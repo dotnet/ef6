@@ -7,12 +7,12 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using EnvDTE;
 
     /// <summary>
-    ///     Finds Visual Studio project items that are .config files.
+    /// Finds Visual Studio project items that are .config files.
     /// </summary>
     internal class ConfigFileFinder
     {
         /// <summary>
-        ///     Finds any item called "app.config" or "web.config" in the given list of project items and performs the given action for each.
+        /// Finds any item called "app.config" or "web.config" in the given list of project items and performs the given action for each.
         /// </summary>
         public virtual void FindConfigFiles(ProjectItems items, Action<ProjectItem> action)
         {

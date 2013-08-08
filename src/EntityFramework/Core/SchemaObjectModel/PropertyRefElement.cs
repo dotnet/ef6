@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents PropertyRef Element for Entity keys and referential constraints
+    /// Represents PropertyRef Element for Entity keys and referential constraints
     /// </summary>
     internal sealed class PropertyRefElement : SchemaElement
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        ///     construct a KeyProperty object
+        /// construct a KeyProperty object
         /// </summary>
         public PropertyRefElement(SchemaElement parentElement)
             : base(parentElement)
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        ///     property chain from KeyedType to Leaf property
+        /// property chain from KeyedType to Leaf property
         /// </summary>
         public StructuredProperty Property
         {
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Since this method can be used in different context, this method does not add any errors
-        ///     Please make sure that the caller of this methods handles the error case and add errors
-        ///     appropriately
+        /// Since this method can be used in different context, this method does not add any errors
+        /// Please make sure that the caller of this methods handles the error case and add errors
+        /// appropriately
         /// </summary>
         internal bool ResolveNames(SchemaEntityType entityType)
         {

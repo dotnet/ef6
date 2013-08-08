@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Globalization;
 
     /// <summary>
-    ///     Describes the location of a member within an entity or association type structure.
+    /// Describes the location of a member within an entity or association type structure.
     /// </summary>
     internal sealed class StorageModificationFunctionMemberPath
     {
@@ -31,14 +31,14 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets the members in the path from the leaf (the member being bound)
-        ///     to the Root of the structure.
+        /// Gets the members in the path from the leaf (the member being bound)
+        /// to the Root of the structure.
         /// </summary>
         internal readonly ReadOnlyCollection<EdmMember> Members;
 
         /// <summary>
-        ///     Gets the association set to which we are navigating via this member. If the value
-        ///     is null, this is not a navigation member path.
+        /// Gets the association set to which we are navigating via this member. If the value
+        /// is null, this is not a navigation member path.
         /// </summary>
         internal readonly AssociationSetEnd AssociationSetEnd;
 

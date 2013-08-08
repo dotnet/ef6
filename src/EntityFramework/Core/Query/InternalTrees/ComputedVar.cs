@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     A computed expression. Defined by a VarDefOp
+    /// A computed expression. Defined by a VarDefOp
     /// </summary>
     internal sealed class ComputedVar : Var
     {

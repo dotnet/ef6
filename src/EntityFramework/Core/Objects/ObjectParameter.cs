@@ -10,8 +10,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
 
     /// <summary>
-    ///     This class represents a query parameter at the object layer, which consists
-    ///     of a Name, a Type and a Value.
+    /// This class represents a query parameter at the object layer, which consists
+    /// of a Name, a Type and a Value.
     /// </summary>
     public sealed class ObjectParameter
     {
@@ -24,9 +24,9 @@ namespace System.Data.Entity.Core.Objects
         #region ValidateParameterName
 
         /// <summary>
-        ///     This internal method uses regular expression matching to ensure that the
-        ///     specified parameter name is valid. Parameter names must start with a letter,
-        ///     and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
+        /// This internal method uses regular expression matching to ensure that the
+        /// specified parameter name is valid. Parameter names must start with a letter,
+        /// and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
         /// </summary>
         internal static bool ValidateParameterName(string name)
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, Type)
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and type.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and type.
         /// </summary>
         /// <param name="name">The parameter name. This name should not include the "@" parameter marker that is used in the Entity SQL statements, only the actual name. The first character of the expression must be a letter. Any successive characters in the expression must be either letters, numbers, or an underscore (_) character.</param>
         /// <param name="type">The common language runtime (CLR) type of the parameter.</param>
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Objects
         #region ObjectParameter (string, object)
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and value.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> class with the specified name and value.
         /// </summary>
         /// <param name="name">The parameter name. This name should not include the "@" parameter marker that is used in Entity SQL statements, only the actual name. The first character of the expression must be a letter. Any successive characters in the expression must be either letters, numbers, or an underscore (_) character.</param>
         /// <param name="value">The initial value (and inherently, the type) of the parameter.</param>
@@ -113,8 +113,8 @@ namespace System.Data.Entity.Core.Objects
         // -------------------
 
         /// <summary>
-        ///     This constructor is used by <see cref="ShallowCopy" /> to create a new ObjectParameter
-        ///     with field values taken from the field values of an existing ObjectParameter.
+        /// This constructor is used by <see cref="ShallowCopy" /> to create a new ObjectParameter
+        /// with field values taken from the field values of an existing ObjectParameter.
         /// </summary>
         /// <param name="template"> The existing ObjectParameter instance from which field values should be taken. </param>
         /// <returns> A new ObjectParameter instance with the same field values as the specified ObjectParameter </returns>
@@ -138,32 +138,32 @@ namespace System.Data.Entity.Core.Objects
         // --------------
 
         /// <summary>
-        ///     The name of the parameter. Cannot be null and is immutable.
+        /// The name of the parameter. Cannot be null and is immutable.
         /// </summary>
         private readonly string _name;
 
         /// <summary>
-        ///     The CLR type of the parameter. Cannot be null and is immutable.
+        /// The CLR type of the parameter. Cannot be null and is immutable.
         /// </summary>
         private readonly Type _type;
 
         /// <summary>
-        ///     The mappable CLR type of the parameter. Unless the parameter type is
-        ///     Nullable, this type is equal to the parameter type. In the case of
-        ///     Nullable parameters, this type is the underlying Nullable argument
-        ///     type. Cannot be null and is immutable.
+        /// The mappable CLR type of the parameter. Unless the parameter type is
+        /// Nullable, this type is equal to the parameter type. In the case of
+        /// Nullable parameters, this type is the underlying Nullable argument
+        /// type. Cannot be null and is immutable.
         /// </summary>
         private readonly Type _mappableType;
 
         /// <summary>
-        ///     Used to specify the exact metadata type of this parameter.
-        ///     Typically null, can only be set using the internal <see cref="TypeUsage" /> property.
+        /// Used to specify the exact metadata type of this parameter.
+        /// Typically null, can only be set using the internal <see cref="TypeUsage" /> property.
         /// </summary>
         private TypeUsage _effectiveType;
 
         /// <summary>
-        ///     The value of the parameter. Does not need to be bound until execution
-        ///     time and can be modified at any time.
+        /// The value of the parameter. Does not need to be bound until execution
+        /// time and can be modified at any time.
         /// </summary>
         private object _value;
 
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the parameter type.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Type" /> of the parameter.
+        /// The <see cref="T:System.Type" /> of the parameter.
         /// </returns>
         public Type ParameterType
         {
@@ -209,8 +209,8 @@ namespace System.Data.Entity.Core.Objects
         // -------------------
 
         /// <summary>
-        ///     Gets or sets a <see cref="TypeUsage" /> that specifies the exact
-        ///     type of which the parameter value is considered an instance.
+        /// Gets or sets a <see cref="TypeUsage" /> that specifies the exact
+        /// type of which the parameter value is considered an instance.
         /// </summary>
         internal TypeUsage TypeUsage
         {
@@ -224,9 +224,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     The mappable parameter type; this is primarily used to handle the case of
-        ///     Nullable parameter types. For example, metadata knows nothing about 'int?',
-        ///     only 'Int32'. For internal use only.
+        /// The mappable parameter type; this is primarily used to handle the case of
+        /// Nullable parameter types. For example, metadata knows nothing about 'int?',
+        /// only 'Int32'. For internal use only.
         /// </summary>
         internal Type MappableType
         {
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Objects
         // ----------------
 
         /// <summary>
-        ///     Creates a new ObjectParameter instance with identical field values to this instance.
+        /// Creates a new ObjectParameter instance with identical field values to this instance.
         /// </summary>
         /// <returns> The new ObjectParameter instance </returns>
         internal ObjectParameter ShallowCopy()
@@ -251,9 +251,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This internal method ensures that the specified type is a scalar
-        ///     type supported by the underlying provider by ensuring that scalar
-        ///     metadata for this type is retrievable.
+        /// This internal method ensures that the specified type is a scalar
+        /// type supported by the underlying provider by ensuring that scalar
+        /// metadata for this type is retrievable.
         /// </summary>
         internal bool ValidateParameterType(ClrPerspective perspective)
         {

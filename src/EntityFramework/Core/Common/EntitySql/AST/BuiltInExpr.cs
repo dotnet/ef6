@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents a builtin expression ast node.
+    /// Represents a builtin expression ast node.
     /// </summary>
     internal sealed class BuiltInExpr : Node
     {

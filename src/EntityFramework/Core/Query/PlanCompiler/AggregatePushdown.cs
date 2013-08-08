@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal delegate bool TryGetValue(Node key, out Node value);
 
     /// <summary>
-    ///     The Aggregate Pushdown feature tries to identify function aggregates defined over a
-    ///     group aggregate and push their definitions in the group by into node corresponding to
-    ///     the group aggregate.
+    /// The Aggregate Pushdown feature tries to identify function aggregates defined over a
+    /// group aggregate and push their definitions in the group by into node corresponding to
+    /// the group aggregate.
     /// </summary>
     internal class AggregatePushdown
     {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region 'Public' Surface
 
         /// <summary>
-        ///     Apply Aggregate Pushdown over the tree in the given plan complier state.
+        /// Apply Aggregate Pushdown over the tree in the given plan complier state.
         /// </summary>
         internal static void Process(PlanCompiler planCompilerState)
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private Methods
 
         /// <summary>
-        ///     The main driver
+        /// The main driver
         /// </summary>
         private void Process()
         {
@@ -65,12 +65,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Try to push the given function aggregate candidate to the corresponding group into node.
-        ///     The candidate can be pushed if all ancestors of the group into node up to the least common
-        ///     ancestor between the group into node and the function aggregate have one of the following node op types:
-        ///     Project
-        ///     Filter
-        ///     ConstraintSortOp
+        /// Try to push the given function aggregate candidate to the corresponding group into node.
+        /// The candidate can be pushed if all ancestors of the group into node up to the least common
+        /// ancestor between the group into node and the function aggregate have one of the following node op types:
+        /// Project
+        /// Filter
+        /// ConstraintSortOp
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GroupByInto")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -136,8 +136,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Check whether all nodes in the given list of nodes are of types
-        ///     that we know how to propagate an aggregate through
+        /// Check whether all nodes in the given list of nodes are of types
+        /// that we know how to propagate an aggregate through
         /// </summary>
         private static bool AreAllNodesSupportedForPropagation(IList<Node> nodes)
         {
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Finds the paths from each of node1 and node2 to their least common ancestor
+        /// Finds the paths from each of node1 and node2 to their least common ancestor
         /// </summary>
         private void FindPathsToLeastCommonAncestor(Node node1, Node node2, out IList<Node> ancestors1, out IList<Node> ancestors2)
         {
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Finds all ancestors of the given node.
+        /// Finds all ancestors of the given node.
         /// </summary>
         /// <returns> An ordered list of the all the ancestors of the given node starting from the immediate parent to the root of the tree </returns>
         private IList<Node> FindAncestors(Node node)

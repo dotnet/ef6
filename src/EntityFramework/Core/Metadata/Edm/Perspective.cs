@@ -7,13 +7,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Internal helper class for query
+    /// Internal helper class for query
     /// </summary>
     internal abstract class Perspective
     {
         /// <summary>
-        ///     Creates a new instance of perspective class so that query can work
-        ///     ignorant of all spaces
+        /// Creates a new instance of perspective class so that query can work
+        /// ignorant of all spaces
         /// </summary>
         /// <param name="metadataWorkspace"> runtime metadata container </param>
         /// <param name="targetDataspace"> target dataspace for the perspective </param>
@@ -31,11 +31,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly DataSpace _targetDataspace;
 
         /// <summary>
-        ///     Given the type in the target space and the member name in the source space,
-        ///     get the corresponding member in the target space
-        ///     For e.g.  consider a Conceptual Type 'Foo' with a member 'Bar' and a CLR type
-        ///     'XFoo' with a member 'YBar'. If one has a reference to Foo one can
-        ///     invoke GetMember(Foo,"YBar") to retrieve the member metadata for bar
+        /// Given the type in the target space and the member name in the source space,
+        /// get the corresponding member in the target space
+        /// For e.g.  consider a Conceptual Type 'Foo' with a member 'Bar' and a CLR type
+        /// 'XFoo' with a member 'YBar'. If one has a reference to Foo one can
+        /// invoke GetMember(Foo,"YBar") to retrieve the member metadata for bar
         /// </summary>
         /// <param name="type"> The type in the target perspective </param>
         /// <param name="memberName"> the name of the member in the source perspective </param>
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the extent in the target space, for the given entity container.
+        /// Returns the extent in the target space, for the given entity container.
         /// </summary>
         /// <param name="entityContainer"> name of the entity container in target space </param>
         /// <param name="extentName"> name of the extent </param>
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the function import in the target space, for the given entity container.
+        /// Returns the function import in the target space, for the given entity container.
         /// </summary>
         internal virtual bool TryGetFunctionImport(
             EntityContainer entityContainer, String functionImportName, bool ignoreCase, out EdmFunction functionImport)
@@ -95,9 +95,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the default entity container
-        ///     returns null for any perspective other
-        ///     than the CLR perspective
+        /// Get the default entity container
+        /// returns null for any perspective other
+        /// than the CLR perspective
         /// </summary>
         /// <returns> The default container </returns>
         internal virtual EntityContainer GetDefaultContainer()
@@ -106,8 +106,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get an entity container based upon the strong name of the container
-        ///     If no entity container is found, returns null, else returns the first one///
+        /// Get an entity container based upon the strong name of the container
+        /// If no entity container is found, returns null, else returns the first one///
         /// </summary>
         /// <param name="name"> name of the entity container </param>
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a type with the given name in the target space.
+        /// Gets a type with the given name in the target space.
         /// </summary>
         /// <param name="fullName"> full name of the type </param>
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal abstract bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage typeUsage);
 
         /// <summary>
-        ///     Returns overloads of a function with the given name in the target space.
+        /// Returns overloads of a function with the given name in the target space.
         /// </summary>
         /// <param name="namespaceName"> namespace of the function </param>
         /// <param name="functionName"> name of the function </param>
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Return the metadata workspace
+        /// Return the metadata workspace
         /// </summary>
         internal MetadataWorkspace MetadataWorkspace
         {
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     returns the primitive type for a given primitive type kind.
+        /// returns the primitive type for a given primitive type kind.
         /// </summary>
         internal virtual bool TryGetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind, out PrimitiveType primitiveType)
         {
@@ -205,7 +205,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // This property will be needed to construct keys for transient types
         //
         /// <summary>
-        ///     Returns the target dataspace for this perspective
+        /// Returns the target dataspace for this perspective
         /// </summary>
         internal DataSpace TargetDataspace
         {

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Interface allowing an IEntityAdapter to analyze state/change tracking information maintained
-    ///     by a state manager in order to perform updates on a backing store (and push back the results
-    ///     of those updates).
+    /// Interface allowing an IEntityAdapter to analyze state/change tracking information maintained
+    /// by a state manager in order to perform updates on a backing store (and push back the results
+    /// of those updates).
     /// </summary>
     internal interface IEntityStateManager
     {

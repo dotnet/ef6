@@ -3,17 +3,17 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Basic Visitor Design Pattern support for ColumnMap hierarchy;
-    ///     This visitor class will walk the entire hierarchy, but does not
-    ///     return results; it's useful for operations such as printing and
-    ///     searching.
+    /// Basic Visitor Design Pattern support for ColumnMap hierarchy;
+    /// This visitor class will walk the entire hierarchy, but does not
+    /// return results; it's useful for operations such as printing and
+    /// searching.
     /// </summary>
     internal abstract class ColumnMapVisitor<TArgType>
     {
         #region visitor helpers
 
         /// <summary>
-        ///     Common List(ColumnMap) code
+        /// Common List(ColumnMap) code
         /// </summary>
         protected void VisitList<TListType>(TListType[] columnMaps, TArgType arg)
             where TListType : ColumnMap

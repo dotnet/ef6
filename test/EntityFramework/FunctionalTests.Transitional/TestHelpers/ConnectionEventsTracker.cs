@@ -22,7 +22,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Verifies the no connection events were fired.
+        /// Verifies the no connection events were fired.
         /// </summary>
         public void VerifyNoConnectionEventsWereFired()
         {
@@ -32,7 +32,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Verifies the connection open and close events were fired.
+        /// Verifies the connection open and close events were fired.
         /// </summary>
         public void VerifyConnectionOpenCloseEventsWereFired()
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Verifies the connection opened event was fired.
+        /// Verifies the connection opened event was fired.
         /// </summary>
         public void VerifyConnectionOpenedEventWasFired()
         {
@@ -52,7 +52,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Verifies the connection closed event was fired.
+        /// Verifies the connection closed event was fired.
         /// </summary>
         public void VerifyConnectionClosedEventWasFired()
         {

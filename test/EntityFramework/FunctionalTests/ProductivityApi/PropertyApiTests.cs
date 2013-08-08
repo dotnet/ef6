@@ -15,8 +15,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    ///     Functional tests for the Property, Reference, and Collection methods on DbEntityEntry.
-    ///     Unit tests also exist in the unit tests project.
+    /// Functional tests for the Property, Reference, and Collection methods on DbEntityEntry.
+    /// Unit tests also exist in the unit tests project.
     /// </summary>
     public class PropertyApiTests : FunctionalTestBase
     {

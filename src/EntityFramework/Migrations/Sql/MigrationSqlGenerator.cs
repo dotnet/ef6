@@ -7,13 +7,13 @@ namespace System.Data.Entity.Migrations.Sql
     using System.Data.Entity.Migrations.Model;
 
     /// <summary>
-    ///     Common base class for providers that convert provider agnostic migration
-    ///     operations into database provider specific SQL commands.
+    /// Common base class for providers that convert provider agnostic migration
+    /// operations into database provider specific SQL commands.
     /// </summary>
     public abstract class MigrationSqlGenerator
     {
         /// <summary>
-        ///     Converts a set of migration operations into database provider specific SQL.
+        /// Converts a set of migration operations into database provider specific SQL.
         /// </summary>
         /// <param name="migrationOperations"> The operations to be converted. </param>
         /// <param name="providerManifestToken"> Token representing the version of the database being targeted. </param>

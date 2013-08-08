@@ -16,7 +16,7 @@ namespace CodeFirstTest
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for ModelBuilder and DbCompiledModel.
+    /// Functional tests for ModelBuilder and DbCompiledModel.
     /// </summary>
     public class DbModelTests : FunctionalTestBase
     {

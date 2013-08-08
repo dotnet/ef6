@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     A SimpleRule is a rule that specifies a specific OpType to look for, and an
-    ///     appropriate action to take when such an Op is identified
+    /// A SimpleRule is a rule that specifies a specific OpType to look for, and an
+    /// appropriate action to take when such an Op is identified
     /// </summary>
     internal sealed class SimpleRule : Rule
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        ///     Basic constructor.
+        /// Basic constructor.
         /// </summary>
         /// <param name="opType"> The OpType we're interested in </param>
         /// <param name="processDelegate"> The callback to invoke when we see such an Op </param>

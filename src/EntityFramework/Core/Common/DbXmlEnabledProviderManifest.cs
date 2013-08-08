@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common
     using System.Xml;
 
     /// <summary>
-    ///     A specialization of the ProviderManifest that accepts an XmlReader
+    /// A specialization of the ProviderManifest that accepts an XmlReader
     /// </summary>
     public abstract class DbXmlEnabledProviderManifest : DbProviderManifest
     {
@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Common
         private readonly Dictionary<string, PrimitiveType> _storeTypeNameToStorePrimitiveType = new Dictionary<string, PrimitiveType>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbXmlEnabledProviderManifest" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbXmlEnabledProviderManifest" /> class.
         /// </summary>
         /// <param name="reader">
-        ///     An <see cref="T:System.Xml.XmlReader" /> object that provides access to the XML data in the provider manifest file.
+        /// An <see cref="T:System.Xml.XmlReader" /> object that provides access to the XML data in the provider manifest file.
         /// </param>
         protected DbXmlEnabledProviderManifest(XmlReader reader)
         {
@@ -72,10 +72,10 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>Returns the list of facet descriptions for the specified Entity Data Model (EDM) type.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for the specified EDM type.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for the specified EDM type.
         /// </returns>
         /// <param name="edmType">
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the facet descriptions are to be retrieved.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> for which the facet descriptions are to be retrieved.
         /// </param>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType edmType)
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>Returns the list of primitive types supported by the storage provider.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of primitive types supported by the storage provider.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of primitive types supported by the storage provider.
         /// </returns>
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>Returns the list of provider-supported functions.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of provider-supported functions.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of provider-supported functions.
         /// </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {

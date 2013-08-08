@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    ///     Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
+    /// Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
     /// </summary>
     internal sealed class RoleBoolean : TrueFalseLiteral
     {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         private readonly MetadataItem m_metadataItem;
 
         /// <summary>
-        ///     Not supported in this class.
+        /// Not supported in this class.
         /// </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Not supported in this class.
+        /// Not supported in this class.
         /// </summary>
         internal override DbExpression AsCqt(DbExpression row, bool skipIsNotNull)
         {

@@ -18,51 +18,51 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     DbDataReader functionality for the bridge.
+    /// DbDataReader functionality for the bridge.
     /// </summary>
     internal class BridgeDataReader : DbDataReader, IExtendedDataRecord
     {
         #region Private state
 
         /// <summary>
-        ///     Object that holds the state needed by the coordinator and the root enumerator
+        /// Object that holds the state needed by the coordinator and the root enumerator
         /// </summary>
         private Shaper<RecordState> _shaper;
 
         /// <summary>
-        ///     Enumerator over shapers for NextResult() calls.
-        ///     Null for nested data readers (depth > 0);
+        /// Enumerator over shapers for NextResult() calls.
+        /// Null for nested data readers (depth > 0);
         /// </summary>
         private IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> _nextResultShaperInfoEnumerator;
 
         /// <summary>
-        ///     The coordinator we're responsible for returning results for.
+        /// The coordinator we're responsible for returning results for.
         /// </summary>
         private CoordinatorFactory<RecordState> _coordinatorFactory;
 
         /// <summary>
-        ///     The default record (pre-read/past-end) state
+        /// The default record (pre-read/past-end) state
         /// </summary>
         private RecordState _defaultRecordState;
 
         /// <summary>
-        ///     We delegate to this on our getters, to avoid duplicate code.
+        /// We delegate to this on our getters, to avoid duplicate code.
         /// </summary>
         private BridgeDataRecord _dataRecord;
 
         /// <summary>
-        ///     Do we have a row to read?  Determined in the constructor and
-        ///     should not be changed.
+        /// Do we have a row to read?  Determined in the constructor and
+        /// should not be changed.
         /// </summary>
         private bool _hasRows;
 
         /// <summary>
-        ///     Set to true only when we've been closed through the Close() method
+        /// Set to true only when we've been closed through the Close() method
         /// </summary>
         private bool _isClosed;
 
         /// <summary>
-        ///     0 if initialization hasn't been performed, 1 otherwise
+        /// 0 if initialization hasn't been performed, 1 otherwise
         /// </summary>
         private int _initialized;
 
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         #region Helpers
 
         /// <summary>
-        ///     Runs the initialization if it hasn't been run
+        /// Runs the initialization if it hasn't been run
         /// </summary>
         protected virtual void EnsureInitialized()
         {
@@ -114,8 +114,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of <see cref="EnsureInitialized" />, which
-        ///     runs the initialization if it hasn't been run
+        /// An asynchronous version of <see cref="EnsureInitialized" />, which
+        /// runs the initialization if it hasn't been run
         /// </summary>
         protected virtual Task EnsureInitializedAsync(CancellationToken cancellationToken)
         {
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     Ensures that the reader is actually open, and throws an exception if not
+        /// Ensures that the reader is actually open, and throws an exception if not
         /// </summary>
         private void AssertReaderIsOpen(string methodName)
         {
@@ -202,11 +202,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     Implicitly close this (nested) data reader; will be called whenever
-        ///     the user has done a GetValue() or a Read() on a parent reader/record
-        ///     to ensure that we consume all our results.  We do that because we
-        ///     our design requires us to be positioned at the next nested reader's
-        ///     first row.
+        /// Implicitly close this (nested) data reader; will be called whenever
+        /// the user has done a GetValue() or a Read() on a parent reader/record
+        /// to ensure that we consume all our results.  We do that because we
+        /// our design requires us to be positioned at the next nested reader's
+        /// first row.
         /// </summary>
         internal void CloseImplicitly()
         {
@@ -218,12 +218,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of <see cref="CloseImplicitly" />, which
-        ///     implicitly closes this (nested) data reader; will be called whenever
-        ///     the user has done a GetValue() or a ReadAsync() on a parent reader/record
-        ///     to ensure that we consume all our results.  We do that because we
-        ///     our design requires us to be positioned at the next nested reader's
-        ///     first row.
+        /// An asynchronous version of <see cref="CloseImplicitly" />, which
+        /// implicitly closes this (nested) data reader; will be called whenever
+        /// the user has done a GetValue() or a ReadAsync() on a parent reader/record
+        /// to ensure that we consume all our results.  We do that because we
+        /// our design requires us to be positioned at the next nested reader's
+        /// first row.
         /// </summary>
         internal async Task CloseImplicitlyAsync(CancellationToken cancellationToken)
         {
@@ -235,7 +235,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #endif
 
         /// <summary>
-        ///     Reads to the end of the source enumerator provided
+        /// Reads to the end of the source enumerator provided
         /// </summary>
         private void Consume()
         {
@@ -247,8 +247,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of <see cref="Consume" />, which
-        ///     reads to the end of the source enumerator provided
+        /// An asynchronous version of <see cref="Consume" />, which
+        /// reads to the end of the source enumerator provided
         /// </summary>
         private async Task ConsumeAsync(CancellationToken cancellationToken)
         {
@@ -260,10 +260,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #endif
 
         /// <summary>
-        ///     Figure out the CLR type from the TypeMetadata object; For scalars,
-        ///     we can get this from the metadata workspace, but for the rest, we
-        ///     just guess at "Object".  You need to use the DataRecordInfo property
-        ///     to get better information for those.
+        /// Figure out the CLR type from the TypeMetadata object; For scalars,
+        /// we can get this from the metadata workspace, but for the rest, we
+        /// just guess at "Object".  You need to use the DataRecordInfo property
+        /// to get better information for those.
         /// </summary>
         internal static Type GetClrTypeFromTypeMetadata(TypeUsage typeUsage)
         {
@@ -546,11 +546,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 #endif
 
         /// <summary>
-        ///     Internal read method; does the work of advancing the root enumerator
-        ///     as needed and determining whether it's current record is for our
-        ///     coordinator. The public Read method does the assertions and such that
-        ///     we don't want to do when we're called from internal methods to do things
-        ///     like consume the rest of the reader's contents.
+        /// Internal read method; does the work of advancing the root enumerator
+        /// as needed and determining whether it's current record is for our
+        /// coordinator. The public Read method does the assertions and such that
+        /// we don't want to do when we're called from internal methods to do things
+        /// like consume the rest of the reader's contents.
         /// </summary>
         private bool ReadInternal()
         {

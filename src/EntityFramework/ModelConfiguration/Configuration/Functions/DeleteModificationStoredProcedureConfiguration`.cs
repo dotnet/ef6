@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to delete entities.
+    /// Allows configuration to be performed for a stored procedure that is used to delete entities.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the stored procedure can be used to delete.</typeparam>
     public class DeleteModificationStoredProcedureConfiguration<TEntityType> : ModificationStoredProcedureConfigurationBase

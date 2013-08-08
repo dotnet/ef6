@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Text;
 
     /// <summary>
-    ///     Base class for clauses, which are (constrained) combinations of literals.
+    /// Base class for clauses, which are (constrained) combinations of literals.
     /// </summary>
     /// <typeparam name="T_Identifier"> Type of normal form literal. </typeparam>
     internal abstract class Clause<T_Identifier> : NormalFormNode<T_Identifier>
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly int _hashCode;
 
         /// <summary>
-        ///     Initialize a new clause.
+        /// Initialize a new clause.
         /// </summary>
         /// <param name="literals"> Literals contained in the clause. </param>
         /// <param name="treeType"> Type of expression tree to produce from literals. </param>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets the literals contained in this clause.
+        /// Gets the literals contained in this clause.
         /// </summary>
         internal Set<Literal<T_Identifier>> Literals
         {

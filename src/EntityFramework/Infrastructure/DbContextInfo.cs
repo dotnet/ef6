@@ -12,7 +12,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq;
 
     /// <summary>
-    ///     Provides runtime information about a given <see cref="DbContext" /> type.
+    /// Provides runtime information about a given <see cref="DbContext" /> type.
     /// </summary>
     public class DbContextInfo
     {
@@ -30,10 +30,10 @@ namespace System.Data.Entity.Infrastructure
         private Action<DbModelBuilder> _onModelCreating;
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type.
+        /// Creates a new instance representing a given <see cref="DbContext" /> type.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         public DbContextInfo(Type contextType)
             : this(Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, null)
@@ -41,10 +41,10 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> targeting a specific database.
+        /// Creates a new instance representing a given <see cref="DbContext" /> targeting a specific database.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
         public DbContextInfo(Type contextType, DbConnectionInfo connectionInfo)
@@ -54,17 +54,17 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external list of
-        ///     connection strings can be supplied and will be used during connection string resolution in place
-        ///     of any connection strings specified in external configuration files.
+        /// Creates a new instance representing a given <see cref="DbContext" /> type. An external list of
+        /// connection strings can be supplied and will be used during connection string resolution in place
+        /// of any connection strings specified in external configuration files.
         /// </summary>
         /// <remarks>
-        ///     It is preferable to use the constructor that accepts the entire config document instead of using this
-        ///     constructor. Providing the entire config document allows DefaultConnectionFactroy entries in the config
-        ///     to be found in addition to explicitly specified connection strings.
+        /// It is preferable to use the constructor that accepts the entire config document instead of using this
+        /// constructor. Providing the entire config document allows DefaultConnectionFactroy entries in the config
+        /// to be found in addition to explicitly specified connection strings.
         /// </remarks>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="connectionStringSettings"> A collection of connection strings. </param>
         [Obsolete(
@@ -78,12 +78,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config
-        ///     object (e.g. app.config or web.config) can be supplied and will be used during connection string
-        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
+        /// Creates a new instance representing a given <see cref="DbContext" /> type. An external config
+        /// object (e.g. app.config or web.config) can be supplied and will be used during connection string
+        /// resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         public DbContextInfo(Type contextType, Configuration config)
@@ -92,12 +92,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" />, targeting a specific database.
-        ///     An external config object (e.g. app.config or web.config) can be supplied and will be used during connection string
-        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
+        /// Creates a new instance representing a given <see cref="DbContext" />, targeting a specific database.
+        /// An external config object (e.g. app.config or web.config) can be supplied and will be used during connection string
+        /// resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         /// <param name="connectionInfo"> Connection information for the database to be used. </param>
@@ -109,15 +109,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type.  A <see cref="DbProviderInfo" />
-        ///     can be supplied in order to override the default determined provider used when constructing
-        ///     the underlying EDM model.
+        /// Creates a new instance representing a given <see cref="DbContext" /> type.  A <see cref="DbProviderInfo" />
+        /// can be supplied in order to override the default determined provider used when constructing
+        /// the underlying EDM model.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="modelProviderInfo">
-        ///     A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
+        /// A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
         /// </param>
         public DbContextInfo(Type contextType, DbProviderInfo modelProviderInfo)
             : this(
@@ -127,19 +127,19 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance representing a given <see cref="DbContext" /> type. An external config
-        ///     object (e.g. app.config or web.config) can be supplied and will be used during connection string
-        ///     resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
-        ///     A <see cref="DbProviderInfo" /> can be supplied in order to override the default determined
-        ///     provider used when constructing the underlying EDM model. This can be useful to prevent EF from
-        ///     connecting to discover a manifest token.
+        /// Creates a new instance representing a given <see cref="DbContext" /> type. An external config
+        /// object (e.g. app.config or web.config) can be supplied and will be used during connection string
+        /// resolution. This includes looking for connection strings and DefaultConnectionFactory entries.
+        /// A <see cref="DbProviderInfo" /> can be supplied in order to override the default determined
+        /// provider used when constructing the underlying EDM model. This can be useful to prevent EF from
+        /// connecting to discover a manifest token.
         /// </summary>
         /// <param name="contextType">
-        ///     The type deriving from <see cref="DbContext" />.
+        /// The type deriving from <see cref="DbContext" />.
         /// </param>
         /// <param name="config"> An object representing the config file. </param>
         /// <param name="modelProviderInfo">
-        ///     A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
+        /// A <see cref="DbProviderInfo" /> specifying the underlying ADO.NET provider to target.
         /// </param>
         public DbContextInfo(Type contextType, Configuration config, DbProviderInfo modelProviderInfo)
             : this(
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Called internally when a context info is needed for an existing context, which may not be constructable.
+        /// Called internally when a context info is needed for an existing context, which may not be constructable.
         /// </summary>
         /// <param name="context"> The context instance to get info from. </param>
         internal DbContextInfo(DbContext context)
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The concrete <see cref="DbContext" /> type.
+        /// The concrete <see cref="DbContext" /> type.
         /// </summary>
         public virtual Type ContextType
         {
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Whether or not instances of the underlying <see cref="DbContext" /> type can be created.
+        /// Whether or not instances of the underlying <see cref="DbContext" /> type can be created.
         /// </summary>
         public virtual bool IsConstructible
         {
@@ -240,7 +240,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The connection string used by the underlying <see cref="DbContext" /> type.
+        /// The connection string used by the underlying <see cref="DbContext" /> type.
         /// </summary>
         public virtual string ConnectionString
         {
@@ -248,7 +248,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The connection string name used by the underlying <see cref="DbContext" /> type.
+        /// The connection string name used by the underlying <see cref="DbContext" /> type.
         /// </summary>
         public virtual string ConnectionStringName
         {
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The ADO.NET provider name of the connection used by the underlying <see cref="DbContext" /> type.
+        /// The ADO.NET provider name of the connection used by the underlying <see cref="DbContext" /> type.
         /// </summary>
         public virtual string ConnectionProviderName
         {
@@ -264,7 +264,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The origin of the connection string used by the underlying <see cref="DbContext" /> type.
+        /// The origin of the connection string used by the underlying <see cref="DbContext" /> type.
         /// </summary>
         public virtual DbConnectionStringOrigin ConnectionStringOrigin
         {
@@ -272,7 +272,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     An action to be run on the DbModelBuilder after OnModelCreating has been run on the context.
+        /// An action to be run on the DbModelBuilder after OnModelCreating has been run on the context.
         /// </summary>
         public virtual Action<DbModelBuilder> OnModelCreating
         {
@@ -281,11 +281,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     If instances of the underlying <see cref="DbContext" /> type can be created, returns
-        ///     a new instance; otherwise returns null.
+        /// If instances of the underlying <see cref="DbContext" /> type can be created, returns
+        /// a new instance; otherwise returns null.
         /// </summary>
         /// <returns>
-        ///     A <see cref="DbContext" /> instance.
+        /// A <see cref="DbContext" /> instance.
         /// </returns>
         public virtual DbContext CreateInstance()
         {

@@ -12,10 +12,10 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     Service used to search for instance properties on a DbContext class that can
-    ///     be assigned a DbSet instance.  Also, if the the property has a public setter,
-    ///     then a delegate is compiled to set the property to a new instance of DbSet.
-    ///     All of this information is cached per app domain.
+    /// Service used to search for instance properties on a DbContext class that can
+    /// be assigned a DbSet instance.  Also, if the the property has a public setter,
+    /// then a delegate is compiled to set the property to a new instance of DbSet.
+    /// All of this information is cached per app domain.
     /// </summary>
     internal class DbSetDiscoveryService
     {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Internal
         private readonly DbContext _context;
 
         /// <summary>
-        ///     Creates a set discovery service for the given derived context.
+        /// Creates a set discovery service for the given derived context.
         /// </summary>
         public DbSetDiscoveryService(DbContext context)
         {
@@ -45,11 +45,11 @@ namespace System.Data.Entity.Internal
         #region Set discovery/processing
 
         /// <summary>
-        ///     Processes the given context type to determine the DbSet or IDbSet
-        ///     properties and collect root entity types from those properties.  Also, delegates are
-        ///     created to initialize any of these properties that have public setters.
-        ///     If the type has been processed previously in the app domain, then all this information
-        ///     is returned from a cache.
+        /// Processes the given context type to determine the DbSet or IDbSet
+        /// properties and collect root entity types from those properties.  Also, delegates are
+        /// created to initialize any of these properties that have public setters.
+        /// If the type has been processed previously in the app domain, then all this information
+        /// is returned from a cache.
         /// </summary>
         /// <returns> A dictionary of potential entity type to the list of the names of the properties that used the type. </returns>
         private Dictionary<Type, List<string>> GetSets()
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Calls the public setter on any property found to initialize it to a new instance of DbSet.
+        /// Calls the public setter on any property found to initialize it to a new instance of DbSet.
         /// </summary>
         public void InitializeSets()
         {
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Registers the entities and their entity set name hints with the given <see cref="DbModelBuilder" />.
+        /// Registers the entities and their entity set name hints with the given <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="modelBuilder"> The model builder. </param>
         public void RegisterSets(DbModelBuilder modelBuilder)
@@ -154,8 +154,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns false if SuppressDbSetInitializationAttribute is found on the property or the class, otherwise
-        ///     returns true.
+        /// Returns false if SuppressDbSetInitializationAttribute is found on the property or the class, otherwise
+        /// returns true.
         /// </summary>
         private static bool DbSetPropertyShouldBeInitialized(PropertyInfo propertyInfo)
         {
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Internal
         #region Helpers
 
         /// <summary>
-        ///     Determines whether or not an instance of DbSet/ObjectSet can be assigned to a property of the given type.
+        /// Determines whether or not an instance of DbSet/ObjectSet can be assigned to a property of the given type.
         /// </summary>
         /// <param name="declaredType"> The type to check. </param>
         /// <returns> The entity type of the DbSet/ObjectSet that can be assigned, or null if no set type can be assigned. </returns>
@@ -193,9 +193,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Given a type that might be an IDbSet\IObjectSet, determine if the type implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;, and if
-        ///     so return the element type of the IDbSet\IObjectSet.  Currently, if the collection implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;
-        ///     multiple times with different types, then we will return false since this is not supported.
+        /// Given a type that might be an IDbSet\IObjectSet, determine if the type implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;, and if
+        /// so return the element type of the IDbSet\IObjectSet.  Currently, if the collection implements IDbSet&lt;&gt;\IObjectSet&lt;&gt;
+        /// multiple times with different types, then we will return false since this is not supported.
         /// </summary>
         /// <param name="setType"> The type to check. </param>
         /// <returns> The element type of the IDbSet\IObjectSet, or null if the type does not match. </returns>

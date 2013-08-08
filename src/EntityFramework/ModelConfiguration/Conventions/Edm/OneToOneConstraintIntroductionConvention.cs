@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to configure the primary key(s) of the dependent entity type as foreign key(s) in a one:one relationship.
+    /// Convention to configure the primary key(s) of the dependent entity type as foreign key(s) in a one:one relationship.
     /// </summary>
     public class OneToOneConstraintIntroductionConvention : IConceptualModelConvention<AssociationType>
     {

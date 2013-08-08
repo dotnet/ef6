@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents renaming an existing table.
+    /// Represents renaming an existing table.
     /// </summary>
     public class RenameTableOperation : MigrationOperation
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
         private string _newName;
 
         /// <summary>
-        ///     Initializes a new instance of the RenameTableOperation class.
+        /// Initializes a new instance of the RenameTableOperation class.
         /// </summary>
         /// <param name="name"> Name of the table to be renamed. </param>
         /// <param name="newName"> New name for the table. </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table to be renamed.
+        /// Gets the name of the table to be renamed.
         /// </summary>
         public virtual string Name
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the new name for the table.
+        /// Gets the new name for the table.
         /// </summary>
         public virtual string NewName
         {
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that reverts the rename.
+        /// Gets an operation that reverts the rename.
         /// </summary>
         public override MigrationOperation Inverse
         {

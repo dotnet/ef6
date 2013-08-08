@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Describes a column of a table
+    /// Describes a column of a table
     /// </summary>
     internal sealed class ColumnVar : Var
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly Table m_table;
 
         /// <summary>
-        ///     Constructor
+        /// Constructor
         /// </summary>
         internal ColumnVar(int id, Table table, ColumnMD columnMetadata)
             : base(id, VarType.Column, columnMetadata.Type)
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The table instance containing this column reference
+        /// The table instance containing this column reference
         /// </summary>
         internal Table Table
         {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The column metadata for this column
+        /// The column metadata for this column
         /// </summary>
         internal ColumnMD ColumnMetadata
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the name of this column var
+        /// Get the name of this column var
         /// </summary>
         internal override bool TryGetName(out string name)
         {

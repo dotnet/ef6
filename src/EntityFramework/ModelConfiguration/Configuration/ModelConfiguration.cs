@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for a model.
+    /// Allows configuration to be performed for a model.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     internal class ModelConfiguration : ConfigurationBase
@@ -53,8 +53,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets a collection of types that have been configured in this model including
-        ///     entity types, complex types, and ignored types.
+        /// Gets a collection of types that have been configured in this model including
+        /// entity types, complex types, and ignored types.
         /// </summary>
         public virtual IEnumerable<Type> ConfiguredTypes
         {
@@ -77,12 +77,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets or sets the default schema name.
+        /// Gets or sets the default schema name.
         /// </summary>
         public string DefaultSchema { get; set; }
 
         /// <summary>
-        ///     Gets or sets the default model namespace.
+        /// Gets or sets the default model namespace.
         /// </summary>
         public string ModelNamespace { get; set; }
 
@@ -127,15 +127,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Registers an entity type as part of the model and returns an object that can
-        ///     be used to configure the entity. This method can be called multiple times
-        ///     for the same entity to perform multiple configurations.
+        /// Registers an entity type as part of the model and returns an object that can
+        /// be used to configure the entity. This method can be called multiple times
+        /// for the same entity to perform multiple configurations.
         /// </summary>
         /// <param name="entityType"> The type to be registered or configured. </param>
         /// <returns> The configuration object for the specified entity type. </returns>
         /// <remarks>
-        ///     Types registered as an entity type may later be changed to a complex type by
-        ///     the <see cref="ComplexTypeDiscoveryConvention" />.
+        /// Types registered as an entity type may later be changed to a complex type by
+        /// the <see cref="ComplexTypeDiscoveryConvention" />.
         /// </remarks>
         public virtual EntityTypeConfiguration Entity(Type entityType)
         {
@@ -168,9 +168,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Registers a type as a complex type in the model and returns an object that
-        ///     can be used to configure the complex type. This method can be called
-        ///     multiple times for the same type to perform multiple configurations.
+        /// Registers a type as a complex type in the model and returns an object that
+        /// can be used to configure the complex type. This method can be called
+        /// multiple times for the same type to perform multiple configurations.
         /// </summary>
         /// <param name="complexType"> The type to be registered or configured. </param>
         /// <returns> The configuration object for the specified entity type. </returns>
@@ -195,7 +195,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes a type from the model.
+        /// Excludes a type from the model.
         /// </summary>
         /// <param name="type"> The type to be excluded. </param>
         public virtual void Ignore(Type type)
@@ -225,8 +225,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the specified type has been configured as a
-        ///     complex type in the model.
+        /// Gets a value indicating whether the specified type has been configured as a
+        /// complex type in the model.
         /// </summary>
         /// <param name="type"> The type to test. </param>
         /// <returns> True if the type is a complex type; false otherwise. </returns>
@@ -238,8 +238,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the specified type has been excluded from
-        ///     the model.
+        /// Gets a value indicating whether the specified type has been excluded from
+        /// the model.
         /// </summary>
         /// <param name="type"> The type to test. </param>
         /// <returns> True if the type is excluded; false otherwise. </returns>
@@ -637,8 +637,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Initializes configurations in the ModelConfiguration so that configuration data
-        ///     is in a single place
+        /// Initializes configurations in the ModelConfiguration so that configuration data
+        /// is in a single place
         /// </summary>
         internal void NormalizeConfigurations()
         {

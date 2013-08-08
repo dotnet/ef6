@@ -9,12 +9,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Class for representing an Association set
+    /// Class for representing an Association set
     /// </summary>
     public sealed class AssociationSet : RelationshipSet
     {
         /// <summary>
-        ///     Initializes a new instance of AssocationSet with the given name and the association type
+        /// Initializes a new instance of AssocationSet with the given name and the association type
         /// </summary>
         /// <param name="name"> The name of the Assocation set </param>
         /// <param name="associationType"> The association type of the entities that this associationship set type contains </param>
@@ -27,13 +27,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             = new ReadOnlyMetadataCollection<AssociationSetEnd>(new MetadataCollection<AssociationSetEnd>());
 
         /// <summary>
-        ///     Gets the association related to this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
+        /// Gets the association related to this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> object that represents the association related to this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationType" /> object that represents the association related to this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
+        /// .
         /// </returns>
         public new AssociationType ElementType
         {
@@ -41,13 +41,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the ends of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
+        /// Gets the ends of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the ends of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the ends of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.AssociationSetEnd, true)]
         public ReadOnlyMetadataCollection<AssociationSetEnd> AssociationSetEnds
@@ -139,13 +139,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationSet" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
+        /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds the given end to the collection of ends
+        /// Adds the given end to the collection of ends
         /// </summary>
         internal void AddAssociationSetEnd(AssociationSetEnd associationSetEnd)
         {
@@ -173,7 +173,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a read-only AssociationSet instance from the specified parameters.
+        /// Creates a read-only AssociationSet instance from the specified parameters.
         /// </summary>
         /// <param name="name">The name of the association set.</param>
         /// <param name="type">The association type of the elements in the association set.</param>
@@ -184,8 +184,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">The specified name is null or empty.</exception>
         /// <exception cref="System.ArgumentNullException">The specified association type is null.</exception>
         /// <exception cref="System.ArgumentException">
-        ///     The entity type of one of the ends of the specified
-        ///     association type does not match the entity type of the corresponding entity set end.
+        /// The entity type of one of the ends of the specified
+        /// association type does not match the entity type of the corresponding entity set end.
         /// </exception>
         public static AssociationSet Create(
             string name,

@@ -10,9 +10,9 @@ namespace System.Data.Entity
     using Moq.Protected;
 
     /// <summary>
-    ///     Helper class that uses Moq to create mocks for the InternalContext and related classes such
-    ///     that different database initialization strategies can be tested and the operations that these
-    ///     strategies perform can be recorded and validated.
+    /// Helper class that uses Moq to create mocks for the InternalContext and related classes such
+    /// that different database initialization strategies can be tested and the operations that these
+    /// strategies perform can be recorded and validated.
     /// </summary>
     public class DatabaseInitializerTracker<TContext, TInitializer>
         where TInitializer : class, IDatabaseInitializer<TContext>

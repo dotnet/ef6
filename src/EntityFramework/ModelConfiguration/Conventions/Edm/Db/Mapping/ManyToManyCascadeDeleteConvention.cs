@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to add a cascade delete to the join table from both tables involved in a many to many relationship.
+    /// Convention to add a cascade delete to the join table from both tables involved in a many to many relationship.
     /// </summary>
     public class ManyToManyCascadeDeleteConvention : IDbMappingConvention
     {

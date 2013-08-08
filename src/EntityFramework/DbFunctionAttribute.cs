@@ -6,10 +6,10 @@ namespace System.Data.Entity
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Indicates that the given method is a proxy for an EDM function.
+    /// Indicates that the given method is a proxy for an EDM function.
     /// </summary>
     /// <remarks>
-    ///     Note that this class was called EdmFunctionAttribute in some previous versions of Entity Framework.
+    /// Note that this class was called EdmFunctionAttribute in some previous versions of Entity Framework.
     /// </remarks>
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes")]
     [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = false)]
@@ -19,7 +19,7 @@ namespace System.Data.Entity
         private readonly string _functionName;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.DbFunctionAttribute" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.DbFunctionAttribute" /> class.
         /// </summary>
         /// <param name="namespaceName">The namespace of the mapped-to function.</param>
         /// <param name="functionName">The name of the mapped-to function.</param>

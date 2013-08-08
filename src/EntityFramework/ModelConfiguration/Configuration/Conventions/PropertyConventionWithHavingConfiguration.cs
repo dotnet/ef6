@@ -10,8 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the properties of entity types in a model and a captured value.
+    /// Allows configuration to be performed for a lightweight convention based on
+    /// the properties of entity types in a model and a captured value.
     /// </summary>
     public class PropertyConventionWithHavingConfiguration<T>
         where T : class
@@ -50,11 +50,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Allows configuration of the properties that this convention applies to.
+        /// Allows configuration of the properties that this convention applies to.
         /// </summary>
         /// <param name="propertyConfigurationAction">
-        ///     An action that performs configuration against a <see cref="ConventionPrimitivePropertyConfiguration" />
-        ///     using a captured value.
+        /// An action that performs configuration against a <see cref="ConventionPrimitivePropertyConfiguration" />
+        /// using a captured value.
         /// </param>
         public void Configure(Action<ConventionPrimitivePropertyConfiguration, T> propertyConfigurationAction)
         {

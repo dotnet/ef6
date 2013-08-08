@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Contains additional attributes and properties of the <see cref="EdmFunction" />
+    /// Contains additional attributes and properties of the <see cref="EdmFunction" />
     /// </summary>
     /// <remarks>
-    ///     Note that <see cref="EdmFunctionPayload" /> objects are short lived and exist only to
-    ///     make <see cref="EdmFunction" /> initialization easier. Instance of this type are not
-    ///     compared to each other and arrays returned by array properties are copied to internal
-    ///     collections in the <see cref="EdmFunction" /> ctor. Therefore it is fine to suppress the
-    ///     Code Analysis messages.
+    /// Note that <see cref="EdmFunctionPayload" /> objects are short lived and exist only to
+    /// make <see cref="EdmFunction" /> initialization easier. Instance of this type are not
+    /// compared to each other and arrays returned by array properties are copied to internal
+    /// collections in the <see cref="EdmFunction" /> ctor. Therefore it is fine to suppress the
+    /// Code Analysis messages.
     /// </remarks>
     [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
     public class EdmFunctionPayload

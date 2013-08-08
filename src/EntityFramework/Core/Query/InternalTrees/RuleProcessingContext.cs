@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     A RuleProcessingContext encapsulates information needed by various rules to process
-    ///     the query tree.
+    /// A RuleProcessingContext encapsulates information needed by various rules to process
+    /// the query tree.
     /// </summary>
     internal abstract class RuleProcessingContext
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied to a node before any rules are applied
+        /// Callback function to be applied to a node before any rules are applied
         /// </summary>
         /// <param name="node"> the node </param>
         internal virtual void PreProcess(Node node)
@@ -24,8 +24,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied to the subtree rooted at the given
-        ///     node before any rules are applied
+        /// Callback function to be applied to the subtree rooted at the given
+        /// node before any rules are applied
         /// </summary>
         /// <param name="node"> the node that is the root of the subtree </param>
         internal virtual void PreProcessSubTree(Node node)
@@ -33,8 +33,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied on a node after a rule has been applied
-        ///     that has modified the node
+        /// Callback function to be applied on a node after a rule has been applied
+        /// that has modified the node
         /// </summary>
         /// <param name="node"> current node </param>
         /// <param name="rule"> the rule that modified the node </param>
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Callback function to be applied to the subtree rooted at the given
-        ///     node after any rules are applied
+        /// Callback function to be applied to the subtree rooted at the given
+        /// node after any rules are applied
         /// </summary>
         /// <param name="node"> the node that is the root of the subtree </param>
         internal virtual void PostProcessSubTree(Node node)
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the hashcode for this node - to ensure that we don't loop forever
+        /// Get the hashcode for this node - to ensure that we don't loop forever
         /// </summary>
         /// <param name="node"> current node </param>
         /// <returns> int hashcode </returns>

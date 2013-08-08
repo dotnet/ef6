@@ -8,14 +8,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Linq;
 
     /// <summary>
-    ///     Chain-of-Responsibility implementation for <see cref="IDbDependencyResolver" /> instances.
+    /// Chain-of-Responsibility implementation for <see cref="IDbDependencyResolver" /> instances.
     /// </summary>
     /// <remarks>
-    ///     When GetService is called each resolver added to the chain is called in turn until one
-    ///     returns a non-null value. If all resolvers in the chain return null, then GetService
-    ///     returns null. Resolvers are called in the reverse order to which they are added so that
-    ///     the most recently added resolvers get a chance to resolve first.
-    ///     This class is thread-safe.
+    /// When GetService is called each resolver added to the chain is called in turn until one
+    /// returns a non-null value. If all resolvers in the chain return null, then GetService
+    /// returns null. Resolvers are called in the reverse order to which they are added so that
+    /// the most recently added resolvers get a chance to resolve first.
+    /// This class is thread-safe.
     /// </remarks>
     internal class ResolverChain : IDbDependencyResolver
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private volatile IDbDependencyResolver[] _resolversSnapshot = new IDbDependencyResolver[0];
 
         /// <summary>
-        ///     Adds a new resolver to the top of the chain.
+        /// Adds a new resolver to the top of the chain.
         /// </summary>
         /// <param name="resolver">The resolver to add.</param>
         public virtual void Add(IDbDependencyResolver resolver)
@@ -41,8 +41,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Gets the resolvers in the chain in the order that they will be called to
-        ///     resolve a dependency.
+        /// Gets the resolvers in the chain in the order that they will be called to
+        /// resolve a dependency.
         /// </summary>
         public virtual IEnumerable<IDbDependencyResolver> Resolvers
         {
@@ -50,13 +50,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls GetService on each resolver in the chain in turn and returns the first non-null value
-        ///     or returns null if all GetService calls return null. Resolvers are called in the reverse order
-        ///     to which they are added so that the most recently added resolvers get a chance to resolve first.
+        /// Calls GetService on each resolver in the chain in turn and returns the first non-null value
+        /// or returns null if all GetService calls return null. Resolvers are called in the reverse order
+        /// to which they are added so that the most recently added resolvers get a chance to resolve first.
         /// </summary>
         /// <param name="type">The type of service to resolve.</param>
         /// <param name="key">
-        ///     An optional key value which may be used to determine the service instance to create.
+        /// An optional key value which may be used to determine the service instance to create.
         /// </param>
         /// <returns>The resolved service, or null if no resolver in the chain could resolve the service.</returns>
         public virtual object GetService(Type type, object key)
@@ -67,12 +67,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls GetServices with the given type and key on each resolver in the chain and concatenates all
-        ///     the results into a single enumeration.
+        /// Calls GetServices with the given type and key on each resolver in the chain and concatenates all
+        /// the results into a single enumeration.
         /// </summary>
         /// <param name="type">The type of service to resolve.</param>
         /// <param name="key">
-        ///     An optional key value which may be used to determine the service instance to create.
+        /// An optional key value which may be used to determine the service instance to create.
         /// </param>
         /// <returns>All the resolved services, or an empty enumeration if no resolver in the chain could resolve the service.</returns>
         public virtual IEnumerable<object> GetServices(Type type, object key)

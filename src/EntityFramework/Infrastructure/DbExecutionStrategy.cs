@@ -12,15 +12,15 @@ namespace System.Data.Entity.Infrastructure
     using System.Transactions;
 
     /// <summary>
-    ///     Provides the base implementation of the retry mechanism for unreliable operations and transient conditions that uses
-    ///     exponentially increasing delays between retries.
+    /// Provides the base implementation of the retry mechanism for unreliable operations and transient conditions that uses
+    /// exponentially increasing delays between retries.
     /// </summary>
     /// <remarks>
-    ///     A new instance will be created each time an operation is executed.
-    ///     The following formula is used to calculate the delay after <c>retryCount</c> number of attempts:
-    ///     <code>min(random(1, 1.1) * (2 ^ retryCount - 1), maxDelay)</code>
-    ///     The <c>retryCount</c> starts at 0.
-    ///     The random factor distributes uniformly the retry attempts from multiple simultaneous operations failing simultaneously.
+    /// A new instance will be created each time an operation is executed.
+    /// The following formula is used to calculate the delay after <c>retryCount</c> number of attempts:
+    /// <code>min(random(1, 1.1) * (2 ^ retryCount - 1), maxDelay)</code>
+    /// The <c>retryCount</c> starts at 0.
+    /// The random factor distributes uniformly the retry attempts from multiple simultaneous operations failing simultaneously.
     /// </remarks>
     public abstract class DbExecutionStrategy : IDbExecutionStrategy
     {
@@ -31,35 +31,35 @@ namespace System.Data.Entity.Infrastructure
         private readonly TimeSpan _maxDelay;
 
         /// <summary>
-        ///     The default number of retry attempts, must be nonnegative.
+        /// The default number of retry attempts, must be nonnegative.
         /// </summary>
         private const int DefaultMaxRetryCount = 5;
 
         /// <summary>
-        ///     The default maximum random factor, must not be lesser than 1.
+        /// The default maximum random factor, must not be lesser than 1.
         /// </summary>
         private const double DefaultRandomFactor = 1.1;
 
         /// <summary>
-        ///     The default base for the exponential function used to compute the delay between retries, must be positive.
+        /// The default base for the exponential function used to compute the delay between retries, must be positive.
         /// </summary>
         private const double DefaultExponentialBase = 2;
 
         /// <summary>
-        ///     The default coefficient for the exponential function used to compute the delay between retries, must be nonnegative.
+        /// The default coefficient for the exponential function used to compute the delay between retries, must be nonnegative.
         /// </summary>
         private static readonly TimeSpan DefaultCoefficient = TimeSpan.FromSeconds(1);
 
         /// <summary>
-        ///     The default maximum time delay between retries, must be nonnegative.
+        /// The default maximum time delay between retries, must be nonnegative.
         /// </summary>
         private static readonly TimeSpan DefaultMaxDelay = TimeSpan.FromSeconds(30);
 
         /// <summary>
-        ///     Creates a new instance of <see cref="DbExecutionStrategy" />.
+        /// Creates a new instance of <see cref="DbExecutionStrategy" />.
         /// </summary>
         /// <remarks>
-        ///     The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
+        /// The default retry limit is 5, which means that the total amount of time spent between retries is 26 seconds plus the random factor.
         /// </remarks>
         protected DbExecutionStrategy()
             : this(DefaultMaxRetryCount, DefaultMaxDelay)
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance of <see cref="DbExecutionStrategy" /> with the specified limits for number of retries and the delay between retries.
+        /// Creates a new instance of <see cref="DbExecutionStrategy" /> with the specified limits for number of retries and the delay between retries.
         /// </summary>
         /// <param name="maxRetryCount"> The maximum number of retry attempts. </param>
         /// <param name="maxDelay"> The maximum delay in milliseconds between retries. </param>
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns <c>true</c> to indicate that <see cref="DbExecutionStrategy" /> might retry the execution after a failure.
+        /// Returns <c>true</c> to indicate that <see cref="DbExecutionStrategy" /> might retry the execution after a failure.
         /// </summary>
         public bool RetriesOnFailure
         {
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Repetitively executes the specified operation while it satisfies the current retry policy.
+        /// Repetitively executes the specified operation while it satisfies the current retry policy.
         /// </summary>
         /// <param name="operation">A delegate representing an executable operation that doesn't return any results.</param>
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
@@ -114,11 +114,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Repetitively executes the specified operation while it satisfies the current retry policy.
+        /// Repetitively executes the specified operation while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">The type of result expected from the executable operation.</typeparam>
         /// <param name="operation">
-        ///     A delegate representing an executable operation that returns the result of type <typeparamref name="TResult" />.
+        /// A delegate representing an executable operation that returns the result of type <typeparamref name="TResult" />.
         /// </param>
         /// <returns>The result from the operation.</returns>
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
@@ -163,17 +163,17 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Repetitively executes the specified asynchronous operation while it satisfies the current retry policy.
+        /// Repetitively executes the specified asynchronous operation while it satisfies the current retry policy.
         /// </summary>
         /// <param name="operation">A function that returns a started task.</param>
         /// <param name="cancellationToken">
-        ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
-        ///     or that already completed successfully.
+        /// A cancellation token used to cancel the retry operation, but not operations that are already in flight
+        /// or that already completed successfully.
         /// </param>
         /// <returns>
-        ///     A task that will run to completion if the original task completes successfully (either the
-        ///     first time or after retrying transient failures). If the task fails with a non-transient error or
-        ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
+        /// A task that will run to completion if the original task completes successfully (either the
+        /// first time or after retrying transient failures). If the task fails with a non-transient error or
+        /// the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
@@ -192,22 +192,22 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Repeatedly executes the specified asynchronous operation while it satisfies the current retry policy.
+        /// Repeatedly executes the specified asynchronous operation while it satisfies the current retry policy.
         /// </summary>
         /// <typeparam name="TResult">
-        ///     The result type of the <see cref="Task{T}" /> returned by <paramref name="operation" />.
+        /// The result type of the <see cref="Task{T}" /> returned by <paramref name="operation" />.
         /// </typeparam>
         /// <param name="operation">
-        ///     A function that returns a started task of type <typeparamref name="TResult" />.
+        /// A function that returns a started task of type <typeparamref name="TResult" />.
         /// </param>
         /// <param name="cancellationToken">
-        ///     A cancellation token used to cancel the retry operation, but not operations that are already in flight
-        ///     or that already completed successfully.
+        /// A cancellation token used to cancel the retry operation, but not operations that are already in flight
+        /// or that already completed successfully.
         /// </param>
         /// <returns>
-        ///     A task that will run to completion if the original task completes successfully (either the
-        ///     first time or after retrying transient failures). If the task fails with a non-transient error or
-        ///     the retry limit is reached, the returned task will become faulted and the exception must be observed.
+        /// A task that will run to completion if the original task completes successfully (either the
+        /// first time or after retrying transient failures). If the task fails with a non-transient error or
+        /// the retry limit is reached, the returned task will become faulted and the exception must be observed.
         /// </returns>
         /// <exception cref="RetryLimitExceededException">if the retry delay strategy determines the operation shouldn't be retried anymore</exception>
         /// <exception cref="InvalidOperationException">if an existing transaction is detected and the execution strategy doesn't support it</exception>
@@ -269,12 +269,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Determines whether the operation should be retried and the delay before the next attempt.
+        /// Determines whether the operation should be retried and the delay before the next attempt.
         /// </summary>
         /// <param name="lastException">The exception thrown during the last execution attempt.</param>
         /// <returns>
-        ///     Returns the delay indicating how long to wait for before the next execution attempt if the operation should be retried;
-        ///     <c>null</c> otherwise
+        /// Returns the delay indicating how long to wait for before the next execution attempt if the operation should be retried;
+        /// <c>null</c> otherwise
         /// </returns>
         protected internal virtual TimeSpan? GetNextDelay(Exception lastException)
         {
@@ -297,14 +297,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Recursively gets InnerException from <paramref name="exception" /> as long as it's an
-        ///     <see cref="EntityException" />, <see cref="DbUpdateException" /> or <see cref="UpdateException" />
-        ///     and passes it to <paramref name="exceptionHandler" />
+        /// Recursively gets InnerException from <paramref name="exception" /> as long as it's an
+        /// <see cref="EntityException" />, <see cref="DbUpdateException" /> or <see cref="UpdateException" />
+        /// and passes it to <paramref name="exceptionHandler" />
         /// </summary>
         /// <param name="exception"> The exception to be unwrapped. </param>
         /// <param name="exceptionHandler"> A delegate that will be called with the unwrapped exception. </param>
         /// <returns>
-        ///     The result from <paramref name="exceptionHandler" />.
+        /// The result from <paramref name="exceptionHandler" />.
         /// </returns>
         public static T UnwrapAndHandleException<T>(Exception exception, Func<Exception, T> exceptionHandler)
         {
@@ -330,11 +330,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Determines whether the specified exception represents a transient failure that can be compensated by a retry.
+        /// Determines whether the specified exception represents a transient failure that can be compensated by a retry.
         /// </summary>
         /// <param name="exception">The exception object to be verified.</param>
         /// <returns>
-        ///     <c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.
+        /// <c>true</c> if the specified exception is considered as transient, otherwise <c>false</c>.
         /// </returns>
         protected internal abstract bool ShouldRetryOn(Exception exception);
     }

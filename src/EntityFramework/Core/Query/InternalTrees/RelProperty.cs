@@ -6,15 +6,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     A "Rel" property is best thought of as a collocated reference (aka foreign key).
-    ///     Any entity may have zero or more rel-properties carried along with it (purely
-    ///     as a means to optimize for common relationship traversal scenarios)
-    ///     Although the definition is lax here, we only deal with RelProperties that
-    ///     are one-ended (ie) the target multiplicity is at most One.
-    ///     Consider for example, an Order entity with a (N:1) Order-Customer relationship. The Customer ref
-    ///     will be treated as a rel property for the Order entity.
-    ///     Similarly, the OrderLine entity may have an Order ref rel property (assuming that there was
-    ///     a N:1 relationship between OrderLine and Order)
+    /// A "Rel" property is best thought of as a collocated reference (aka foreign key).
+    /// Any entity may have zero or more rel-properties carried along with it (purely
+    /// as a means to optimize for common relationship traversal scenarios)
+    /// Although the definition is lax here, we only deal with RelProperties that
+    /// are one-ended (ie) the target multiplicity is at most One.
+    /// Consider for example, an Order entity with a (N:1) Order-Customer relationship. The Customer ref
+    /// will be treated as a rel property for the Order entity.
+    /// Similarly, the OrderLine entity may have an Order ref rel property (assuming that there was
+    /// a N:1 relationship between OrderLine and Order)
     /// </summary>
     internal sealed class RelProperty
     {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public APIs
 
         /// <summary>
-        ///     The relationship
+        /// The relationship
         /// </summary>
         public RelationshipType Relationship
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The source end of the relationship
+        /// The source end of the relationship
         /// </summary>
         public RelationshipEndMember FromEnd
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     the target end of the relationship
+        /// the target end of the relationship
         /// </summary>
         public RelationshipEndMember ToEnd
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Our definition of equality
+        /// Our definition of equality
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     our hash code
+        /// our hash code
         /// </summary>
         public override int GetHashCode()
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     String form
+        /// String form
         /// </summary>
         [DebuggerNonUserCode]
         public override string ToString()

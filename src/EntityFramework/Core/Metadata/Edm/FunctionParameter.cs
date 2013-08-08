@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Class representing a function parameter
+    /// Class representing a function parameter
     /// </summary>
     public sealed class FunctionParameter : MetadataItem, INamedDataModelItem
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for FunctionParameter taking in a name and a TypeUsage object
+        /// The constructor for FunctionParameter taking in a name and a TypeUsage object
         /// </summary>
         /// <param name="name"> The name of this FunctionParameter </param>
         /// <param name="typeUsage"> The TypeUsage describing the type of this FunctionParameter </param>
@@ -43,13 +43,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -57,10 +57,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the mode of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// Gets the mode of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.ParameterMode" /> values.
+        /// One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.ParameterMode" /> values.
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the FunctionParameter instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.ParameterMode, false)]
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the identity of the member
+        /// Returns the identity of the member
         /// </summary>
         internal override string Identity
         {
@@ -83,10 +83,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </summary>
         /// <returns>
-        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public String Name
@@ -101,10 +101,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains both the type of the parameter and facets for the type.
+        /// Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains both the type of the parameter and facets for the type.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object that contains both the type of the parameter and facets for the type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object that contains both the type of the parameter and facets for the type.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public TypeUsage TypeUsage
@@ -210,10 +210,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> on which this parameter is declared.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> on which this parameter is declared.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> object that represents the function on which this parameter is declared.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> object that represents the function on which this parameter is declared.
         /// </returns>
         public EdmFunction DeclaringFunction
         {
@@ -221,10 +221,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// Returns the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </summary>
         /// <returns>
-        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
+        /// The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" />.
         /// </returns>
         public override string ToString()
         {
@@ -232,8 +232,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Sets the member to read only mode. Once this is done, there are no changes
-        ///     that can be done to this class
+        /// Sets the member to read only mode. Once this is done, there are no changes
+        /// that can be done to this class
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -245,15 +245,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The factory method for constructing the <see cref="FunctionParameter" /> object.
+        /// The factory method for constructing the <see cref="FunctionParameter" /> object.
         /// </summary>
         /// <param name="name">The name of the parameter.</param>
         /// <param name="edmType">The EdmType of the parameter.</param>
         /// <param name="parameterMode">
-        ///     The <see cref="ParameterMode" /> of the parameter.
+        /// The <see cref="ParameterMode" /> of the parameter.
         /// </param>
         /// <returns>
-        ///     A new, read-only instance of the <see cref="EdmFunction" /> type.
+        /// A new, read-only instance of the <see cref="EdmFunction" /> type.
         /// </returns>
         public static FunctionParameter Create(string name, EdmType edmType, ParameterMode parameterMode)
         {

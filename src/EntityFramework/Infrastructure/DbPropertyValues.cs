@@ -9,13 +9,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     A collection of all the properties for an underlying entity or complex object.
+    /// A collection of all the properties for an underlying entity or complex object.
     /// </summary>
     /// <remarks>
-    ///     An instance of this class can be converted to an instance of the generic class
-    ///     using the Cast method.
-    ///     Complex properties in the underlying entity or complex object are represented in
-    ///     the property values as nested instances of this class.
+    /// An instance of this class can be converted to an instance of the generic class
+    /// using the Cast method.
+    /// Complex properties in the underlying entity or complex object are represented in
+    /// the property values as nested instances of this class.
     /// </remarks>
     public class DbPropertyValues
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalPropertyValues _internalValues;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbPropertyValues" /> class.
+        /// Initializes a new instance of the <see cref="DbPropertyValues" /> class.
         /// </summary>
         /// <param name="internalValues"> The internal dictionary. </param>
         internal DbPropertyValues(InternalPropertyValues internalValues)
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Infrastructure
         #region Copy to and from objects
 
         /// <summary>
-        ///     Creates an object of the underlying type for this dictionary and hydrates it with property
-        ///     values from this dictionary.
+        /// Creates an object of the underlying type for this dictionary and hydrates it with property
+        /// values from this dictionary.
         /// </summary>
         /// <returns> The properties of this dictionary copied into a new object. </returns>
         public object ToObject()
@@ -49,11 +49,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Sets the values of this dictionary by reading values out of the given object.
-        ///     The given object can be of any type.  Any property on the object with a name that
-        ///     matches a property name in the dictionary and can be read will be read.  Other
-        ///     properties will be ignored.  This allows, for example, copying of properties from
-        ///     simple Data Transfer Objects (DTOs).
+        /// Sets the values of this dictionary by reading values out of the given object.
+        /// The given object can be of any type.  Any property on the object with a name that
+        /// matches a property name in the dictionary and can be read will be read.  Other
+        /// properties will be ignored.  This allows, for example, copying of properties from
+        /// simple Data Transfer Objects (DTOs).
         /// </summary>
         /// <param name="obj"> The object to read values from. </param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "obj",
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Infrastructure
         #region Copy to and from property values
 
         /// <summary>
-        ///     Creates a new dictionary containing copies of all the properties in this dictionary.
-        ///     Changes made to the new dictionary will not be reflected in this dictionary and vice versa.
+        /// Creates a new dictionary containing copies of all the properties in this dictionary.
+        /// Changes made to the new dictionary will not be reflected in this dictionary and vice versa.
         /// </summary>
         /// <returns> A clone of this dictionary. </returns>
         public DbPropertyValues Clone()
@@ -80,9 +80,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Sets the values of this dictionary by reading values from another dictionary.
-        ///     The other dictionary must be based on the same type as this dictionary, or a type derived
-        ///     from the type for this dictionary.
+        /// Sets the values of this dictionary by reading values from another dictionary.
+        /// The other dictionary must be based on the same type as this dictionary, or a type derived
+        /// from the type for this dictionary.
         /// </summary>
         /// <param name="propertyValues"> The dictionary to read values from. </param>
         public void SetValues(DbPropertyValues propertyValues)
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Infrastructure
         #region Property name/value access
 
         /// <summary>
-        ///     Gets the set of names of all properties in this dictionary as a read-only set.
+        /// Gets the set of names of all properties in this dictionary as a read-only set.
         /// </summary>
         /// <value> The property names. </value>
         public IEnumerable<string> PropertyNames
@@ -106,8 +106,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets the value of the property with the specified property name.
-        ///     The value may be a nested instance of this class.
+        /// Gets or sets the value of the property with the specified property name.
+        /// The value may be a nested instance of this class.
         /// </summary>
         /// <param name="propertyName"> The property name. </param>
         /// <value> The value of the property. </value>
@@ -136,9 +136,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the value of the property just like using the indexed property getter but
-        ///     typed to the type of the generic parameter.  This is useful especially with
-        ///     nested dictionaries to avoid writing expressions with lots of casts.
+        /// Gets the value of the property just like using the indexed property getter but
+        /// typed to the type of the generic parameter.  This is useful especially with
+        /// nested dictionaries to avoid writing expressions with lots of casts.
         /// </summary>
         /// <typeparam name="TValue"> The type of the property. </typeparam>
         /// <param name="propertyName"> Name of the property. </param>
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Infrastructure
         #region InternalPropertyValues access
 
         /// <summary>
-        ///     Gets the internal dictionary.
+        /// Gets the internal dictionary.
         /// </summary>
         /// <value> The internal dictionary. </value>
         internal InternalPropertyValues InternalPropertyValues

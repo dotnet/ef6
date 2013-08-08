@@ -11,20 +11,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    ///     This class contains a pair of cell queries which is essentially a
-    ///     constraint that they are equal. A cell is initialized with a C or an
-    ///     S Query which it exposes as properties but it also has the notion of
-    ///     "Left" and "Right" queries -- left refers to the side for which a
-    ///     view is being generated
-    ///     For example, to
-    ///     specify a mapping for CPerson to an SPerson table, we have
-    ///     [(p type Person) in P : SPerson]
-    ///     (p.pid, pid)
-    ///     (p.name, name)
-    ///     This really denotes the equality of two queries:
-    ///     (C) SELECT (p type Person) AS D1, p.pid, p.name FROM p in P WHERE D1
-    ///     (S) SELECT True AS D1, pid, name FROM SPerson WHERE D1
-    ///     For more details, see the design doc
+    /// This class contains a pair of cell queries which is essentially a
+    /// constraint that they are equal. A cell is initialized with a C or an
+    /// S Query which it exposes as properties but it also has the notion of
+    /// "Left" and "Right" queries -- left refers to the side for which a
+    /// view is being generated
+    /// For example, to
+    /// specify a mapping for CPerson to an SPerson table, we have
+    /// [(p type Person) in P : SPerson]
+    /// (p.pid, pid)
+    /// (p.name, name)
+    /// This really denotes the equality of two queries:
+    /// (C) SELECT (p type Person) AS D1, p.pid, p.name FROM p in P WHERE D1
+    /// (S) SELECT True AS D1, pid, name FROM SPerson WHERE D1
+    /// For more details, see the design doc
     /// </summary>
     internal class Cell : InternalBase
     {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Copy Constructor
+        /// Copy Constructor
         /// </summary>
         internal Cell(Cell source)
         {

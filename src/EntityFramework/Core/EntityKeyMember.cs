@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Information about a key that is part of an EntityKey.
-    ///     A key member contains the key name and value.
+    /// Information about a key that is part of an EntityKey.
+    /// A key member contains the key name and value.
     /// </summary>
     [DataContract]
     [Serializable]
@@ -19,14 +19,14 @@ namespace System.Data.Entity.Core
         private object _keyValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class.
         /// </summary>
         public EntityKeyMember()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class with the specified entity key pair.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKeyMember" /> class with the specified entity key pair.
         /// </summary>
         /// <param name="keyName">The name of the key.</param>
         /// <param name="keyValue">The key value.</param>
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Ensures that the instance can be written to (value must be null)
+        /// Ensures that the instance can be written to (value must be null)
         /// </summary>
         private static void ValidateWritable(object instance)
         {

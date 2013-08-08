@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
 
     /// <summary>
-    ///     Used to configure a constraint on a navigation property.
+    /// Used to configure a constraint on a navigation property.
     /// </summary>
     internal abstract class ConstraintConfiguration
     {
@@ -17,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             EntityTypeConfiguration entityTypeConfiguration);
 
         /// <summary>
-        ///     Gets a value indicating whether the constraint has been fully specified
-        ///     using the Code First Fluent API.
+        /// Gets a value indicating whether the constraint has been fully specified
+        /// using the Code First Fluent API.
         /// </summary>
         public virtual bool IsFullySpecified
         {

@@ -5,58 +5,58 @@ namespace System.Data.Entity.SqlServerCompact
     internal class ProviderManifest
     {
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaDefinition
+        /// Value to pass to GetInformation to get the StoreSchemaDefinition
         /// </summary>
         public const string StoreSchemaDefinition = "StoreSchemaDefinition";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaMapping
+        /// Value to pass to GetInformation to get the StoreSchemaMapping
         /// </summary>
         public const string StoreSchemaMapping = "StoreSchemaMapping";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the ConceptualSchemaDefinition
+        /// Value to pass to GetInformation to get the ConceptualSchemaDefinition
         /// </summary>
         public const string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
 
         // System Facet Info
         /// <summary>
-        ///     Name of the MaxLength Facet
+        /// Name of the MaxLength Facet
         /// </summary>
         internal const string MaxLengthFacetName = "MaxLength";
 
         /// <summary>
-        ///     Name of the Unicode Facet
+        /// Name of the Unicode Facet
         /// </summary>
         internal const string UnicodeFacetName = "Unicode";
 
         /// <summary>
-        ///     Name of the FixedLength Facet
+        /// Name of the FixedLength Facet
         /// </summary>
         internal const string FixedLengthFacetName = "FixedLength";
 
         /// <summary>
-        ///     Name of the Precision Facet
+        /// Name of the Precision Facet
         /// </summary>
         internal const string PrecisionFacetName = "Precision";
 
         /// <summary>
-        ///     Name of the Scale Facet
+        /// Name of the Scale Facet
         /// </summary>
         internal const string ScaleFacetName = "Scale";
 
         /// <summary>
-        ///     Name of the Nullable Facet
+        /// Name of the Nullable Facet
         /// </summary>
         internal const string NullableFacetName = "Nullable";
 
         /// <summary>
-        ///     Name of the DefaultValue Facet
+        /// Name of the DefaultValue Facet
         /// </summary>
         internal const string DefaultValueFacetName = "DefaultValue";
 
         /// <summary>
-        ///     Name of the Collation Facet
+        /// Name of the Collation Facet
         /// </summary>
         internal const string CollationFacetName = "Collation";
     }

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.QueryCache
 {
     /// <summary>
-    ///     represents an abstract cache key
+    /// represents an abstract cache key
     /// </summary>
     internal abstract class QueryCacheKey
     {
@@ -16,12 +16,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Fields
 
         /// <summary>
-        ///     entry hit counter
+        /// entry hit counter
         /// </summary>
         private uint _hitCount;
 
         /// <summary>
-        ///     default string comparison kind - Ordinal
+        /// default string comparison kind - Ordinal
         /// </summary>
         protected static StringComparison _stringComparison = StringComparison.Ordinal;
 
@@ -39,13 +39,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Abstract Methods
 
         /// <summary>
-        ///     Determines whether two instances of QueryCacheContext are equal.
-        ///     Equality is value based.
+        /// Determines whether two instances of QueryCacheContext are equal.
+        /// Equality is value based.
         /// </summary>
         public abstract override bool Equals(object obj);
 
         /// <summary>
-        ///     Returns QueryCacheContext instance HashCode
+        /// Returns QueryCacheContext instance HashCode
         /// </summary>
         public abstract override int GetHashCode();
 
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Internal API
 
         /// <summary>
-        ///     Cache entry hit count
+        /// Cache entry hit count
         /// </summary>
         internal uint HitCount
         {
@@ -64,12 +64,12 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Gets/Sets Aging index for cache entry
+        /// Gets/Sets Aging index for cache entry
         /// </summary>
         internal int AgingIndex { get; set; }
 
         /// <summary>
-        ///     Updates hit count
+        /// Updates hit count
         /// </summary>
         internal void UpdateHit()
         {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     default string comparer
+        /// default string comparer
         /// </summary>
         protected virtual bool Equals(string s, string t)
         {

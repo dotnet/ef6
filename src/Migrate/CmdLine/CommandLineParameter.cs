@@ -129,7 +129,7 @@ namespace CmdLine
         }
 
         /// <summary>
-        ///     Returns a boolean value from a command switch
+        /// Returns a boolean value from a command switch
         /// </summary>
         /// <param name="cmd"> The command switch </param>
         /// <returns> A boolean value based on the switch and value </returns>

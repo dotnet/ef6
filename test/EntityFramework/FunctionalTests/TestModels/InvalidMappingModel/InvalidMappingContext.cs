@@ -31,9 +31,9 @@ namespace ProductivityApiTests
     }
 
     /// <summary>
-    ///     Validation of this model will fail. Currently this happens after the model has been
-    ///     built when it is passed to WriteEdmx or Compile. In the future the pipeline may be fixed
-    ///     such that it fails when Build is called.
+    /// Validation of this model will fail. Currently this happens after the model has been
+    /// built when it is passed to WriteEdmx or Compile. In the future the pipeline may be fixed
+    /// such that it fails when Build is called.
     /// </summary>
     public class InvalidMappingContext : DbContext
     {

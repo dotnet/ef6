@@ -12,7 +12,7 @@ namespace System.Data.Entity.SqlServer
     using System.Xml;
 
     /// <summary>
-    ///     SqlTypesAssembly allows for late binding to the capabilities of a specific version of the Microsoft.SqlServer.Types assembly
+    /// SqlTypesAssembly allows for late binding to the capabilities of a specific version of the Microsoft.SqlServer.Types assembly
     /// </summary>
     internal class SqlTypesAssembly
     {

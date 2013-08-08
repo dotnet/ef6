@@ -219,7 +219,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Moves a foreign key constraint from oldTable to newTable and updates column references
+        /// Moves a foreign key constraint from oldTable to newTable and updates column references
         /// </summary>
         private static void MoveForeignKeyConstraint(
             EntityType fromTable, EntityType toTable, ForeignKeyBuilder fk)
@@ -379,7 +379,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Move any FK constraints that are now completely in newTable and used to refer to oldColumn
+        /// Move any FK constraints that are now completely in newTable and used to refer to oldColumn
         /// </summary>
         public static void MoveAllForeignKeyConstraintsForColumn(
             EntityType fromTable, EntityType toTable, EdmProperty column)

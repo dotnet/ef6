@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Typed version of TrailingSpaceComparer.
+    /// Typed version of TrailingSpaceComparer.
     /// </summary>
     internal class TrailingSpaceStringComparer : IEqualityComparer<string>
     {

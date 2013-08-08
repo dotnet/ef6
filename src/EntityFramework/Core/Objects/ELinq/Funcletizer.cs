@@ -16,13 +16,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
 
     /// <summary>
-    ///     Determines which leaves of a LINQ expression tree should be evaluated locally before
-    ///     sending a query to the store. These sub-expressions may map to query parameters (e.g. local variables),
-    ///     to constants (e.g. literals 'new DateTime(2008, 1, 1)') or query sub-expression
-    ///     (e.g. 'context.Products'). Parameter expressions are replaced with QueryParameterExpression
-    ///     nodes. All other elements are swapped in place with either expanded expressions (for sub-queries)
-    ///     or constants. Where the expression includes mutable state that may influence the translation
-    ///     to a query, a Func(Of Boolean) delegate is returned indicating when a recompilation is necessary.
+    /// Determines which leaves of a LINQ expression tree should be evaluated locally before
+    /// sending a query to the store. These sub-expressions may map to query parameters (e.g. local variables),
+    /// to constants (e.g. literals 'new DateTime(2008, 1, 1)') or query sub-expression
+    /// (e.g. 'context.Products'). Parameter expressions are replaced with QueryParameterExpression
+    /// nodes. All other elements are swapped in place with either expanded expressions (for sub-queries)
+    /// or constants. Where the expression includes mutable state that may influence the translation
+    /// to a query, a Func(Of Boolean) delegate is returned indicating when a recompilation is necessary.
     /// </summary>
     internal sealed class Funcletizer
     {
@@ -100,8 +100,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Performs funcletization on the given expression. Also returns a delegates that can be used
-        ///     to determine if the entire tree needs to be recompiled.
+        /// Performs funcletization on the given expression. Also returns a delegates that can be used
+        /// to determine if the entire tree needs to be recompiled.
         /// </summary>
         internal Expression Funcletize(Expression expression, out Func<bool> recompileRequired)
         {
@@ -147,8 +147,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Replaces context parameter (e.g. 'ctx' in CompiledQuery.Compile(ctx => ctx.Products)) with constant
-        ///     containing the object context.
+        /// Replaces context parameter (e.g. 'ctx' in CompiledQuery.Compile(ctx => ctx.Products)) with constant
+        /// containing the object context.
         /// </summary>
         private Expression ReplaceRootContextParameter(Expression expression)
         {
@@ -165,8 +165,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Returns a function indicating whether the given expression and all of its children satisfy the
-        ///     'localCriterion'.
+        /// Returns a function indicating whether the given expression and all of its children satisfy the
+        /// 'localCriterion'.
         /// </summary>
         private static Func<Expression, bool> Nominate(Expression expression, Func<Expression, bool> localCriterion)
         {
@@ -209,8 +209,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the node may be evaluated locally and whether
-        ///     it is a constant. Assumes that all children are also client expressions.
+        /// Determines whether the node may be evaluated locally and whether
+        /// it is a constant. Assumes that all children are also client expressions.
         /// </summary>
         private bool IsImmutable(Expression expression)
         {
@@ -245,8 +245,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the node may be evaluated locally and whether
-        ///     it is a variable. Assumes that all children are also variable client expressions.
+        /// Determines whether the node may be evaluated locally and whether
+        /// it is a variable. Assumes that all children are also variable client expressions.
         /// </summary>
         private bool IsClosureExpression(Expression expression)
         {
@@ -273,8 +273,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the node may be evaluated as a compiled query parameter.
-        ///     Assumes that all children are also eligible compiled query parameters.
+        /// Determines whether the node may be evaluated as a compiled query parameter.
+        /// Assumes that all children are also eligible compiled query parameters.
         /// </summary>
         private bool IsCompiledQueryParameterVariable(Expression expression)
         {
@@ -296,8 +296,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determine whether the given CLR type is legal for an ObjectParameter or constant
-        ///     DbExpression.
+        /// Determine whether the given CLR type is legal for an ObjectParameter or constant
+        /// DbExpression.
         /// </summary>
         private bool TryGetTypeUsageForTerminal(Type type, out TypeUsage typeUsage)
         {
@@ -318,7 +318,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Creates the next available parameter name.
+        /// Creates the next available parameter name.
         /// </summary>
         internal string GenerateParameterName()
         {
@@ -332,8 +332,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Walks the expression tree and replaces client-evaluable expressions with constants
-        ///     or QueryParameterExpressions.
+        /// Walks the expression tree and replaces client-evaluable expressions with constants
+        /// or QueryParameterExpressions.
         /// </summary>
         private sealed class FuncletizingVisitor : EntityExpressionVisitor
         {
@@ -357,8 +357,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Returns a delegate indicating (when called) whether a change has been identified
-            ///     requiring a complete recompile of the query.
+            /// Returns a delegate indicating (when called) whether a change has been identified
+            /// requiring a complete recompile of the query.
             /// </summary>
             internal Func<bool> GetRecompileRequiredFunction()
             {
@@ -460,7 +460,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Compiles a delegate returning the value of the given expression.
+            /// Compiles a delegate returning the value of the given expression.
             /// </summary>
             private static Func<object> CompileExpression(Expression expression)
             {
@@ -471,8 +471,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Inlines a funcletizable expression. Queries and lambda expressions are expanded
-            ///     inline. All other values become simple constants.
+            /// Inlines a funcletizable expression. Queries and lambda expressions are expanded
+            /// inline. All other values become simple constants.
             /// </summary>
             private Expression InlineValue(Expression expression, bool recompileOnChange)
             {
@@ -571,7 +571,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Gets the appropriate LINQ expression for an inline ObjectQuery instance.
+            /// Gets the appropriate LINQ expression for an inline ObjectQuery instance.
             /// </summary>
             private Expression InlineObjectQuery(ObjectQuery inlineQuery, Type expressionType)
             {

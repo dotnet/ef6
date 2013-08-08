@@ -14,8 +14,8 @@ namespace System.Data.Entity
     public static class ObservableCollectionExtensions
     {
         /// <summary>
-        ///     Returns an <see cref="BindingList{T}" /> implementation that stays in sync with the given
-        ///     <see cref="ObservableCollection{T}" />.
+        /// Returns an <see cref="BindingList{T}" /> implementation that stays in sync with the given
+        /// <see cref="ObservableCollection{T}" />.
         /// </summary>
         /// <typeparam name="T"> The element type. </typeparam>
         /// <param name="source"> The collection that the binding list will stay in sync with. </param>

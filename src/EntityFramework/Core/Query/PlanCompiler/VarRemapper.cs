@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     The VarRemapper is a utility class that can be used to "remap" Var references
-    ///     in a node, or a subtree.
+    /// The VarRemapper is a utility class that can be used to "remap" Var references
+    /// in a node, or a subtree.
     /// </summary>
     internal class VarRemapper : BasicOpVisitor
     {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructors
 
         /// <summary>
-        ///     Internal constructor
+        /// Internal constructor
         /// </summary>
         /// <param name="command"> Current iqt command </param>
         internal VarRemapper(Command command)
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Internal constructor
+        /// Internal constructor
         /// </summary>
         /// <param name="command"> Current iqt command </param>
         /// <param name="varMap"> Var map to be used </param>
@@ -45,8 +45,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Public surface
 
         /// <summary>
-        ///     Add a mapping for "oldVar" - when the replace methods are invoked, they
-        ///     will replace all references to "oldVar" by "newVar"
+        /// Add a mapping for "oldVar" - when the replace methods are invoked, they
+        /// will replace all references to "oldVar" by "newVar"
         /// </summary>
         /// <param name="oldVar"> var to replace </param>
         /// <param name="newVar"> the replacement var </param>
@@ -56,9 +56,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Update vars in just this node (and not the entire subtree)
-        ///     Does *not* recompute the nodeinfo - there are at least some consumers of this
-        ///     function that do not want the recomputation - transformation rules, for example
+        /// Update vars in just this node (and not the entire subtree)
+        /// Does *not* recompute the nodeinfo - there are at least some consumers of this
+        /// function that do not want the recomputation - transformation rules, for example
         /// </summary>
         /// <param name="node"> current node </param>
         internal virtual void RemapNode(Node node)
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Update vars in this subtree. Recompute the nodeinfo along the way
+        /// Update vars in this subtree. Recompute the nodeinfo along the way
         /// </summary>
         /// <param name="subTree"> subtree to "remap" </param>
         internal virtual void RemapSubtree(Node subTree)
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Produce a a new remapped varList
+        /// Produce a a new remapped varList
         /// </summary>
         /// <returns> remapped varList </returns>
         internal VarList RemapVarList(VarList varList)
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Remap the given varList using the given varMap
+        /// Remap the given varList using the given varMap
         /// </summary>
         internal static VarList RemapVarList(Command command, Dictionary<Var, Var> varMap, VarList varList)
         {
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private methods
 
         /// <summary>
-        ///     Get the mapping for a Var - returns the var itself, mapping was found
+        /// Get the mapping for a Var - returns the var itself, mapping was found
         /// </summary>
         private Var Map(Var v)
         {
@@ -205,9 +205,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region VisitorMethods
 
         /// <summary>
-        ///     Default visitor for a node - does not visit the children
-        ///     The reason we have this method is because the default VisitDefault
-        ///     actually visits the children, and we don't want to do that
+        /// Default visitor for a node - does not visit the children
+        /// The reason we have this method is because the default VisitDefault
+        /// actually visits the children, and we don't want to do that
         /// </summary>
         protected override void VisitDefault(Node n)
         {

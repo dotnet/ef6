@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Configures a relationship that can support cascade on delete functionality.
+    /// Configures a relationship that can support cascade on delete functionality.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Cascadable")]
     public abstract class CascadableNavigationPropertyConfiguration
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures cascade delete to be on for the relationship.
+        /// Configures cascade delete to be on for the relationship.
         /// </summary>
         public void WillCascadeOnDelete()
         {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures whether or not cascade delete is on for the relationship.
+        /// Configures whether or not cascade delete is on for the relationship.
         /// </summary>
         /// <param name="value"> Value indicating if cascade delete is on or not. </param>
         public void WillCascadeOnDelete(bool value)

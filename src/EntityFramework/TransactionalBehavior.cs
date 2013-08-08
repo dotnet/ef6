@@ -3,7 +3,7 @@
 namespace System.Data.Entity
 {
     /// <summary>
-    ///     Controls the transaction creation behavior while executing a database command or query.
+    /// Controls the transaction creation behavior while executing a database command or query.
     /// </summary>
     public enum TransactionalBehavior
     {

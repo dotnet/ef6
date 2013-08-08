@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Rules for SingleRowOp
+    /// Rules for SingleRowOp
     /// </summary>
     internal static class SingleRowOpRules
     {
@@ -17,9 +17,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverAnything);
 
         /// <summary>
-        ///     Convert a
-        ///     SingleRowOp(X) => X
-        ///     if X produces at most one row
+        /// Convert a
+        /// SingleRowOp(X) => X
+        /// if X produces at most one row
         /// </summary>
         /// <param name="context"> Rule Processing context </param>
         /// <param name="singleRowNode"> Current subtree </param>
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessSingleRowOpOverProject);
 
         /// <summary>
-        ///     Convert
-        ///     SingleRowOp(Project) => Project(SingleRowOp)
+        /// Convert
+        /// SingleRowOp(Project) => Project(SingleRowOp)
         /// </summary>
         /// <param name="context"> Rule Processing context </param>
         /// <param name="singleRowNode"> current subtree </param>

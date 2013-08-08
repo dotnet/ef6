@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     This class determines the state entries contributing to an expression
-    ///     propagated through an update mapping view (values in propagated expressions
-    ///     remember where they come from)
+    /// This class determines the state entries contributing to an expression
+    /// propagated through an update mapping view (values in propagated expressions
+    /// remember where they come from)
     /// </summary>
     internal class SourceInterpreter
     {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly EntitySet m_sourceTable;
 
         /// <summary>
-        ///     Finds all markup associated with the given source.
+        /// Finds all markup associated with the given source.
         /// </summary>
         /// <param name="source"> Source expression. Must not be null. </param>
         /// <param name="translator"> Translator containing session information. </param>

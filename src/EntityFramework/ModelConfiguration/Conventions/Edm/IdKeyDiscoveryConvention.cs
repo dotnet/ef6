@@ -9,11 +9,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to detect primary key properties.
-    ///     Recognized naming patterns in order of precedence are:
-    ///     1. 'Id'
-    ///     2. [type name]Id
-    ///     Primary key detection is case insensitive.
+    /// Convention to detect primary key properties.
+    /// Recognized naming patterns in order of precedence are:
+    /// 1. 'Id'
+    /// 2. [type name]Id
+    /// Primary key detection is case insensitive.
     /// </summary>
     public class IdKeyDiscoveryConvention : KeyDiscoveryConvention
     {

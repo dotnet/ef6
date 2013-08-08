@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Creates a convention that configures stored procedures to be used to delete entities in the database.
+    /// Creates a convention that configures stored procedures to be used to delete entities in the database.
     /// </summary>
     public class ConventionDeleteModificationStoredProcedureConfiguration : ConventionModificationStoredProcedureConfiguration
     {

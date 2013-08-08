@@ -16,14 +16,14 @@ namespace System.Data.Entity.Migrations.Design
     using System.Text;
 
     /// <summary>
-    ///     Helper class that is used by design time tools to run migrations related
-    ///     commands that need to interact with an application that is being edited
-    ///     in Visual Studio.
-    ///     Because the application is being edited the assemblies need to
-    ///     be loaded in a separate AppDomain to ensure the latest version
-    ///     is always loaded.
-    ///     The App/Web.config file from the startup project is also copied
-    ///     to ensure that any configuration is applied.
+    /// Helper class that is used by design time tools to run migrations related
+    /// commands that need to interact with an application that is being edited
+    /// in Visual Studio.
+    /// Because the application is being edited the assemblies need to
+    /// be loaded in a separate AppDomain to ensure the latest version
+    /// is always loaded.
+    /// The App/Web.config file from the startup project is also copied
+    /// to ensure that any configuration is applied.
     /// </summary>
     // TODO: Move this functionality to System.Data.Entity.Infrastructure.Design.Executor
     public class ToolingFacade : IDisposable
@@ -37,22 +37,22 @@ namespace System.Data.Entity.Migrations.Design
         private AppDomain _appDomain;
 
         /// <summary>
-        ///     Gets or sets an action to be run to log information.
+        /// Gets or sets an action to be run to log information.
         /// </summary>
         public Action<string> LogInfoDelegate { get; set; }
 
         /// <summary>
-        ///     Gets or sets an action to be run to log warnings.
+        /// Gets or sets an action to be run to log warnings.
         /// </summary>
         public Action<string> LogWarningDelegate { get; set; }
 
         /// <summary>
-        ///     Gets or sets an action to be run to log verbose information.
+        /// Gets or sets an action to be run to log verbose information.
         /// </summary>
         public Action<string> LogVerboseDelegate { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the ToolingFacade class.
+        /// Initializes a new instance of the ToolingFacade class.
         /// </summary>
         /// <param name="migrationsAssemblyName"> The name of the assembly that contains the migrations configuration to be used. </param>
         /// <param name="contextAssemblyName"> The name of the assembly that contains the DbContext to be used. </param>
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Releases all unmanaged resources used by the facade.
+        /// Releases all unmanaged resources used by the facade.
         /// </summary>
         ~ToolingFacade()
         {
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets the fully qualified name of all types deriving from <see cref="DbContext" />.
+        /// Gets the fully qualified name of all types deriving from <see cref="DbContext" />.
         /// </summary>
         /// <returns> All context types found. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets the fully qualified name of a type deriving from <see cref="DbContext" />.
+        /// Gets the fully qualified name of a type deriving from <see cref="DbContext" />.
         /// </summary>
         /// <param name="contextTypeName"> The name of the context type. If null, the single context type found in the assembly will be returned. </param>
         /// <returns> The context type found. </returns>
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets a list of all migrations that have been applied to the database.
+        /// Gets a list of all migrations that have been applied to the database.
         /// </summary>
         /// <returns> Ids of applied migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -163,7 +163,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets a list of all migrations that have not been applied to the database.
+        /// Gets a list of all migrations that have not been applied to the database.
         /// </summary>
         /// <returns> Ids of pending migrations. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Updates the database to the specified migration.
+        /// Updates the database to the specified migration.
         /// </summary>
         /// <param name="targetMigration"> The Id of the migration to migrate to. If null is supplied, the database will be updated to the latest migration. </param>
         /// <param name="force"> Value indicating if data loss during automatic migration is acceptable. </param>
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates a SQL script to migrate between two migrations.
+        /// Generates a SQL script to migrate between two migrations.
         /// </summary>
         /// <param name="sourceMigration"> The migration to update from. If null is supplied, a script to update the current database will be produced. </param>
         /// <param name="targetMigration"> The migration to update to. If null is supplied, a script to update to the latest migration will be produced. </param>
@@ -218,7 +218,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Scaffolds a code-based migration to apply any pending model changes.
+        /// Scaffolds a code-based migration to apply any pending model changes.
         /// </summary>
         /// <param name="migrationName"> The name for the generated migration. </param>
         /// <param name="language"> The programming language of the generated migration. </param>
@@ -244,7 +244,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Scaffolds the initial code-based migration corresponding to a previously run database initializer.
+        /// Scaffolds the initial code-based migration corresponding to a previously run database initializer.
         /// </summary>
         /// <param name="language"> The programming language of the generated migration. </param>
         /// <param name="rootNamespace"> The root namespace of the project the migration will be added to. </param>
@@ -273,10 +273,10 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Releases all resources used by the facade.
+        /// Releases all resources used by the facade.
         /// </summary>
         /// <param name="disposing">
-        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
         /// </param>
         protected virtual void Dispose(bool disposing)
         {

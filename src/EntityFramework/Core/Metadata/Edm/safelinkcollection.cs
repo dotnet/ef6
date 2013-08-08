@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
 
     /// <summary>
-    ///     This class attempts to make a double linked connection between a parent and child without
-    ///     exposing the properties publicly that would allow them to be mutable and possibly dangerous
-    ///     in a multithreading environment
+    /// This class attempts to make a double linked connection between a parent and child without
+    /// exposing the properties publicly that would allow them to be mutable and possibly dangerous
+    /// in a multithreading environment
     /// </summary>
     internal class SafeLinkCollection<TParent, TChild> : ReadOnlyMetadataCollection<TChild>
         where TChild : MetadataItem

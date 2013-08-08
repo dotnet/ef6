@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Represents a collection of property references
+    /// Represents a collection of property references
     /// </summary>
     internal class PropertyRefList
     {
@@ -13,12 +13,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private bool m_allProperties;
 
         /// <summary>
-        ///     Get something that represents "all" property references
+        /// Get something that represents "all" property references
         /// </summary>
         internal static PropertyRefList All = new PropertyRefList(true);
 
         /// <summary>
-        ///     Trivial constructor
+        /// Trivial constructor
         /// </summary>
         internal PropertyRefList()
             : this(false)
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add a new property reference to this list
+        /// Add a new property reference to this list
         /// </summary>
         /// <param name="property"> new property reference </param>
         internal void Add(PropertyRef property)
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Append an existing list of property references to myself
+        /// Append an existing list of property references to myself
         /// </summary>
         /// <param name="propertyRefs"> list of property references </param>
         internal void Append(PropertyRefList propertyRefs)
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Do I contain "all" properties?
+        /// Do I contain "all" properties?
         /// </summary>
         internal bool AllProperties
         {
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a clone of myself
+        /// Create a clone of myself
         /// </summary>
         /// <returns> a clone of myself </returns>
         internal PropertyRefList Clone()
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Do I contain the specifed property?
+        /// Do I contain the specifed property?
         /// </summary>
         /// <param name="p"> The property </param>
         /// <returns> true, if I do </returns>
@@ -111,7 +111,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the list of all properties
+        /// Get the list of all properties
         /// </summary>
         internal IEnumerable<PropertyRef> Properties
         {

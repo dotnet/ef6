@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Base class for the type created at design time to store the generated views.
+    /// Base class for the type created at design time to store the generated views.
     /// </summary>
     [Obsolete("The mechanism to provide pre-generated views has changed. Implement a class that derives from " +
         "System.Data.Entity.Infrastructure.DbMappingViewCache and has a parameterless constructor, " +
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Mapping
     public abstract class EntityViewContainer
     {
         /// <summary>
-        ///     Returns the cached dictionary of (ExtentName,EsqlView)
+        /// Returns the cached dictionary of (ExtentName,EsqlView)
         /// </summary>
         internal IEnumerable<KeyValuePair<string, string>> ExtentViews
         {
@@ -35,13 +35,13 @@ namespace System.Data.Entity.Core.Mapping
         protected abstract KeyValuePair<string, string> GetViewAt(int index);
 
         /// <summary>
-        ///     Gets or sets the name of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" />.
+        /// Gets or sets the name of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" />.
         /// </summary>
         /// <returns>The container name.</returns>
         public string EdmEntityContainerName { get; set; }
 
         /// <summary>
-        ///     Gets or sets <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> in storage schema.
+        /// Gets or sets <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> in storage schema.
         /// </summary>
         /// <returns>Container name.</returns>
         public string StoreEntityContainerName { get; set; }

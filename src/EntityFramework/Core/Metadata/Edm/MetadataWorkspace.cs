@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     Runtime Metadata Workspace
+    /// Runtime Metadata Workspace
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class MetadataWorkspace
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly Guid _metadataWorkspaceId = Guid.NewGuid();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class.
         /// </summary>
         public MetadataWorkspace()
         {
@@ -50,11 +50,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
-        ///     needed by EF except the o/c mapping which will be created automatically based on the given o-space and c-space
-        ///     loaders. The item collection delegates are executed lazily when a given collection is used for the first
-        ///     time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
-        ///     is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        /// Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
+        /// needed by EF except the o/c mapping which will be created automatically based on the given o-space and c-space
+        /// loaders. The item collection delegates are executed lazily when a given collection is used for the first
+        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
         /// </summary>
         /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
         /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
@@ -83,11 +83,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
-        ///     that come from traditional EDMX mapping. Default o-space and o/c mapping collections will be used.
-        ///     The item collection delegates are executed lazily when a given collection is used for the first
-        ///     time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
-        ///     is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
+        /// Constructs a <see cref="MetadataWorkspace" /> with loaders for all item collections (<see cref="ItemCollection" />)
+        /// that come from traditional EDMX mapping. Default o-space and o/c mapping collections will be used.
+        /// The item collection delegates are executed lazily when a given collection is used for the first
+        /// time. It is acceptable to pass a delegate that returns null if the collection will never be used, but this
+        /// is rarely done, and any attempt by EF to use the collection in such cases will result in an exception.
         /// </summary>
         /// <param name="cSpaceLoader">Delegate to return the c-space (CSDL) item collection.</param>
         /// <param name="sSpaceLoader">Delegate to return the s-space (SSDL) item collection.</param>
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class using the specified paths and assemblies.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> class using the specified paths and assemblies.
         /// </summary>
         /// <param name="paths">The paths to workspace metadata.</param>
         /// <param name="assembliesToConsider">The names of assemblies used to construct workspace.</param>
@@ -208,7 +208,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static readonly double _maximumEdmVersionSupported = SupportedEdmVersions.Last();
 
         /// <summary>
-        ///     The Max EDM version thats going to be supported by the runtime.
+        /// The Max EDM version thats going to be supported by the runtime.
         /// </summary>
         public static double MaximumEdmVersionSupported
         {
@@ -224,10 +224,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates an <see cref="T:System.Data.Entity.Core.Common.EntitySql.EntitySqlParser" /> configured to use the
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Metadata.Edm.DataSpace.CSpace" />
-        ///     data space.
+        /// Creates an <see cref="T:System.Data.Entity.Core.Common.EntitySql.EntitySqlParser" /> configured to use the
+        /// <see
+        ///     cref="F:System.Data.Entity.Core.Metadata.Edm.DataSpace.CSpace" />
+        /// data space.
         /// </summary>
         /// <returns>The created parser object.</returns>
         public virtual EntitySqlParser CreateEntitySqlParser()
@@ -236,31 +236,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree" /> bound to this metadata workspace based on the specified query expression.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree" /> bound to this metadata workspace based on the specified query expression.
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree" /> with the specified expression as it's
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree.Query" />
-        ///     property.
+        /// A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree" /> with the specified expression as it's
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Common.CommandTrees.DbQueryCommandTree.Query" />
+        /// property.
         /// </returns>
         /// <param name="query">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the query.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the query.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     If
-        ///     <paramref name="query" />
-        ///     is null
+        /// If
+        /// <paramref name="query" />
+        /// is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     If
-        ///     <paramref name="query" />
-        ///     contains metadata that cannot be resolved in this metadata workspace
+        /// If
+        /// <paramref name="query" />
+        /// contains metadata that cannot be resolved in this metadata workspace
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     If
-        ///     <paramref name="query" />
-        ///     is not structurally valid because it contains unresolvable variable references
+        /// If
+        /// <paramref name="query" />
+        /// is not structurally valid because it contains unresolvable variable references
         /// </exception>
         public virtual DbQueryCommandTree CreateQueryCommandTree(DbExpression query)
         {
@@ -268,13 +268,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> items.
+        /// Gets <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> items.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> items.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> items.
         /// </returns>
         /// <param name="dataSpace">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.DataSpace" /> from which to retrieve items.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.DataSpace" /> from which to retrieve items.
         /// </param>
         [CLSCompliant(false)]
         public virtual ItemCollection GetItemCollection(DataSpace dataSpace)
@@ -441,12 +441,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right
-        ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
-        ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        ///     Load metadata from the type's assembly into the OSpace ItemCollection.
-        ///     If type comes from known source, has Ecma or Microsoft PublicKeyToken then the type's assembly is not
-        ///     loaded, but the callingAssembly and its referenced assemblies are loaded.
+        /// Implicit loading means that we are trying to help the user find the right
+        /// assembly, but they didn't explicitly ask for it. Our Implicit rules require that
+        /// we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
+        /// Load metadata from the type's assembly into the OSpace ItemCollection.
+        /// If type comes from known source, has Ecma or Microsoft PublicKeyToken then the type's assembly is not
+        /// loaded, but the callingAssembly and its referenced assemblies are loaded.
         /// </summary>
         /// <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
         /// <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
@@ -496,8 +496,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     If OSpace is not loaded for the specified EntityType
-        ///     the load metadata from the callingAssembly and its referenced assemblies.
+        /// If OSpace is not loaded for the specified EntityType
+        /// the load metadata from the callingAssembly and its referenced assemblies.
         /// </summary>
         /// <param name="type"> The CSPace type to verify its OSpace counterpart is loaded </param>
         /// <param name="callingAssembly"> The assembly and its referenced assemblies to load when type is insuffiecent </param>
@@ -540,7 +540,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="identity">The conceptual model on which the item is searched.</param>
         /// <param name="space">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        ///     When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, DataSpace space, out T item) where T : GlobalItem
@@ -569,7 +569,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="dataSpace">The conceptual model on which the item is searched.</param>
         /// <param name="item">
-        ///     When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Metadata.Edm.GlobalIem" /> object. This parameter is passed uninitialized.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual bool TryGetItem<T>(string identity, bool ignoreCase, DataSpace dataSpace, out T item) where T : GlobalItem
@@ -581,7 +581,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets all the items in the specified data model.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items in the specified data model.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items in the specified data model.
         /// </returns>
         /// <param name="dataSpace">The conceptual model for which the list of items is needed.</param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
@@ -593,10 +593,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the given type name and the namespace name in the specified data model. If there is no matched type, this method returns null.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the given type name and the namespace name in the specified data model. If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
@@ -610,14 +610,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
         /// <param name="dataSpace">The conceptual model on which the type is searched.</param>
         /// <param name="type">
-        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object. This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetType(string name, string namespaceName, DataSpace dataSpace, out EdmType type)
         {
@@ -627,10 +627,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object.
         /// </returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
@@ -645,7 +645,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name, namespace name, and data model.
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the type.</param>
@@ -653,7 +653,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="dataSpace">The conceptual model on which the type is searched.</param>
         /// <param name="type">
-        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object. This parameter is passed uninitialized.
+        /// When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object. This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetType(string name, string namespaceName, bool ignoreCase, DataSpace dataSpace, out EdmType type)
         {
@@ -663,7 +663,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
         /// </summary>
         /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first entity container.</returns>
         /// <param name="name">The name of the entity container.</param>
@@ -676,13 +676,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
         /// </summary>
         /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the entity container.</param>
         /// <param name="dataSpace">The conceptual model on which the entity container is searched.</param>
         /// <param name="entityContainer">
-        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it returns the first entity container. This parameter is passed uninitialized.
+        /// When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it returns the first entity container. This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetEntityContainer(string name, DataSpace dataSpace, out EntityContainer entityContainer)
         {
@@ -694,7 +694,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
         /// </summary>
         /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first entity container.</returns>
         /// <param name="name">The name of the entity container.</param>
@@ -708,14 +708,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name and the data model.
         /// </summary>
         /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the entity container.</param>
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="dataSpace">The conceptual model on which the entity container is searched.</param>
         /// <param name="entityContainer">
-        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it returns the first entity container. This parameter is passed uninitialized.
+        /// When this method returns, contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it returns the first entity container. This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetEntityContainer(string name, bool ignoreCase, DataSpace dataSpace, out EntityContainer entityContainer)
         {
@@ -728,7 +728,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the overloads of the functions by using the specified name, namespace name, and data model.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that match the specified name in a given namespace and a data model.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that match the specified name in a given namespace and a data model.
         /// </returns>
         /// <param name="name">The name of the function.</param>
         /// <param name="namespaceName">The namespace of the function.</param>
@@ -741,7 +741,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the overloads of the functions by using the specified name, namespace name, and data model.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that match the specified name in a given namespace and a data model.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that match the specified name in a given namespace and a data model.
         /// </returns>
         /// <param name="name">The name of the function.</param>
         /// <param name="namespaceName">The namespace of the function.</param>
@@ -759,8 +759,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the function as specified by the function key.
-        ///     All parameters are assumed to be <see cref="ParameterMode.In" />.
+        /// Gets the function as specified by the function key.
+        /// All parameters are assumed to be <see cref="ParameterMode.In" />.
         /// </summary>
         /// <param name="name"> name of the function </param>
         /// <param name="namespaceName"> namespace of the function </param>
@@ -790,7 +790,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns the list of primitive types in the specified data model.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the primitive types in the specified data model.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the primitive types in the specified data model.
         /// </returns>
         /// <param name="dataSpace">The data model for which you need the list of primitive types.</param>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
@@ -802,7 +802,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets all the items in the specified data model.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items in the specified data model.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items in the specified data model.
         /// </returns>
         /// <param name="dataSpace">The conceptual model for which the list of items is needed.</param>
         /// <exception cref="System.ArgumentException">Thrown if the space is not a valid space. Valid space is either C, O, CS or OCSpace</exception>
@@ -813,7 +813,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
         /// <param name="primitiveTypeKind"> primitive type kind </param>
         /// <param name="dataSpace"> dataspace in which one needs to the mapping primitive types </param>
@@ -828,7 +828,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="typeIdentity"> type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
@@ -845,7 +845,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="identity"> typeIdentity of the type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
@@ -858,7 +858,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="item"> </param>
         /// <param name="dataSpace"> space for which you want to get the mapped type </param>
@@ -871,7 +871,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="item"> </param>
         /// <param name="dataSpace"> space for which you want to get the mapped type </param>
@@ -886,14 +886,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Tests the retrieval of <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />.
+        /// Tests the retrieval of <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />.
         /// </summary>
         /// <returns>true if the retrieval was successful; otherwise, false.</returns>
         /// <param name="dataSpace">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.DataSpace" /> from which to attempt retrieval of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.DataSpace" /> from which to attempt retrieval of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />
+        /// .
         /// </param>
         /// <param name="collection">When this method returns, contains the item collection. This parameter is passed uninitialized.</param>
         [CLSCompliant(false)]
@@ -904,8 +904,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Checks if the space is valid and whether the collection is registered for the given space, and if both are valid,
-        ///     then returns the itemcollection for the given space
+        /// Checks if the space is valid and whether the collection is registered for the given space, and if both are valid,
+        /// then returns the itemcollection for the given space
         /// </summary>
         /// <param name="dataSpace"> The dataspace for the item collection that should be returned </param>
         /// <param name="required"> if true, will throw if the collection isn't registered </param>
@@ -948,16 +948,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type that matches the type supplied by the parameter  edmSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type that matches the type supplied by the parameter  edmSpaceType .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. If there is no matched type, this method returns null.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="edmSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// .
         /// </param>
         public virtual StructuralType GetObjectSpaceType(StructuralType edmSpaceType)
         {
@@ -965,20 +965,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object via the out parameter  objectSpaceType  that represents the type that matches the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     supplied by the parameter  edmSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object via the out parameter  objectSpaceType  that represents the type that matches the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// supplied by the parameter  edmSpaceType .
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="edmSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// .
         /// </param>
         /// <param name="objectSpaceType">
-        ///     When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. This parameter is passed uninitialized.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public virtual bool TryGetObjectSpaceType(StructuralType edmSpaceType, out StructuralType objectSpaceType)
@@ -987,16 +987,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type that matches the type supplied by the parameter  edmSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type that matches the type supplied by the parameter  edmSpaceType .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. If there is no matched type, this method returns null.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the Object space type. If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="edmSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// .
         /// </param>
         public virtual EnumType GetObjectSpaceType(EnumType edmSpaceType)
         {
@@ -1004,20 +1004,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object via the out parameter  objectSpaceType  that represents the type that matches the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     supplied by the parameter  edmSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object via the out parameter  objectSpaceType  that represents the type that matches the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// supplied by the parameter  edmSpaceType .
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="edmSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// .
         /// </param>
         /// <param name="objectSpaceType">
-        ///     When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the Object space type. This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the Object space type. This parameter is passed uninitialized.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public virtual bool TryGetObjectSpaceType(EnumType edmSpaceType, out EnumType objectSpaceType)
@@ -1026,9 +1026,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Helper method returning the OSpace enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or the mapped OSpace type
-        ///     cannot be determined, an ArgumentException is thrown.
+        /// Helper method returning the OSpace enum type mapped to the specified Edm Space Type.
+        /// If the DataSpace of the argument is not CSpace, or the mapped OSpace type
+        /// cannot be determined, an ArgumentException is thrown.
         /// </summary>
         /// <param name="edmSpaceType"> The CSpace type to look up </param>
         /// <returns> The OSpace type mapped to the supplied argument </returns>
@@ -1050,10 +1050,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Helper method returning the OSpace structural or enum type mapped to the specified Edm Space Type.
-        ///     If the DataSpace of the argument is not CSpace, or if the mapped OSpace type
-        ///     cannot be determined, the method returns false and sets the out parameter
-        ///     to null.
+        /// Helper method returning the OSpace structural or enum type mapped to the specified Edm Space Type.
+        /// If the DataSpace of the argument is not CSpace, or if the mapped OSpace type
+        /// cannot be determined, the method returns false and sets the out parameter
+        /// to null.
         /// </summary>
         /// <param name="edmSpaceType"> The CSpace type to look up </param>
         /// <param name="objectSpaceType"> The OSpace type mapped to the supplied argument </param>
@@ -1089,19 +1089,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     that matches the type supplied by the parameter  objectSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// that matches the type supplied by the parameter  objectSpaceType .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     . If there is no matched type, this method returns null.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// . If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that supplies the type in the object space.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that supplies the type in the object space.
         /// </param>
         public virtual StructuralType GetEdmSpaceType(StructuralType objectSpaceType)
         {
@@ -1109,20 +1109,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object via the out parameter  edmSpaceType  that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     that matches the type supplied by the parameter  objectSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object via the out parameter  edmSpaceType  that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// that matches the type supplied by the parameter  objectSpaceType .
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the object space type.
         /// </param>
         /// <param name="edmSpaceType">
-        ///     When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     . This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// . This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetEdmSpaceType(StructuralType objectSpaceType, out StructuralType edmSpaceType)
         {
@@ -1130,19 +1130,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     that matches the type supplied by the parameter  objectSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// that matches the type supplied by the parameter  objectSpaceType .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     . If there is no matched type, this method returns null.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// . If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Metadata.Edm.EnumlType" /> that supplies the type in the object space.
+        /// A <see cref="T:System.Data.Metadata.Edm.EnumlType" /> that supplies the type in the object space.
         /// </param>
         public virtual EnumType GetEdmSpaceType(EnumType objectSpaceType)
         {
@@ -1150,20 +1150,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object via the out parameter  edmSpaceType  that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     that matches the type supplied by the parameter  objectSpaceType .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object via the out parameter  edmSpaceType  that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// that matches the type supplied by the parameter  objectSpaceType .
         /// </summary>
         /// <returns>true on success, false on failure.</returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the object space type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the object space type.
         /// </param>
         /// <param name="edmSpaceType">
-        ///     When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     . This parameter is passed uninitialized.
+        /// When this method returns, contains a <see cref="T:System.Data.Entity.Core.Metadata.Edm.EnumType" /> object that represents the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// . This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetEdmSpaceType(EnumType objectSpaceType, out EnumType edmSpaceType)
         {
@@ -1171,9 +1171,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
-        ///     DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
-        ///     be determined, an ArgumentException is thrown.
+        /// Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
+        /// DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
+        /// be determined, an ArgumentException is thrown.
         /// </summary>
         /// <param name="objectSpaceType"> The OSpace type to look up </param>
         /// <returns> The CSpace type mapped to the OSpace parameter </returns>
@@ -1195,9 +1195,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
-        ///     DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
-        ///     be determined, the method returns false and sets the out parameter to null.
+        /// Helper method returning the Edm Space structural or enum type mapped to the OSpace Type parameter. If the
+        /// DataSpace of the supplied type is not OSpace, or the mapped Edm Space type cannot
+        /// be determined, the method returns false and sets the out parameter to null.
         /// </summary>
         /// <param name="objectSpaceType"> The OSpace type to look up </param>
         /// <param name="edmSpaceType"> The mapped CSpace type </param>
@@ -1245,7 +1245,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns generated update or query view for the given extent.
+        /// Returns generated update or query view for the given extent.
         /// </summary>
         internal virtual GeneratedView GetGeneratedView(EntitySetBase extent)
         {
@@ -1254,7 +1254,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a TypeOf/TypeOfOnly Query for a given Extent and Type as a command tree.
+        /// Returns a TypeOf/TypeOfOnly Query for a given Extent and Type as a command tree.
         /// </summary>
         internal virtual bool TryGetGeneratedViewOfType(
             EntitySetBase extent, EntityTypeBase type, bool includeSubtypes, out GeneratedView generatedView)
@@ -1264,11 +1264,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns generated function definition for the given function.
-        ///     Guarantees type match of declaration and generated parameters.
-        ///     Guarantees return type match.
-        ///     Throws internal error for functions without definition.
-        ///     Passes thru exception occured during definition generation.
+        /// Returns generated function definition for the given function.
+        /// Guarantees type match of declaration and generated parameters.
+        /// Guarantees return type match.
+        /// Throws internal error for functions without definition.
+        /// Passes thru exception occured during definition generation.
         /// </summary>
         internal virtual DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
@@ -1277,7 +1277,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if a target function exists for the given function import.
+        /// Determines if a target function exists for the given function import.
         /// </summary>
         /// <param name="functionImport"> Function import (function declared in a model entity container) </param>
         /// <param name="targetFunctionMapping"> Function target mapping (function to which the import is mapped in the target store) </param>
@@ -1298,10 +1298,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the view loader associated with this workspace,
-        ///     creating a loader if non exists. The loader includes
-        ///     context information used by the update pipeline when
-        ///     processing changes to C-space extents.
+        /// Returns the view loader associated with this workspace,
+        /// creating a loader if non exists. The loader includes
+        /// context information used by the update pipeline when
+        /// processing changes to C-space extents.
         /// </summary>
         internal virtual ViewLoader GetUpdateViewLoader()
         {
@@ -1309,8 +1309,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Takes in a Edm space type usage and converts into an
-        ///     equivalent O space type usage
+        /// Takes in a Edm space type usage and converts into an
+        /// equivalent O space type usage
         /// </summary>
         internal virtual TypeUsage GetOSpaceTypeUsage(TypeUsage edmSpaceTypeUsage)
         {
@@ -1347,7 +1347,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns true if the item collection for the given space has already been registered else returns false
+        /// Returns true if the item collection for the given space has already been registered else returns false
         /// </summary>
         internal virtual bool IsItemCollectionAlreadyRegistered(DataSpace dataSpace)
         {
@@ -1356,9 +1356,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Requires: C, S and CS are registered in this and other
-        ///     Determines whether C, S and CS are equivalent. Useful in determining whether a DbCommandTree
-        ///     is usable within a particular entity connection.
+        /// Requires: C, S and CS are registered in this and other
+        /// Determines whether C, S and CS are equivalent. Useful in determining whether a DbCommandTree
+        /// is usable within a particular entity connection.
         /// </summary>
         /// <param name="other"> Other workspace. </param>
         /// <returns> true is C, S and CS collections are equivalent </returns>
@@ -1395,7 +1395,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the canonical Model TypeUsage for a given PrimitiveTypeKind
+        /// Returns the canonical Model TypeUsage for a given PrimitiveTypeKind
         /// </summary>
         /// <param name="primitiveTypeKind"> PrimitiveTypeKind for which a canonical TypeUsage is expected </param>
         /// <returns> a canonical model TypeUsage </returns>
@@ -1405,7 +1405,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the Model PrimitiveType for a given primitiveTypeKind
+        /// Returns the Model PrimitiveType for a given primitiveTypeKind
         /// </summary>
         /// <param name="primitiveTypeKind"> a PrimitiveTypeKind for which a Model PrimitiveType is expected </param>
         /// <returns> Model PrimitiveType </returns>
@@ -1438,22 +1438,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns members of a given <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />/
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     for which original values are needed when modifying an entity.
+        /// Returns members of a given <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />/
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// for which original values are needed when modifying an entity.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" />s for which original value is required.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" />s for which original value is required.
         /// </returns>
         /// <param name="entitySet">
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> belonging to the C-Space.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> belonging to the C-Space.
         /// </param>
         /// <param name="entityType">
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> that participates in the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> that participates in the given
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// .
         /// </param>
         /// <param name="partialUpdateSupported">true if entities may be updated partially; otherwise, false.</param>
         public virtual ReadOnlyCollection<EdmMember> GetRelevantMembersForUpdate(
@@ -1468,16 +1468,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Return members for <see cref="GetRequiredOriginalValueMembers" /> and <see cref="GetRelevantMembersForUpdate" /> methods.
+        /// Return members for <see cref="GetRequiredOriginalValueMembers" /> and <see cref="GetRelevantMembersForUpdate" /> methods.
         /// </summary>
         /// <param name="entitySet"> An EntitySet belonging to the C-Space </param>
         /// <param name="entityType"> An EntityType that participates in the given EntitySet </param>
         /// <param name="interestingMembersKind"> Scenario the members should be returned for. </param>
         /// <returns>
-        ///     ReadOnlyCollection of interesting members for the requested scenario (
-        ///     <paramref
-        ///         name="interestingMembersKind" />
-        ///     ).
+        /// ReadOnlyCollection of interesting members for the requested scenario (
+        /// <paramref
+        ///     name="interestingMembersKind" />
+        /// ).
         /// </returns>
         private ReadOnlyCollection<EdmMember> GetInterestingMembers(
             EntitySetBase entitySet, EntityTypeBase entityType, StorageMappingItemCollection.InterestingMembersKind interestingMembersKind)
@@ -1522,7 +1522,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the QueryCacheManager hosted by this metadata workspace instance
+        /// Returns the QueryCacheManager hosted by this metadata workspace instance
         /// </summary>
         internal virtual QueryCacheManager GetQueryCacheManager()
         {

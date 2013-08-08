@@ -10,89 +10,89 @@ namespace System.Data.Entity.Core.Common
     using System.Xml;
 
     /// <summary>
-    ///     Metadata Interface for all CLR types types
+    /// Metadata Interface for all CLR types types
     /// </summary>
     public abstract class DbProviderManifest
     {
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaDefinition
+        /// Value to pass to GetInformation to get the StoreSchemaDefinition
         /// </summary>
         public const string StoreSchemaDefinition = "StoreSchemaDefinition";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaMapping
+        /// Value to pass to GetInformation to get the StoreSchemaMapping
         /// </summary>
         public const string StoreSchemaMapping = "StoreSchemaMapping";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the ConceptualSchemaDefinition
+        /// Value to pass to GetInformation to get the ConceptualSchemaDefinition
         /// </summary>
         public const string ConceptualSchemaDefinition = "ConceptualSchemaDefinition";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaDefinitionVersion3
+        /// Value to pass to GetInformation to get the StoreSchemaDefinitionVersion3
         /// </summary>
         public const string StoreSchemaDefinitionVersion3 = "StoreSchemaDefinitionVersion3";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the StoreSchemaMappingVersion3
+        /// Value to pass to GetInformation to get the StoreSchemaMappingVersion3
         /// </summary>
         public const string StoreSchemaMappingVersion3 = "StoreSchemaMappingVersion3";
 
         /// <summary>
-        ///     Value to pass to GetInformation to get the ConceptualSchemaDefinitionVersion3
+        /// Value to pass to GetInformation to get the ConceptualSchemaDefinitionVersion3
         /// </summary>
         public const string ConceptualSchemaDefinitionVersion3 = "ConceptualSchemaDefinitionVersion3";
 
         // System Facet Info
         /// <summary>
-        ///     Name of the MaxLength Facet
+        /// Name of the MaxLength Facet
         /// </summary>
         public const string MaxLengthFacetName = "MaxLength";
 
         /// <summary>
-        ///     Name of the Unicode Facet
+        /// Name of the Unicode Facet
         /// </summary>
         public const string UnicodeFacetName = "Unicode";
 
         /// <summary>
-        ///     Name of the FixedLength Facet
+        /// Name of the FixedLength Facet
         /// </summary>
         public const string FixedLengthFacetName = "FixedLength";
 
         /// <summary>
-        ///     Name of the Precision Facet
+        /// Name of the Precision Facet
         /// </summary>
         public const string PrecisionFacetName = "Precision";
 
         /// <summary>
-        ///     Name of the Scale Facet
+        /// Name of the Scale Facet
         /// </summary>
         public const string ScaleFacetName = "Scale";
 
         /// <summary>
-        ///     Name of the Nullable Facet
+        /// Name of the Nullable Facet
         /// </summary>
         public const string NullableFacetName = "Nullable";
 
         /// <summary>
-        ///     Name of the DefaultValue Facet
+        /// Name of the DefaultValue Facet
         /// </summary>
         public const string DefaultValueFacetName = "DefaultValue";
 
         /// <summary>
-        ///     Name of the Collation Facet
+        /// Name of the Collation Facet
         /// </summary>
         public const string CollationFacetName = "Collation";
 
         /// <summary>
-        ///     Name of the SRID Facet
+        /// Name of the SRID Facet
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Srid")]
         public const string SridFacetName = "SRID";
 
         /// <summary>
-        ///     Name of the IsStrict Facet
+        /// Name of the IsStrict Facet
         /// </summary>
         public const string IsStrictFacetName = "IsStrict";
 
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>When overridden in a derived class, this method maps the specified storage type and a set of facets for that type to an EDM type.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> instance that describes an EDM type and a set of facets for that type.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> instance that describes an EDM type and a set of facets for that type.
         /// </returns>
         /// <param name="storeType">The TypeUsage instance that describes a storage type and a set of facets for that type to be mapped to the EDM type.</param>
         public abstract TypeUsage GetEdmType(TypeUsage storeType);
@@ -189,12 +189,12 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Returns a boolean that specifies whether the provider can handle expression trees
-        ///     containing instances of DbInExpression.
-        ///     The default implementation returns <c>false</c> for backwards compatibility. Derived classes can override this method.
+        /// Returns a boolean that specifies whether the provider can handle expression trees
+        /// containing instances of DbInExpression.
+        /// The default implementation returns <c>false</c> for backwards compatibility. Derived classes can override this method.
         /// </summary>
         /// <returns>
-        ///     <c>false</c>
+        /// <c>false</c>
         /// </returns>
         public virtual bool SupportsInExpression()
         {

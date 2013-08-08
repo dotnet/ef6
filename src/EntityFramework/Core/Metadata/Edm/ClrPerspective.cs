@@ -9,15 +9,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
 
     /// <summary>
-    ///     Internal helper class for query
+    /// Internal helper class for query
     /// </summary>
     internal sealed class ClrPerspective : Perspective
     {
         private EntityContainer _defaultContainer;
 
         /// <summary>
-        ///     Creates a new instance of perspective class so that query can work
-        ///     ignorant of all spaces
+        /// Creates a new instance of perspective class so that query can work
+        /// ignorant of all spaces
         /// </summary>
         internal ClrPerspective(MetadataWorkspace metadataWorkspace)
             : base(metadataWorkspace, DataSpace.CSpace)
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given a clrType attempt to return the corresponding target type from
-        ///     the worksapce
+        /// Given a clrType attempt to return the corresponding target type from
+        /// the worksapce
         /// </summary>
         /// <param name="clrType"> The clr type to resolve </param>
         /// <param name="outTypeUsage"> an out param for the typeUsage to be resolved to </param>
@@ -40,11 +40,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the type in the target space and the member name in the source space,
-        ///     get the corresponding member in the target space
-        ///     For e.g.  consider a Conceptual Type Foo with a member bar and a CLR type
-        ///     XFoo with a member YBar. If one has a reference to Foo one can
-        ///     invoke GetMember(Foo,"YBar") to retrieve the member metadata for bar
+        /// Given the type in the target space and the member name in the source space,
+        /// get the corresponding member in the target space
+        /// For e.g.  consider a Conceptual Type Foo with a member bar and a CLR type
+        /// XFoo with a member YBar. If one has a reference to Foo one can
+        /// invoke GetMember(Foo,"YBar") to retrieve the member metadata for bar
         /// </summary>
         /// <param name="type"> The type in the target perspective </param>
         /// <param name="memberName"> the name of the member in the source perspective </param>
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Look up a type in the target data space based upon the fullName
+        /// Look up a type in the target data space based upon the fullName
         /// </summary>
         /// <param name="fullName"> fullName </param>
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     get the default container
+        /// get the default container
         /// </summary>
         /// <returns> The default container </returns>
         internal override EntityContainer GetDefaultContainer()
@@ -135,9 +135,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given a map, dereference the EdmItem, ensure that it is
-        ///     an EdmType and return a TypeUsage for the type, otherwise
-        ///     return null.
+        /// Given a map, dereference the EdmItem, ensure that it is
+        /// an EdmType and return a TypeUsage for the type, otherwise
+        /// return null.
         /// </summary>
         /// <param name="map"> The OC map to use to get the EdmType </param>
         /// <returns> A TypeUsage for the mapped EdmType or null if no EdmType was mapped </returns>

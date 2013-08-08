@@ -12,12 +12,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Class representing a primitive type
+    /// Class representing a primitive type
     /// </summary>
     public class PrimitiveType : SimpleType
     {
         /// <summary>
-        ///     Initializes a new instance of PrimitiveType
+        /// Initializes a new instance of PrimitiveType
         /// </summary>
         internal PrimitiveType()
         {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for PrimitiveType.  It takes the required information to identify this type.
+        /// The constructor for PrimitiveType.  It takes the required information to identify this type.
         /// </summary>
         /// <param name="name"> The name of this type </param>
         /// <param name="namespaceName"> The namespace name of this type </param>
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for PrimitiveType, it takes in a CLR type containing the identity information
+        /// The constructor for PrimitiveType, it takes in a CLR type containing the identity information
         /// </summary>
         /// <param name="clrType"> The CLR type object for this primitive type </param>
         /// <param name="baseType"> The base type for this primitive type </param>
@@ -71,13 +71,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private DbProviderManifest _providerManifest;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -90,16 +90,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind" /> enumeration value that indicates a primitive type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// Gets a <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind" /> enumeration value that indicates a primitive type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind" /> enumeration value that indicates a primitive type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveTypeKind" /> enumeration value that indicates a primitive type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.PrimitiveTypeKind, false)]
         public virtual PrimitiveTypeKind PrimitiveTypeKind
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the ProviderManifest giving access to the Manifest that this type came from
+        /// Returns the ProviderManifest giving access to the Manifest that this type came from
         /// </summary>
         /// <returns> The types ProviderManifest value </returns>
         internal DbProviderManifest ProviderManifest
@@ -128,13 +128,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the list of facet descriptions for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
+        /// Gets the list of facet descriptions for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of facet descriptions for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         public virtual ReadOnlyCollection<FacetDescription> FacetDescriptions
         {
@@ -142,19 +142,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an equivalent common language runtime (CLR) type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     . Note that the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.PrimitiveType.ClrEquivalentType" />
-        ///     property always returns a non-nullable type value.
+        /// Returns an equivalent common language runtime (CLR) type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// . Note that the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Metadata.Edm.PrimitiveType.ClrEquivalentType" />
+        /// property always returns a non-nullable type value.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Type" /> object that represents an equivalent common language runtime (CLR) type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// A <see cref="T:System.Type" /> object that represents an equivalent common language runtime (CLR) type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         public Type ClrEquivalentType
         {
@@ -223,7 +223,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Perform initialization that's common across all constructors
+        /// Perform initialization that's common across all constructors
         /// </summary>
         /// <param name="primitiveType"> The primitive type to initialize </param>
         /// <param name="primitiveTypeKind"> The primitive type kind of this primitive type </param>
@@ -238,22 +238,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the equivalent <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// Returns the equivalent <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </summary>
         /// <remarks>
-        ///     For example if this instance is nvarchar and it's
-        ///     base type is Edm String then the return type is Edm String.
-        ///     If the type is actually already a model type then the
-        ///     return type is "this".
+        /// For example if this instance is nvarchar and it's
+        /// base type is Edm String then the return type is Edm String.
+        /// If the type is actually already a model type then the
+        /// return type is "this".
         /// </remarks>        
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that is an equivalent of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that is an equivalent of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         public EdmType GetEdmPrimitiveType()
         {
@@ -262,7 +262,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns the list of primitive types.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of primitive types.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains the list of primitive types.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static ReadOnlyCollection<PrimitiveType> GetEdmPrimitiveTypes()
@@ -271,19 +271,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the equivalent <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> of a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// Returns the equivalent <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> of a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that is an equivalent of a specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that is an equivalent of a specified
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// .
         /// </returns>
         /// <param name="primitiveTypeKind">
-        ///     A value of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
+        /// A value of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />.
         /// </param>
         public static PrimitiveType GetEdmPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {

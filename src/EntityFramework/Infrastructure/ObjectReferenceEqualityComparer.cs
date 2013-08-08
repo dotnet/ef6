@@ -6,7 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///     Compares objects using reference equality.
+    /// Compares objects using reference equality.
     /// </summary>
     [Serializable]
     public sealed class ObjectReferenceEqualityComparer : IEqualityComparer<object>

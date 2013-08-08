@@ -8,8 +8,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to discover foreign key properties whose names are a combination
-    ///     of the dependent navigation property name and the principal type primary key property name(s).
+    /// Convention to discover foreign key properties whose names are a combination
+    /// of the dependent navigation property name and the principal type primary key property name(s).
     /// </summary>
     public class NavigationPropertyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {

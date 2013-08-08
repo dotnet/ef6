@@ -11,14 +11,14 @@ namespace System.Data.Entity.Infrastructure
     public class CommitFailedException : DataException
     {
         /// <summary>
-        ///     Initializes a new instance of <see cref="CommitFailedException"/>
+        /// Initializes a new instance of <see cref="CommitFailedException"/>
         /// </summary>
         public CommitFailedException()
         {
         }
         
         /// <summary>
-        ///     Initializes a new instance of <see cref="CommitFailedException"/>
+        /// Initializes a new instance of <see cref="CommitFailedException"/>
         /// </summary>
         /// <param name="message"> The exception message. </param>
         public CommitFailedException(string message)
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Infrastructure
         }
         
         /// <summary>
-        ///     Initializes a new instance of <see cref="CommitFailedException"/>
+        /// Initializes a new instance of <see cref="CommitFailedException"/>
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="innerException"> The inner exception. </param>

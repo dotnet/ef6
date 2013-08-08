@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for <see cref="DbRawSqlQuery" /> and <see cref="DbRawSqlQuery{TElement}" />.
+    /// Unit tests for <see cref="DbRawSqlQuery" /> and <see cref="DbRawSqlQuery{TElement}" />.
     /// </summary>
     public class DbRawSqlQueryTests : TestBase
     {

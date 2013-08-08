@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an Association element
+    /// Represents an Association element
     /// </summary>
     internal sealed class Relationship : SchemaType, IRelationship
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private bool _isForeignKey;
 
         /// <summary>
-        ///     Construct a Relationship object
+        /// Construct a Relationship object
         /// </summary>
         /// <param name="parent"> the parent </param>
         /// <param name="kind"> the kind of relationship </param>
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     List of Ends defined for this Association
+        /// List of Ends defined for this Association
         /// </summary>
         public IList<IRelationshipEnd> Ends
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns the list of constraints on this relation
+        /// Returns the list of constraints on this relation
         /// </summary>
         public IList<ReferentialConstraint> Constraints
         {
@@ -77,12 +77,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Is this an Association
+        /// Is this an Association
         /// </summary>
         public RelationshipKind RelationshipKind { get; private set; }
 
         /// <summary>
-        ///     Is this a foreign key (aka foreign key) relationship?
+        /// Is this a foreign key (aka foreign key) relationship?
         /// </summary>
         public bool IsForeignKey
         {
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     do whole element validation
+        /// do whole element validation
         /// </summary>
         internal override void Validate()
         {
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     do whole element resolution
+        /// do whole element resolution
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     handle the End child element
+        /// handle the End child element
         /// </summary>
         /// <param name="reader"> XmlReader positioned at the end element </param>
         private void HandleEndElement(XmlReader reader)
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     handle the constraint element
+        /// handle the constraint element
         /// </summary>
         /// <param name="reader"> XmlReader positioned at the constraint element </param>
         private void HandleConstraintElement(XmlReader reader)

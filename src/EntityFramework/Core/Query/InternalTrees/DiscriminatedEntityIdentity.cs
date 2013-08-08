@@ -8,15 +8,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    ///     This class also represents entity identity. However, this class addresses
-    ///     those scenarios where the entityset for the entity is not uniquely known
-    ///     a priori. Instead, the query is annotated with information, and based on
-    ///     the resulting information, the appropriate entityset is identified.
-    ///     Specifically, the specific entityset is represented as a SimpleColumnMap
-    ///     in the query. The value of that column is used to look up a dictionary,
-    ///     and then identify the appropriate entity set.
-    ///     It is entirely possible that no entityset may be located for the entity
-    ///     instance - this represents a transient entity instance
+    /// This class also represents entity identity. However, this class addresses
+    /// those scenarios where the entityset for the entity is not uniquely known
+    /// a priori. Instead, the query is annotated with information, and based on
+    /// the resulting information, the appropriate entityset is identified.
+    /// Specifically, the specific entityset is represented as a SimpleColumnMap
+    /// in the query. The value of that column is used to look up a dictionary,
+    /// and then identify the appropriate entity set.
+    /// It is entirely possible that no entityset may be located for the entity
+    /// instance - this represents a transient entity instance
     /// </summary>
     internal class DiscriminatedEntityIdentity : EntityIdentity
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly EntitySet[] m_entitySetMap; // optional dictionary that maps values to entitysets
 
         /// <summary>
-        ///     Simple constructor
+        /// Simple constructor
         /// </summary>
         /// <param name="entitySetColumn"> column map representing the entityset </param>
         /// <param name="entitySetMap"> Map from value -> the appropriate entityset </param>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the column map representing the entityset
+        /// Get the column map representing the entityset
         /// </summary>
         internal SimpleColumnMap EntitySetColumnMap
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Return the entityset map
+        /// Return the entityset map
         /// </summary>
         internal EntitySet[] EntitySetMap
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

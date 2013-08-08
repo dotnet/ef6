@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents dropping an existing table.
+    /// Represents dropping an existing table.
     /// </summary>
     public class DropTableOperation : MigrationOperation
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
         private readonly CreateTableOperation _inverse;
 
         /// <summary>
-        ///     Initializes a new instance of the DropTableOperation class.
+        /// Initializes a new instance of the DropTableOperation class.
         /// </summary>
         /// <param name="name"> The name of the table to be dropped. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Initializes a new instance of the DropTableOperation class.
+        /// Initializes a new instance of the DropTableOperation class.
         /// </summary>
         /// <param name="name"> The name of the table to be dropped. </param>
         /// <param name="inverse"> An operation that represents reverting dropping the table. </param>
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table to be dropped.
+        /// Gets the name of the table to be dropped.
         /// </summary>
         public virtual string Name
         {
@@ -51,9 +51,9 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that represents reverting dropping the table.
-        ///     The inverse cannot be automatically calculated,
-        ///     if it was not supplied to the constructor this property will return null.
+        /// Gets an operation that represents reverting dropping the table.
+        /// The inverse cannot be automatically calculated,
+        /// if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse
         {

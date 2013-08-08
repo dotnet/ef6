@@ -10,20 +10,20 @@ namespace System.Data.Entity.Infrastructure
     using System.Xml;
 
     /// <summary>
-    ///     Contains methods used to access the Entity Data Model created by Code First in the EDMX form.
-    ///     These methods are typically used for debugging when there is a need to look at the model that
-    ///     Code First creates internally.
+    /// Contains methods used to access the Entity Data Model created by Code First in the EDMX form.
+    /// These methods are typically used for debugging when there is a need to look at the model that
+    /// Code First creates internally.
     /// </summary>
     public static class EdmxWriter
     {
         #region WriteEdmx
 
         /// <summary>
-        ///     Uses Code First with the given context and writes the resulting Entity Data Model to the given
-        ///     writer in EDMX form.  This method can only be used with context instances that use Code First
-        ///     and create the model internally.  The method cannot be used for contexts created using Database
-        ///     First or Model First, for contexts created using a pre-existing <see cref="ObjectContext" />, or
-        ///     for contexts created using a pre-existing <see cref="DbCompiledModel" />.
+        /// Uses Code First with the given context and writes the resulting Entity Data Model to the given
+        /// writer in EDMX form.  This method can only be used with context instances that use Code First
+        /// and create the model internally.  The method cannot be used for contexts created using Database
+        /// First or Model First, for contexts created using a pre-existing <see cref="ObjectContext" />, or
+        /// for contexts created using a pre-existing <see cref="DbCompiledModel" />.
         /// </summary>
         /// <param name="context"> The context. </param>
         /// <param name="writer"> The writer. </param>
@@ -53,8 +53,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Writes the Entity Data Model represented by the given <see cref="DbModel" /> to the
-        ///     given writer in EDMX form.
+        /// Writes the Entity Data Model represented by the given <see cref="DbModel" /> to the
+        /// given writer in EDMX form.
         /// </summary>
         /// <param name="model"> An object representing the EDM. </param>
         /// <param name="writer"> The writer. </param>

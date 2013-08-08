@@ -10,8 +10,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq;
 
     /// <summary>
-    ///     Returned by the ChangeTracker method of <see cref="DbContext" /> to provide access to features of
-    ///     the context that are related to change tracking of entities.
+    /// Returned by the ChangeTracker method of <see cref="DbContext" /> to provide access to features of
+    /// the context that are related to change tracking of entities.
     /// </summary>
     public class DbChangeTracker
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalContext _internalContext;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbChangeTracker" /> class.
+        /// Initializes a new instance of the <see cref="DbChangeTracker" /> class.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
         internal DbChangeTracker(InternalContext internalContext)
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Infrastructure
         #region Entity entries
 
         /// <summary>
-        ///     Gets <see cref="DbEntityEntry" /> objects for all the entities tracked by this context.
+        /// Gets <see cref="DbEntityEntry" /> objects for all the entities tracked by this context.
         /// </summary>
         /// <returns> The entries. </returns>
         public IEnumerable<DbEntityEntry> Entries()
@@ -46,8 +46,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets <see cref="DbEntityEntry" /> objects for all the entities of the given type
-        ///     tracked by this context.
+        /// Gets <see cref="DbEntityEntry" /> objects for all the entities of the given type
+        /// tracked by this context.
         /// </summary>
         /// <typeparam name="TEntity"> The type of the entity. </typeparam>
         /// <returns> The entries. </returns>
@@ -64,17 +64,17 @@ namespace System.Data.Entity.Infrastructure
         #region DetectChanges
 
         /// <summary>
-        ///     Checks if the <see cref="DbContext" /> is tracking any new, deleted, or changed entities or
-        ///     relationships that will be sent to the database if <see cref="DbContext.SaveChanges" /> is called.
+        /// Checks if the <see cref="DbContext" /> is tracking any new, deleted, or changed entities or
+        /// relationships that will be sent to the database if <see cref="DbContext.SaveChanges" /> is called.
         /// </summary>
         /// <remarks>
-        ///     Functionally, calling this method is equivalent to checking if there are any entities or
-        ///     relationships in the Added, Updated, or Deleted state.
-        ///     Note that this method calls <see cref="DbChangeTracker.DetectChanges" /> unless
-        ///     <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> has been set to false.
+        /// Functionally, calling this method is equivalent to checking if there are any entities or
+        /// relationships in the Added, Updated, or Deleted state.
+        /// Note that this method calls <see cref="DbChangeTracker.DetectChanges" /> unless
+        /// <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> has been set to false.
         /// </remarks>
         /// <returns>
-        ///     True if underlying <see cref="DbContext" /> have changes, else false.
+        /// True if underlying <see cref="DbContext" /> have changes, else false.
         /// </returns>
         public bool HasChanges()
         {
@@ -84,14 +84,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Detects changes made to the properties and relationships of POCO entities.  Note that some types of
-        ///     entity (such as change tracking proxies and entities that derive from
-        ///     <see cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />)
-        ///     report changes automatically and a call to DetectChanges is not normally needed for these types of entities.
-        ///     Also note that normally DetectChanges is called automatically by many of the methods of <see cref="DbContext" />
-        ///     and its related classes such that it is rare that this method will need to be called explicitly.
-        ///     However, it may be desirable, usually for performance reasons, to turn off this automatic calling of
-        ///     DetectChanges using the AutoDetectChangesEnabled flag from <see cref="DbContext.Configuration" />.
+        /// Detects changes made to the properties and relationships of POCO entities.  Note that some types of
+        /// entity (such as change tracking proxies and entities that derive from
+        /// <see cref="System.Data.Entity.Core.Objects.DataClasses.EntityObject" />)
+        /// report changes automatically and a call to DetectChanges is not normally needed for these types of entities.
+        /// Also note that normally DetectChanges is called automatically by many of the methods of <see cref="DbContext" />
+        /// and its related classes such that it is rare that this method will need to be called explicitly.
+        /// However, it may be desirable, usually for performance reasons, to turn off this automatic calling of
+        /// DetectChanges using the AutoDetectChangesEnabled flag from <see cref="DbContext.Configuration" />.
         /// </summary>
         public void DetectChanges()
         {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Defines literal value kind, including the eSQL untyped NULL.
+    /// Defines literal value kind, including the eSQL untyped NULL.
     /// </summary>
     internal enum LiteralKind
     {

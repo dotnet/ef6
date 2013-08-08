@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     Summary description for FilteredSchemaTypes.
+    /// Summary description for FilteredSchemaTypes.
     /// </summary>
     internal sealed class FilteredSchemaElementLookUpTable<T, S> : IEnumerable<T>, ISchemaElementLookUpTable<T>
         where T : S

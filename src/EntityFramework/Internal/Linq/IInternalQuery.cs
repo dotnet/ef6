@@ -9,8 +9,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     A non-generic interface implemented by <see cref="InternalQuery{TElement}" /> that allows operations on
-    ///     any query object without knowing the type to which it applies.
+    /// A non-generic interface implemented by <see cref="InternalQuery{TElement}" /> that allows operations on
+    /// any query object without knowing the type to which it applies.
     /// </summary>
     internal interface IInternalQuery
     {

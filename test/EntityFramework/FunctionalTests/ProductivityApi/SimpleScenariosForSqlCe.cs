@@ -11,9 +11,9 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     These are not really tests, but rather simple scenarios with minimal final state validation.
-    ///     They are here as a good starting point for understanding the functionality and to give some level
-    ///     of confidence that the simple scenarios keep on working as the code evolves.
+    /// These are not really tests, but rather simple scenarios with minimal final state validation.
+    /// They are here as a good starting point for understanding the functionality and to give some level
+    /// of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
     public class SimpleScenariosForSqlCe : FunctionalTestBase, IDisposable
     {
@@ -439,9 +439,9 @@ namespace ProductivityApiTests
         #region Helpers
 
         /// <summary>
-        ///     SQL Compact doesn't allow the same connection to be opened more than once inside
-        ///     a transaction scope.  Therefore, we have to do some funky stuff to make sure that
-        ///     EF doesn't open and close the connection inside the transaction.
+        /// SQL Compact doesn't allow the same connection to be opened more than once inside
+        /// a transaction scope.  Therefore, we have to do some funky stuff to make sure that
+        /// EF doesn't open and close the connection inside the transaction.
         /// </summary>
         private void RunInSqlCeTransaction<TContext>(Action<TContext> test) where TContext : DbContext, new()
         {

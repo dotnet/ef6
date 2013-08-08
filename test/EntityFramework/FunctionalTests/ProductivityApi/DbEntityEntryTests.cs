@@ -16,8 +16,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     General functional tests for DbEntityEntry and related classes/methods.
-    ///     Unit tests also exist in the unit tests project.
+    /// General functional tests for DbEntityEntry and related classes/methods.
+    /// Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbEntityEntryTests : FunctionalTestBase
     {

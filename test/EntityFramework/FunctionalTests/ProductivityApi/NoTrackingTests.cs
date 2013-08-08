@@ -10,7 +10,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for the AsNoTracking extension methods on IQueryable.
+    /// Tests for the AsNoTracking extension methods on IQueryable.
     /// </summary>
     public class NoTrackingTests : FunctionalTestBase
     {

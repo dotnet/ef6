@@ -12,9 +12,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Reflection;
 
     /// <summary>
-    ///     This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
-    ///     This includes loading from config, discovery from the context assembly and pushing/popping configurations
-    ///     used by <see cref="DbContextInfo" />.
+    /// This class is responsible for managing the app-domain instance of the <see cref="DbConfiguration" /> class.
+    /// This includes loading from config, discovery from the context assembly and pushing/popping configurations
+    /// used by <see cref="DbContextInfo" />.
     /// </summary>
     internal class DbConfigurationManager
     {

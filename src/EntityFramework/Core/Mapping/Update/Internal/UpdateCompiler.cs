@@ -16,13 +16,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    ///     This class implements compilation of DML operation requests to some
-    ///     format (e.g. canonical query tree or T-SQL)
+    /// This class implements compilation of DML operation requests to some
+    /// format (e.g. canonical query tree or T-SQL)
     /// </summary>
     internal sealed class UpdateCompiler
     {
         /// <summary>
-        ///     Initialize an update compiler.
+        /// Initialize an update compiler.
         /// </summary>
         /// <param name="translator"> Update context. </param>
         internal UpdateCompiler(UpdateTranslator translator)
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private const string s_targetVarName = "target";
 
         /// <summary>
-        ///     Builds a delete command.
+        /// Builds a delete command.
         /// </summary>
         /// <param name="oldRow"> Value of the row being deleted. </param>
         /// <param name="processor"> Context for the table containing row. </param>
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Builds an update command.
+        /// Builds an update command.
         /// </summary>
         /// <param name="oldRow"> Old value of the row being updated. </param>
         /// <param name="newRow"> New value for the row being updated. </param>
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Builds insert command.
+        /// Builds insert command.
         /// </summary>
         /// <param name="newRow"> Row to insert. </param>
         /// <param name="processor"> Context for the table we're inserting into. </param>
@@ -161,15 +161,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Determines column/value used to set values for a row.
+        /// Determines column/value used to set values for a row.
         /// </summary>
         /// <remarks>
-        ///     The following columns are not included in the result:
-        ///     <list>
-        ///         <item>Keys in non-insert operations (keys are only set for inserts).</item>
-        ///         <item>Values flagged 'preserve' (these are values the propagator claims are untouched).</item>
-        ///         <item>Server generated values.</item>
-        ///     </list>
+        /// The following columns are not included in the result:
+        /// <list>
+        ///     <item>Keys in non-insert operations (keys are only set for inserts).</item>
+        ///     <item>Values flagged 'preserve' (these are values the propagator claims are untouched).</item>
+        ///     <item>Server generated values.</item>
+        /// </list>
         /// </remarks>
         /// <param name="target"> Expression binding representing the table. </param>
         /// <param name="row"> Row containing values to set. </param>
@@ -352,14 +352,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Determines predicate used to identify a row in a table.
+        /// Determines predicate used to identify a row in a table.
         /// </summary>
         /// <remarks>
-        ///     Columns are included in the list when:
-        ///     <list>
-        ///         <item>They are keys for the table</item>
-        ///         <item>They are concurrency values</item>
-        ///     </list>
+        /// Columns are included in the list when:
+        /// <list>
+        ///     <item>They are keys for the table</item>
+        ///     <item>They are concurrency values</item>
+        /// </list>
         /// </remarks>
         /// <param name="target"> Expression binding representing the table containing the row </param>
         /// <param name="referenceRow"> Values for the row being located. </param>

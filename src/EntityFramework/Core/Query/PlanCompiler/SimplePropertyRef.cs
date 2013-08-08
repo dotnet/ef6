@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     A "simple" property ref - represents a simple property of the type
+    /// A "simple" property ref - represents a simple property of the type
     /// </summary>
     internal class SimplePropertyRef : PropertyRef
     {
         private readonly EdmMember m_property;
 
         /// <summary>
-        ///     Simple constructor
+        /// Simple constructor
         /// </summary>
         /// <param name="property"> the property metadata </param>
         internal SimplePropertyRef(EdmMember property)
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the property metadata
+        /// Gets the property metadata
         /// </summary>
         internal EdmMember Property
         {
@@ -30,8 +30,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Overrides the default equality function. Two SimplePropertyRefs are
-        ///     equal, if they describe the same property
+        /// Overrides the default equality function. Two SimplePropertyRefs are
+        /// equal, if they describe the same property
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -42,8 +42,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Overrides the default hashcode function.
-        ///     Simply returns the hashcode for the property instead
+        /// Overrides the default hashcode function.
+        /// Simply returns the hashcode for the property instead
         /// </summary>
         public override int GetHashCode()
         {

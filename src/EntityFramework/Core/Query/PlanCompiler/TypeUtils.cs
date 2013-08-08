@@ -14,10 +14,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal static class TypeUtils
     {
         /// <summary>
-        ///     Is this a structured type?
-        ///     Note: Structured, in this context means structured outside the server.
-        ///     UDTs for instance, are considered to be scalar types - all WinFS types,
-        ///     would by this argument, be scalar types.
+        /// Is this a structured type?
+        /// Note: Structured, in this context means structured outside the server.
+        /// UDTs for instance, are considered to be scalar types - all WinFS types,
+        /// would by this argument, be scalar types.
         /// </summary>
         /// <param name="type"> The type to check </param>
         /// <returns> true, if the type is a structured type </returns>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Is this type a collection type?
+        /// Is this type a collection type?
         /// </summary>
         /// <param name="type"> the current type </param>
         /// <returns> true, if this is a collection type </returns>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Is this type an enum type?
+        /// Is this type an enum type?
         /// </summary>
         /// <param name="type"> the current type </param>
         /// <returns> true, if this is an enum type </returns>
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a new collection type based on the supplied element type
+        /// Create a new collection type based on the supplied element type
         /// </summary>
         /// <param name="elementType"> element type of the collection </param>
         /// <returns> the new collection type </returns>

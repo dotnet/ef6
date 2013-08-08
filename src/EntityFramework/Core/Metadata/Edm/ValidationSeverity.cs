@@ -3,22 +3,22 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    ///     The validation severity level
+    /// The validation severity level
     /// </summary>
     internal enum ValidationSeverity
     {
         /// <summary>
-        ///     Warning
+        /// Warning
         /// </summary>
         Warning,
 
         /// <summary>
-        ///     Error
+        /// Error
         /// </summary>
         Error,
 
         /// <summary>
-        ///     Internal
+        /// Internal
         /// </summary>
         Internal
     }

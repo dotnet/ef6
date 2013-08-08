@@ -7,10 +7,10 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     Extends <see cref="SortableBindingList{T}" /> to create a sortable binding list that stays in
-    ///     sync with an underlying <see cref="ObservableCollection{T}" />.  That is, when items are added
-    ///     or removed from the binding list, they are added or removed from the ObservableCollecion, and
-    ///     vice-versa.
+    /// Extends <see cref="SortableBindingList{T}" /> to create a sortable binding list that stays in
+    /// sync with an underlying <see cref="ObservableCollection{T}" />.  That is, when items are added
+    /// or removed from the binding list, they are added or removed from the ObservableCollecion, and
+    /// vice-versa.
     /// </summary>
     /// <typeparam name="T"> The list element type. </typeparam>
     internal class ObservableBackedBindingList<T> : SortableBindingList<T>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal
         private bool _changingObservableCollection;
 
         /// <summary>
-        ///     Initializes a new instance of a binding list backed by the given <see cref="ObservableCollection{T}" />
+        /// Initializes a new instance of a binding list backed by the given <see cref="ObservableCollection{T}" />
         /// </summary>
         /// <param name="obervableCollection"> The obervable collection. </param>
         public ObservableBackedBindingList(ObservableCollection<T> obervableCollection)
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Internal
         #region BindingList overrides
 
         /// <summary>
-        ///     Creates a new item to be added to the binding list.
+        /// Creates a new item to be added to the binding list.
         /// </summary>
         /// <returns> The new item. </returns>
         protected override object AddNewCore()
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Cancels adding of a new item that was started with AddNew.
+        /// Cancels adding of a new item that was started with AddNew.
         /// </summary>
         /// <param name="itemIndex"> Index of the item. </param>
         public override void CancelNew(int itemIndex)
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Removes all items from the binding list and underlying ObservableCollection.
+        /// Removes all items from the binding list and underlying ObservableCollection.
         /// </summary>
         protected override void ClearItems()
         {
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Ends the process of adding a new item that was started with AddNew.
+        /// Ends the process of adding a new item that was started with AddNew.
         /// </summary>
         /// <param name="itemIndex"> Index of the item. </param>
         public override void EndNew(int itemIndex)
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Inserts the item into the binding list at the given index.
+        /// Inserts the item into the binding list at the given index.
         /// </summary>
         /// <param name="index"> The index. </param>
         /// <param name="item"> The item. </param>
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Removes the item at the specified index.
+        /// Removes the item at the specified index.
         /// </summary>
         /// <param name="index"> The index. </param>
         protected override void RemoveItem(int index)
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the item into the list at the given position.
+        /// Sets the item into the list at the given position.
         /// </summary>
         /// <param name="index"> The index to insert at. </param>
         /// <param name="item"> The item. </param>
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Internal
         #region ObservaleCollection management
 
         /// <summary>
-        ///     Event handler to update the binding list when the underlying observable collection changes.
+        /// Event handler to update the binding list when the underlying observable collection changes.
         /// </summary>
         /// <param name="sender"> The sender. </param>
         /// <param name="e"> Data indicating how the collection has changed. </param>
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Adds the item to the underlying observable collection.
+        /// Adds the item to the underlying observable collection.
         /// </summary>
         /// <param name="item"> The item. </param>
         private void AddToObservableCollection(T item)
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Removes the item from the underlying from observable collection.
+        /// Removes the item from the underlying from observable collection.
         /// </summary>
         /// <param name="item"> The item. </param>
         private void RemoveFromObservableCollection(T item)

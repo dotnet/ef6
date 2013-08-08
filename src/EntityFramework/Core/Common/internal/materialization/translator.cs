@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Reflection;
 
     /// <summary>
-    ///     Translates query ColumnMap into ShaperFactory. Basically, we interpret the
-    ///     ColumnMap and compile delegates used to materialize results.
+    /// Translates query ColumnMap into ShaperFactory. Basically, we interpret the
+    /// ColumnMap and compile delegates used to materialize results.
     /// </summary>
     internal class Translator
     {
@@ -31,8 +31,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             "TranslateColumnMap", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
-        ///     The main entry point for the translation process. Given a ColumnMap, returns
-        ///     a ShaperFactory which can be used to materialize results for a query.
+        /// The main entry point for the translation process. Given a ColumnMap, returns
+        /// a ShaperFactory which can be used to materialize results for a query.
         /// </summary>
         internal virtual ShaperFactory<T> TranslateColumnMap<T>(
             ColumnMap columnMap, MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool valueLayer)
@@ -108,36 +108,36 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Private state
 
             /// <summary>
-            ///     Gets the O-Space Metadata workspace.
+            /// Gets the O-Space Metadata workspace.
             /// </summary>
             private readonly MetadataWorkspace _workspace;
 
             /// <summary>
-            ///     Gets structure telling us how to interpret 'span' rows (includes implicit
-            ///     relationship span and explicit full span via ObjectQuery.Include().
+            /// Gets structure telling us how to interpret 'span' rows (includes implicit
+            /// relationship span and explicit full span via ObjectQuery.Include().
             /// </summary>
             private readonly SpanIndex _spanIndex;
 
             /// <summary>
-            ///     Gets the MergeOption for the current query (influences our handling of
-            ///     entities when they are materialized).
+            /// Gets the MergeOption for the current query (influences our handling of
+            /// entities when they are materialized).
             /// </summary>
             private readonly MergeOption _mergeOption;
 
             /// <summary>
-            ///     When true, indicates we're processing for the value layer (BridgeDataReader)
-            ///     and not the ObjectMaterializer
+            /// When true, indicates we're processing for the value layer (BridgeDataReader)
+            /// and not the ObjectMaterializer
             /// </summary>
             private readonly bool IsValueLayer;
 
             /// <summary>
-            ///     Gets scratchpad for the coordinator builder for the nested reader currently
-            ///     being translated or emitted.
+            /// Gets scratchpad for the coordinator builder for the nested reader currently
+            /// being translated or emitted.
             /// </summary>
             private CoordinatorScratchpad _currentCoordinatorScratchpad;
 
             /// <summary>
-            ///     Local cache of ObjectTypeMappings for EdmTypes (to prevent expensive lookups).
+            /// Local cache of ObjectTypeMappings for EdmTypes (to prevent expensive lookups).
             /// </summary>
             private readonly Dictionary<EdmType, ObjectTypeMapping> _objectTypeMappings = new Dictionary<EdmType, ObjectTypeMapping>();
 
@@ -163,13 +163,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region "Public" surface
 
             /// <summary>
-            ///     Scratchpad for topmost nested reader coordinator.
+            /// Scratchpad for topmost nested reader coordinator.
             /// </summary>
             public CoordinatorScratchpad RootCoordinatorScratchpad { get; private set; }
 
             /// <summary>
-            ///     Gets number of 'Shaper.State' slots allocated (used to hold onto intermediate
-            ///     values during materialization)
+            /// Gets number of 'Shaper.State' slots allocated (used to hold onto intermediate
+            /// values during materialization)
             /// </summary>
             public int StateSlotCount { get; private set; }
 
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Structured columns
 
             /// <summary>
-            ///     Visit(ComplexTypeColumnMap)
+            /// Visit(ComplexTypeColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(ComplexTypeColumnMap columnMap, TranslatorArg arg)
             {
@@ -228,7 +228,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(EntityColumnMap)
+            /// Visit(EntityColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(EntityColumnMap columnMap, TranslatorArg arg)
             {
@@ -397,11 +397,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Prepare a list of PropertyBindings for each item in the specified property
-            ///     collection such that the mapped property of the specified clrType has its
-            ///     value set from the source data reader.
-            ///     Along the way we'll keep track of non-public properties and properties that
-            ///     have link demands, so we can ensure enforce them.
+            /// Prepare a list of PropertyBindings for each item in the specified property
+            /// collection such that the mapped property of the specified clrType has its
+            /// value set from the source data reader.
+            /// Along the way we'll keep track of non-public properties and properties that
+            /// have link demands, so we can ensure enforce them.
             /// </summary>
             private List<MemberBinding> CreatePropertyBindings(
                 StructuredColumnMap columnMap, ReadOnlyMetadataCollection<EdmProperty> properties)
@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(SimplePolymorphicColumnMap)
+            /// Visit(SimplePolymorphicColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(SimplePolymorphicColumnMap columnMap, TranslatorArg arg)
             {
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(MultipleDiscriminatorPolymorphicColumnMap)
+            /// Visit(MultipleDiscriminatorPolymorphicColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, TranslatorArg arg)
             {
@@ -510,7 +510,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Helper method to simplify the construction of the types
+            /// Helper method to simplify the construction of the types
             /// </summary>
             [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
                 Justification = "Called via reflection by the Visit method")]
@@ -555,7 +555,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(RecordColumnMap)
+            /// Visit(RecordColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(RecordColumnMap columnMap, TranslatorArg arg)
             {
@@ -692,8 +692,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Build expression to materialize LINQ initialization types (anonymous
-            ///     types, IGrouping, EntityCollection)
+            /// Build expression to materialize LINQ initialization types (anonymous
+            /// types, IGrouping, EntityCollection)
             /// </summary>
             private Expression HandleLinqRecord(RecordColumnMap columnMap, InitializerMetadata initializerMetadata)
             {
@@ -721,7 +721,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Build expression to materialize a data record.
+            /// Build expression to materialize a data record.
             /// </summary>
             private Expression HandleRegularRecord(RecordColumnMap columnMap, TranslatorArg arg, RowType spanRowType)
             {
@@ -760,7 +760,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Build expression to materialize the spanned information
+            /// Build expression to materialize the spanned information
             /// </summary>
             private Expression HandleSpandexRecord(RecordColumnMap columnMap, TranslatorArg arg, RowType spanRowType)
             {
@@ -821,7 +821,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Collection columns
 
             /// <summary>
-            ///     Visit(SimpleCollectionColumnMap)
+            /// Visit(SimpleCollectionColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(SimpleCollectionColumnMap columnMap, TranslatorArg arg)
             {
@@ -829,7 +829,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(DiscriminatedCollectionColumnMap)
+            /// Visit(DiscriminatedCollectionColumnMap)
             /// </summary>
             internal override TranslatorResult Visit(DiscriminatedCollectionColumnMap columnMap, TranslatorArg arg)
             {
@@ -837,7 +837,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Common code for both Simple and Discrminated Column Maps.
+            /// Common code for both Simple and Discrminated Column Maps.
             /// </summary>
             private TranslatorResult ProcessCollectionColumnMap(CollectionColumnMap columnMap, TranslatorArg arg)
             {
@@ -845,7 +845,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Common code for both Simple and Discriminated Column Maps.
+            /// Common code for both Simple and Discriminated Column Maps.
             /// </summary>
             private TranslatorResult ProcessCollectionColumnMap(
                 CollectionColumnMap columnMap, TranslatorArg arg, ColumnMap discriminatorColumnMap, object discriminatorValue)
@@ -971,7 +971,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Returns the CLR Type of the element of the collection
+            /// Returns the CLR Type of the element of the collection
             /// </summary>
             private Type DetermineElementType(Type collectionType, CollectionColumnMap columnMap)
             {
@@ -998,7 +998,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Build up the coordinator graph using Enter/ExitCoordinatorTranslateScope.
+            /// Build up the coordinator graph using Enter/ExitCoordinatorTranslateScope.
             /// </summary>
             private void EnterCoordinatorTranslateScope(CoordinatorScratchpad coordinatorScratchpad)
             {
@@ -1022,10 +1022,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Return an expression to read the coordinator from a state slot at
-            ///     runtime.  This is the method where we store the expressions we've
-            ///     been building into the CoordinatorScratchpad, which we'll compile
-            ///     later, once we've left the visitor.
+            /// Return an expression to read the coordinator from a state slot at
+            /// runtime.  This is the method where we store the expressions we've
+            /// been building into the CoordinatorScratchpad, which we'll compile
+            /// later, once we've left the visitor.
             /// </summary>
             private Expression BuildExpressionToGetCoordinator(
                 Type elementType, Expression element, Expression[] keyReaders, Expression discriminator, object discriminatorValue,
@@ -1088,9 +1088,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Scalar columns
 
             /// <summary>
-            ///     Visit(RefColumnMap)
-            ///     If the entityKey has a value, then return it otherwise return a null
-            ///     valued EntityKey.  The EntityKey construction is the tricky part.
+            /// Visit(RefColumnMap)
+            /// If the entityKey has a value, then return it otherwise return a null
+            /// valued EntityKey.  The EntityKey construction is the tricky part.
             /// </summary>
             internal override TranslatorResult Visit(RefColumnMap columnMap, TranslatorArg arg)
             {
@@ -1107,10 +1107,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(ScalarColumnMap)
-            ///     Pretty basic stuff here; we just call the method that matches the
-            ///     type of the column.  Of course we have to handle nullable/non-nullable
-            ///     types, and non-value types.
+            /// Visit(ScalarColumnMap)
+            /// Pretty basic stuff here; we just call the method that matches the
+            /// type of the column.  Of course we have to handle nullable/non-nullable
+            /// types, and non-value types.
             /// </summary>
             internal override TranslatorResult Visit(ScalarColumnMap columnMap, TranslatorArg arg)
             {
@@ -1196,8 +1196,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Visit(VarRefColumnMap)
-            ///     This should throw; VarRefColumnMaps should be removed by the PlanCompiler.
+            /// Visit(VarRefColumnMap)
+            /// This should throw; VarRefColumnMaps should be removed by the PlanCompiler.
             /// </summary>
             internal override TranslatorResult Visit(VarRefColumnMap columnMap, TranslatorArg arg)
             {
@@ -1210,8 +1210,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #region Helper methods
 
             /// <summary>
-            ///     Allocates a slot in 'Shaper.State' which can be used as storage for
-            ///     materialization tasks (e.g. remembering key values for a nested collection)
+            /// Allocates a slot in 'Shaper.State' which can be used as storage for
+            /// materialization tasks (e.g. remembering key values for a nested collection)
             /// </summary>
             private int AllocateStateSlot()
             {
@@ -1219,7 +1219,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Return the CLR type we're supposed to materialize for the TypeUsage
+            /// Return the CLR type we're supposed to materialize for the TypeUsage
             /// </summary>
             private Type DetermineClrType(TypeUsage typeUsage)
             {
@@ -1227,7 +1227,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Return the CLR type we're supposed to materialize for the EdmType
+            /// Return the CLR type we're supposed to materialize for the EdmType
             /// </summary>
             private Type DetermineClrType(EdmType edmType)
             {
@@ -1326,8 +1326,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Get the ConstructorInfo for the type specified, and ensure we keep track
-            ///     of any security requirements that the type has.
+            /// Get the ConstructorInfo for the type specified, and ensure we keep track
+            /// of any security requirements that the type has.
             /// </summary>
             private static ConstructorInfo GetConstructor(Type type)
             {
@@ -1335,12 +1335,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Retrieves object mapping metadata for the given type. The first time a type
-            ///     is encountered, we cache the metadata to avoid repeating the work for every
-            ///     row in result.
-            ///     Caching at the materializer rather than workspace/metadata cache level optimizes
-            ///     for transient types (including row types produced for span, LINQ initializations,
-            ///     collections and projections).
+            /// Retrieves object mapping metadata for the given type. The first time a type
+            /// is encountered, we cache the metadata to avoid repeating the work for every
+            /// row in result.
+            /// Caching at the materializer rather than workspace/metadata cache level optimizes
+            /// for transient types (including row types produced for span, LINQ initializations,
+            /// collections and projections).
             /// </summary>
             private ObjectTypeMapping LookupObjectMapping(EdmType edmType)
             {
@@ -1363,7 +1363,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Remove spanned info from the edmType
+            /// Remove spanned info from the edmType
             /// </summary>
             private EdmType ResolveSpanType(EdmType edmType)
             {
@@ -1396,7 +1396,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Creates an expression representing an inline delegate of type Func{Shaper, body.Type};
+            /// Creates an expression representing an inline delegate of type Func{Shaper, body.Type};
             /// </summary>
             private LambdaExpression CreateInlineDelegate(Expression body)
             {
@@ -1418,9 +1418,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
 
             /// <summary>
-            ///     Creates expression to construct an EntityKey. Assumes that both the key has
-            ///     a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value
-            ///     (EntitySet != null).
+            /// Creates expression to construct an EntityKey. Assumes that both the key has
+            /// a value (Emit_EntityKey_HasValue == true) and that the EntitySet has value
+            /// (EntitySet != null).
             /// </summary>
             private static Expression Emit_EntityKey_ctor(
                 TranslatorVisitor translatorVisitor, EntityIdentity entityIdentity, bool isForColumnValue, out Expression entitySetReader)

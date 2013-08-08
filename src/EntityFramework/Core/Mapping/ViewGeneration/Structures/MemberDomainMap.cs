@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Adds AllOtherConstants element to the domain set given by MemberPath
+        /// Adds AllOtherConstants element to the domain set given by MemberPath
         /// </summary>
         internal void AddSentinel(MemberPath path)
         {
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Removes AllOtherConstant element from the domain set given by MemberPath
+        /// Removes AllOtherConstant element from the domain set given by MemberPath
         /// </summary>
         internal void RemoveSentinel(MemberPath path)
         {

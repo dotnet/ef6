@@ -5,8 +5,8 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     using System.Data.Common;
 
     /// <summary>
-    ///     A DbConnection that doesn't work but providers just enough information that Code First can generate
-    ///     an SSDL without having to hit a real database.
+    /// A DbConnection that doesn't work but providers just enough information that Code First can generate
+    /// an SSDL without having to hit a real database.
     /// </summary>
     public class FakeSqlConnection : DbConnection
     {

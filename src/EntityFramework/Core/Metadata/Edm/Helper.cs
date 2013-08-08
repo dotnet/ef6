@@ -14,26 +14,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml.XPath;
 
     /// <summary>
-    ///     Helper Class for EDM Metadata - this class contains all the helper methods
-    ///     which only accesses public methods/properties. The other partial class contains all
-    ///     helper methods which just uses internal methods/properties. The reason why we
-    ///     did this for allowing view gen to happen at compile time - all the helper
-    ///     methods that view gen or mapping uses are in this class. Rest of the
-    ///     methods are in this class
+    /// Helper Class for EDM Metadata - this class contains all the helper methods
+    /// which only accesses public methods/properties. The other partial class contains all
+    /// helper methods which just uses internal methods/properties. The reason why we
+    /// did this for allowing view gen to happen at compile time - all the helper
+    /// methods that view gen or mapping uses are in this class. Rest of the
+    /// methods are in this class
     /// </summary>
     internal static partial class Helper
     {
         internal static readonly EdmMember[] EmptyArrayEdmProperty = new EdmMember[0];
 
         /// <summary>
-        ///     The method wraps the GetAttribute method on XPathNavigator.
-        ///     The problem with using the method directly is that the
-        ///     Get Attribute method does not differentiate the absence of an attribute and
-        ///     having an attribute with Empty string value. In both cases the value returned is an empty string.
-        ///     So in case of optional attributes, it becomes hard to distinguish the case whether the
-        ///     xml contains the attribute with empty string or doesn't contain the attribute
-        ///     This method will return null if the attribute is not present and otherwise will return the
-        ///     attribute value.
+        /// The method wraps the GetAttribute method on XPathNavigator.
+        /// The problem with using the method directly is that the
+        /// Get Attribute method does not differentiate the absence of an attribute and
+        /// having an attribute with Empty string value. In both cases the value returned is an empty string.
+        /// So in case of optional attributes, it becomes hard to distinguish the case whether the
+        /// xml contains the attribute with empty string or doesn't contain the attribute
+        /// This method will return null if the attribute is not present and otherwise will return the
+        /// attribute value.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="attributeName"> name of the attribute </param>
@@ -53,8 +53,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The method returns typed attribute value of the specified xml attribute.
-        ///     The method does not do any specific casting but uses the methods on XPathNavigator.
+        /// The method returns typed attribute value of the specified xml attribute.
+        /// The method does not do any specific casting but uses the methods on XPathNavigator.
         /// </summary>
         internal static object GetTypedAttributeValue(
             XPathNavigator nav,
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Searches for Facet Description with the name specified.
+        /// Searches for Facet Description with the name specified.
         /// </summary>
         /// <param name="facetCollection"> Collection of facet description </param>
         /// <param name="facetName"> name of the facet </param>
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a single comma delimited string given a list of strings
+        /// Creates a single comma delimited string given a list of strings
         /// </summary>
         internal static String GetCommaDelimitedString(IEnumerable<string> stringList)
         {
@@ -458,7 +458,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <remarks>
-        ///     Performance of Enum.ToString() is slow and we use this value in building Identity
+        /// Performance of Enum.ToString() is slow and we use this value in building Identity
         /// </remarks>
         internal static string ToString(ParameterDirection value)
         {
@@ -479,7 +479,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <remarks>
-        ///     Performance of Enum.ToString() is slow and we use this value in building Identity
+        /// Performance of Enum.ToString() is slow and we use this value in building Identity
         /// </remarks>
         internal static string ToString(ParameterMode value)
         {
@@ -500,13 +500,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Verifies whether the given <paramref name="typeKind" /> is a valid underlying type for an enumeration type.
+        /// Verifies whether the given <paramref name="typeKind" /> is a valid underlying type for an enumeration type.
         /// </summary>
         /// <param name="typeKind">
-        ///     <see cref="PrimitiveTypeKind" /> to verifiy.
+        /// <see cref="PrimitiveTypeKind" /> to verifiy.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the <paramref name="typeKind" /> is a valid underlying type for an enumeration type. Otherwise <c>false</c> .
+        /// <c>true</c> if the <paramref name="typeKind" /> is a valid underlying type for an enumeration type. Otherwise <c>false</c> .
         /// </returns>
         internal static bool IsSupportedEnumUnderlyingType(PrimitiveTypeKind typeKind)
         {
@@ -528,12 +528,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 };
 
         /// <summary>
-        ///     Verifies whether a value of a member of an enumeration type is in range according to underlying type of the enumeration type.
+        /// Verifies whether a value of a member of an enumeration type is in range according to underlying type of the enumeration type.
         /// </summary>
         /// <param name="underlyingTypeKind"> Underlying type of the enumeration type. </param>
         /// <param name="value"> Value to check. </param>
         /// <returns>
-        ///     <c>true</c> if the <paramref name="value" /> is in range of the <paramref name="underlyingTypeKind" /> . <c>false</c> otherwise.
+        /// <c>true</c> if the <paramref name="value" /> is in range of the <paramref name="underlyingTypeKind" /> . <c>false</c> otherwise.
         /// </returns>
         internal static bool IsEnumMemberValueInRange(PrimitiveTypeKind underlyingTypeKind, long value)
         {
@@ -543,15 +543,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Checks whether the <paramref name="type" /> is enum type and if this is the case returns its underlying type. Otherwise
-        ///     returns <paramref name="type" /> after casting it to PrimitiveType.
+        /// Checks whether the <paramref name="type" /> is enum type and if this is the case returns its underlying type. Otherwise
+        /// returns <paramref name="type" /> after casting it to PrimitiveType.
         /// </summary>
         /// <param name="type"> Type to convert to primitive type. </param>
         /// <returns>
-        ///     Underlying type if <paramref name="type" /> is enumeration type. Otherwise <paramref name="type" /> itself.
+        /// Underlying type if <paramref name="type" /> is enumeration type. Otherwise <paramref name="type" /> itself.
         /// </returns>
         /// <remarks>
-        ///     This method should be called only for primitive or enumeration types.
+        /// This method should be called only for primitive or enumeration types.
         /// </remarks>
         internal static PrimitiveType AsPrimitive(EdmType type)
         {
@@ -564,11 +564,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns underlying EDM type of a given enum <paramref name="type" />.
+        /// Returns underlying EDM type of a given enum <paramref name="type" />.
         /// </summary>
         /// <param name="type"> Enum type whose underlying EDM type needs to be returned. Must not be null. </param>
         /// <returns>
-        ///     The underlying EDM type of a given enum <paramref name="type" /> .
+        /// The underlying EDM type of a given enum <paramref name="type" /> .
         /// </returns>
         internal static PrimitiveType GetUnderlyingEdmTypeForEnumType(EdmType type)
         {

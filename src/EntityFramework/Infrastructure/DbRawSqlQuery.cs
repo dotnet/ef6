@@ -13,13 +13,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Represents a SQL query for non-entities that is created from a <see cref="DbContext" />
-    ///     and is executed using the connection from that context.
-    ///     Instances of this class are obtained from the <see cref="DbContext.Database" /> instance.
-    ///     The query is not executed when this object is created; it is executed
-    ///     each time it is enumerated, for example by using foreach.
-    ///     SQL queries for entities are created using <see cref="DbSet.SqlQuery" />.
-    ///     See <see cref="DbRawSqlQuery{TElement}" /> for a generic version of this class.
+    /// Represents a SQL query for non-entities that is created from a <see cref="DbContext" />
+    /// and is executed using the connection from that context.
+    /// Instances of this class are obtained from the <see cref="DbContext.Database" /> instance.
+    /// The query is not executed when this object is created; it is executed
+    /// each time it is enumerated, for example by using foreach.
+    /// SQL queries for entities are created using <see cref="DbSet.SqlQuery" />.
+    /// See <see cref="DbRawSqlQuery{TElement}" /> for a generic version of this class.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalSqlQuery _internalQuery;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbRawSqlQuery" /> class.
+        /// Initializes a new instance of the <see cref="DbRawSqlQuery" /> class.
         /// </summary>
         /// <param name="internalQuery"> The internal query. </param>
         internal DbRawSqlQuery(InternalSqlQuery internalQuery)
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         #region AsStreaming
 
         /// <summary>
-        ///     Returns a new query that will stream the results instead of buffering.
+        /// Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
         public virtual DbRawSqlQuery AsStreaming()
@@ -59,10 +59,10 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the SQL query against the database.
+        /// Returns an <see cref="IEnumerator" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref="IEnumerator" /> object that can be used to iterate through the elements.
+        /// An <see cref="IEnumerator" /> object that can be used to iterate through the elements.
         /// </returns>
         public virtual IEnumerator GetEnumerator()
         {
@@ -76,10 +76,10 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerable" /> which when enumerated will execute the SQL query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerable" /> which when enumerated will execute the SQL query against the database.
         /// </summary>
         /// <returns>
-        ///     An <see cref="IDbAsyncEnumerable" /> object that can be used to iterate through the elements.
+        /// An <see cref="IDbAsyncEnumerable" /> object that can be used to iterate through the elements.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IDbAsyncEnumerator IDbAsyncEnumerable.GetAsyncEnumerator()
@@ -96,11 +96,11 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously enumerates the query results and performs the specified action on each element.
+        /// Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="action"> The action to perform on each element. </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
@@ -112,15 +112,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously enumerates the query results and performs the specified action on each element.
+        /// Asynchronously enumerates the query results and performs the specified action on each element.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="action"> The action to perform on each element. </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns> A task that represents the asynchronous operation. </returns>
         public virtual Task ForEachAsync(Action<object> action, CancellationToken cancellationToken)
@@ -131,15 +131,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
+        /// Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a <see cref="List{T}" /> that contains elements from the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains a <see cref="List{T}" /> that contains elements from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<List<object>> ToListAsync()
@@ -148,18 +148,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
+        /// Creates a <see cref="List{T}" /> from the query by enumerating it asynchronously.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains a <see cref="List{T}" /> that contains elements from the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains a <see cref="List{T}" /> that contains elements from the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<List<object>> ToListAsync(CancellationToken cancellationToken)
@@ -174,11 +174,11 @@ namespace System.Data.Entity.Infrastructure
         #region ToString
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> that contains the SQL string that was set
-        ///     when the query was created.  The parameters are not included.
+        /// Returns a <see cref="System.String" /> that contains the SQL string that was set
+        /// when the query was created.  The parameters are not included.
         /// </summary>
         /// <returns>
-        ///     A <see cref="System.String" /> that represents this instance.
+        /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
         {
@@ -190,7 +190,7 @@ namespace System.Data.Entity.Infrastructure
         #region Access to internal query
 
         /// <summary>
-        ///     Gets the internal query.
+        /// Gets the internal query.
         /// </summary>
         /// <value> The internal query. </value>
         internal InternalSqlQuery InternalQuery
@@ -213,10 +213,10 @@ namespace System.Data.Entity.Infrastructure
         #region IListSource implementation
 
         /// <summary>
-        ///     Returns <c>false</c>.
+        /// Returns <c>false</c>.
         /// </summary>
         /// <returns>
-        ///     <c>false</c> .
+        /// <c>false</c> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Throws an exception indicating that binding directly to a store query is not supported.
+        /// Throws an exception indicating that binding directly to a store query is not supported.
         /// </summary>
         /// <returns> Never returns; always throws. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]

@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
     /// <summary>
-    ///     Summary description for SchemaType.
+    /// Summary description for SchemaType.
     /// </summary>
     internal abstract class SchemaType : SchemaElement
     {
         #region Public Properties
 
         /// <summary>
-        ///     Gets the Namespace that this type is in.
+        /// Gets the Namespace that this type is in.
         /// </summary>
         public string Namespace
         {

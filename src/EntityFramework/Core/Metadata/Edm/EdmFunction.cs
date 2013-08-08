@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Text;
 
     /// <summary>
-    ///     Class for representing a function
+    /// Class for representing a function
     /// </summary>
     public class EdmFunction : EdmType
     {
@@ -151,10 +151,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
         /// <returns>
-        ///     One of the enumeration values of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> enumeration.
+        /// One of the enumeration values of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> enumeration.
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -169,13 +169,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
+        /// Gets the parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the parameters of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the parameters of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        /// .
         /// </returns>
         public ReadOnlyMetadataCollection<FunctionParameter> Parameters
         {
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns true if this is a C-space function and it has an eSQL body defined as DefiningExpression.
+        /// Returns true if this is a C-space function and it has an eSQL body defined as DefiningExpression.
         /// </summary>
         internal bool HasUserDefinedBody
         {
@@ -208,8 +208,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     For function imports, optionally indicates the entity set to which the result is bound.
-        ///     If the function import has multiple result sets, returns the entity set to which the first result is bound
+        /// For function imports, optionally indicates the entity set to which the result is bound.
+        /// If the function import has multiple result sets, returns the entity set to which the first result is bound
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, false)]
         internal EntitySet EntitySet
@@ -218,9 +218,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     For function imports, indicates the entity sets to which the return parameters are bound.
-        ///     The number of elements in the collection matches the number of return parameters.
-        ///     A null element in the collection indicates that the corresponding are not bound to an entity set.
+        /// For function imports, indicates the entity sets to which the return parameters are bound.
+        /// The number of elements in the collection matches the number of return parameters.
+        /// A null element in the collection indicates that the corresponding are not bound to an entity set.
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, true)]
         internal ReadOnlyMetadataCollection<EntitySet> EntitySets
@@ -229,13 +229,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the return parameter of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
+        /// Gets the return parameter of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" /> object that represents the return parameter of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.FunctionParameter" /> object that represents the return parameter of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.FunctionParameter, false)]
         public FunctionParameter ReturnParameter
@@ -244,13 +244,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the return parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
+        /// Gets the return parameters of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that represents the return parameters of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that represents the return parameters of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.FunctionParameter, true)]
         public ReadOnlyMetadataCollection<FunctionParameter> ReturnParameters
@@ -338,10 +338,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets a query in the language that is used by the database management system or storage model. </summary>
         /// <returns>
-        ///     A string value in the syntax used by the database management system or storage model that contains the query or update statement of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
-        ///     .
+        /// A string value in the syntax used by the database management system or storage model that contains the query or update statement of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />
+        /// .
         /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string CommandTextAttribute
@@ -380,7 +380,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
+        /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Builds function identity string in the form of "functionName (param1, param2, ... paramN)".
+        /// Builds function identity string in the form of "functionName (param1, param2, ... paramN)".
         /// </summary>
         internal override void BuildIdentity(StringBuilder builder)
         {
@@ -416,11 +416,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Builds identity based on the functionName and parameter types. All parameters are assumed to be
-        ///     <see
-        ///         cref="ParameterMode.In" />
-        ///     .
-        ///     Returns string in the form of "functionName (param1, param2, ... paramN)".
+        /// Builds identity based on the functionName and parameter types. All parameters are assumed to be
+        /// <see
+        ///     cref="ParameterMode.In" />
+        /// .
+        /// Returns string in the form of "functionName (param1, param2, ... paramN)".
         /// </summary>
         internal static string BuildIdentity(string functionName, IEnumerable<TypeUsage> functionParameters)
         {
@@ -437,8 +437,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Builds identity based on the functionName and parameters metadata.
-        ///     Returns string in the form of "functionName (param1, param2, ... paramN)".
+        /// Builds identity based on the functionName and parameters metadata.
+        /// Returns string in the form of "functionName (param1, param2, ... paramN)".
         /// </summary>
         internal static void BuildIdentity<TParameterMetadata>(
             StringBuilder builder,
@@ -507,7 +507,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The factory method for constructing the <see cref="EdmFunction" /> object.
+        /// The factory method for constructing the <see cref="EdmFunction" /> object.
         /// </summary>
         /// <param name="name">The name of the function.</param>
         /// <param name="namespaceName">The namespace of the function.</param>
@@ -515,7 +515,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="payload">Additional function attributes and properties.</param>
         /// <param name="metadataProperties">Metadata properties that will be added to the function. Can be null.</param>
         /// <returns>
-        ///     A new, read-only instance of the <see cref="EdmFunction" /> type.
+        /// A new, read-only instance of the <see cref="EdmFunction" /> type.
         /// </returns>
         public static EdmFunction Create(
             string name,

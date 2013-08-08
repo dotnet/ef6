@@ -20,25 +20,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     internal partial class Propagator
     {
         /// <summary>
-        ///     Performs join propagation. The basic strategy is to identify changes (inserts, deletes)
-        ///     on either side of the join that are related according to the join criteria. Support is restricted
-        ///     to conjunctions of equality predicates of the form <c>left property == right property</c>.
-        ///     When a group of related changes is identified, rules are applied based on the existence of
-        ///     different components (e.g., a left insert + right insert).
+        /// Performs join propagation. The basic strategy is to identify changes (inserts, deletes)
+        /// on either side of the join that are related according to the join criteria. Support is restricted
+        /// to conjunctions of equality predicates of the form <c>left property == right property</c>.
+        /// When a group of related changes is identified, rules are applied based on the existence of
+        /// different components (e.g., a left insert + right insert).
         /// </summary>
         /// <remarks>
-        ///     The joins handled by this class are degenerate in the sense that a row in the 'left' input always
-        ///     joins with at most one row in the 'right' input. The restrictions that allow for this assumption
-        ///     are described in the update design spec (see 'Level 5 Optimization').
+        /// The joins handled by this class are degenerate in the sense that a row in the 'left' input always
+        /// joins with at most one row in the 'right' input. The restrictions that allow for this assumption
+        /// are described in the update design spec (see 'Level 5 Optimization').
         /// </remarks>
         /// <remarks>
-        ///     Propagation rules for joins are stored in static fields of the class (initialized in the static
-        ///     constructor for the class).
+        /// Propagation rules for joins are stored in static fields of the class (initialized in the static
+        /// constructor for the class).
         /// </remarks>
         private partial class JoinPropagator
         {
             /// <summary>
-            ///     Constructs a join propagator.
+            /// Constructs a join propagator.
             /// </summary>
             /// <param name="left"> Result of propagating changes in the left input to the join </param>
             /// <param name="right"> Result of propagating changes in the right input to the join </param>
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private readonly CompositeKey m_rightPlaceholderKey;
 
             /// <summary>
-            ///     Initialize rules.
+            /// Initialize rules.
             /// </summary>
             [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
             static JoinPropagator()
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Initializes propagation rules for a specific input combination.
+            /// Initializes propagation rules for a specific input combination.
             /// </summary>
             /// <param name="input"> Describes the elements available in the input </param>
             /// <param name="joinInsert"> Describes the rule for inserts when the operator is an inner join </param>
@@ -260,7 +260,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Performs join propagation.
+            /// Performs join propagation.
             /// </summary>
             /// <returns> Changes propagated to the current join node in the update mapping view. </returns>
             internal ChangeNode Propagate()
@@ -293,7 +293,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Propagate all changes associated with a particular join key.
+            /// Propagate all changes associated with a particular join key.
             /// </summary>
             /// <param name="key"> Key. </param>
             /// <param name="result"> Resulting changes are added to this result. </param>
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Produce a tuple containing joined rows.
+            /// Produce a tuple containing joined rows.
             /// </summary>
             /// <param name="left"> Left row. </param>
             /// <param name="right"> Right row. </param>
@@ -460,16 +460,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Constructs a new placeholder record for the left hand side of the join. Values taken
-            ///     from the join key are injected into the record.
+            /// Constructs a new placeholder record for the left hand side of the join. Values taken
+            /// from the join key are injected into the record.
             /// </summary>
             /// <param name="key"> Key producing the left hand side. </param>
             /// <param name="mode"> Mode used to populate the placeholder </param>
             /// <returns>
-            ///     Record corresponding to the type of the left input to the join. Each value in the record is flagged as
-            ///     <see
-            ///         cref="PropagatorFlags.Unknown" />
-            ///     except when it is a component of the key.
+            /// Record corresponding to the type of the left input to the join. Each value in the record is flagged as
+            /// <see
+            ///     cref="PropagatorFlags.Unknown" />
+            /// except when it is a component of the key.
             /// </returns>
             private PropagatorResult LeftPlaceholder(CompositeKey key, PopulateMode mode)
             {
@@ -477,7 +477,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     See <see cref="LeftPlaceholder"></see>
+            /// See <see cref="LeftPlaceholder"></see>
             /// </summary>
             private PropagatorResult RightPlaceholder(CompositeKey key, PopulateMode mode)
             {
@@ -485,8 +485,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Produces a hash table of all instances and processes join keys, adding them to the list
-            ///     of keys handled by this node.
+            /// Produces a hash table of all instances and processes join keys, adding them to the list
+            /// of keys handled by this node.
             /// </summary>
             /// <param name="instances"> List of instances (whether delete or insert) for this node. </param>
             /// <param name="keySelectors"> Selectors for key components. </param>
@@ -524,8 +524,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             /// <summary>
-            ///     Flags indicating which change elements are available (0-4) and propagation
-            ///     rules (0, 5-512)
+            /// Flags indicating which change elements are available (0-4) and propagation
+            /// rules (0, 5-512)
             /// </summary>
             [Flags]
             private enum Ops : uint

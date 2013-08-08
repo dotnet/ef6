@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     UnionAll (ie) no duplicate elimination
+    /// UnionAll (ie) no duplicate elimination
     /// </summary>
     internal sealed class UnionAllOp : SetOp
     {
@@ -35,8 +35,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly UnionAllOp Pattern = new UnionAllOp();
 
         /// <summary>
-        ///     Returns the branch discriminator var for this op.  It may be null, if
-        ///     we haven't been through key pullup yet.
+        /// Returns the branch discriminator var for this op.  It may be null, if
+        /// we haven't been through key pullup yet.
         /// </summary>
         internal Var BranchDiscriminator
         {
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

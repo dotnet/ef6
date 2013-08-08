@@ -11,10 +11,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents a particular usage of a structure defined in EntityType. In the conceptual-model, this represents a set that can 
-    ///     query and persist entities. In the store-model it represents a table. 
-    ///     From a store-space model-convention it can be used to configure
-    ///     table name with <see cref="EntitySetBase.Table"/> property and table schema with <see cref="EntitySetBase.Schema"/> property.
+    /// Represents a particular usage of a structure defined in EntityType. In the conceptual-model, this represents a set that can 
+    /// query and persist entities. In the store-model it represents a table. 
+    /// From a store-space model-convention it can be used to configure
+    /// table name with <see cref="EntitySetBase.Table"/> property and table schema with <see cref="EntitySetBase.Schema"/> property.
     /// </summary>
     public class EntitySet : EntitySetBase
     {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing the EntitySet with a given name and an entity type
+        /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
         /// <param name="name"> The name of the EntitySet </param>
         /// <param name="schema"> The db schema </param>
@@ -42,13 +42,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private volatile bool _hasIndependentRelationships;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -56,13 +56,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the entity type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
+        /// Gets the entity type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> object that represents the entity type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> object that represents the entity type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// .
         /// </returns>
         public new virtual EntityType ElementType
         {
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the associations and constraints where "this" EntitySet particpates as the Principal end.
-        ///     From the results of this list, you can retrieve the Dependent IRelatedEnds
+        /// Returns the associations and constraints where "this" EntitySet particpates as the Principal end.
+        /// From the results of this list, you can retrieve the Dependent IRelatedEnds
         /// </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyDependents
         {
@@ -86,8 +86,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the associations and constraints where "this" EntitySet particpates as the Dependent end.
-        ///     From the results of this list, you can retrieve the Principal IRelatedEnds
+        /// Returns the associations and constraints where "this" EntitySet particpates as the Dependent end.
+        /// From the results of this list, you can retrieve the Principal IRelatedEnds
         /// </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyPrincipals
         {
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     True if this entity set participates in any foreign key relationships, otherwise false.
+        /// True if this entity set participates in any foreign key relationships, otherwise false.
         /// </summary>
         internal bool HasForeignKeyRelationships
         {
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     True if this entity set participates in any independent relationships, otherwise false.
+        /// True if this entity set participates in any independent relationships, otherwise false.
         /// </summary>
         internal bool HasIndependentRelationships
         {
@@ -176,17 +176,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The factory method for constructing the EntitySet object.
+        /// The factory method for constructing the EntitySet object.
         /// </summary>
         /// <param name="name">The name of the EntitySet.</param>
         /// <param name="schema">The db schema. Can be null.</param>
         /// <param name="table">The db table. Can be null.</param>
         /// <param name="definingQuery">
-        ///     The provider specific query that should be used to retrieve data for this EntitySet. Can be null.
+        /// The provider specific query that should be used to retrieve data for this EntitySet. Can be null.
         /// </param>
         /// <param name="entityType">The entity type of the entities that this entity set type contains.</param>
         /// <param name="metadataProperties">
-        ///     Metadata properties that will be added to the newly created EntitySet. Can be null.
+        /// Metadata properties that will be added to the newly created EntitySet. Can be null.
         /// </param>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
         /// <notes>The newly created EntitySet will be read only.</notes>

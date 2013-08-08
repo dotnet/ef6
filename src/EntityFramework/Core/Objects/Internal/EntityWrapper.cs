@@ -8,11 +8,11 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Implementation of the IEntityWrapper interface that is used for non-null entities that do not implement
-    ///     all of our standard interfaces: IEntityWithKey, IEntityWithRelationships, and IEntityWithChangeTracker, and
-    ///     are not proxies.
-    ///     Different strategies for dealing with these entities are defined by strategy objects that are set into the
-    ///     wrapper at construction time.
+    /// Implementation of the IEntityWrapper interface that is used for non-null entities that do not implement
+    /// all of our standard interfaces: IEntityWithKey, IEntityWithRelationships, and IEntityWithChangeTracker, and
+    /// are not proxies.
+    /// Different strategies for dealing with these entities are defined by strategy objects that are set into the
+    /// wrapper at construction time.
     /// </summary>
     internal abstract class EntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
         where TEntity : class
@@ -23,8 +23,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly IEntityKeyStrategy _keyStrategy;
 
         /// <summary>
-        ///     Constructs a wrapper for the given entity.
-        ///     Note: use EntityWrapperFactory instead of calling this constructor directly.
+        /// Constructs a wrapper for the given entity.
+        /// Note: use EntityWrapperFactory instead of calling this constructor directly.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
@@ -50,11 +50,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Constructs a wrapper as part of the materialization process.  This constructor is only used
-        ///     during materialization where it is known that the entity being wrapped is newly constructed.
-        ///     This means that some checks are not performed that might be needed when thw wrapper is
-        ///     created at other times, and information such as the identity type is passed in because
-        ///     it is readily available in the materializer.
+        /// Constructs a wrapper as part of the materialization process.  This constructor is only used
+        /// during materialization where it is known that the entity being wrapped is newly constructed.
+        /// This means that some checks are not performed that might be needed when thw wrapper is
+        /// created at other times, and information such as the identity type is passed in because
+        /// it is readily available in the materializer.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="relationshipManager"> The RelationshipManager associated with the entity </param>

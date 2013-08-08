@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     // The Range 10,000-15,000 is reserved for tools
     //
     /// <summary>
-    ///     Summary description for ErrorCode.
+    /// Summary description for ErrorCode.
     /// </summary>
     internal enum ErrorCode
     {
@@ -74,17 +74,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 49,
 
         /// <summary>
-        ///     Namespace attribute must be specified.
+        /// Namespace attribute must be specified.
         /// </summary>
         MissingNamespaceAttribute = 50,
 
         /// <summary>
-        ///     Precision out of range
+        /// Precision out of range
         /// </summary>
         PrecisionOutOfRange = 51,
 
         /// <summary>
-        ///     Scale out of range
+        /// Scale out of range
         /// </summary>
         ScaleOutOfRange = 52,
 
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidDefault = 54,
 
         /// <summary>
-        ///     One of the required facets is missing
+        /// One of the required facets is missing
         /// </summary>
         RequiredFacetMissing = 55,
 
@@ -105,12 +105,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         InvalidAssociation = 62,
 
         /// <summary>
-        ///     The facet isn't allow by the property type.
+        /// The facet isn't allow by the property type.
         /// </summary>
         FacetNotAllowedByType = 63,
 
         /// <summary>
-        ///     This facet value is constant and is specified in the schema
+        /// This facet value is constant and is specified in the schema
         /// </summary>
         ConstantFacetSpecifiedInSchema = 64,
 
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 91,
 
         /// <summary>
-        ///     Multiplicity value was malformed
+        /// Multiplicity value was malformed
         /// </summary>
         InvalidMultiplicity = 92,
 
@@ -152,34 +152,34 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 95,
 
         /// <summary>
-        ///     The value for the Action attribute is invalid or not allowed in the current context
+        /// The value for the Action attribute is invalid or not allowed in the current context
         /// </summary>
         InvalidAction = 96,
 
         /// <summary>
-        ///     An error occured processing the On&lt;Operation&gt;  elements
+        /// An error occured processing the On&lt;Operation&gt;  elements
         /// </summary>
         InvalidOperation = 97,
 
         // unused 98,
 
         /// <summary>
-        ///     Ends were given for the Property element of a EntityContainer that is not a RelationshipSet
+        /// Ends were given for the Property element of a EntityContainer that is not a RelationshipSet
         /// </summary>
         InvalidContainerTypeForEnd = 99,
 
         /// <summary>
-        ///     The extent name used in the EntittyContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
+        /// The extent name used in the EntittyContainerType End does not match the name of any of the EntityContainerProperties in the containing EntityContainer
         /// </summary>
         InvalidEndEntitySet = 100,
 
         /// <summary>
-        ///     An end element was not given, and cannot be inferred because too many EntityContainerEntitySet elements that are good possibilities.
+        /// An end element was not given, and cannot be inferred because too many EntityContainerEntitySet elements that are good possibilities.
         /// </summary>
         AmbiguousEntityContainerEnd = 101,
 
         /// <summary>
-        ///     An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
+        /// An end element was not given, and cannot be infered because there is no EntityContainerEntitySets that are the correct type to be used as an EntitySet.
         /// </summary>
         MissingExtentEntityContainerEnd = 102,
 
@@ -188,54 +188,54 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 105,
 
         /// <summary>
-        ///     Not a valid parameter direction for the parameter in a function
+        /// Not a valid parameter direction for the parameter in a function
         /// </summary>
         BadParameterDirection = 106,
 
         /// <summary>
-        ///     Unable to infer an optional schema part, to resolve this, be more explicit
+        /// Unable to infer an optional schema part, to resolve this, be more explicit
         /// </summary>
         FailedInference = 107,
 
         // unused = 108,
 
         /// <summary>
-        ///     Invalid facet attribute(s) specified in provider manifest
+        /// Invalid facet attribute(s) specified in provider manifest
         /// </summary>
         InvalidFacetInProviderManifest = 109,
 
         /// <summary>
-        ///     Invalid role value in the relationship constraint
+        /// Invalid role value in the relationship constraint
         /// </summary>
         InvalidRoleInRelationshipConstraint = 110,
 
         /// <summary>
-        ///     Invalid Property in relationship constraint
+        /// Invalid Property in relationship constraint
         /// </summary>
         InvalidPropertyInRelationshipConstraint = 111,
 
         /// <summary>
-        ///     Type mismatch between ToProperty and FromProperty in the relationship constraint
+        /// Type mismatch between ToProperty and FromProperty in the relationship constraint
         /// </summary>
         TypeMismatchRelationshipConstaint = 112,
 
         /// <summary>
-        ///     Invalid multiplicty in FromRole in the relationship constraint
+        /// Invalid multiplicty in FromRole in the relationship constraint
         /// </summary>
         InvalidMultiplicityInRoleInRelationshipConstraint = 113,
 
         /// <summary>
-        ///     The number of properties in the FromProperty and ToProperty in the relationship constraint must be identical
+        /// The number of properties in the FromProperty and ToProperty in the relationship constraint must be identical
         /// </summary>
         MismatchNumberOfPropertiesInRelationshipConstraint = 114,
 
         /// <summary>
-        ///     No Properties defined in either FromProperty or ToProperty in the relationship constraint
+        /// No Properties defined in either FromProperty or ToProperty in the relationship constraint
         /// </summary>
         MissingPropertyInRelationshipConstraint = 115,
 
         /// <summary>
-        ///     Missing constraint in relationship type in ssdl
+        /// Missing constraint in relationship type in ssdl
         /// </summary>
         MissingConstraintOnRelationshipType = 116,
 
@@ -243,311 +243,311 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // unused 118,
 
         /// <summary>
-        ///     Same role referred in the ToRole and FromRole of a referential constraint
+        /// Same role referred in the ToRole and FromRole of a referential constraint
         /// </summary>
         SameRoleReferredInReferentialConstraint = 119,
 
         /// <summary>
-        ///     Invalid value for attribute ParameterTypeSemantics
+        /// Invalid value for attribute ParameterTypeSemantics
         /// </summary>
         InvalidValueForParameterTypeSemantics = 120,
 
         /// <summary>
-        ///     Invalid type used for a Relationship End Type
+        /// Invalid type used for a Relationship End Type
         /// </summary>
         InvalidRelationshipEndType = 121,
 
         /// <summary>
-        ///     Invalid PrimitiveTypeKind
+        /// Invalid PrimitiveTypeKind
         /// </summary>
         InvalidPrimitiveTypeKind = 122,
 
         // unused 123,
 
         /// <summary>
-        ///     Invalid TypeConversion DestinationType
+        /// Invalid TypeConversion DestinationType
         /// </summary>
         InvalidTypeConversionDestinationType = 124,
 
         /// <summary>
-        ///     Expected a integer value between 0 - 255
+        /// Expected a integer value between 0 - 255
         /// </summary>
         ByteValueExpected = 125,
 
         /// <summary>
-        ///     Invalid Type specified in function
+        /// Invalid Type specified in function
         /// </summary>
         FunctionWithNonPrimitiveTypeNotSupported = 126,
 
         /// <summary>
-        ///     Precision must not be greater than 28
+        /// Precision must not be greater than 28
         /// </summary>
         PrecisionMoreThanAllowedMax = 127,
 
         /// <summary>
-        ///     Properties that are part of entity key must be of scalar type
+        /// Properties that are part of entity key must be of scalar type
         /// </summary>
         EntityKeyMustBeScalar = 128,
 
         /// <summary>
-        ///     Binary and spatial type properties which are part of entity key are currently not supported
+        /// Binary and spatial type properties which are part of entity key are currently not supported
         /// </summary>
         EntityKeyTypeCurrentlyNotSupported = 129,
 
         /// <summary>
-        ///     The primitive type kind does not have a prefered mapping
+        /// The primitive type kind does not have a prefered mapping
         /// </summary>
         NoPreferredMappingForPrimitiveTypeKind = 130,
 
         /// <summary>
-        ///     More than one PreferredMapping for a PrimitiveTypeKind
+        /// More than one PreferredMapping for a PrimitiveTypeKind
         /// </summary>
         TooManyPreferredMappingsForPrimitiveTypeKind = 131,
 
         /// <summary>
-        ///     End with * multiplicity cannot have operations specified
+        /// End with * multiplicity cannot have operations specified
         /// </summary>
         EndWithManyMultiplicityCannotHaveOperationsSpecified = 132,
 
         /// <summary>
-        ///     EntitySet type has no keys
+        /// EntitySet type has no keys
         /// </summary>
         EntitySetTypeHasNoKeys = 133,
 
         /// <summary>
-        ///     InvalidNumberOfParametersForAggregateFunction
+        /// InvalidNumberOfParametersForAggregateFunction
         /// </summary>
         InvalidNumberOfParametersForAggregateFunction = 134,
 
         /// <summary>
-        ///     InvalidParameterTypeForAggregateFunction
+        /// InvalidParameterTypeForAggregateFunction
         /// </summary>
         InvalidParameterTypeForAggregateFunction = 135,
 
         /// <summary>
-        ///     Composable functions and function imports must declare a return type.
+        /// Composable functions and function imports must declare a return type.
         /// </summary>
         ComposableFunctionOrFunctionImportWithoutReturnType = 136,
 
         /// <summary>
-        ///     Non-composable functions must not declare a return type.
+        /// Non-composable functions must not declare a return type.
         /// </summary>
         NonComposableFunctionWithReturnType = 137,
 
         /// <summary>
-        ///     Non-composable functions do not permit the aggregate, niladic, or built-in attributes.
+        /// Non-composable functions do not permit the aggregate, niladic, or built-in attributes.
         /// </summary>
         NonComposableFunctionAttributesNotValid = 138,
 
         /// <summary>
-        ///     Composable functions can not include command text attribute.
+        /// Composable functions can not include command text attribute.
         /// </summary>
         ComposableFunctionWithCommandText = 139,
 
         /// <summary>
-        ///     Functions should not declare both a store name and command text (only one or the other
-        ///     can be used).
+        /// Functions should not declare both a store name and command text (only one or the other
+        /// can be used).
         /// </summary>
         FunctionDeclaresCommandTextAndStoreFunctionName = 140,
 
         /// <summary>
-        ///     SystemNamespace
+        /// SystemNamespace
         /// </summary>
         SystemNamespace = 141,
 
         /// <summary>
-        ///     Empty DefiningQuery text
+        /// Empty DefiningQuery text
         /// </summary>
         EmptyDefiningQuery = 142,
 
         /// <summary>
-        ///     Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
+        /// Schema, Table and DefiningQuery are all specified, and are mutualy exlusive
         /// </summary>
         TableAndSchemaAreMutuallyExclusiveWithDefiningQuery = 143,
 
         // unused 144,
 
         /// <summary>
-        ///     Conurency can't change for any sub types of an EntitySet type.
+        /// Conurency can't change for any sub types of an EntitySet type.
         /// </summary>
         ConcurrencyRedefinedOnSubTypeOfEntitySetType = 145,
 
         /// <summary>
-        ///     Function import return type must be either empty, a collection of entities, or a singleton scalar.
+        /// Function import return type must be either empty, a collection of entities, or a singleton scalar.
         /// </summary>
         FunctionImportUnsupportedReturnType = 146,
 
         /// <summary>
-        ///     Function import specifies a non-existent entity set.
+        /// Function import specifies a non-existent entity set.
         /// </summary>
         FunctionImportUnknownEntitySet = 147,
 
         /// <summary>
-        ///     Function import specifies entity type return but no entity set.
+        /// Function import specifies entity type return but no entity set.
         /// </summary>
         FunctionImportReturnsEntitiesButDoesNotSpecifyEntitySet = 148,
 
         /// <summary>
-        ///     Function import specifies entity type that does not derive from element type of entity set.
+        /// Function import specifies entity type that does not derive from element type of entity set.
         /// </summary>
         FunctionImportEntityTypeDoesNotMatchEntitySet = 149,
 
         /// <summary>
-        ///     Function import specifies a binding to an entity set but does not return entities.
+        /// Function import specifies a binding to an entity set but does not return entities.
         /// </summary>
         FunctionImportSpecifiesEntitySetButDoesNotReturnEntityType = 150,
 
         /// <summary>
-        ///     InternalError
+        /// InternalError
         /// </summary>
         InternalError = 152,
 
         /// <summary>
-        ///     Same Entity Set Taking part in the same role of the relationship set in two different relationship sets
+        /// Same Entity Set Taking part in the same role of the relationship set in two different relationship sets
         /// </summary>
         SimilarRelationshipEnd = 153,
 
         /// <summary>
-        ///     Entity key refers to the same property twice
+        /// Entity key refers to the same property twice
         /// </summary>
         DuplicatePropertySpecifiedInEntityKey = 154,
 
         /// <summary>
-        ///     Function declares a ReturnType attribute and element
+        /// Function declares a ReturnType attribute and element
         /// </summary>
         AmbiguousFunctionReturnType = 156,
 
         /// <summary>
-        ///     Nullable Complex Type not supported in Edm V1
+        /// Nullable Complex Type not supported in Edm V1
         /// </summary>
         NullableComplexType = 157,
 
         /// <summary>
-        ///     Only Complex Collections supported in Edm V1.1
+        /// Only Complex Collections supported in Edm V1.1
         /// </summary>
         NonComplexCollections = 158,
 
         /// <summary>
-        ///     No Key defined on Entity Type
+        /// No Key defined on Entity Type
         /// </summary>
         KeyMissingOnEntityType = 159,
 
         /// <summary>
-        ///     Invalid namespace specified in using element
+        /// Invalid namespace specified in using element
         /// </summary>
         InvalidNamespaceInUsing = 160,
 
         /// <summary>
-        ///     Need not specify system namespace in using
+        /// Need not specify system namespace in using
         /// </summary>
         NeedNotUseSystemNamespaceInUsing = 161,
 
         /// <summary>
-        ///     Cannot use a reserved/system namespace as alias
+        /// Cannot use a reserved/system namespace as alias
         /// </summary>
         CannotUseSystemNamespaceAsAlias = 162,
 
         /// <summary>
-        ///     Invalid qualification specified for type
+        /// Invalid qualification specified for type
         /// </summary>
         InvalidNamespaceName = 163,
 
         /// <summary>
-        ///     Invalid Entity Container Name in extends attribute
+        /// Invalid Entity Container Name in extends attribute
         /// </summary>
         InvalidEntityContainerNameInExtends = 164,
 
         // unused 165,
 
         /// <summary>
-        ///     Must specify namespace or alias of the schema in which this type is defined
+        /// Must specify namespace or alias of the schema in which this type is defined
         /// </summary>
         InvalidNamespaceOrAliasSpecified = 166,
 
         /// <summary>
-        ///     Entity Container cannot extend itself
+        /// Entity Container cannot extend itself
         /// </summary>
         EntityContainerCannotExtendItself = 167,
 
         /// <summary>
-        ///     Failed to retrieve provider manifest
+        /// Failed to retrieve provider manifest
         /// </summary>
         FailedToRetrieveProviderManifest = 168,
 
         /// <summary>
-        ///     Mismatched Provider Manifest token values in SSDL artifacts
+        /// Mismatched Provider Manifest token values in SSDL artifacts
         /// </summary>
         ProviderManifestTokenMismatch = 169,
 
         /// <summary>
-        ///     Missing Provider Manifest token value in SSDL artifact(s)
+        /// Missing Provider Manifest token value in SSDL artifact(s)
         /// </summary>
         ProviderManifestTokenNotFound = 170,
 
         /// <summary>
-        ///     Empty CommandText element
+        /// Empty CommandText element
         /// </summary>
         EmptyCommandText = 171,
 
         /// <summary>
-        ///     Inconsistent Provider values in SSDL artifacts
+        /// Inconsistent Provider values in SSDL artifacts
         /// </summary>
         InconsistentProvider = 172,
 
         /// <summary>
-        ///     Inconsistent Provider Manifest token values in SSDL artifacts
+        /// Inconsistent Provider Manifest token values in SSDL artifacts
         /// </summary>
         InconsistentProviderManifestToken = 173,
 
         /// <summary>
-        ///     Duplicated Function overloads
+        /// Duplicated Function overloads
         /// </summary>
         DuplicatedFunctionoverloads = 174,
 
         /// <summary>
-        ///     InvalidProvider
+        /// InvalidProvider
         /// </summary>
         InvalidProvider = 175,
 
         /// <summary>
-        ///     FunctionWithNonEdmTypeNotSupported
+        /// FunctionWithNonEdmTypeNotSupported
         /// </summary>
         FunctionWithNonEdmTypeNotSupported = 176,
 
         /// <summary>
-        ///     ComplexTypeAsReturnTypeAndDefinedEntitySet
+        /// ComplexTypeAsReturnTypeAndDefinedEntitySet
         /// </summary>
         ComplexTypeAsReturnTypeAndDefinedEntitySet = 177,
 
         /// <summary>
-        ///     ComplexTypeAsReturnTypeAndDefinedEntitySet
+        /// ComplexTypeAsReturnTypeAndDefinedEntitySet
         /// </summary>
         ComplexTypeAsReturnTypeAndNestedComplexProperty = 178,
 
         // unused = 179,
 
         /// <summary>
-        ///     A function import can be either composable or side-effecting, but not both.
+        /// A function import can be either composable or side-effecting, but not both.
         /// </summary>
         FunctionImportComposableAndSideEffectingNotAllowed = 180,
 
         /// <summary>
-        ///     A function import can specify an entity set or an entity set path, but not both.
+        /// A function import can specify an entity set or an entity set path, but not both.
         /// </summary>
         FunctionImportEntitySetAndEntitySetPathDeclared = 181,
 
         /// <summary>
-        ///     In model functions facet attribute is allowed only on ScalarTypes
+        /// In model functions facet attribute is allowed only on ScalarTypes
         /// </summary>
         FacetOnNonScalarType = 182,
 
         /// <summary>
-        ///     Captures several conditions where facets are placed on element where it should not exist.
+        /// Captures several conditions where facets are placed on element where it should not exist.
         /// </summary>
         IncorrectlyPlacedFacet = 183,
 
         /// <summary>
-        ///     Return type has not been declared
+        /// Return type has not been declared
         /// </summary>
         ReturnTypeNotDeclared = 184,
 
@@ -558,39 +558,39 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         ReferenceToNonEntityType = 189,
 
         /// <summary>
-        ///     Collection and reference type parameters are not allowed in function imports.
+        /// Collection and reference type parameters are not allowed in function imports.
         /// </summary>
         FunctionImportCollectionAndRefParametersNotAllowed = 190,
 
         IncompatibleSchemaVersion = 191,
 
         /// <summary>
-        ///     The structural annotation cannot use codegen namespaces
+        /// The structural annotation cannot use codegen namespaces
         /// </summary>
         NoCodeGenNamespaceInStructuralAnnotation = 192,
 
         /// <summary>
-        ///     Function and type cannot have the same fully qualified name
+        /// Function and type cannot have the same fully qualified name
         /// </summary>
         AmbiguousFunctionAndType = 193,
 
         /// <summary>
-        ///     Cannot load different version of schema in the same ItemCollection
+        /// Cannot load different version of schema in the same ItemCollection
         /// </summary>
         CannotLoadDifferentVersionOfSchemaInTheSameItemCollection = 194,
 
         /// <summary>
-        ///     Expected bool value
+        /// Expected bool value
         /// </summary>
         BoolValueExpected = 195,
 
         /// <summary>
-        ///     End without Multiplicity specified
+        /// End without Multiplicity specified
         /// </summary>
         EndWithoutMultiplicity = 196,
 
         /// <summary>
-        ///     In SSDL, if composable function returns a collection of rows (TVF), all row properties must be of scalar types.
+        /// In SSDL, if composable function returns a collection of rows (TVF), all row properties must be of scalar types.
         /// </summary>
         TVFReturnTypeRowHasNonScalarProperty = 197,
 
@@ -599,47 +599,47 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // FunctionUnknownEntitySet = 200,
 
         /// <summary>
-        ///     Only nullable parameters are supported in function imports.
+        /// Only nullable parameters are supported in function imports.
         /// </summary>
         FunctionImportNonNullableParametersNotAllowed = 201,
 
         /// <summary>
-        ///     Defining expression and entity set can not be specified at the same time.
+        /// Defining expression and entity set can not be specified at the same time.
         /// </summary>
         FunctionWithDefiningExpressionAndEntitySetNotAllowed = 202,
 
         /// <summary>
-        ///     Function specifies return type that does not derive from element type of entity set.
+        /// Function specifies return type that does not derive from element type of entity set.
         /// </summary>
         FunctionEntityTypeScopeDoesNotMatchReturnType = 203,
 
         /// <summary>
-        ///     The specified type cannot be used as the underlying type of Enum type.
+        /// The specified type cannot be used as the underlying type of Enum type.
         /// </summary>
         InvalidEnumUnderlyingType = 204,
 
         /// <summary>
-        ///     Duplicate enumeration member.
+        /// Duplicate enumeration member.
         /// </summary>
         DuplicateEnumMember = 205,
 
         /// <summary>
-        ///     The calculated value for an enum member is ouf of Int64 range.
+        /// The calculated value for an enum member is ouf of Int64 range.
         /// </summary>
         CalculatedEnumValueOutOfRange = 206,
 
         /// <summary>
-        ///     The enumeration value for an enum member is out of its underlying type range.
+        /// The enumeration value for an enum member is out of its underlying type range.
         /// </summary>
         EnumMemberValueOutOfItsUnderylingTypeRange = 207,
 
         /// <summary>
-        ///     The Srid value is out of range.
+        /// The Srid value is out of range.
         /// </summary>
         InvalidSystemReferenceId = 208,
 
         /// <summary>
-        ///     A CSDL spatial type in a file without the UseSpatialUnionType annotation
+        /// A CSDL spatial type in a file without the UseSpatialUnionType annotation
         /// </summary>
         UnexpectedSpatialType = 209,
     }

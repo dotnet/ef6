@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a constraint of the form:
-    ///     Var1 in Range
+    /// Represents a constraint of the form:
+    /// Var1 in Range
     /// </summary>
     /// <typeparam name="T_Variable"> Type of the variable. </typeparam>
     /// <typeparam name="T_Element"> Type of range elements. </typeparam>
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly int _hashCode;
 
         /// <summary>
-        ///     Constructs a new constraint for the given variable and range.
+        /// Constructs a new constraint for the given variable and range.
         /// </summary>
         /// <param name="variable"> Variable in constraint. </param>
         /// <param name="range"> Range of constraint. </param>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Constructor supporting a singleton range domain constraint
+        /// Constructor supporting a singleton range domain constraint
         /// </summary>
         internal DomainConstraint(DomainVariable<T_Variable, T_Element> variable, T_Element element)
             : this(variable, new Set<T_Element>(new[] { element }).MakeReadOnly())
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets the variable for this constraint.
+        /// Gets the variable for this constraint.
         /// </summary>
         internal DomainVariable<T_Variable, T_Element> Variable
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Get the range for this constraint.
+        /// Get the range for this constraint.
         /// </summary>
         internal Set<T_Element> Range
         {
@@ -56,8 +56,8 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Inverts this constraint (this iff. !result)
-        ///     !(Var in Range) iff. Var in (Var.Domain - Range)
+        /// Inverts this constraint (this iff. !result)
+        /// !(Var in Range) iff. Var in (Var.Domain - Range)
         /// </summary>
         internal DomainConstraint<T_Variable, T_Element> InvertDomainConstraint()
         {

@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents an "edge" in the join graph.
-    ///     A JoinEdge is a directed equijoin between the left and the right table. The equijoin
-    ///     columns are represented by the LeftVars and the RightVars properties
+    /// Represents an "edge" in the join graph.
+    /// A JoinEdge is a directed equijoin between the left and the right table. The equijoin
+    /// columns are represented by the LeftVars and the RightVars properties
     /// </summary>
     internal class JoinEdge
     {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        ///     Internal constructor
+        /// Internal constructor
         /// </summary>
         /// <param name="left"> the left table </param>
         /// <param name="right"> the right table </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public apis
 
         /// <summary>
-        ///     The left table
+        /// The left table
         /// </summary>
         internal AugmentedTableNode Left
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The right table of the join
+        /// The right table of the join
         /// </summary>
         internal AugmentedTableNode Right
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The underlying join node, may be null
+        /// The underlying join node, may be null
         /// </summary>
         internal AugmentedJoinNode JoinNode
         {
@@ -79,12 +79,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The join kind
+        /// The join kind
         /// </summary>
         internal JoinKind JoinKind { get; set; }
 
         /// <summary>
-        ///     Equijoin columns of the left table
+        /// Equijoin columns of the left table
         /// </summary>
         internal List<ColumnVar> LeftVars
         {
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Equijoin columns of the right table
+        /// Equijoin columns of the right table
         /// </summary>
         internal List<ColumnVar> RightVars
         {
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Is this join edge useless?
+        /// Is this join edge useless?
         /// </summary>
         internal bool IsEliminated
         {
@@ -108,9 +108,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets a flag that indicates whether elimination is restricted for this join edge.
-        ///     Returns true if this is not a transitive join edge and one or both participating
-        ///     tables are not visible at the join node, otherwise false.
+        /// Gets a flag that indicates whether elimination is restricted for this join edge.
+        /// Returns true if this is not a transitive join edge and one or both participating
+        /// tables are not visible at the join node, otherwise false.
         /// </summary>
         internal bool RestrictedElimination
         {
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Factory method
+        /// Factory method
         /// </summary>
         /// <param name="left"> left table </param>
         /// <param name="right"> right table </param>
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Creates a transitively generated join edge
+        /// Creates a transitively generated join edge
         /// </summary>
         /// <param name="left"> the left table </param>
         /// <param name="right"> the right table </param>
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add a new "equi-join" condition to this edge
+        /// Add a new "equi-join" condition to this edge
         /// </summary>
         /// <param name="joinNode"> join node producing this condition </param>
         /// <param name="leftVar"> the left-side column </param>

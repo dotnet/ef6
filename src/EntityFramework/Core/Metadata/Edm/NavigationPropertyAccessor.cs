@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Cached dynamic method to get the property value from a CLR instance
+    /// Cached dynamic method to get the property value from a CLR instance
     /// </summary>
     internal class NavigationPropertyAccessor
     {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-///     cached dynamic method to get the property value from a CLR instance
+/// cached dynamic method to get the property value from a CLR instance
 /// </summary>
         public Func<object, object> ValueGetter
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-///     cached dynamic method to set the property value from a CLR instance
+/// cached dynamic method to set the property value from a CLR instance
 /// </summary>
         public Action<object, object> ValueSetter
         {

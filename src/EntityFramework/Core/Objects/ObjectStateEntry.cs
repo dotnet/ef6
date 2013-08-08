@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents either a entity, entity stub or relationship
+    /// Represents either a entity, entity stub or relationship
     /// </summary>
     public abstract class ObjectStateEntry : IEntityStateEntry, IEntityChangeTracker
     {
@@ -50,16 +50,16 @@ namespace System.Data.Entity.Core.Objects
         #region Public members
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     .
+        /// Gets the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> for the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// .
         /// </returns>
         public ObjectStateManager ObjectStateManager
         {
@@ -71,10 +71,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" /> for the object or relationship.
         /// </returns>
         public EntitySetBase EntitySet
         {
@@ -86,10 +86,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
+        /// Gets the state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
         /// </summary>
         /// <returns>
-        ///     The state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
+        /// The state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />.
         /// </returns>
         public EntityState State
         {
@@ -106,15 +106,15 @@ namespace System.Data.Entity.Core.Objects
         public abstract EntityKey EntityKey { get; internal set; }
 
         /// <summary>
-        ///     Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship.
+        /// Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship; otherwise, false.
+        /// true if the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> represents a relationship; otherwise, false.
         /// </returns>
         public abstract bool IsRelationship { get; }
 
         /// <summary>
-        ///     Gets bit array indicating which properties are modified.
+        /// Gets bit array indicating which properties are modified.
         /// </summary>
         internal abstract BitArray ModifiedProperties { get; }
 
@@ -129,26 +129,26 @@ namespace System.Data.Entity.Core.Objects
         public abstract DbDataRecord OriginalValues { get; }
 
         /// <summary>
-        ///     Gets the updatable version of original values of the object associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     .
+        /// Gets the updatable version of original values of the object associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// .
         /// </summary>
         /// <returns>The updatable original values of object data.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public abstract OriginalValueRecord GetUpdatableOriginalValues();
 
         /// <summary>
-        ///     Gets the current property values of the object or relationship associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     .
+        /// Gets the current property values of the object or relationship associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.CurrentValueRecord" /> that contains the current values of the object or relationship associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Objects.CurrentValueRecord" /> that contains the current values of the object or relationship associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// .
         /// </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public abstract CurrentValueRecord CurrentValues { get; }
@@ -160,13 +160,13 @@ namespace System.Data.Entity.Core.Objects
         public abstract void Delete();
 
         /// <summary>
-        ///     Returns the names of an object’s properties that have changed since the last time
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
-        ///     was called.
+        /// Returns the names of an object’s properties that have changed since the last time
+        /// <see
+        ///     cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" />
+        /// was called.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of names as string.
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of names as string.
         /// </returns>
         public abstract IEnumerable<string> GetModifiedProperties();
 
@@ -189,22 +189,22 @@ namespace System.Data.Entity.Core.Objects
         public abstract bool IsPropertyChanged(string propertyName);
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance for the object represented by entry.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance for the object represented by entry.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> object.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> object.
         /// </returns>
         /// <exception cref="InvalidOperationException">The entry is a stub or represents a relationship</exception>
         public abstract RelationshipManager RelationshipManager { get; }
 
         /// <summary>
-        ///     Changes state of the entry to the specified <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// Changes state of the entry to the specified <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </summary>
         /// <param name="state">
-        ///     The <see cref="T:System.Data.Entity.EntityState" /> value to set for the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.State" />
-        ///     property of the entry.
+        /// The <see cref="T:System.Data.Entity.EntityState" /> value to set for the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.State" />
+        /// property of the entry.
         /// </param>
         public abstract void ChangeState(EntityState state);
 
@@ -238,8 +238,8 @@ namespace System.Data.Entity.Core.Objects
         #region Public IEntityChangeTracker
 
         /// <summary>
-        ///     Used to report that a scalar entity property is about to change
-        ///     The current value of the specified property is cached when this method is called.
+        /// Used to report that a scalar entity property is about to change
+        /// The current value of the specified property is cached when this method is called.
         /// </summary>
         /// <param name="entityMemberName"> The name of the entity property that is changing </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -249,9 +249,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Used to report that a scalar entity property has been changed
-        ///     The property value that was cached during EntityMemberChanging is now
-        ///     added to OriginalValues
+        /// Used to report that a scalar entity property has been changed
+        /// The property value that was cached during EntityMemberChanging is now
+        /// added to OriginalValues
         /// </summary>
         /// <param name="entityMemberName"> The name of the entity property that has changing </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -261,8 +261,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Used to report that a complex property is about to change
-        ///     The current value of the specified property is cached when this method is called.
+        /// Used to report that a complex property is about to change
+        /// The current value of the specified property is cached when this method is called.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that is changing </param>
         /// <param name="complexObject"> The complex object that contains the property that is changing </param>
@@ -274,8 +274,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Used to report that a complex property has been changed
-        ///     The property value that was cached during EntityMemberChanging is now added to OriginalValues
+        /// Used to report that a complex property has been changed
+        /// The property value that was cached during EntityMemberChanging is now added to OriginalValues
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that has changed </param>
         /// <param name="complexObject"> The complex object that contains the property that changed </param>
@@ -287,7 +287,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns the EntityState from the ObjectStateEntry
+        /// Returns the EntityState from the ObjectStateEntry
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EntityState IEntityChangeTracker.EntityState
@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core.Objects
         internal abstract void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName);
 
         /// <summary>
-        ///     Reuse or create a new (Entity)DataRecordInfo.
+        /// Reuse or create a new (Entity)DataRecordInfo.
         /// </summary>
         internal abstract DataRecordInfo GetDataRecordInfo(StateManagerTypeMetadata metadata, object userObject);
 

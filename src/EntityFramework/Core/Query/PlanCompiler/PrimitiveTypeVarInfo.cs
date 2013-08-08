@@ -7,17 +7,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents information about a primitive typed Var and how it can be replaced.
+    /// Represents information about a primitive typed Var and how it can be replaced.
     /// </summary>
     internal class PrimitiveTypeVarInfo : VarInfo
     {
         private readonly List<Var> m_newVars; // always a singleton list
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="PrimitiveTypeVarInfo" /> class.
+        /// Initializes a new instance of <see cref="PrimitiveTypeVarInfo" /> class.
         /// </summary>
         /// <param name="newVar">
-        ///     New <see cref="Var" /> that replaces current <see cref="Var" /> .
+        /// New <see cref="Var" /> that replaces current <see cref="Var" /> .
         /// </param>
         internal PrimitiveTypeVarInfo(Var newVar)
         {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the newVar.
+        /// Gets the newVar.
         /// </summary>
         internal Var NewVar
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets <see cref="VarInfoKind" /> for this <see cref="VarInfo" />. Always <see cref="VarInfoKind.CollectionVarInfo" />.
+        /// Gets <see cref="VarInfoKind" /> for this <see cref="VarInfo" />. Always <see cref="VarInfoKind.CollectionVarInfo" />.
         /// </summary>
         internal override VarInfoKind Kind
         {
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the list of all NewVars. The list contains always just one element.
+        /// Gets the list of all NewVars. The list contains always just one element.
         /// </summary>
         internal override List<Var> NewVars
         {

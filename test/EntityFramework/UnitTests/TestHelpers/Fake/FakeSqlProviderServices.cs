@@ -11,8 +11,8 @@ namespace System.Data.Entity.ModelConfiguration.Internal.UnitTests
     using Moq;
 
     /// <summary>
-    ///     Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
-    ///     without having to hit a real store.
+    /// Used with the FakeSqlConnection class to fake provider info so that Code First can create SSDL
+    /// without having to hit a real store.
     /// </summary>
     public class FakeSqlProviderServices : DbProviderServices
     {

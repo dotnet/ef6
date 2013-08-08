@@ -8,15 +8,15 @@ namespace System.Data.Entity.Internal.Validation
     using System.Linq;
 
     /// <summary>
-    ///     Validates a property of a given EDM complex type.
+    /// Validates a property of a given EDM complex type.
     /// </summary>
     /// <remarks>
-    ///     This is a composite validator for a complex property of an entity.
+    /// This is a composite validator for a complex property of an entity.
     /// </remarks>
     internal class ComplexPropertyValidator : PropertyValidator
     {
         /// <summary>
-        ///     The complex type validator.
+        /// The complex type validator.
         /// </summary>
         private readonly ComplexTypeValidator _complexTypeValidator;
 
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal.Validation
         }
 
         /// <summary>
-        ///     Creates an instance of <see cref="ComplexPropertyValidator" /> for a given complex property.
+        /// Creates an instance of <see cref="ComplexPropertyValidator" /> for a given complex property.
         /// </summary>
         /// <param name="propertyName"> The complex property name. </param>
         /// <param name="propertyValidators"> Validators used to validate the given property. </param>
@@ -41,12 +41,12 @@ namespace System.Data.Entity.Internal.Validation
         }
 
         /// <summary>
-        ///     Validates a complex property.
+        /// Validates a complex property.
         /// </summary>
         /// <param name="entityValidationContext"> Validation context. Never null. </param>
         /// <param name="property"> Property to validate. Never null. </param>
         /// <returns>
-        ///     Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
+        /// Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
         /// </returns>
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)

@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Copied from System.Data.dll
+    /// Copied from System.Data.dll
     /// </summary>
     internal class DbConnectionOptions
     {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         internal readonly NameValuePair KeyChain;
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         internal DbConnectionOptions()
         {

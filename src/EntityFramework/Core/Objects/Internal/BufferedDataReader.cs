@@ -19,8 +19,8 @@ namespace System.Data.Entity.Core.Objects.Internal
 #endif
 
     /// <summary>
-    ///     A wrapper over a <see cref="DbDataReader" /> that will consume and close the supplied reader
-    ///     when <see cref="Initialize" /> is called.
+    /// A wrapper over a <see cref="DbDataReader" /> that will consume and close the supplied reader
+    /// when <see cref="Initialize" /> is called.
     /// </summary>
     internal class BufferedDataReader : DbDataReader
     {

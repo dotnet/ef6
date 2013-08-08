@@ -14,20 +14,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    ///     Processes changes applying to a table by merging inserts and deletes into updates
-    ///     where appropriate.
+    /// Processes changes applying to a table by merging inserts and deletes into updates
+    /// where appropriate.
     /// </summary>
     /// <remarks>
-    ///     This class is essentially responsible for identifying inserts, deletes
-    ///     and updates in a particular table based on the <see cref="ChangeNode" />
-    ///     produced by value propagation w.r.t. the update mapping view for that table.
-    ///     Assumes the change node includes at most a single insert and at most a single delete
-    ///     for a given key (where we have both, the change is treated as an update).
+    /// This class is essentially responsible for identifying inserts, deletes
+    /// and updates in a particular table based on the <see cref="ChangeNode" />
+    /// produced by value propagation w.r.t. the update mapping view for that table.
+    /// Assumes the change node includes at most a single insert and at most a single delete
+    /// for a given key (where we have both, the change is treated as an update).
     /// </remarks>
     internal class TableChangeProcessor
     {
         /// <summary>
-        ///     Constructs processor based on the contents of a change node.
+        /// Constructs processor based on the contents of a change node.
         /// </summary>
         /// <param name="table"> Table for which changes are being processed. </param>
         internal TableChangeProcessor(EntitySet table)
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     For testing purposes only
+        /// For testing purposes only
         /// </summary>
         protected TableChangeProcessor()
         {
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly int[] m_keyOrdinals;
 
         /// <summary>
-        ///     Gets metadata for the table being modified.
+        /// Gets metadata for the table being modified.
         /// </summary>
         internal EntitySet Table
         {
@@ -59,8 +59,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets a map from column ordinal to property descriptions for columns that are components of the table's
-        ///     primary key.
+        /// Gets a map from column ordinal to property descriptions for columns that are components of the table's
+        /// primary key.
         /// </summary>
         internal int[] KeyOrdinals
         {

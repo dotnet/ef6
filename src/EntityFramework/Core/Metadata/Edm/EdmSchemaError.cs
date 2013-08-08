@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Globalization;
 
     /// <summary>
-    ///     This class encapsulates the error information for a schema error that was encountered.
+    /// This class encapsulates the error information for a schema error that was encountered.
     /// </summary>
     [Serializable]
     public sealed class EdmSchemaError : EdmError
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private string _stackTrace = string.Empty;
 
         /// <summary>
-        ///     Constructs a EdmSchemaError object.
+        /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
         /// <param name="errorCode"> The code associated with this error. </param>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs a EdmSchemaError object.
+        /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
         /// <param name="errorCode"> The code associated with this error. </param>
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs a EdmSchemaError object.
+        /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
         /// <param name="errorCode"> The code associated with this error. </param>
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs a EdmSchemaError object.
+        /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
         /// <param name="errorCode"> The code associated with this error. </param>
@@ -156,10 +156,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the severity level of the error.</summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity" /> values. The default is
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity.Warning" />
-        ///     .
+        /// One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity" /> values. The default is
+        /// <see
+        ///     cref="F:System.Data.Entity.Core.Metadata.Edm.EdmSchemaErrorSeverity.Warning" />
+        /// .
         /// </returns>
         public EdmSchemaErrorSeverity Severity
         {

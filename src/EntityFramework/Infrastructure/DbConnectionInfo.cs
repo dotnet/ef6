@@ -10,7 +10,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents information about a database connection.
+    /// Represents information about a database connection.
     /// </summary>
     [Serializable]
     public class DbConnectionInfo
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly string _providerInvariantName;
 
         /// <summary>
-        ///     Creates a new instance of DbConnectionInfo representing a connection that is specified in the application configuration file.
+        /// Creates a new instance of DbConnectionInfo representing a connection that is specified in the application configuration file.
         /// </summary>
         /// <param name="connectionName"> The name of the connection string in the application configuration. </param>
         public DbConnectionInfo(string connectionName)
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a new instance of DbConnectionInfo based on a connection string.
+        /// Creates a new instance of DbConnectionInfo based on a connection string.
         /// </summary>
         /// <param name="connectionString"> The connection string to use for the connection. </param>
         /// <param name="providerInvariantName"> The name of the provider to use for the connection. Use 'System.Data.SqlClient' for SQL Server. </param>
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the connection information represented by this instance.
+        /// Gets the connection information represented by this instance.
         /// </summary>
         /// <param name="config"> Configuration to use if connection comes from the configuration file. </param>
         internal ConnectionStringSettings GetConnectionString(AppConfig config)

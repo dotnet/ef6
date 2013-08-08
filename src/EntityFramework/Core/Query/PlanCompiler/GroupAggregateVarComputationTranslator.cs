@@ -9,8 +9,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Utility class that tries to produce an equivalent tree to the input tree over
-    ///     a single group aggregate variable and no other external references
+    /// Utility class that tries to produce an equivalent tree to the input tree over
+    /// a single group aggregate variable and no other external references
     /// </summary>
     internal class GroupAggregateVarComputationTranslator : BasicOpVisitorOfNode
     {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructor
 
         /// <summary>
-        ///     Private constructor
+        /// Private constructor
         /// </summary>
         private GroupAggregateVarComputationTranslator(
             Command command,
@@ -41,10 +41,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region 'Public' Surface
 
         /// <summary>
-        ///     Try to produce an equivalent tree to the input subtree, over a single group aggregate variable.
-        ///     Such translation can only be produced if all external references of the input subtree are to a
-        ///     single group aggregate var, or to vars that are can be translated over that single group
-        ///     aggregate var
+        /// Try to produce an equivalent tree to the input subtree, over a single group aggregate variable.
+        /// Such translation can only be produced if all external references of the input subtree are to a
+        /// single group aggregate var, or to vars that are can be translated over that single group
+        /// aggregate var
         /// </summary>
         /// <param name="subtree"> The input subtree </param>
         /// <param name="isVarDefinition"> </param>
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Methods
 
         /// <summary>
-        ///     See <see cref="TryTranslateOverGroupAggregateVar" />
+        /// See <see cref="TryTranslateOverGroupAggregateVar" />
         /// </summary>
         public override Node Visit(VarRefOp op, Node n)
         {
@@ -135,9 +135,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a
-        ///     group aggregate var.
-        ///     Otherwise do default processing
+        /// If the child is VarRef check if the subtree PropertyOp(VarRef) is reference to a
+        /// group aggregate var.
+        /// Otherwise do default processing
         /// </summary>
         public override Node Visit(PropertyOp op, Node n)
         {
@@ -151,15 +151,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     If the Subtree rooted at the collect is of the following structure:
-        ///     PhysicalProject(outputVar)
-        ///     |
-        ///     Project(s)
-        ///     |
-        ///     Unnest
-        ///     where the unnest is over the group aggregate var and the output var
-        ///     is either a reference to the group aggregate var or to a constant, it returns the
-        ///     translation of the ouput var.
+        /// If the Subtree rooted at the collect is of the following structure:
+        /// PhysicalProject(outputVar)
+        /// |
+        /// Project(s)
+        /// |
+        /// Unnest
+        /// where the unnest is over the group aggregate var and the output var
+        /// is either a reference to the group aggregate var or to a constant, it returns the
+        /// translation of the ouput var.
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -236,9 +236,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Determines whether the given Node is a constant subtree
-        ///     It only recognizes any of the constant base ops
-        ///     and possibly casts over these nodes.
+        /// Determines whether the given Node is a constant subtree
+        /// It only recognizes any of the constant base ops
+        /// and possibly casts over these nodes.
         /// </summary>
         private static bool IsConstant(Node node)
         {
@@ -252,11 +252,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     (1) If the given var or the given property of the given var are defined over a group aggregate var,
-        ///     (2) and if that group aggregate var matches the var represented by represented by _targetGroupAggregateVarInfo
-        ///     if any
-        ///     it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
-        ///     is not set, it sets it to the group aggregate var representing the referenced var.
+        /// (1) If the given var or the given property of the given var are defined over a group aggregate var,
+        /// (2) and if that group aggregate var matches the var represented by represented by _targetGroupAggregateVarInfo
+        /// if any
+        /// it returns the corresponding translation over the group aggregate var. Also, if _targetGroupAggregateVarInfo
+        /// is not set, it sets it to the group aggregate var representing the referenced var.
         /// </summary>
         private Node TranslateOverGroupAggregateVar(Var var, EdmMember property)
         {
@@ -295,11 +295,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default processing for nodes.
-        ///     Visits the children and if any child has changed it creates a new node
-        ///     for the parent.
-        ///     If the reference of the child node did not change, the child node did not change either,
-        ///     this is because a node can only be reused "as is" when building a template.
+        /// Default processing for nodes.
+        /// Visits the children and if any child has changed it creates a new node
+        /// for the parent.
+        /// If the reference of the child node did not change, the child node did not change either,
+        /// this is because a node can only be reused "as is" when building a template.
         /// </summary>
         protected override Node VisitDefault(Node n)
         {

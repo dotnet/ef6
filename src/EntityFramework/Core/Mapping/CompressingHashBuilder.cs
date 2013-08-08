@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Security.Cryptography;
 
     /// <summary>
-    ///     This class keeps recomputing the hash and adding it to the front of the
-    ///     builder when the length of the string gets too long
+    /// This class keeps recomputing the hash and adding it to the front of the
+    /// builder when the length of the string gets too long
     /// </summary>
     internal class CompressingHashBuilder : StringHashBuilder
     {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     add string like "typename Instance#1"
+        /// add string like "typename Instance#1"
         /// </summary>
         internal void AppendObjectStartDump(object o, int objectIndex)
         {

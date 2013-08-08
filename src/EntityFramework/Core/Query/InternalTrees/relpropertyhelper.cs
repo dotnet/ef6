@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     A helper class for all rel-properties
+    /// A helper class for all rel-properties
     /// </summary>
     internal sealed class RelPropertyHelper
     {
@@ -20,9 +20,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region private methods
 
         /// <summary>
-        ///     Add the rel property induced by the specified relationship, (if the target
-        ///     end has a multiplicity of one)
-        ///     We only keep track of rel-properties that are "interesting"
+        /// Add the rel property induced by the specified relationship, (if the target
+        /// end has a multiplicity of one)
+        /// We only keep track of rel-properties that are "interesting"
         /// </summary>
         /// <param name="associationType"> the association relationship </param>
         /// <param name="fromEnd"> source end of the relationship traversal </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Add any rel properties that are induced by the supplied relationship
+        /// Add any rel properties that are induced by the supplied relationship
         /// </summary>
         /// <param name="relationshipType"> the relationship </param>
         private void ProcessRelationship(RelationshipType relationshipType)
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public APIs
 
         /// <summary>
-        ///     Get the rel properties declared by this type (and *not* by any of its subtypes)
+        /// Get the rel properties declared by this type (and *not* by any of its subtypes)
         /// </summary>
         /// <param name="entityType"> the entity type </param>
         /// <returns> set of rel properties declared for this type </returns>
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the rel-properties of this entity and its supertypes (starting from the root)
+        /// Get the rel-properties of this entity and its supertypes (starting from the root)
         /// </summary>
         /// <param name="entityType"> the entity type </param>
         /// <returns> set of rel-properties for this entity type (and its supertypes) </returns>

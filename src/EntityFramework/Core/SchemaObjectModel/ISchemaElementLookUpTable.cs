@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Summary description for ISchemaElementLookUpTable.
+    /// Summary description for ISchemaElementLookUpTable.
     /// </summary>
     internal interface ISchemaElementLookUpTable<T>
         where T : SchemaElement
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         IEnumerator<T> GetEnumerator();
 
         /// <summary>
-        ///     Look up a name case insensitively
+        /// Look up a name case insensitively
         /// </summary>
         /// <param name="key"> the key to look up </param>
         /// <returns> the element or null </returns>

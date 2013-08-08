@@ -16,7 +16,7 @@ namespace System.Data.Entity.SqlServerCompact
         private static Assembly _rdp;
 
         /// <summary>
-        ///     Convinience method to load the type specific to Remote Provider
+        /// Convinience method to load the type specific to Remote Provider
         /// </summary>
         internal static Type GetRemoteProviderType(string typeName)
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Compare whether the object obj is of the type typeName
+        /// Compare whether the object obj is of the type typeName
         /// </summary>
         internal static bool CompareObjectEqualsToType(Object obj, string typeName)
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Create an instance of the Remote Provider specific type
+        /// Create an instance of the Remote Provider specific type
         /// </summary>
         internal static object CreateRemoteProviderType(string typeName)
         {
@@ -73,7 +73,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Returns whether the Remote Provider is loaded or not.
+        /// Returns whether the Remote Provider is loaded or not.
         /// </summary>
         internal static bool IsRemoteProviderLoaded
         {
@@ -81,9 +81,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Use current assembly information to construct the full
-        ///     assembly name for an assembly with name assemblyName.
-        ///     This is called for Microsoft.SqlServerCe.Client.dll only.
+        /// Use current assembly information to construct the full
+        /// assembly name for an assembly with name assemblyName.
+        /// This is called for Microsoft.SqlServerCe.Client.dll only.
         /// </summary>
         private static string ConstructFullAssemblyName(string assemblyName)
         {

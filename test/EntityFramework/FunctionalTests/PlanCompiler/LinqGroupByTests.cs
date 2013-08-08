@@ -8,7 +8,7 @@ namespace PlanCompilerTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for GroupBy statements in Linq queries.
+    /// Tests for GroupBy statements in Linq queries.
     /// </summary>
     public class LinqGroupByTests : FunctionalTestBase
     {

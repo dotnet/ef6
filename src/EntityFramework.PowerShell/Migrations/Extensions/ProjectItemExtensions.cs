@@ -6,12 +6,12 @@ namespace System.Data.Entity.Migrations.Extensions
     using EnvDTE;
 
     /// <summary>
-    ///     Extension methods for the Visual Studio ProjectItem interface.
+    /// Extension methods for the Visual Studio ProjectItem interface.
     /// </summary>
     internal static class ProjectItemExtensions
     {
         /// <summary>
-        ///     Returns true if the project item is named either "app.config" or "web.config".
+        /// Returns true if the project item is named either "app.config" or "web.config".
         /// </summary>
         public static bool IsConfig(this ProjectItem item)
         {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Migrations.Extensions
         }
 
         /// <summary>
-        ///     Returns true if the project item has the given name, with case ignored.
+        /// Returns true if the project item has the given name, with case ignored.
         /// </summary>
         public static bool IsNamed(this ProjectItem item, string name)
         {

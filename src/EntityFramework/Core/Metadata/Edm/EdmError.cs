@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     This class encapsulates the error information for a generic EDM error.
+    /// This class encapsulates the error information for a generic EDM error.
     /// </summary>
     [Serializable]
     public abstract class EdmError
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _message;
 
         /// <summary>
-        ///     Constructs a EdmSchemaError object.
+        /// Constructs a EdmSchemaError object.
         /// </summary>
         /// <param name="message"> The explanation of the error. </param>
         internal EdmError(string message)

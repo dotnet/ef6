@@ -6,13 +6,13 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Thrown to indicate that a command tree is invalid.
+    /// Thrown to indicate that a command tree is invalid.
     /// </summary>
     [Serializable]
     public sealed class InvalidCommandTreeException : DataException /*InvalidQueryException*/
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class  with a default message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class  with a default message.
         /// </summary>
         public InvalidCommandTreeException()
             : base(Strings.Cqt_Exceptions_InvalidCommandTree)
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class with the specified message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class with the specified message.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public InvalidCommandTreeException(string message)
@@ -29,11 +29,11 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class  with the specified message and inner exception.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" /> class  with the specified message and inner exception.
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">
-        ///     The exception that is the cause of this <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" />.
+        /// The exception that is the cause of this <see cref="T:System.Data.Entity.Core.InvalidCommandTreeException" />.
         /// </param>
         public InvalidCommandTreeException(string message, Exception innerException)
             : base(message, innerException)
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructs a new InvalidCommandTreeException from the specified serialization info and streaming context.
+        /// Constructs a new InvalidCommandTreeException from the specified serialization info and streaming context.
         /// </summary>
         private InvalidCommandTreeException(SerializationInfo info, StreamingContext context)
             : base(info, context)

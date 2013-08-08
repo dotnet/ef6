@@ -34,10 +34,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set and provides access to the set element and group element variables.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set and provides access to the set element and group element variables.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set and provides access to the set element and group element variables.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set and provides access to the set element and group element variables.
         /// </returns>
         public DbGroupExpressionBinding Input
         {
@@ -45,10 +45,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides grouping keys.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides grouping keys.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides grouping keys.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides grouping keys.
         /// </returns>
         public IList<DbExpression> Keys
         {
@@ -56,10 +56,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" /> list that provides the aggregates to apply.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" /> list that provides the aggregates to apply.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" /> list that provides the aggregates to apply.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" /> list that provides the aggregates to apply.
         /// </returns>
         public IList<DbAggregate> Aggregates
         {
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -80,13 +80,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

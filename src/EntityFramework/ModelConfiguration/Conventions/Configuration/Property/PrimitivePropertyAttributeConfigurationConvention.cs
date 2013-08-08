@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Base class for conventions that process CLR attributes found on primitive properties in the model.
+    /// Base class for conventions that process CLR attributes found on primitive properties in the model.
     /// </summary>
     /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
     public abstract class PrimitivePropertyAttributeConfigurationConvention<TAttribute>

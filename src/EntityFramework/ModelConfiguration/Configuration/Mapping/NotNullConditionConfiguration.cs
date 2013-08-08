@@ -15,8 +15,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq;
 
     /// <summary>
-    ///     Configures a condition used to discriminate between types in an inheritance hierarchy based on the values assigned to a property.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Configures a condition used to discriminate between types in an inheritance hierarchy based on the values assigned to a property.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class NotNullConditionConfiguration
     {
@@ -49,9 +49,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the condition to require a value in the property.
-        ///     Rows that do not have a value assigned to column that this property is stored in are
-        ///     assumed to be of the base type of this entity type.
+        /// Configures the condition to require a value in the property.
+        /// Rows that do not have a value assigned to column that this property is stored in are
+        /// assumed to be of the base type of this entity type.
         /// </summary>
         public void HasValue()
         {

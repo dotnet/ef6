@@ -5,7 +5,7 @@ namespace SimpleModel
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Compares two BaseTypeForLinq objects.
+    /// Compares two BaseTypeForLinq objects.
     /// </summary>
     public class BaseTypeForLinqComparer : IEqualityComparer<BaseTypeForLinq>
     {

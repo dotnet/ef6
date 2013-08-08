@@ -43,7 +43,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Used for testing.
+        /// Used for testing.
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Because Equals is overridden; not currently used.
+        /// Because Equals is overridden; not currently used.
         /// </summary>
         public override int GetHashCode()
         {

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     This class represents the result of the <see cref="ObjectQuery{T}.Execute" /> method.
+    /// This class represents the result of the <see cref="ObjectQuery{T}.Execute" /> method.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectResult<T> : ObjectResult, IEnumerable<T>
@@ -170,10 +170,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// Gets the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Type" /> that is the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// A <see cref="T:System.Type" /> that is the type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
         /// </returns>
         public override Type ElementType
         {

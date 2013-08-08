@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Class for representing a FacetDescription object
+    /// Class for representing a FacetDescription object
     /// </summary>
     public class FacetDescription
     {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a facet description object
+        /// The constructor for constructing a facet description object
         /// </summary>
         /// <param name="facetName"> The name of this facet </param>
         /// <param name="facetType"> The type of this facet </param>
@@ -95,17 +95,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly bool _isConstant;
 
         /// <summary>
-        ///     A facet with the default value for this description.
+        /// A facet with the default value for this description.
         /// </summary>
         private Facet _defaultValueFacet;
 
         /// <summary>
-        ///     A facet with a null value for this description.
+        /// A facet with a null value for this description.
         /// </summary>
         private Facet _nullValueFacet;
 
         /// <summary>
-        ///     Type-dependant cache for additional values (possibly null).
+        /// Type-dependant cache for additional values (possibly null).
         /// </summary>
         private Facet[] _valueCache;
 
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the type of this facet.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this facet.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this facet.
         /// </returns>
         public EdmType FacetType
         {
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a facet with the default value for this description.
+        /// Gets a facet with the default value for this description.
         /// </summary>
         internal Facet DefaultValueFacet
         {
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a facet with a null value for this description.
+        /// Gets a facet with a null value for this description.
         /// </summary>
         internal Facet NullValueFacet
         {
@@ -210,7 +210,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a cached facet instance with the specified boolean value.
+        /// Gets a cached facet instance with the specified boolean value.
         /// </summary>
         /// <param name="value"> Value for the Facet result. </param>
         /// <returns> A cached facet instance with the specified boolean value. </returns>
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns true if the facet type is of numeric type
+        /// Returns true if the facet type is of numeric type
         /// </summary>
         /// <param name="facetType"> Type of the facet </param>
         internal static bool IsNumericType(EdmType facetType)

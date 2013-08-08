@@ -41,17 +41,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the instance from which the property should be retrieved.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" />
-        ///     , or its result type is not equal or promotable to the type that defines the property.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" />
+        /// , or its result type is not equal or promotable to the type that defines the property.
         /// </exception>
         public virtual DbExpression Instance
         {
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -72,13 +72,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
@@ -91,10 +91,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Creates a new key/value pair based on this property expression.</summary>
         /// <returns>
-        ///     A new key/value pair with the key and value derived from the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" />
-        ///     .
+        /// A new key/value pair with the key and value derived from the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" />
+        /// .
         /// </returns>
         public KeyValuePair<string, DbExpression> ToKeyValuePair()
         {

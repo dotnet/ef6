@@ -6,12 +6,12 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Contains function stubs that expose SqlServerCe methods in Linq to Entities.
+    /// Contains function stubs that expose SqlServerCe methods in Linq to Entities.
     /// </summary>
     public static class SqlCeFunctions
     {
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
@@ -22,7 +22,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
@@ -33,7 +33,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
@@ -45,7 +45,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startLocation")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
@@ -57,7 +57,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
@@ -69,7 +69,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.CHARINDEX
+        /// Proxy for the function SqlServerCe.CHARINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "toSearch")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
@@ -81,7 +81,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.NCHAR
+        /// Proxy for the function SqlServerCe.NCHAR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "NCHAR")]
@@ -91,7 +91,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.PATINDEX
+        /// Proxy for the function SqlServerCe.PATINDEX
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "stringPattern")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
@@ -103,7 +103,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.REPLICATE
+        /// Proxy for the function SqlServerCe.REPLICATE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "count")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "target")]
@@ -114,7 +114,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SPACE
+        /// Proxy for the function SqlServerCe.SPACE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "SPACE")]
@@ -124,7 +124,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [DbFunction("SqlServerCe", "STR")]
@@ -134,7 +134,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [DbFunction("SqlServerCe", "STR")]
@@ -144,7 +144,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
@@ -155,7 +155,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
@@ -166,7 +166,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "decimalArg")]
@@ -178,7 +178,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STR
+        /// Proxy for the function SqlServerCe.STR
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "decimalArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
@@ -190,7 +190,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.STUFF
+        /// Proxy for the function SqlServerCe.STUFF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "start")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "length")]
@@ -204,7 +204,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.UNICODE
+        /// Proxy for the function SqlServerCe.UNICODE
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "UNICODE")]
@@ -214,7 +214,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ACOS
+        /// Proxy for the function SqlServerCe.ACOS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "ACOS")]
@@ -224,7 +224,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ACOS
+        /// Proxy for the function SqlServerCe.ACOS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "ACOS")]
@@ -234,7 +234,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ASIN
+        /// Proxy for the function SqlServerCe.ASIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "ASIN")]
@@ -244,7 +244,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ASIN
+        /// Proxy for the function SqlServerCe.ASIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "ASIN")]
@@ -254,7 +254,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ATAN
+        /// Proxy for the function SqlServerCe.ATAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "ATAN")]
@@ -264,7 +264,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ATAN
+        /// Proxy for the function SqlServerCe.ATAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "ATAN")]
@@ -274,7 +274,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ATN2
+        /// Proxy for the function SqlServerCe.ATN2
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
@@ -285,7 +285,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.ATN2
+        /// Proxy for the function SqlServerCe.ATN2
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg2")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
@@ -296,7 +296,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.COS
+        /// Proxy for the function SqlServerCe.COS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "COS")]
@@ -306,7 +306,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.COS
+        /// Proxy for the function SqlServerCe.COS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "COS")]
@@ -316,7 +316,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.COT
+        /// Proxy for the function SqlServerCe.COT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "COT")]
@@ -326,7 +326,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.COT
+        /// Proxy for the function SqlServerCe.COT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "COT")]
@@ -336,7 +336,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DEGREES
+        /// Proxy for the function SqlServerCe.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "DEGREES")]
@@ -346,7 +346,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DEGREES
+        /// Proxy for the function SqlServerCe.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "DEGREES")]
@@ -356,7 +356,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DEGREES
+        /// Proxy for the function SqlServerCe.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "DEGREES")]
@@ -366,7 +366,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DEGREES
+        /// Proxy for the function SqlServerCe.DEGREES
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg1")]
         [DbFunction("SqlServerCe", "DEGREES")]
@@ -376,7 +376,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.EXP
+        /// Proxy for the function SqlServerCe.EXP
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Exp")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
@@ -387,7 +387,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.EXP
+        /// Proxy for the function SqlServerCe.EXP
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Exp")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
@@ -398,7 +398,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.LOG
+        /// Proxy for the function SqlServerCe.LOG
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "LOG")]
@@ -408,7 +408,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.LOG
+        /// Proxy for the function SqlServerCe.LOG
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "LOG")]
@@ -418,7 +418,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.LOG10
+        /// Proxy for the function SqlServerCe.LOG10
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "LOG10")]
@@ -428,7 +428,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.LOG10
+        /// Proxy for the function SqlServerCe.LOG10
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "LOG10")]
@@ -438,7 +438,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.PI
+        /// Proxy for the function SqlServerCe.PI
         /// </summary>
         [DbFunction("SqlServerCe", "PI")]
         public static Double? Pi()
@@ -447,7 +447,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RADIANS
+        /// Proxy for the function SqlServerCe.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "RADIANS")]
@@ -457,7 +457,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RADIANS
+        /// Proxy for the function SqlServerCe.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "RADIANS")]
@@ -467,7 +467,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RADIANS
+        /// Proxy for the function SqlServerCe.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "RADIANS")]
@@ -477,7 +477,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RADIANS
+        /// Proxy for the function SqlServerCe.RADIANS
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "RADIANS")]
@@ -487,7 +487,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RAND
+        /// Proxy for the function SqlServerCe.RAND
         /// </summary>
         [DbFunction("SqlServerCe", "RAND")]
         public static Double? Rand()
@@ -496,7 +496,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.RAND
+        /// Proxy for the function SqlServerCe.RAND
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "seed")]
         [DbFunction("SqlServerCe", "RAND")]
@@ -506,7 +506,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIGN
+        /// Proxy for the function SqlServerCe.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIGN")]
@@ -516,7 +516,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIGN
+        /// Proxy for the function SqlServerCe.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIGN")]
@@ -526,7 +526,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIGN
+        /// Proxy for the function SqlServerCe.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIGN")]
@@ -536,7 +536,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIGN
+        /// Proxy for the function SqlServerCe.SIGN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIGN")]
@@ -546,7 +546,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIN
+        /// Proxy for the function SqlServerCe.SIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIN")]
@@ -556,7 +556,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SIN
+        /// Proxy for the function SqlServerCe.SIN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SIN")]
@@ -566,7 +566,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SQRT
+        /// Proxy for the function SqlServerCe.SQRT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SQRT")]
@@ -576,7 +576,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.SQRT
+        /// Proxy for the function SqlServerCe.SQRT
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "SQRT")]
@@ -586,7 +586,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.TAN
+        /// Proxy for the function SqlServerCe.TAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "TAN")]
@@ -596,7 +596,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.TAN
+        /// Proxy for the function SqlServerCe.TAN
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "TAN")]
@@ -606,7 +606,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEADD
+        /// Proxy for the function SqlServerCe.DATEADD
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "number")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
@@ -618,7 +618,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEADD
+        /// Proxy for the function SqlServerCe.DATEADD
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
@@ -630,7 +630,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEDIFF
+        /// Proxy for the function SqlServerCe.DATEDIFF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
@@ -642,7 +642,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEDIFF
+        /// Proxy for the function SqlServerCe.DATEDIFF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
@@ -654,7 +654,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEDIFF
+        /// Proxy for the function SqlServerCe.DATEDIFF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "endDate")]
@@ -666,7 +666,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEDIFF
+        /// Proxy for the function SqlServerCe.DATEDIFF
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "startDate")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
@@ -678,7 +678,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATENAME
+        /// Proxy for the function SqlServerCe.DATENAME
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
@@ -689,7 +689,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATENAME
+        /// Proxy for the function SqlServerCe.DATENAME
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
@@ -700,7 +700,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEPART
+        /// Proxy for the function SqlServerCe.DATEPART
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
@@ -711,7 +711,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATEPART
+        /// Proxy for the function SqlServerCe.DATEPART
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "date")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "datePartArg")]
@@ -722,7 +722,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.GETDATE
+        /// Proxy for the function SqlServerCe.GETDATE
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         [DbFunction("SqlServerCe", "GETDATE")]
@@ -732,7 +732,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -742,7 +742,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -752,7 +752,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -762,7 +762,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -772,7 +772,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -782,7 +782,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]
@@ -792,7 +792,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Proxy for the function SqlServerCe.DATALENGTH
+        /// Proxy for the function SqlServerCe.DATALENGTH
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "arg")]
         [DbFunction("SqlServerCe", "DATALENGTH")]

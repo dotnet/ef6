@@ -13,7 +13,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for Database.  Unit tests also exist in the unit tests project.
+    /// Functional tests for Database.  Unit tests also exist in the unit tests project.
     /// </summary>
     public class DatabaseTests : FunctionalTestBase
     {

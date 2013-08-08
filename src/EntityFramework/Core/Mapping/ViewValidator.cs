@@ -14,12 +14,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Verifies that only legal expressions exist in a user-defined query mapping view.
+    /// Verifies that only legal expressions exist in a user-defined query mapping view.
     /// </summary>
     internal static class ViewValidator
     {
         /// <summary>
-        ///     Determines whether the given view is valid.
+        /// Determines whether the given view is valid.
         /// </summary>
         /// <param name="view"> Query view to validate. </param>
         /// <param name="setMapping"> Mapping in which view is declared. </param>
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     Retrieves all complex types that can be constructed as part of the view.
+            /// Retrieves all complex types that can be constructed as part of the view.
             /// </summary>
             private IEnumerable<ComplexType> GetComplexTypes()
             {
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     Recursively identify complex types.
+            /// Recursively identify complex types.
             /// </summary>
             private IEnumerable<ComplexType> GetComplexTypes(IEnumerable<EdmProperty> properties)
             {
@@ -208,7 +208,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     Gets all entity types in scope for this view.
+            /// Gets all entity types in scope for this view.
             /// </summary>
             private IEnumerable<EntityType> GetEntityTypes()
             {
@@ -291,9 +291,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The visitor validates that the QueryView for an AssociationSet uses the same EntitySets when
-        ///     creating the ends that were used in CSDL. Since the Query View is already validated, we can expect to
-        ///     see only a very restricted set of expressions in the tree.
+        /// The visitor validates that the QueryView for an AssociationSet uses the same EntitySets when
+        /// creating the ends that were used in CSDL. Since the Query View is already validated, we can expect to
+        /// see only a very restricted set of expressions in the tree.
         /// </summary>
         private class AssociationSetViewValidator : DbExpressionVisitor<DbExpressionEntitySetInfo>
         {

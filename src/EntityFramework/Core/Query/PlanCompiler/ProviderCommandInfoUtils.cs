@@ -11,16 +11,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Helper class for creating a ProviderCommandInfo given an Iqt Node.
+    /// Helper class for creating a ProviderCommandInfo given an Iqt Node.
     /// </summary>
     internal static class ProviderCommandInfoUtils
     {
         #region Public Methods
 
         /// <summary>
-        ///     Creates a ProviderCommandInfo for the given node.
-        ///     This method should be called when the keys, foreign keys and sort keys are known ahead of time.
-        ///     Typically it is used when the original command is factored into multiple commands.
+        /// Creates a ProviderCommandInfo for the given node.
+        /// This method should be called when the keys, foreign keys and sort keys are known ahead of time.
+        /// Typically it is used when the original command is factored into multiple commands.
         /// </summary>
         /// <param name="command"> The owning command, used for creating VarVecs, etc </param>
         /// <param name="node"> The root of the sub-command for which a ProviderCommandInfo should be generated </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private Methods
 
         /// <summary>
-        ///     Build up a mapping from Vars to the corresponding property of the output row type
+        /// Build up a mapping from Vars to the corresponding property of the output row type
         /// </summary>
         /// <param name="projectOp"> the physical projectOp </param>
         /// <param name="outputType"> output type </param>

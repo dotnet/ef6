@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
 #if DEBUG
     /// <summary>
-    ///     The Validator class extends the BasicValidator and enforces that the ITree is valid
-    ///     through varying stages of the plan compilation process. At each stage, certain operators
-    ///     are illegal - and this validator is largely intended to tackle that
+    /// The Validator class extends the BasicValidator and enforces that the ITree is valid
+    /// through varying stages of the plan compilation process. At each stage, certain operators
+    /// are illegal - and this validator is largely intended to tackle that
     /// </summary>
     internal class Validator : BasicValidator
     {
@@ -306,12 +306,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         /// <summary>
-        ///     BitVector helper class; used to keep track of the used columns
-        ///     in the result assembly.
+        /// BitVector helper class; used to keep track of the used columns
+        /// in the result assembly.
         /// </summary>
         /// <remarks>
-        ///     BitVec can be a struct because it contains a readonly reference to an int[].
-        ///     This code is a copy of System.Collections.BitArray so that we can have an efficient implementation of Minus.
+        /// BitVec can be a struct because it contains a readonly reference to an int[].
+        /// This code is a copy of System.Collections.BitArray so that we can have an efficient implementation of Minus.
         /// </remarks>
         internal struct BitVec
         {

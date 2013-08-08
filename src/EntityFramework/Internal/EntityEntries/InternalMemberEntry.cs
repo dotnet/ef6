@@ -10,7 +10,7 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     Base class for all internal entries that represent different kinds of properties.
+    /// Base class for all internal entries that represent different kinds of properties.
     /// </summary>
     internal abstract class InternalMemberEntry
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Internal
         private readonly MemberEntryMetadata _memberMetadata;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InternalMemberEntry" /> class.
+        /// Initializes a new instance of the <see cref="InternalMemberEntry" /> class.
         /// </summary>
         /// <param name="internalEntityEntry"> The internal entity entry. </param>
         /// <param name="memberMetadata"> The member metadata. </param>
@@ -38,8 +38,8 @@ namespace System.Data.Entity.Internal
         #region Name
 
         /// <summary>
-        ///     Gets the property name.
-        ///     The property is virtual to allow mocking.
+        /// Gets the property name.
+        /// The property is virtual to allow mocking.
         /// </summary>
         /// <value> The property name. </value>
         public virtual string Name
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Internal
         #region CurrentValue
 
         /// <summary>
-        ///     Gets or sets the current value of the navigation property.
+        /// Gets or sets the current value of the navigation property.
         /// </summary>
         /// <value> The current value. </value>
         public abstract object CurrentValue { get; set; }
@@ -62,8 +62,8 @@ namespace System.Data.Entity.Internal
         #region Internal entity/metadata access
 
         /// <summary>
-        ///     Gets the internal entity entry property belongs to.
-        ///     This property is virtual to allow mocking.
+        /// Gets the internal entity entry property belongs to.
+        /// This property is virtual to allow mocking.
         /// </summary>
         /// <value> The internal entity entry. </value>
         public virtual InternalEntityEntry InternalEntityEntry
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the entry metadata.
+        /// Gets the entry metadata.
         /// </summary>
         /// <value> The entry metadata. </value>
         public virtual MemberEntryMetadata EntryMetadata
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Internal
         #region Validation
 
         /// <summary>
-        ///     Validates this property.
+        /// Validates this property.
         /// </summary>
         /// <returns> A sequence of validation errors for this property. Empty if no errors. Never null. </returns>
         public virtual IEnumerable<DbValidationError> GetValidationErrors()
@@ -108,15 +108,15 @@ namespace System.Data.Entity.Internal
         #region DbMemberEntry factory methods
 
         /// <summary>
-        ///     Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
-        ///     The actual subtype of the DbMemberEntry created depends on the metadata of this internal entry.
+        /// Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
+        /// The actual subtype of the DbMemberEntry created depends on the metadata of this internal entry.
         /// </summary>
         /// <returns> The new entry. </returns>
         public abstract DbMemberEntry CreateDbMemberEntry();
 
         /// <summary>
-        ///     Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
-        ///     The actual subtype of the DbMemberEntry created depends on the metadata of this internal entry.
+        /// Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
+        /// The actual subtype of the DbMemberEntry created depends on the metadata of this internal entry.
         /// </summary>
         /// <typeparam name="TEntity"> The type of the entity. </typeparam>
         /// <typeparam name="TProperty"> The type of the property. </typeparam>

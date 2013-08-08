@@ -10,7 +10,7 @@ namespace System.Data.Entity.Validation
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Exception thrown from <see cref="DbContext.SaveChanges()" /> when validating entities fails.
+    /// Exception thrown from <see cref="DbContext.SaveChanges()" /> when validating entities fails.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Validation
         private DbEntityValidationExceptionState _state = new DbEntityValidationExceptionState();
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException.
+        /// Initializes a new instance of DbEntityValidationException.
         /// </summary>
         public DbEntityValidationException()
             : this(Strings.DbEntityValidationException_ValidationFailed)
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException.
+        /// Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         public DbEntityValidationException(string message)
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException.
+        /// Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="entityValidationResults"> Validation results. </param>
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException.
+        /// Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="innerException"> The inner exception. </param>
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbEntityValidationException.
+        /// Initializes a new instance of DbEntityValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="entityValidationResults"> Validation results. </param>
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Validation results.
+        /// Validation results.
         /// </summary>
         public IEnumerable<DbEntityValidationResult> EntityValidationErrors
         {
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Subscribes the SerializeObjectState event.
+        /// Subscribes the SerializeObjectState event.
         /// </summary>
         private void SubscribeToSerializeObjectState()
         {
@@ -97,13 +97,13 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Holds exception state that will be serialized when the exception is serialized.
+        /// Holds exception state that will be serialized when the exception is serialized.
         /// </summary>
         [Serializable]
         private class DbEntityValidationExceptionState : ISafeSerializationData
         {
             /// <summary>
-            ///     Validation results.
+            /// Validation results.
             /// </summary>
             private IList<DbEntityValidationResult> _entityValidationResults;
 
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Validation
             }
 
             /// <summary>
-            ///     Validation results.
+            /// Validation results.
             /// </summary>
             public IEnumerable<DbEntityValidationResult> EntityValidationErrors
             {
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Validation
             }
 
             /// <summary>
-            ///     Completes the deserialization.
+            /// Completes the deserialization.
             /// </summary>
             /// <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)

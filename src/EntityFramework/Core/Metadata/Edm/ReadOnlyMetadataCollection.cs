@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Class representing a read-only wrapper around MetadataCollection
+    /// Class representing a read-only wrapper around MetadataCollection
     /// </summary>
     /// <typeparam name="T"> The type of items in this collection </typeparam>
     public class ReadOnlyMetadataCollection<T> : ReadOnlyCollection<T>
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
+        /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
         /// <param name="collection"> The metadata collection to wrap </param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
@@ -32,13 +32,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // On the surface, this Enumerator doesn't do anything but delegating to the underlying enumerator
 
         /// <summary>
-        ///     The enumerator for MetadataCollection
+        /// The enumerator for MetadataCollection
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct Enumerator : IEnumerator<T>
         {
             /// <summary>
-            ///     Constructor for the enumerator
+            /// Constructor for the enumerator
             /// </summary>
             /// <param name="collection"> The collection that this enumerator should enumerate on </param>
             internal Enumerator(IList<T> collection)
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Gets the member at the current position
+            /// Gets the member at the current position
             /// </summary>
             object IEnumerator.Current
             {
@@ -73,16 +73,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Moves to the next member in the collection of type
-            ///     <see
-            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" />
-            ///     .
+            /// Moves to the next member in the collection of type
+            /// <see
+            ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" />
+            /// .
             /// </summary>
             /// <returns>
-            ///     true if the enumerator is moved in the collection of type
-            ///     <see
-            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.EnumeratortaCollection" />
-            ///     ; otherwise, false.
+            /// true if the enumerator is moved in the collection of type
+            /// <see
+            ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.EnumeratortaCollection" />
+            /// ; otherwise, false.
             /// </returns>
             public bool MoveNext()
             {
@@ -99,10 +99,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Positions the enumerator before the first position in the collection of type
-            ///     <see
-            ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" />
-            ///     .
+            /// Positions the enumerator before the first position in the collection of type
+            /// <see
+            ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" />
+            /// .
             /// </summary>
             public void Reset()
             {
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the metadata collection over which this collection is the view
+        /// Returns the metadata collection over which this collection is the view
         /// </summary>
         internal MetadataCollection<T> Source
         {
@@ -163,10 +163,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns an enumerator that can iterate through this collection.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" /> that can be used to iterate through this
-        ///     <see
-        ///         cref="T:System.Data.Metadata.Edm.ReadOnlyMetadataCollection" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1.Enumerator" /> that can be used to iterate through this
+        /// <see
+        ///     cref="T:System.Data.Metadata.Edm.ReadOnlyMetadataCollection" />
+        /// .
         /// </returns>
         public new Enumerator GetEnumerator()
         {

@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Mapping exception class. Note that this class has state - so if you change even
-    ///     its internals, it can be a breaking change
+    /// Mapping exception class. Note that this class has state - so if you change even
+    /// its internals, it can be a breaking change
     /// </summary>
     [Serializable]
     internal class InternalMappingException : EntityException
@@ -19,14 +19,14 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        ///     default constructor
+        /// default constructor
         /// </summary>
         internal InternalMappingException() // required ctor
         {
         }
 
         /// <summary>
-        ///     default constructor
+        /// default constructor
         /// </summary>
         /// <param name="message"> localized error message </param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")] // required CTOR for exceptions.
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     constructor
+        /// constructor
         /// </summary>
         /// <param name="message"> localized error message </param>
         /// <param name="innerException"> inner exception </param>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     constructor
+        /// constructor
         /// </summary>
         protected InternalMappingException(SerializationInfo info, StreamingContext context)
             :
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core
         #region Properties
 
         /// <summary>
-        ///     Returns the inner exceptions stored in this
+        /// Returns the inner exceptions stored in this
         /// </summary>
         internal ErrorLog ErrorLog
         {

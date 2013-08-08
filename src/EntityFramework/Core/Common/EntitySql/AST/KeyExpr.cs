@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents KEY(expr) expression.
+    /// Represents KEY(expr) expression.
     /// </summary>
     internal class KeyExpr : Node
     {
         private readonly Node _argExpr;
 
         /// <summary>
-        ///     Initializes KEY expression.
+        /// Initializes KEY expression.
         /// </summary>
         internal KeyExpr(Node argExpr)
         {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns KEY argument expression.
+        /// Returns KEY argument expression.
         /// </summary>
         internal Node ArgExpr
         {

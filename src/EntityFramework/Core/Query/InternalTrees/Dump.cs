@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Xml;
 
     /// <summary>
-    ///     A dump module for the Iqt
+    /// A dump module for the Iqt
     /// </summary>
     internal class Dump : BasicOpVisitor, IDisposable
     {
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly Encoding DefaultEncoding = Encoding.UTF8;
 
         /// <summary>
-        ///     Driver method to dump the entire tree
+        /// Driver method to dump the entire tree
         /// </summary>
         internal static string ToXml(Command itree)
         {
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Driver method to dump the a subtree of a tree
+        /// Driver method to dump the a subtree of a tree
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal static string ToXml(Node subtree)
@@ -713,7 +713,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             internal static ColumnMapDumper Instance = new ColumnMapDumper();
 
             /// <summary>
-            ///     Private constructor
+            /// Private constructor
             /// </summary>
             private ColumnMapDumper()
             {
@@ -722,7 +722,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             #region Helpers
 
             /// <summary>
-            ///     Common CollectionColumnMap code
+            /// Common CollectionColumnMap code
             /// </summary>
             private void DumpCollection(CollectionColumnMap columnMap, Dump dumper)
             {
@@ -747,7 +747,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     Common code to produce an the attributes for the dumper's XML node
+            /// Common code to produce an the attributes for the dumper's XML node
             /// </summary>
             private static Dictionary<string, object> GetAttributes(ColumnMap columnMap)
             {
@@ -759,7 +759,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             #endregion
 
             /// <summary>
-            ///     ComplexTypeColumnMap
+            /// ComplexTypeColumnMap
             /// </summary>
             internal override void Visit(ComplexTypeColumnMap columnMap, Dump dumper)
             {
@@ -777,7 +777,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     DiscriminatedCollectionColumnMap
+            /// DiscriminatedCollectionColumnMap
             /// </summary>
             internal override void Visit(DiscriminatedCollectionColumnMap columnMap, Dump dumper)
             {
@@ -795,7 +795,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     EntityColumnMap
+            /// EntityColumnMap
             /// </summary>
             internal override void Visit(EntityColumnMap columnMap, Dump dumper)
             {
@@ -810,7 +810,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     PolymorphicColumnMap
+            /// PolymorphicColumnMap
             /// </summary>
             internal override void Visit(SimplePolymorphicColumnMap columnMap, Dump dumper)
             {
@@ -838,7 +838,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     MultipleDiscriminatorPolymorphicColumnMap
+            /// MultipleDiscriminatorPolymorphicColumnMap
             /// </summary>
             internal override void Visit(MultipleDiscriminatorPolymorphicColumnMap columnMap, Dump dumper)
             {
@@ -866,7 +866,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     RecordColumnMap
+            /// RecordColumnMap
             /// </summary>
             internal override void Visit(RecordColumnMap columnMap, Dump dumper)
             {
@@ -884,7 +884,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     RefColumnMap
+            /// RefColumnMap
             /// </summary>
             internal override void Visit(RefColumnMap columnMap, Dump dumper)
             {
@@ -898,7 +898,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     SimpleCollectionColumnMap
+            /// SimpleCollectionColumnMap
             /// </summary>
             internal override void Visit(SimpleCollectionColumnMap columnMap, Dump dumper)
             {
@@ -909,7 +909,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     SimpleColumnMap
+            /// SimpleColumnMap
             /// </summary>
             internal override void Visit(ScalarColumnMap columnMap, Dump dumper)
             {
@@ -923,7 +923,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     SimpleColumnMap
+            /// SimpleColumnMap
             /// </summary>
             internal override void Visit(VarRefColumnMap columnMap, Dump dumper)
             {
@@ -935,7 +935,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     DiscriminatedEntityIdentity
+            /// DiscriminatedEntityIdentity
             /// </summary>
             protected override void VisitEntityIdentity(DiscriminatedEntityIdentity entityIdentity, Dump dumper)
             {
@@ -956,7 +956,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
 
             /// <summary>
-            ///     SimpleEntityIdentity
+            /// SimpleEntityIdentity
             /// </summary>
             protected override void VisitEntityIdentity(SimpleEntityIdentity entityIdentity, Dump dumper)
             {

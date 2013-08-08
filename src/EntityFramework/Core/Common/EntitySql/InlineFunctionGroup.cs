@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.InlineFunctionGroup" />.
+    /// Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.InlineFunctionGroup" />.
     /// </summary>
     internal sealed class InlineFunctionGroup : MetadataMember
     {

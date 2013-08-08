@@ -29,8 +29,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             = new ConcurrentDictionary<string, MetadataWorkspace>();
 
         /// <summary>
-        ///     A helper function for splitting up a string that is a concatenation of strings delimited by the metadata
-        ///     path separator into a string list. The resulting list sorted SSDL, MSL, CSDL, if possible.
+        /// A helper function for splitting up a string that is a concatenation of strings delimited by the metadata
+        /// path separator into a string list. The resulting list sorted SSDL, MSL, CSDL, if possible.
         /// </summary>
         /// <param name="paths"> The paths to split </param>
         /// <returns> An array of strings </returns>

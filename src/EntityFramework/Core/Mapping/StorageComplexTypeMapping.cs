@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Mapping metadata for Complex Types.
+    /// Mapping metadata for Complex Types.
     /// </summary>
     internal class StorageComplexTypeMapping : StructuralTypeMapping
     {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
         // not only the type specified but the sub-types of that type as well.        
 
         /// <summary>
-        ///     Construct a new Complex Property mapping object
+        /// Construct a new Complex Property mapping object
         /// </summary>
         /// <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     a list of TypeMetadata that this mapping holds true for.
+        /// a list of TypeMetadata that this mapping holds true for.
         /// </summary>
         internal ReadOnlyCollection<ComplexType> Types
         {
@@ -57,8 +57,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     a list of TypeMetadatas for which the mapping holds true for
-        ///     not only the type specified but the sub-types of that type as well.
+        /// a list of TypeMetadatas for which the mapping holds true for
+        /// not only the type specified but the sub-types of that type as well.
         /// </summary>
         internal ReadOnlyCollection<ComplexType> IsOfTypes
         {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     List of child properties that make up this complex property
+        /// List of child properties that make up this complex property
         /// </summary>
         public override ReadOnlyCollection<StoragePropertyMapping> Properties
         {
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Returns all the property mappings defined in the complex type mapping
-        ///     including Properties and Condition Properties
+        /// Returns all the property mappings defined in the complex type mapping
+        /// including Properties and Condition Properties
         /// </summary>
         internal ReadOnlyCollection<StoragePropertyMapping> AllProperties
         {
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add a Type to the list of types that this mapping is valid for
+        /// Add a Type to the list of types that this mapping is valid for
         /// </summary>
         internal void AddType(ComplexType type)
         {
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add a Type to the list of Is-Of types that this mapping is valid for
+        /// Add a Type to the list of Is-Of types that this mapping is valid for
         /// </summary>
         internal void AddIsOfType(ComplexType type)
         {
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add a property mapping as a child of this complex property mapping
+        /// Add a property mapping as a child of this complex property mapping
         /// </summary>
         /// <param name="propertyMapping"> The mapping that needs to be added </param>
         internal override void AddProperty(StoragePropertyMapping propertyMapping)
@@ -119,8 +119,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add a condition property mapping as a child of this complex property mapping
-        ///     Condition Property Mapping specifies a Condition either on the C side property or S side property.
+        /// Add a condition property mapping as a child of this complex property mapping
+        /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
         /// </summary>
         /// <param name="conditionPropertyMap"> The Condition Property mapping that needs to be added </param>
         internal void AddConditionProperty(
@@ -143,8 +143,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method finds the type in which the member with the given name exists
-        ///     form the list of IsOfTypes and Type.
+        /// The method finds the type in which the member with the given name exists
+        /// form the list of IsOfTypes and Type.
         /// </summary>
         internal ComplexType GetOwnerType(string memberName)
         {

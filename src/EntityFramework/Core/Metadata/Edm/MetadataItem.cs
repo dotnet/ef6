@@ -13,13 +13,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the base item class for all the metadata
+    /// Represents the base item class for all the metadata
     /// </summary>
     public abstract partial class MetadataItem
     {
         /// <summary>
-        ///     Implementing this internal constructor so that this class can't be derived
-        ///     outside this assembly
+        /// Implementing this internal constructor so that this class can't be derived
+        /// outside this assembly
         /// </summary>
         internal MetadataItem()
         {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private AnnotationCollection _annotations;
 
         /// <summary>
-        ///     Gets the currently assigned annotations.
+        /// Gets the currently assigned annotations.
         /// </summary>
         internal virtual ICollection<MetadataProperty> Annotations
         {
@@ -75,13 +75,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the built-in type kind for this type.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
         /// </returns>
         public abstract BuiltInTypeKind BuiltInTypeKind { get; }
 
         /// <summary>Gets the list of properties of the current type.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties of the current type.
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties of the current type.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.MetadataProperty, true)]
         public virtual ReadOnlyMetadataCollection<MetadataProperty> MetadataProperties
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     List of item attributes on this type
+        /// List of item attributes on this type
         /// </summary>
         internal MetadataCollection<MetadataProperty> RawMetadataProperties
         {
@@ -138,17 +138,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets or sets the documentation associated with this type.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" /> object that represents the documentation on this type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.Documentation" /> object that represents the documentation on this type.
         /// </returns>
         public Documentation Documentation { get; set; }
 
         /// <summary>
-        ///     Identity of the item
+        /// Identity of the item
         /// </summary>
         internal abstract String Identity { get; }
 
         /// <summary>
-        ///     Just checks for identities to be equal
+        /// Just checks for identities to be equal
         /// </summary>
         internal virtual bool EdmEquals(MetadataItem item)
         {
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns true if this item is not-changeable. Otherwise returns false.
+        /// Returns true if this item is not-changeable. Otherwise returns false.
         /// </summary>
         internal bool IsReadOnly
         {
@@ -167,8 +167,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
-        ///     it can never be changed.
+        /// Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
+        /// it can never be changed.
         /// </summary>
         internal virtual void SetReadOnly()
         {
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Builds identity string for this item. By default, the method calls the identity property.
+        /// Builds identity string for this item. By default, the method calls the identity property.
         /// </summary>
         internal virtual void BuildIdentity(StringBuilder builder)
         {
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds the given metadata property to the metadata property collection
+        /// Adds the given metadata property to the metadata property collection
         /// </summary>
         internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
         {

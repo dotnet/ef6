@@ -5,13 +5,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Attribute used to mark up properties that should appear in the MetadataItem.MetadataProperties collection
+    /// Attribute used to mark up properties that should appear in the MetadataItem.MetadataProperties collection
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     internal sealed class MetadataPropertyAttribute : Attribute
     {
         /// <summary>
-        ///     Initializes a new attribute with built in type kind
+        /// Initializes a new attribute with built in type kind
         /// </summary>
         /// <param name="builtInTypeKind"> Built in type setting Type property </param>
         /// <param name="isCollectionType"> Sets IsCollectionType property </param>
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new attribute with primitive type kind
+        /// Initializes a new attribute with primitive type kind
         /// </summary>
         /// <param name="primitiveTypeKind"> Primitive type setting Type property </param>
         /// <param name="isCollectionType"> Sets IsCollectionType property </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initialize a new attribute with complex type kind (corresponding the the CLR type)
+        /// Initialize a new attribute with complex type kind (corresponding the the CLR type)
         /// </summary>
         /// <param name="type"> CLR type setting Type property </param>
         /// <param name="isCollection"> Sets IsCollectionType property </param>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initialize a new attribute
+        /// Initialize a new attribute
         /// </summary>
         /// <param name="type"> Sets Type property </param>
         /// <param name="isCollectionType"> Sets IsCollectionType property </param>
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly bool _isCollectionType;
 
         /// <summary>
-        ///     Gets EDM type for values stored in property.
+        /// Gets EDM type for values stored in property.
         /// </summary>
         internal EdmType Type
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets bool indicating whether this is a collection type.
+        /// Gets bool indicating whether this is a collection type.
         /// </summary>
         internal bool IsCollectionType
         {

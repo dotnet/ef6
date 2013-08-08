@@ -15,29 +15,29 @@ namespace System.Data.Entity.Core.Mapping
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<ViewGeneration.Structures.Cell>;
 
     /// <summary>
-    ///     Represents the Mapping metadata for the EntityContainer map in CS space.
-    ///     Only one EntityContainerMapping element is allowed in the MSL file for CS mapping.
-    ///     <example>
-    ///         For Example if conceptually you could represent the CS MSL file as following
-    ///         ---Mapping
-    ///         --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///         --EntitySetMapping
-    ///         --AssociationSetMapping
-    ///         The type represents the metadata for EntityContainerMapping element in the above example.
-    ///         The SetMapping elements that are children of the EntityContainerMapping element
-    ///         can be accessed through the properties on this type.
-    ///     </example>
-    ///     <remarks>
-    ///         We currently assume that an Entity Container on the C side
-    ///         is mapped to a single Entity Container in the S - space.
-    ///     </remarks>
+    /// Represents the Mapping metadata for the EntityContainer map in CS space.
+    /// Only one EntityContainerMapping element is allowed in the MSL file for CS mapping.
+    /// <example>
+    ///     For Example if conceptually you could represent the CS MSL file as following
+    ///     ---Mapping
+    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    ///     --EntitySetMapping
+    ///     --AssociationSetMapping
+    ///     The type represents the metadata for EntityContainerMapping element in the above example.
+    ///     The SetMapping elements that are children of the EntityContainerMapping element
+    ///     can be accessed through the properties on this type.
+    /// </example>
+    /// <remarks>
+    ///     We currently assume that an Entity Container on the C side
+    ///     is mapped to a single Entity Container in the S - space.
+    /// </remarks>
     /// </summary>
     internal class StorageEntityContainerMapping : Map
     {
         /// <summary>
-        ///     Construct a new EntityContainer mapping object
-        ///     passing in the C-space EntityContainer  and
-        ///     the s-space Entity container metadata objects.
+        /// Construct a new EntityContainer mapping object
+        /// passing in the C-space EntityContainer  and
+        /// the s-space Entity container metadata objects.
         /// </summary>
         /// <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
         /// <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets the type kind for this item
+        /// Gets the type kind for this item
         /// </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -98,8 +98,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The Entity Container Metadata object on the C-side
-        ///     for which the mapping is being represented.
+        /// The Entity Container Metadata object on the C-side
+        /// for which the mapping is being represented.
         /// </summary>
         internal override MetadataItem EdmItem
         {
@@ -112,8 +112,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Indicates whether there are no Set mappings
-        ///     in the container mapping.
+        /// Indicates whether there are no Set mappings
+        /// in the container mapping.
         /// </summary>
         internal bool IsEmpty
         {
@@ -125,8 +125,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Determine whether the container includes any views.
-        ///     Returns true if there is at least one query or update view specified by the mapping.
+        /// Determine whether the container includes any views.
+        /// Returns true if there is at least one query or update view specified by the mapping.
         /// </summary>
         internal bool HasViews
         {
@@ -140,8 +140,8 @@ namespace System.Data.Entity.Core.Mapping
         internal string SourceLocation { get; set; }
 
         /// <summary>
-        ///     The Entity Container Metadata object on the C-side
-        ///     for which the mapping is being represented.
+        /// The Entity Container Metadata object on the C-side
+        /// for which the mapping is being represented.
         /// </summary>
         public EntityContainer EdmEntityContainer
         {
@@ -149,8 +149,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The Entity Container Metadata object on the C-side
-        ///     for which the mapping is being represented.
+        /// The Entity Container Metadata object on the C-side
+        /// for which the mapping is being represented.
         /// </summary>
         public EntityContainer StorageEntityContainer
         {
@@ -158,9 +158,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     a list of all the  entity set maps under this
-        ///     container. In CS mapping, the mapping is done
-        ///     at the extent level as opposed to the type level.
+        /// a list of all the  entity set maps under this
+        /// container. In CS mapping, the mapping is done
+        /// at the extent level as opposed to the type level.
         /// </summary>
         public ReadOnlyCollection<StorageSetMapping> EntitySetMaps
         {
@@ -183,15 +183,15 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     a list of all the  entity set maps under this
-        ///     container. In CS mapping, the mapping is done
-        ///     at the extent level as opposed to the type level.
-        ///     RelationshipSetMaps will be CompositionSetMaps and
-        ///     AssociationSetMaps put together.
+        /// a list of all the  entity set maps under this
+        /// container. In CS mapping, the mapping is done
+        /// at the extent level as opposed to the type level.
+        /// RelationshipSetMaps will be CompositionSetMaps and
+        /// AssociationSetMaps put together.
         /// </summary>
         /// <remarks>
-        ///     The reason we have RelationshipSetMaps is to be consistent with CDM metadata
-        ///     which treats both associations and compositions as Relationships.
+        /// The reason we have RelationshipSetMaps is to be consistent with CDM metadata
+        /// which treats both associations and compositions as Relationships.
         /// </remarks>
         public ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps
         {
@@ -199,8 +199,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     a list of all the  set maps under this
-        ///     container.
+        /// a list of all the  set maps under this
+        /// container.
         /// </summary>
         public IEnumerable<StorageSetMapping> AllSetMaps
         {
@@ -208,17 +208,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Line Number in MSL file where the EntityContainer Mapping Element's Start Tag is present.
+        /// Line Number in MSL file where the EntityContainer Mapping Element's Start Tag is present.
         /// </summary>
         internal int StartLineNumber { get; set; }
 
         /// <summary>
-        ///     Line Position in MSL file where the EntityContainer Mapping Element's Start Tag is present.
+        /// Line Position in MSL file where the EntityContainer Mapping Element's Start Tag is present.
         /// </summary>
         internal int StartLinePosition { get; set; }
 
         /// <summary>
-        ///     Indicates whether to validate the mapping or not.
+        /// Indicates whether to validate the mapping or not.
         /// </summary>
         internal bool Validate
         {
@@ -226,7 +226,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Indicates whether to generate the update views or not.
+        /// Indicates whether to generate the update views or not.
         /// </summary>
         internal bool GenerateUpdateViews
         {
@@ -234,7 +234,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     get an EntitySet mapping based upon the name of the entity set.
+        /// get an EntitySet mapping based upon the name of the entity set.
         /// </summary>
         /// ///
         /// <param name="entitySetName"> the name of the entity set </param>
@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Get a RelationShip set mapping based upon the name of the relationship set
+        /// Get a RelationShip set mapping based upon the name of the relationship set
         /// </summary>
         /// <param name="relationshipSetName"> the name of the relationship set </param>
         /// <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
@@ -261,8 +261,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Get a RelationShipSet mapping that has the passed in EntitySet as one of the ends and is mapped to the
-        ///     table.
+        /// Get a RelationShipSet mapping that has the passed in EntitySet as one of the ends and is mapped to the
+        /// table.
         /// </summary>
         internal IEnumerable<StorageAssociationSetMapping> GetRelationshipSetMappingsFor(
             EntitySetBase edmEntitySet, EntitySetBase storeEntitySet)
@@ -281,7 +281,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Get a set mapping based upon the name of the set
+        /// Get a set mapping based upon the name of the set
         /// </summary>
         internal StorageSetMapping GetSetMapping(string setName)
         {
@@ -294,9 +294,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Adds an entity set mapping to the list of EntitySetMaps
-        ///     under this entity container mapping. The method will be called
-        ///     by the Mapping loader.
+        /// Adds an entity set mapping to the list of EntitySetMaps
+        /// under this entity container mapping. The method will be called
+        /// by the Mapping loader.
         /// </summary>
         public void AddEntitySetMapping(StorageSetMapping setMapping)
         {
@@ -307,9 +307,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Adds a association set mapping to the list of AssociationSetMaps
-        ///     under this entity container mapping. The method will be called
-        ///     by the Mapping loader.
+        /// Adds a association set mapping to the list of AssociationSetMaps
+        /// under this entity container mapping. The method will be called
+        /// by the Mapping loader.
         /// </summary>
         public void AddAssociationSetMapping(StorageSetMapping setMapping)
         {
@@ -317,8 +317,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     check whether the EntityContainerMapping contains
-        ///     the map for the given AssociationSet
+        /// check whether the EntityContainerMapping contains
+        /// the map for the given AssociationSet
         /// </summary>
         internal bool ContainsAssociationSetMapping(AssociationSet associationSet)
         {
@@ -326,7 +326,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Returns whether the Set Map for the given set has a query view or not
+        /// Returns whether the Set Map for the given set has a query view or not
         /// </summary>
         internal bool HasQueryViewForSetMap(string setName)
         {

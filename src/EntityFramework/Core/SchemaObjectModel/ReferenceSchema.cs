@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for UsingElement.
+    /// Summary description for UsingElement.
     /// </summary>
     internal class UsingElement : SchemaElement
     {

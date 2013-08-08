@@ -5,13 +5,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Internal helper class for query
+    /// Internal helper class for query
     /// </summary>
     internal class ModelPerspective : Perspective
     {
         /// <summary>
-        ///     Creates a new instance of perspective class so that query can work
-        ///     ignorant of all spaces
+        /// Creates a new instance of perspective class so that query can work
+        /// ignorant of all spaces
         /// </summary>
         /// <param name="metadataWorkspace"> runtime metadata container </param>
         internal ModelPerspective(MetadataWorkspace metadataWorkspace)
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Look up a type in the target data space based upon the fullName
+        /// Look up a type in the target data space based upon the fullName
         /// </summary>
         /// <param name="fullName"> fullName </param>
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>

@@ -13,15 +13,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    ///     Class for representing a collection of items for the object layer.
-    ///     Most of the implementation for actual maintenance of the collection is
-    ///     done by ItemCollection
+    /// Class for representing a collection of items for the object layer.
+    /// Most of the implementation for actual maintenance of the collection is
+    /// done by ItemCollection
     /// </summary>
     [CLSCompliant(false)]
     public class ObjectItemCollection : ItemCollection
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection" /> class.
         /// </summary>
         public ObjectItemCollection()
             : this(null)
@@ -65,9 +65,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The method loads the O-space metadata for all the referenced assemblies starting from the given assembly
-        ///     in a recursive way.
-        ///     The assembly should be from Assembly.GetCallingAssembly via one of our public API's.
+        /// The method loads the O-space metadata for all the referenced assemblies starting from the given assembly
+        /// in a recursive way.
+        /// The assembly should be from Assembly.GetCallingAssembly via one of our public API's.
         /// </summary>
         /// <param name="assembly"> assembly whose dependency list we are going to traverse </param>
         internal void ImplicitLoadAllReferencedAssemblies(Assembly assembly, EdmItemCollection edmItemCollection)
@@ -110,8 +110,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Explicit loading means that the user specifically asked us to load this assembly.
-        ///     We won't do any filtering, they "know what they are doing"
+        /// Explicit loading means that the user specifically asked us to load this assembly.
+        /// We won't do any filtering, they "know what they are doing"
         /// </summary>
         internal void ExplicitLoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
@@ -119,10 +119,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implicit loading means that we are trying to help the user find the right
-        ///     assembly, but they didn't explicitly ask for it. Our Implicit rules require that
-        ///     we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        ///     Load metadata from the type's assembly.
+        /// Implicit loading means that we are trying to help the user find the right
+        /// assembly, but they didn't explicitly ask for it. Our Implicit rules require that
+        /// we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
+        /// Load metadata from the type's assembly.
         /// </summary>
         /// <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
         /// <returns> true if the type and all its generic arguments are filtered out (did not attempt to load assembly) </returns>
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     internal static method to get the relationship name
+        /// internal static method to get the relationship name
         /// </summary>
         internal AssociationType GetRelationshipType(string relationshipName)
         {
@@ -287,11 +287,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the CLR type that corresponds to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
+        /// Returns the CLR type that corresponds to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
         /// </summary>
         /// <returns>The CLR type of the OSpace argument.</returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
         /// </param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public Type GetClrType(StructuralType objectSpaceType)
@@ -300,11 +300,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a CLR type corresponding to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
+        /// Returns a CLR type corresponding to the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> supplied by the objectSpaceType parameter.
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="objectSpaceType">
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> that represents the object space type.
         /// </param>
         /// <param name="clrType">The CLR type.</param>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
@@ -333,8 +333,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     A helper method returning the underlying CLR type for the specified OSpace Enum or Structural type argument.
-        ///     If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
+        /// A helper method returning the underlying CLR type for the specified OSpace Enum or Structural type argument.
+        /// If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
         /// </summary>
         /// <param name="objectSpaceType"> The OSpace type to look up </param>
         /// <returns> The CLR type of the OSpace argument </returns>
@@ -354,9 +354,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     A helper method returning the underlying CLR type for the specified OSpace enum or structural type argument.
-        ///     If the DataSpace of the parameter is not OSpace, the method returns false and sets
-        ///     the out parameter to null.
+        /// A helper method returning the underlying CLR type for the specified OSpace enum or structural type argument.
+        /// If the DataSpace of the parameter is not OSpace, the method returns false and sets
+        /// the out parameter to null.
         /// </summary>
         /// <param name="objectSpaceType"> The OSpace enum type to look up </param>
         /// <param name="clrType"> The CLR enum type of the OSpace argument </param>
@@ -393,7 +393,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
         /// <param name="modelType"> canonical primitive type </param>
         /// <returns> The mapped scalar type </returns>
@@ -414,7 +414,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the OSpace type given the CSpace typename
+        /// Get the OSpace type given the CSpace typename
         /// </summary>
         internal bool TryGetOSpaceType(EdmType cspaceType, out EdmType edmType)
         {
@@ -432,9 +432,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the ospace type, returns the fullname of the mapped cspace type.
-        ///     Today, since we allow non-default mapping between entity type and complex type,
-        ///     this is only possible for entity and complex type.
+        /// Given the ospace type, returns the fullname of the mapped cspace type.
+        /// Today, since we allow non-default mapping between entity type and complex type,
+        /// this is only possible for entity and complex type.
         /// </summary>
         internal static string TryGetMappingCSpaceTypeIdentity(EdmType edmType)
         {
@@ -458,7 +458,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the items of the specified type from this item collection.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all items of the specified type.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all items of the specified type.
         /// </returns>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public override ReadOnlyCollection<T> GetItems<T>()

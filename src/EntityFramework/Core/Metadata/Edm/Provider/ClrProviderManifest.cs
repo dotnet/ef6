@@ -16,14 +16,14 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         private static readonly ClrProviderManifest _instance = new ClrProviderManifest();
 
         /// <summary>
-        ///     A private constructor to prevent other places from instantiating this class
+        /// A private constructor to prevent other places from instantiating this class
         /// </summary>
         private ClrProviderManifest()
         {
         }
 
         /// <summary>
-        ///     Gets the EDM provider manifest singleton instance
+        /// Gets the EDM provider manifest singleton instance
         /// </summary>
         internal static ClrProviderManifest Instance
         {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the namespace used by this provider manifest
+        /// Returns the namespace used by this provider manifest
         /// </summary>
         public override string NamespaceName
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the primitive type corresponding to the given CLR type
+        /// Returns the primitive type corresponding to the given CLR type
         /// </summary>
         /// <param name="clrType"> The CLR type for which the PrimitiveType object is retrieved </param>
         /// <param name="primitiveType"> The retrieved primitive type </param>
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the <see cref="PrimitiveTypeKind" /> corresponding to the given CLR type
+        /// Returns the <see cref="PrimitiveTypeKind" /> corresponding to the given CLR type
         /// </summary>
         /// <param name="clrType"> The CLR type for which the PrimitiveTypeKind value should be resolved </param>
         /// <param name="resolvedPrimitiveTypeKind"> The PrimitiveTypeKind value to which the CLR type resolves, if any. </param>
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns all the functions in this provider manifest
+        /// Returns all the functions in this provider manifest
         /// </summary>
         /// <returns> A collection of functions </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns all the FacetDescriptions for a particular type
+        /// Returns all the FacetDescriptions for a particular type
         /// </summary>
         /// <param name="type"> the type to return FacetDescriptions for. </param>
         /// <returns> The FacetDescriptions for the type given. </returns>
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Initializes all the primitive types
+        /// Initializes all the primitive types
         /// </summary>
         private void InitializePrimitiveTypes()
         {
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Initialize the primitive type with the given
+        /// Initialize the primitive type with the given
         /// </summary>
         /// <param name="clrType"> The CLR type of this type </param>
         /// <param name="primitiveTypeKind"> The primitive type kind of the primitive type </param>
@@ -253,8 +253,8 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.
-        ///     This method should never return null.
+        /// Providers should override this to return information specific to their provider.
+        /// This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
         /// <returns> An XmlReader at the begining of the information requested. </returns>

@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
+    /// Convention to process instances of <see cref="ForeignKeyAttribute" /> found on navigation properties in the model.
     /// </summary>
     public class ForeignKeyNavigationPropertyAttributeConvention : IConceptualModelConvention<NavigationProperty>
     {

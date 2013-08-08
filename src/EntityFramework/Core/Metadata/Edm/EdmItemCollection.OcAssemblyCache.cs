@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal class OcAssemblyCache
     {
         /// <summary>
-        ///     cache for loaded assembly
+        /// cache for loaded assembly
         /// </summary>
         private readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> _conventionalOcCache;
 
@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
-        ///     this method doesn't provide any locking mechanism.
+        /// Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
+        /// this method doesn't provide any locking mechanism.
         /// </summary>
         internal bool TryGetConventionalOcCacheFromAssemblyCache(Assembly assemblyToLookup, out ImmutableAssemblyCacheEntry cacheEntry)
         {
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
-        ///     this method doesn't provide any locking mechanism.
+        /// Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
+        /// this method doesn't provide any locking mechanism.
         /// </summary>
         internal void AddAssemblyToOcCacheFromAssemblyCache(Assembly assembly, ImmutableAssemblyCacheEntry cacheEntry)
         {

@@ -11,7 +11,7 @@ namespace System.Data.Entity.SqlServer
     using System.Reflection;
 
     /// <summary>
-    ///     Contains function stubs that expose SqlServer methods in Linq to Entities.
+    /// Contains function stubs that expose SqlServer methods in Linq to Entities.
     /// </summary>
     public static class SqlFunctions
     {
@@ -123,7 +123,7 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>Returns the starting position of one expression found within another expression.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Nullable`1" /> of <see cref="T:System.Int64" /> value that is the starting position of  target  if it is found in  toSearch .
+        /// A <see cref="T:System.Nullable`1" /> of <see cref="T:System.Int64" /> value that is the starting position of  target  if it is found in  toSearch .
         /// </returns>
         /// <param name="toSearch">The string expression to be searched.</param>
         /// <param name="target">The string expression to be found.</param>
@@ -798,7 +798,7 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>Returns a new datetime value based on adding an interval to the specified date.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Nullable`1" /> of <see cref="T:System.DateTime" /> value that is the new date.
+        /// A <see cref="T:System.Nullable`1" /> of <see cref="T:System.DateTime" /> value that is the new date.
         /// </returns>
         /// <param name="datePartArg">The part of the date to increment.</param>
         /// <param name="number">The value used to increment a date by a specified amount.</param>

@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents DEREF(epxr) expression.
+    /// Represents DEREF(epxr) expression.
     /// </summary>
     internal sealed class DerefExpr : Node
     {
         private readonly Node _argExpr;
 
         /// <summary>
-        ///     Initializes DEREF expression node.
+        /// Initializes DEREF expression node.
         /// </summary>
         internal DerefExpr(Node derefArgExpr)
         {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Ieturns ref argument expression.
+        /// Ieturns ref argument expression.
         /// </summary>
         internal Node ArgExpr
         {

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an EntitySet element.
+    /// Represents an EntitySet element.
     /// </summary>
     internal sealed class EntityContainerEntitySet : SchemaElement
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private EntityContainerEntitySetDefiningQuery _definingQueryElement;
 
         /// <summary>
-        ///     Constructs an EntityContainerEntitySet
+        /// Constructs an EntityContainerEntitySet
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerEntitySet(EntityContainer parentElement)
@@ -147,7 +147,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The method that is called when a Type attribute is encountered.
+        /// The method that is called when a Type attribute is encountered.
         /// </summary>
         /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleEntityTypeAttribute(XmlReader reader)
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The method that is called when a DbSchema attribute is encountered.
+        /// The method that is called when a DbSchema attribute is encountered.
         /// </summary>
         /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleDbSchemaAttribute(XmlReader reader)
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The method that is called when a DbTable attribute is encountered.
+        /// The method that is called when a DbTable attribute is encountered.
         /// </summary>
         /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleTableAttribute(XmlReader reader)
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Used during the resolve phase to resolve the type name to the object that represents that type
+        /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Infrastructure;
 
     /// <summary>
-    ///     An interface implemented by <see cref="InternalQuery{TElement}" />.
+    /// An interface implemented by <see cref="InternalQuery{TElement}" />.
     /// </summary>
     /// <typeparam name="TElement"> The type of the element. </typeparam>
     internal interface IInternalQuery<out TElement> : IInternalQuery

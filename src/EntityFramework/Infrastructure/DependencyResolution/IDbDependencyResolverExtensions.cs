@@ -7,14 +7,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Linq;
 
     /// <summary>
-    ///     Extension methods to call the <see cref="IDbDependencyResolver.GetService" /> method using
-    ///     a generic type parameter and/or no name.
+    /// Extension methods to call the <see cref="IDbDependencyResolver.GetService" /> method using
+    /// a generic type parameter and/or no name.
     /// </summary>
     public static class DbDependencyResolverExtensions
     {
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetService" /> passing the generic type of the method and the given
-        ///     name as arguments.
+        /// Calls <see cref="IDbDependencyResolver.GetService" /> passing the generic type of the method and the given
+        /// name as arguments.
         /// </summary>
         /// <typeparam name="T"> The contract type to resolve. </typeparam>
         /// <param name="resolver"> The resolver to use. </param>
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetService" /> passing the generic type of the method as
-        ///     the type argument and null for the name argument.
+        /// Calls <see cref="IDbDependencyResolver.GetService" /> passing the generic type of the method as
+        /// the type argument and null for the name argument.
         /// </summary>
         /// <typeparam name="T"> The contract type to resolve. </typeparam>
         /// <param name="resolver"> The resolver to use. </param>
@@ -42,8 +42,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetService" /> passing the given type argument and using
-        ///     null for the name argument.
+        /// Calls <see cref="IDbDependencyResolver.GetService" /> passing the given type argument and using
+        /// null for the name argument.
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         /// <param name="type"> The contract type to resolve. </param>
@@ -57,8 +57,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetServices" /> passing the generic type of the method and the given
-        ///     name as arguments.
+        /// Calls <see cref="IDbDependencyResolver.GetServices" /> passing the generic type of the method and the given
+        /// name as arguments.
         /// </summary>
         /// <typeparam name="T"> The contract type to resolve. </typeparam>
         /// <param name="resolver"> The resolver to use. </param>
@@ -72,8 +72,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetServices" /> passing the generic type of the method as
-        ///     the type argument and null for the name argument.
+        /// Calls <see cref="IDbDependencyResolver.GetServices" /> passing the generic type of the method as
+        /// the type argument and null for the name argument.
         /// </summary>
         /// <typeparam name="T"> The contract type to resolve. </typeparam>
         /// <param name="resolver"> The resolver to use. </param>
@@ -86,8 +86,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Calls <see cref="IDbDependencyResolver.GetServices" /> passing the given type argument and using
-        ///     null for the name argument.
+        /// Calls <see cref="IDbDependencyResolver.GetServices" /> passing the given type argument and using
+        /// null for the name argument.
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         /// <param name="type"> The contract type to resolve. </param>

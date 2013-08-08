@@ -6,10 +6,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Defines the binding for the input set to a <see cref="DbGroupByExpression" />.
-    ///     In addition to the properties of <see cref="DbExpressionBinding" />, DbGroupExpressionBinding
-    ///     also provides access to the group element via the <seealso cref="GroupVariable" /> variable reference
-    ///     and to the group aggregate via the <seealso cref="GroupAggregate" /> property.
+    /// Defines the binding for the input set to a <see cref="DbGroupByExpression" />.
+    /// In addition to the properties of <see cref="DbExpressionBinding" />, DbGroupExpressionBinding
+    /// also provides access to the group element via the <seealso cref="GroupVariable" /> variable reference
+    /// and to the group aggregate via the <seealso cref="GroupAggregate" /> property.
     /// </summary>
     public sealed class DbGroupExpressionBinding
     {
@@ -27,17 +27,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" />
-        ///     , or its result type is not equal or promotable to the result type of the current value of the property.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" />
+        /// , or its result type is not equal or promotable to the result type of the current value of the property.
         /// </exception>
         public DbExpression Expression
         {
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the element variable.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the element variable.
         /// </summary>
         /// <returns>A reference to the element variable.</returns>
         public DbVariableReferenceExpression Variable
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the group element variable.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the group element variable.
         /// </summary>
         /// <returns>A reference to the group element variable.</returns>
         public DbVariableReferenceExpression GroupVariable
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupAggregate" /> that represents the collection of elements in the group.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupAggregate" /> that represents the collection of elements in the group.
         /// </summary>
         /// <returns>The elements in the group.</returns>
         public DbGroupAggregate GroupAggregate

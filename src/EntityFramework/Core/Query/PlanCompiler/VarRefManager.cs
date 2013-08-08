@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     This is a halper module for <see cref="JoinElimination" />
-    ///     The VarRefManager keeps track of the child-parent relationships in order to be able
-    ///     to decide whether a given var is referenced by children on right-side relatives of a given node.
-    ///     It is used in JoinElimination when deciding whether it is possible to eliminate the child table participating
-    ///     in a left-outer join when there is a 1 - 0..1 FK relationship.
+    /// This is a halper module for <see cref="JoinElimination" />
+    /// The VarRefManager keeps track of the child-parent relationships in order to be able
+    /// to decide whether a given var is referenced by children on right-side relatives of a given node.
+    /// It is used in JoinElimination when deciding whether it is possible to eliminate the child table participating
+    /// in a left-outer join when there is a 1 - 0..1 FK relationship.
     /// </summary>
     internal class VarRefManager
     {
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new VarRefManager given a command.
+        /// Constructs a new VarRefManager given a command.
         /// </summary>
         internal VarRefManager(Command command)
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Public Methods
 
         /// <summary>
-        ///     Tracks the information that the given node is a parent of its children (one level only)
+        /// Tracks the information that the given node is a parent of its children (one level only)
         /// </summary>
         internal void AddChildren(Node parent)
         {
@@ -55,8 +55,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Determines whether any var from a given list of keys is referenced by any of defining node's right relatives,
-        ///     with the exception of the relatives brunching at the given targetJoinNode.
+        /// Determines whether any var from a given list of keys is referenced by any of defining node's right relatives,
+        /// with the exception of the relatives brunching at the given targetJoinNode.
         /// </summary>
         /// <param name="keys"> A list of vars to check for </param>
         /// <param name="definingNode"> The node considered to be the defining node </param>
@@ -97,8 +97,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Private Methods
 
         /// <summary>
-        ///     Checks whether the given node has references to any of the vars in the given VarVec.
-        ///     It only checks the given node, not its children.
+        /// Checks whether the given node has references to any of the vars in the given VarVec.
+        /// It only checks the given node, not its children.
         /// </summary>
         /// <param name="node"> The node to check </param>
         /// <param name="vars"> The list of vars to check for </param>
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Does the gvien VarList overlap with the given VarVec
+        /// Does the gvien VarList overlap with the given VarVec
         /// </summary>
         private static bool HasVarReferences(VarList listToCheck, VarVec vars)
         {
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Do the two given varVecs overlap
+        /// Do the two given varVecs overlap
         /// </summary>
         private static bool HasVarReferences(VarVec listToCheck, VarVec vars)
         {
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Does the given list of sort keys contain a key with a var that is the given VarVec
+        /// Does the given list of sort keys contain a key with a var that is the given VarVec
         /// </summary>
         private static bool HasVarReferences(List<SortKey> listToCheck, VarVec vars)
         {
@@ -181,8 +181,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Does the list of outputs of the given SetOp contain a var
-        ///     from the given VarVec defined by the SetOp's child with the given index
+        /// Does the list of outputs of the given SetOp contain a var
+        /// from the given VarVec defined by the SetOp's child with the given index
         /// </summary>
         private static bool HasVarReferences(SetOp op, VarVec vars, int index)
         {

@@ -3,8 +3,8 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents a relationship navigation operator NAVIGATE(sourceRefExpr, Relationship-Type-Name [,ToEndName [,FromEndName]]).
-    ///     Also used in WITH RELATIONSHIP clause as RELATIONSHIP(targetRefExpr, Relationship-Type-Name [,FromEndName [,ToEndName]]).
+    /// Represents a relationship navigation operator NAVIGATE(sourceRefExpr, Relationship-Type-Name [,ToEndName [,FromEndName]]).
+    /// Also used in WITH RELATIONSHIP clause as RELATIONSHIP(targetRefExpr, Relationship-Type-Name [,FromEndName [,ToEndName]]).
     /// </summary>
     internal sealed class RelshipNavigationExpr : Node
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Identifier _fromEndIdentifier;
 
         /// <summary>
-        ///     Initializes relationship navigation expression.
+        /// Initializes relationship navigation expression.
         /// </summary>
         internal RelshipNavigationExpr(Node refExpr, Node relshipTypeName, Identifier toEndIdentifier, Identifier fromEndIdentifier)
         {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Entity reference expression.
+        /// Entity reference expression.
         /// </summary>
         internal Node RefExpr
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Relship type name.
+        /// Relship type name.
         /// </summary>
         internal Node TypeName
         {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     TO end identifier.
+        /// TO end identifier.
         /// </summary>
         internal Identifier ToEndIdentifier
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     FROM end identifier.
+        /// FROM end identifier.
         /// </summary>
         internal Identifier FromEndIdentifier
         {

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal class MslSerializer
     {
         /// <summary>
-        ///     Serialize the <see cref="DbModel" /> to the XmlWriter
+        /// Serialize the <see cref="DbModel" /> to the XmlWriter
         /// </summary>
         /// <param name="databaseMapping"> The DbModel to serialize </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>

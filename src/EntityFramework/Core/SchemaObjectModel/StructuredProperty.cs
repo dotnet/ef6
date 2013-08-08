@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for StructuredProperty.
+    /// Summary description for StructuredProperty.
     /// </summary>
     internal class StructuredProperty : Property
     {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns a TypeUsage that represent this property.
+        /// Returns a TypeUsage that represent this property.
         /// </summary>
         public TypeUsage TypeUsage
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The nullablity of this property.
+        /// The nullablity of this property.
         /// </summary>
         public bool Nullable
         {
@@ -75,9 +75,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Specifies the type of the Collection.
-        ///     By Default this is Single( i.e. not a Collection.
-        ///     And in case of Collections, will be either Bag or List
+        /// Specifies the type of the Collection.
+        /// By Default this is Single( i.e. not a Collection.
+        /// And in case of Collections, will be either Bag or List
         /// </summary>
         public CollectionKind CollectionKind
         {
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Resolve the type string to a SchemaType object
+        /// Resolve the type string to a SchemaType object
         /// </summary>
         protected virtual SchemaType ResolveType(string typeName)
         {
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handles the Multiplicity attribute on the property.
+        /// Handles the Multiplicity attribute on the property.
         /// </summary>
         private void HandleCollectionKindAttribute(XmlReader reader)
         {

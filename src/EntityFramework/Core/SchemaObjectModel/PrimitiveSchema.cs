@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     The virtual schema for primitive data types
+    /// The virtual schema for primitive data types
     /// </summary>
     internal class PrimitiveSchema : Schema
     {
@@ -48,8 +48,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns the alias that can be used for type in this
-        ///     Namespace instead of the entire namespace name
+        /// Returns the alias that can be used for type in this
+        /// Namespace instead of the entire namespace name
         /// </summary>
         internal override string Alias
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns the TypeAuthority that is driving this schema
+        /// Returns the TypeAuthority that is driving this schema
         /// </summary>
         internal override string Namespace
         {

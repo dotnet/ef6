@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Reflection;
 
     /// <summary>
-    ///     Used to configure a navigation property.
+    /// Used to configure a navigation property.
     /// </summary>
     internal class NavigationPropertyConfiguration : PropertyConfiguration
     {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Gets or sets the action to take when a delete operation is attempted.
+        /// Gets or sets the action to take when a delete operation is attempted.
         /// </summary>
         public OperationAction? DeleteAction { get; set; }
 
@@ -79,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Gets or sets the multiplicity of this end of the navigation property.
+        /// Gets or sets the multiplicity of this end of the navigation property.
         /// </summary>
         public RelationshipMultiplicity? RelationshipMultiplicity
         {
@@ -120,12 +120,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Gets or sets the constraint associated with the navigation property.
+        /// Gets or sets the constraint associated with the navigation property.
         /// </summary>
         /// <remarks>
-        ///     This property uses <see cref="ForeignKeyConstraintConfiguration" /> for
-        ///     foreign key constraints and <see cref="IndependentConstraintConfiguration" />
-        ///     for independent constraints.
+        /// This property uses <see cref="ForeignKeyConstraintConfiguration" /> for
+        /// foreign key constraints and <see cref="IndependentConstraintConfiguration" />
+        /// for independent constraints.
         /// </remarks>
         public ConstraintConfiguration Constraint
         {
@@ -139,7 +139,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     True if the NavigationProperty's declaring type is the principal end, false if it is not, null if it is not known
+        /// True if the NavigationProperty's declaring type is the principal end, false if it is not, null if it is not known
         /// </summary>
         internal bool? IsNavigationPropertyDeclaringTypePrincipal { get; set; }
 

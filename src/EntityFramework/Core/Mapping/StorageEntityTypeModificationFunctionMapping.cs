@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Describes modification function mappings for an entity type within an entity set.
+    /// Describes modification function mappings for an entity type within an entity set.
     /// </summary>
     internal sealed class StorageEntityTypeModificationFunctionMapping
     {
@@ -37,12 +37,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets (specific) entity type these functions handle.
+        /// Gets (specific) entity type these functions handle.
         /// </summary>
         internal readonly EntityType EntityType;
 
         /// <summary>
-        ///     Gets delete function for the current entity type.
+        /// Gets delete function for the current entity type.
         /// </summary>
         public StorageModificationFunctionMapping DeleteFunctionMapping
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets insert function for the current entity type.
+        /// Gets insert function for the current entity type.
         /// </summary>
         public StorageModificationFunctionMapping InsertFunctionMapping
         {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets update function for the current entity type.
+        /// Gets update function for the current entity type.
         /// </summary>
         public StorageModificationFunctionMapping UpdateFunctionMapping
         {

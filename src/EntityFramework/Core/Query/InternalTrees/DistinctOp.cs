@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     DistinctOp
+    /// DistinctOp
     /// </summary>
     internal sealed class DistinctOp : RelOp
     {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal static readonly DistinctOp Pattern = new DistinctOp();
 
         /// <summary>
-        ///     1 child - input
+        /// 1 child - input
         /// </summary>
         internal override int Arity
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get "key" vars for the distinct
+        /// Get "key" vars for the distinct
         /// </summary>
         internal VarVec Keys
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

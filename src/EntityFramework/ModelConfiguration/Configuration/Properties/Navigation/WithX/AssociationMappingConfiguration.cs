@@ -7,8 +7,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Base class for performing configuration of a relationship.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Base class for performing configuration of a relationship.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public abstract class AssociationMappingConfiguration
     {

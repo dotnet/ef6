@@ -9,30 +9,30 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Threading;
 
     /// <summary>
-    ///     Provides Query Execution Plan Caching Service
+    /// Provides Query Execution Plan Caching Service
     /// </summary>
     /// <remarks>
-    ///     Thread safe.
-    ///     Dispose <b>must</b> be called as there is no finalizer for this class
+    /// Thread safe.
+    /// Dispose <b>must</b> be called as there is no finalizer for this class
     /// </remarks>
     internal class QueryCacheManager : IDisposable
     {
         #region Constants/Default values for configuration parameters
 
         /// <summary>
-        ///     Default Soft maximum number of entries in the cache
-        ///     Default value: 1000
+        /// Default Soft maximum number of entries in the cache
+        /// Default value: 1000
         /// </summary>
         private const int DefaultMaxNumberOfEntries = 1000;
 
         /// <summary>
-        ///     Default high mark for starting sweeping process
-        ///     default value: 80% of MaxNumberOfEntries
+        /// Default high mark for starting sweeping process
+        /// default value: 80% of MaxNumberOfEntries
         /// </summary>
         private const float DefaultHighMarkPercentageFactor = 0.8f; // 80% of MaxLimit
 
         /// <summary>
-        ///     Recycler timer period
+        /// Recycler timer period
         /// </summary>
         private const int DefaultRecyclerPeriodInMilliseconds = 60 * 1000;
 
@@ -41,27 +41,27 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Fields
 
         /// <summary>
-        ///     cache lock object
+        /// cache lock object
         /// </summary>
         private readonly object _cacheDataLock = new object();
 
         /// <summary>
-        ///     cache data
+        /// cache data
         /// </summary>
         private readonly Dictionary<QueryCacheKey, QueryCacheEntry> _cacheData = new Dictionary<QueryCacheKey, QueryCacheEntry>(32);
 
         /// <summary>
-        ///     soft maximum number of entries in the cache
+        /// soft maximum number of entries in the cache
         /// </summary>
         private readonly int _maxNumberOfEntries;
 
         /// <summary>
-        ///     high mark of the number of entries to trigger the sweeping process
+        /// high mark of the number of entries to trigger the sweeping process
         /// </summary>
         private readonly int _sweepingTriggerHighMark;
 
         /// <summary>
-        ///     Eviction timer
+        /// Eviction timer
         /// </summary>
         private readonly EvictionTimer _evictionTimer;
 
@@ -70,10 +70,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Construction and Initialization
 
         /// <summary>
-        ///     Constructs a new Query Cache Manager instance, with default values for all 'configurable' parameters.
+        /// Constructs a new Query Cache Manager instance, with default values for all 'configurable' parameters.
         /// </summary>
         /// <returns>
-        ///     A new instance of <see cref="QueryCacheManager" /> configured with default entry count, load factor and recycle period
+        /// A new instance of <see cref="QueryCacheManager" /> configured with default entry count, load factor and recycle period
         /// </returns>
         internal static QueryCacheManager Create()
         {
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Cache Constructor
+        /// Cache Constructor
         /// </summary>
         /// <param name="maximumSize"> Maximum number of entries that the cache should contain. </param>
         /// <param name="loadFactor"> The number of entries that must be present, as a percentage, before entries should be removed according to the eviction policy. Must be greater than 0 and less than or equal to 1.0 </param>
@@ -113,9 +113,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region 'External' interface
 
         /// <summary>
-        ///     Adds new entry to the cache using "abstract" cache context and
-        ///     value; returns an existing entry if the key is already in the
-        ///     dictionary.
+        /// Adds new entry to the cache using "abstract" cache context and
+        /// value; returns an existing entry if the key is already in the
+        /// dictionary.
         /// </summary>
         /// <param name="inQueryCacheEntry"> </param>
         /// <param name="outQueryCacheEntry"> The existing entry in the dicitionary if already there; inQueryCacheEntry if none was found and inQueryCacheEntry was added instead. </param>
@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Lookup service for a cached value.
+        /// Lookup service for a cached value.
         /// </summary>
         internal bool TryCacheLookup<TK, TE>(TK key, out TE value)
             where TK : QueryCacheKey
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Clears the Cache
+        /// Clears the Cache
         /// </summary>
         internal void Clear()
         {
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region Private Members
 
         /// <summary>
-        ///     lookup service
+        /// lookup service
         /// </summary>
         /// <returns> true if cache hit, false if cache miss </returns>
         private bool TryInternalCacheLookup(QueryCacheKey queryCacheKey, out QueryCacheEntry queryCacheEntry)
@@ -228,9 +228,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Recycler handler. This method is called directly by the eviction timer.
-        ///     It should take no action beyond invoking the <see cref="SweepCache" /> method on the
-        ///     cache manager instance passed as <paramref name="state" />.
+        /// Recycler handler. This method is called directly by the eviction timer.
+        /// It should take no action beyond invoking the <see cref="SweepCache" /> method on the
+        /// cache manager instance passed as <paramref name="state" />.
         /// </summary>
         /// <param name="state"> The cache manager instance on which the 'recycle' handler should be invoked </param>
         private static void CacheRecyclerHandler(object state)
@@ -239,15 +239,15 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Aging factor
+        /// Aging factor
         /// </summary>
         private static readonly int[] _agingFactor = { 1, 1, 2, 4, 8, 16 };
 
         private static readonly int _agingMaxIndex = _agingFactor.Length - 1;
 
         /// <summary>
-        ///     Sweeps the cache removing old unused entries.
-        ///     This method implements the query cache eviction policy.
+        /// Sweeps the cache removing old unused entries.
+        /// This method implements the query cache eviction policy.
         /// </summary>
         private void SweepCache()
         {
@@ -314,10 +314,10 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #region IDisposable Members
 
         /// <summary>
-        ///     Dispose instance
+        /// Dispose instance
         /// </summary>
         /// <remarks>
-        ///     Dispose <b>must</b> be called as there are no finalizers for this class
+        /// Dispose <b>must</b> be called as there are no finalizers for this class
         /// </remarks>
         public void Dispose()
         {
@@ -334,29 +334,29 @@ namespace System.Data.Entity.Core.Common.QueryCache
         #endregion
 
         /// <summary>
-        ///     Periodically invokes cache cleanup logic on a specified <see cref="QueryCacheManager" /> instance,
-        ///     and allows this periodic callback to be suspended, resumed or stopped in a thread-safe way.
+        /// Periodically invokes cache cleanup logic on a specified <see cref="QueryCacheManager" /> instance,
+        /// and allows this periodic callback to be suspended, resumed or stopped in a thread-safe way.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
         private sealed class EvictionTimer
         {
             /// <summary>
-            ///     Used to control multi-threaded accesses to this instance
+            /// Used to control multi-threaded accesses to this instance
             /// </summary>
             private readonly object _sync = new object();
 
             /// <summary>
-            ///     The required interval between invocations of the cache cleanup logic
+            /// The required interval between invocations of the cache cleanup logic
             /// </summary>
             private readonly int _period;
 
             /// <summary>
-            ///     The underlying QueryCacheManger that the callback will act on
+            /// The underlying QueryCacheManger that the callback will act on
             /// </summary>
             private readonly QueryCacheManager _cacheManager;
 
             /// <summary>
-            ///     The underlying <see cref="Timer" /> that implements the periodic callback
+            /// The underlying <see cref="Timer" /> that implements the periodic callback
             /// </summary>
             private Timer _timer;
 
@@ -378,19 +378,19 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
 
             /// <summary>
-            ///     Permanently stops the eviction timer.
-            ///     It will no longer generate periodic callbacks and further calls to <see cref="Suspend" />, <see cref="Resume" />, or
-            ///     <see
-            ///         cref="Stop" />
-            ///     ,
-            ///     though thread-safe, will have no effect.
+            /// Permanently stops the eviction timer.
+            /// It will no longer generate periodic callbacks and further calls to <see cref="Suspend" />, <see cref="Resume" />, or
+            /// <see
+            ///     cref="Stop" />
+            /// ,
+            /// though thread-safe, will have no effect.
             /// </summary>
             /// <returns>
-            ///     If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully stopped and cleaned up the underlying timer instance.
+            /// If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully stopped and cleaned up the underlying timer instance.
             /// </returns>
             /// <remarks>
-            ///     Thread safe. May be called regardless of the current state of the eviction timer.
-            ///     Once stopped, an eviction timer cannot be restarted with the <see cref="Resume" /> method.
+            /// Thread safe. May be called regardless of the current state of the eviction timer.
+            /// Once stopped, an eviction timer cannot be restarted with the <see cref="Resume" /> method.
             /// </remarks>
             internal bool Stop()
             {
@@ -410,17 +410,17 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
 
             /// <summary>
-            ///     Pauses the operation of the eviction timer.
+            /// Pauses the operation of the eviction timer.
             /// </summary>
             /// <returns>
-            ///     If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying
-            ///     <see
-            ///         cref="Timer" />
-            ///     and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called.
+            /// If this eviction timer has already been stopped (using the <see cref="Stop" /> method), returns <c>false</c> ; otherwise, returns <c>true</c> to indicate that the call successfully suspended the inderlying
+            /// <see
+            ///     cref="Timer" />
+            /// and no further periodic callbacks will be generated until the <see cref="Resume" /> method is called.
             /// </returns>
             /// <remarks>
-            ///     Thread-safe. May be called regardless of the current state of the eviction timer.
-            ///     Once suspended, an eviction timer may be resumed or stopped.
+            /// Thread-safe. May be called regardless of the current state of the eviction timer.
+            /// Once suspended, an eviction timer may be resumed or stopped.
             /// </remarks>
             internal bool Suspend()
             {
@@ -439,13 +439,13 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
 
             /// <summary>
-            ///     Causes this eviction timer to generate periodic callbacks, provided it has not been permanently stopped (using the
-            ///     <see
-            ///         cref="Stop" />
-            ///     method).
+            /// Causes this eviction timer to generate periodic callbacks, provided it has not been permanently stopped (using the
+            /// <see
+            ///     cref="Stop" />
+            /// method).
             /// </summary>
             /// <remarks>
-            ///     Thread-safe. May be called regardless of the current state of the eviction timer.
+            /// Thread-safe. May be called regardless of the current state of the eviction timer.
             /// </remarks>
             internal void Resume()
             {

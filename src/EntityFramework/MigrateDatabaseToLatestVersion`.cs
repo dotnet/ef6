@@ -8,8 +8,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
-    ///     to update the database to the latest version.
+    /// An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
+    /// to update the database to the latest version.
     /// </summary>
     public class MigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
         where TContext : DbContext
@@ -23,7 +23,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the MigrateDatabaseToLatestVersion class.
+        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class.
         /// </summary>
         public MigrateDatabaseToLatestVersion()
         {
@@ -31,9 +31,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the MigrateDatabaseToLatestVersion class that will
-        ///     use a specific connection string from the configuration file to connect to
-        ///     the database to perform the migration.
+        /// Initializes a new instance of the MigrateDatabaseToLatestVersion class that will
+        /// use a specific connection string from the configuration file to connect to
+        /// the database to perform the migration.
         /// </summary>
         /// <param name="connectionStringName"> The name of the connection string to use for migration. </param>
         public MigrateDatabaseToLatestVersion(string connectionStringName)

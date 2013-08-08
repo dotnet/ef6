@@ -7,7 +7,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a code-based migration that has been scaffolded and is ready to be written to a file.
+    /// Represents a code-based migration that has been scaffolded and is ready to be written to a file.
     /// </summary>
     [Serializable]
     public class ScaffoldedMigration
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Migrations.Design
         private readonly Dictionary<string, object> _resources = new Dictionary<string, object>();
 
         /// <summary>
-        ///     Gets or sets the unique identifier for this migration.
-        ///     Typically used for the file name of the generated code.
+        /// Gets or sets the unique identifier for this migration.
+        /// Typically used for the file name of the generated code.
         /// </summary>
         public string MigrationId
         {
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets the scaffolded migration code that the user can edit.
+        /// Gets or sets the scaffolded migration code that the user can edit.
         /// </summary>
         public string UserCode
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets the scaffolded migration code that should be stored in a code behind file.
+        /// Gets or sets the scaffolded migration code that should be stored in a code behind file.
         /// </summary>
         public string DesignerCode
         {
@@ -63,8 +63,8 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets the programming language used for this migration.
-        ///     Typically used for the file extension of the generated code.
+        /// Gets or sets the programming language used for this migration.
+        /// Typically used for the file extension of the generated code.
         /// </summary>
         public string Language
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets the subdirectory in the user's project that this migration should be saved in.
+        /// Gets or sets the subdirectory in the user's project that this migration should be saved in.
         /// </summary>
         public string Directory
         {
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets a dictionary of string resources to add to the migration resource file.
+        /// Gets a dictionary of string resources to add to the migration resource file.
         /// </summary>
         public IDictionary<string, object> Resources
         {
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets whether the migration was re-scaffolded.
+        /// Gets or sets whether the migration was re-scaffolded.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Rescaffold")]
         public bool IsRescaffold { get; set; }

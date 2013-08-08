@@ -9,10 +9,10 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents an Entity Data Model (EDM) created by the <see cref="DbModelBuilder" />.
-    ///     The Compile method can be used to go from this EDM representation to a <see cref="DbCompiledModel" />
-    ///     which is a compiled snapshot of the model suitable for caching and creation of
-    ///     <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" /> instances.
+    /// Represents an Entity Data Model (EDM) created by the <see cref="DbModelBuilder" />.
+    /// The Compile method can be used to go from this EDM representation to a <see cref="DbCompiledModel" />
+    /// which is a compiled snapshot of the model suitable for caching and creation of
+    /// <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" /> instances.
     /// </summary>
     public class DbModel : IEdmModelAdapter
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly DbModelBuilder _cachedModelBuilder;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbModel" /> class.
+        /// Initializes a new instance of the <see cref="DbModel" /> class.
         /// </summary>
         internal DbModel(DbDatabaseMapping databaseMapping, DbModelBuilder modelBuilder)
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     For test purpose only.
+        /// For test purpose only.
         /// </summary>
         internal DbModel(EdmModel conceptualModel, EdmModel storeModel)
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the provider information.
+        /// Gets the provider information.
         /// </summary>
         public DbProviderInfo ProviderInfo
         {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the provider manifest.
+        /// Gets the provider manifest.
         /// </summary>
         public DbProviderManifest ProviderManifest
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
+        /// A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
         /// </summary>
         internal DbModelBuilder CachedModelBuilder
         {
@@ -91,8 +91,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbCompiledModel" /> for this mode which is a compiled snapshot
-        ///     suitable for caching and creation of <see cref="DbContext" /> instances.
+        /// Creates a <see cref="DbCompiledModel" /> for this mode which is a compiled snapshot
+        /// suitable for caching and creation of <see cref="DbContext" /> instances.
         /// </summary>
         /// <returns> The compiled model. </returns>
         public DbCompiledModel Compile()

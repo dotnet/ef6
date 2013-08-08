@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents Row contructor expression.
+    /// Represents Row contructor expression.
     /// </summary>
     internal sealed class RowConstructorExpr : Node
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns list of elements as aliased expressions.
+        /// Returns list of elements as aliased expressions.
         /// </summary>
         internal NodeList<AliasedExpr> AliasedExprList
         {

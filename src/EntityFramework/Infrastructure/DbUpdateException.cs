@@ -12,9 +12,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Exception thrown by <see cref="DbContext" /> when the saving of changes to the database fails.
-    ///     Note that state entries referenced by this exception are not serialized due to security and accesses to the
-    ///     state entries after serialization will return null.
+    /// Exception thrown by <see cref="DbContext" /> when the saving of changes to the database fails.
+    /// Note that state entries referenced by this exception are not serialized due to security and accesses to the
+    /// state entries after serialization will return null.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure
         private DbUpdateExceptionState _state;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbUpdateException" /> class.
+        /// Initializes a new instance of the <see cref="DbUpdateException" /> class.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="innerException"> The inner exception. </param>
@@ -53,8 +53,8 @@ namespace System.Data.Entity.Infrastructure
         #region Access to state entries
 
         /// <summary>
-        ///     Gets <see cref="DbEntityEntry" /> objects that represents the entities that could not
-        ///     be saved to the database.
+        /// Gets <see cref="DbEntityEntry" /> objects that represents the entities that could not
+        /// be saved to the database.
         /// </summary>
         /// <returns> The entries representing the entities that could not be saved. </returns>
         public IEnumerable<DbEntityEntry> Entries
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Infrastructure
         #region Required by FxCop
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbUpdateException" /> class.
+        /// Initializes a new instance of the <see cref="DbUpdateException" /> class.
         /// </summary>
         public DbUpdateException()
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbUpdateException" /> class.
+        /// Initializes a new instance of the <see cref="DbUpdateException" /> class.
         /// </summary>
         /// <param name="message"> The message. </param>
         public DbUpdateException(string message)
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbUpdateException" /> class.
+        /// Initializes a new instance of the <see cref="DbUpdateException" /> class.
         /// </summary>
         /// <param name="message"> The message. </param>
         /// <param name="innerException"> The inner exception. </param>
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Subscribes the SerializeObjectState event.
+        /// Subscribes the SerializeObjectState event.
         /// </summary>
         private void SubscribeToSerializeObjectState()
         {
@@ -123,18 +123,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Holds exception state that will be serialized when the exception is serialized.
+        /// Holds exception state that will be serialized when the exception is serialized.
         /// </summary>
         [Serializable]
         private struct DbUpdateExceptionState : ISafeSerializationData
         {
             /// <summary>
-            ///     Gets or sets a value indicating whether the exception involved independent associations.
+            /// Gets or sets a value indicating whether the exception involved independent associations.
             /// </summary>
             public bool InvolvesIndependentAssociations { get; set; }
 
             /// <summary>
-            ///     Completes the deserialization.
+            /// Completes the deserialization.
             /// </summary>
             /// <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)

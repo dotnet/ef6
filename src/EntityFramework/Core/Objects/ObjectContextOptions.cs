@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.DataClasses;
 
     /// <summary>
-    ///     Defines options that affect the behavior of the ObjectContext.
+    /// Defines options that affect the behavior of the ObjectContext.
     /// </summary>
     public sealed class ObjectContextOptions
     {
@@ -28,23 +28,23 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets or sets a Boolean value that determines whether to use the consistent NullReference behavior.</summary>
         /// <remarks>
-        ///     If this flag is set to false then setting the Value property of the <see cref="EntityReference{TElement}" /> for an
-        ///     FK relationship to null when it is already null will have no effect. When this flag is set to true, then
-        ///     setting the value to null will always cause the FK to be nulled and the relationship to be deleted
-        ///     even if the value is currently null. The default value is false when using ObjectContext and true
-        ///     when using DbContext.
+        /// If this flag is set to false then setting the Value property of the <see cref="EntityReference{TElement}" /> for an
+        /// FK relationship to null when it is already null will have no effect. When this flag is set to true, then
+        /// setting the value to null will always cause the FK to be nulled and the relationship to be deleted
+        /// even if the value is currently null. The default value is false when using ObjectContext and true
+        /// when using DbContext.
         /// </remarks>
         /// <returns>true if the consistent NullReference behavior should be used; otherwise, false.</returns>
         public bool UseConsistentNullReferenceBehavior { get; set; }
 
         /// <summary>Gets or sets a Boolean value that determines whether to use the C# NullComparison behavior.</summary>
         /// <remarks>
-        ///     This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities.
-        ///     If this flag is set, then any equality comparison between two operands, both of which are potentially
-        ///     nullable, will be rewritten to show C# null comparison semantics. As an example:
-        ///     (operand1 = operand2) will be rewritten as
-        ///     (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL &amp;&amp; operand2 IS NULL))
-        ///     The default value is false when using <see cref="ObjectContext" />.
+        /// This flag determines whether C# behavior should be exhibited when comparing null values in LinqToEntities.
+        /// If this flag is set, then any equality comparison between two operands, both of which are potentially
+        /// nullable, will be rewritten to show C# null comparison semantics. As an example:
+        /// (operand1 = operand2) will be rewritten as
+        /// (((operand1 = operand2) AND NOT (operand1 IS NULL OR operand2 IS NULL)) || (operand1 IS NULL &amp;&amp; operand2 IS NULL))
+        /// The default value is false when using <see cref="ObjectContext" />.
         /// </remarks>
         /// <returns>true if the C# NullComparison behavior should be used; otherwise, false.</returns>
         public bool UseCSharpNullComparisonBehavior { get; set; }

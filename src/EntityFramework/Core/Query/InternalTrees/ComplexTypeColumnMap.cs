@@ -7,14 +7,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Represents a column map for a specific complextype
+    /// Represents a column map for a specific complextype
     /// </summary>
     internal class ComplexTypeColumnMap : TypedColumnMap
     {
         private readonly SimpleColumnMap m_nullSentinel;
 
         /// <summary>
-        ///     Constructor
+        /// Constructor
         /// </summary>
         /// <param name="type"> column Datatype </param>
         /// <param name="name"> column name </param>
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the type Nullability column
+        /// Get the type Nullability column
         /// </summary>
         internal override SimpleColumnMap NullSentinel
         {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

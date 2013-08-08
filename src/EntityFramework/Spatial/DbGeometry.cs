@@ -46,7 +46,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Gets the spatial provider that will be used for operations on this spatial type.
+        /// Gets the spatial provider that will be used for operations on this spatial type.
         /// </summary>
         public virtual DbSpatialServices Provider
         {
@@ -75,13 +75,13 @@ namespace System.Data.Entity.Spatial
         #region Well Known Binary Static Constructors
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known binary value.
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known binary value.
         /// </summary>
         /// <returns>
-        ///     A new DbGeometry value as defined by the well known binary value with the default geometry coordinate system identifier (
-        ///     <see
-        ///         cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
-        ///     ).
+        /// A new DbGeometry value as defined by the well known binary value with the default geometry coordinate system identifier (
+        /// <see
+        ///     cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
+        /// ).
         /// </returns>
         /// <param name="wellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
         /// <exception cref="T:System.ArgumentNullException">wellKnownBinary</exception>
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known binary value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <param name="wellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> line value based on the specified well known binary value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> line value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <param name="lineWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> point value based on the specified well known binary value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> point value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <param name="pointWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> polygon value based on the specified well known binary value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> polygon value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <param name="polygonWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
@@ -198,7 +198,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> collection value based on the specified well known binary value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> collection value based on the specified well known binary value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known binary value with the specified coordinate system identifier.</returns>
         /// <param name="geometryCollectionWellKnownBinary">A byte array that contains a well known binary representation of the geometry value.</param>
@@ -216,13 +216,13 @@ namespace System.Data.Entity.Spatial
         #region GML Static Constructors
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified Geography Markup Language (GML) value.
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified Geography Markup Language (GML) value.
         /// </summary>
         /// <returns>
-        ///     A new DbGeometry value as defined by the GML value with the default geometry coordinate system identifier (SRID) (
-        ///     <see
-        ///         cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
-        ///     ).
+        /// A new DbGeometry value as defined by the GML value with the default geometry coordinate system identifier (SRID) (
+        /// <see
+        ///     cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
+        /// ).
         /// </returns>
         /// <param name="geometryMarkup">A string that contains a Geography Markup Language (GML) representation of the geometry value.</param>
         /// <exception cref="T:System.ArgumentNullException">geometryMarkup</exception>
@@ -234,7 +234,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified Geography Markup Language (GML) value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified Geography Markup Language (GML) value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the GML value with the specified coordinate system identifier.</returns>
         /// <param name="geometryMarkup">A string that contains a Geography Markup Language (GML) representation of the geometry value.</param>
@@ -253,13 +253,13 @@ namespace System.Data.Entity.Spatial
         #region Well Known Text Static Constructors
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known text value.
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known text value.
         /// </summary>
         /// <returns>
-        ///     A new DbGeometry value as defined by the well known text value with the default geometry coordinate system identifier (SRID) (
-        ///     <see
-        ///         cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
-        ///     ).
+        /// A new DbGeometry value as defined by the well known text value with the default geometry coordinate system identifier (SRID) (
+        /// <see
+        ///     cref="P:System.Data.Entity.Spatial.DbGeometry.DefaultCoordinateSystemId" />
+        /// ).
         /// </returns>
         /// <param name="wellKnownText">A string that contains a well known text representation of the geometry value.</param>
         /// <exception cref="T:System.ArgumentNullException">wellKnownText</exception>
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known text value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <param name="wellKnownText">A string that contains a well known text representation of the geometry value.</param>
@@ -284,7 +284,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> line value based on the specified well known text value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> line value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <param name="lineWellKnownText">A string that contains a well known text representation of the geometry value.</param>
@@ -298,7 +298,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> point value based on the specified well known text value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> point value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <param name="pointWellKnownText">A string that contains a well known text representation of the geometry value.</param>
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> polygon value based on the specified well known text value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> polygon value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <param name="polygonWellKnownText">A string that contains a well known text representation of the geometry value.</param>
@@ -376,7 +376,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> collection value based on the specified well known text value and coordinate system identifier (SRID).
+        /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> collection value based on the specified well known text value and coordinate system identifier (SRID).
         /// </summary>
         /// <returns>A new DbGeometry value as defined by the well known text value with the specified coordinate system identifier.</returns>
         /// <param name="geometryCollectionWellKnownText">A string that contains a well known text representation of the geometry value.</param>
@@ -408,10 +408,10 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Gets the dimension of the given <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value or, if the value is a collection, the dimension of its largest element.
+        /// Gets the dimension of the given <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value or, if the value is a collection, the dimension of its largest element.
         /// </summary>
         /// <returns>
-        ///     The dimension of the given <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value.
+        /// The dimension of the given <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value.
         /// </returns>
         public int Dimension
         {
@@ -465,7 +465,7 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
+        /// Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
         /// </summary>
         /// <returns> A string containing the well known text representation of this DbGeometry value. </returns>
         internal string AsTextIncludingElevationAndMeasure()

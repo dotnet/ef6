@@ -8,17 +8,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents enum Member element from the CSDL.
+    /// Represents enum Member element from the CSDL.
     /// </summary>
     internal class SchemaEnumMember : SchemaElement
     {
         /// <summary>
-        ///     Value for this member.
+        /// Value for this member.
         /// </summary>
         private long? _value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SchemaEnumMember" /> class.
+        /// Initializes a new instance of the <see cref="SchemaEnumMember" /> class.
         /// </summary>
         /// <param name="parentElement"> Parent element. </param>
         public SchemaEnumMember(SchemaElement parentElement)
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Gets the value of this enum member. Possibly null if not specified in the CSDL.
+        /// Gets the value of this enum member. Possibly null if not specified in the CSDL.
         /// </summary>
         public long? Value
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Generic handler for the Member element attributes
+        /// Generic handler for the Member element attributes
         /// </summary>
         /// <param name="reader"> Xml reader positioned on an attribute. </param>
         /// <c>true</c>
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the Member Value attribute.
+        /// Handler for the Member Value attribute.
         /// </summary>
         /// <param name="reader"> XmlReader positioned on the Member Value attribute. </param>
         private void HandleValueAttribute(XmlReader reader)

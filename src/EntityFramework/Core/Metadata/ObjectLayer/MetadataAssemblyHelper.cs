@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Is the assembly and its referened assemblies not expected to have any metadata
+        /// Is the assembly and its referened assemblies not expected to have any metadata
         /// </summary>
         private static bool ShouldFilterAssembly(AssemblyName assemblyName)
         {

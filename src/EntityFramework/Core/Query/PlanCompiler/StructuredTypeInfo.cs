@@ -13,44 +13,44 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Globalization;
 
     /// <summary>
-    ///     The type flattener module is part of the structured type elimination phase,
-    ///     and is largely responsible for "flattening" record and nominal types into
-    ///     flat record types. Additionally, for nominal types, this module produces typeid
-    ///     values that can be used later to interpret the input data stream.
-    ///     The goal of this module is to load up information about type and entityset metadata
-    ///     used in the ITree. This module is part of the "StructuredTypeElimination" phase,
-    ///     and provides information to help in this process.
-    ///     This module itself is broken down into multiple parts.
-    ///     (*) Loading type information: We walk the query tree to identify all references
-    ///     to structured types and entity sets
-    ///     (*) Processing entitysets: We walk the list of entitysets, and assign ids to each
-    ///     entityset. We also create a map of id->entityset metadata in this phase.
-    ///     (*) Processing types: We then walk the list of types, and process each type. This,
-    ///     in turn, is also broken into multiple parts:
-    ///     * Populating the Type Map: we walk the list of reference types and add each of
-    ///     them to our typeMap, along with their base types.
-    ///     * TypeId assignment: We assign typeids to each nominal (complextype/entitytype).
-    ///     This typeid is based on a dewey encoding. The typeid of a type is typically
-    ///     the typeid of its supertype suffixed by the subtype number of this type within
-    ///     its supertype. This encoding is intended to support easy type matching
-    ///     later on in the query - both for exact (IS OF ONLY) and inexact (IS OF) matches.
-    ///     * Type flattening: We then "explode"/"flatten" each structured type - refs,
-    ///     entity types, complex types and record types. The result is a flattened type
-    ///     where every single property of the resulting type is a primitive/scalar type
-    ///     (Note: UDTs are considered to be scalar types). Additional information may also
-    ///     be encoded as a type property. For example, a typeid property is added (if
-    ///     necessary) to complex/entity types to help discriminate polymorphic instances.
-    ///     An EntitySetId property is added to ref and entity type attributes to help
-    ///     determine the entity set that a given entity instance comes from.
-    ///     As part of type flattening, we keep track of additional information that allows
-    ///     us to map easily from the original property to the properties in the new type
-    ///     The final result of this processing is an object that contains:
-    ///     * a TypeInfo (extra type information) for each structured type in the query
-    ///     * a map from typeid value to type. To be used later by result assembly
-    ///     * a map between entitysetid value and entityset. To be used later by result assembly
-    ///     NOTE: StructuredTypeInfo is probably not the best name for this class, since
-    ///     it doesn't derive from TypeInfo but rather manages a collection of them.
-    ///     I don't have a better name, but if you come up with one change this.
+    /// The type flattener module is part of the structured type elimination phase,
+    /// and is largely responsible for "flattening" record and nominal types into
+    /// flat record types. Additionally, for nominal types, this module produces typeid
+    /// values that can be used later to interpret the input data stream.
+    /// The goal of this module is to load up information about type and entityset metadata
+    /// used in the ITree. This module is part of the "StructuredTypeElimination" phase,
+    /// and provides information to help in this process.
+    /// This module itself is broken down into multiple parts.
+    /// (*) Loading type information: We walk the query tree to identify all references
+    /// to structured types and entity sets
+    /// (*) Processing entitysets: We walk the list of entitysets, and assign ids to each
+    /// entityset. We also create a map of id->entityset metadata in this phase.
+    /// (*) Processing types: We then walk the list of types, and process each type. This,
+    /// in turn, is also broken into multiple parts:
+    /// * Populating the Type Map: we walk the list of reference types and add each of
+    /// them to our typeMap, along with their base types.
+    /// * TypeId assignment: We assign typeids to each nominal (complextype/entitytype).
+    /// This typeid is based on a dewey encoding. The typeid of a type is typically
+    /// the typeid of its supertype suffixed by the subtype number of this type within
+    /// its supertype. This encoding is intended to support easy type matching
+    /// later on in the query - both for exact (IS OF ONLY) and inexact (IS OF) matches.
+    /// * Type flattening: We then "explode"/"flatten" each structured type - refs,
+    /// entity types, complex types and record types. The result is a flattened type
+    /// where every single property of the resulting type is a primitive/scalar type
+    /// (Note: UDTs are considered to be scalar types). Additional information may also
+    /// be encoded as a type property. For example, a typeid property is added (if
+    /// necessary) to complex/entity types to help discriminate polymorphic instances.
+    /// An EntitySetId property is added to ref and entity type attributes to help
+    /// determine the entity set that a given entity instance comes from.
+    /// As part of type flattening, we keep track of additional information that allows
+    /// us to map easily from the original property to the properties in the new type
+    /// The final result of this processing is an object that contains:
+    /// * a TypeInfo (extra type information) for each structured type in the query
+    /// * a map from typeid value to type. To be used later by result assembly
+    /// * a map between entitysetid value and entityset. To be used later by result assembly
+    /// NOTE: StructuredTypeInfo is probably not the best name for this class, since
+    /// it doesn't derive from TypeInfo but rather manages a collection of them.
+    /// I don't have a better name, but if you come up with one change this.
     /// </summary>
     internal class StructuredTypeInfo
     {
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Process driver
 
         /// <summary>
-        ///     Process Driver
+        /// Process Driver
         /// </summary>
         /// <param name="itree"> </param>
         /// <param name="referencedTypes"> structured types referenced in the query </param>
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Fills the StructuredTypeInfo instance from the itree provided.
+        /// Fills the StructuredTypeInfo instance from the itree provided.
         /// </summary>
         /// <param name="itree"> </param>
         /// <param name="referencedTypes"> referenced structured types </param>
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region "public" properties
 
         /// <summary>
-        ///     Mapping from entitysetid-s to entitysets
+        /// Mapping from entitysetid-s to entitysets
         /// </summary>
         internal md.EntitySet[] EntitySetIdToEntitySetMap
         {
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region "public" methods
 
         /// <summary>
-        ///     Get a helper for rel properties
+        /// Get a helper for rel properties
         /// </summary>
         internal RelPropertyHelper RelPropertyHelper
         {
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the "single" entityset that stores instances of this type
+        /// Gets the "single" entityset that stores instances of this type
         /// </summary>
         internal md.EntitySet GetEntitySet(md.EntityTypeBase type)
         {
@@ -189,7 +189,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the entitysetid value for a given entityset
+        /// Get the entitysetid value for a given entityset
         /// </summary>
         /// <param name="e"> the entityset </param>
         /// <returns> entitysetid value </returns>
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets entity sets referenced by the query.
+        /// Gets entity sets referenced by the query.
         /// </summary>
         /// <returns> entity sets </returns>
         internal Set<md.EntitySet> GetEntitySets()
@@ -216,10 +216,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Find the TypeInfo entry for a type. For non-structured types, we always
-        ///     return null. For structured types, we return the entry in the typeInfoMap.
-        ///     If we don't find one, and the typeInfoMap has already been populated, then we
-        ///     assert
+        /// Find the TypeInfo entry for a type. For non-structured types, we always
+        /// return null. For structured types, we return the entry in the typeInfoMap.
+        /// If we don't find one, and the typeInfoMap has already been populated, then we
+        /// assert
         /// </summary>
         /// <param name="type"> the type to look up </param>
         /// <returns> the typeinfo for the type (null if we couldn't find one) </returns>
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region EntitySet processing methods
 
         /// <summary>
-        ///     Add a new entry to the entityTypeToSet map
+        /// Add a new entry to the entityTypeToSet map
         /// </summary>
         /// <param name="entityType"> entity type </param>
         /// <param name="entitySet"> entityset producing this type </param>
@@ -282,9 +282,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Handle any relevant processing for entity sets
-        ///     <param name="referencedEntitySets"> referenced entitysets </param>
-        ///     <param name="freeFloatingEntityConstructorTypes"> free-floating entity constructor types </param>
+        /// Handle any relevant processing for entity sets
+        /// <param name="referencedEntitySets"> referenced entitysets </param>
+        /// <param name="freeFloatingEntityConstructorTypes"> free-floating entity constructor types </param>
         /// </summary>
         private void ProcessEntitySets(
             HashSet<md.EntitySet> referencedEntitySets, HashSet<md.EntityType> freeFloatingEntityConstructorTypes)
@@ -306,7 +306,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Handle discriminator maps (determine which can safely be used in the query)
+        /// Handle discriminator maps (determine which can safely be used in the query)
         /// </summary>
         private void ProcessDiscriminatorMaps(Dictionary<md.EntitySetBase, DiscriminatorMapInfo> discriminatorMaps)
         {
@@ -342,8 +342,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Assign ids to each entityset in the query
-        ///     <param name="referencedEntitySets"> referenced entitysets </param>
+        /// Assign ids to each entityset in the query
+        /// <param name="referencedEntitySets"> referenced entitysets </param>
         /// </summary>
         private void AssignEntitySetIds(HashSet<md.EntitySet> referencedEntitySets)
         {
@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Type processing methods
 
         /// <summary>
-        ///     Process all types in the query
+        /// Process all types in the query
         /// </summary>
         /// <param name="referencedTypes"> referenced types </param>
         private void ProcessTypes(HashSet<md.TypeUsage> referencedTypes)
@@ -384,7 +384,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Populating TypeInfo Map
 
         /// <summary>
-        ///     Build up auxilliary information for each referenced type in the query
+        /// Build up auxilliary information for each referenced type in the query
         /// </summary>
         private void PopulateTypeInfoMap(HashSet<md.TypeUsage> referencedTypes)
         {
@@ -396,8 +396,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Tries to lookup custom discriminator map for the given type (applies to EntitySets with
-        ///     TPH discrimination pattern)
+        /// Tries to lookup custom discriminator map for the given type (applies to EntitySets with
+        /// TPH discrimination pattern)
         /// </summary>
         private bool TryGetDiscriminatorMap(md.EdmType type, out ExplicitDiscriminatorMap discriminatorMap)
         {
@@ -437,7 +437,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a TypeInfo (if necessary) for the type, and add it to the TypeInfo map
+        /// Create a TypeInfo (if necessary) for the type, and add it to the TypeInfo map
         /// </summary>
         /// <param name="type"> the type to process </param>
         private void CreateTypeInfoForType(md.TypeUsage type)
@@ -462,10 +462,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add a new entry to the map. If an entry already exists, then this function
-        ///     simply returns the existing entry. Otherwise a new entry is created. If
-        ///     the type has a supertype, then we ensure that the supertype also exists in
-        ///     the map, and we add our info to the supertype's list of subtypes
+        /// Add a new entry to the map. If an entry already exists, then this function
+        /// simply returns the existing entry. Otherwise a new entry is created. If
+        /// the type has a supertype, then we ensure that the supertype also exists in
+        /// the map, and we add our info to the supertype's list of subtypes
         /// </summary>
         /// <param name="type"> New type to add </param>
         /// <param name="discriminatorMap"> type discriminator map </param>
@@ -540,10 +540,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Assigning TypeIds
 
         /// <summary>
-        ///     Assigns typeids to each type in the map.
-        ///     We walk the map looking only for "root" types, and call the function
-        ///     above to process root types. All other types will be handled in that
-        ///     function
+        /// Assigns typeids to each type in the map.
+        /// We walk the map looking only for "root" types, and call the function
+        /// above to process root types. All other types will be handled in that
+        /// function
         /// </summary>
         private void AssignTypeIds()
         {
@@ -571,7 +571,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Assign a typeid to a root type
+        /// Assign a typeid to a root type
         /// </summary>
         private void AssignRootTypeId(TypeInfo typeInfo, string typeId)
         {
@@ -580,8 +580,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Assigns typeids to each subtype of the current type.
-        ///     Assertion: the current type has already had a typeid assigned to it.
+        /// Assigns typeids to each subtype of the current type.
+        /// Assertion: the current type has already had a typeid assigned to it.
         /// </summary>
         /// <param name="typeInfo"> The current type </param>
         private void AssignTypeIdsToSubTypes(TypeInfo typeInfo)
@@ -596,10 +596,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Assign a typeid to a non-root type.
-        ///     Assigns typeids to a non-root type based on a dewey encoding scheme.
-        ///     The typeid will be the typeId of the supertype suffixed by a
-        ///     local identifier for the type.
+        /// Assign a typeid to a non-root type.
+        /// Assigns typeids to a non-root type based on a dewey encoding scheme.
+        /// The typeid will be the typeId of the supertype suffixed by a
+        /// local identifier for the type.
         /// </summary>
         /// <param name="typeInfo"> the non-root type </param>
         /// <param name="subtypeNum"> position in the subtype list </param>
@@ -614,10 +614,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Flattening/Exploding types
 
         /// <summary>
-        ///     A type needs a type-id property if it is an entity type or a complex tpe that
-        ///     has subtypes.
-        ///     Coming soon: relax the "need subtype" requirement (ie) any entity/complex type will
-        ///     have a typeid
+        /// A type needs a type-id property if it is an entity type or a complex tpe that
+        /// has subtypes.
+        /// Coming soon: relax the "need subtype" requirement (ie) any entity/complex type will
+        /// have a typeid
         /// </summary>
         private static bool NeedsTypeIdProperty(TypeInfo typeInfo)
         {
@@ -625,9 +625,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     A type needs a null-sentinel property if it is an row type that was projected
-        ///     at the top level of the query; we capture that information in the preprocessor
-        ///     and pass it in here.
+        /// A type needs a null-sentinel property if it is an row type that was projected
+        /// at the top level of the query; we capture that information in the preprocessor
+        /// and pass it in here.
         /// </summary>
         private bool NeedsNullSentinelProperty(TypeInfo typeInfo)
         {
@@ -635,9 +635,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The type needs an entitysetidproperty, if it is either an entity type
-        ///     or a reference type, AND we cannot determine that there is only entityset
-        ///     in the query that could be producing instances of this entity
+        /// The type needs an entitysetidproperty, if it is either an entity type
+        /// or a reference type, AND we cannot determine that there is only entityset
+        /// in the query that could be producing instances of this entity
         /// </summary>
         private bool NeedsEntitySetIdProperty(TypeInfo typeInfo)
         {
@@ -656,8 +656,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     "Explode" each type in the dictionary. (ie) for each type, get a flattened
-        ///     list of all its members (including special cases for the typeid)
+        /// "Explode" each type in the dictionary. (ie) for each type, get a flattened
+        /// list of all its members (including special cases for the typeid)
         /// </summary>
         private void ExplodeTypes()
         {
@@ -674,10 +674,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     "Explode" a type.  (ie) produce a flat record type with one property for each
-        ///     scalar property (top-level or nested) of the original type.
-        ///     Really deals with structured types, but also
-        ///     peels off collection wrappers
+        /// "Explode" a type.  (ie) produce a flat record type with one property for each
+        /// scalar property (top-level or nested) of the original type.
+        /// Really deals with structured types, but also
+        /// peels off collection wrappers
         /// </summary>
         /// <param name="type"> the type to explode </param>
         /// <returns> the typeinfo for this type (with the explosion) </returns>
@@ -700,7 +700,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Type Explosion - simply delegates to the root type
+        /// Type Explosion - simply delegates to the root type
         /// </summary>
         /// <param name="typeInfo"> type info </param>
         private void ExplodeType(TypeInfo typeInfo)
@@ -709,19 +709,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     "Explode" a root type. (ie) add each member of the type to a flat list of
-        ///     members for the supertype.
-        ///     Type explosion works in a DFS style model. We first walk through the
-        ///     list of properties for the current type, and "flatten" out the properties
-        ///     that are themselves "structured". We then target each subtype (recursively)
-        ///     and perform the same kind of processing.
-        ///     Consider a very simple case:
-        ///     Q = (z1 int, z2 date)
-        ///     Q2: Q = (z3 string)  -- Q2 is a subtype of Q
-        ///     T = (a int, b Q, c date)
-        ///     S: T = (d int)  -- read as S is a subtype of T
-        ///     The result of flattening T (and S) will be
-        ///     (a int, b.z1 int, b.z2 date, b.z3 string, c date, d int)
+        /// "Explode" a root type. (ie) add each member of the type to a flat list of
+        /// members for the supertype.
+        /// Type explosion works in a DFS style model. We first walk through the
+        /// list of properties for the current type, and "flatten" out the properties
+        /// that are themselves "structured". We then target each subtype (recursively)
+        /// and perform the same kind of processing.
+        /// Consider a very simple case:
+        /// Q = (z1 int, z2 date)
+        /// Q2: Q = (z3 string)  -- Q2 is a subtype of Q
+        /// T = (a int, b Q, c date)
+        /// S: T = (d int)  -- read as S is a subtype of T
+        /// The result of flattening T (and S) will be
+        /// (a int, b.z1 int, b.z2 date, b.z3 string, c date, d int)
         /// </summary>
         /// <param name="rootType"> the root type to explode </param>
         private void ExplodeRootStructuredType(RootTypeInfo rootType)
@@ -783,14 +783,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Helper for ExplodeType.
-        ///     Walks through each member introduced by the current type, and
-        ///     adds it onto the "flat" record type being constructed.
-        ///     We then walk through all subtypes of this type, and process those as
-        ///     well.
-        ///     Special handling for Refs: we only add the keys; there is no
-        ///     need to handle subtypes (since they won't be introducing anything
-        ///     different)
+        /// Helper for ExplodeType.
+        /// Walks through each member introduced by the current type, and
+        /// adds it onto the "flat" record type being constructed.
+        /// We then walk through all subtypes of this type, and process those as
+        /// well.
+        /// Special handling for Refs: we only add the keys; there is no
+        /// need to handle subtypes (since they won't be introducing anything
+        /// different)
         /// </summary>
         /// <param name="typeInfo"> type in the type hierarchy </param>
         private void ExplodeRootStructuredTypeHelper(TypeInfo typeInfo)
@@ -856,7 +856,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add the list of rel-properties for this type
+        /// Add the list of rel-properties for this type
         /// </summary>
         /// <param name="typeInfo"> the type to process </param>
         private void AddRelProperties(TypeInfo typeInfo)
@@ -894,12 +894,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create the flattened record type for the type.
-        ///     Walk through the list of property refs, and creates a new field
-        ///     (which we name as "F1", "F2" etc.) with the required property type.
-        ///     We then produce a mapping from the original property (propertyRef really)
-        ///     to the new property for use in later modules.
-        ///     Finally, we identify the TypeId and EntitySetId property if they exist
+        /// Create the flattened record type for the type.
+        /// Walk through the list of property refs, and creates a new field
+        /// (which we name as "F1", "F2" etc.) with the required property type.
+        /// We then produce a mapping from the original property (propertyRef really)
+        /// to the new property for use in later modules.
+        /// Finally, we identify the TypeId and EntitySetId property if they exist
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -971,13 +971,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the "new" type corresponding to the input type. For structured types,
-        ///     we return the flattened record type.
-        ///     For collections of structured type, we return a new collection type of the corresponding flattened
-        ///     type.
-        ///     For enum types we return the underlying type of the enum type.
-        ///     For strong spatial types we return the union type that includes the strong spatial type.
-        ///     For everything else, we return the input type
+        /// Get the "new" type corresponding to the input type. For structured types,
+        /// we return the flattened record type.
+        /// For collections of structured type, we return a new collection type of the corresponding flattened
+        /// type.
+        /// For enum types we return the underlying type of the enum type.
+        /// For strong spatial types we return the union type that includes the strong spatial type.
+        /// For everything else, we return the input type
         /// </summary>
         /// <param name="type"> the original type </param>
         /// <returns> the new type (if any) </returns>
@@ -1017,12 +1017,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the datatype for a propertyRef. The only concrete classes that we
-        ///     handle are TypeIdPropertyRef, and BasicPropertyRef.
-        ///     AllPropertyRef is illegal here.
-        ///     For BasicPropertyRef, we simply pick up the type from the corresponding
-        ///     property. For TypeIdPropertyRef, we use "string" as the default type
-        ///     or the discriminator property type where one is available.
+        /// Get the datatype for a propertyRef. The only concrete classes that we
+        /// handle are TypeIdPropertyRef, and BasicPropertyRef.
+        /// AllPropertyRef is illegal here.
+        /// For BasicPropertyRef, we simply pick up the type from the corresponding
+        /// property. For TypeIdPropertyRef, we use "string" as the default type
+        /// or the discriminator property type where one is available.
         /// </summary>
         /// <param name="typeInfo"> typeinfo of the current type </param>
         /// <param name="p"> current property ref </param>
@@ -1091,7 +1091,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region utils
 
         /// <summary>
-        ///     Get the root entity type for a type
+        /// Get the root entity type for a type
         /// </summary>
         /// <param name="type"> entity type </param>
         private static md.EntityTypeBase GetRootType(md.EntityTypeBase type)

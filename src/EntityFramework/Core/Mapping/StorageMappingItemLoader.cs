@@ -24,68 +24,68 @@ namespace System.Data.Entity.Core.Mapping
         System.Data.Entity.Core.Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
 
     /// <summary>
-    ///     The class loads an MSL file into memory and exposes CSMappingMetadata interfaces.
-    ///     The primary consumers of the interfaces are view genration and tools.
+    /// The class loads an MSL file into memory and exposes CSMappingMetadata interfaces.
+    /// The primary consumers of the interfaces are view genration and tools.
     /// </summary>
     /// <example>
-    ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping
-    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///     --EntitySetMapping
-    ///     --EntityTypeMapping
-    ///     --TableMappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --EntityTypeMapping
-    ///     --TableMappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ComplexPropertyMap
-    ///     --ComplexTypeMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --AssociationSetMapping
-    ///     --AssociationTypeMapping
-    ///     --TableMappingFragment
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EntityContainerMapping ( CMyDatabase-->SMyDatabase )
-    ///     --CompositionSetMapping
-    ///     --CompositionTypeMapping
-    ///     --TableMappingFragment
-    ///     --ParentEntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->Constant value )
-    ///     --ComplexPropertyMap
-    ///     --ComplexTypeMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->Constant value )
-    ///     The CCMappingSchemaLoader loads an Xml file that has a conceptual structure
-    ///     equivalent to the above example into in-memory data structure in a
-    ///     top-dwon approach.
+    /// For Example if conceptually you could represent the CS MSL file as following
+    /// --Mapping
+    /// --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    /// --EntitySetMapping
+    /// --EntityTypeMapping
+    /// --TableMappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --EntityTypeMapping
+    /// --TableMappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ComplexPropertyMap
+    /// --ComplexTypeMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --AssociationSetMapping
+    /// --AssociationTypeMapping
+    /// --TableMappingFragment
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EntityContainerMapping ( CMyDatabase-->SMyDatabase )
+    /// --CompositionSetMapping
+    /// --CompositionTypeMapping
+    /// --TableMappingFragment
+    /// --ParentEntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->Constant value )
+    /// --ComplexPropertyMap
+    /// --ComplexTypeMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->Constant value )
+    /// The CCMappingSchemaLoader loads an Xml file that has a conceptual structure
+    /// equivalent to the above example into in-memory data structure in a
+    /// top-dwon approach.
     /// </example>
     /// <remarks>
-    ///     The loader uses XPathNavigator to parse the XML. The advantage of using XPathNavigator
-    ///     over DOM is that it exposes the line number of the current xml content.
-    ///     This is really helpful when throwing exceptions. Another advantage is
+    /// The loader uses XPathNavigator to parse the XML. The advantage of using XPathNavigator
+    /// over DOM is that it exposes the line number of the current xml content.
+    /// This is really helpful when throwing exceptions. Another advantage is
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class StorageMappingItemLoader
     {
         /// <summary>
-        ///     Public constructor.
-        ///     For Beta2 we wont support delay loading Mapping information and we would also support
-        ///     only one mapping file for workspace.
+        /// Public constructor.
+        /// For Beta2 we wont support delay loading Mapping information and we would also support
+        /// only one mapping file for workspace.
         /// </summary>
         /// <param name="reader"> </param>
         /// <param name="storageMappingItemCollection"> </param>
@@ -180,9 +180,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The LoadMappingSchema method loads the mapping file and initializes the
-        ///     MappingSchema that represents this mapping file.
-        ///     For Beta2 atleast, we will support only one EntityContainerMapping per mapping file.
+        /// The LoadMappingSchema method loads the mapping file and initializes the
+        /// MappingSchema that represents this mapping file.
+        /// For Beta2 atleast, we will support only one EntityContainerMapping per mapping file.
         /// </summary>
         private StorageEntityContainerMapping LoadMappingItems(XmlReader innerReader)
         {
@@ -277,8 +277,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the root Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the root Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private StorageEntityContainerMapping LoadMappingChildNodes(XPathNavigator nav)
         {
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads and returns the EntityContainer Mapping node.
+        /// The method loads and returns the EntityContainer Mapping node.
         /// </summary>
         private StorageEntityContainerMapping LoadEntityContainerMapping(XPathNavigator nav)
         {
@@ -401,8 +401,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the EntityContainer Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the EntityContainer Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private void LoadEntityContainerMappingChildNodes(
             XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping, EntityContainer storageEntityContainerType)
@@ -466,8 +466,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validates that collocated association sets are consistently mapped for each entity set (all operations or none). In the case
-        ///     of relationships between sub-types of an entity set, ensures the relationship mapping is legal.
+        /// Validates that collocated association sets are consistently mapped for each entity set (all operations or none). In the case
+        /// of relationships between sub-types of an entity set, ensures the relationship mapping is legal.
         /// </summary>
         private void ValidateModificationFunctionMappingConsistentForAssociations(
             XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping)
@@ -564,7 +564,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validates that association sets are only mapped once.
+        /// Validates that association sets are only mapped once.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="entityContainerMapping"> Container to validate </param>
@@ -638,8 +638,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validates that all or no related extents have function mappings. If an EntitySet or an AssociationSet has a function mapping,
-        ///     then all the sets that touched the same store tableSet must also have function mappings.
+        /// Validates that all or no related extents have function mappings. If an EntitySet or an AssociationSet has a function mapping,
+        /// then all the sets that touched the same store tableSet must also have function mappings.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="entityContainerMapping"> Container to validate. </param>
@@ -768,8 +768,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validates that all or no related extents have query views defined. If an extent has a query view defined, then
-        ///     all related extents must also have query views.
+        /// Validates that all or no related extents have query views defined. If an extent has a query view defined, then
+        /// all related extents must also have query views.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="entityContainerMapping"> Container to validate. </param>
@@ -813,8 +813,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the EntitySet Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the EntitySet Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private void LoadEntitySetMapping(
             XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping, EntityContainer storageEntityContainerType)
@@ -1071,8 +1071,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the EntityType Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the EntityType Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private void LoadEntityTypeMapping(
             XPathNavigator nav, StorageEntitySetMapping entitySetMapping, string tableName, EntityContainer storageEntityContainerType,
@@ -1191,7 +1191,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Loads modification function mappings for entity type.
+        /// Loads modification function mappings for entity type.
         /// </summary>
         private void LoadEntityTypeModificationFunctionMapping(
             XPathNavigator nav,
@@ -1317,8 +1317,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the query view for the Set Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the query view for the Set Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private bool LoadQueryView(XPathNavigator nav, StorageSetMapping setMapping)
         {
@@ -1476,8 +1476,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the AssociationSet Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the AssociationSet Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private void LoadAssociationSetMapping(
             XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping, EntityContainer storageEntityContainerType)
@@ -1608,7 +1608,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads a function import mapping element
+        /// The method loads a function import mapping element
         /// </summary>
         private void LoadFunctionImportMapping(XPathNavigator nav, StorageEntityContainerMapping entityContainerMapping)
         {
@@ -2339,7 +2339,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Attempts to infer key columns of the target function based on the function import mapping.
+        /// Attempts to infer key columns of the target function based on the function import mapping.
         /// </summary>
         internal static bool TryInferTVFKeys(
             List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings,
@@ -2705,8 +2705,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the AssociationType Mapping node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the AssociationType Mapping node
+        /// into the internal datastructures.
         /// </summary>
         private void LoadAssociationTypeMapping(
             XPathNavigator nav, StorageAssociationSetMapping associationSetMapping, string associationTypeName, string tableName,
@@ -2764,7 +2764,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Loads function mappings for the entity type.
+        /// Loads function mappings for the entity type.
         /// </summary>
         private void LoadAssociationTypeModificationFunctionMapping(
             XPathNavigator nav,
@@ -2801,8 +2801,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the TableMappingFragment under the EntityType node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the TableMappingFragment under the EntityType node
+        /// into the internal datastructures.
         /// </summary>
         private StorageMappingFragment LoadMappingFragment(
             XPathNavigator nav,
@@ -2905,8 +2905,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the child nodes for the TableMappingFragment under the AssociationType node
-        ///     into the internal datastructures.
+        /// The method loads the child nodes for the TableMappingFragment under the AssociationType node
+        /// into the internal datastructures.
         /// </summary>
         private StorageMappingFragment LoadAssociationMappingFragment(
             XPathNavigator nav, StorageAssociationSetMapping setMapping, StorageAssociationTypeMapping typeMapping, string tableName,
@@ -3010,8 +3010,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the ScalarProperty mapping
-        ///     into the internal datastructures.
+        /// The method loads the ScalarProperty mapping
+        /// into the internal datastructures.
         /// </summary>
         private StorageScalarPropertyMapping LoadScalarPropertyMapping(
             XPathNavigator nav, EdmType containerType, ReadOnlyMetadataCollection<EdmProperty> tableProperties)
@@ -3088,7 +3088,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the ComplexProperty mapping into the internal datastructures.
+        /// The method loads the ComplexProperty mapping into the internal datastructures.
         /// </summary>
         private StorageComplexPropertyMapping LoadComplexPropertyMapping(
             XPathNavigator nav, EdmType containerType, ReadOnlyMetadataCollection<EdmProperty> tableProperties)
@@ -3323,8 +3323,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the EndProperty mapping
-        ///     into the internal datastructures.
+        /// The method loads the EndProperty mapping
+        /// into the internal datastructures.
         /// </summary>
         private StorageEndPropertyMapping LoadEndPropertyMapping(XPathNavigator nav, AssociationEndMember end, EntityType tableType)
         {
@@ -3373,8 +3373,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method loads the ConditionProperty mapping
-        ///     into the internal datastructures.
+        /// The method loads the ConditionProperty mapping
+        /// into the internal datastructures.
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private StorageConditionPropertyMapping LoadConditionPropertyMapping(
@@ -3593,8 +3593,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Throws a new MappingException giving out the line number and
-        ///     File Name where the error in Mapping specification is present.
+        /// Throws a new MappingException giving out the line number and
+        /// File Name where the error in Mapping specification is present.
         /// </summary>
         /// <param name="message"> </param>
         /// <param name="errorCode"> </param>
@@ -3642,7 +3642,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Resolve the attribute value based on the aliases provided as part of MSL file.
+        /// Resolve the attribute value based on the aliases provided as part of MSL file.
         /// </summary>
         private string GetAliasResolvedAttributeValue(XPathNavigator nav, string attributeName)
         {
@@ -3662,8 +3662,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method simply calls the helper method on Helper class with the
-        ///     namespaceURI that is default for CSMapping.
+        /// The method simply calls the helper method on Helper class with the
+        /// namespaceURI that is default for CSMapping.
         /// </summary>
         private static string GetAttributeValue(XPathNavigator nav, string attributeName)
         {
@@ -3671,8 +3671,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method simply calls the helper method on Helper class with the
-        ///     namespaceURI that is default for CSMapping.
+        /// The method simply calls the helper method on Helper class with the
+        /// namespaceURI that is default for CSMapping.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="attributeName"> </param>
@@ -3701,7 +3701,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Returns the enum EdmMember corresponding to attribute name in enumType.
+        /// Returns the enum EdmMember corresponding to attribute name in enumType.
         /// </summary>
         /// <param name="nav"> </param>
         /// <param name="attributeName"> </param>
@@ -3734,7 +3734,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Resolve the string value based on the aliases provided as part of MSL file.
+        /// Resolve the string value based on the aliases provided as part of MSL file.
         /// </summary>
         private string GetAliasResolvedValue(string aliasedString)
         {
@@ -3761,8 +3761,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Creates Xml Reader with settings required for
-        ///     XSD validation.
+        /// Creates Xml Reader with settings required for
+        /// XSD validation.
         /// </summary>
         private XmlReader GetSchemaValidatingReader(XmlReader innerReader)
         {
@@ -3786,9 +3786,9 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The method is called by the XSD validation event handler when
-        ///     ever there are warnings or errors.
-        ///     We ignore the warnings but the errors will result in exception.
+        /// The method is called by the XSD validation event handler when
+        /// ever there are warnings or errors.
+        /// We ignore the warnings but the errors will result in exception.
         /// </summary>
         private void XsdValidationCallBack(object sender, ValidationEventArgs args)
         {
@@ -3815,8 +3815,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Validate the scalar property mapping - makes sure that the cspace type is promotable to the store side and updates
-        ///     the store type usage
+        /// Validate the scalar property mapping - makes sure that the cspace type is promotable to the store side and updates
+        /// the store type usage
         /// </summary>
         private void ValidateAndUpdateScalarMemberMapping(EdmProperty member, EdmProperty columnMember, IXmlLineInfo lineInfo)
         {
@@ -3925,7 +3925,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Encapsulates state and functionality for loading a modification function mapping.
+        /// Encapsulates state and functionality for loading a modification function mapping.
         /// </summary>
         private class ModificationFunctionMappingLoader
         {
@@ -4584,7 +4584,7 @@ namespace System.Data.Entity.Core.Mapping
             }
 
             /// <summary>
-            ///     Loads function metadata and ensures the function is supportable for function mapping.
+            /// Loads function metadata and ensures the function is supportable for function mapping.
             /// </summary>
             private EdmFunction LoadAndValidateFunctionMetadata(XPathNavigator nav, out FunctionParameter rowsAffectedParameter)
             {
@@ -4696,15 +4696,15 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Checks whether the <paramref name="typeUsage" /> represents a type usage for an enumeration type and if
-        ///     this is the case creates a new type usage built using the underlying type of the enumeration type.
+        /// Checks whether the <paramref name="typeUsage" /> represents a type usage for an enumeration type and if
+        /// this is the case creates a new type usage built using the underlying type of the enumeration type.
         /// </summary>
         /// <param name="typeUsage"> TypeUsage to resolve. </param>
         /// <returns>
-        ///     If <paramref name="typeUsage" /> represents a TypeUsage for enumeration type the method returns a new TypeUsage instance created using the underlying type of the enumeration type. Otherwise the method returns
-        ///     <paramref
-        ///         name="typeUsage" />
-        ///     .
+        /// If <paramref name="typeUsage" /> represents a TypeUsage for enumeration type the method returns a new TypeUsage instance created using the underlying type of the enumeration type. Otherwise the method returns
+        /// <paramref
+        ///     name="typeUsage" />
+        /// .
         /// </returns>
         private static TypeUsage ResolveTypeUsageForEnums(TypeUsage typeUsage)
         {

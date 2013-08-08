@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     All scalars fall into this category
+    /// All scalars fall into this category
     /// </summary>
     internal abstract class ScalarOp : Op
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        ///     Default constructor
+        /// Default constructor
         /// </summary>
         /// <param name="opType"> kind of Op </param>
         /// <param name="type"> type of value produced by this Op </param>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     ScalarOp
+        /// ScalarOp
         /// </summary>
         internal override bool IsScalarOp
         {
@@ -48,9 +48,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Two scalarOps are equivalent (usually) if their OpTypes and types are the
-        ///     same. Obviously, their arguments need to be equivalent as well - but that's
-        ///     checked elsewhere
+        /// Two scalarOps are equivalent (usually) if their OpTypes and types are the
+        /// same. Obviously, their arguments need to be equivalent as well - but that's
+        /// checked elsewhere
         /// </summary>
         /// <param name="other"> The other Op to compare against </param>
         /// <returns> true, if the Ops are indeed equivalent </returns>
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Datatype of result
+        /// Datatype of result
         /// </summary>
         internal override TypeUsage Type
         {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Is this an Aggregate
+        /// Is this an Aggregate
         /// </summary>
         internal virtual bool IsAggregateOp
         {

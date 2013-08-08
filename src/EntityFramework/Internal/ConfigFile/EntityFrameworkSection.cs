@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents all Entity Framework related configuration
+    /// Represents all Entity Framework related configuration
     /// </summary>
     internal class EntityFrameworkSection : ConfigurationSection
     {

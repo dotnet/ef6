@@ -6,18 +6,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     This Class is never expected to be used except for by the FacetValues class.
-    ///     The purpose of this class is to allow strong type checking by the compiler while setting facet values which
-    ///     are typically stored as Object because they can either on of these things
-    ///     1. null
-    ///     2. scalar type (bool, int, byte)
-    ///     3. Unbounded object
-    ///     without this class it would be very easy to accidentally set precision to an int when it really is supposed to be
-    ///     a byte value.  Also you would be able to set the facet value to any Object derived class (ANYTHING!!!) when really only
-    ///     null and Unbounded are allowed besides an actual scalar value.  The magic of the class happens in the implicit constructors with
-    ///     allow patterns like
-    ///     new FacetValues( MaxLength = EdmConstants.UnboundedValue, Nullable = true};
-    ///     and these are type checked at compile time
+    /// This Class is never expected to be used except for by the FacetValues class.
+    /// The purpose of this class is to allow strong type checking by the compiler while setting facet values which
+    /// are typically stored as Object because they can either on of these things
+    /// 1. null
+    /// 2. scalar type (bool, int, byte)
+    /// 3. Unbounded object
+    /// without this class it would be very easy to accidentally set precision to an int when it really is supposed to be
+    /// a byte value.  Also you would be able to set the facet value to any Object derived class (ANYTHING!!!) when really only
+    /// null and Unbounded are allowed besides an actual scalar value.  The magic of the class happens in the implicit constructors with
+    /// allow patterns like
+    /// new FacetValues( MaxLength = EdmConstants.UnboundedValue, Nullable = true};
+    /// and these are type checked at compile time
     /// </summary>
     internal struct FacetValueContainer<T>
     {

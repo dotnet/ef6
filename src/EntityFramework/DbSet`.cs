@@ -15,12 +15,12 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A DbSet represents the collection of all entities in the context, or that can be queried from the
-    ///     database, of a given type.  DbSet objects are created from a DbContext using the DbContext.Set method.
+    /// A DbSet represents the collection of all entities in the context, or that can be queried from the
+    /// database, of a given type.  DbSet objects are created from a DbContext using the DbContext.Set method.
     /// </summary>
     /// <remarks>
-    ///     Note that DbSet does not support MEST (Multiple Entity Sets per Type) meaning that there is always a
-    ///     one-to-one correlation between a type and a set.
+    /// Note that DbSet does not support MEST (Multiple Entity Sets per Type) meaning that there is always a
+    /// one-to-one correlation between a type and a set.
     /// </remarks>
     /// <typeparam name="TEntity"> The type that defines the set. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
@@ -33,7 +33,7 @@ namespace System.Data.Entity
         private readonly InternalSet<TEntity> _internalSet;
 
         /// <summary>
-        ///     Creates a new set that will be backed by the given <see cref="InternalSet{T}" />.
+        /// Creates a new set that will be backed by the given <see cref="InternalSet{T}" />.
         /// </summary>
         /// <param name="internalSet"> The internal set. </param>
         internal DbSet(InternalSet<TEntity> internalSet)
@@ -43,10 +43,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates an instance of a <see cref="DbSet{TEntity}" /> when called from the constructor of a derived
-        ///     type that will be used as a test double for DbSets. Methods and properties that will be used by the
-        ///     test double must be implemented by the test double except AsNoTracking, AsStreaming, an Include where
-        ///     the default implementation is a no-op.
+        /// Creates an instance of a <see cref="DbSet{TEntity}" /> when called from the constructor of a derived
+        /// type that will be used as a test double for DbSets. Methods and properties that will be used by the
+        /// test double must be implemented by the test double except AsNoTracking, AsStreaming, an Include where
+        /// the default implementation is a no-op.
         /// </summary>
         protected DbSet()
             : this(null)
@@ -58,16 +58,16 @@ namespace System.Data.Entity
         #region Find
 
         /// <summary>
-        ///     Finds an entity with the given primary key values.
-        ///     If an entity with the given primary key values exists in the context, then it is
-        ///     returned immediately without making a request to the store.  Otherwise, a request
-        ///     is made to the store for an entity with the given primary key values and this entity,
-        ///     if found, is attached to the context and returned.  If no entity is found in the
-        ///     context or the store, then null is returned.
+        /// Finds an entity with the given primary key values.
+        /// If an entity with the given primary key values exists in the context, then it is
+        /// returned immediately without making a request to the store.  Otherwise, a request
+        /// is made to the store for an entity with the given primary key values and this entity,
+        /// if found, is attached to the context and returned.  If no entity is found in the
+        /// context or the store, then null is returned.
         /// </summary>
         /// <remarks>
-        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
-        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        /// the designer, by the Code First fluent API, or by the DataMember attribute.
         /// </remarks>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> The entity found, or null. </returns>
@@ -83,21 +83,21 @@ namespace System.Data.Entity
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously finds an entity with the given primary key values.
-        ///     If an entity with the given primary key values exists in the context, then it is
-        ///     returned immediately without making a request to the store.  Otherwise, a request
-        ///     is made to the store for an entity with the given primary key values and this entity,
-        ///     if found, is attached to the context and returned.  If no entity is found in the
-        ///     context or the store, then null is returned.
+        /// Asynchronously finds an entity with the given primary key values.
+        /// If an entity with the given primary key values exists in the context, then it is
+        /// returned immediately without making a request to the store.  Otherwise, a request
+        /// is made to the store for an entity with the given primary key values and this entity,
+        /// if found, is attached to the context and returned.  If no entity is found in the
+        /// context or the store, then null is returned.
         /// </summary>
         /// <remarks>
-        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
-        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        /// the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
@@ -111,18 +111,18 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Asynchronously finds an entity with the given primary key values.
-        ///     If an entity with the given primary key values exists in the context, then it is
-        ///     returned immediately without making a request to the store.  Otherwise, a request
-        ///     is made to the store for an entity with the given primary key values and this entity,
-        ///     if found, is attached to the context and returned.  If no entity is found in the
-        ///     context or the store, then null is returned.
+        /// Asynchronously finds an entity with the given primary key values.
+        /// If an entity with the given primary key values exists in the context, then it is
+        /// returned immediately without making a request to the store.  Otherwise, a request
+        /// is made to the store for an entity with the given primary key values and this entity,
+        /// if found, is attached to the context and returned.  If no entity is found in the
+        /// context or the store, then null is returned.
         /// </summary>
         /// <remarks>
-        ///     The ordering of composite key values is as defined in the EDM, which is in turn as defined in
-        ///     the designer, by the Code First fluent API, or by the DataMember attribute.
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// The ordering of composite key values is as defined in the EDM, which is in turn as defined in
+        /// the designer, by the Code First fluent API, or by the DataMember attribute.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="keyValues"> The values of the primary key for the entity to be found. </param>
         /// <returns> A task that represents the asynchronous find operation. The task result contains the entity found, or null. </returns>
@@ -165,20 +165,20 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Adds the given collection of entities into context underlying the set with each entity being put into
-        ///     the Added state such that it will be inserted into the database when SaveChanges is called.
+        /// Adds the given collection of entities into context underlying the set with each entity being put into
+        /// the Added state such that it will be inserted into the database when SaveChanges is called.
         /// </summary>
         /// <param name="entities">The collection of entities to add.</param>
         /// <returns>
-        ///     The collection of entities.
+        /// The collection of entities.
         /// </returns>
         /// <remarks>
-        ///     Note that if <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> is set to true (which is
-        ///     the default), then DetectChanges will be called once before adding any entities and will not be called
-        ///     again. This means that in some situations AddRange may perform significantly better than calling
-        ///     Add multiple times would do.
-        ///     Note that entities that are already in the context in some other state will have their state set to
-        ///     Added.  AddRange is a no-op for entities that are already in the context in the Added state.
+        /// Note that if <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> is set to true (which is
+        /// the default), then DetectChanges will be called once before adding any entities and will not be called
+        /// again. This means that in some situations AddRange may perform significantly better than calling
+        /// Add multiple times would do.
+        /// Note that entities that are already in the context in some other state will have their state set to
+        /// Added.  AddRange is a no-op for entities that are already in the context in the Added state.
         /// </remarks>
         public virtual IEnumerable<TEntity> AddRange(IEnumerable<TEntity> entities)
         {
@@ -198,21 +198,21 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Removes the given collection of entities from the context underlying the set with each entity being put into
-        ///     the Deleted state such that it will be deleted from the database when SaveChanges is called.
+        /// Removes the given collection of entities from the context underlying the set with each entity being put into
+        /// the Deleted state such that it will be deleted from the database when SaveChanges is called.
         /// </summary>
         /// <param name="entities">The collection of entities to delete.</param>
         /// <returns>
-        ///     The collection of entities.
+        /// The collection of entities.
         /// </returns>
         /// <remarks>
-        ///     Note that if <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> is set to true (which is
-        ///     the default), then DetectChanges will be called once before delete any entities and will not be called
-        ///     again. This means that in some situations RemoveRange may perform significantly better than calling
-        ///     Remove multiple times would do.
-        ///     Note that if any entity exists in the context in the Added state, then this method
-        ///     will cause it to be detached from the context.  This is because an Added entity is assumed not to
-        ///     exist in the database such that trying to delete it does not make sense.
+        /// Note that if <see cref="DbContextConfiguration.AutoDetectChangesEnabled" /> is set to true (which is
+        /// the default), then DetectChanges will be called once before delete any entities and will not be called
+        /// again. This means that in some situations RemoveRange may perform significantly better than calling
+        /// Remove multiple times would do.
+        /// Note that if any entity exists in the context in the Added state, then this method
+        /// will cause it to be detached from the context.  This is because an Added entity is assumed not to
+        /// exist in the database such that trying to delete it does not make sense.
         /// </remarks>
         public virtual IEnumerable<TEntity> RemoveRange(IEnumerable<TEntity> entities)
         {
@@ -242,7 +242,7 @@ namespace System.Data.Entity
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns the equivalent non-generic <see cref="DbSet" /> object.
+        /// Returns the equivalent non-generic <see cref="DbSet" /> object.
         /// </summary>
         /// <returns> The non-generic set object. </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
@@ -265,7 +265,7 @@ namespace System.Data.Entity
         #region IInternalSetAdapter
 
         /// <summary>
-        ///     Gets the underlying internal set.
+        /// Gets the underlying internal set.
         /// </summary>
         /// <value> The internal set. </value>
         IInternalSet IInternalSetAdapter.InternalSet
@@ -288,23 +288,23 @@ namespace System.Data.Entity
         #region SQL queries
 
         /// <summary>
-        ///     Creates a raw SQL query that will return entities in this set.  By default, the
-        ///     entities returned are tracked by the context; this can be changed by calling
-        ///     AsNoTracking on the <see cref="DbSqlQuery{TEntity}" /> returned.
-        ///     Note that the entities returned are always of the type for this set and never of
-        ///     a derived type.  If the table or tables queried may contain data for other entity
-        ///     types, then the SQL query must be written appropriately to ensure that only entities of
-        ///     the correct type are returned.
+        /// Creates a raw SQL query that will return entities in this set.  By default, the
+        /// entities returned are tracked by the context; this can be changed by calling
+        /// AsNoTracking on the <see cref="DbSqlQuery{TEntity}" /> returned.
+        /// Note that the entities returned are always of the type for this set and never of
+        /// a derived type.  If the table or tables queried may contain data for other entity
+        /// types, then the SQL query must be written appropriately to ensure that only entities of
+        /// the correct type are returned.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.Blogs.SqlQuery("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <param name="sql"> The SQL query string. </param>
         /// <param name="parameters"> The parameters to apply to the SQL query string. </param>
         /// <returns>
-        ///     A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.
+        /// A <see cref="DbSqlQuery{TEntity}" /> object that will execute the query when it is enumerated.
         /// </returns>
         public virtual DbSqlQuery<TEntity> SqlQuery(string sql, params object[] parameters)
         {

@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to set the table name to be a pluralized version of the entity type name.
+    /// Convention to set the table name to be a pluralized version of the entity type name.
     /// </summary>
     public class PluralizingTableNameConvention : IStoreModelConvention<EntityType>
     {

@@ -10,13 +10,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Text;
 
     /// <summary>
-    ///     This class represents slots for expressions over boolean variables, e.g., _from0, _from1, etc
+    /// This class represents slots for expressions over boolean variables, e.g., _from0, _from1, etc
     /// </summary>
     internal sealed class BooleanProjectedSlot : ProjectedSlot
     {
         /// <summary>
-        ///     Creates a boolean slot for expression that comes from originalCellNum, i.e.,
-        ///     the value of the slot is <paramref name="expr" /> and the name is "_from{<paramref name="originalCellNum" />}", e.g., _from2
+        /// Creates a boolean slot for expression that comes from originalCellNum, i.e.,
+        /// the value of the slot is <paramref name="expr" /> and the name is "_from{<paramref name="originalCellNum" />}", e.g., _from2
         /// </summary>
         internal BooleanProjectedSlot(BoolExpression expr, CqlIdentifiers identifiers, int originalCellNum)
         {
@@ -29,17 +29,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         }
 
         /// <summary>
-        ///     The actual value of the slot - could be <see cref="CellIdBoolean" />!
+        /// The actual value of the slot - could be <see cref="CellIdBoolean" />!
         /// </summary>
         private readonly BoolExpression m_expr;
 
         /// <summary>
-        ///     A boolean corresponding to the original cell number (_from0)
+        /// A boolean corresponding to the original cell number (_from0)
         /// </summary>
         private readonly CellIdBoolean m_originalCell;
 
         /// <summary>
-        ///     Returns "_from0", "_from1" etc. <paramref name="outputMember" /> is ignored.
+        /// Returns "_from0", "_from1" etc. <paramref name="outputMember" /> is ignored.
         /// </summary>
         internal override string GetCqlFieldAlias(MemberPath outputMember)
         {

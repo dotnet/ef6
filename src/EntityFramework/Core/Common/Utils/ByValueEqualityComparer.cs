@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An implementation of IEqualityComparer{object} that compares byte[] instances by value, and
-    ///     delegates all other equality comparisons to a specified IEqualityComparer. In the default case,
-    ///     this provides by-value comparison for instances of the CLR equivalents of all EDM primitive types.
+    /// An implementation of IEqualityComparer{object} that compares byte[] instances by value, and
+    /// delegates all other equality comparisons to a specified IEqualityComparer. In the default case,
+    /// this provides by-value comparison for instances of the CLR equivalents of all EDM primitive types.
     /// </summary>
     internal sealed class ByValueEqualityComparer : IEqualityComparer<object>
     {
         /// <summary>
-        ///     Provides by-value comparison for instances of the CLR equivalents of all EDM primitive types.
+        /// Provides by-value comparison for instances of the CLR equivalents of all EDM primitive types.
         /// </summary>
         internal static readonly ByValueEqualityComparer Default = new ByValueEqualityComparer();
 

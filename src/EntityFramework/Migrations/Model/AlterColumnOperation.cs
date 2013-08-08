@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents altering an existing column.
+    /// Represents altering an existing column.
     /// </summary>
     public class AlterColumnOperation : MigrationOperation
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Migrations.Model
         private readonly bool _destructiveChange;
 
         /// <summary>
-        ///     Initializes a new instance of the AlterColumnOperation class.
+        /// Initializes a new instance of the AlterColumnOperation class.
         /// </summary>
         /// <param name="table"> The name of the table that the column belongs to. </param>
         /// <param name="column"> Details of what the column should be altered to. </param>
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Initializes a new instance of the AlterColumnOperation class.
+        /// Initializes a new instance of the AlterColumnOperation class.
         /// </summary>
         /// <param name="table"> The name of the table that the column belongs to. </param>
         /// <param name="column"> Details of what the column should be altered to. </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table that the column belongs to.
+        /// Gets the name of the table that the column belongs to.
         /// </summary>
         public string Table
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the new definition for the column.
+        /// Gets the new definition for the column.
         /// </summary>
         public ColumnModel Column
         {
@@ -71,9 +71,9 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that represents reverting the alteration.
-        ///     The inverse cannot be automatically calculated,
-        ///     if it was not supplied to the constructor this property will return null.
+        /// Gets an operation that represents reverting the alteration.
+        /// The inverse cannot be automatically calculated,
+        /// if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse
         {

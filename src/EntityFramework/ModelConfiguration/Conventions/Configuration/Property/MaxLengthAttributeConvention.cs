@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Convention to process instances of <see cref="MaxLengthAttribute" /> found on properties in the model.
+    /// Convention to process instances of <see cref="MaxLengthAttribute" /> found on properties in the model.
     /// </summary>
     public class MaxLengthAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<MaxLengthAttribute>

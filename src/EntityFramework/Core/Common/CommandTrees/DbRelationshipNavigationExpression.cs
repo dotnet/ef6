@@ -54,20 +54,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the starting point of the navigation and must be a reference to an entity instance.
+        /// Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the starting point of the navigation and must be a reference to an entity instance.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the instance of the source relationship end from which navigation should occur.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the instance of the source relationship end from which navigation should occur.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" />
-        ///     , or its result type is not equal or promotable to the reference type of the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression.NavigateFrom" />
-        ///     property.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" />
+        /// , or its result type is not equal or promotable to the reference type of the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression.NavigateFrom" />
+        /// property.
         /// </exception>
         public DbExpression NavigationSource
         {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value. </summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -88,13 +88,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

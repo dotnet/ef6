@@ -7,20 +7,20 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The methods here are called from multiple places with an ObjectContext that may have
-    ///     been created in a variety of ways and ensure that the same code is run regardless of
-    ///     how the context was created.
+    /// The methods here are called from multiple places with an ObjectContext that may have
+    /// been created in a variety of ways and ensure that the same code is run regardless of
+    /// how the context was created.
     /// </summary>
     internal class DatabaseOperations
     {
         #region Database operations
 
         /// <summary>
-        ///     Used a delegate to do the actual creation once an ObjectContext has been obtained.
-        ///     This is factored in this way so that we do the same thing regardless of how we get to
-        ///     having an ObjectContext.
-        ///     Note however that a context obtained from only a connection will have no model and so
-        ///     will result in an empty database.
+        /// Used a delegate to do the actual creation once an ObjectContext has been obtained.
+        /// This is factored in this way so that we do the same thing regardless of how we get to
+        /// having an ObjectContext.
+        /// Note however that a context obtained from only a connection will have no model and so
+        /// will result in an empty database.
         /// </summary>
         public virtual bool Create(ObjectContext objectContext)
         {
@@ -31,9 +31,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Used a delegate to do the actual existence check once an ObjectContext has been obtained.
-        ///     This is factored in this way so that we do the same thing regardless of how we get to
-        ///     having an ObjectContext.
+        /// Used a delegate to do the actual existence check once an ObjectContext has been obtained.
+        /// This is factored in this way so that we do the same thing regardless of how we get to
+        /// having an ObjectContext.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual bool Exists(ObjectContext objectContext)
@@ -44,9 +44,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Used a delegate to do the actual check/delete once an ObjectContext has been obtained.
-        ///     This is factored in this way so that we do the same thing regardless of how we get to
-        ///     having an ObjectContext.
+        /// Used a delegate to do the actual check/delete once an ObjectContext has been obtained.
+        /// This is factored in this way so that we do the same thing regardless of how we get to
+        /// having an ObjectContext.
         /// </summary>
         public virtual bool DeleteIfExists(ObjectContext objectContext)
         {

@@ -9,19 +9,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Used to configure a <see cref="T:Byte[]" /> property of an entity type or
-    ///     complex type.
+    /// Used to configure a <see cref="T:Byte[]" /> property of an entity type or
+    /// complex type.
     /// </summary>
     internal class BinaryPropertyConfiguration : LengthPropertyConfiguration
     {
         /// <summary>
-        ///     Gets or sets a value indicating whether the property is a row version in the
-        ///     database.
+        /// Gets or sets a value indicating whether the property is a row version in the
+        /// database.
         /// </summary>
         public bool? IsRowVersion { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the BinaryPropertyConfiguration class.
+        /// Initializes a new instance of the BinaryPropertyConfiguration class.
         /// </summary>
         public BinaryPropertyConfiguration()
         {

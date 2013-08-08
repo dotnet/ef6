@@ -1494,8 +1494,8 @@ namespace FunctionalTests.ProductivityApi
 
 #pragma warning disable 612,618
         /// <summary>
-        ///     Tests for the proxy implementations of the <see cref="DbFunctions" /> functions
-        ///     in the <see cref="EntityFunctions" /> class.
+        /// Tests for the proxy implementations of the <see cref="DbFunctions" /> functions
+        /// in the <see cref="EntityFunctions" /> class.
         /// </summary>
         public class EntityFunctionsProxies
         {

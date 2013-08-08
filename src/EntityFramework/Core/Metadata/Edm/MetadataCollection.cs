@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Class representing an actual implementaton of a collection of metadata objects
+    /// Class representing an actual implementaton of a collection of metadata objects
     /// </summary>
     /// <typeparam name="T"> The type of items in this collection </typeparam>
     internal class MetadataCollection<T> : IList<T>
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // have the public virtual method delegates to it.
 
         /// <summary>
-        ///     Default constructor for constructing an empty collection
+        /// Default constructor for constructing an empty collection
         /// </summary>
         internal MetadataCollection()
             : this(null)
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing the collection with the given items
+        /// The constructor for constructing the collection with the given items
         /// </summary>
         /// <param name="items"> The items to populate the collection </param>
         internal MetadataCollection(IEnumerable<T> items)
@@ -60,17 +60,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     structure to contain the indexes of items whose identity match by OrdinalIgnoreCase
+        /// structure to contain the indexes of items whose identity match by OrdinalIgnoreCase
         /// </summary>
         private struct OrderedIndex
         {
             /// <summary>
-            ///     the index of the item whose identity was used to create the initial dictionary entry
+            /// the index of the item whose identity was used to create the initial dictionary entry
             /// </summary>
             internal readonly int ExactIndex;
 
             /// <summary>
-            ///     the continuation of indexes whose item identities match by OrdinalIgnoreCase
+            /// the continuation of indexes whose item identities match by OrdinalIgnoreCase
             /// </summary>
             internal readonly int[] InexactIndexes;
 
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool _readOnly;
 
         /// <summary>
-        ///     Gets whether the collection is a readonly collection
+        /// Gets whether the collection is a readonly collection
         /// </summary>
         public bool IsReadOnly
         {
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the collection as a readonly collection
+        /// Returns the collection as a readonly collection
         /// </summary>
         public virtual ReadOnlyCollection<T> AsReadOnly
         {
@@ -111,7 +111,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the collection as a read-only metadata collection.
+        /// Returns the collection as a read-only metadata collection.
         /// </summary>
         public virtual ReadOnlyMetadataCollection<T> AsReadOnlyMetadataCollection()
         {
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the count on the number of items in the collection
+        /// Gets the count on the number of items in the collection
         /// </summary>
         public virtual int Count
         {
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given index
+        /// Gets an item from the collection with the given index
         /// </summary>
         /// <param name="index"> The index to search for </param>
         /// <returns> An item from the collection </returns>
@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <returns> An item from the collection </returns>
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the collection
+        /// Adds an item to the collection
         /// </summary>
         /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -235,7 +235,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the identityDictionary
+        /// Adds an item to the identityDictionary
         /// </summary>
         /// <param name="identityDictionary"> The collection data to add to </param>
         /// <param name="orderedList"> </param>
@@ -313,10 +313,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the collection
+        /// Adds an item to the collection
         /// </summary>
         /// <remarks>
-        ///     This method only exists to allow ctor to avoid virtual method call
+        /// This method only exists to allow ctor to avoid virtual method call
         /// </remarks>
         /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private const int UseSortedListCrossover = 25;
 
         /// <summary>
-        ///     Adds an item to the collection represented by a list and a dictionary
+        /// Adds an item to the collection represented by a list and a dictionary
         /// </summary>
         /// <param name="item"> The item to add to the list </param>
         /// <param name="collectionData"> The collection data where the item will be added </param>
@@ -350,11 +350,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <exception cref="System.ArgumentException">Thrown if the MetadataCollection already contains an item with the same identity</exception>
         /// <exception cref="System.ArgumentException">Thrown if the item passed into Setter has null or String.Empty identity</exception>
         /// <remarks>
-        ///     If updateIfFound is true, then an update is done in-place instead of
-        ///     having an exception thrown. The in-place aspect is required to avoid
-        ///     disrupting the indices generated for indexed items, and to enable
-        ///     foreach loops to be able to modify the enumerated facets as if it
-        ///     were a property update rather than an instance replacement.
+        /// If updateIfFound is true, then an update is done in-place instead of
+        /// having an exception thrown. The in-place aspect is required to avoid
+        /// disrupting the indices generated for indexed items, and to enable
+        /// foreach loops to be able to modify the enumerated facets as if it
+        /// were a property update rather than an instance replacement.
         /// </remarks>
         private static void AddInternalHelper(T item, CollectionData collectionData, bool updateIfFound)
         {
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds a collection of items to the collection
+        /// Adds a collection of items to the collection
         /// </summary>
         /// <param name="items"> The items to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -468,7 +468,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Does Item at index have the same identity
+        /// Does Item at index have the same identity
         /// </summary>
         private static bool EqualIdentity(List<T> orderedList, int index, string identity)
         {
@@ -476,7 +476,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Not supported, the collection is treated as read-only.
+        /// Not supported, the collection is treated as read-only.
         /// </summary>
         /// <param name="index"> The index where to insert the given item </param>
         /// <param name="item"> The item to be inserted </param>
@@ -487,7 +487,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Not supported, the collection is treated as read-only.
+        /// Not supported, the collection is treated as read-only.
         /// </summary>
         /// <param name="item"> The item to be removed </param>
         /// <returns> True if the item is actually removed, false if the item is not in the list </returns>
@@ -498,7 +498,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Not supported, the collection is treated as read-only.
+        /// Not supported, the collection is treated as read-only.
         /// </summary>
         /// <param name="index"> The index at which the item is removed </param>
         /// <exception cref="System.InvalidOperationException">Always thrown</exception>
@@ -508,7 +508,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Not supported, the collection is treated as read-only.
+        /// Not supported, the collection is treated as read-only.
         /// </summary>
         /// <exception cref="System.InvalidOperationException">Always thrown</exception>
         void ICollection<T>.Clear()
@@ -517,7 +517,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if this collection contains the given item
+        /// Determines if this collection contains the given item
         /// </summary>
         /// <param name="item"> The item to check for </param>
         /// <returns> True if the collection contains the item </returns>
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if this collection contains an item of the given identity
+        /// Determines if this collection contains an item of the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to check for </param>
         /// <returns> True if the collection contains the item with the given identity </returns>
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Find the index of an item identitified by identity
+        /// Find the index of an item identitified by identity
         /// </summary>
         /// <param name="collectionData"> The collection data to search in </param>
         /// <param name="identity"> The identity whose index is to be returned </param>
@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Find the index of an item
+        /// Find the index of an item
         /// </summary>
         /// <param name="item"> The item whose index is to be looked for </param>
         /// <returns> The index of the found item, -1 if not found </returns>
@@ -643,7 +643,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Copies the items in this collection to an array
+        /// Copies the items in this collection to an array
         /// </summary>
         /// <param name="array"> The array to copy to </param>
         /// <param name="arrayIndex"> The index in the array at which to start the copy </param>
@@ -669,7 +669,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the enumerator over this collection
+        /// Gets the enumerator over this collection
         /// </summary>
         public ReadOnlyMetadataCollection<T>.Enumerator GetEnumerator()
         {
@@ -677,7 +677,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the enumerator over this collection
+        /// Gets the enumerator over this collection
         /// </summary>
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
@@ -685,7 +685,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the enumerator over this collection
+        /// Gets the enumerator over this collection
         /// </summary>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -693,7 +693,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Set this collection as readonly so no more changes can be made on it
+        /// Set this collection as readonly so no more changes can be made on it
         /// </summary>
         public MetadataCollection<T> SetReadOnly()
         {
@@ -707,7 +707,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -721,7 +721,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -737,8 +737,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Throws an appropriate exception if the given item is a readonly, used when an attempt is made to change
-        ///     the collection
+        /// Throws an appropriate exception if the given item is a readonly, used when an attempt is made to change
+        /// the collection
         /// </summary>
         internal void ThrowIfReadOnly()
         {
@@ -749,16 +749,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The data structures for this collection, which contains a list and a dictionary
+        /// The data structures for this collection, which contains a list and a dictionary
         /// </summary>
         private class CollectionData
         {
             /// <summary>
-            ///     The IdentityDictionary is a case-insensitive dictionary
-            ///     used after a certain # of elements have been added to the OrderedList.
-            ///     It aids in fast lookup by T.Identity by mapping a string value to
-            ///     an OrderedIndex structure with other case-insensitive matches for the
-            ///     entry.  See additional comments in AddInternal.
+            /// The IdentityDictionary is a case-insensitive dictionary
+            /// used after a certain # of elements have been added to the OrderedList.
+            /// It aids in fast lookup by T.Identity by mapping a string value to
+            /// an OrderedIndex structure with other case-insensitive matches for the
+            /// entry.  See additional comments in AddInternal.
             /// </summary>
             internal Lazy<Dictionary<string, OrderedIndex>> IdentityDictionary
                 = new Lazy<Dictionary<string, OrderedIndex>>(() => null);

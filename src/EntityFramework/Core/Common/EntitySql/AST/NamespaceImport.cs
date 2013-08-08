@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     Represents an ast node for namespace import (using nsABC;)
+    /// Represents an ast node for namespace import (using nsABC;)
     /// </summary>
     internal sealed class NamespaceImport : Node
     {
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _namespaceName;
 
         /// <summary>
-        ///     Initializes a single name import.
+        /// Initializes a single name import.
         /// </summary>
         internal NamespaceImport(Identifier idenitifier)
         {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Initializes a single name import.
+        /// Initializes a single name import.
         /// </summary>
         internal NamespaceImport(DotExpr dorExpr)
         {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Initializes aliased import.
+        /// Initializes aliased import.
         /// </summary>
         internal NamespaceImport(BuiltInExpr bltInExpr)
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns ns alias id if exists.
+        /// Returns ns alias id if exists.
         /// </summary>
         internal Identifier Alias
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns namespace name.
+        /// Returns namespace name.
         /// </summary>
         internal Node NamespaceName
         {

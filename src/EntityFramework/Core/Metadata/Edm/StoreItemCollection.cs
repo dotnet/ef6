@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     Class for representing a collection of items in Store space.
+    /// Class for representing a collection of items in Store space.
     /// </summary>
     public partial class StoreItemCollection : ItemCollection
     {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly QueryCacheManager _queryCacheManager = QueryCacheManager.Create();
 
         /// <summary>
-        ///     For testing purposes only.
+        /// For testing purposes only.
         /// </summary>
         internal StoreItemCollection()
             : base(DataSpace.SSpace)
@@ -68,8 +68,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        ///     encountered during load as the out parameter errors.
+        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        /// encountered during load as the out parameter errors.
         /// </summary>
         /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
@@ -95,8 +95,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        ///     encountered during load as the out parameter errors.
+        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        /// encountered during load as the out parameter errors.
         /// </summary>
         /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
         /// <param name="filePaths"> the paths where the files can be found that match the xml readers collection </param>
@@ -118,7 +118,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified XMLReader.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified XMLReader.
         /// </summary>
         /// <param name="xmlReaders">The XMLReader used to create metadata.</param>
         public StoreItemCollection(IEnumerable<XmlReader> xmlReaders)
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified file paths.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" /> class using the specified file paths.
         /// </summary>
         /// <param name="filePaths">The file paths used to create metadata.</param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
@@ -255,7 +255,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the query cache manager
+        /// Returns the query cache manager
         /// </summary>
         internal QueryCacheManager QueryCacheManager
         {
@@ -299,13 +299,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects.
+        /// Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the collection of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     objects.
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the collection of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// objects.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public virtual ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
@@ -314,7 +314,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
         /// <param name="primitiveTypeKind"> canonical primitive type </param>
         /// <returns> The mapped scalar type </returns>
@@ -326,8 +326,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     checks if the schemaKey refers to the provider manifest schema key
-        ///     and if true, loads the provider manifest
+        /// checks if the schemaKey refers to the provider manifest schema key
+        /// and if true, loads the provider manifest
         /// </summary>
         /// <param name="storeManifest"> The store manifest </param>
         private void LoadProviderManifest(DbProviderManifest storeManifest)
@@ -346,7 +346,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get all the overloads of the function with the given name, this method is used for internal perspective
+        /// Get all the overloads of the function with the given name, this method is used for internal perspective
         /// </summary>
         /// <param name="functionName"> The full name of the function </param>
         /// <param name="ignoreCase"> true for case-insensitive lookup </param>
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Convert the S type function parameters and returnType to C types.
+        /// Convert the S type function parameters and returnType to C types.
         /// </summary>
         private EdmFunction ConvertFunctionSignatureToCType(EdmFunction sTypeFunction)
         {
@@ -452,24 +452,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method that creates a <see cref="StoreItemCollection" />.
+        /// Factory method that creates a <see cref="StoreItemCollection" />.
         /// </summary>
         /// <param name="xmlReaders">
-        ///     SSDL artifacts to load. Must not be <c>null</c>.
+        /// SSDL artifacts to load. Must not be <c>null</c>.
         /// </param>
         /// <param name="filePaths">
-        ///     Paths to SSDL artifacts. Used in error messages. Can be <c>null</c> in which case
-        ///     the base Uri of the XmlReader will be used as a path.
+        /// Paths to SSDL artifacts. Used in error messages. Can be <c>null</c> in which case
+        /// the base Uri of the XmlReader will be used as a path.
         /// </param>
         /// <param name="resolver">
-        ///     Custom resolver. Currently used to resolve DbProviderServices implementation. If <c>null</c>
-        ///     the default resolver will be used.
+        /// Custom resolver. Currently used to resolve DbProviderServices implementation. If <c>null</c>
+        /// the default resolver will be used.
         /// </param>
         /// <param name="errors">
-        ///     The collection of errors encountered while loading.
+        /// The collection of errors encountered while loading.
         /// </param>
         /// <returns>
-        ///     <see cref="StoreItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.
+        /// <see cref="StoreItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.
         /// </returns>
         public static StoreItemCollection Create(
             IEnumerable<XmlReader> xmlReaders,

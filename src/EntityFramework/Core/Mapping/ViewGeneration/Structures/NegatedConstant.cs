@@ -12,15 +12,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    ///     A class that represents NOT(elements), e.g., NOT(1, 2, NULL), i.e., all values other than null, 1 and 2
+    /// A class that represents NOT(elements), e.g., NOT(1, 2, NULL), i.e., all values other than null, 1 and 2
     /// </summary>
     internal sealed class NegatedConstant : Constant
     {
         /// <summary>
-        ///     Creates a negated constant with the <paramref name="values" /> in it.
+        /// Creates a negated constant with the <paramref name="values" /> in it.
         /// </summary>
         /// <param name="values">
-        ///     must have no <see cref=" NegatedConstant" /> items
+        /// must have no <see cref=" NegatedConstant" /> items
         /// </param>
         internal NegatedConstant(IEnumerable<Constant> values)
         {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     e.g., NOT(1, 2, Undefined)
+        /// e.g., NOT(1, 2, Undefined)
         /// </summary>
         private readonly Set<Constant> m_negatedDomain;
 
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns true if the negated constant contains <paramref name="constant" />.
+        /// Returns true if the negated constant contains <paramref name="constant" />.
         /// </summary>
         internal bool Contains(Constant constant)
         {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Returns true if the negated constant contains <see cref="Constant.Null" />.
+        /// Returns true if the negated constant contains <see cref="Constant.Null" />.
         /// </summary>
         internal override bool HasNotNull()
         {
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Not supported in this class.
+        /// Not supported in this class.
         /// </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
         {
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Not supported in this class.
+        /// Not supported in this class.
         /// </summary>
         internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
         {
@@ -155,10 +155,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Given a set of positive <paramref name="constants" /> generates a simplified negated constant Cql expression.
-        ///     Examples:
-        ///     - 7, NOT(7, NULL) means NOT(NULL)
-        ///     - 7, 8, NOT(7, 8, 9, 10) means NOT(9, 10)
+        /// Given a set of positive <paramref name="constants" /> generates a simplified negated constant Cql expression.
+        /// Examples:
+        /// - 7, NOT(7, NULL) means NOT(NULL)
+        /// - 7, 8, NOT(7, 8, 9, 10) means NOT(9, 10)
         /// </summary>
         private void AsCql(
             Action trueLiteral, Action varIsNotNull, Action<Constant> varNotEqualsTo, IEnumerable<Constant> constants,

@@ -8,13 +8,13 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Groups a pair of strings that identify a provider and server version together into a single object.
+    /// Groups a pair of strings that identify a provider and server version together into a single object.
     /// </summary>
     /// <remarks>
-    ///     Instances of this class act as the key for resolving a <see cref="DbSpatialServices" /> for a specific
-    ///     provider from a <see cref="IDbDependencyResolver" />. This is typically used when registering spatial services
-    ///     in <see cref="DbConfiguration" /> or when the spatial services specific to a provider is
-    ///     resolved by an implementation of <see cref="DbProviderServices" />.
+    /// Instances of this class act as the key for resolving a <see cref="DbSpatialServices" /> for a specific
+    /// provider from a <see cref="IDbDependencyResolver" />. This is typically used when registering spatial services
+    /// in <see cref="DbConfiguration" /> or when the spatial services specific to a provider is
+    /// resolved by an implementation of <see cref="DbProviderServices" />.
     /// </remarks>
     public sealed class DbProviderInfo
     {
@@ -22,16 +22,16 @@ namespace System.Data.Entity.Infrastructure
         private readonly string _providerManifestToken;
 
         /// <summary>
-        ///     Creates a new object for a given provider invariant name and manifest token.
+        /// Creates a new object for a given provider invariant name and manifest token.
         /// </summary>
         /// <param name="providerInvariantName">
-        ///     A string that identifies that provider. For example, the SQL Server
-        ///     provider uses the string "System.Data.SqlCient".
+        /// A string that identifies that provider. For example, the SQL Server
+        /// provider uses the string "System.Data.SqlCient".
         /// </param>
         /// <param name="providerManifestToken">
-        ///     A string that identifies that version of the database server being used. For example, the SQL Server
-        ///     provider uses the string "2008" for SQL Server 2008. This cannot be null but may be empty.
-        ///     The manifest token is sometimes referred to as a version hint.
+        /// A string that identifies that version of the database server being used. For example, the SQL Server
+        /// provider uses the string "2008" for SQL Server 2008. This cannot be null but may be empty.
+        /// The manifest token is sometimes referred to as a version hint.
         /// </param>
         public DbProviderInfo(string providerInvariantName, string providerManifestToken)
         {
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     A string that identifies that provider. For example, the SQL Server
-        ///     provider uses the string "System.Data.SqlCient".
+        /// A string that identifies that provider. For example, the SQL Server
+        /// provider uses the string "System.Data.SqlCient".
         /// </summary>
         public string ProviderInvariantName
         {
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     A string that identifies that version of the database server being used. For example, the SQL Server
-        ///     provider uses the string "2008" for SQL Server 2008. This cannot be null but may be empty.
+        /// A string that identifies that version of the database server being used. For example, the SQL Server
+        /// provider uses the string "2008" for SQL Server 2008. This cannot be null but may be empty.
         /// </summary>
         public string ProviderManifestToken
         {

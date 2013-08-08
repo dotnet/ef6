@@ -10,8 +10,8 @@ namespace System.Data.Entity
     using System.Threading;
 
     /// <summary>
-    ///     This class provides utility methods for common I/O tasks not directly supported by .NET Framework BCL,
-    ///     as well as I/O tasks that require elevated privileges.
+    /// This class provides utility methods for common I/O tasks not directly supported by .NET Framework BCL,
+    /// as well as I/O tasks that require elevated privileges.
     /// </summary>
     public static class IOHelpers
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity
 
 #if !SILVERLIGHT
         /// <summary>
-        ///     Safely determines whether the given path refers to an existing directory on disk.
+        /// Safely determines whether the given path refers to an existing directory on disk.
         /// </summary>
         /// <param name="path"> The path to test. </param>
         /// <returns> True if path refers to an existing directory; otherwise, false. </returns>
@@ -32,7 +32,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates the specified directory if it doesn't exist or removes all contents of an existing directory.
+        /// Creates the specified directory if it doesn't exist or removes all contents of an existing directory.
         /// </summary>
         /// <param name="path"> Path to directory to create. </param>
         [SecuritySafeCritical]
@@ -49,7 +49,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates the specified directory if it doesn't exist.
+        /// Creates the specified directory if it doesn't exist.
         /// </summary>
         /// <param name="path"> Path to directory to create. </param>
         [SecuritySafeCritical]
@@ -64,7 +64,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Safely determines whether the specified file exists.
+        /// Safely determines whether the specified file exists.
         /// </summary>
         /// <param name="path"> The file to check. </param>
         /// <returns> True if the caller has the required permissions and path contains the name of an existing file; otherwise, false. This method also returns false if path is null, an invalid path, or a zero-length string. If the caller does not have sufficient permissions to read the specified file, no exception is thrown and the method returns false regardless of the existence of path. </returns>
@@ -77,7 +77,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Safely returns the absolute path for the specified path string.
+        /// Safely returns the absolute path for the specified path string.
         /// </summary>
         /// <param name="path"> The file or directory for which to obtain absolute path information. </param>
         /// <returns> A string containing the fully qualified location of path, such as "C:\MyFile.txt". </returns>
@@ -90,7 +90,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Safely deletes the file and ignores any access violation exceptions.
+        /// Safely deletes the file and ignores any access violation exceptions.
         /// </summary>
         /// <param name="path"> The directory to delete. </param>
         [SecuritySafeCritical]
@@ -110,7 +110,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Safely deletes the directory and ignores any access violation exceptions.
+        /// Safely deletes the directory and ignores any access violation exceptions.
         /// </summary>
         /// <param name="path"> The directory to delete. </param>
         [SecuritySafeCritical]
@@ -152,8 +152,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a uniquely named, empty temporary directory on disk and returns the
-        ///     full path of that directory.
+        /// Creates a uniquely named, empty temporary directory on disk and returns the
+        /// full path of that directory.
         /// </summary>
         /// <returns> A <see cref="String" /> containing the full path of the temporary directory. </returns>
         public static string GetTempDirName()
@@ -166,7 +166,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Copies the specified source files to a given directory.
+        /// Copies the specified source files to a given directory.
         /// </summary>
         /// <param name="destinationDirectory"> The destination directory. </param>
         /// <param name="sourceFiles"> The source files. </param>
@@ -199,7 +199,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Copies contents of one stream into another.
+        /// Copies contents of one stream into another.
         /// </summary>
         /// <param name="source"> Stream to read from. </param>
         /// <param name="destination"> Stream to write to. </param>
@@ -210,7 +210,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Copies contents of one stream into another.
+        /// Copies contents of one stream into another.
         /// </summary>
         /// <param name="source"> Stream to read from. </param>
         /// <param name="destination"> Stream to write to. </param>
@@ -237,7 +237,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Write an embedded resource to a local file
+        /// Write an embedded resource to a local file
         /// </summary>
         /// <param name="resourceName"> Resource to be written </param>
         /// <param name="fileName"> File to write resource to </param>
@@ -265,7 +265,7 @@ namespace System.Data.Entity
 
 #if !SILVERLIGHT
         /// <summary>
-        ///     Adds the given set of file attributes to the file at the given path
+        /// Adds the given set of file attributes to the file at the given path
         /// </summary>
         /// <param name="fileName"> The name/path of the file </param>
         /// <param name="toAdd"> The bit-field of attributes to add </param>
@@ -275,7 +275,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Removes the given set of file attributes from the file at the given path
+        /// Removes the given set of file attributes from the file at the given path
         /// </summary>
         /// <param name="fileName"> The name/path of the file </param>
         /// <param name="toRemove"> The bit-field of attributes to remove </param>

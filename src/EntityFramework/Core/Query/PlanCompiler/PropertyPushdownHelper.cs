@@ -10,25 +10,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The PropertyPushdownHelper module is a submodule of the StructuredTypeEliminator
-    ///     module. It serves as a useful optimization sidekick for NominalTypeEliminator which
-    ///     is the real guts of eliminating structured types.
-    ///     The goal of this module is to identify a list of desired properties for each node
-    ///     (and Var) in the tree that is of a structured type. This list of desired properties
-    ///     is identified in a top-down push fashion.
-    ///     While it is desirable to get as accurate information as possible, it is unnecessary
-    ///     for this module to be super-efficient (i.e.) it is ok for it to get a superset
-    ///     of the appropriate information for each node, but it is absolutely not ok for it
-    ///     to get a subset. Later phases (projection pruning) can help eliminate unnecessary
-    ///     information, but the query cannot be made incorrect.
-    ///     This module is implemented as a visitor - it leverages information about
-    ///     types in the query - made possible by the TypeFlattener module - and walks
-    ///     down the tree pushing properties to each child of a node. It builds two maps:
-    ///     (*) a node-property map
-    ///     (*) a var-property map
-    ///     Each of these keeps trackof the properties needed from each node/var.
-    ///     These maps are returned to the caller and will be used by the NominalTypeEliminator
-    ///     module to eliminate all structured types.
+    /// The PropertyPushdownHelper module is a submodule of the StructuredTypeEliminator
+    /// module. It serves as a useful optimization sidekick for NominalTypeEliminator which
+    /// is the real guts of eliminating structured types.
+    /// The goal of this module is to identify a list of desired properties for each node
+    /// (and Var) in the tree that is of a structured type. This list of desired properties
+    /// is identified in a top-down push fashion.
+    /// While it is desirable to get as accurate information as possible, it is unnecessary
+    /// for this module to be super-efficient (i.e.) it is ok for it to get a superset
+    /// of the appropriate information for each node, but it is absolutely not ok for it
+    /// to get a subset. Later phases (projection pruning) can help eliminate unnecessary
+    /// information, but the query cannot be made incorrect.
+    /// This module is implemented as a visitor - it leverages information about
+    /// types in the query - made possible by the TypeFlattener module - and walks
+    /// down the tree pushing properties to each child of a node. It builds two maps:
+    /// (*) a node-property map
+    /// (*) a var-property map
+    /// Each of these keeps trackof the properties needed from each node/var.
+    /// These maps are returned to the caller and will be used by the NominalTypeEliminator
+    /// module to eliminate all structured types.
     /// </summary>
     internal class PropertyPushdownHelper : BasicOpVisitor
     {
@@ -52,9 +52,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Process Driver
 
         /// <summary>
-        ///     The driver.
-        ///     Walks the tree, and "pushes" down information about required properties
-        ///     to every node and Var in the tree.
+        /// The driver.
+        /// Walks the tree, and "pushes" down information about required properties
+        /// to every node and Var in the tree.
         /// </summary>
         /// <param name="itree"> The query tree </param>
         /// <param name="varPropertyRefs"> List of desired properties from each Var </param>
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     the driver routine. Invokes the visitor, and then returns the collected
-        ///     info
+        /// the driver routine. Invokes the visitor, and then returns the collected
+        /// info
         /// </summary>
         /// <param name="rootNode"> node in the tree to begin processing at </param>
         private void Process(Node rootNode)
@@ -87,8 +87,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region state maintenance
 
         /// <summary>
-        ///     Get the list of propertyrefs for a node. If none exists, create an
-        ///     empty structure and store it in the map
+        /// Get the list of propertyrefs for a node. If none exists, create an
+        /// empty structure and store it in the map
         /// </summary>
         /// <param name="node"> Specific node </param>
         /// <returns> List of properties expected from this node </returns>
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add a list of property references for this node
+        /// Add a list of property references for this node
         /// </summary>
         /// <param name="node"> the node </param>
         /// <param name="propertyRefs"> list of property references </param>
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the list of desired properties for a Var
+        /// Get the list of desired properties for a Var
         /// </summary>
         /// <param name="v"> the var </param>
         /// <returns> List of desired properties </returns>
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Add a new set of properties to a Var
+        /// Add a new set of properties to a Var
         /// </summary>
         /// <param name="v"> the var </param>
         /// <param name="propertyRefs"> desired properties </param>
@@ -146,8 +146,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Helpers
 
         /// <summary>
-        ///     Gets the list of "identity" properties for an entity. Gets the
-        ///     "entitysetid" property in addition to the "key" properties
+        /// Gets the list of "identity" properties for an entity. Gets the
+        /// "entitysetid" property in addition to the "key" properties
         /// </summary>
         private static PropertyRefList GetIdentityProperties(md.EntityType type)
         {
@@ -157,7 +157,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the list of key properties for an entity
+        /// Gets the list of key properties for an entity
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-EdmProperty")]
@@ -179,32 +179,32 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #endregion
 
         /// <summary>
-        ///     Default visitor for an Op.
-        ///     Simply walks through all children looking for Ops of structured
-        ///     types, and asks for all their properties.
+        /// Default visitor for an Op.
+        /// Simply walks through all children looking for Ops of structured
+        /// types, and asks for all their properties.
         /// </summary>
         /// <remarks>
-        ///     Several of the ScalarOps take the default handling, to simply ask
-        ///     for all the children's properties:
-        ///     AggegateOp
-        ///     ArithmeticOp
-        ///     CastOp
-        ///     ConditionalOp
-        ///     ConstantOp
-        ///     ElementOp
-        ///     ExistsOp
-        ///     FunctionOp
-        ///     GetRefKeyOp
-        ///     LikeOp
-        ///     NestAggregateOp
-        ///     NewInstanceOp
-        ///     NewMultisetOp
-        ///     NewRecordOp
-        ///     RefOp
-        ///     They do not exist here to eliminate noise.
-        ///     Note that the NewRecordOp and the NewInstanceOp could be optimized to only
-        ///     push down the appropriate references, but it isn't clear to Murali that the
-        ///     complexity is worth it.
+        /// Several of the ScalarOps take the default handling, to simply ask
+        /// for all the children's properties:
+        /// AggegateOp
+        /// ArithmeticOp
+        /// CastOp
+        /// ConditionalOp
+        /// ConstantOp
+        /// ElementOp
+        /// ExistsOp
+        /// FunctionOp
+        /// GetRefKeyOp
+        /// LikeOp
+        /// NestAggregateOp
+        /// NewInstanceOp
+        /// NewMultisetOp
+        /// NewRecordOp
+        /// RefOp
+        /// They do not exist here to eliminate noise.
+        /// Note that the NewRecordOp and the NewInstanceOp could be optimized to only
+        /// push down the appropriate references, but it isn't clear to Murali that the
+        /// complexity is worth it.
         /// </remarks>
         protected override void VisitDefault(Node n)
         {
@@ -224,12 +224,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region ScalarOps
 
         /// <summary>
-        ///     SoftCastOp:
-        ///     If the input is
-        ///     Ref - ask for all properties
-        ///     Entity, ComplexType - ask for the same properties I've been asked for
-        ///     Record - ask for all properties (Note: This should be more optimized in the future
-        ///     since we can actually "remap" the properties)
+        /// SoftCastOp:
+        /// If the input is
+        /// Ref - ask for all properties
+        /// Entity, ComplexType - ask for the same properties I've been asked for
+        /// Record - ask for all properties (Note: This should be more optimized in the future
+        /// since we can actually "remap" the properties)
         /// </summary>
         public override void Visit(SoftCastOp op, Node n)
         {
@@ -261,8 +261,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     CaseOp handling
-        ///     Pushes its desired properties to each of the WHEN/ELSE clauses
+        /// CaseOp handling
+        /// Pushes its desired properties to each of the WHEN/ELSE clauses
         /// </summary>
         public override void Visit(CaseOp op, Node n)
         {
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     CollectOp handling.
+        /// CollectOp handling.
         /// </summary>
         public override void Visit(CollectOp op, Node n)
         {
@@ -292,7 +292,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ComparisonOp handling
+        /// ComparisonOp handling
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "childOpType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ElementOp handling
+        /// ElementOp handling
         /// </summary>
         public override void Visit(ElementOp op, Node n)
         {
@@ -340,9 +340,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     GetEntityRefOp handling
-        ///     Ask for the "identity" properties from the input entity, and push that
-        ///     down to my child
+        /// GetEntityRefOp handling
+        /// Ask for the "identity" properties from the input entity, and push that
+        /// down to my child
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ScalarOp")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "GetEntityRefOp")]
@@ -363,9 +363,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     IsOfOp handling
-        ///     Simply requests the "typeid" property from
-        ///     the input. No other property is required
+        /// IsOfOp handling
+        /// Simply requests the "typeid" property from
+        /// the input. No other property is required
         /// </summary>
         /// <param name="op"> IsOf op </param>
         /// <param name="n"> Node to visit </param>
@@ -380,8 +380,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Common handler for RelPropertyOp and PropertyOp.
-        ///     Simply pushes down the desired set of properties to the child
+        /// Common handler for RelPropertyOp and PropertyOp.
+        /// Simply pushes down the desired set of properties to the child
         /// </summary>
         /// <param name="op"> the *propertyOp </param>
         /// <param name="n"> node tree corresponding to the Op </param>
@@ -427,9 +427,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     RelPropertyOp handling.
-        ///     Delegates to VisitPropertyOp. Marks the rel-property as required from the
-        ///     child
+        /// RelPropertyOp handling.
+        /// Delegates to VisitPropertyOp. Marks the rel-property as required from the
+        /// child
         /// </summary>
         /// <param name="op"> the RelPropertyOp </param>
         /// <param name="n"> node tree corresponding to the op </param>
@@ -439,9 +439,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     PropertyOp handling
-        ///     Pushes down the requested properties along with the current
-        ///     property to the child
+        /// PropertyOp handling
+        /// Pushes down the requested properties along with the current
+        /// property to the child
         /// </summary>
         public override void Visit(PropertyOp op, Node n)
         {
@@ -449,9 +449,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     TreatOp handling
-        ///     Simply passes down "my" desired properties, and additionally
-        ///     asks for the TypeID property
+        /// TreatOp handling
+        /// Simply passes down "my" desired properties, and additionally
+        /// asks for the TypeID property
         /// </summary>
         public override void Visit(TreatOp op, Node n)
         {
@@ -467,9 +467,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     VarRefOp handling
-        ///     Simply passes along the current "desired" properties
-        ///     to the corresponding Var
+        /// VarRefOp handling
+        /// Simply passes along the current "desired" properties
+        /// to the corresponding Var
         /// </summary>
         public override void Visit(VarRefOp op, Node n)
         {
@@ -487,9 +487,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region AncillaryOps
 
         /// <summary>
-        ///     VarDefOp handling
-        ///     Pushes the "desired" properties to the
-        ///     defining expression
+        /// VarDefOp handling
+        /// Pushes the "desired" properties to the
+        /// defining expression
         /// </summary>
         public override void Visit(VarDefOp op, Node n)
         {
@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     VarDefListOp handling
+        /// VarDefListOp handling
         /// </summary>
         public override void Visit(VarDefListOp op, Node n)
         {
@@ -516,12 +516,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region RelOps
 
         /// <summary>
-        ///     ApplyOp handling
-        ///     CrossApplyOp handling
-        ///     OuterApplyOp handling
-        ///     Handling for all ApplyOps: Process the right child, and then
-        ///     the left child - since the right child may have references to the
-        ///     left
+        /// ApplyOp handling
+        /// CrossApplyOp handling
+        /// OuterApplyOp handling
+        /// Handling for all ApplyOps: Process the right child, and then
+        /// the left child - since the right child may have references to the
+        /// left
         /// </summary>
         /// <param name="op"> apply op </param>
         /// <param name="n"> </param>
@@ -533,8 +533,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     DistinctOp handling
-        ///     Require all properties out of all structured vars
+        /// DistinctOp handling
+        /// Require all properties out of all structured vars
         /// </summary>
         public override void Visit(DistinctOp op, Node n)
         {
@@ -549,9 +549,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     FilterOp handling
-        ///     Process the predicate child, and then the input child - since the
-        ///     predicate child will probably have references to the input.
+        /// FilterOp handling
+        /// Process the predicate child, and then the input child - since the
+        /// predicate child will probably have references to the input.
         /// </summary>
         public override void Visit(FilterOp op, Node n)
         {
@@ -560,7 +560,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     GroupByOp handling
+        /// GroupByOp handling
         /// </summary>
         protected override void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
@@ -579,15 +579,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     JoinOp handling
-        ///     CrossJoinOp handling
-        ///     InnerJoinOp handling
-        ///     LeftOuterJoinOp handling
-        ///     FullOuterJoinOp handling
-        ///     Handler for all JoinOps. For all joins except cross joins, process
-        ///     the predicate first, and then the inputs - the inputs can be processed
-        ///     in any order.
-        ///     For cross joins, simply process all the (relop) inputs
+        /// JoinOp handling
+        /// CrossJoinOp handling
+        /// InnerJoinOp handling
+        /// LeftOuterJoinOp handling
+        /// FullOuterJoinOp handling
+        /// Handler for all JoinOps. For all joins except cross joins, process
+        /// the predicate first, and then the inputs - the inputs can be processed
+        /// in any order.
+        /// For cross joins, simply process all the (relop) inputs
         /// </summary>
         /// <param name="op"> join op </param>
         /// <param name="n"> </param>
@@ -608,7 +608,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ProjectOp handling
+        /// ProjectOp handling
         /// </summary>
         public override void Visit(ProjectOp op, Node n)
         {
@@ -617,7 +617,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ScanTableOp handler
+        /// ScanTableOp handler
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scanTableOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -628,9 +628,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     ScanViewOp
-        ///     ask for all properties from the view definition
-        ///     that have currently been requested from the view itself
+        /// ScanViewOp
+        /// ask for all properties from the view definition
+        /// that have currently been requested from the view itself
         /// </summary>
         /// <param name="op"> current ScanViewOp </param>
         /// <param name="n"> current node </param>
@@ -653,12 +653,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SetOp handling
-        ///     UnionAllOp handling
-        ///     IntersectOp handling
-        ///     ExceptOp handling
-        ///     Visitor for a SetOp. Pushes desired properties to the corresponding
-        ///     Vars of the input
+        /// SetOp handling
+        /// UnionAllOp handling
+        /// IntersectOp handling
+        /// ExceptOp handling
+        /// Visitor for a SetOp. Pushes desired properties to the corresponding
+        /// Vars of the input
         /// </summary>
         /// <param name="op"> the setop </param>
         /// <param name="n"> </param>
@@ -698,10 +698,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SortOp handling
-        ///     First, "request" that for any sort key that is a structured type, we
-        ///     need all its properties. Then process any local definitions, and
-        ///     finally the relop input
+        /// SortOp handling
+        /// First, "request" that for any sort key that is a structured type, we
+        /// need all its properties. Then process any local definitions, and
+        /// finally the relop input
         /// </summary>
         protected override void VisitSortOp(SortBaseOp op, Node n)
         {
@@ -724,7 +724,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     UnnestOp handling
+        /// UnnestOp handling
         /// </summary>
         public override void Visit(UnnestOp op, Node n)
         {
@@ -736,7 +736,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region PhysicalOps
 
         /// <summary>
-        ///     PhysicalProjectOp handling
+        /// PhysicalProjectOp handling
         /// </summary>
         public override void Visit(PhysicalProjectOp op, Node n)
         {
@@ -754,7 +754,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     MultiStreamNestOp handling
+        /// MultiStreamNestOp handling
         /// </summary>
         public override void Visit(MultiStreamNestOp op, Node n)
         {
@@ -763,7 +763,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     SingleStreamNestOp handling
+        /// SingleStreamNestOp handling
         /// </summary>
         public override void Visit(SingleStreamNestOp op, Node n)
         {

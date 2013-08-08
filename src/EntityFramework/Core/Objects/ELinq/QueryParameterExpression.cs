@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
 
     /// <summary>
-    ///     A LINQ expression corresponding to a query parameter.
+    /// A LINQ expression corresponding to a query parameter.
     /// </summary>
     internal sealed class QueryParameterExpression : Expression
     {
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Gets the current value of the parameter given (optional) compiled query arguments.
+        /// Gets the current value of the parameter given (optional) compiled query arguments.
         /// </summary>
         internal object EvaluateParameter(object[] arguments)
         {
@@ -73,8 +73,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Create QueryParameterExpression based on this one, but with the funcletized expression
-        ///     wrapped by the given method
+        /// Create QueryParameterExpression based on this one, but with the funcletized expression
+        /// wrapped by the given method
         /// </summary>
         internal QueryParameterExpression EscapeParameterForLike(Func<string, string> method)
         {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Gets the parameter reference for the parameter.
+        /// Gets the parameter reference for the parameter.
         /// </summary>
         internal DbParameterReferenceExpression ParameterReference
         {

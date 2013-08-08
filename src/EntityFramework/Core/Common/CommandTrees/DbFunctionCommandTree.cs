@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private readonly ReadOnlyCollection<TypeUsage> _parameterTypes;
 
         /// <summary>
-        ///     Constructs a new DbFunctionCommandTree that uses the specified metadata workspace, data space and function metadata
+        /// Constructs a new DbFunctionCommandTree that uses the specified metadata workspace, data space and function metadata
         /// </summary>
         /// <param name="metadata"> The metadata workspace that the command tree should use. </param>
         /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
@@ -26,11 +26,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <param name="resultType"> </param>
         /// <param name="parameters"> </param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="metadata" />, <paramref name="dataSpace" /> or <paramref name="edmFunction" /> is null
+        /// <paramref name="metadata" />, <paramref name="dataSpace" /> or <paramref name="edmFunction" /> is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     <paramref name="dataSpace" /> does not represent a valid data space or <paramref name="edmFunction" />
-        ///     is a composable function
+        /// <paramref name="dataSpace" /> does not represent a valid data space or <paramref name="edmFunction" />
+        /// is a composable function
         /// </exception>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
@@ -60,10 +60,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.
         /// </returns>
         public EdmFunction EdmFunction
         {

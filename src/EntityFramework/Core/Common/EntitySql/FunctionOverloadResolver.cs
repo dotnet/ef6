@@ -11,12 +11,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Linq;
 
     /// <summary>
-    ///     Represents function overload resolution mechanism, used by L2E and eSQL frontends.
+    /// Represents function overload resolution mechanism, used by L2E and eSQL frontends.
     /// </summary>
     internal static class FunctionOverloadResolver
     {
         /// <summary>
-        ///     Resolves <paramref name="argTypes" /> against the list of function signatures.
+        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
         /// </summary>
         /// <returns> Funciton metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Resolves <paramref name="argTypes" /> against the list of function signatures.
+        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
         /// </summary>
         /// <returns> Funciton metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Resolves <paramref name="argTypes" /> against the list of function signatures.
+        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
         /// </summary>
         /// <param name="functionsMetadata"> </param>
         /// <param name="argTypes"> </param>
@@ -189,8 +189,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Check promotability, returns true if argument list is promotable to the overload and overload was successfully ranked, otherwise false.
-        ///     Ranks the overload parameter types against the argument list.
+        /// Check promotability, returns true if argument list is promotable to the overload and overload was successfully ranked, otherwise false.
+        /// Ranks the overload parameter types against the argument list.
         /// </summary>
         /// <param name="argumentList"> list of argument types </param>
         /// <param name="flatArgumentList"> flattened list of argument types </param>
@@ -293,9 +293,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Ranks the <paramref name="fromType" /> -> <paramref name="toType" /> promotion.
-        ///     Range of values: 0 to negative infinity, with 0 as the best rank (promotion to self).
-        ///     <paramref name="fromType" /> must be promotable to <paramref name="toType" />, otherwise internal error is thrown.
+        /// Ranks the <paramref name="fromType" /> -> <paramref name="toType" /> promotion.
+        /// Range of values: 0 to negative infinity, with 0 as the best rank (promotion to self).
+        /// <paramref name="fromType" /> must be promotable to <paramref name="toType" />, otherwise internal error is thrown.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPromotableTo")]
         private static int GetPromotionRank(

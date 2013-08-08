@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents the when then sub expression.
+    /// Represents the when then sub expression.
     /// </summary>
     internal class WhenThenExpr : Node
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _thenExpr;
 
         /// <summary>
-        ///     Initializes WhenThen sub-expression.
+        /// Initializes WhenThen sub-expression.
         /// </summary>
         /// <param name="whenExpr"> When expression </param>
         /// <param name="thenExpr"> Then expression </param>
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns When expression.
+        /// Returns When expression.
         /// </summary>
         internal Node WhenExpr
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns Then Expression.
+        /// Returns Then Expression.
         /// </summary>
         internal Node ThenExpr
         {

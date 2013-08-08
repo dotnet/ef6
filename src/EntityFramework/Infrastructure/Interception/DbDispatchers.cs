@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Provides access to all dispatchers through the the <see cref="DbInterception.Dispatch" /> fluent API.
+    /// Provides access to all dispatchers through the the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
     public class DbDispatchers
     {
@@ -27,8 +27,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        ///     Provides methods for dispatching to <see cref="IDbCommandInterceptor" /> interceptors for
-        ///     interception of methods on <see cref="DbCommand" />.
+        /// Provides methods for dispatching to <see cref="IDbCommandInterceptor" /> interceptors for
+        /// interception of methods on <see cref="DbCommand" />.
         /// </summary>
         public virtual DbCommandDispatcher Command
         {

@@ -14,23 +14,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     This class represents a collection of resources to be loaded from one
-    ///     or more assemblies.
+    /// This class represents a collection of resources to be loaded from one
+    /// or more assemblies.
     /// </summary>
     internal class MetadataArtifactLoaderCompositeResource : MetadataArtifactLoader
     {
         /// <summary>
-        ///     The list of metadata artifacts encapsulated by the composite.
+        /// The list of metadata artifacts encapsulated by the composite.
         /// </summary>
         private readonly ReadOnlyCollection<MetadataArtifactLoaderResource> _children;
 
         private readonly string _originalPath;
 
         /// <summary>
-        ///     This constructor expects to get the paths that have potential to turn into multiple
-        ///     artifacts like
-        ///     res://*/foo.csdl   -- could be multiple assemblies
-        ///     res://MyAssembly/  -- could be multiple artifacts in the one assembly
+        /// This constructor expects to get the paths that have potential to turn into multiple
+        /// artifacts like
+        /// res://*/foo.csdl   -- could be multiple assemblies
+        /// res://MyAssembly/  -- could be multiple artifacts in the one assembly
         /// </summary>
         /// <param name="originalPath"> The path to the (collection of) resources </param>
         /// <param name="assemblyName"> </param>
@@ -59,12 +59,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace, in the original, unexpanded
-        ///     form.
+        /// Get paths to artifacts for a specific DataSpace, in the original, unexpanded
+        /// form.
         /// </summary>
         /// <remarks>
-        ///     An assembly can embed any kind of artifact as a resource, so we simply
-        ///     ignore the parameter and return the original assembly name in the URI.
+        /// An assembly can embed any kind of artifact as a resource, so we simply
+        /// ignore the parameter and return the original assembly name in the URI.
         /// </remarks>
         /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
         /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace.
+        /// Get paths to artifacts for a specific DataSpace.
         /// </summary>
         /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
         /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to all artifacts
+        /// Get paths to all artifacts
         /// </summary>
         /// <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetPaths()
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Aggregates all resource streams from the _children collection
+        /// Aggregates all resource streams from the _children collection
         /// </summary>
         /// <returns> A List of XmlReader objects; cannot be null </returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get XmlReaders for a specific DataSpace.
+        /// Get XmlReaders for a specific DataSpace.
         /// </summary>
         /// <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
         /// <returns> A List of XmlReader objects </returns>
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load all resources from the assembly/assemblies identified in the resource path.
+        /// Load all resources from the assembly/assemblies identified in the resource path.
         /// </summary>
         /// <param name="assemblyName"> </param>
         /// <param name="resourceName"> </param>
@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load all resources from a specific assembly.
+        /// Load all resources from a specific assembly.
         /// </summary>
         /// <param name="assemblyName"> The full name identifying the assembly to load resources from </param>
         /// <param name="resolver"> delegate for resolve the assembly </param>
@@ -337,8 +337,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Splits the supplied path into the assembly portion and the resource
-        ///     part (if any)
+        /// Splits the supplied path into the assembly portion and the resource
+        /// part (if any)
         /// </summary>
         /// <param name="path"> The resource path to parse </param>
         /// <param name="assemblyName"> </param>

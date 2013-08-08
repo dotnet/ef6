@@ -16,7 +16,7 @@ namespace System.Data.Entity.Infrastructure
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for implementations of IDbConnectionFactory.
+    /// Unit tests for implementations of IDbConnectionFactory.
     /// </summary>
     public class DbConnectionFactoryTests : TestBase
     {

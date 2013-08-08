@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Represents Cql scanner and helper functions.
+    /// Represents Cql scanner and helper functions.
     /// </summary>
     internal sealed partial class CqlLexer
     {
@@ -40,17 +40,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly string _query;
 
         /// <summary>
-        ///     set for DOT expressions
+        /// set for DOT expressions
         /// </summary>
         private bool _symbolAsIdentifierState;
 
         /// <summary>
-        ///     set for AS expressions
+        /// set for AS expressions
         /// </summary>
         private bool _symbolAsAliasIdentifierState;
 
         /// <summary>
-        ///     set for function definitions
+        /// set for function definitions
         /// </summary>
         private bool _symbolAsInlineFunctionNameState;
 
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             };
 
         /// <summary>
-        ///     Intializes scanner
+        /// Intializes scanner
         /// </summary>
         /// <param name="query"> input query </param>
         /// <param name="parserOptions"> parser options </param>
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Creates a new token.
+        /// Creates a new token.
         /// </summary>
         /// <param name="tokenId"> tokenid </param>
         /// <param name="tokenvalue"> ast node </param>
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Creates a new token representing a terminal.
+        /// Creates a new token representing a terminal.
         /// </summary>
         /// <param name="tokenId"> tokenid </param>
         /// <param name="termToken"> lexical value </param>
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Represents a token to be used in parser stack.
+        /// Represents a token to be used in parser stack.
         /// </summary>
         internal class Token
         {
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Represents a terminal token
+        /// Represents a terminal token
         /// </summary>
         internal class TerminalToken
         {
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns current lexeme
+        /// Returns current lexeme
         /// </summary>
         internal string YYText
         {
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns current input position
+        /// Returns current input position
         /// </summary>
         internal int IPos
         {
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Advances input position.
+        /// Advances input position.
         /// </summary>
         /// <returns> updated input position </returns>
         internal int AdvanceIPos()
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     returns true if given term is a eSQL keyword
+        /// returns true if given term is a eSQL keyword
         /// </summary>
         internal static bool IsReservedKeyword(string term)
         {
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Map lexical symbol to a keyword or an identifier.
+        /// Map lexical symbol to a keyword or an identifier.
         /// </summary>
         /// <param name="symbol"> lexeme </param>
         /// <returns> Token </returns>
@@ -389,11 +389,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true when current symbol looks like a caninical function name in a function call.
-        ///     Method only treats canonical functions with names ovelapping eSQL keywords.
-        ///     This check allows calling these canonical functions without escaping their names.
-        ///     Check lookAheadChar for a left paren to see if looks like a function call, check symbol against the list of
-        ///     canonical functions with names overlapping keywords.
+        /// Returns true when current symbol looks like a caninical function name in a function call.
+        /// Method only treats canonical functions with names ovelapping eSQL keywords.
+        /// This check allows calling these canonical functions without escaping their names.
+        /// Check lookAheadChar for a left paren to see if looks like a function call, check symbol against the list of
+        /// canonical functions with names overlapping keywords.
         /// </summary>
         private bool IsCanonicalFunctionCall(string symbol, Char lookAheadChar)
         {
@@ -425,7 +425,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Skip insignificant whitespace to reach the first potentially significant char.
+        /// Skip insignificant whitespace to reach the first potentially significant char.
         /// </summary>
         private Char GetLookAheadChar()
         {
@@ -449,7 +449,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Resets "symbol as identifier" state.
+        /// Resets "symbol as identifier" state.
         /// </summary>
         /// <param name="significant"> see function callers for more info </param>
         private void ResetSymbolAsIdentifierState(bool significant)
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         #endregion
 
         /// <summary>
-        ///     Maps operator to respective token
+        /// Maps operator to respective token
         /// </summary>
         /// <param name="oper"> operator lexeme </param>
         /// <returns> Token </returns>
@@ -485,7 +485,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Maps punctuator to respective token
+        /// Maps punctuator to respective token
         /// </summary>
         /// <param name="punct"> punctuator </param>
         /// <returns> Token </returns>
@@ -510,7 +510,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Maps double quoted string to a literal or an idendifier
+        /// Maps double quoted string to a literal or an idendifier
         /// </summary>
         /// <returns> Token </returns>
         internal Token MapDoubleQuotedString(string symbol)
@@ -524,7 +524,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Creates literal token
+        /// Creates literal token
         /// </summary>
         /// <param name="literal"> literal </param>
         /// <param name="literalKind"> literal kind </param>
@@ -593,7 +593,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Creates parameter token
+        /// Creates parameter token
         /// </summary>
         /// <param name="param"> param </param>
         /// <returns> Parameter Token </returns>
@@ -603,8 +603,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     handles escaped identifiers
-        ///     ch will always be translated i.e. normalized.
+        /// handles escaped identifiers
+        /// ch will always be translated i.e. normalized.
         /// </summary>
         internal Token HandleEscapedIdentifiers()
         {
@@ -662,10 +662,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true if given char is a new line character defined by
-        ///     UNICODE 5.0, section 5.8 Newline Guidelines.
-        ///     These are 'mandatory' line breaks. NOTE that CRLF is treated as a
-        ///     composite 'character' and was intentionaly omitted in the character set bellow.
+        /// Returns true if given char is a new line character defined by
+        /// UNICODE 5.0, section 5.8 Newline Guidelines.
+        /// These are 'mandatory' line breaks. NOTE that CRLF is treated as a
+        /// composite 'character' and was intentionaly omitted in the character set bellow.
         /// </summary>
         internal static bool IsNewLine(Char c)
         {
@@ -680,7 +680,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     extracts single quoted literal 'payload'. literal MUST BE normalized.
+        /// extracts single quoted literal 'payload'. literal MUST BE normalized.
         /// </summary>
         private static string GetLiteralSingleQuotePayload(string literal)
         {
@@ -720,7 +720,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     returns true if guid literal value format is valid
+        /// returns true if guid literal value format is valid
         /// </summary>
         private static bool IsValidGuidValue(string guidValue)
         {
@@ -752,7 +752,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     returns true if binary literal value format is valid
+        /// returns true if binary literal value format is valid
         /// </summary>
         private static bool IsValidBinaryValue(string binaryValue)
         {
@@ -774,9 +774,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true if datetime literal value format is valid
-        ///     allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?
-        ///     where d is any decimal digit.
+        /// Returns true if datetime literal value format is valid
+        /// allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?
+        /// where d is any decimal digit.
         /// </summary>
         private static bool IsValidDateTimeValue(string datetimeValue)
         {
@@ -788,9 +788,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true if time literal value format is valid
-        ///     allowed format is: +d?d:d?d(:d?d(.d?d?d)?)?
-        ///     where d is any decimal digit.
+        /// Returns true if time literal value format is valid
+        /// allowed format is: +d?d:d?d(:d?d(.d?d?d)?)?
+        /// where d is any decimal digit.
         /// </summary>
         private static bool IsValidTimeValue(string timeValue)
         {
@@ -802,9 +802,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true if datetimeoffset literal value format is valid
-        ///     allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?([+-]d?d:d?d)?
-        ///     where d is any decimal digit.
+        /// Returns true if datetimeoffset literal value format is valid
+        /// allowed format is: dddd-d?d-d?d{space}+d?d:d?d(:d?d(.d?d?d)?)?([+-]d?d:d?d)?
+        /// where d is any decimal digit.
         /// </summary>
         private static bool IsValidDateTimeOffsetValue(string datetimeOffsetValue)
         {

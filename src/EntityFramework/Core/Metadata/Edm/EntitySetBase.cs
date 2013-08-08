@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Class for representing a entity set
+    /// Class for representing a entity set
     /// </summary>
     public abstract class EntitySetBase : MetadataItem, INamedDataModelItem
     {
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing the EntitySet with a given name and an entity type
+        /// The constructor for constructing the EntitySet with a given name and an entity type
         /// </summary>
         /// <param name="name"> The name of the EntitySet </param>
         /// <param name="schema"> The db schema </param>
@@ -66,13 +66,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private string _definingQuery;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySetBase" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the identity for this item as a string
+        /// Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets escaped provider specific SQL describing this entity set.
+        /// Gets escaped provider specific SQL describing this entity set.
         /// </summary>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public string DefiningQuery
@@ -109,9 +109,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the name of the current entity or relationship set. 
-        ///     If this property is changed from store-space, the mapping layer must also be updated to reflect the new name. 
-        ///     To change the table name of a store space <see cref="EntitySet"/> use the Table property. 
+        /// Gets or sets the name of the current entity or relationship set. 
+        /// If this property is changed from store-space, the mapping layer must also be updated to reflect the new name. 
+        /// To change the table name of a store space <see cref="EntitySet"/> use the Table property. 
         /// </summary>
         /// <returns>The name of the current entity or relationship set.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -138,7 +138,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the entity container of the current entity or relationship set.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object that represents the entity container of the current entity or relationship set.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object that represents the entity container of the current entity or relationship set.
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EntitySetBase instance or the EntityContainer passed into the setter is in ReadOnly state</exception>
         public virtual EntityContainer EntityContainer
@@ -147,13 +147,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the entity type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" />.
+        /// Gets the entity type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" /> object that represents the entity type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" /> object that represents the entity type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" />
+        /// .
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the database table name for this entity set.
+        /// Gets or sets the database table name for this entity set.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the database schema for this entity set.
+        /// Gets or sets the database schema for this entity set.
         /// </summary>
         /// <exception cref="System.ArgumentNullException">if value passed into setter is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when EntitySetBase instance is in ReadOnly state</exception>
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Sets this item to be readonly, once this is set, the item will never be writable again.
+        /// Sets this item to be readonly, once this is set, the item will never be writable again.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Change the entity container without doing fixup in the entity set collection
+        /// Change the entity container without doing fixup in the entity set collection
         /// </summary>
         internal void ChangeEntityContainerWithoutCollectionFixup(EntityContainer newEntityContainer)
         {

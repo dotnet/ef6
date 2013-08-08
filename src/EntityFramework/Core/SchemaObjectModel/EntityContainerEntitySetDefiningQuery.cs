@@ -7,14 +7,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an DefiningQuery element.
+    /// Represents an DefiningQuery element.
     /// </summary>
     internal sealed class EntityContainerEntitySetDefiningQuery : SchemaElement
     {
         private string _query;
 
         /// <summary>
-        ///     Constructs an EntityContainerEntitySet
+        /// Constructs an EntityContainerEntitySet
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerEntitySetDefiningQuery(EntityContainerEntitySet parentElement)

@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
     /// <summary>Represents a single row insert operation expressed as a command tree. This class cannot be inherited.</summary>
     /// <remarks>
-    ///     Represents a single row insert operation expressed as a canonical command tree.
-    ///     When the <see cref="Returning" /> property is set, the command returns a reader; otherwise,
-    ///     it returns a scalar value indicating the number of rows affected.
+    /// Represents a single row insert operation expressed as a canonical command tree.
+    /// When the <see cref="Returning" /> property is set, the command returns a reader; otherwise,
+    /// it returns a scalar value indicating the number of rows affected.
     /// </remarks>
     public sealed class DbInsertCommandTree : DbModificationCommandTree
     {
@@ -55,10 +55,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned based on the modified rows.
+        /// Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned based on the modified rows.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned based on the modified rows. null indicates that no results should be returned from this command.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies a projection of results to be returned based on the modified rows. null indicates that no results should be returned from this command.
         /// </returns>
         public DbExpression Returning
         {

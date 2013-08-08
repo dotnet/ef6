@@ -9,7 +9,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for simple uses of transactions with DbContext.
+    /// Tests for simple uses of transactions with DbContext.
     /// </summary>
     public class TransactionTests : FunctionalTestBase
     {

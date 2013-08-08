@@ -19,9 +19,9 @@ namespace System.Data.Entity.Internal
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A <see cref="LazyInternalContext" /> is a concrete <see cref="InternalContext" /> type that will lazily create the
-    ///     underlying <see cref="ObjectContext" /> when needed. The <see cref="ObjectContext" /> created is owned by the
-    ///     internal context and will be disposed when the internal context is disposed.
+    /// A <see cref="LazyInternalContext" /> is a concrete <see cref="InternalContext" /> type that will lazily create the
+    /// underlying <see cref="ObjectContext" /> when needed. The <see cref="ObjectContext" /> created is owned by the
+    /// internal context and will be disposed when the internal context is disposed.
     /// </summary>
     internal class LazyInternalContext : InternalContext
     {
@@ -85,11 +85,11 @@ namespace System.Data.Entity.Internal
         private readonly AttributeProvider _attributeProvider;
 
         /// <summary>
-        ///     Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
-        ///     on first use.
+        /// Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
+        /// on first use.
         /// </summary>
         /// <param name="owner">
-        ///     The owner <see cref="DbContext" /> .
+        /// The owner <see cref="DbContext" /> .
         /// </param>
         /// <param name="internalConnection"> Responsible for creating a connection lazily when the context is used for the first time. </param>
         /// <param name="model"> The model, or null if it will be created by convention </param>
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Internal
         #region ObjectContext and model
 
         /// <summary>
-        ///     Returns the underlying <see cref="ObjectContext" />.
+        /// Returns the underlying <see cref="ObjectContext" />.
         /// </summary>
         public override ObjectContext ObjectContext
         {
@@ -129,10 +129,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The compiled model created from the Code First pipeline, or null if Code First was
-        ///     not used to create this context.
-        ///     Causes the Code First pipeline to be run to create the model if it has not already been
-        ///     created.
+        /// The compiled model created from the Code First pipeline, or null if Code First was
+        /// not used to create this context.
+        /// Causes the Code First pipeline to be run to create the model if it has not already been
+        /// created.
         /// </summary>
         public override DbCompiledModel CodeFirstModel
         {
@@ -144,9 +144,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
-        ///     or the database initialization strategy to be executed.
-        ///     This is used to get a context that can then be used for database creation/initialization.
+        /// Returns the underlying <see cref="ObjectContext" /> without causing the underlying database to be created
+        /// or the database initialization strategy to be executed.
+        /// This is used to get a context that can then be used for database creation/initialization.
         /// </summary>
         public override ObjectContext GetObjectContextWithoutDatabaseInitialization()
         {
@@ -155,8 +155,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The <see cref="ObjectContext" /> actually being used, which may be the
-        ///     temp context for initialization or the real context.
+        /// The <see cref="ObjectContext" /> actually being used, which may be the
+        /// temp context for initialization or the real context.
         /// </summary>
         public virtual ObjectContext ObjectContextInUse
         {
@@ -168,10 +168,10 @@ namespace System.Data.Entity.Internal
         #region SaveChanges
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database, but only if the
-        ///     context has been initialized. If the context has not been initialized, then this
-        ///     method does nothing because there is nothing to do; in particular, it does not
-        ///     cause the context to be initialized.
+        /// Saves all changes made in this context to the underlying database, but only if the
+        /// context has been initialized. If the context has not been initialized, then this
+        /// method does nothing because there is nothing to do; in particular, it does not
+        /// cause the context to be initialized.
         /// </summary>
         /// <returns> The number of objects written to the underlying database. </returns>
         public override int SaveChanges()
@@ -193,9 +193,9 @@ namespace System.Data.Entity.Internal
         #region Dispose
 
         /// <summary>
-        ///     Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed.
-        ///     The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created by
-        ///     the context, otherwise it is not disposed.
+        /// Disposes the context. The underlying <see cref="ObjectContext" /> is also disposed.
+        /// The connection to the database (<see cref="DbConnection" /> object) is also disposed if it was created by
+        /// the context, otherwise it is not disposed.
         /// </summary>
         public override void DisposeContext()
         {
@@ -216,8 +216,8 @@ namespace System.Data.Entity.Internal
         #region Connection access
 
         /// <summary>
-        ///     The connection underlying this context.  Accessing this property does not cause the context
-        ///     to be initialized, only its connection.
+        /// The connection underlying this context.  Accessing this property does not cause the context
+        /// to be initialized, only its connection.
         /// </summary>
         public override DbConnection Connection
         {
@@ -237,8 +237,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The connection string as originally applied to the context. This is used to perform operations
-        ///     that need the connection string in a non-mutated form, such as with security info still intact.
+        /// The connection string as originally applied to the context. This is used to perform operations
+        /// that need the connection string in a non-mutated form, such as with security info still intact.
         /// </summary>
         public override string OriginalConnectionString
         {
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the origin of the underlying connection string.
+        /// Returns the origin of the underlying connection string.
         /// </summary>
         public override DbConnectionStringOrigin ConnectionStringOrigin
         {
@@ -258,8 +258,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries
-        ///     and connection strings.
+        /// Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries
+        /// and connection strings.
         /// </summary>
         public override AppConfig AppConfig
         {
@@ -272,7 +272,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the name of the underlying connection string.
+        /// Gets the name of the underlying connection string.
         /// </summary>
         public override string ConnectionStringName
         {
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Internal
         private DbProviderInfo _modelProviderInfo;
 
         /// <summary>
-        ///     Gets or sets the provider details to be used when building the EDM model.
+        /// Gets or sets the provider details to be used when building the EDM model.
         /// </summary>
         public override DbProviderInfo ModelProviderInfo
         {
@@ -312,7 +312,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets or sets a custom OnModelCreating action.
+        /// Gets or sets a custom OnModelCreating action.
         /// </summary>
         public override Action<DbModelBuilder> OnModelCreating
         {
@@ -359,7 +359,7 @@ namespace System.Data.Entity.Internal
         #region Initialization
 
         /// <summary>
-        ///     Initializes the underlying <see cref="ObjectContext" />.
+        /// Initializes the underlying <see cref="ObjectContext" />.
         /// </summary>
         protected override void InitializeContext()
         {
@@ -442,9 +442,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates an immutable, cacheable representation of the model defined by this builder.
-        ///     This model can be used to create an <see cref="ObjectContext" /> or can be passed to a <see cref="DbContext" />
-        ///     constructor to create a <see cref="DbContext" /> for this model.
+        /// Creates an immutable, cacheable representation of the model defined by this builder.
+        /// This model can be used to create an <see cref="ObjectContext" /> or can be passed to a <see cref="DbContext" />
+        /// constructor to create a <see cref="DbContext" /> for this model.
         /// </summary>
         public static DbCompiledModel CreateModel(LazyInternalContext internalContext)
         {
@@ -459,8 +459,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates and configures the <see cref="DbModelBuilder" /> instance that will be used to build the
-        ///     <see cref="DbCompiledModel" />.
+        /// Creates and configures the <see cref="DbModelBuilder" /> instance that will be used to build the
+        /// <see cref="DbCompiledModel" />.
         /// </summary>
         /// <returns> The builder. </returns>
         public DbModelBuilder CreateModelBuilder()
@@ -547,8 +547,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Marks the database as having not been initialized. This is called when the app calls Database.Delete so
-        ///     that the database if the app attempts to then use the database again it will be re-initialized automatically.
+        /// Marks the database as having not been initialized. This is called when the app calls Database.Delete so
+        /// that the database if the app attempts to then use the database again it will be re-initialized automatically.
         /// </summary>
         public override void MarkDatabaseNotInitialized()
         {
@@ -560,10 +560,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Marks the database as having been initialized without actually running the
-        ///     <see
-        ///         cref="IDatabaseInitializer{TContext}" />
-        ///     .
+        /// Marks the database as having been initialized without actually running the
+        /// <see
+        ///     cref="IDatabaseInitializer{TContext}" />
+        /// .
         /// </summary>
         public override void MarkDatabaseInitialized()
         {
@@ -572,8 +572,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Runs the <see cref="IDatabaseInitializer{TContext}" /> unless it has already been run or there
-        ///     is no initializer for this context type in which case this method does nothing.
+        /// Runs the <see cref="IDatabaseInitializer{TContext}" /> unless it has already been run or there
+        /// is no initializer for this context type in which case this method does nothing.
         /// </summary>
         protected override void InitializeDatabase()
         {
@@ -581,9 +581,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Performs some action (which may do nothing) in such a way that it is guaranteed only to be run
-        ///     once for the model and connection in this app domain, unless it fails by throwing an exception,
-        ///     in which case it will be re-tried next time the context is initialized.
+        /// Performs some action (which may do nothing) in such a way that it is guaranteed only to be run
+        /// once for the model and connection in this app domain, unless it fails by throwing an exception,
+        /// in which case it will be re-tried next time the context is initialized.
         /// </summary>
         /// <param name="action"> The action. </param>
         private void InitializeDatabaseAction(Action<InternalContext> action)
@@ -619,9 +619,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the default database initializer to use for this context if no other has been registered.
-        ///     For code first this property returns a <see cref="CreateDatabaseIfNotExists{TContext}" /> instance.
-        ///     For database/model first, this property returns null.
+        /// Gets the default database initializer to use for this context if no other has been registered.
+        /// For code first this property returns a <see cref="CreateDatabaseIfNotExists{TContext}" /> instance.
+        /// For database/model first, this property returns null.
         /// </summary>
         /// <value> The default initializer. </value>
         public override IDatabaseInitializer<DbContext> DefaultInitializer
@@ -634,11 +634,11 @@ namespace System.Data.Entity.Internal
         #region Lazy Loading
 
         /// <summary>
-        ///     Gets or sets a value indicating whether lazy loading is enabled.
-        ///     If the underlying <see cref="ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the underlying <see cref="ObjectContext" /> has not been created yet, then we store the value given so we can later
-        ///     use it when we create the <see cref="ObjectContext" />.  This allows the flag to be changed, for example in
-        ///     a DbContext constructor, without it causing the <see cref="ObjectContext" /> to be created.
+        /// Gets or sets a value indicating whether lazy loading is enabled.
+        /// If the underlying <see cref="ObjectContext" /> exists, then this property acts as a wrapper over the flag stored there.
+        /// If the underlying <see cref="ObjectContext" /> has not been created yet, then we store the value given so we can later
+        /// use it when we create the <see cref="ObjectContext" />.  This allows the flag to be changed, for example in
+        /// a DbContext constructor, without it causing the <see cref="ObjectContext" /> to be created.
         /// </summary>
         public override bool LazyLoadingEnabled
         {
@@ -664,11 +664,11 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether proxy creation is enabled.
-        ///     If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the underlying ObjectContext has not been created yet, then we store the value given so we can later
-        ///     use it when we create the ObjectContext.  This allows the flag to be changed, for example in
-        ///     a DbContext constructor, without it causing the ObjectContext to be created.
+        /// Gets or sets a value indicating whether proxy creation is enabled.
+        /// If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
+        /// If the underlying ObjectContext has not been created yet, then we store the value given so we can later
+        /// use it when we create the ObjectContext.  This allows the flag to be changed, for example in
+        /// a DbContext constructor, without it causing the ObjectContext to be created.
         /// </summary>
         public override bool ProxyCreationEnabled
         {
@@ -694,11 +694,11 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether database null comparison behavior is enabled.
-        ///     If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
-        ///     If the underlying ObjectContext has not been created yet, then we store the value given so we can later
-        ///     use it when we create the ObjectContext.  This allows the flag to be changed, for example in
-        ///     a DbContext constructor, without it causing the ObjectContext to be created.
+        /// Gets or sets a value indicating whether database null comparison behavior is enabled.
+        /// If the underlying ObjectContext exists, then this property acts as a wrapper over the flag stored there.
+        /// If the underlying ObjectContext has not been created yet, then we store the value given so we can later
+        /// use it when we create the ObjectContext.  This allows the flag to be changed, for example in
+        /// a DbContext constructor, without it causing the ObjectContext to be created.
         /// </summary>
         public override bool UseDatabaseNullSemantics
         {

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Type returned by the Translator visitor; allows us to put the logic
-    ///     to ensure a specific return type in a single place, instead of in
-    ///     each Visit method.
+    /// Type returned by the Translator visitor; allows us to put the logic
+    /// to ensure a specific return type in a single place, instead of in
+    /// each Visit method.
     /// </summary>
     internal class TranslatorResult
     {
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Return the expression; wrapped with the appropriate cast/convert
-        ///     logic to guarantee its type.
+        /// Return the expression; wrapped with the appropriate cast/convert
+        /// logic to guarantee its type.
         /// </summary>
         internal Expression Expression
         {
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Return the expression without attempting to cast/convert to the requested type.
+        /// Return the expression without attempting to cast/convert to the requested type.
         /// </summary>
         internal Expression UnconvertedExpression
         {
@@ -43,8 +43,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Checks if the expression represents an wrapped entity and if so creates an expression
-        ///     that extracts the raw entity from the wrapper.
+        /// Checks if the expression represents an wrapped entity and if so creates an expression
+        /// that extracts the raw entity from the wrapper.
         /// </summary>
         internal Expression UnwrappedExpression
         {

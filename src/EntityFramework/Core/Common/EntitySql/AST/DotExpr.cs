@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents dotExpr: expr.Identifier
+    /// Represents dotExpr: expr.Identifier
     /// </summary>
     internal sealed class DotExpr : Node
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private string[] _names;
 
         /// <summary>
-        ///     initializes
+        /// initializes
         /// </summary>
         internal DotExpr(Node leftExpr, Identifier id)
         {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     For the following expression: "a.b.c.d", Left returns "a.b.c".
+        /// For the following expression: "a.b.c.d", Left returns "a.b.c".
         /// </summary>
         internal Node Left
         {
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     For the following expression: "a.b.c.d", Identifier returns "d".
+        /// For the following expression: "a.b.c.d", Identifier returns "d".
         /// </summary>
         internal Identifier Identifier
         {
@@ -40,8 +40,8 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns true if all parts of this expression are identifiers like in "a.b.c",
-        ///     false for expressions like "FunctionCall().a.b.c".
+        /// Returns true if all parts of this expression are identifiers like in "a.b.c",
+        /// false for expressions like "FunctionCall().a.b.c".
         /// </summary>
         internal bool IsMultipartIdentifier(out string[] names)
         {

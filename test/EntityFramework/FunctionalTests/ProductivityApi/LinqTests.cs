@@ -16,7 +16,7 @@ namespace ProductivityApiTests
     using Xunit.Sdk;
 
     /// <summary>
-    ///     Functional tests for LINQ to Entities using DbQuery.
+    /// Functional tests for LINQ to Entities using DbQuery.
     /// </summary>
     public class LinqTests : FunctionalTestBase
     {
@@ -12452,9 +12452,9 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Tests that using a <see cref="DbQuery" /> with an <see cref="ObjectQuery" /> in its expression tree works.
-        ///     Note that the reverse (using a DbQuery inside an ObjectQuery) may not work if the expression
-        ///     tree given to the ObjectQuery provider contains a DbQuery node.
+        /// Tests that using a <see cref="DbQuery" /> with an <see cref="ObjectQuery" /> in its expression tree works.
+        /// Note that the reverse (using a DbQuery inside an ObjectQuery) may not work if the expression
+        /// tree given to the ObjectQuery provider contains a DbQuery node.
         /// </summary>
         /// <param name="query"> The query. </param>
         private void RunWithObjectQueryNestedInsideDbQuery(
@@ -12647,8 +12647,8 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with one root
 
         /// <summary>
-        ///     This is the default LINQ query executor that does (basically) a ToList.
-        ///     Some tests use First, Single(), etc instead.
+        /// This is the default LINQ query executor that does (basically) a ToList.
+        /// Some tests use First, Single(), etc instead.
         /// </summary>
         private static object ToListExecutor(IQueryable query)
         {
@@ -12656,8 +12656,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     This is the default async LINQ query executor that does (basically) a ToListAsync.
-        ///     Some tests use First, Single(), etc instead.
+        /// This is the default async LINQ query executor that does (basically) a ToListAsync.
+        /// Some tests use First, Single(), etc instead.
         /// </summary>
         private static object ToListAsyncExecutor(IQueryable query)
         {
@@ -12669,8 +12669,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Returns a method that examines the AggregateExceptions thrown by the <paramref name="executor" />
-        ///     and rethrows the inner exception if only one is contained.
+        /// Returns a method that examines the AggregateExceptions thrown by the <paramref name="executor" />
+        /// and rethrows the inner exception if only one is contained.
         /// </summary>
         private static Func<IQueryable, object> UnwrapAggregateExceptions(Func<IQueryable, object> executor)
         {
@@ -12678,7 +12678,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity>
             (
@@ -12688,7 +12688,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter
             <TEntity>(
@@ -12698,10 +12698,10 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
-        ///     the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
-        ///     query using this set as the root for the query.  The query must return an IQueryable itself, which is then
-        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        /// First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
+        /// the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
+        /// query using this set as the root for the query.  The query must return an IQueryable itself, which is then
+        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
         private void RunLinqTest<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -12711,7 +12711,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
         private void RunLinqTest<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -12722,7 +12722,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet and treats is as a generic IQueryable.
+        /// Version of RunLinqTest that starts with a non-generic DbSet and treats is as a generic IQueryable.
         /// </summary>
         private void RunLinqTestNonGeneric<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -12734,7 +12734,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -12747,7 +12747,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
@@ -12780,7 +12780,7 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with two roots
 
         /// <summary>
-        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
             SyncRunnerAdapter<TEntity1, TEntity2>(
@@ -12792,7 +12792,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable>, Func<IQueryable, object>, Func<IQueryable, object>>
             AsyncRunnerAdapter<TEntity1, TEntity2>(
@@ -12804,10 +12804,10 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        ///     query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
-        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        /// query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
+        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
@@ -12821,7 +12821,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query,
@@ -12836,7 +12836,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet.
+        /// Version of RunLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunLinqTestNonGeneric<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -12853,7 +12853,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -12866,7 +12866,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -12912,7 +12912,7 @@ namespace ProductivityApiTests
         #region RunLinqTest methods for queries with an extracted nested query
 
         /// <summary>
-        ///     Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the synchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
             Func<IQueryable, object>, Func<IQueryable, object>> SyncRunnerAdapter<TEntity1, TEntity2, TNested>(
@@ -12926,7 +12926,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
+        /// Returns a runner that invokes the asynchronous executer on both DbContext and ObjectContext
         /// </summary>
         private Action<Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable>, Func<IQueryable<TEntity2>, IQueryable<TNested>>,
             Func<IQueryable, object>, Func<IQueryable, object>> AsyncRunnerAdapter<TEntity1, TEntity2, TNested>(
@@ -12940,10 +12940,10 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        ///     query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
-        ///     evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
+        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        /// query using these sets as the roots for the query.  The query must return an IQueryable itself, which is then
+        /// evaluated with a call to ToList.  Finally, asserts that the results of the two queries are the same.
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -12957,7 +12957,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that uses different executors for DbContext and ObjectContext
+        /// Version of RunLinqTest that uses different executors for DbContext and ObjectContext
         /// </summary>
         private void RunLinqTest<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -12973,7 +12973,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet.
+        /// Version of RunLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunLinqTestNonGeneric<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -12991,7 +12991,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -13005,7 +13005,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2, TNested>(
             Func<IQueryable<TEntity1>, IQueryable<TNested>, IQueryable> query,
@@ -13053,11 +13053,11 @@ namespace ProductivityApiTests
         #region RunNotSupportedLinqTest for queries with one root
 
         /// <summary>
-        ///     First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
-        ///     the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
-        ///     query using this set as the root for the query.  The query must return an IQueryable itself, which is then
-        ///     evaluated with a call to ToList.
-        ///     It is expected (and asserted) that both these queries will throw a NotSupportedException.
+        /// First, creates an DbSet object for the given entity type and then runs the given LINQ query this set as
+        /// the root for the query.  Next creates an ObjectSet object for the given entity type and then runs the same LINQ
+        /// query using this set as the root for the query.  The query must return an IQueryable itself, which is then
+        /// evaluated with a call to ToList.
+        /// It is expected (and asserted) that both these queries will throw a NotSupportedException.
         /// </summary>
         private void RunNotSupportedLinqTest<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -13069,7 +13069,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
+        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunNotSupportedLinqTestNonGeneric<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query,
@@ -13082,7 +13082,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
@@ -13093,7 +13093,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery<TEntity>(
             Func<IQueryable<TEntity>, IQueryable> query, Func<IQueryable, object> executor) where TEntity : class
@@ -13108,10 +13108,10 @@ namespace ProductivityApiTests
         #region RunNotSupportedLinqTest methods for queries with two roots
 
         /// <summary>
-        ///     First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
-        ///     the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
-        ///     query using these sets as the roots for the query.  The query returns an object rather than an IQueryable.
-        ///     It is expected (and asserted) that both these queries will throw a NotSupportedException.
+        /// First, creates DbSet objects for the given entity types and then runs the given LINQ query using these sets as
+        /// the roots for the query.  Next creates ObjectSet objects for the given entity types and then runs the same LINQ
+        /// query using these sets as the roots for the query.  The query returns an object rather than an IQueryable.
+        /// It is expected (and asserted) that both these queries will throw a NotSupportedException.
         /// </summary>
         private void RunNotSupportedLinqTest<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -13124,7 +13124,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
+        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet.
         /// </summary>
         private void RunNotSupportedLinqTestNonGeneric<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -13141,7 +13141,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunNotSupportedLinqTest that starts with a generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -13154,7 +13154,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
+        /// Version of RunNotSupportedLinqTest that starts with a non-generic DbSet and passes built expressions to non-generic CreateQuery.
         /// </summary>
         private void RunNotSupportedLinqTestNonGenericWithNonGenericCreateQuery<TEntity1, TEntity2>(
             Func<IQueryable<TEntity1>, IQueryable<TEntity2>, IQueryable> query, Func<IQueryable, object> executor)
@@ -13171,8 +13171,8 @@ namespace ProductivityApiTests
         #region Low-level RunLinqTest and RunNotSupportedLinqTest methods
 
         /// <summary>
-        ///     Executes one delegate against a DbContext and the other against an ObjectContext and asserts that
-        ///     a NotSupportedException with the same message is thrown in both cases.
+        /// Executes one delegate against a DbContext and the other against an ObjectContext and asserts that
+        /// a NotSupportedException with the same message is thrown in both cases.
         /// </summary>
         private void RunNotSupportedLinqTest(Func<DbContext, object> dbQuery, Func<ObjectContext, object> obQuery)
         {
@@ -13202,8 +13202,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Executes one delegate against a DbContext and the other against an ObjectContext, and then asserts that
-        ///     the results are the same.
+        /// Executes one delegate against a DbContext and the other against an ObjectContext, and then asserts that
+        /// the results are the same.
         /// </summary>
         private void RunLinqTest(Func<DbContext, object> dbQuery, Func<ObjectContext, object> obQuery)
         {
@@ -13211,8 +13211,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
-        ///     of DbContext and then returns the result.
+        /// Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
+        /// of DbContext and then returns the result.
         /// </summary>
         private object RunAgainstDbQuery(Func<DbContext, object> query)
         {
@@ -13223,8 +13223,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
-        ///     of ObjectContext and then returns the result.
+        /// Executes the given delegate, which is assumed to contain a LINQ query, on a new instance
+        /// of ObjectContext and then returns the result.
         /// </summary>
         private object RunAgainstObQuery(Func<ObjectContext, object> query)
         {
@@ -13239,14 +13239,14 @@ namespace ProductivityApiTests
         #region Assertion helpers
 
         /// <summary>
-        ///     Asserts that the two objects are equal using the following heuristics:
-        ///     - If one is null, then the other must be null
-        ///     - Else if one is IEnumerable, then the other must be IEnumerable and the two enumerations are
-        ///     passed to AssertEnumerationsEqual to tests their elements
-        ///     - Else the types of the two objects must be exactly the same
-        ///     - And if they are instances of BaseTypeForLinq, then the EntityEquals method is used
-        ///     - Else if Object.Equals indicates that they are equal, then this is trusted
-        ///     - Else each property is tested for equality with a recursive call to AssertResultsEqual
+        /// Asserts that the two objects are equal using the following heuristics:
+        /// - If one is null, then the other must be null
+        /// - Else if one is IEnumerable, then the other must be IEnumerable and the two enumerations are
+        /// passed to AssertEnumerationsEqual to tests their elements
+        /// - Else the types of the two objects must be exactly the same
+        /// - And if they are instances of BaseTypeForLinq, then the EntityEquals method is used
+        /// - Else if Object.Equals indicates that they are equal, then this is trusted
+        /// - Else each property is tested for equality with a recursive call to AssertResultsEqual
         /// </summary>
         private void AssertResultsEqual(object left, object right)
         {
@@ -13300,8 +13300,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Asserts that each enumeration has the same number of elements and that each element tests
-        ///     equal with the AssertResultsEqual method.
+        /// Asserts that each enumeration has the same number of elements and that each element tests
+        /// equal with the AssertResultsEqual method.
         /// </summary>
         private void AssertEnumerationsEqual(IEnumerable leftResult, IEnumerable rightResult)
         {

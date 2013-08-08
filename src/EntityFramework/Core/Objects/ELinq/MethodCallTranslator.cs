@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     internal sealed partial class ExpressionConverter
     {
         /// <summary>
-        ///     Translates System.Linq.Expression.MethodCallExpression to System.Data.Entity.Core.Common.CommandTrees.DbExpression
+        /// Translates System.Linq.Expression.MethodCallExpression to System.Data.Entity.Core.Common.CommandTrees.DbExpression
         /// </summary>
         private sealed partial class MethodCallTranslator : TypedTranslator<MethodCallExpression>
         {
@@ -150,9 +150,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Tries to get a translator for the given method info.
-            ///     If the given method info corresponds to a Visual Basic property,
-            ///     it also initializes the Visual Basic translators if they have not been initialized
+            /// Tries to get a translator for the given method info.
+            /// If the given method info corresponds to a Visual Basic property,
+            /// it also initializes the Visual Basic translators if they have not been initialized
             /// </summary>
             private static bool TryGetCallTranslator(MethodInfo methodInfo, out CallTranslator callTranslator)
             {
@@ -618,7 +618,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static readonly object _vbInitializerLock = new object();
 
                 /// <summary>
-                ///     Tries to check whether there is an alternative method suggested insted of the given unsupported one.
+                /// Tries to check whether there is an alternative method suggested insted of the given unsupported one.
                 /// </summary>
                 private static bool TryGetAlternativeMethod(MethodInfo originalMethodInfo, out MethodInfo suggestedMethodInfo)
                 {
@@ -645,8 +645,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Initializes the dictionary of alternative methods.
-                ///     Currently, it simply initializes an empty dictionary.
+                /// Initializes the dictionary of alternative methods.
+                /// Currently, it simply initializes an empty dictionary.
                 /// </summary>
                 private static Dictionary<MethodInfo, MethodInfo> InitializeAlternateMethodInfos()
                 {
@@ -654,7 +654,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Populates the dictionary of alternative methods with the VB methods
+                /// Populates the dictionary of alternative methods with the VB methods
                 /// </summary>
                 private static void InitializeVBMethods(Assembly vbAssembly)
                 {
@@ -702,10 +702,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Recursively rewrite the argument expression to unwrap any "structured" set sources
-                ///     using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
-                ///     and EntityCollection as argument types to functions.
-                ///     NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
+                /// Recursively rewrite the argument expression to unwrap any "structured" set sources
+                /// using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
+                /// and EntityCollection as argument types to functions.
+                /// NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
                 /// </summary>
                 private CqtExpression NormalizeAllSetSources(ExpressionConverter parent, CqtExpression argumentExpr)
                 {
@@ -770,9 +770,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Removes casts where possible, for example Cast from a Reference type to Object type
-                ///     Handles nested converts recursively. Removing no-op casts is required to prevent the
-                ///     expression converter from complaining.
+                /// Removes casts where possible, for example Cast from a Reference type to Object type
+                /// Handles nested converts recursively. Removing no-op casts is required to prevent the
+                /// expression converter from complaining.
                 /// </summary>
                 private Expression UnwrapNoOpConverts(Expression expression)
                 {
@@ -793,8 +793,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 /// <summary>
-                ///     Checks if the return type specified by the call expression matches that expected by the
-                ///     function definition. Performs a recursive check in case of Collection type.
+                /// Checks if the return type specified by the call expression matches that expected by the
+                /// function definition. Performs a recursive check in case of Collection type.
                 /// </summary>
                 /// <param name="result"> DbFunctionExpression for the function definition </param>
                 /// <param name="actualReturnType"> Return type expected by the function definition </param>

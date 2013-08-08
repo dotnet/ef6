@@ -16,7 +16,7 @@ namespace System.Data.Entity.Internal
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for the DbSet/ObjectSet discovery service.
+    /// Unit tests for the DbSet/ObjectSet discovery service.
     /// </summary>
     public class DbSetDiscoveryServiceTests : TestBase
     {

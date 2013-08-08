@@ -14,14 +14,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Helper Class for converting SOM objects to metadata objects
-    ///     This class should go away once we have completely integrated SOM and metadata
+    /// Helper Class for converting SOM objects to metadata objects
+    /// This class should go away once we have completely integrated SOM and metadata
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class Converter
     {
         /// <summary>
-        ///     Static constructor for creating FacetDescription objects that we use
+        /// Static constructor for creating FacetDescription objects that we use
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static Converter()
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static readonly FacetDescription CollationFacet;
 
         /// <summary>
-        ///     Converts a schema from SOM into Metadata
+        /// Converts a schema from SOM into Metadata
         /// </summary>
         /// <param name="somSchema"> The SOM schema to convert </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Loads a schema element
+        /// Loads a schema element
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an entity container from SOM to metadata
+        /// Converts an entity container from SOM to metadata
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -320,10 +320,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an entity type from SOM to metadata
-        ///     This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not
-        ///     sideways parts (NavigationProperties) that go between types or we risk trying to access and EntityTypes keys, from the referential constraint,
-        ///     before the base type, which has the keys, is setup yet.
+        /// Converts an entity type from SOM to metadata
+        /// This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not
+        /// sideways parts (NavigationProperties) that go between types or we risk trying to access and EntityTypes keys, from the referential constraint,
+        /// before the base type, which has the keys, is setup yet.
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -413,7 +413,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an complex type from SOM to metadata
+        /// Converts an complex type from SOM to metadata
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -465,7 +465,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an association type from SOM to metadata
+        /// Converts an association type from SOM to metadata
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initialize the end member if its not initialized already
+        /// Initialize the end member if its not initialized already
         /// </summary>
         private static AssociationEndMember InitializeAssociationEndMember(
             AssociationType associationType, IRelationshipEnd end,
@@ -635,7 +635,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an entity set from SOM to metadata
+        /// Converts an entity set from SOM to metadata
         /// </summary>
         /// <param name="set"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -667,7 +667,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an entity set from SOM to metadata
+        /// Converts an entity set from SOM to metadata
         /// </summary>
         /// <param name="set"> The SOM element to process </param>
         /// <param name="container"> </param>
@@ -679,7 +679,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an association set from SOM to metadata
+        /// Converts an association set from SOM to metadata
         /// </summary>
         /// <param name="relationshipSet"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts a property from SOM to metadata
+        /// Converts a property from SOM to metadata
         /// </summary>
         /// <param name="somProperty"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -820,7 +820,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts a navigation property from SOM to metadata
+        /// Converts a navigation property from SOM to metadata
         /// </summary>
         /// <param name="declaringEntityType"> entity type on which this navigation property was declared </param>
         /// <param name="somNavigationProperty"> The SOM element to process </param>
@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts a function from SOM to metadata
+        /// Converts a function from SOM to metadata
         /// </summary>
         /// <param name="somFunction"> The SOM element to process </param>
         /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
@@ -1106,7 +1106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts SchemaEnumType instance to Metadata EnumType.
+        /// Converts SchemaEnumType instance to Metadata EnumType.
         /// </summary>
         /// <param name="somEnumType"> SchemaEnumType to be covnerted. </param>
         /// <param name="newGlobalItems"> Global item objects where newly created Metadata EnumType will be added. </param>
@@ -1156,7 +1156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts an SOM Documentation node to a metadata Documentation construct
+        /// Converts an SOM Documentation node to a metadata Documentation construct
         /// </summary>
         /// <param name="element"> The SOM element to process </param>
         /// <returns> The Documentation object resulting from the convert operation </returns>
@@ -1310,7 +1310,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Converts the ParameterDirection into a ParameterMode
+        /// Converts the ParameterDirection into a ParameterMode
         /// </summary>
         /// <param name="parameterDirection"> The ParameterDirection to convert </param>
         /// <returns> ParameterMode </returns>
@@ -1337,7 +1337,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Apply the facet values
+        /// Apply the facet values
         /// </summary>
         /// <param name="sourceType"> The source TypeUsage </param>
         /// <param name="targetType"> The primitive or enum type of the target </param>
@@ -1370,7 +1370,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Populate the facets on the TypeUsage object for a property
+        /// Populate the facets on the TypeUsage object for a property
         /// </summary>
         /// <param name="somProperty"> The property containing the information </param>
         /// <param name="propertyTypeUsage"> The type usage object where to populate facet </param>
@@ -1424,7 +1424,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get a primitive type when converting a CSDL schema
+        /// Get a primitive type when converting a CSDL schema
         /// </summary>
         /// <param name="scalarType"> The schema type representing the primitive type </param>
         /// <param name="providerManifest"> The provider manifest for retrieving the store types </param>
@@ -1472,8 +1472,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Cache containing item collection and type usages to support looking up and generating
-        ///     metadata types.
+        /// Cache containing item collection and type usages to support looking up and generating
+        /// metadata types.
         /// </summary>
         internal class ConversionCache
         {
@@ -1489,8 +1489,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Gets type usage for the given type with null facet values. Caches usage to avoid creating
-            ///     redundant type usages.
+            /// Gets type usage for the given type with null facet values. Caches usage to avoid creating
+            /// redundant type usages.
             /// </summary>
             internal TypeUsage GetTypeUsageWithNullFacets(EdmType edmType)
             {
@@ -1511,8 +1511,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             /// <summary>
-            ///     Gets collection type usage for the given type with null facet values. Caches usage to avoid creating
-            ///     redundant type usages.
+            /// Gets collection type usage for the given type with null facet values. Caches usage to avoid creating
+            /// redundant type usages.
             /// </summary>
             internal TypeUsage GetCollectionTypeUsageWithNullFacets(EdmType edmType)
             {

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a variable with finite domain, e.g., c in {1, 2, 3}
+    /// Represents a variable with finite domain, e.g., c in {1, 2, 3}
     /// </summary>
     /// <typeparam name="T_Variable"> Type of the identifier (c above -- it need not be int). </typeparam>
     /// <typeparam name="T_Element"> Type of domain variables (int in the above example). </typeparam>
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly IEqualityComparer<T_Variable> _identifierComparer;
 
         /// <summary>
-        ///     Constructs a new domain variable.
+        /// Constructs a new domain variable.
         /// </summary>
         /// <param name="identifier"> Identifier </param>
         /// <param name="domain"> Domain of variable. </param>
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets the variable.
+        /// Gets the variable.
         /// </summary>
         internal T_Variable Identifier
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets the domain of this variable.
+        /// Gets the domain of this variable.
         /// </summary>
         internal Set<T_Element> Domain
         {

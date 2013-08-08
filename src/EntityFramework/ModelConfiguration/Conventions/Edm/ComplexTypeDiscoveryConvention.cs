@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to configure a type as a complex type if it has no primary key, no mapped base type and no navigation properties.
+    /// Convention to configure a type as a complex type if it has no primary key, no mapped base type and no navigation properties.
     /// </summary>
     public class ComplexTypeDiscoveryConvention : IConceptualModelConvention<EdmModel>
     {

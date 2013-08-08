@@ -16,21 +16,21 @@ namespace System.Data.Entity
 #endif
 
     /// <summary>
-    ///     Various utilities for dealing with embedded resources
+    /// Various utilities for dealing with embedded resources
     /// </summary>
     public static class ResourceUtilities
     {
 #if !SILVERLIGHT
         /// <summary>
-        ///     Extracts the specified compressed resource to a given directory
+        /// Extracts the specified compressed resource to a given directory
         /// </summary>
         /// <param name="outputDirectory"> Output directory </param>
         /// <param name="assembly"> Assembly that contains the resource </param>
         /// <param name="resourceName"> Partial resource name </param>
         /// <remarks>
-        ///     The method prefixes the actual resource with unqualified assembly name + '.Resources.' (
-        ///     so you should put all your resources under 'Resources' directory within a project)
-        ///     and appends '.gz' to it. You should use gzip to produce compressed files.
+        /// The method prefixes the actual resource with unqualified assembly name + '.Resources.' (
+        /// so you should put all your resources under 'Resources' directory within a project)
+        /// and appends '.gz' to it. You should use gzip to produce compressed files.
         /// </remarks>
         [SecuritySafeCritical]
         // Calling File.Create demands FileIOPermission (Write flag) for the file path to which the resource is extracted.
@@ -63,7 +63,7 @@ namespace System.Data.Entity
 #endif
 
         /// <summary>
-        ///     Copies the named embedded resources from given assembly into the current directory.
+        /// Copies the named embedded resources from given assembly into the current directory.
         /// </summary>
         /// <param name="assembly"> The assembly. </param>
         /// <param name="prefix"> The prefix to use for each name. </param>
@@ -95,7 +95,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Builds a resource manager for the given assembly.
+        /// Builds a resource manager for the given assembly.
         /// </summary>
         /// <param name="assembly"> The assembly to build the resource manager for. </param>
         /// <returns> The resource manager. </returns>

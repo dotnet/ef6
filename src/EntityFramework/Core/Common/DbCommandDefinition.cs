@@ -8,17 +8,17 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     A prepared command definition, can be cached and reused to avoid
-    ///     repreparing a command.
+    /// A prepared command definition, can be cached and reused to avoid
+    /// repreparing a command.
     /// </summary>
     public class DbCommandDefinition
     {
         private readonly ICloneable _prototype;
 
         /// <summary>
-        ///     Internal factory method to create the default Command Definition object
-        ///     based on a prototype command. The prototype command is cloned
-        ///     before the protected constructor is invoked
+        /// Internal factory method to create the default Command Definition object
+        /// based on a prototype command. The prototype command is cloned
+        /// before the protected constructor is invoked
         /// </summary>
         /// <param name="prototype"> prototype DbCommand </param>
         /// <returns> the DbCommandDefinition </returns>
@@ -35,13 +35,13 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class using the supplied
-        ///     <see
-        ///         cref="T:System.Data.Common.DbCommand" />
-        ///     .
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class using the supplied
+        /// <see
+        ///     cref="T:System.Data.Common.DbCommand" />
+        /// .
         /// </summary>
         /// <param name="prototype">
-        ///     The supplied <see cref="T:System.Data.Common.DbCommand" />.
+        /// The supplied <see cref="T:System.Data.Common.DbCommand" />.
         /// </param>
         protected DbCommandDefinition(DbCommand prototype)
         {
@@ -54,14 +54,14 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.DbCommandDefinition" /> class.
         /// </summary>
         protected DbCommandDefinition()
         {
         }
 
         /// <summary>
-        ///     Creates and returns a <see cref="T:System.Data.Common.DbCommand" /> object that can be executed.
+        /// Creates and returns a <see cref="T:System.Data.Common.DbCommand" /> object that can be executed.
         /// </summary>
         /// <returns>The command for database.</returns>
         public virtual DbCommand CreateCommand()

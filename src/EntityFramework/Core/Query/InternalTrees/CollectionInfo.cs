@@ -5,15 +5,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Represents information about one collection being managed by the NestOps.
-    ///     The CollectionVar is a Var that represents the entire collection.
+    /// Represents information about one collection being managed by the NestOps.
+    /// The CollectionVar is a Var that represents the entire collection.
     /// </summary>
     internal class CollectionInfo
     {
         #region public methods
 
         /// <summary>
-        ///     The collection-var
+        /// The collection-var
         /// </summary>
         internal Var CollectionVar
         {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     the column map for the collection element
+        /// the column map for the collection element
         /// </summary>
         internal ColumnMap ColumnMap
         {
@@ -29,8 +29,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     list of vars describing the collection element; flattened to remove
-        ///     nested collections
+        /// list of vars describing the collection element; flattened to remove
+        /// nested collections
         /// </summary>
         internal VarList FlattenedElementVars
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     list of keys specific to this collection
+        /// list of keys specific to this collection
         /// </summary>
         internal VarVec Keys
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     list of sort keys specific to this collection
+        /// list of sort keys specific to this collection
         /// </summary>
         internal List<SortKey> SortKeys
         {
@@ -54,8 +54,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Discriminator Value for this collection (for a given NestOp).
-        ///     Should we break this out into a subtype of CollectionInfo
+        /// Discriminator Value for this collection (for a given NestOp).
+        /// Should we break this out into a subtype of CollectionInfo
         /// </summary>
         internal object DiscriminatorValue
         {

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Summary description for SchemaElementLookUpTableEnumerator.
+    /// Summary description for SchemaElementLookUpTableEnumerator.
     /// </summary>
     internal sealed class SchemaElementLookUpTableEnumerator<T, S> : IEnumerator<T>
         where T : S

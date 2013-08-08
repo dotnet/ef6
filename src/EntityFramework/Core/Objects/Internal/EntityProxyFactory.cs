@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Xml.Serialization;
 
     /// <summary>
-    ///     Factory for creating proxy classes that can intercept calls to a class' members.
+    /// Factory for creating proxy classes that can intercept calls to a class' members.
     /// </summary>
     internal class EntityProxyFactory
     {
@@ -30,21 +30,21 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal const string CompareByteArraysFieldName = "_compareByteArrays";
 
         /// <summary>
-        ///     A hook such that test code can change the AssemblyBuilderAccess of the
-        ///     proxy assembly through reflection into the EntityProxyFactory.
+        /// A hook such that test code can change the AssemblyBuilderAccess of the
+        /// proxy assembly through reflection into the EntityProxyFactory.
         /// </summary>
         private static AssemblyBuilderAccess s_ProxyAssemblyBuilderAccess = AssemblyBuilderAccess.Run;
 
         /// <summary>
-        ///     Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
-        ///     A null value for a particular EntityType name key records the fact that
-        ///     no proxy Type could be created for the specified type.
+        /// Dictionary of proxy class type information, keyed by the pair of the CLR type and EntityType CSpaceName of the type being proxied.
+        /// A null value for a particular EntityType name key records the fact that
+        /// no proxy Type could be created for the specified type.
         /// </summary>
         private static readonly Dictionary<Tuple<Type, string>, EntityProxyTypeInfo> _proxyNameMap =
             new Dictionary<Tuple<Type, string>, EntityProxyTypeInfo>();
 
         /// <summary>
-        ///     Dictionary of proxy class type information, keyed by the proxy type
+        /// Dictionary of proxy class type information, keyed by the proxy type
         /// </summary>
         private static readonly Dictionary<Type, EntityProxyTypeInfo> _proxyTypeMap = new Dictionary<Type, EntityProxyTypeInfo>();
 
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static readonly ReaderWriterLockSlim _typeMapLock = new ReaderWriterLockSlim();
 
         /// <summary>
-        ///     The runtime assembly of the proxy types.
-        ///     This is not the same as the AssemblyBuilder used to create proxy types.
+        /// The runtime assembly of the proxy types.
+        /// This is not the same as the AssemblyBuilder used to create proxy types.
         /// </summary>
         private static readonly HashSet<Assembly> _proxyRuntimeAssemblies = new HashSet<Assembly>();
 
@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Return proxy type information for the specified O-Space EntityType.
+        /// Return proxy type information for the specified O-Space EntityType.
         /// </summary>
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. Must not be null. </param>
         /// <returns> A non-null EntityProxyTypeInfo instance that contains information about the type of proxy for the specified O-Space EntityType; or null if no proxy can be created for the specified type. </returns>
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     A mechanism to lookup AssociationType metadata for proxies for a given entity and association information
+        /// A mechanism to lookup AssociationType metadata for proxies for a given entity and association information
         /// </summary>
         /// <param name="wrappedEntity"> The entity instance used to lookup the proxy type </param>
         /// <param name="relationshipName"> The name of the relationship (FullName or Name) </param>
@@ -194,8 +194,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Enumerate list of supplied O-Space EntityTypes,
-        ///     and generate a proxy type for each EntityType (if possible for the particular type).
+        /// Enumerate list of supplied O-Space EntityTypes,
+        /// and generate a proxy type for each EntityType (if possible for the particular type).
         /// </summary>
         /// <param name="ospaceEntityTypes"> Enumeration of O-Space EntityType objects. Must not be null. In addition, the elements of the enumeration must not be null. </param>
         /// <param name="workspace"> </param>
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Determine if the specified type represents a known proxy type.
+        /// Determine if the specified type represents a known proxy type.
         /// </summary>
         /// <param name="type"> The Type to be examined. </param>
         /// <returns> True if the type is a known proxy type; otherwise false. </returns>
@@ -272,11 +272,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Return an enumerable of the current set of CLR proxy types.
+        /// Return an enumerable of the current set of CLR proxy types.
         /// </summary>
         /// <returns> Enumerable of the current set of CLR proxy types. This value will never be null. </returns>
         /// <remarks>
-        ///     The enumerable is based on a shapshot of the current list of types.
+        /// The enumerable is based on a shapshot of the current list of types.
         /// </remarks>
         internal static IEnumerable<Type> GetKnownProxyTypes()
         {
@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Build a CLR proxy type for the supplied EntityType.
+        /// Build a CLR proxy type for the supplied EntityType.
         /// </summary>
         /// <param name="moduleBuilder"> </param>
         /// <param name="ospaceEntityType"> EntityType in O-Space that represents the CLR type to be proxied. </param>
@@ -425,9 +425,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     In order for deserialization of proxy objects to succeed in this AppDomain,
-        ///     an assembly resolve handler must be added to the AppDomain to resolve the dynamic assembly,
-        ///     since it is not present in a location discoverable by fusion.
+        /// In order for deserialization of proxy objects to succeed in this AppDomain,
+        /// an assembly resolve handler must be added to the AppDomain to resolve the dynamic assembly,
+        /// since it is not present in a location discoverable by fusion.
         /// </summary>
         /// <param name="assembly"> Proxy assembly to be resolved. </param>
         private static void AddAssemblyToResolveList(Assembly assembly)
@@ -445,7 +445,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Construct an interception delegate for the specified proxy member.
+        /// Construct an interception delegate for the specified proxy member.
         /// </summary>
         /// <param name="member"> EdmMember that specifies the member to be intercepted. </param>
         /// <param name="proxyType"> Type of the proxy. </param>
@@ -482,8 +482,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Sets a delegate onto the _resetFKSetterFlag field such that it can be executed to make
-        ///     a call into the state manager to reset the InFKSetter flag.
+        /// Sets a delegate onto the _resetFKSetterFlag field such that it can be executed to make
+        /// a call into the state manager to reset the InFKSetter flag.
         /// </summary>
         private static void SetResetFKSetterFlagDelegate(Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
@@ -497,8 +497,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns the delegate that takes a proxy instance and uses it to reset the InFKSetter flag maintained
-        ///     by the state manager of the context associated with the proxy instance.
+        /// Returns the delegate that takes a proxy instance and uses it to reset the InFKSetter flag maintained
+        /// by the state manager of the context associated with the proxy instance.
         /// </summary>
         private static Action<object> GetResetFKSetterFlagDelegate(Func<object, object> getEntityWrapperDelegate)
         {
@@ -511,10 +511,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Called in the finally clause of each overridden property setter to ensure that the flag
-        ///     indicating that we are in an FK setter is cleared.  Note that the wrapped entity is passed as
-        ///     an obejct becayse IEntityWrapper is an internal type and is therefore not accessable to
-        ///     the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
+        /// Called in the finally clause of each overridden property setter to ensure that the flag
+        /// indicating that we are in an FK setter is cleared.  Note that the wrapped entity is passed as
+        /// an obejct becayse IEntityWrapper is an internal type and is therefore not accessable to
+        /// the proxy type.  Once we're in the framework it is cast back to an IEntityWrapper.
         /// </summary>
         private static void ResetFKSetterFlag(object wrappedEntityAsObject)
         {
@@ -529,8 +529,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Sets a delegate onto the _compareByteArrays field such that it can be executed to check
-        ///     whether two byte arrays are the same by value comparison.
+        /// Sets a delegate onto the _compareByteArrays field such that it can be executed to check
+        /// whether two byte arrays are the same by value comparison.
         /// </summary>
         private static void SetCompareByteArraysDelegate(Type proxyType)
         {
@@ -542,17 +542,17 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Return boolean that specifies if the specified type can be proxied.
+        /// Return boolean that specifies if the specified type can be proxied.
         /// </summary>
         /// <param name="ospaceEntityType"> O-space EntityType </param>
         /// <returns> True if the class is not abstract or sealed, does not implement IEntityWithRelationships, and has a public or protected default constructor; otherwise false. </returns>
         /// <remarks>
-        ///     While it is technically possible to derive from an abstract type
-        ///     in order to create a proxy, we avoid this so that the proxy type
-        ///     has the same "concreteness" of the type being proxied.
-        ///     The check for IEntityWithRelationships ensures that codegen'ed
-        ///     entities that derive from EntityObject as well as properly
-        ///     constructed IPOCO entities will not be proxied.
+        /// While it is technically possible to derive from an abstract type
+        /// in order to create a proxy, we avoid this so that the proxy type
+        /// has the same "concreteness" of the type being proxied.
+        /// The check for IEntityWithRelationships ensures that codegen'ed
+        /// entities that derive from EntityObject as well as properly
+        /// constructed IPOCO entities will not be proxied.
         /// </remarks>
         private static bool CanProxyType(EntityType ospaceEntityType)
         {

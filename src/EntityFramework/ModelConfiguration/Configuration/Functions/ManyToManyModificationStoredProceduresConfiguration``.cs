@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to modify a many to many relationship.
+    /// Allows configuration to be performed for a stored procedure that is used to modify a many to many relationship.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the relationship is being configured from.</typeparam>
     /// <typeparam name="TTargetEntityType">The type of the entity that the other end of the relationship targets.</typeparam>

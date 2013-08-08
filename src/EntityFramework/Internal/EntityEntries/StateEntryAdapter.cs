@@ -9,10 +9,10 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     This is a temporary adapter class that wraps an <see cref="ObjectStateEntry" /> and
-    ///     presents it as an <see cref="IEntityStateEntry" />.  This class will be removed once
-    ///     we roll into the System.Data.Entity assembly.  See <see cref="IEntityStateEntry" />
-    ///     for more details.
+    /// This is a temporary adapter class that wraps an <see cref="ObjectStateEntry" /> and
+    /// presents it as an <see cref="IEntityStateEntry" />.  This class will be removed once
+    /// we roll into the System.Data.Entity assembly.  See <see cref="IEntityStateEntry" />
+    /// for more details.
     /// </summary>
     internal class StateEntryAdapter : IEntityStateEntry
     {

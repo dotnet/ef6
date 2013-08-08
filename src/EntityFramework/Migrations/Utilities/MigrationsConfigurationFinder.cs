@@ -18,7 +18,7 @@ namespace System.Data.Entity.Migrations.Utilities
         private readonly TypeFinder _typeFinder;
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         public MigrationsConfigurationFinder()
         {

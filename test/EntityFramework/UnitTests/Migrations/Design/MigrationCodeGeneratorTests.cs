@@ -102,7 +102,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Exposes protected methods for unit testing.
+        /// Exposes protected methods for unit testing.
         /// </summary>
         public class DummyCodeGenerator : MigrationCodeGenerator
         {

@@ -11,13 +11,13 @@ namespace System.Data.Entity.Internal
         private readonly bool _isCollection;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NavigationEntryMetadata" /> class.
+        /// Initializes a new instance of the <see cref="NavigationEntryMetadata" /> class.
         /// </summary>
         /// <param name="declaringType"> The type that the property is declared on. </param>
         /// <param name="propertyType"> Type of the property. </param>
         /// <param name="propertyName"> The property name. </param>
         /// <param name="isCollection">
-        ///     if set to <c>true</c> this is a collection nav prop.
+        /// if set to <c>true</c> this is a collection nav prop.
         /// </param>
         public NavigationEntryMetadata(Type declaringType, Type propertyType, string propertyName, bool isCollection)
             : base(declaringType, propertyType, propertyName)
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
         #region Metadata access
 
         /// <summary>
-        ///     Gets the type of the member for which this is metadata.
+        /// Gets the type of the member for which this is metadata.
         /// </summary>
         /// <value> The type of the member entry. </value>
         public override MemberEntryType MemberEntryType
@@ -44,8 +44,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the type of the member, which for collection properties is the type
-        ///     of the collection rather than the type in the collection.
+        /// Gets the type of the member, which for collection properties is the type
+        /// of the collection rather than the type in the collection.
         /// </summary>
         /// <value> The type of the member. </value>
         public override Type MemberType
@@ -58,8 +58,8 @@ namespace System.Data.Entity.Internal
         #region Entry factory methods
 
         /// <summary>
-        ///     Creates a new <see cref="InternalMemberEntry" /> the runtime type of which will be
-        ///     determined by the metadata.
+        /// Creates a new <see cref="InternalMemberEntry" /> the runtime type of which will be
+        /// determined by the metadata.
         /// </summary>
         /// <param name="internalEntityEntry"> The entity entry to which the member belongs. </param>
         /// <param name="parentPropertyEntry"> The parent property entry which will always be null for navigation entries. </param>

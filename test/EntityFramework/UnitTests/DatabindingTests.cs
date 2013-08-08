@@ -17,7 +17,7 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for data binding and DbSet.Local.
+    /// Unit tests for data binding and DbSet.Local.
     /// </summary>
     public class DatabindingTests : TestBase
     {

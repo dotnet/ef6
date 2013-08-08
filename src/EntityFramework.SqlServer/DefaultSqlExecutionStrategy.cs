@@ -10,7 +10,7 @@ namespace System.Data.Entity.SqlServer
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An <see cref="IDbExecutionStrategy"/> that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
+    /// An <see cref="IDbExecutionStrategy"/> that doesn't affect the execution but will throw a more helpful exception if a transient failure is detected.
     /// </summary>
     internal sealed class DefaultSqlExecutionStrategy : IDbExecutionStrategy
     {

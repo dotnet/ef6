@@ -734,8 +734,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     if already seen, then out the object instance index, return false;
-        ///     if haven't seen, then add it to the m_itemAlreadySeen, out the current index, return true
+        /// if already seen, then out the object instance index, return false;
+        /// if haven't seen, then add it to the m_itemAlreadySeen, out the current index, return true
         /// </summary>
         private bool TryAddSeenItem(Object o, out int indexSeen)
         {
@@ -752,8 +752,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     if the object has seen, then add the seen object style to the hash source, return false;
-        ///     if not, then add it to the seen list, and append the object start dump to the hash source, return true
+        /// if the object has seen, then add the seen object style to the hash source, return false;
+        /// if not, then add it to the seen list, and append the object start dump to the hash source, return true
         /// </summary>
         private bool AddObjectToSeenListAndHashBuilder(object o, out int instanceIndex)
         {
@@ -812,7 +812,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add V2 schema properties and attributes to the hash builder
+        /// Add V2 schema properties and attributes to the hash builder
         /// </summary>
         private void AddV2ObjectContentToHashBuilder(object content, double version)
         {

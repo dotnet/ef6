@@ -6,10 +6,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a literal in a normal form expression of the form:
-    ///     Term
-    ///     or
-    ///     !Term
+    /// Represents a literal in a normal form expression of the form:
+    /// Term
+    /// or
+    /// !Term
     /// </summary>
     internal sealed class Literal<T_Identifier> : NormalFormNode<T_Identifier>,
                                                   IEquatable<Literal<T_Identifier>>
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly bool _isTermPositive;
 
         /// <summary>
-        ///     Initialize a new literal.
+        /// Initialize a new literal.
         /// </summary>
         /// <param name="term"> Term </param>
         /// <param name="isTermPositive"> Sign of term </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets literal term.
+        /// Gets literal term.
         /// </summary>
         internal TermExpr<T_Identifier> Term
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets sign of term.
+        /// Gets sign of term.
         /// </summary>
         internal bool IsTermPositive
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Creates a negated version of this literal.
+        /// Creates a negated version of this literal.
         /// </summary>
         /// <returns> !this </returns>
         internal Literal<T_Identifier> MakeNegated()

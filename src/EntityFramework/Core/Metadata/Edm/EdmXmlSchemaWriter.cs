@@ -28,117 +28,117 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static class SyndicationXmlConstants
         {
             /// <summary>
-            ///     author/email
+            /// author/email
             /// </summary>
             internal const string SyndAuthorEmail = "SyndicationAuthorEmail";
 
             /// <summary>
-            ///     author/name
+            /// author/name
             /// </summary>
             internal const string SyndAuthorName = "SyndicationAuthorName";
 
             /// <summary>
-            ///     author/uri
+            /// author/uri
             /// </summary>
             internal const string SyndAuthorUri = "SyndicationAuthorUri";
 
             /// <summary>
-            ///     published
+            /// published
             /// </summary>
             internal const string SyndPublished = "SyndicationPublished";
 
             /// <summary>
-            ///     rights
+            /// rights
             /// </summary>
             internal const string SyndRights = "SyndicationRights";
 
             /// <summary>
-            ///     summary
+            /// summary
             /// </summary>
             internal const string SyndSummary = "SyndicationSummary";
 
             /// <summary>
-            ///     title
+            /// title
             /// </summary>
             internal const string SyndTitle = "SyndicationTitle";
 
             /// <summary>
-            ///     contributor/email
+            /// contributor/email
             /// </summary>
             internal const string SyndContributorEmail = "SyndicationContributorEmail";
 
             /// <summary>
-            ///     contributor/name
+            /// contributor/name
             /// </summary>
             internal const string SyndContributorName = "SyndicationContributorName";
 
             /// <summary>
-            ///     contributor/uri
+            /// contributor/uri
             /// </summary>
             internal const string SyndContributorUri = "SyndicationContributorUri";
 
             /// <summary>
-            ///     category/@label
+            /// category/@label
             /// </summary>
             internal const string SyndCategoryLabel = "SyndicationCategoryLabel";
 
             /// <summary>
-            ///     Plaintext
+            /// Plaintext
             /// </summary>
             internal const string SyndContentKindPlaintext = "text";
 
             /// <summary>
-            ///     HTML
+            /// HTML
             /// </summary>
             internal const string SyndContentKindHtml = "html";
 
             /// <summary>
-            ///     XHTML
+            /// XHTML
             /// </summary>
             internal const string SyndContentKindXHtml = "xhtml";
 
             /// <summary>
-            ///     updated
+            /// updated
             /// </summary>
             internal const string SyndUpdated = "SyndicationUpdated";
 
             /// <summary>
-            ///     link/@href
+            /// link/@href
             /// </summary>
             internal const string SyndLinkHref = "SyndicationLinkHref";
 
             /// <summary>
-            ///     link/@rel
+            /// link/@rel
             /// </summary>
             internal const string SyndLinkRel = "SyndicationLinkRel";
 
             /// <summary>
-            ///     link/@type
+            /// link/@type
             /// </summary>
             internal const string SyndLinkType = "SyndicationLinkType";
 
             /// <summary>
-            ///     link/@hreflang
+            /// link/@hreflang
             /// </summary>
             internal const string SyndLinkHrefLang = "SyndicationLinkHrefLang";
 
             /// <summary>
-            ///     link/@title
+            /// link/@title
             /// </summary>
             internal const string SyndLinkTitle = "SyndicationLinkTitle";
 
             /// <summary>
-            ///     link/@length
+            /// link/@length
             /// </summary>
             internal const string SyndLinkLength = "SyndicationLinkLength";
 
             /// <summary>
-            ///     category/@term
+            /// category/@term
             /// </summary>
             internal const string SyndCategoryTerm = "SyndicationCategoryTerm";
 
             /// <summary>
-            ///     category/@scheme
+            /// category/@scheme
             /// </summary>
             internal const string SyndCategoryScheme = "SyndicationCategoryScheme";
         }

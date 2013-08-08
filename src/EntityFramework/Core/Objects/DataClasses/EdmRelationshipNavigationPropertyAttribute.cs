@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Objects.DataClasses
 {
     /// <summary>
-    ///     Attribute identifying the Ends defined for a RelationshipSet
-    ///     Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
-    ///     The metadata system expects this and will only look at the first of each of these attributes, even if there are more.
+    /// Attribute identifying the Ends defined for a RelationshipSet
+    /// Implied default AttributeUsage properties Inherited=True, AllowMultiple=False,
+    /// The metadata system expects this and will only look at the first of each of these attributes, even if there are more.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class EdmRelationshipNavigationPropertyAttribute : EdmPropertyAttribute
@@ -15,10 +15,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private readonly string _targetRoleName;
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute" />
-        ///     class.
+        /// Initializes a new instance of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipNavigationPropertyAttribute" />
+        /// class.
         /// </summary>
         /// <param name="relationshipNamespaceName">The namespace name of the relationship property.</param>
         /// <param name="relationshipName">The name of the relationship. The relationship name is not namespace qualified.</param>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>The namespace name of the navigation property.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the namespace name.
+        /// A <see cref="T:System.String" /> that is the namespace name.
         /// </returns>
         public string RelationshipNamespaceName
         {

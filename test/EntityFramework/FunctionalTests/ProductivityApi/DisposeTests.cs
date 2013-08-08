@@ -24,8 +24,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
-        ///     executed, not when the set is created.
+        /// Asserts that an operation on a set from a disposed context throws, but only when the operation is
+        /// executed, not when the set is created.
         /// </summary>
         /// <param name="entityType"> The type of entity for which the set is for. </param>
         /// <param name="test"> The test to run on the set. </param>
@@ -39,8 +39,8 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Asserts that an operation on a set from a disposed context throws, but only when the operation is
-        ///     executed, not when the set is created.
+        /// Asserts that an operation on a set from a disposed context throws, but only when the operation is
+        /// executed, not when the set is created.
         /// </summary>
         /// <typeparam name="TEntity"> The type of entity for which a set should be created. </typeparam>
         /// <param name="test"> The test to run on the set. </param>
@@ -54,7 +54,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Creates a disposed context.
+        /// Creates a disposed context.
         /// </summary>
         private SimpleModelContext CreateDisposedContext()
         {
@@ -68,7 +68,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Asserts that an operation on a disposed context throws.
+        /// Asserts that an operation on a disposed context throws.
         /// </summary>
         /// <param name="test"> The test to run on the context. </param>
         private void ThrowsWithDisposedContext(Action<SimpleModelContext> test)

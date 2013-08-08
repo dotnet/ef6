@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Describes a query parameter
+    /// Describes a query parameter
     /// </summary>
     internal sealed class ParameterVar : Var
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Name of the parameter
+        /// Name of the parameter
         /// </summary>
         internal string ParameterName
         {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the name of this Var
+        /// Get the name of this Var
         /// </summary>
         internal override bool TryGetName(out string name)
         {

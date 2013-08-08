@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Text;
 
     /// <summary>
-    ///     this class collects several strings together, and allows you to (
+    /// this class collects several strings together, and allows you to (
     /// </summary>
     internal class StringHashBuilder
     {

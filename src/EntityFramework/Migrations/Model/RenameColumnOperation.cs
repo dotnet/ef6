@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents renaming an existing column.
+    /// Represents renaming an existing column.
     /// </summary>
     public class RenameColumnOperation : MigrationOperation
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Model
         private string _newName;
 
         /// <summary>
-        ///     Initializes a new instance of the RenameColumnOperation class.
+        /// Initializes a new instance of the RenameColumnOperation class.
         /// </summary>
         /// <param name="table"> Name of the table the column belongs to. </param>
         /// <param name="name"> Name of the column to be renamed. </param>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table the column belongs to.
+        /// Gets the name of the table the column belongs to.
         /// </summary>
         public virtual string Table
         {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the column to be renamed.
+        /// Gets the name of the column to be renamed.
         /// </summary>
         public virtual string Name
         {
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the new name for the column.
+        /// Gets the new name for the column.
         /// </summary>
         public virtual string NewName
         {
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that reverts the rename.
+        /// Gets an operation that reverts the rename.
         /// </summary>
         public override MigrationOperation Inverse
         {

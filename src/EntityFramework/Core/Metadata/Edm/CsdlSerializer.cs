@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     Serializes an <see cref="EdmModel" /> that conforms to the restrictions of a single
-    ///     CSDL schema file to an XML writer. The model to be serialized must contain a single
-    ///     <see cref="Core.Metadata.Edm.EntityContainer" /> .
+    /// Serializes an <see cref="EdmModel" /> that conforms to the restrictions of a single
+    /// CSDL schema file to an XML writer. The model to be serialized must contain a single
+    /// <see cref="Core.Metadata.Edm.EntityContainer" /> .
     /// </summary>
     public class CsdlSerializer
     {
@@ -21,10 +21,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>
-        ///     Serialize the <see cref="EdmModel" /> to the XmlWriter.
+        /// Serialize the <see cref="EdmModel" /> to the XmlWriter.
         /// </summary>
         /// <param name="model">
-        ///     The EdmModel to serialize.
+        /// The EdmModel to serialize.
         /// </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]

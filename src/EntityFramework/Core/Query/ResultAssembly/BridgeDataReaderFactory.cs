@@ -22,10 +22,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         }
 
         /// <summary>
-        ///     The primary factory method to produce the BridgeDataReader; given a store data
-        ///     reader and a column map, create the BridgeDataReader, hooking up the IteratorSources
-        ///     and ResultColumn Hierarchy.  All construction of top level data readers go through
-        ///     this method.
+        /// The primary factory method to produce the BridgeDataReader; given a store data
+        /// reader and a column map, create the BridgeDataReader, hooking up the IteratorSources
+        /// and ResultColumn Hierarchy.  All construction of top level data readers go through
+        /// this method.
         /// </summary>
         /// <param name="storeDataReader"> </param>
         /// <param name="columnMap"> column map of the first result set </param>

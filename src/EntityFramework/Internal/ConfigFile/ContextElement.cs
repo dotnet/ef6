@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents the configuration for a specific context type
+    /// Represents the configuration for a specific context type
     /// </summary>
     internal class ContextElement : ConfigurationElement
     {

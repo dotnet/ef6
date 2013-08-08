@@ -7,9 +7,9 @@ namespace System.Data.Entity.Internal
     using Moq;
 
     /// <summary>
-    ///     A derived InternalContext implementation that exposes a parameterless constructor
-    ///     that creates a mocked underlying DbContext such that the internal context can
-    ///     also be mocked.
+    /// A derived InternalContext implementation that exposes a parameterless constructor
+    /// that creates a mocked underlying DbContext such that the internal context can
+    /// also be mocked.
     /// </summary>
     internal abstract class InternalContextForMock<TContext> : InternalContext
         where TContext : DbContext

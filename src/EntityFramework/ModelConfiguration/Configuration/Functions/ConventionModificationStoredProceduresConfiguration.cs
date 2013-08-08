@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Creates a convention that configures stored procedures to be used to modify entities in the database.
+    /// Creates a convention that configures stored procedures to be used to modify entities in the database.
     /// </summary>
     public class ConventionModificationStoredProceduresConfiguration
     {

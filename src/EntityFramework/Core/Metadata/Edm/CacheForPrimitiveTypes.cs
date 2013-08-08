@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly List<PrimitiveType>[] _primitiveTypeMap = new List<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
 
         /// <summary>
-        ///     Add the given primitive type to the primitive type cache
+        /// Add the given primitive type to the primitive type cache
         /// </summary>
         /// <param name="type"> The primitive type to add </param>
         internal void Add(PrimitiveType type)
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Try and get the mapped type for the given primitiveTypeKind in the given dataspace
+        /// Try and get the mapped type for the given primitiveTypeKind in the given dataspace
         /// </summary>
         /// <param name="primitiveTypeKind"> The primitive type kind of the primitive type to retrieve </param>
         /// <param name="facets"> The facets to use in picking the primitive type </param>
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the list of the primitive types for the given dataspace
+        /// Get the list of the primitive types for the given dataspace
         /// </summary>
         internal ReadOnlyCollection<PrimitiveType> GetTypes()
         {

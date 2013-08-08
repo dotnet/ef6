@@ -29,14 +29,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     #region CommandInfo
 
     /// <summary>
-    ///     Captures information about a single provider command
+    /// Captures information about a single provider command
     /// </summary>
     internal sealed class ProviderCommandInfo
     {
         #region public apis
 
         /// <summary>
-        ///     Internal methods to get the command tree
+        /// Internal methods to get the command tree
         /// </summary>
         internal cqt.DbCommandTree CommandTree
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        ///     Internal constructor for a ProviderCommandInfo object
+        /// Internal constructor for a ProviderCommandInfo object
         /// </summary>
         /// <param name="commandTree"> command tree for the provider command </param>
         internal ProviderCommandInfo(cqt.DbCommandTree commandTree)

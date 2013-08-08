@@ -8,12 +8,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Class for representing a collection of mapping items in Edm space.
+    /// Class for representing a collection of mapping items in Edm space.
     /// </summary>
     public abstract class MappingItemCollection : ItemCollection
     {
         /// <summary>
-        ///     The default constructor for ItemCollection
+        /// The default constructor for ItemCollection
         /// </summary>
         internal MappingItemCollection(DataSpace dataSpace)
             : base(dataSpace)
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="identity"> identity of the type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         internal virtual Map GetMap(GlobalItem item)
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <returns> Returns false if no match found. </returns>
         internal virtual bool TryGetMap(GlobalItem item, out Map map)
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="identity"> identity of the type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="identity"> identity of the type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Search for a Mapping metadata with the specified type key.
+        /// Search for a Mapping metadata with the specified type key.
         /// </summary>
         /// <param name="identity"> identity of the type </param>
         /// <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>

@@ -22,10 +22,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </returns>
         public DbExpressionBinding Input
         {
@@ -33,17 +33,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the projection.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the projection.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the projection.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the projection.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
-        ///     , or its result type is not equal or promotable to the reference type of the current projection.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        /// , or its result type is not equal or promotable to the reference type of the current projection.
         /// </exception>
         public DbExpression Projection
         {
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -64,13 +64,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

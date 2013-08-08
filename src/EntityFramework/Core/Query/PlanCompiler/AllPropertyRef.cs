@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     /// <summary>
-    ///     A reference to "all" properties of a type
+    /// A reference to "all" properties of a type
     /// </summary>
     internal class AllPropertyRef : PropertyRef
     {
@@ -12,12 +12,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the singleton instance
+        /// Get the singleton instance
         /// </summary>
         internal static AllPropertyRef Instance = new AllPropertyRef();
 
         /// <summary>
-        ///     Create a nested property ref, with "p" as the prefix
+        /// Create a nested property ref, with "p" as the prefix
         /// </summary>
         /// <param name="p"> the property to prefix with </param>
         /// <returns> the nested property reference </returns>

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Describes information about each column
+    /// Describes information about each column
     /// </summary>
     internal class ColumnMD
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly EdmMember m_property;
 
         /// <summary>
-        ///     Default constructor
+        /// Default constructor
         /// </summary>
         /// <param name="name"> Column name </param>
         /// <param name="type"> Datatype of the column </param>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     More useful default constructor
+        /// More useful default constructor
         /// </summary>
         /// <param name="property"> property describing this column </param>
         internal ColumnMD(EdmMember property)
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Column Name
+        /// Column Name
         /// </summary>
         internal string Name
         {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Datatype of the column
+        /// Datatype of the column
         /// </summary>
         internal TypeUsage Type
         {
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Is this column nullable ?
+        /// Is this column nullable ?
         /// </summary>
         internal bool IsNullable
         {
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     debugging help
+        /// debugging help
         /// </summary>
         public override string ToString()
         {

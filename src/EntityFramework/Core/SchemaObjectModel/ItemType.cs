@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for Item.
+    /// Summary description for Item.
     /// </summary>
     [DebuggerDisplay("Name={Name}, BaseType={BaseType.FQName}, HasKeys={HasKeys}")]
     internal sealed class SchemaEntityType : StructuredType

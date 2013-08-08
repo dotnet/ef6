@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Convention to process instances of <see cref="DatabaseGeneratedAttribute" /> found on properties in the model.
+    /// Convention to process instances of <see cref="DatabaseGeneratedAttribute" /> found on properties in the model.
     /// </summary>
     public class DatabaseGeneratedAttributeConvention
         : PrimitivePropertyAttributeConfigurationConvention<DatabaseGeneratedAttribute>

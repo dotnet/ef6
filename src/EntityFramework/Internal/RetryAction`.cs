@@ -6,8 +6,8 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Adapted from <see cref="System.Lazy{T}" /> to allow the initializer to take an input object and
-    ///     to do one-time initialization that only has side-effects and doesn't return a value.
+    /// Adapted from <see cref="System.Lazy{T}" /> to allow the initializer to take an input object and
+    /// to do one-time initialization that only has side-effects and doesn't return a value.
     /// </summary>
     /// <typeparam name="TInput"> The type of the input. </typeparam>
     internal class RetryAction<TInput>
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Internal
         private Action<TInput> _action;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RetryAction&lt;TInput&gt;" /> class.
+        /// Initializes a new instance of the <see cref="RetryAction&lt;TInput&gt;" /> class.
         /// </summary>
         /// <param name="action"> The action. </param>
         public RetryAction(Action<TInput> action)
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Internal
         #region Lazy initialization
 
         /// <summary>
-        ///     Performs the action unless it has already been successfully performed before.
+        /// Performs the action unless it has already been successfully performed before.
         /// </summary>
         /// <param name="input"> The input to the action; ignored if the action has already succeeded. </param>
         [DebuggerStepThrough]

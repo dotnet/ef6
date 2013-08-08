@@ -17,13 +17,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Reflection;
 
     /// <summary>
-    ///     Factory methods for prescriptive column map patterns (includes default
-    ///     column maps for materializer services and function mappings).
+    /// Factory methods for prescriptive column map patterns (includes default
+    /// column maps for materializer services and function mappings).
     /// </summary>
     internal class ColumnMapFactory
     {
         /// <summary>
-        ///     Creates a column map for the given reader and function mapping.
+        /// Creates a column map for the given reader and function mapping.
         /// </summary>
         internal virtual CollectionColumnMap CreateFunctionImportStructuralTypeColumnMap(
             DbDataReader storeDataReader, FunctionImportMappingNonComposable mapping, int resultSetIndex, EntitySet entitySet,
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Build the collectionColumnMap from a store datareader, a type and an entitySet.
+        /// Build the collectionColumnMap from a store datareader, a type and an entitySet.
         /// </summary>
         internal virtual CollectionColumnMap CreateColumnMapFromReaderAndType(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,
@@ -125,9 +125,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Requires: a public type with a public, default constructor. Returns a column map initializing the type
-        ///     and all properties of the type with a public setter taking a primitive type and having a corresponding
-        ///     column in the reader.
+        /// Requires: a public type with a public, default constructor. Returns a column map initializing the type
+        /// and all properties of the type with a public setter taking a primitive type and having a corresponding
+        /// column in the reader.
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -221,8 +221,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Build the entityColumnMap from a store datareader, a type and an entitySet and
-        ///     a list ofproperties.
+        /// Build the entityColumnMap from a store datareader, a type and an entitySet and
+        /// a list ofproperties.
         /// </summary>
         private static EntityColumnMap CreateEntityTypeElementColumnMap(
             DbDataReader storeDataReader, EdmType edmType, EntitySet entitySet,
@@ -271,9 +271,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     For a given edmType, build an array of scalarColumnMaps that map to the columns
-        ///     in the store datareader provided.  Note that we're hooking things up by name, not
-        ///     by ordinal position.
+        /// For a given edmType, build an array of scalarColumnMaps that map to the columns
+        /// in the store datareader provided.  Note that we're hooking things up by name, not
+        /// by ordinal position.
         /// </summary>
         private static ColumnMap[] GetColumnMapsForType(
             DbDataReader storeDataReader, EdmType edmType,
@@ -325,8 +325,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Given a store datareader and a member of an edmType, find the column ordinal
-        ///     in the datareader with the name of the member.
+        /// Given a store datareader and a member of an edmType, find the column ordinal
+        /// in the datareader with the name of the member.
         /// </summary>
         private static int GetMemberOrdinalFromReader(
             DbDataReader storeDataReader, EdmMember member, EdmType currentType,
@@ -358,10 +358,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Given a store datareader, a column name, find the column ordinal
-        ///     in the datareader with the name of the column.
-        ///     We only have the functionImport provided to include it in the exception
-        ///     message.
+        /// Given a store datareader, a column name, find the column ordinal
+        /// in the datareader with the name of the column.
+        /// We only have the functionImport provided to include it in the exception
+        /// message.
         /// </summary>
         private static int GetDiscriminatorOrdinalFromReader(DbDataReader storeDataReader, string columnName, EdmFunction functionImport)
         {
@@ -375,8 +375,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Given a store datareader and a column name, try to find the column ordinal
-        ///     in the datareader with the name of the column.
+        /// Given a store datareader and a column name, try to find the column ordinal
+        /// in the datareader with the name of the column.
         /// </summary>
         /// <returns> true if found, false otherwise. </returns>
         private static bool TryGetColumnOrdinalFromReader(DbDataReader storeDataReader, string columnName, out int ordinal)

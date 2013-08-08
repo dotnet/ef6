@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Additional information for a JoinNode
-    ///     AugmentedJoinNode - represents all joins (cross-joins, leftouter, fullouter
-    ///     and innerjoins). This class represents a number of column equijoin conditions
-    ///     via the LeftVars and RightVars properties, and also keeps track of additional
-    ///     (non-equijoin column) join predicates
+    /// Additional information for a JoinNode
+    /// AugmentedJoinNode - represents all joins (cross-joins, leftouter, fullouter
+    /// and innerjoins). This class represents a number of column equijoin conditions
+    /// via the LeftVars and RightVars properties, and also keeps track of additional
+    /// (non-equijoin column) join predicates
     /// </summary>
     internal sealed class AugmentedJoinNode : AugmentedNode
     {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        ///     basic constructor
+        /// basic constructor
         /// </summary>
         /// <param name="id"> current node id </param>
         /// <param name="node"> the join node </param>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Yet another constructor - used for crossjoins
+        /// Yet another constructor - used for crossjoins
         /// </summary>
         /// <param name="id"> node id </param>
         /// <param name="node"> current node </param>
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public properties
 
         /// <summary>
-        ///     Non-equijoin predicate
+        /// Non-equijoin predicate
         /// </summary>
         internal Node OtherPredicate
         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Equijoin columns of the left side
+        /// Equijoin columns of the left side
         /// </summary>
         internal List<ColumnVar> LeftVars
         {
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Equijoin columns of the right side
+        /// Equijoin columns of the right side
         /// </summary>
         internal List<ColumnVar> RightVars
         {

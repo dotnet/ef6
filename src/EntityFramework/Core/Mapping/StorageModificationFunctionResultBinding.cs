@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Globalization;
 
     /// <summary>
-    ///     Defines a binding from a named result set column to a member taking the value.
+    /// Defines a binding from a named result set column to a member taking the value.
     /// </summary>
     internal sealed class StorageModificationFunctionResultBinding
     {
@@ -21,13 +21,13 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets the name of the column to bind from the function result set. We use a string
-        ///     value rather than EdmMember, since there is no metadata for function result sets.
+        /// Gets the name of the column to bind from the function result set. We use a string
+        /// value rather than EdmMember, since there is no metadata for function result sets.
         /// </summary>
         internal string ColumnName;
 
         /// <summary>
-        ///     Gets the property to be set on the entity.
+        /// Gets the property to be set on the entity.
         /// </summary>
         internal readonly EdmProperty Property;
 

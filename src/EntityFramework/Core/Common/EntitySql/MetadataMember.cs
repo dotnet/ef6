@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
+    /// Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
     /// </summary>
     internal abstract class MetadataMember : ExpressionResolution
     {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal readonly string Name;
 
         /// <summary>
-        ///     Return the name of the <see cref="MetadataMemberClass" /> for error messages.
+        /// Return the name of the <see cref="MetadataMemberClass" /> for error messages.
         /// </summary>
         internal abstract string MetadataMemberClassName { get; }
 

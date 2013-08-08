@@ -8,17 +8,17 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Globalization;
 
     /// <summary>
-    ///     A node in a Reduced Ordered Boolean Decision Diagram. Reads as:
-    ///     if 'Variable' then 'Then' else 'Else'
-    ///     Invariant: the Then and Else children must refer to 'deeper' variables,
-    ///     or variables with a higher value. Otherwise, the graph is not 'Ordered'.
-    ///     All creation of vertices is mediated by the Solver class which ensures
-    ///     each vertex is unique. Otherwise, the graph is not 'Reduced'.
+    /// A node in a Reduced Ordered Boolean Decision Diagram. Reads as:
+    /// if 'Variable' then 'Then' else 'Else'
+    /// Invariant: the Then and Else children must refer to 'deeper' variables,
+    /// or variables with a higher value. Otherwise, the graph is not 'Ordered'.
+    /// All creation of vertices is mediated by the Solver class which ensures
+    /// each vertex is unique. Otherwise, the graph is not 'Reduced'.
     /// </summary>
     internal sealed class Vertex : IEquatable<Vertex>
     {
         /// <summary>
-        ///     Initializes a sink BDD node (zero or one)
+        /// Initializes a sink BDD node (zero or one)
         /// </summary>
         private Vertex()
         {
@@ -54,32 +54,32 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Sink node representing the Boolean function '1' (true)
+        /// Sink node representing the Boolean function '1' (true)
         /// </summary>
         internal static readonly Vertex One = new Vertex();
 
         /// <summary>
-        ///     Sink node representing the Boolean function '0' (false)
+        /// Sink node representing the Boolean function '0' (false)
         /// </summary>
         internal static readonly Vertex Zero = new Vertex();
 
         /// <summary>
-        ///     Gets the variable tested by this vertex. If this is a sink node, returns
-        ///     int.MaxValue since there is no variable to test (and since this is a leaf,
-        ///     this non-existent variable is 'deeper' than any existing variable; the
-        ///     variable value is larger than any real variable)
+        /// Gets the variable tested by this vertex. If this is a sink node, returns
+        /// int.MaxValue since there is no variable to test (and since this is a leaf,
+        /// this non-existent variable is 'deeper' than any existing variable; the
+        /// variable value is larger than any real variable)
         /// </summary>
         internal readonly int Variable;
 
         /// <summary>
-        ///     Note: do not modify elements.
-        ///     Gets the result when Variable evaluates to true. If this is a sink node,
-        ///     returns null.
+        /// Note: do not modify elements.
+        /// Gets the result when Variable evaluates to true. If this is a sink node,
+        /// returns null.
         /// </summary>
         internal readonly Vertex[] Children;
 
         /// <summary>
-        ///     Returns true if this is '1'.
+        /// Returns true if this is '1'.
         /// </summary>
         internal bool IsOne()
         {
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Returns true if this is '0'.
+        /// Returns true if this is '0'.
         /// </summary>
         internal bool IsZero()
         {
@@ -95,7 +95,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Returns true if this is '0' or '1'.
+        /// Returns true if this is '0' or '1'.
         /// </summary>
         internal bool IsSink()
         {

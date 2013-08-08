@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Text;
 
     /// <summary>
-    ///     Represents a node in a hierarchical collection of information strings.
-    ///     Intended as a common way mechanism to represent tree structures for debugging (using the TreePrinter class).
-    ///     A node consists of a string (represented as a StringBuilder), its collection of child nodes, and an optional Tag value.
+    /// Represents a node in a hierarchical collection of information strings.
+    /// Intended as a common way mechanism to represent tree structures for debugging (using the TreePrinter class).
+    /// A node consists of a string (represented as a StringBuilder), its collection of child nodes, and an optional Tag value.
     /// </summary>
     internal class TreeNode
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Constructs a new TreeNode with the specified text, tag value and child nodes
+        /// Constructs a new TreeNode with the specified text, tag value and child nodes
         /// </summary>
         /// <param name="text"> The initial value of the new node's text </param>
         /// <param name="children"> An optional list of initial child nodes </param>
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // 'public' properties
 
         /// <summary>
-        ///     The current text of this node.
+        /// The current text of this node.
         /// </summary>
         internal StringBuilder Text
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     The collection of child nodes for this node, which may be empty.
+        /// The collection of child nodes for this node, which may be empty.
         /// </summary>
         internal IList<TreeNode> Children
         {
@@ -76,9 +76,9 @@ namespace System.Data.Entity.Core.Common.Utils
     }
 
     /// <summary>
-    ///     Generates a formatted string from a hierarchy of tree nodes. Derived types may override
-    ///     the PreProcess, Before/AfterAppend, Print, PrintNode and PrintChildren methods to add
-    ///     specific functionality at particular points in process of building the string.
+    /// Generates a formatted string from a hierarchy of tree nodes. Derived types may override
+    /// the PreProcess, Before/AfterAppend, Print, PrintNode and PrintChildren methods to add
+    /// specific functionality at particular points in process of building the string.
     /// </summary>
     internal abstract class TreePrinter
     {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region 'Public' API
 
         /// <summary>
-        ///     Entry point method for the TreePrinter
+        /// Entry point method for the TreePrinter
         /// </summary>
         /// <param name="node"> The TreeNode instance that is the root of the tree to be printed </param>
         /// <returns> A string representation of the specified tree </returns>
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Core.Common.Utils
         // 'protected' API that may be overriden to customize printing
 
         /// <summary>
-        ///     Called once on the root of the tree before printing begins
+        /// Called once on the root of the tree before printing begins
         /// </summary>
         /// <param name="node"> The TreeNode that is the root of the tree </param>
         internal virtual void PreProcess(TreeNode node)
@@ -124,8 +124,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Called once for every node after indentation, connecting lines and the node's text value
-        ///     have been added to the output but before the line suffix (if any) has been added.
+        /// Called once for every node after indentation, connecting lines and the node's text value
+        /// have been added to the output but before the line suffix (if any) has been added.
         /// </summary>
         /// <param name="node"> The current node </param>
         /// <param name="text"> The StringBuilder into which the tree is being printed </param>
@@ -134,9 +134,9 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Called once for every node immediately after the line prefix (if any) and appropriate
-        ///     indentation and connecting lines have been added to the output but before the node's
-        ///     text value has been added.
+        /// Called once for every node immediately after the line prefix (if any) and appropriate
+        /// indentation and connecting lines have been added to the output but before the node's
+        /// text value has been added.
         /// </summary>
         /// <param name="node"> The current node </param>
         /// <param name="text"> The StringBuilder into which the tree is being printed </param>
@@ -145,7 +145,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     The recursive step of the printing process, called once for each TreeNode in the tree
+        /// The recursive step of the printing process, called once for each TreeNode in the tree
         /// </summary>
         /// <param name="text"> The StringBuilder into which the tree is being printed </param>
         /// <param name="node"> The current node that should be printed to the StringBuilder </param>
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Called to recursively visit the child nodes of the current TreeNode.
+        /// Called to recursively visit the child nodes of the current TreeNode.
         /// </summary>
         /// <param name="text"> The StringBuilder into which the tree is being printed </param>
         /// <param name="node"> The current node </param>

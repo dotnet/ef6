@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     This class contains the common methods need for an date object.
+    /// This class contains the common methods need for an date object.
     /// </summary>
     [DataContract(IsReference = true)]
     [Serializable]
@@ -28,27 +28,27 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // serialization/deserialization code.
 
         /// <summary>
-        ///     Public constant name used for change tracking
-        ///     Providing this definition allows users to use this constant instead of
-        ///     hard-coding the string. This helps to ensure the property name is correct
-        ///     and allows faster comparisons in places where we are looking for this specific string.
-        ///     Users can still use the case-sensitive string directly instead of the constant,
-        ///     it will just be slightly slower on comparison.
-        ///     Including the dash (-) character around the name ensures that this will not conflict with
-        ///     a real data property, because -EntityKey- is not a valid identifier name
+        /// Public constant name used for change tracking
+        /// Providing this definition allows users to use this constant instead of
+        /// hard-coding the string. This helps to ensure the property name is correct
+        /// and allows faster comparisons in places where we are looking for this specific string.
+        /// Users can still use the case-sensitive string directly instead of the constant,
+        /// it will just be slightly slower on comparison.
+        /// Including the dash (-) character around the name ensures that this will not conflict with
+        /// a real data property, because -EntityKey- is not a valid identifier name
         /// </summary>
         public const string EntityKeyPropertyName = "-EntityKey-";
 
         #region INotifyPropertyChanged Members
 
         /// <summary>
-        ///     Notification that a property has been changed.
+        /// Notification that a property has been changed.
         /// </summary>
         /// <remarks>
-        ///     The PropertyChanged event can indicate all properties on the
-        ///     object have changed by using either a null reference
-        ///     (Nothing in Visual Basic) or String.Empty as the property name
-        ///     in the PropertyChangedEventArgs.
+        /// The PropertyChanged event can indicate all properties on the
+        /// object have changed by using either a null reference
+        /// (Nothing in Visual Basic) or String.Empty as the property name
+        /// in the PropertyChangedEventArgs.
         /// </remarks>
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,13 +58,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region INotifyPropertyChanging Members
 
         /// <summary>
-        ///     Notification that a property is about to be changed.
+        /// Notification that a property is about to be changed.
         /// </summary>
         /// <remarks>
-        ///     The PropertyChanging event can indicate all properties on the
-        ///     object are changing by using either a null reference
-        ///     (Nothing in Visual Basic) or String.Empty as the property name
-        ///     in the PropertyChangingEventArgs.
+        /// The PropertyChanging event can indicate all properties on the
+        /// object are changing by using either a null reference
+        /// (Nothing in Visual Basic) or String.Empty as the property name
+        /// in the PropertyChangingEventArgs.
         /// </remarks>
         [field: NonSerialized]
         public event PropertyChangingEventHandler PropertyChanging;
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region Protected Overrideable
 
         /// <summary>
-        ///     Raises the <see cref="E:System.Data.Entity.Core.Objects.DataClasses.StructuralObject.PropertyChanged" /> event.
+        /// Raises the <see cref="E:System.Data.Entity.Core.Objects.DataClasses.StructuralObject.PropertyChanged" /> event.
         /// </summary>
         /// <param name="property">The name of the changed property.</param>
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Raises the <see cref="E:System.Data.Entity.Core.Objects.DataClasses.StructuralObject.PropertyChanging" /> event.
+        /// Raises the <see cref="E:System.Data.Entity.Core.Objects.DataClasses.StructuralObject.PropertyChanging" /> event.
         /// </summary>
         /// <param name="property">The name of the property changing.</param>
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Returns the minimum date time value supported by the data source.</summary>
         /// <returns>
-        ///     A <see cref="T:System.DateTime" /> value that is the minimum date time that is supported by the data source.
+        /// A <see cref="T:System.DateTime" /> value that is the minimum date time that is supported by the data source.
         /// </returns>
         protected static DateTime DefaultDateTimeValue()
         {
@@ -136,9 +136,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Returns a complex type for the specified property.</summary>
         /// <remarks>
-        ///     Unlike most of the other helper methods in this class, this one is not static
-        ///     because it references the SetValidValue for complex objects, which is also not static
-        ///     because it needs a reference to this.
+        /// Unlike most of the other helper methods in this class, this one is not static
+        /// because it references the SetValidValue for complex objects, which is also not static
+        /// because it needs a reference to this.
         /// </remarks>        
         /// <returns>A complex type object for the property.</returns>
         /// <param name="currentValue">A complex object that inherits from complex object.</param>
@@ -160,9 +160,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity
-        ///     whenever a change is about to be made to a property of the
-        ///     ComplexObject so that the change can be forwarded to the change tracker.
+        /// This method is called by a ComplexObject contained in this Entity
+        /// whenever a change is about to be made to a property of the
+        /// ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
         /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
@@ -171,9 +171,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string entityMemberName, ComplexObject complexObject, string complexMemberName);
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity
-        ///     whenever a change has been made to a property of the
-        ///     ComplexObject so that the change can be forwarded to the change tracker.
+        /// This method is called by a ComplexObject contained in this Entity
+        /// whenever a change has been made to a property of the
+        /// ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
         /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             string entityMemberName, ComplexObject complexObject, string complexMemberName);
 
         /// <summary>
-        ///     Determines whether the structural object is attached to a change tracker or not
+        /// Determines whether the structural object is attached to a change tracker or not
         /// </summary>
         internal abstract bool IsChangeTracked { get; }
 
@@ -208,7 +208,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Returns a copy of the current byte value.</summary>
         /// <returns>
-        ///     A copy of the current <see cref="T:System.Byte" /> value.
+        /// A copy of the current <see cref="T:System.Byte" /> value.
         /// </returns>
         /// <param name="currentValue">The current byte array value.</param>
         protected internal static byte[] GetValidValue(byte[] currentValue)
@@ -221,10 +221,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte[]" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte[]" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Byte" /> value being validated.
+        /// The <see cref="T:System.Byte" /> value being validated.
         /// </returns>
         /// <param name="value">The value passed into the property setter.</param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
@@ -244,10 +244,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte[]" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte[]" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Byte" /> value being set.
+        /// A <see cref="T:System.Byte" /> value being set.
         /// </returns>
         /// <param name="value">The value being set.</param>
         /// <param name="isNullable">Indicates whether the property is nullable.</param>
@@ -257,10 +257,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Boolean" /> value being set.
+        /// The <see cref="T:System.Boolean" /> value being set.
         /// </returns>
         /// <param name="value">The Boolean value.</param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
@@ -272,10 +272,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Boolean" /> value being set.
+        /// The <see cref="T:System.Boolean" /> value being set.
         /// </returns>
         /// <param name="value">The Boolean value.</param>
         protected internal static bool SetValidValue(bool value)
@@ -285,13 +285,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Boolean" /> value being set.
+        /// The nullable <see cref="T:System.Boolean" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Boolean" /> value.
+        /// The nullable <see cref="T:System.Boolean" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -302,13 +302,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Boolean" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Boolean" /> value being set.
+        /// The nullable <see cref="T:System.Boolean" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Boolean" /> value.
+        /// The nullable <see cref="T:System.Boolean" /> value.
         /// </param>
         protected internal static bool? SetValidValue(bool? value)
         {
@@ -317,13 +317,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Byte" /> that is set.
+        /// A <see cref="T:System.Byte" /> that is set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Byte" /> value.
+        /// The <see cref="T:System.Byte" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -334,10 +334,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Byte" /> value that is set.
+        /// The <see cref="T:System.Byte" /> value that is set.
         /// </returns>
         /// <param name="value">The value that is being validated.</param>
         protected internal static byte SetValidValue(byte value)
@@ -347,13 +347,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Byte" /> value being set.
+        /// The nullable <see cref="T:System.Byte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Byte" /> value.
+        /// The nullable <see cref="T:System.Byte" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -364,13 +364,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Byte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Byte" /> value being set.
+        /// The nullable <see cref="T:System.Byte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Byte" /> value.
+        /// The nullable <see cref="T:System.Byte" /> value.
         /// </param>
         protected internal static byte? SetValidValue(byte? value)
         {
@@ -379,13 +379,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.SByte" /> value being set.
+        /// The <see cref="T:System.SByte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.SByte" /> value.
+        /// The <see cref="T:System.SByte" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -397,13 +397,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.SByte" /> value being set.
+        /// The <see cref="T:System.SByte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.SByte" /> value.
+        /// The <see cref="T:System.SByte" /> value.
         /// </param>
         [CLSCompliant(false)]
         protected internal static sbyte SetValidValue(sbyte value)
@@ -413,13 +413,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.SByte" /> value being set.
+        /// The nullable <see cref="T:System.SByte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.SByte" /> value.
+        /// The nullable <see cref="T:System.SByte" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -431,13 +431,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.SByte" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.SByte" /> value being set.
+        /// The nullable <see cref="T:System.SByte" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.SByte" /> value.
+        /// The nullable <see cref="T:System.SByte" /> value.
         /// </param>
         [CLSCompliant(false)]
         protected internal static sbyte? SetValidValue(sbyte? value)
@@ -447,13 +447,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.DateTime" /> value being set.
+        /// The <see cref="T:System.DateTime" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.DateTime" /> value.
+        /// The <see cref="T:System.DateTime" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -464,13 +464,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.DateTime" /> value being set.
+        /// The <see cref="T:System.DateTime" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.DateTime" /> value.
+        /// The <see cref="T:System.DateTime" /> value.
         /// </param>
         protected internal static DateTime SetValidValue(DateTime value)
         {
@@ -479,13 +479,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.DateTime" /> value being set.
+        /// The nullable <see cref="T:System.DateTime" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.DateTime" /> value.
+        /// The nullable <see cref="T:System.DateTime" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -496,13 +496,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTime" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.DateTime" /> value being set.
+        /// The nullable <see cref="T:System.DateTime" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.DateTime" /> value.
+        /// The nullable <see cref="T:System.DateTime" /> value.
         /// </param>
         protected internal static DateTime? SetValidValue(DateTime? value)
         {
@@ -511,13 +511,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.TimeSpan" /> value being set.
+        /// The <see cref="T:System.TimeSpan" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.TimeSpan" /> value.
+        /// The <see cref="T:System.TimeSpan" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -528,13 +528,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.TimeSpan" /> value being set.
+        /// The <see cref="T:System.TimeSpan" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.TimeSpan" /> value.
+        /// The <see cref="T:System.TimeSpan" /> value.
         /// </param>
         protected internal static TimeSpan SetValidValue(TimeSpan value)
         {
@@ -543,13 +543,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.TimeSpan" /> value being set.
+        /// The nullable <see cref="T:System.TimeSpan" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.TimeSpan" /> value.
+        /// The nullable <see cref="T:System.TimeSpan" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -560,13 +560,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.TimeSpan" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.TimeSpan" /> value being set.
+        /// The nullable <see cref="T:System.TimeSpan" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.TimeSpan" /> value.
+        /// The nullable <see cref="T:System.TimeSpan" /> value.
         /// </param>
         protected internal static TimeSpan? SetValidValue(TimeSpan? value)
         {
@@ -575,13 +575,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.DateTimeOffset" /> value being set.
+        /// The <see cref="T:System.DateTimeOffset" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.DateTimeOffset" /> value.
+        /// The <see cref="T:System.DateTimeOffset" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -592,13 +592,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.DateTimeOffset" /> value being set.
+        /// A <see cref="T:System.DateTimeOffset" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.DateTimeOffset" /> value.
+        /// The <see cref="T:System.DateTimeOffset" /> value.
         /// </param>
         protected internal static DateTimeOffset SetValidValue(DateTimeOffset value)
         {
@@ -607,13 +607,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.DateTimeOffset" /> value being set.
+        /// The <see cref="T:System.DateTimeOffset" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.DateTimeOffset" /> value.
+        /// The <see cref="T:System.DateTimeOffset" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -624,13 +624,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.DateTimeOffset" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.DateTimeOffset" /> value being set.
+        /// The nullable <see cref="T:System.DateTimeOffset" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.DateTimeOffset" /> value.
+        /// The nullable <see cref="T:System.DateTimeOffset" /> value.
         /// </param>
         protected internal static DateTimeOffset? SetValidValue(DateTimeOffset? value)
         {
@@ -639,13 +639,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Decimal" /> value being set.
+        /// The <see cref="T:System.Decimal" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Decimal" /> value.
+        /// The <see cref="T:System.Decimal" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -656,13 +656,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Decimal" /> value being set.
+        /// The <see cref="T:System.Decimal" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Decimal" /> value.
+        /// The <see cref="T:System.Decimal" /> value.
         /// </param>
         protected internal static Decimal SetValidValue(Decimal value)
         {
@@ -671,13 +671,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Decimal" /> value being set.
+        /// The nullable <see cref="T:System.Decimal" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Decimal" /> value.
+        /// The nullable <see cref="T:System.Decimal" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -688,13 +688,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Decimal" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Decimal" /> value being set.
+        /// The nullable <see cref="T:System.Decimal" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Decimal" /> value.
+        /// The nullable <see cref="T:System.Decimal" /> value.
         /// </param>
         protected internal static decimal? SetValidValue(decimal? value)
         {
@@ -703,13 +703,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Double" /> value being set.
+        /// The <see cref="T:System.Double" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Double" /> value.
+        /// The <see cref="T:System.Double" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -720,13 +720,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Double" /> value being set.
+        /// The <see cref="T:System.Double" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Double" /> value.
+        /// The <see cref="T:System.Double" /> value.
         /// </param>
         protected internal static double SetValidValue(double value)
         {
@@ -735,13 +735,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Double" /> value being set.
+        /// The nullable <see cref="T:System.Double" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Double" /> value.
+        /// The nullable <see cref="T:System.Double" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -752,13 +752,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Double" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Double" /> value being set.
+        /// The nullable <see cref="T:System.Double" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Double" /> value.
+        /// The nullable <see cref="T:System.Double" /> value.
         /// </param>
         protected internal static double? SetValidValue(double? value)
         {
@@ -768,10 +768,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Makes sure the Single value being set for a property is valid.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Single" /> value being set.
+        /// The <see cref="T:System.Single" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Single" /> value.
+        /// The <see cref="T:System.Single" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -783,10 +783,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Makes sure the Single value being set for a property is valid.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Single" /> value being set.
+        /// The <see cref="T:System.Single" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Single" /> value.
+        /// The <see cref="T:System.Single" /> value.
         /// </param>
         protected internal static float SetValidValue(Single value)
         {
@@ -795,13 +795,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Single" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Single" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Single" /> value being set.
+        /// The nullable <see cref="T:System.Single" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Single" /> value.
+        /// The nullable <see cref="T:System.Single" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -812,13 +812,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Single" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Single" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Single" /> value being set.
+        /// The nullable <see cref="T:System.Single" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Single" /> value.
+        /// The nullable <see cref="T:System.Single" /> value.
         /// </param>
         protected internal static float? SetValidValue(float? value)
         {
@@ -827,13 +827,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Guid" /> value being set.
+        /// The <see cref="T:System.Guid" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Guid" /> value.
+        /// The <see cref="T:System.Guid" /> value.
         /// </param>
         /// <param name="propertyName">Name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -844,13 +844,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Guid" /> value being set.
+        /// The <see cref="T:System.Guid" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Guid" /> value.
+        /// The <see cref="T:System.Guid" /> value.
         /// </param>
         protected internal static Guid SetValidValue(Guid value)
         {
@@ -859,13 +859,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Guid" /> value being set.
+        /// The nullable <see cref="T:System.Guid" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Guid" /> value.
+        /// The nullable <see cref="T:System.Guid" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -876,13 +876,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Guid" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Guid" /> value being set.
+        /// The nullable <see cref="T:System.Guid" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Guid" /> value.
+        /// The nullable <see cref="T:System.Guid" /> value.
         /// </param>
         protected internal static Guid? SetValidValue(Guid? value)
         {
@@ -891,13 +891,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int16" /> value being set.
+        /// The <see cref="T:System.Int16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int16" /> value.
+        /// The <see cref="T:System.Int16" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -908,13 +908,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int16" /> value being set.
+        /// The <see cref="T:System.Int16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int16" /> value.
+        /// The <see cref="T:System.Int16" /> value.
         /// </param>
         protected internal static Int16 SetValidValue(Int16 value)
         {
@@ -923,13 +923,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int16" /> value being set.
+        /// The nullable <see cref="T:System.Int16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int16" /> value.
+        /// The nullable <see cref="T:System.Int16" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -940,13 +940,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int16" /> value being set.
+        /// The nullable <see cref="T:System.Int16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int16" /> value.
+        /// The nullable <see cref="T:System.Int16" /> value.
         /// </param>
         protected internal static short? SetValidValue(short? value)
         {
@@ -955,13 +955,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int32" /> value being set.
+        /// The <see cref="T:System.Int32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int32" /> value.
+        /// The <see cref="T:System.Int32" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -972,13 +972,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int32" /> value being set.
+        /// The <see cref="T:System.Int32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int32" /> value.
+        /// The <see cref="T:System.Int32" /> value.
         /// </param>
         protected internal static Int32 SetValidValue(Int32 value)
         {
@@ -987,13 +987,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int32" /> value being set.
+        /// The nullable <see cref="T:System.Int32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int32" /> value.
+        /// The nullable <see cref="T:System.Int32" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1004,13 +1004,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int32" /> value being set.
+        /// The nullable <see cref="T:System.Int32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int32" /> value.
+        /// The nullable <see cref="T:System.Int32" /> value.
         /// </param>
         protected internal static int? SetValidValue(int? value)
         {
@@ -1019,13 +1019,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int64" /> value being set.
+        /// The <see cref="T:System.Int64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int64" /> value.
+        /// The <see cref="T:System.Int64" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1036,13 +1036,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Int64" /> value being set.
+        /// The <see cref="T:System.Int64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Int64" /> value.
+        /// The <see cref="T:System.Int64" /> value.
         /// </param>
         protected internal static Int64 SetValidValue(Int64 value)
         {
@@ -1051,13 +1051,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int64" /> value being set.
+        /// The nullable <see cref="T:System.Int64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int64" /> value.
+        /// The nullable <see cref="T:System.Int64" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1068,13 +1068,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.Int64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The nullable <see cref="T:System.Int64" /> value being set.
+        /// The nullable <see cref="T:System.Int64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The nullable <see cref="T:System.Int64" /> value.
+        /// The nullable <see cref="T:System.Int64" /> value.
         /// </param>
         protected internal static long? SetValidValue(long? value)
         {
@@ -1083,13 +1083,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt16" /> value being set.
+        /// The <see cref="T:System.UInt16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt16" /> value.
+        /// The <see cref="T:System.UInt16" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1101,13 +1101,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt16" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt16" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt16" /> value being set.
+        /// The <see cref="T:System.UInt16" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt16" /> value.
+        /// The <see cref="T:System.UInt16" /> value.
         /// </param>
         [CLSCompliant(false)]
         protected internal static UInt16 SetValidValue(UInt16 value)
@@ -1139,13 +1139,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt32" /> value being set.
+        /// The <see cref="T:System.UInt32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt32" /> value.
+        /// The <see cref="T:System.UInt32" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1157,13 +1157,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt32" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt32" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt32" /> value being set.
+        /// The <see cref="T:System.UInt32" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt32" /> value.
+        /// The <see cref="T:System.UInt32" /> value.
         /// </param>
         [CLSCompliant(false)]
         protected internal static UInt32 SetValidValue(UInt32 value)
@@ -1195,13 +1195,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt64" /> value being set.
+        /// The <see cref="T:System.UInt64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt64" /> value.
+        /// The <see cref="T:System.UInt64" /> value.
         /// </param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "propertyName")]
@@ -1213,13 +1213,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.UInt64" /> value being set.
+        /// The <see cref="T:System.UInt64" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.UInt64" /> value.
+        /// The <see cref="T:System.UInt64" /> value.
         /// </param>
         [CLSCompliant(false)]
         protected internal static UInt64 SetValidValue(UInt64 value)
@@ -1229,7 +1229,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>The nullable UInt64 value being set.</returns>
         /// <param name="value">The nullable UInt64 value.</param>
@@ -1243,7 +1243,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
+        /// Makes sure the <see cref="T:System.UInt64" /> value being set for a property is valid.
         /// </summary>
         /// <returns>The nullable UInt64 value being set.</returns>
         /// <param name="value">The nullable UInt64 value.</param>
@@ -1274,7 +1274,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Validates that the property is not null, and throws if it is.</summary>
         /// <returns>
-        ///     The validated <see cref="T:System.String" /> value.
+        /// The validated <see cref="T:System.String" /> value.
         /// </returns>
         /// <param name="value">The string value to be checked.</param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
@@ -1285,10 +1285,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Validates that the property is not null, and throws if it is.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value being set.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value to be checked.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value to be checked.
         /// </param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
         /// <param name="propertyName">Name of the property that is being validated.</param>
@@ -1307,10 +1307,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Validates that the property is not null, and throws if it is.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value being set.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value to be checked.
+        /// <see cref="T:System.Data.Entity.Spatial.DbGeography" /> value to be checked.
         /// </param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
         /// <exception cref="T:System.Data.ConstraintException">The value is null for a non-nullable property.</exception>
@@ -1321,10 +1321,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Validates that the property is not null, and throws if it is.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value being set.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value to be checked.
+        /// <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value to be checked.
         /// </param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
         /// <param name="propertyName">The name of the property that is being validated.</param>
@@ -1343,10 +1343,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Validates that the property is not null, and throws if it is.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value being set.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value being set.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value to be checked.
+        /// The <see cref="T:System.Data.Entity.Spatial.DbGeometry" /> value to be checked.
         /// </param>
         /// <param name="isNullable">Flag indicating if this property is allowed to be null.</param>
         /// <exception cref="T:System.Data.ConstraintException">The value is null for a non-nullable property.</exception>

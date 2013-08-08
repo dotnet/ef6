@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents an enumeration type that has a reference to the backing CLR type.
+    /// Represents an enumeration type that has a reference to the backing CLR type.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     internal sealed class ClrEnumType : EnumType
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _cspaceTypeName;
 
         /// <summary>
-        ///     Initializes a new instance of ClrEnumType class with properties from the CLR type.
+        /// Initializes a new instance of ClrEnumType class with properties from the CLR type.
         /// </summary>
         /// <param name="clrType"> The CLR type to construct from. </param>
         /// <param name="cspaceNamespaceName"> CSpace namespace name. </param>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the clr type backing this enum type.
+        /// Gets the clr type backing this enum type.
         /// </summary>
         internal override Type ClrType
         {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the full CSpaceTypeName for this enum type.
+        /// Get the full CSpaceTypeName for this enum type.
         /// </summary>
         internal string CSpaceTypeName
         {

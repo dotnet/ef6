@@ -6,15 +6,15 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a foreign key constraint being dropped from a table.
+    /// Represents a foreign key constraint being dropped from a table.
     /// </summary>
     public class DropForeignKeyOperation : ForeignKeyOperation
     {
         private readonly AddForeignKeyOperation _inverse;
 
         /// <summary>
-        ///     Initializes a new instance of the DropForeignKeyOperation class.
-        ///     The PrincipalTable, DependentTable and DependentColumns properties should also be populated.
+        /// Initializes a new instance of the DropForeignKeyOperation class.
+        /// The PrincipalTable, DependentTable and DependentColumns properties should also be populated.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Initializes a new instance of the DropForeignKeyOperation class.
+        /// Initializes a new instance of the DropForeignKeyOperation class.
         /// </summary>
         /// <param name="inverse"> The operation that represents reverting dropping the foreign key constraint. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation to drop the associated index on the foreign key column(s).
+        /// Gets an operation to drop the associated index on the foreign key column(s).
         /// </summary>
         /// <returns> An operation to drop the index. </returns>
         public virtual DropIndexOperation CreateDropIndexOperation()
@@ -55,9 +55,9 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that represents reverting dropping the foreign key constraint.
-        ///     The inverse cannot be automatically calculated,
-        ///     if it was not supplied to the constructor this property will return null.
+        /// Gets an operation that represents reverting dropping the foreign key constraint.
+        /// The inverse cannot be automatically calculated,
+        /// if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse
         {

@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a <see cref="RelationshipMultiplicity"/> from a string
+        /// Gets a <see cref="RelationshipMultiplicity"/> from a string
         /// </summary>
         /// <param name="value"> string containing multiplicity definition </param>
         /// <param name="multiplicity"> multiplicity value (-1 if there were errors) </param>

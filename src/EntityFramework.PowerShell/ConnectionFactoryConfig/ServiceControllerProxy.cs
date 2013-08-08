@@ -6,22 +6,22 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.ServiceProcess;
 
     /// <summary>
-    ///     Acts as a thin wrapper around a <see cref="ServiceController" /> instance such that uses of
-    ///     the ServiceController can be mocked.
+    /// Acts as a thin wrapper around a <see cref="ServiceController" /> instance such that uses of
+    /// the ServiceController can be mocked.
     /// </summary>
     internal class ServiceControllerProxy : IDisposable
     {
         private readonly ServiceController _controller;
 
         /// <summary>
-        ///     For mocking.
+        /// For mocking.
         /// </summary>
         protected ServiceControllerProxy()
         {
         }
 
         /// <summary>
-        ///     Constructs a proxy around a real <see cref="ServiceController" />.
+        /// Constructs a proxy around a real <see cref="ServiceController" />.
         /// </summary>
         public ServiceControllerProxy(ServiceController controller)
         {

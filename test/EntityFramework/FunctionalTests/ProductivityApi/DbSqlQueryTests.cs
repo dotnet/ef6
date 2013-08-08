@@ -15,8 +15,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    ///     Functional tests for DbSqlQuery and other raw SQL functionality. 
-    ///     Unit tests also exist in the unit tests project.
+    /// Functional tests for DbSqlQuery and other raw SQL functionality. 
+    /// Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbSqlQueryTests : FunctionalTestBase
     {

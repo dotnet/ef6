@@ -12,8 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Configures the table and column mapping for an entity type or a sub-set of properties from an entity type.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Configures the table and column mapping for an entity type or a sub-set of properties from an entity type.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     /// <typeparam name="TEntityType"> The entity type to be mapped. </typeparam>
     public class EntityMappingConfiguration<TEntityType>
@@ -40,9 +40,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the properties that will be included in this mapping fragment.
-        ///     If this method is not called then all properties that have not yet been
-        ///     included in a mapping fragment will be configured.
+        /// Configures the properties that will be included in this mapping fragment.
+        /// If this method is not called then all properties that have not yet been
+        /// included in a mapping fragment will be configured.
         /// </summary>
         /// <typeparam name="TObject"> An anonymous type including the properties to be mapped. </typeparam>
         /// <param name="propertiesExpression"> A lambda expression to an anonymous type that contains the properties to be mapped. C#: t => new { t.Id, t.Property1, t.Property2 } VB.Net: Function(t) New With { p.Id, t.Property1, t.Property2 } </param>
@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.struct" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.struct" /> property that is included in this mapping fragment.
         /// </summary>
         /// <typeparam name="T"> The type of the property being configured. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -73,7 +73,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.struct?" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.struct?" /> property that is included in this mapping fragment.
         /// </summary>
         /// <typeparam name="T"> The type of the property being configured. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -89,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:DbGeometry" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:DbGeometry" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -103,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:DbGeography" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:DbGeography" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -117,7 +117,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.string" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.string" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -130,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.byte[]" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.byte[]" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -143,7 +143,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.decimal" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.decimal" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.decimal?" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.decimal?" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -169,7 +169,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.DateTime" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.DateTime" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -182,7 +182,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.DateTime?" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.DateTime?" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -195,7 +195,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.DateTimeOffset" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.DateTimeOffset" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -209,7 +209,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.DateTimeOffset?" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.DateTimeOffset?" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -223,7 +223,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.TimeSpan" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.TimeSpan" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -236,7 +236,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a <see cref="T:System.TimeSpan?" /> property that is included in this mapping fragment.
+        /// Configures a <see cref="T:System.TimeSpan?" /> property that is included in this mapping fragment.
         /// </summary>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -261,10 +261,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Re-maps all properties inherited from base types.
-        ///     When configuring a derived type to be mapped to a separate table this will cause all properties to
-        ///     be included in the table rather than just the non-inherited properties. This is known as
-        ///     Table per Concrete Type (TPC) mapping.
+        /// Re-maps all properties inherited from base types.
+        /// When configuring a derived type to be mapped to a separate table this will cause all properties to
+        /// be included in the table rather than just the non-inherited properties. This is known as
+        /// Table per Concrete Type (TPC) mapping.
         /// </summary>
         public void MapInheritedProperties()
         {
@@ -272,7 +272,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name to be mapped to.
+        /// Configures the table name to be mapped to.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         public void ToTable(string tableName)
@@ -285,7 +285,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name and schema to be mapped to.
+        /// Configures the table name and schema to be mapped to.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         /// <param name="schemaName"> Schema of the table. </param>
@@ -297,7 +297,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator column used to differentiate between types in an inheritance hierarchy.
+        /// Configures the discriminator column used to differentiate between types in an inheritance hierarchy.
         /// </summary>
         /// <param name="discriminator"> The name of the discriminator column. </param>
         /// <returns> A configuration object to further configure the discriminator column and values. </returns>
@@ -309,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator condition used to differentiate between types in an inheritance hierarchy.
+        /// Configures the discriminator condition used to differentiate between types in an inheritance hierarchy.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property being used to discriminate between types. </typeparam>
         /// <param name="property"> A lambda expression representing the property being used to discriminate between types. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>

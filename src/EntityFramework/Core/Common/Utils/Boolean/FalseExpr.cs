@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     /// <summary>
-    ///     Boolean expression that evaluates to false.
+    /// Boolean expression that evaluates to false.
     /// </summary>
     /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal sealed class FalseExpr<T_Identifier> : BoolExpr<T_Identifier>
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Gets the one instance of FalseExpr
+        /// Gets the one instance of FalseExpr
         /// </summary>
         internal static FalseExpr<T_Identifier> Value
         {

@@ -11,10 +11,10 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq;
 
     /// <summary>
-    ///     This is an abstract base class use to represent a scalar or complex property, or a navigation property
-    ///     of an entity.  Scalar and complex properties use the derived class <see cref="DbPropertyEntry{TEntity, TProperty}" />,
-    ///     reference navigation properties use the derived class <see cref="DbReferenceEntry{TEntity, TProperty}" />, and collection
-    ///     navigation properties use the derived class <see cref="DbCollectionEntry{TEntity, TProperty}" />.
+    /// This is an abstract base class use to represent a scalar or complex property, or a navigation property
+    /// of an entity.  Scalar and complex properties use the derived class <see cref="DbPropertyEntry{TEntity, TProperty}" />,
+    /// reference navigation properties use the derived class <see cref="DbReferenceEntry{TEntity, TProperty}" />, and collection
+    /// navigation properties use the derived class <see cref="DbCollectionEntry{TEntity, TProperty}" />.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity to which this property belongs. </typeparam>
     /// <typeparam name="TProperty"> The type of the property. </typeparam>
@@ -24,12 +24,12 @@ namespace System.Data.Entity.Infrastructure
         #region  Factory methods
 
         /// <summary>
-        ///     Creates a <see cref="DbMemberEntry{TEntity,TProperty}" /> from information in the given
-        ///     <see
-        ///         cref="InternalMemberEntry" />
-        ///     .
-        ///     This method will create an instance of the appropriate subclass depending on the metadata contained
-        ///     in the InternalMemberEntry instance.
+        /// Creates a <see cref="DbMemberEntry{TEntity,TProperty}" /> from information in the given
+        /// <see
+        ///     cref="InternalMemberEntry" />
+        /// .
+        /// This method will create an instance of the appropriate subclass depending on the metadata contained
+        /// in the InternalMemberEntry instance.
         /// </summary>
         /// <param name="internalMemberEntry"> The internal member entry. </param>
         /// <returns> The new entry. </returns>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Infrastructure
         #region Current values
 
         /// <summary>
-        ///     Gets or sets the current value of this property.
+        /// Gets or sets the current value of this property.
         /// </summary>
         /// <value> The current value. </value>
         public abstract TProperty CurrentValue { get; set; }
@@ -63,8 +63,8 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbMemberEntry" /> class for
-        ///     the property represented by this object.
+        /// Returns a new instance of the non-generic <see cref="DbMemberEntry" /> class for
+        /// the property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Infrastructure
         #region Internal entry access
 
         /// <summary>
-        ///     Gets the underlying <see cref="InternalMemberEntry" />.
+        /// Gets the underlying <see cref="InternalMemberEntry" />.
         /// </summary>
         /// <value> The internal member entry. </value>
         internal abstract InternalMemberEntry InternalMemberEntry { get; }
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Infrastructure
         #region Back references
 
         /// <summary>
-        ///     The <see cref="DbEntityEntry{TEntity}" /> to which this member belongs.
+        /// The <see cref="DbEntityEntry{TEntity}" /> to which this member belongs.
         /// </summary>
         /// <value> An entry for the entity that owns this member. </value>
         public abstract DbEntityEntry<TEntity> EntityEntry { get; }
@@ -99,10 +99,10 @@ namespace System.Data.Entity.Infrastructure
         #region Validation
 
         /// <summary>
-        ///     Validates this property.
+        /// Validates this property.
         /// </summary>
         /// <returns>
-        ///     Collection of <see cref="DbValidationError" /> objects. Never null. If the entity is valid the collection will be empty.
+        /// Collection of <see cref="DbValidationError" /> objects. Never null. If the entity is valid the collection will be empty.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public ICollection<DbValidationError> GetValidationErrors()

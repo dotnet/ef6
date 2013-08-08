@@ -8,9 +8,9 @@ namespace System.Data.Entity
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An implementation of IDatabaseInitializer that will recreate and optionally re-seed the
-    ///     database only if the database does not exist.
-    ///     To seed the database, create a derived class and override the Seed method.
+    /// An implementation of IDatabaseInitializer that will recreate and optionally re-seed the
+    /// database only if the database does not exist.
+    /// To seed the database, create a derived class and override the Seed method.
     /// </summary>
     /// <typeparam name="TContext"> The type of the context. </typeparam>
     public class CreateDatabaseIfNotExists<TContext> : IDatabaseInitializer<TContext>
@@ -37,7 +37,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Executes the strategy to initialize the database for the given context.
+        /// Executes the strategy to initialize the database for the given context.
         /// </summary>
         /// <param name="context"> The context. </param>
         public void InitializeDatabase(TContext context)
@@ -84,8 +84,8 @@ namespace System.Data.Entity
         #region Seeding methods
 
         /// <summary>
-        ///     A method that should be overridden to actually add data to the context for seeding.
-        ///     The default implementation does nothing.
+        /// A method that should be overridden to actually add data to the context for seeding.
+        /// The default implementation does nothing.
         /// </summary>
         /// <param name="context"> The context to seed. </param>
         protected virtual void Seed(TContext context)

@@ -87,7 +87,7 @@ namespace CmdLine
         public string Program { get; set; }
 
         /// <summary>
-        ///     Returns a CommandLineArgumentsAttribute
+        /// Returns a CommandLineArgumentsAttribute
         /// </summary>
         /// <param name="member"> </param>
         /// <returns> </returns>

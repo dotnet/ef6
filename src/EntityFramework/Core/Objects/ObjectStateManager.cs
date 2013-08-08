@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Maintains object state and identity management for entity type instances and relationship instances.
+    /// Maintains object state and identity management for entity type instances and relationship instances.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ObjectStateManager : IEntityStateManager
@@ -82,10 +82,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> class.
         /// </summary>
         /// <param name="metadataWorkspace">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />, which supplies mapping and metadata information.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />, which supplies mapping and metadata information.
         /// </param>
         [CLSCompliant(false)]
         public ObjectStateManager(MetadataWorkspace metadataWorkspace)
@@ -143,13 +143,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this state manager.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this state manager.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// .
         /// </returns>
         [CLSCompliant(false)]
         public virtual MetadataWorkspace MetadataWorkspace
@@ -193,7 +193,7 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         /// <summary>
-        ///     Adds an object stub to the cache.
+        /// Adds an object stub to the cache.
         /// </summary>
         /// <param name="entityKey"> the key of the object to add </param>
         /// <param name="entitySet"> the entity set of the given object </param>
@@ -223,10 +223,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Validates that the proxy type being attached to the context matches the proxy type
-        ///     that would be generated for the given CLR type for the currently loaded metadata.
-        ///     This prevents a proxy for one set of metadata being incorrectly loaded into a context
-        ///     which has different metadata.
+        /// Validates that the proxy type being attached to the context matches the proxy type
+        /// that would be generated for the given CLR type for the currently loaded metadata.
+        /// This prevents a proxy for one set of metadata being incorrectly loaded into a context
+        /// which has different metadata.
         /// </summary>
         private void ValidateProxyType(IEntityWrapper wrappedEntity)
         {
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds an object to the ObjectStateManager.
+        /// Adds an object to the ObjectStateManager.
         /// </summary>
         /// <param name="wrappedObject"> the object to add </param>
         /// <param name="passedKey"> </param>
@@ -420,7 +420,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds an entry to the index of foreign keys that reference entities that we don't yet know about.
+        /// Adds an entry to the index of foreign keys that reference entities that we don't yet know about.
         /// </summary>
         /// <param name="foreignKey"> The foreign key found in the entry </param>
         /// <param name="entry"> The entry that contains the foreign key that was found </param>
@@ -479,8 +479,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Removes an entry to the index of foreign keys that reference entities that we don't yet know about.
-        ///     This is typically done when the entity is detached from the context.
+        /// Removes an entry to the index of foreign keys that reference entities that we don't yet know about.
+        /// This is typically done when the entity is detached from the context.
         /// </summary>
         /// <param name="foreignKey"> The foreign key found in the entry </param>
         /// <param name="entry"> The entry that contains the foreign key that was found </param>
@@ -494,9 +494,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Removes the foreign key from the index of those keys that have been found in entries
-        ///     but for which it was not possible to do fixup because the entity that the foreign key
-        ///     referenced was not in the state manager.
+        /// Removes the foreign key from the index of those keys that have been found in entries
+        /// but for which it was not possible to do fixup because the entity that the foreign key
+        /// referenced was not in the state manager.
         /// </summary>
         /// <param name="foreignKey"> The key to lookup and remove </param>
         internal virtual void RemoveForeignKeyFromIndex(EntityKey foreignKey)
@@ -505,8 +505,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets all state entries that contain the given foreign key for which we have not performed
-        ///     fixup because the state manager did not contain the entity to which the foreign key pointed.
+        /// Gets all state entries that contain the given foreign key for which we have not performed
+        /// fixup because the state manager did not contain the entity to which the foreign key pointed.
         /// </summary>
         /// <param name="foreignKey"> The key to lookup </param>
         /// <returns> The state entries that contain the key </returns>
@@ -523,13 +523,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds to index of currently tracked entities that have FK values that are conceptually
-        ///     null but not actually null because the FK properties are not nullable.
-        ///     If this index is non-empty in AcceptAllChanges or SaveChanges, then we throw.
-        ///     If AcceptChanges is called on an entity and that entity is in the index, then
-        ///     we will throw.
-        ///     Note that the index is keyed by EntityEntry reference because it's only ever used
-        ///     when we have the EntityEntry and this makes it slightly faster than using key lookup.
+        /// Adds to index of currently tracked entities that have FK values that are conceptually
+        /// null but not actually null because the FK properties are not nullable.
+        /// If this index is non-empty in AcceptAllChanges or SaveChanges, then we throw.
+        /// If AcceptChanges is called on an entity and that entity is in the index, then
+        /// we will throw.
+        /// Note that the index is keyed by EntityEntry reference because it's only ever used
+        /// when we have the EntityEntry and this makes it slightly faster than using key lookup.
         /// </summary>
         internal virtual void RememberEntryWithConceptualNull(EntityEntry entry)
         {
@@ -541,8 +541,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Checks whether or not there is some entry in the context that has any conceptually but not
-        ///     actually null FK values.
+        /// Checks whether or not there is some entry in the context that has any conceptually but not
+        /// actually null FK values.
         /// </summary>
         internal virtual bool SomeEntryWithConceptualNullExists()
         {
@@ -550,7 +550,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Checks whether the given entry has conceptually but not actually null FK values.
+        /// Checks whether the given entry has conceptually but not actually null FK values.
         /// </summary>
         internal virtual bool EntryHasConceptualNull(EntityEntry entry)
         {
@@ -558,8 +558,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Stops keeping track of an entity with conceptual nulls because the FK values have been
-        ///     really set or because the entity is leaving the context or becoming deleted.
+        /// Stops keeping track of an entity with conceptual nulls because the FK values have been
+        /// really set or because the entity is leaving the context or becoming deleted.
         /// </summary>
         internal virtual void ForgetEntryWithConceptualNull(EntityEntry entry, bool resetAllKeys)
         {
@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Upgrades an entity key entry in the cache to a a regular entity
+        /// Upgrades an entity key entry in the cache to a a regular entity
         /// </summary>
         /// <param name="keyEntry"> the key entry that exists in the state manager </param>
         /// <param name="wrappedEntity"> the object to add </param>
@@ -746,9 +746,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Performs non-generic collection or reference fixup between two entities
-        ///     This method should only be used in scenarios where we are automatically hooking up relationships for
-        ///     the user, and not in cases where they are manually setting relationships.
+        /// Performs non-generic collection or reference fixup between two entities
+        /// This method should only be used in scenarios where we are automatically hooking up relationships for
+        /// the user, and not in cases where they are manually setting relationships.
         /// </summary>
         /// <param name="mergeOption"> The MergeOption to use to decide how to resolve EntityReference conflicts </param>
         /// <param name="wrappedSource"> The entity instance on the source side of the relationship </param>
@@ -927,12 +927,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Updates the relationships between a given source entity and a collection of target entities.
-        ///     Used for full span and related end Load methods, where the following may be true:
-        ///     (a) both sides of each relationship are always full entities and not stubs
-        ///     (b) there could be multiple entities to process at once
-        ///     (c) NoTracking queries are possible.
-        ///     Not used for relationship span because although some of the logic is similar, the above are not true.
+        /// Updates the relationships between a given source entity and a collection of target entities.
+        /// Used for full span and related end Load methods, where the following may be true:
+        /// (a) both sides of each relationship are always full entities and not stubs
+        /// (b) there could be multiple entities to process at once
+        /// (c) NoTracking queries are possible.
+        /// Not used for relationship span because although some of the logic is similar, the above are not true.
         /// </summary>
         /// <param name="context"> ObjectContext to use to look up existing relationships. Using the context here instead of ObjectStateManager because for NoTracking queries we shouldn't even touch the state manager at all, so we don't want to access it until we know we are not using NoTracking. </param>
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
@@ -1087,7 +1087,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Removes relationships if necessary when a query determines that the source entity has no relationships on the server
+        /// Removes relationships if necessary when a query determines that the source entity has no relationships on the server
         /// </summary>
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
         /// <param name="associationSet"> AssociationSet for the incoming relationship </param>
@@ -1138,7 +1138,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Tries to updates one or more existing relationships for an entity, based on a given MergeOption and a target entity.
+        /// Tries to updates one or more existing relationships for an entity, based on a given MergeOption and a target entity.
         /// </summary>
         /// <param name="context"> ObjectContext to use to look up existing relationships for sourceEntity </param>
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
@@ -1407,8 +1407,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Attach entity in unchanged state (skip Added state, don't create temp key)
-        ///     It is equal (but faster) to call AddEntry(); AcceptChanges().
+        /// Attach entity in unchanged state (skip Added state, don't create temp key)
+        /// It is equal (but faster) to call AddEntry(); AcceptChanges().
         /// </summary>
         internal virtual EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet)
         {
@@ -1449,8 +1449,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Checks that the EntityKey attached to the given entity
-        ///     appropriately matches the given entity.
+        /// Checks that the EntityKey attached to the given entity
+        /// appropriately matches the given entity.
         /// </summary>
         /// <param name="wrappedEntity"> The entity whose key must be verified </param>
         /// <param name="entityKey"> </param>
@@ -1565,7 +1565,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds the given relationship cache entry to the mapping from each of its endpoint keys.
+        /// Adds the given relationship cache entry to the mapping from each of its endpoint keys.
         /// </summary>
         private void AddRelationshipToLookup(RelationshipEntry relationship)
         {
@@ -1579,7 +1579,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds the given relationship cache entry to the mapping from the given endpoint key.
+        /// Adds the given relationship cache entry to the mapping from the given endpoint key.
         /// </summary>
         private void AddRelationshipEndToLookup(EntityKey key, RelationshipEntry relationship)
         {
@@ -1591,7 +1591,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Deletes the given relationship cache entry from the mapping from each of its endpoint keys.
+        /// Deletes the given relationship cache entry from the mapping from each of its endpoint keys.
         /// </summary>
         private void DeleteRelationshipFromLookup(RelationshipEntry relationship)
         {
@@ -1604,7 +1604,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Deletes the given relationship cache entry from the mapping from the given endpoint key.
+        /// Deletes the given relationship cache entry from the mapping from the given endpoint key.
         /// </summary>
         private void DeleteRelationshipEndFromLookup(EntityKey key, RelationshipEntry relationship)
         {
@@ -1641,7 +1641,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     DeleteRelationship
+        /// DeleteRelationship
         /// </summary>
         /// <returns> The deleted entry </returns>
         internal virtual RelationshipEntry DeleteRelationship(
@@ -1658,7 +1658,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     DeleteKeyEntry
+        /// DeleteKeyEntry
         /// </summary>
         internal virtual void DeleteKeyEntry(EntityEntry keyEntry)
         {
@@ -1670,7 +1670,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Finds all relationships with the given key at one end.
+        /// Finds all relationships with the given key at one end.
         /// </summary>
         internal virtual RelationshipEntry[] CopyOfRelationshipsByKey(EntityKey key)
         {
@@ -1678,8 +1678,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Finds all relationships with the given key at one end.
-        ///     Do not use the list to add elements
+        /// Finds all relationships with the given key at one end.
+        /// Do not use the list to add elements
         /// </summary>
         internal virtual EntityEntry.RelationshipEndEnumerable FindRelationshipsByKey(EntityKey key)
         {
@@ -1760,7 +1760,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Find the ObjectStateEntry from _keylessEntityStore for an entity that doesn't implement IEntityWithKey.
+        /// Find the ObjectStateEntry from _keylessEntityStore for an entity that doesn't implement IEntityWithKey.
         /// </summary>
         private bool TryGetEntryFromKeylessStore(object entity, out EntityEntry entryRef)
         {
@@ -1786,22 +1786,22 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns a collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects for objects or relationships with the given state.
+        /// Returns a collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects for objects or relationships with the given state.
         /// </summary>
         /// <returns>
-        ///     A collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects in the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.EntityState" />
-        ///     .
+        /// A collection of <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> objects in the given
+        /// <see
+        ///     cref="T:System.Data.Entity.EntityState" />
+        /// .
         /// </returns>
         /// <param name="state">
-        ///     An <see cref="T:System.Data.Entity.EntityState" /> used to filter the returned
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     objects.
+        /// An <see cref="T:System.Data.Entity.EntityState" /> used to filter the returned
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// objects.
         /// </param>
         /// <exception cref="T:System.ArgumentException">
-        ///     When  state  is <see cref="F:System.Data.Entity.EntityState.Detached" />.
+        /// When  state  is <see cref="F:System.Data.Entity.EntityState.Detached" />.
         /// </exception>
         public virtual IEnumerable<ObjectStateEntry> GetObjectStateEntries(EntityState state)
         {
@@ -1813,7 +1813,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns all CacheEntries in the given state.
+        /// Returns all CacheEntries in the given state.
         /// </summary>
         /// <exception cref="ArgumentException">if EntityState.Detached flag is set in state</exception>
         IEnumerable<IEntityStateEntry> IEntityStateManager.GetEntityStateEntries(EntityState state)
@@ -1999,13 +1999,13 @@ namespace System.Data.Entity.Core.Objects
         #region temporary (added state) to permanent (deleted, modified, unchanged state) EntityKey fixup
 
         /// <summary>
-        ///     Performs key-fixup on the given entry, by creating a (permanent) EntityKey
-        ///     based on the current key values within the associated entity and fixing up
-        ///     all associated relationship entries.
+        /// Performs key-fixup on the given entry, by creating a (permanent) EntityKey
+        /// based on the current key values within the associated entity and fixing up
+        /// all associated relationship entries.
         /// </summary>
         /// <remarks>
-        ///     Will promote EntityEntry.IsKeyEntry and leave in _unchangedStore
-        ///     otherwise will move EntityEntry from _addedStore to _unchangedStore.
+        /// Will promote EntityEntry.IsKeyEntry and leave in _unchangedStore
+        /// otherwise will move EntityEntry from _addedStore to _unchangedStore.
         /// </remarks>
         internal virtual void FixupKey(EntityEntry entry)
         {
@@ -2115,7 +2115,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Replaces permanent EntityKey with a temporary key.  Used in N-Tier API.
+        /// Replaces permanent EntityKey with a temporary key.  Used in N-Tier API.
         /// </summary>
         internal virtual void ReplaceKeyWithTemporaryKey(EntityEntry entry)
         {
@@ -2158,10 +2158,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Resets the EntityKey for this entry.  This method is called
-        ///     as part of temporary key fixup and permanent key un-fixup. This method is necessary because it is the only
-        ///     scenario where we allow a new value to be set on a non-null EntityKey. This
-        ///     is the only place where we should be setting and clearing _inRelationshipFixup.
+        /// Resets the EntityKey for this entry.  This method is called
+        /// as part of temporary key fixup and permanent key un-fixup. This method is necessary because it is the only
+        /// scenario where we allow a new value to be set on a non-null EntityKey. This
+        /// is the only place where we should be setting and clearing _inRelationshipFixup.
         /// </summary>
         private void ResetEntityKey(EntityEntry entry, EntityKey value)
         {
@@ -2200,19 +2200,19 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         /// <summary>
-        ///     Changes state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for a specific object to the specified  entityState .
+        /// Changes state of the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for a specific object to the specified  entityState .
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the supplied  entity .
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the supplied  entity .
         /// </returns>
         /// <param name="entity">The object for which the state must be changed.</param>
         /// <param name="entityState">The new state of the object.</param>
         /// <exception cref="T:System.ArgumentNullException">When  entity  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the object is not detached and does not have an entry in the state manager
-        ///     or when you try to change the state to <see cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     from any other <see cref="T:System.Data.Entity.EntityState." />
-        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// When the object is not detached and does not have an entry in the state manager
+        /// or when you try to change the state to <see cref="F:System.Data.Entity.EntityState.Detached" />
+        /// from any other <see cref="T:System.Data.Entity.EntityState." />
+        /// or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </exception>
         public virtual ObjectStateEntry ChangeObjectState(object entity, EntityState entityState)
         {
@@ -2250,27 +2250,27 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and the name of the navigation property.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
         /// </returns>
         /// <param name="sourceEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
         /// </param>
         /// <param name="targetEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
         /// </param>
         /// <param name="navigationProperty">The name of the navigation property on  source  that returns the specified  target .</param>
         /// <param name="relationshipState">
-        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">When  source  or  target  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When trying to change the state of the relationship to a state other than 
-        ///         <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
-        ///     when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
-        ///     or when you try to change the state of the relationship to a state other than
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     when either  source  or  target  is in an <see ref="F:System.Data.Entity.EntityState.Added" /> state 
-        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value
+        /// When trying to change the state of the relationship to a state other than 
+        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        /// when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        /// or when you try to change the state of the relationship to a state other than
+        /// <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
+        /// when either  source  or  target  is in an <see ref="F:System.Data.Entity.EntityState.Added" /> state 
+        /// or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value
         /// </exception>
         public virtual ObjectStateEntry ChangeRelationshipState(
             object sourceEntity,
@@ -2291,30 +2291,30 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and a LINQ expression that defines the navigation property.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
         /// </returns>
         /// <param name="sourceEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
         /// </param>
         /// <param name="targetEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
         /// </param>
         /// <param name="navigationPropertySelector">A LINQ expression that selects the navigation property on  source  that returns the specified  target .</param>
         /// <param name="relationshipState">
-        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
         /// </param>
         /// <typeparam name="TEntity">The entity type of the  source  object.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">When  source ,  target , or  selector  is null.</exception>
         /// <exception cref="T:System.ArgumentException"> selector  is malformed or cannot return a navigation property.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When you try to change the state of the relationship to a state other than
-        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" />  or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
-        ///     when either  source  or  target  is in a
-        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
-        ///     or when you try to change the state of the relationship to a state other than
-        ///     <see  cref="F:System.Data.Entity.EntityState.Added" />  or <see  cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     when either  source  or  target  is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
-        ///     or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// When you try to change the state of the relationship to a state other than
+        /// <see cref="F:System.Data.Entity.EntityState.Deleted" />  or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        /// when either  source  or  target  is in a
+        /// <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        /// or when you try to change the state of the relationship to a state other than
+        /// <see  cref="F:System.Data.Entity.EntityState.Added" />  or <see  cref="F:System.Data.Entity.EntityState.Detached" />
+        /// when either  source  or  target  is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        /// or when  state  is not a valid <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual ObjectStateEntry ChangeRelationshipState<TEntity>(
@@ -2341,29 +2341,29 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Changes the state of the relationship between two entity objects that is specified based on the two related objects and the properties of the relationship.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the relationship that was changed.
         /// </returns>
         /// <param name="sourceEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the source entity at one end of the relationship.
         /// </param>
         /// <param name="targetEntity">
-        ///     The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
+        /// The object instance or <see cref="T:System.Data.Entity.Core.EntityKey" /> of the target entity at the other end of the relationship.
         /// </param>
         /// <param name="relationshipName">The name of the relationship.</param>
         /// <param name="targetRoleName">The role name at the  target  end of the relationship.</param>
         /// <param name="relationshipState">
-        ///     The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
+        /// The requested <see cref="T:System.Data.Entity.EntityState" /> of the specified relationship.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">When  source  or  target  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When you try to change the state of the relationship to a state other than
-        ///     <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
-        ///     when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
-        ///     or when you try to change the state of the relationship to a state other than
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     when either  source  or  target  is in an
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> state 
-        ///     or when  state  is not a valid  <see cref="T:System.Data.Entity.EntityState" /> value.
+        /// When you try to change the state of the relationship to a state other than
+        /// <see cref="F:System.Data.Entity.EntityState.Deleted" /> or <see cref="F:System.Data.Entity.EntityState.Detached" /> 
+        /// when either  source  or  target  is in a <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        /// or when you try to change the state of the relationship to a state other than
+        /// <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Detached" />
+        /// when either  source  or  target  is in an
+        /// <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        /// or when  state  is not a valid  <see cref="T:System.Data.Entity.EntityState" /> value.
         /// </exception>
         public virtual ObjectStateEntry ChangeRelationshipState(
             object sourceEntity,
@@ -2529,7 +2529,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding IEntityStateEntry for the given EntityKey.
+        /// Retrieve the corresponding IEntityStateEntry for the given EntityKey.
         /// </summary>
         /// <exception cref="ArgumentNullException">if key is null</exception>
         /// <exception cref="ArgumentException">if key is not found</exception>
@@ -2539,24 +2539,24 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship entry with the specified key.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship entry with the specified key.
         /// </summary>
         /// <returns>
-        ///     The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     .
+        /// The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// .
         /// </returns>
         /// <param name="key">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// The <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">When  key  is null.</exception>
         /// <exception cref="T:System.ArgumentException">When the specified  key  cannot be found in the state manager.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     No entity with the specified <see cref="T:System.Data.Entity.Core.EntityKey" /> exists in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     .
+        /// No entity with the specified <see cref="T:System.Data.Entity.Core.EntityKey" /> exists in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// .
         /// </exception>
         public virtual ObjectStateEntry GetObjectStateEntry(EntityKey key)
         {
@@ -2579,25 +2579,25 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified object.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified object.
         /// </summary>
         /// <returns>
-        ///     The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
-        ///     <see
-        ///         cref="T:System.Object" />
-        ///     .
+        /// The corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        /// <see
+        ///     cref="T:System.Object" />
+        /// .
         /// </returns>
         /// <param name="entity">
-        ///     The <see cref="T:System.Object" /> to which the retrieved
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     belongs.
+        /// The <see cref="T:System.Object" /> to which the retrieved
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// belongs.
         /// </param>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     No entity for the specified <see cref="T:System.Object" /> exists in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     .
+        /// No entity for the specified <see cref="T:System.Object" /> exists in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// .
         /// </exception>
         public virtual ObjectStateEntry GetObjectStateEntry(object entity)
         {
@@ -2624,28 +2624,28 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified
-        ///     <see
-        ///         cref="T:System.Object" />
-        ///     .
+        /// Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the specified
+        /// <see
+        ///     cref="T:System.Object" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A Boolean value that is true if there is a corresponding
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     for the given object; otherwise, false.
+        /// A Boolean value that is true if there is a corresponding
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// for the given object; otherwise, false.
         /// </returns>
         /// <param name="entity">
-        ///     The <see cref="T:System.Object" /> to which the retrieved
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     belongs.
+        /// The <see cref="T:System.Object" /> to which the retrieved
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// belongs.
         /// </param>
         /// <param name="entry">
-        ///     When this method returns, contains the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     This parameter is passed uninitialized.
+        /// When this method returns, contains the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// This parameter is passed uninitialized.
         /// </param>
         public virtual bool TryGetObjectStateEntry(object entity, out ObjectStateEntry entry)
         {
@@ -2667,7 +2667,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding IEntityStateEntry for the given EntityKey.
+        /// Retrieve the corresponding IEntityStateEntry for the given EntityKey.
         /// </summary>
         /// <returns> true if the corresponding IEntityStateEntry was found </returns>
         /// <exception cref="ArgumentNullException">if key is null</exception>
@@ -2685,10 +2685,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Given a key that represents an entity on the dependent side of a FK, this method attempts to return the key of the
-        ///     entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
-        ///     the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
-        ///     for it is built up from the foreign key values contained in the dependent entity.
+        /// Given a key that represents an entity on the dependent side of a FK, this method attempts to return the key of the
+        /// entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
+        /// the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
+        /// for it is built up from the foreign key values contained in the dependent entity.
         /// </summary>
         /// <param name="dependentKey"> The key of the dependent entity </param>
         /// <param name="principalRole"> The role indicating the FK to navigate </param>
@@ -2706,28 +2706,28 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship with the specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     .
+        /// Tries to retrieve the corresponding <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the object or relationship with the specified
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A Boolean value that is true if there is a corresponding
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     for the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     ; otherwise, false.
+        /// A Boolean value that is true if there is a corresponding
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// for the given
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// ; otherwise, false.
         /// </returns>
         /// <param name="key">
-        ///     The given <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// The given <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </param>
         /// <param name="entry">
-        ///     When this method returns, contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     This parameter is passed uninitialized.
+        /// When this method returns, contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> for the given
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// This parameter is passed uninitialized.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">A null (Nothing in Visual Basic) value is provided for  key .</exception>
         public virtual bool TryGetObjectStateEntry(EntityKey key, out ObjectStateEntry entry)
@@ -2772,8 +2772,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieve the corresponding EntityEntry for the given entity.
-        ///     Returns null if key is unavailable or passed entity is null.
+        /// Retrieve the corresponding EntityEntry for the given entity.
+        /// Returns null if key is unavailable or passed entity is null.
         /// </summary>
         internal virtual EntityEntry FindEntityEntry(object entity)
         {
@@ -2808,16 +2808,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
+        /// Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> for the specified object.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> for the specified object.
         /// </returns>
         /// <param name="entity">
-        ///     The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
+        /// The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
         /// </param>
         /// <exception cref="InvalidOperationException">
-        ///     The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager
+        /// The entity does not implement IEntityWithRelationships and is not tracked by this ObjectStateManager
         /// </exception>
         public virtual RelationshipManager GetRelationshipManager(object entity)
         {
@@ -2830,19 +2830,19 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
+        /// Returns the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> that is used by the specified object.
         /// </summary>
         /// <returns>
-        ///     true if a <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance was returned for the supplied  entity ; otherwise false.
+        /// true if a <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" /> instance was returned for the supplied  entity ; otherwise false.
         /// </returns>
         /// <param name="entity">
-        ///     The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
+        /// The object for which to return the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />.
         /// </param>
         /// <param name="relationshipManager">
-        ///     When this method returns, contains the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
-        ///     for the  entity .
+        /// When this method returns, contains the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
+        /// for the  entity .
         /// </param>
         public virtual bool TryGetRelationshipManager(object entity, out RelationshipManager relationshipManager)
         {
@@ -3058,8 +3058,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Removes the given cache entry from the appropriate dictionary, based on
-        ///     the given state and whether or not the entry represents a relationship.
+        /// Removes the given cache entry from the appropriate dictionary, based on
+        /// the given state and whether or not the entry represents a relationship.
         /// </summary>
         private void RemoveObjectStateEntryFromDictionary(RelationshipEntry entry, EntityState state)
         {
@@ -3104,8 +3104,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Removes the given cache entry from the appropriate dictionary, based on
-        ///     the given state and whether or not the entry represents a relationship.
+        /// Removes the given cache entry from the appropriate dictionary, based on
+        /// the given state and whether or not the entry represents a relationship.
         /// </summary>
         private void RemoveObjectStateEntryFromDictionary(EntityEntry entry, EntityState state)
         {
@@ -3167,8 +3167,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     If a corresponding StateManagerTypeMetadata exists, it is returned.
-        ///     Otherwise, a StateManagerTypeMetadata is created and cached.
+        /// If a corresponding StateManagerTypeMetadata exists, it is returned.
+        /// Otherwise, a StateManagerTypeMetadata is created and cached.
         /// </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(Type entityType, EntitySet entitySet)
         {
@@ -3188,8 +3188,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     If a corresponding StateManagerTypeMetadata exists, it is returned.
-        ///     Otherwise, a StateManagerTypeMetadata is created and cached.
+        /// If a corresponding StateManagerTypeMetadata exists, it is returned.
+        /// Otherwise, a StateManagerTypeMetadata is created and cached.
         /// </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(EdmType edmType)
         {
@@ -3210,8 +3210,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates an instance of StateManagerTypeMetadata from the given EdmType and ObjectMapping,
-        ///     and stores it in the metadata cache.  The new instance is returned.
+        /// Creates an instance of StateManagerTypeMetadata from the given EdmType and ObjectMapping,
+        /// and stores it in the metadata cache.  The new instance is returned.
         /// </summary>
         private StateManagerTypeMetadata AddStateManagerTypeMetadata(EntitySet entitySet, ObjectTypeMapping mapping)
         {
@@ -3258,7 +3258,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Mark the ObjectStateManager as disposed
+        /// Mark the ObjectStateManager as disposed
         /// </summary>
         internal virtual void Dispose()
         {
@@ -3271,11 +3271,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
-        ///     and marks appropriate ObjectStateEntry as Modified.
-        ///     For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
-        ///     The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
-        ///     and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
+        /// For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
+        /// and marks appropriate ObjectStateEntry as Modified.
+        /// For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
+        /// The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
+        /// and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
         /// </summary>
         internal virtual void DetectChanges()
         {
@@ -4018,11 +4018,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Flag that is set when we are processing an FK setter for a full proxy.
-        ///     This is used to determine whether or not we will attempt to call out into FK
-        ///     setters and null references during fixup.
-        ///     The value of this property is either null if the code is not executing an
-        ///     FK setter, or points to the entity on which the FK setter has been called.
+        /// Flag that is set when we are processing an FK setter for a full proxy.
+        /// This is used to determine whether or not we will attempt to call out into FK
+        /// setters and null references during fixup.
+        /// The value of this property is either null if the code is not executing an
+        /// FK setter, or points to the entity on which the FK setter has been called.
         /// </summary>
         internal virtual object EntityInvokingFKSetter { get; set; }
     }

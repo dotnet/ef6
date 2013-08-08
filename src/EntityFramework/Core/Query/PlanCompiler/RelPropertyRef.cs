@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     A rel-property ref - represents a rel property of the type
+    /// A rel-property ref - represents a rel property of the type
     /// </summary>
     internal class RelPropertyRef : PropertyRef
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructor
 
         /// <summary>
-        ///     Simple constructor
+        /// Simple constructor
         /// </summary>
         /// <param name="property"> the property metadata </param>
         internal RelPropertyRef(RelProperty property)
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public apis
 
         /// <summary>
-        ///     Gets the property metadata
+        /// Gets the property metadata
         /// </summary>
         internal RelProperty Property
         {
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Overrides the default equality function. Two RelPropertyRefs are
-        ///     equal, if they describe the same property
+        /// Overrides the default equality function. Two RelPropertyRefs are
+        /// equal, if they describe the same property
         /// </summary>
         /// <param name="obj"> the other object to compare to </param>
         /// <returns> true, if the objects are equal </returns>
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Overrides the default hashcode function.
-        ///     Simply returns the hashcode for the property instead
+        /// Overrides the default hashcode function.
+        /// Simply returns the hashcode for the property instead
         /// </summary>
         /// <returns> hashcode for the relpropertyref </returns>
         public override int GetHashCode()
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     debugging support
+        /// debugging support
         /// </summary>
         public override string ToString()
         {

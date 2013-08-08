@@ -9,7 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Threading;
 
     /// <summary>
-    ///     Provides a mechanism to ensure an exception is thrown on concurrent execution of a critical section.
+    /// Provides a mechanism to ensure an exception is thrown on concurrent execution of a critical section.
     /// </summary>
     internal class ThrowingMonitor
     {
@@ -18,8 +18,8 @@ namespace System.Data.Entity.Internal
         private int _isInCriticalSection;
 
         /// <summary>
-        ///     Acquires an exclusive lock on this instance.
-        ///     Any subsequent call to Enter before a call to Exit will result in an exception.
+        /// Acquires an exclusive lock on this instance.
+        /// Any subsequent call to Enter before a call to Exit will result in an exception.
         /// </summary>
         public void Enter()
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Releases an exclusive lock on this instance.
+        /// Releases an exclusive lock on this instance.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "state",
             Justification = "Used in the debug build")]
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Throws an exception if an exclusive lock has been acquired on this instance.
+        /// Throws an exception if an exclusive lock has been acquired on this instance.
         /// </summary>
         public void EnsureNotEntered()
         {

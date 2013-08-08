@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
+    /// Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
     /// </summary>
     internal sealed class OnOperation : SchemaElement
     {
@@ -19,12 +19,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The operation
+        /// The operation
         /// </summary>
         public Operation Operation { get; private set; }
 
         /// <summary>
-        ///     The action
+        /// The action
         /// </summary>
         public Action Action { get; private set; }
 
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handle the Action attribute
+        /// Handle the Action attribute
         /// </summary>
         /// <param name="reader"> reader positioned at Action attribute </param>
         private void HandleActionAttribute(XmlReader reader)
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     the parent element.
+        /// the parent element.
         /// </summary>
         private new RelationshipEnd ParentElement
         {

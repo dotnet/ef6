@@ -13,7 +13,7 @@ namespace System.Data.Entity.Internal
     using Xunit;
 
     /// <summary>
-    ///     Tests for creating and managing connections using IInternalConnection.
+    /// Tests for creating and managing connections using IInternalConnection.
     /// </summary>
     public class InternalConnectionTests : TestBase
     {

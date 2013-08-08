@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents from clause.
+    /// Represents from clause.
     /// </summary>
     internal sealed class FromClause : Node
     {
         private readonly NodeList<FromClauseItem> _fromClauseItems;
 
         /// <summary>
-        ///     Initializes from clause.
+        /// Initializes from clause.
         /// </summary>
         internal FromClause(NodeList<FromClauseItem> fromClauseItems)
         {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     List of from clause items.
+        /// List of from clause items.
         /// </summary>
         internal NodeList<FromClauseItem> FromClauseItems
         {

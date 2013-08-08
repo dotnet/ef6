@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Xml.Linq;
 
     /// <summary>
-    ///     Base class for decorators that wrap the core <see cref="DbMigrator" />
+    /// Base class for decorators that wrap the core <see cref="DbMigrator" />
     /// </summary>
     [DebuggerStepThrough]
     public abstract class MigratorBase
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private MigratorBase _this;
 
         /// <summary>
-        ///     Initializes a new instance of the MigratorBase class.
+        /// Initializes a new instance of the MigratorBase class.
         /// </summary>
         /// <param name="innerMigrator"> The migrator that this decorator is wrapping. </param>
         protected MigratorBase(MigratorBase innerMigrator)
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Gets a list of the pending migrations that have not been applied to the database.
+        /// Gets a list of the pending migrations that have not been applied to the database.
         /// </summary>
         /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the configuration being used for the migrations process.
+        /// Gets the configuration being used for the migrations process.
         /// </summary>
         public virtual DbMigrationsConfiguration Configuration
         {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Updates the target database to the latest migration.
+        /// Updates the target database to the latest migration.
         /// </summary>
         public void Update()
         {
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Updates the target database to a given migration.
+        /// Updates the target database to a given migration.
         /// </summary>
         /// <param name="targetMigration"> The migration to upgrade/downgrade to. </param>
         public virtual void Update(string targetMigration)
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Gets a list of the migrations that are defined in the assembly.
+        /// Gets a list of the migrations that are defined in the assembly.
         /// </summary>
         /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Gets a list of the migrations that have been applied to the database.
+        /// Gets a list of the migrations that have been applied to the database.
         /// </summary>
         /// <returns> List of migration Ids </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]

@@ -11,10 +11,10 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry" />,
-    ///     and <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry{TEntity, TProperty}" />.
-    ///     This internal class contains all the common implementation between the generic and non-generic
-    ///     entry classes and also allows for a clean internal factoring without compromising the public API.
+    /// The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry" />,
+    /// and <see cref="System.Data.Entity.Infrastructure.DbReferenceEntry{TEntity, TProperty}" />.
+    /// This internal class contains all the common implementation between the generic and non-generic
+    /// entry classes and also allows for a clean internal factoring without compromising the public API.
     /// </summary>
     internal class InternalReferenceEntry : InternalNavigationEntry
     {
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Internal
                 "SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InternalReferenceEntry" /> class.
+        /// Initializes a new instance of the <see cref="InternalReferenceEntry" /> class.
         /// </summary>
         /// <param name="internalEntityEntry"> The internal entity entry. </param>
         /// <param name="navigationMetadata"> The navigation metadata. </param>
@@ -43,9 +43,9 @@ namespace System.Data.Entity.Internal
         #region Current values
 
         /// <summary>
-        ///     Gets the navigation property value from the <see cref="IRelatedEnd" /> object.
-        ///     For reference navigation properties, this means getting the value from the
-        ///     <see cref="EntityReference{T}" /> object.
+        /// Gets the navigation property value from the <see cref="IRelatedEnd" /> object.
+        /// For reference navigation properties, this means getting the value from the
+        /// <see cref="EntityReference{T}" /> object.
         /// </summary>
         /// <param name="entity"> The entity. </param>
         /// <returns> The navigation property value. </returns>
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the navigation property value onto the <see cref="IRelatedEnd" /> object.
-        ///     For reference navigation properties, this means setting the value onto the
-        ///     <see cref="EntityReference{T}" /> object.
+        /// Sets the navigation property value onto the <see cref="IRelatedEnd" /> object.
+        /// For reference navigation properties, this means setting the value onto the
+        /// <see cref="EntityReference{T}" /> object.
         /// </summary>
         /// <param name="value"> The value. </param>
         protected virtual void SetNavigationPropertyOnRelatedEnd(object value)
@@ -81,10 +81,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the given value on the given <see cref="IRelatedEnd" /> which must be an
-        ///     <see cref="EntityReference{TRelatedEntity}" />.
-        ///     This method is setup in such a way that it can easily be used by CreateDelegate without any
-        ///     dynamic code generation needed.
+        /// Sets the given value on the given <see cref="IRelatedEnd" /> which must be an
+        /// <see cref="EntityReference{TRelatedEntity}" />.
+        /// This method is setup in such a way that it can easily be used by CreateDelegate without any
+        /// dynamic code generation needed.
         /// </summary>
         /// <typeparam name="TRelatedEntity"> The type of the related entity. </typeparam>
         /// <param name="entityReference"> The entity reference. </param>
@@ -99,9 +99,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets or sets the current value of the navigation property.  The current value is
-        ///     the entity that the navigation property references or the collection of references
-        ///     for a collection property.
+        /// Gets or sets the current value of the navigation property.  The current value is
+        /// the entity that the navigation property references or the collection of references
+        /// for a collection property.
         /// </summary>
         /// <value> The current value. </value>
         public override object CurrentValue
@@ -144,8 +144,8 @@ namespace System.Data.Entity.Internal
         #region DbMemberEntry factory methods
 
         /// <summary>
-        ///     Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry" /> or a subtype of it.
+        /// Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
+        /// The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry" /> or a subtype of it.
         /// </summary>
         /// <returns> The new entry. </returns>
         public override DbMemberEntry CreateDbMemberEntry()
@@ -154,8 +154,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
-        ///     The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry{TEntity,TProperty}" /> or a subtype of it.
+        /// Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
+        /// The runtime type of the DbMemberEntry created will be <see cref="DbReferenceEntry{TEntity,TProperty}" /> or a subtype of it.
         /// </summary>
         /// <typeparam name="TEntity"> The type of the entity. </typeparam>
         /// <typeparam name="TProperty"> The type of the property. </typeparam>

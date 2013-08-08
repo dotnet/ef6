@@ -497,7 +497,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Validates the input and sort key arguments to both DbSkipExpression and DbSortExpression.
+        /// Validates the input and sort key arguments to both DbSkipExpression and DbSortExpression.
         /// </summary>
         /// <param name="sortOrder"> A list of SortClauses that specifies the sort order to apply to the input collection </param>
         internal static ReadOnlyCollection<DbSortClause> ValidateSortArguments(IEnumerable<DbSortClause> sortOrder)
@@ -1040,7 +1040,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Ensures that the  specified type is non-null, associated with the correct metadata workspace/dataspace, and is not NullType.
+        /// Ensures that the  specified type is non-null, associated with the correct metadata workspace/dataspace, and is not NullType.
         /// </summary>
         /// <param name="type"> The type usage instance to verify. </param>
         /// <exception cref="ArgumentNullException">If the specified type metadata is null</exception>
@@ -1065,7 +1065,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Verifies that the specified member is valid - non-null, from the same metadata workspace and data space as the command tree, etc
+        /// Verifies that the specified member is valid - non-null, from the same metadata workspace and data space as the command tree, etc
         /// </summary>
         /// <param name="memberMeta"> The member to verify </param>
         /// <param name="varName"> The name of the variable to which this member instance is being assigned </param>
@@ -1101,7 +1101,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Verifies that the specified function metadata is valid - non-null and either created by this command tree (if a LambdaFunction) or from the same metadata collection and data space as the command tree (for ordinary function metadata)
+        /// Verifies that the specified function metadata is valid - non-null and either created by this command tree (if a LambdaFunction) or from the same metadata collection and data space as the command tree (for ordinary function metadata)
         /// </summary>
         /// <param name="function"> The function metadata to verify </param>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
@@ -1145,7 +1145,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Verifies that the specified EntitySet is valid with respect to the command tree
+        /// Verifies that the specified EntitySet is valid with respect to the command tree
         /// </summary>
         /// <param name="entitySet"> The EntitySet to verify </param>
         /// <param name="varName"> The variable name to use if an exception should be thrown </param>
@@ -1273,20 +1273,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         }
 
         /// <summary>
-        ///     Checks whether the clr enum type matched the edm enum type.
+        /// Checks whether the clr enum type matched the edm enum type.
         /// </summary>
         /// <param name="edmEnumType"> Edm enum type. </param>
         /// <param name="clrEnumType"> Clr enum type. </param>
         /// <returns>
-        ///     <c>true</c> if types match otherwise <c>false</c> .
+        /// <c>true</c> if types match otherwise <c>false</c> .
         /// </returns>
         /// <remarks>
-        ///     The clr enum type matches the edm enum type if:
-        ///     - type names are the same
-        ///     - both types have the same underlying type (note that this prevents from over- and underflows)
-        ///     - the edm enum type does not have more members than the clr enum type
-        ///     - members have the same names
-        ///     - members have the same values
+        /// The clr enum type matches the edm enum type if:
+        /// - type names are the same
+        /// - both types have the same underlying type (note that this prevents from over- and underflows)
+        /// - the edm enum type does not have more members than the clr enum type
+        /// - members have the same names
+        /// - members have the same values
         /// </remarks>
         private static bool ClrEdmEnumTypesMatch(EnumType edmEnumType, Type clrEnumType)
         {

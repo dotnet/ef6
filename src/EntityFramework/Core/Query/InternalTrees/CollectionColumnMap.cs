@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a column map for a collection column.
-    ///     The "element" represents the element of the collection - usually a Structured
-    ///     type, but occasionally a collection/simple type as well.
-    ///     The "ForeignKeys" property is optional (but usually necessary) to determine the
-    ///     elements of the collection.
+    /// Represents a column map for a collection column.
+    /// The "element" represents the element of the collection - usually a Structured
+    /// type, but occasionally a collection/simple type as well.
+    /// The "ForeignKeys" property is optional (but usually necessary) to determine the
+    /// elements of the collection.
     /// </summary>
     internal abstract class CollectionColumnMap : ColumnMap
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly SimpleColumnMap[] m_keys;
 
         /// <summary>
-        ///     Constructor
+        /// Constructor
         /// </summary>
         /// <param name="type"> datatype of column </param>
         /// <param name="name"> column name </param>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the list of columns that may comprise the foreign key
+        /// Get the list of columns that may comprise the foreign key
         /// </summary>
         internal SimpleColumnMap[] ForeignKeys
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the list of columns that may comprise the key
+        /// Get the list of columns that may comprise the key
         /// </summary>
         internal SimpleColumnMap[] Keys
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the column map describing the collection element
+        /// Get the column map describing the collection element
         /// </summary>
         internal ColumnMap Element
         {

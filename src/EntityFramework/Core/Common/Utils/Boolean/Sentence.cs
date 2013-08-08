@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Text;
 
     /// <summary>
-    ///     Abstract base class for normal form sentences (CNF and DNF)
+    /// Abstract base class for normal form sentences (CNF and DNF)
     /// </summary>
     /// <typeparam name="T_Identifier"> Type of expression leaf term identifiers. </typeparam>
     /// <typeparam name="T_Clause"> Type of clauses in the sentence. </typeparam>
@@ -17,9 +17,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly Set<T_Clause> _clauses;
 
         /// <summary>
-        ///     Initialize a sentence given the appropriate sentence clauses. Produces
-        ///     an equivalent expression by composing the clause expressions using
-        ///     the given tree type.
+        /// Initialize a sentence given the appropriate sentence clauses. Produces
+        /// an equivalent expression by composing the clause expressions using
+        /// the given tree type.
         /// </summary>
         /// <param name="clauses"> Sentence clauses </param>
         /// <param name="treeType"> Tree type for sentence (and generated expression) </param>

@@ -5,16 +5,16 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
 
     /// <summary>
-    ///     Implementation of the change tracking strategy for entities that require snapshot change tracking.
-    ///     These are typically entities that do not implement IEntityWithChangeTracker.
+    /// Implementation of the change tracking strategy for entities that require snapshot change tracking.
+    /// These are typically entities that do not implement IEntityWithChangeTracker.
     /// </summary>
     internal sealed class SnapshotChangeTrackingStrategy : IChangeTrackingStrategy
     {
         private static readonly SnapshotChangeTrackingStrategy _instance = new SnapshotChangeTrackingStrategy();
 
         /// <summary>
-        ///     Returns the single static instance of this class; a single instance is all that is needed
-        ///     because the class is stateless.
+        /// Returns the single static instance of this class; a single instance is all that is needed
+        /// because the class is stateless.
         /// </summary>
         public static SnapshotChangeTrackingStrategy Instance
         {

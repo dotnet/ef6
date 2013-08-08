@@ -6,58 +6,58 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents an Entity-SQL-based ObjectQuery Cache key context
+    /// Represents an Entity-SQL-based ObjectQuery Cache key context
     /// </summary>
     internal sealed class EntitySqlQueryCacheKey : QueryCacheKey
     {
         /// <summary>
-        ///     Aggregate hashcode based the hashcode of the properties of this cache key
+        /// Aggregate hashcode based the hashcode of the properties of this cache key
         /// </summary>
         private readonly int _hashCode;
 
         /// <summary>
-        ///     The name of the default container in effect when the Entity-SQL text was parsed
-        ///     (affects whether or not the text can be successfully parsed)
+        /// The name of the default container in effect when the Entity-SQL text was parsed
+        /// (affects whether or not the text can be successfully parsed)
         /// </summary>
         private readonly string _defaultContainer;
 
         /// <summary>
-        ///     Entity Sql statement
+        /// Entity Sql statement
         /// </summary>
         private readonly string _eSqlStatement;
 
         /// <summary>
-        ///     Parameter collection token
+        /// Parameter collection token
         /// </summary>
         private readonly string _parametersToken;
 
         /// <summary>
-        ///     Number of parameters
+        /// Number of parameters
         /// </summary>
         private readonly int _parameterCount;
 
         /// <summary>
-        ///     Concatenated representation of the Include span paths
+        /// Concatenated representation of the Include span paths
         /// </summary>
         private readonly string _includePathsToken;
 
         /// <summary>
-        ///     The merge option in effect
+        /// The merge option in effect
         /// </summary>
         private readonly MergeOption _mergeOption;
 
         /// <summary>
-        ///     Result type affects assembly plan
+        /// Result type affects assembly plan
         /// </summary>
         private readonly Type _resultType;
 
         /// <summary>
-        ///     Whether the query is streaming or buffering
+        /// Whether the query is streaming or buffering
         /// </summary>
         private readonly bool _streaming;
 
         /// <summary>
-        ///     Creates a new instance of ObjectQueryCacheKey given a entityCommand instance
+        /// Creates a new instance of ObjectQueryCacheKey given a entityCommand instance
         /// </summary>
         /// <param name="defaultContainerName"> The default container name in effect when parsing the query (may be null) </param>
         /// <param name="eSqlStatement"> The Entity-SQL text of the query </param>
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Determines equality of two cache keys based on cache context values
+        /// Determines equality of two cache keys based on cache context values
         /// </summary>
         public override bool Equals(object otherObject)
         {
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Returns the hashcode for this cache key
+        /// Returns the hashcode for this cache key
         /// </summary>
         public override int GetHashCode()
         {
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Returns a string representation of the state of this cache key
+        /// Returns a string representation of the state of this cache key
         /// </summary>
         /// <returns> A string representation that includes query text, parameter information, include path information and merge option information about this cache key. </returns>
         public override string ToString()

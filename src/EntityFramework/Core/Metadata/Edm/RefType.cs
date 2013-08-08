@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Text;
 
     /// <summary>
-    ///     Class representing a ref type
+    /// Class representing a ref type
     /// </summary>
     public class RefType : EdmType
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a RefType object with the entity type it references
+        /// The constructor for constructing a RefType object with the entity type it references
         /// </summary>
         /// <param name="entityType"> The entity type that this ref type references </param>
         /// <exception cref="System.ArgumentNullException">Thrown if entityType argument is null</exception>
@@ -32,13 +32,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly EntityTypeBase _elementType;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -46,13 +46,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the entity type referenced by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
+        /// Gets the entity type referenced by this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" /> object that represents the entity type referenced by this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityTypeBase" /> object that represents the entity type referenced by this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.EntityTypeBase, false)]
         public virtual EntityTypeBase ElementType
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs the name of the collection type
+        /// Constructs the name of the collection type
         /// </summary>
         /// <param name="entityTypeBase"> The entity type base that this ref type refers to </param>
         /// <returns> The identity of the resulting ref type </returns>

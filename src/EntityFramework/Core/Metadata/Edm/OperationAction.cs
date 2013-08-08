@@ -3,17 +3,17 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    ///     Represents the list of possible actions for delete operation
+    /// Represents the list of possible actions for delete operation
     /// </summary>
     public enum OperationAction
     {
         /// <summary>
-        ///     no action
+        /// no action
         /// </summary>
         None,
 
         /// <summary>
-        ///     Cascade to other ends
+        /// Cascade to other ends
         /// </summary>
         Cascade
     }

@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Class representing a connection string builder for the entity client provider
+    /// Class representing a connection string builder for the entity client provider
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "EntityConnectionStringBuilder follows the naming convention of DbConnectionStringBuilder.")]
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.EntityClient
         private string _storeProviderConnectionString;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class.
         /// </summary>
         public EntityConnectionStringBuilder()
         {
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class using the supplied connection string.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> class using the supplied connection string.
         /// </summary>
         /// <param name="connectionString">A provider-specific connection string to the underlying data source.</param>
         public EntityConnectionStringBuilder(string connectionString)
@@ -124,16 +124,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets a value that indicates whether the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     has a fixed size.
+        /// Gets a value that indicates whether the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// has a fixed size.
         /// </summary>
         /// <returns>
-        ///     Returns true in every case, because the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     supplies a fixed-size collection of keyword/value pairs.
+        /// Returns true in every case, because the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// supplies a fixed-size collection of keyword/value pairs.
         /// </returns>
         public override bool IsFixedSize
         {
@@ -141,16 +141,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Collections.ICollection" /> that contains the keys in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     .
+        /// Gets an <see cref="T:System.Collections.ICollection" /> that contains the keys in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.ICollection" /> that contains the keys in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     .
+        /// An <see cref="T:System.Collections.ICollection" /> that contains the keys in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// .
         /// </returns>
         public override ICollection Keys
         {
@@ -158,8 +158,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns a hash table object containing all the valid keywords. This is really the same as the Keys
-        ///     property, it's just that the returned object is a hash table.
+        /// Returns a hash table object containing all the valid keywords. This is really the same as the Keys
+        /// property, it's just that the returned object is a hash table.
         /// </summary>
         internal static Hashtable Synonyms
         {
@@ -256,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Clears the contents of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> instance.
+        /// Clears the contents of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> instance.
         /// </summary>
         public override void Clear()
         {
@@ -268,13 +268,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains a specific key.
+        /// Determines whether the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains a specific key.
         /// </summary>
         /// <returns>
-        ///     Returns true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains an element that has the specified key; otherwise, false.
+        /// Returns true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" /> contains an element that has the specified key; otherwise, false.
         /// </returns>
         /// <param name="keyword">
-        ///     The key to locate in the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />.
+        /// The key to locate in the <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />.
         /// </param>
         public override bool ContainsKey(string keyword)
         {
@@ -292,10 +292,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Retrieves a value corresponding to the supplied key from this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     .
+        /// Retrieves a value corresponding to the supplied key from this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// .
         /// </summary>
         /// <returns>Returns true if  keyword  was found in the connection string; otherwise, false.</returns>
         /// <param name="keyword">The key of the item to retrieve.</param>
@@ -316,17 +316,17 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Removes the entry with the specified key from the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     instance.
+        /// Removes the entry with the specified key from the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// instance.
         /// </summary>
         /// <returns>Returns true if the key existed in the connection string and was removed; false if the key did not exist.</returns>
         /// <param name="keyword">
-        ///     The key of the keyword/value pair to be removed from the connection string in this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
-        ///     .
+        /// The key of the keyword/value pair to be removed from the connection string in this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnectionStringBuilder" />
+        /// .
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> keyword  is null (Nothing in Visual Basic)</exception>
         public override bool Remove(string keyword)

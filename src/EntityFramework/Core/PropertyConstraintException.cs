@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Property constraint exception class. Note that this class has state - so if you change even
-    ///     its internals, it can be a breaking change
+    /// Property constraint exception class. Note that this class has state - so if you change even
+    /// its internals, it can be a breaking change
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core
         private PropertyConstraintExceptionState _state;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with default message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with default message.
         /// </summary>
         public PropertyConstraintException() // required ctor
         {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message.
         /// </summary>
         /// <param name="message">A localized error message.</param>
         public PropertyConstraintException(string message) // required ctor
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message and inner exception.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class with supplied message and inner exception.
         /// </summary>
         /// <param name="message">A localized error message.</param>
         /// <param name="innerException">The inner exception.</param>
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
         /// </summary>
         /// <param name="message">A localized error message.</param>
         /// <param name="propertyName">The name of the property.</param>
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.PropertyConstraintException" /> class.
         /// </summary>
         /// <param name="message">A localized error message.</param>
         /// <param name="propertyName">The name of the property.</param>

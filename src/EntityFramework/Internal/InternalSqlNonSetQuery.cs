@@ -7,8 +7,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a raw SQL query against the context for any type where the results are never
-    ///     associated with an entity set and are never tracked.
+    /// Represents a raw SQL query against the context for any type where the results are never
+    /// associated with an entity set and are never tracked.
     /// </summary>
     internal class InternalSqlNonSetQuery : InternalSqlQuery
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Internal
         private readonly Type _elementType;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InternalSqlNonSetQuery" /> class.
+        /// Initializes a new instance of the <see cref="InternalSqlNonSetQuery" /> class.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="elementType"> Type of the element. </param>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Internal
         #region AsNoTracking
 
         /// <summary>
-        ///     Returns this query since it can never be a tracking query.
+        /// Returns this query since it can never be a tracking query.
         /// </summary>
         /// <returns> This instance. </returns>
         public override InternalSqlQuery AsNoTracking()
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Internal
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
-        ///     database backing this context. The results are not materialized as entities or tracked.
+        /// Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
+        /// database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
         /// <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
@@ -81,8 +81,8 @@ namespace System.Data.Entity.Internal
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
-        ///     database backing this context. The results are not materialized as entities or tracked.
+        /// Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
+        /// database backing this context. The results are not materialized as entities or tracked.
         /// </summary>
         /// <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()

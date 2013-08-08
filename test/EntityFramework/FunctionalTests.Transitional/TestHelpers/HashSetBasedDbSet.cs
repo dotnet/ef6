@@ -13,7 +13,7 @@ namespace System.Data.Entity
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     In-memory implementation of IDbSet based on a <see cref="HashSet{T}" />
+    /// In-memory implementation of IDbSet based on a <see cref="HashSet{T}" />
     /// </summary>
     /// <typeparam name="T"> Type of elements to be stored in the set </typeparam>
     public class HashSetBasedDbSet<T> : IDbSet<T>

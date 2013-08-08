@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents having clause.
+    /// Represents having clause.
     /// </summary>
     internal sealed class HavingClause : Node
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly uint _methodCallCount;
 
         /// <summary>
-        ///     Initializes having clause.
+        /// Initializes having clause.
         /// </summary>
         internal HavingClause(Node havingExpr, uint methodCallCounter)
         {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns having inner expression.
+        /// Returns having inner expression.
         /// </summary>
         internal Node HavingPredicate
         {
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     True if predicate has method calls.
+        /// True if predicate has method calls.
         /// </summary>
         internal bool HasMethodCall
         {

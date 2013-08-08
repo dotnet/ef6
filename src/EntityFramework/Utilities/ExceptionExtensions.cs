@@ -36,8 +36,8 @@ namespace System.Data.Entity.Utilities
         }
 
         /// <summary>
-        ///     Determines whether the given exception requires additional context from the update pipeline (in other
-        ///     words, whether the exception should be wrapped in an UpdateException).
+        /// Determines whether the given exception requires additional context from the update pipeline (in other
+        /// words, whether the exception should be wrapped in an UpdateException).
         /// </summary>
         /// <param name="e"> Exception to test. </param>
         /// <returns> true if exception should be wrapped; false otherwise </returns>

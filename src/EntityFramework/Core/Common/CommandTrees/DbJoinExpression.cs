@@ -33,10 +33,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the left input.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the left input.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the left input.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the left input.
         /// </returns>
         public DbExpressionBinding Left
         {
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the right input.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the right input.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the right input.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that provides the right input.
         /// </returns>
         public DbExpressionBinding Right
         {
@@ -58,10 +58,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>The join condition to apply.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" />
-        ///     , or its result type is not a Boolean type.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" />
+        /// , or its result type is not a Boolean type.
         /// </exception>
         public DbExpression JoinCondition
         {
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -82,13 +82,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

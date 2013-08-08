@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Column map for a scalar column - maps 1-1 with a column from a
-    ///     row of the underlying reader
+    /// Column map for a scalar column - maps 1-1 with a column from a
+    /// row of the underlying reader
     /// </summary>
     internal class ScalarColumnMap : SimpleColumnMap
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly int m_columnPos;
 
         /// <summary>
-        ///     Basic constructor
+        /// Basic constructor
         /// </summary>
         /// <param name="type"> datatype for this column </param>
         /// <param name="name"> column name </param>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The command (reader, really) to get this column value from
+        /// The command (reader, really) to get this column value from
         /// </summary>
         internal int CommandId
         {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Column position within the reader of the command
+        /// Column position within the reader of the command
         /// </summary>
         internal int ColumnPos
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

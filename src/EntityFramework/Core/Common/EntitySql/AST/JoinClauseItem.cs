@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents join clause item.
+    /// Represents join clause item.
     /// </summary>
     internal sealed class JoinClauseItem : Node
     {
@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _onExpr;
 
         /// <summary>
-        ///     Initializes join clause item without ON expression.
+        /// Initializes join clause item without ON expression.
         /// </summary>
         internal JoinClauseItem(FromClauseItem joinLeft, FromClauseItem joinRight, JoinKind joinKind)
             : this(joinLeft, joinRight, joinKind, null)
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Initializes join clause item with ON expression.
+        /// Initializes join clause item with ON expression.
         /// </summary>
         internal JoinClauseItem(FromClauseItem joinLeft, FromClauseItem joinRight, JoinKind joinKind, Node onExpr)
         {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns join left expression.
+        /// Returns join left expression.
         /// </summary>
         internal FromClauseItem LeftExpr
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns join right expression.
+        /// Returns join right expression.
         /// </summary>
         internal FromClauseItem RightExpr
         {
@@ -47,12 +47,12 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Join kind (cross, inner, full, left outer,right outer).
+        /// Join kind (cross, inner, full, left outer,right outer).
         /// </summary>
         internal JoinKind JoinKind { get; set; }
 
         /// <summary>
-        ///     Returns join on expression.
+        /// Returns join on expression.
         /// </summary>
         internal Node OnExpr
         {

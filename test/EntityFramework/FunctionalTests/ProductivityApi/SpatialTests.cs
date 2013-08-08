@@ -15,7 +15,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for spatial and DbContext.
+    /// Tests for spatial and DbContext.
     /// </summary>
     public class SpatialTests : FunctionalTestBase
     {

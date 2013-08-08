@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents information about a property of an entity.
+    /// Represents information about a property of an entity.
     /// </summary>
     public abstract class PropertyModel
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
         private TypeUsage _typeUsage;
 
         /// <summary>
-        ///     Initializes a new instance of the PropertyModel class.
+        /// Initializes a new instance of the PropertyModel class.
         /// </summary>
         /// <param name="type"> The data type for this property model. </param>
         /// <param name="typeUsage"> Additional details about the data type. This includes details such as maximum length, nullability etc. </param>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the data type for this property model.
+        /// Gets the data type for this property model.
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods")]
         public virtual PrimitiveTypeKind Type
@@ -34,8 +34,8 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets additional details about the data type of this property model.
-        ///     This includes details such as maximum length, nullability etc.
+        /// Gets additional details about the data type of this property model.
+        /// This includes details such as maximum length, nullability etc.
         /// </summary>
         public TypeUsage TypeUsage
         {
@@ -43,52 +43,52 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of the property model.
+        /// Gets or sets the name of the property model.
         /// </summary>
         public virtual string Name { get; set; }
 
         /// <summary>
-        ///     Gets or sets a provider specific data type to use for this property model.
+        /// Gets or sets a provider specific data type to use for this property model.
         /// </summary>
         public virtual string StoreType { get; set; }
 
         /// <summary>
-        ///     Gets or sets the maximum length for this property model.
-        ///     Only valid for array data types.
+        /// Gets or sets the maximum length for this property model.
+        /// Only valid for array data types.
         /// </summary>
         public virtual int? MaxLength { get; set; }
 
         /// <summary>
-        ///     Gets or sets the precision for this property model.
-        ///     Only valid for decimal data types.
+        /// Gets or sets the precision for this property model.
+        /// Only valid for decimal data types.
         /// </summary>
         public virtual byte? Precision { get; set; }
 
         /// <summary>
-        ///     Gets or sets the scale for this property model.
-        ///     Only valid for decimal data types.
+        /// Gets or sets the scale for this property model.
+        /// Only valid for decimal data types.
         /// </summary>
         public virtual byte? Scale { get; set; }
 
         /// <summary>
-        ///     Gets or sets a constant value to use as the default value for this property model.
+        /// Gets or sets a constant value to use as the default value for this property model.
         /// </summary>
         public virtual object DefaultValue { get; set; }
 
         /// <summary>
-        ///     Gets or sets a SQL expression used as the default value for this property model.
+        /// Gets or sets a SQL expression used as the default value for this property model.
         /// </summary>
         public virtual string DefaultValueSql { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating if this property model is fixed length.
-        ///     Only valid for array data types.
+        /// Gets or sets a value indicating if this property model is fixed length.
+        /// Only valid for array data types.
         /// </summary>
         public virtual bool? IsFixedLength { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating if this property model supports Unicode characters.
-        ///     Only valid for textual data types.
+        /// Gets or sets a value indicating if this property model supports Unicode characters.
+        /// Only valid for textual data types.
         /// </summary>
         public virtual bool? IsUnicode { get; set; }
 

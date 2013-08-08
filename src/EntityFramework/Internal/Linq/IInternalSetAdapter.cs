@@ -3,15 +3,15 @@
 namespace System.Data.Entity.Internal.Linq
 {
     /// <summary>
-    ///     An internal interface implemented by <see cref="DbSet{T}" /> and <see cref="DbSet" /> that allows access to
-    ///     the internal set without using reflection.
+    /// An internal interface implemented by <see cref="DbSet{T}" /> and <see cref="DbSet" /> that allows access to
+    /// the internal set without using reflection.
     /// </summary>
     internal interface IInternalSetAdapter
     {
         #region Underlying internal set
 
         /// <summary>
-        ///     The underlying internal set.
+        /// The underlying internal set.
         /// </summary>
         IInternalSet InternalSet { get; }
 

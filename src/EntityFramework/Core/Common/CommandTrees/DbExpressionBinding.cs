@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Describes a binding for an expression. Conceptually similar to a foreach loop
-    ///     in C#. The DbExpression property defines the collection being iterated over,
-    ///     while the Var property provides a means to reference the current element
-    ///     of the collection during the iteration. DbExpressionBinding is used to describe the set arguments
-    ///     to relational expressions such as <see cref="DbFilterExpression" />, <see cref="DbProjectExpression" />
-    ///     and <see cref="DbJoinExpression" />.
+    /// Describes a binding for an expression. Conceptually similar to a foreach loop
+    /// in C#. The DbExpression property defines the collection being iterated over,
+    /// while the Var property provides a means to reference the current element
+    /// of the collection during the iteration. DbExpressionBinding is used to describe the set arguments
+    /// to relational expressions such as <see cref="DbFilterExpression" />, <see cref="DbProjectExpression" />
+    /// and <see cref="DbJoinExpression" />.
     /// </summary>
     /// <seealso cref="DbExpression" />
     /// <seealso cref="Variable" />
@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the input set.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">The expression is not associated with the command tree of the binding, or its result type is not equal or promotable to the result type of the current value of the property.</exception>
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the element variable.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references the element variable.
         /// </summary>
         /// <returns>The variable reference.</returns>
         public DbVariableReferenceExpression Variable

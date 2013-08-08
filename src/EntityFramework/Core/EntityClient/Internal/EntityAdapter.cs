@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Gets or sets the map connection used by this adapter.
+        /// Gets or sets the map connection used by this adapter.
         /// </summary>
         DbConnection IEntityAdapter.Connection
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Gets or sets the map connection used by this adapter.
+        /// Gets or sets the map connection used by this adapter.
         /// </summary>
         public EntityConnection Connection
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Gets or sets whether the IEntityCache.AcceptChanges should be called during a call to IEntityAdapter.Update.
+        /// Gets or sets whether the IEntityCache.AcceptChanges should be called during a call to IEntityAdapter.Update.
         /// </summary>
         public bool AcceptChangesDuringUpdate
         {
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Gets of sets the command timeout for update operations. If null, indicates that the default timeout
-        ///     for the provider should be used.
+        /// Gets of sets the command timeout for update operations. If null, indicates that the default timeout
+        /// for the provider should be used.
         /// </summary>
         public int? CommandTimeout { get; set; }
 
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         }
 
         /// <summary>
-        ///     Determine whether the cache has changes to apply.
+        /// Determine whether the cache has changes to apply.
         /// </summary>
         /// <param name="entityCache"> ObjectStateManager to check. Must not be null. </param>
         /// <returns> true if cache contains changes entries; false otherwise </returns>

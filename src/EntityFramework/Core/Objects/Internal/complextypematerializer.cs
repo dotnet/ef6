@@ -10,8 +10,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Supports materialization of complex type instances from records. Used
-    ///     by the ObjectStateManager.
+    /// Supports materialization of complex type instances from records. Used
+    /// by the ObjectStateManager.
     /// </summary>
     internal class ComplexTypeMaterializer
     {

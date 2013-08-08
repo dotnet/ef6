@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Collection of entities modeling a particular EDM construct
-    ///     which can either be all entities of a particular type or
-    ///     entities participating in a particular relationship.
+    /// Collection of entities modeling a particular EDM construct
+    /// which can either be all entities of a particular type or
+    /// entities participating in a particular relationship.
     /// </summary>
     [Serializable]
     public class EntityCollection<TEntity> : RelatedEnd, ICollection<TEntity>, IListSource
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" /> class.
         /// </summary>
         public EntityCollection()
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ---------
 
         /// <summary>
-        ///     internal Event to notify changes in the collection.
+        /// internal Event to notify changes in the collection.
         /// </summary>
         // Dev notes -2
         // following statement is valid on current existing CLR: 
@@ -100,10 +100,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets the number of objects that are contained in the collection.</summary>
         /// <returns>
-        ///     The number of elements that are contained in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        /// The number of elements that are contained in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        /// .
         /// </returns>
         public int Count
         {
@@ -124,10 +124,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Gets a value that indicates whether the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     is read-only.
+        /// Gets a value that indicates whether the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        /// is read-only.
         /// </summary>
         /// <returns>Always returns false.</returns>
         public bool IsReadOnly
@@ -139,9 +139,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  Properties
         // ----------------------
         /// <summary>
-        ///     IListSource.ContainsListCollection implementation. Always returns false.
-        ///     This means that the IList we return is the one which contains our actual data,
-        ///     it is not a list of collections.
+        /// IListSource.ContainsListCollection implementation. Always returns false.
+        /// This means that the IList we return is the one which contains our actual data,
+        /// it is not a list of collections.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
@@ -173,10 +173,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // IListSource  method
         // ----------------------
         /// <summary>
-        ///     Returns the collection as an <see cref="T:System.Collections.IList" /> used for data binding.
+        /// Returns the collection as an <see cref="T:System.Collections.IList" /> used for data binding.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IList" /> of entity objects.
+        /// An <see cref="T:System.Collections.IList" /> of entity objects.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
@@ -212,10 +212,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Loads related objects into the collection, using the specified merge option.</summary>
         /// <param name="mergeOption">
-        ///     Specifies how the objects in this collection should be merged with the objects that might have been returned from previous queries against the same
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// Specifies how the objects in this collection should be merged with the objects that might have been returned from previous queries against the same
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         public override void Load(MergeOption mergeOption)
         {
@@ -246,20 +246,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Defines relationships between an object and a collection of related objects in an object context.</summary>
         /// <remarks>
-        ///     Loads related entities into the local collection. If the collection is already filled
-        ///     or partially filled, merges existing entities with the given entities. The given
-        ///     entities are not assumed to be the complete set of related entities.
-        ///     Owner and all entities passed in must be in Unchanged or Modified state. We allow
-        ///     deleted elements only when the state manager is already tracking the relationship
-        ///     instance.
+        /// Loads related entities into the local collection. If the collection is already filled
+        /// or partially filled, merges existing entities with the given entities. The given
+        /// entities are not assumed to be the complete set of related entities.
+        /// Owner and all entities passed in must be in Unchanged or Modified state. We allow
+        /// deleted elements only when the state manager is already tracking the relationship
+        /// instance.
         /// </remarks>
         /// <param name="entities">Collection of objects in the object context that are related to the source object.</param>
         /// <exception cref="T:System.ArgumentNullException"> entities  collection is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The source object or an object in the  entities  collection is null or is not in an
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Unchanged" />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.-or-The relationship cannot be defined based on the EDM metadata. This can occur when the association in the conceptual schema does not support a relationship between the two types.
+        /// The source object or an object in the  entities  collection is null or is not in an
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Unchanged" />
+        /// or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.-or-The relationship cannot be defined based on the EDM metadata. This can occur when the association in the conceptual schema does not support a relationship between the two types.
         /// </exception>
         public void Attach(IEnumerable<TEntity> entities)
         {
@@ -277,10 +277,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// <param name="entity">The object being attached.</param>
         /// <exception cref="T:System.ArgumentNullException">When the  entity  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the  entity  cannot be related to the source object. This can occur when the association in the conceptual schema does not support a relationship between the two types.-or-When either object is null or is not in an
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Unchanged" />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.
+        /// When the  entity  cannot be related to the source object. This can occur when the association in the conceptual schema does not support a relationship between the two types.-or-When either object is null or is not in an
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Unchanged" />
+        /// or <see cref="F:System.Data.Entity.EntityState.Modified" /> state.
         /// </exception>
         public void Attach(TEntity entity)
         {
@@ -289,8 +289,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Requires: collection is null or contains related entities.
-        ///     Loads related entities into the local collection.
+        /// Requires: collection is null or contains related entities.
+        /// Loads related entities into the local collection.
         /// </summary>
         /// <param name="collection"> If null, retrieves entities from the server through a query; otherwise, loads the given collection </param>
         internal virtual void Load(List<IEntityWrapper> collection, MergeOption mergeOption)
@@ -377,10 +377,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Adds an object to the collection.</summary>
         /// <param name="item">
-        ///     An object to add to the collection.  entity  must implement
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithRelationships" />
-        ///     .
+        /// An object to add to the collection.  entity  must implement
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithRelationships" />
+        /// .
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
         public void Add(TEntity item)
@@ -391,7 +391,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Add the item to the underlying collection
+        /// Add the item to the underlying collection
         /// </summary>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Remove the item from the underlying collection
+        /// Remove the item from the underlying collection
         /// </summary>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
@@ -600,7 +600,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Remove from the RelatedEnd
+        /// Remove from the RelatedEnd
         /// </summary>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
@@ -619,7 +619,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Remove from the POCO collection
+        /// Remove from the POCO collection
         /// </summary>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
@@ -677,10 +677,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Returns an enumerator that is used to iterate through the objects in the collection.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        /// An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        /// .
         /// </returns>
         public new IEnumerator<TEntity> GetEnumerator()
         {
@@ -689,16 +689,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns an enumerator that is used to iterate through the set of values cached by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        /// Returns an enumerator that is used to iterate through the set of values cached by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
-        ///     .
+        /// An <see cref="T:System.Collections.IEnumerator" /> that iterates through the set of values cached by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />
+        /// .
         /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -774,10 +774,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Determines whether a specific object exists in the collection.</summary>
         /// <returns>
-        ///     true if the object is found in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />; otherwise, false.
+        /// true if the object is found in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />; otherwise, false.
         /// </returns>
         /// <param name="item">
-        ///     The object to locate in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// The object to locate in the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         public bool Contains(TEntity item)
         {
@@ -912,14 +912,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // knowledge of the generic type, and the base class isn't generic
         /// <summary>Returns an object query that, when it is executed, returns the same set of objects that exists in the current collection. </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that represents the entity collection.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that represents the entity collection.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
-        ///     or when the object is in a
-        ///     <see cref="F:System.Data.Entity.EntityState.Detached" /> state with a
-        ///     <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> other than
-        ///     <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        /// or when the object is in a
+        /// <see cref="F:System.Data.Entity.EntityState.Detached" /> state with a
+        /// <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> other than
+        /// <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public ObjectQuery<TEntity> CreateSourceQuery()
         {

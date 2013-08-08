@@ -21,18 +21,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private readonly bool _isForeignKey;
 
         /// <summary>
-        ///     Creates an instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" /> class.
+        /// Creates an instance of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" /> class.
         /// </summary>
         /// <param name="relationshipNamespaceName">The name of the namespace for the association in which this entity participates.</param>
         /// <param name="relationshipName">The name of a relationship in which this entity participates. </param>
         /// <param name="role1Name">Name of the role for the type at one end of the association.</param>
         /// <param name="role1Multiplicity">
-        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
+        /// A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
         /// </param>
         /// <param name="role1Type">The type of the entity at one end of the association.</param>
         /// <param name="role2Name">Name of the role for the type at the other end of the association.</param>
         /// <param name="role2Multiplicity">
-        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
+        /// A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
         /// </param>
         /// <param name="role2Type">The type of the entity at the other end of the association.</param>
         public EdmRelationshipAttribute(
@@ -58,21 +58,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
-        ///     class.
+        /// Initializes a new instance of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
+        /// class.
         /// </summary>
         /// <param name="relationshipNamespaceName">The name of the namespace for the association in which this entity participates.</param>
         /// <param name="relationshipName">The name of a relationship in which this entity participates.</param>
         /// <param name="role1Name">Name of the role for the type at one end of the association.</param>
         /// <param name="role1Multiplicity">
-        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
+        /// A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at one end of the association, such as one or many.
         /// </param>
         /// <param name="role1Type">The type of the entity at one end of the association.</param>
         /// <param name="role2Name">Name of the role for the type at the other end of the association.</param>
         /// <param name="role2Multiplicity">
-        ///     A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
+        /// A value of <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> that indicates the multiplicity at the other end of the association, such as one or many.
         /// </param>
         /// <param name="role2Type">The type of the entity at the other end of the association.</param>
         /// <param name="isForeignKey">A value that indicates whether the relationship is based on the foreign key value.</param>
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>The namespace for the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the namespace for the relationship.
+        /// A <see cref="T:System.String" /> that is the namespace for the relationship.
         /// </returns>
         public string RelationshipNamespaceName
         {
@@ -112,10 +112,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Name of the relationship. </summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the name of a relationship that is defined by this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
-        ///     .
+        /// A <see cref="T:System.String" /> that is the name of a relationship that is defined by this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EdmRelationshipAttribute" />
+        /// .
         /// </returns>
         public string RelationshipName
         {
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Name of the role at one end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the name of the role.
+        /// A <see cref="T:System.String" /> that is the name of the role.
         /// </returns>
         public string Role1Name
         {
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Multiplicity at one end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
         /// </returns>
         public RelationshipMultiplicity Role1Multiplicity
         {
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Type of the entity at one end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Type" /> that is the type of the object at this end of the association.
+        /// A <see cref="T:System.Type" /> that is the type of the object at this end of the association.
         /// </returns>
         public Type Role1Type
         {
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Name of the role at the other end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the name of the role.
+        /// A <see cref="T:System.String" /> that is the name of the role.
         /// </returns>
         public string Role2Name
         {
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Multiplicity at the other end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> value that indicates the multiplicity.
         /// </returns>
         public RelationshipMultiplicity Role2Multiplicity
         {
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Type of the entity at the other end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Type" /> that is the type of the object t the other end of the association.
+        /// A <see cref="T:System.Type" /> that is the type of the object t the other end of the association.
         /// </returns>
         public Type Role2Type
         {

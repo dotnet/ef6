@@ -7,9 +7,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Instances of this class are returned from the Property method of
-    ///     <see cref="DbEntityEntry{T}" /> and allow access to the state of the scalar
-    ///     or complex property.
+    /// Instances of this class are returned from the Property method of
+    /// <see cref="DbEntityEntry{T}" /> and allow access to the state of the scalar
+    /// or complex property.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity to which this property belongs. </typeparam>
     /// <typeparam name="TProperty"> The type of the property. </typeparam>
@@ -21,12 +21,12 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalPropertyEntry _internalPropertyEntry;
 
         /// <summary>
-        ///     Creates a <see cref="DbPropertyEntry{TEntity,TProperty}" /> from information in the given
-        ///     <see
-        ///         cref="InternalPropertyEntry" />
-        ///     .
-        ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
-        ///     the type of member represented by the InternalCollectionEntry instance.
+        /// Creates a <see cref="DbPropertyEntry{TEntity,TProperty}" /> from information in the given
+        /// <see
+        ///     cref="InternalPropertyEntry" />
+        /// .
+        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
+        /// the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
         /// <param name="internalPropertyEntry"> The internal property entry. </param>
         /// <returns> The new entry. </returns>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbPropertyEntry{TEntity, TProperty}" /> class.
+        /// Initializes a new instance of the <see cref="DbPropertyEntry{TEntity, TProperty}" /> class.
         /// </summary>
         /// <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbPropertyEntry(InternalPropertyEntry internalPropertyEntry)
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Infrastructure
         #region Name
 
         /// <summary>
-        ///     Gets the property name.
+        /// Gets the property name.
         /// </summary>
         /// <value> The property name. </value>
         public override string Name
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Infrastructure
         #region Current and Original values
 
         /// <summary>
-        ///     Gets or sets the original value of this property.
+        /// Gets or sets the original value of this property.
         /// </summary>
         /// <value> The original value. </value>
         public TProperty OriginalValue
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets the current value of this property.
+        /// Gets or sets the current value of this property.
         /// </summary>
         /// <value> The current value. </value>
         public override TProperty CurrentValue
@@ -86,11 +86,11 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the value of this property has been modified since
-        ///     it was loaded from the database.
+        /// Gets or sets a value indicating whether the value of this property has been modified since
+        /// it was loaded from the database.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is modified; otherwise, <c>false</c> .
+        /// <c>true</c> if this instance is modified; otherwise, <c>false</c> .
         /// </value>
         public bool IsModified
         {
@@ -103,8 +103,8 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbPropertyEntry" /> class for
-        ///     the property represented by this object.
+        /// Returns a new instance of the non-generic <see cref="DbPropertyEntry" /> class for
+        /// the property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Infrastructure
         #region Back references
 
         /// <summary>
-        ///     The <see cref="DbEntityEntry{TEntity}" /> to which this property belongs.
+        /// The <see cref="DbEntityEntry{TEntity}" /> to which this property belongs.
         /// </summary>
         /// <value> An entry for the entity that owns this property. </value>
         public override DbEntityEntry<TEntity> EntityEntry
@@ -128,9 +128,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The <see cref="DbPropertyEntry" /> of the property for which this is a nested property.
-        ///     This method will only return a non-null entry for properties of complex objects; it will
-        ///     return null for properties of the entity itself.
+        /// The <see cref="DbPropertyEntry" /> of the property for which this is a nested property.
+        /// This method will only return a non-null entry for properties of complex objects; it will
+        /// return null for properties of the entity itself.
         /// </summary>
         /// <value> An entry for the parent complex property, or null if this is an entity property. </value>
         public DbComplexPropertyEntry ParentProperty
@@ -152,7 +152,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the underlying <see cref="InternalPropertyEntry" /> as an <see cref="InternalMemberEntry" />.
+        /// Gets the underlying <see cref="InternalPropertyEntry" /> as an <see cref="InternalMemberEntry" />.
         /// </summary>
         /// <value> The internal member entry. </value>
         internal override InternalMemberEntry InternalMemberEntry

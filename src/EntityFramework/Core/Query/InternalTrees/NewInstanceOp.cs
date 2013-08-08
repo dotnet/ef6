@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     A new instance creation
+    /// A new instance creation
     /// </summary>
     internal sealed class NewInstanceOp : ScalarOp
     {
@@ -29,12 +29,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     Pattern for transformation rules
+        /// Pattern for transformation rules
         /// </summary>
         internal static readonly NewInstanceOp Pattern = new NewInstanceOp();
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

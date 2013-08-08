@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
 
     /// <summary>
-    ///     Static utility class. Replica of query\DLinq\TypeSystem.cs
+    /// Static utility class. Replica of query\DLinq\TypeSystem.cs
     /// </summary>
     internal static class TypeSystem
     {
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Resolves MemberInfo to a property or field.
+        /// Resolves MemberInfo to a property or field.
         /// </summary>
         /// <param name="member"> Member to test. </param>
         /// <param name="name"> Name of member. </param>

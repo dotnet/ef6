@@ -8,7 +8,7 @@ namespace PlanCompilerTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for anonymous types in Linq queries.
+    /// Tests for anonymous types in Linq queries.
     /// </summary>
     public class AnonymousTypeTests : FunctionalTestBase
     {

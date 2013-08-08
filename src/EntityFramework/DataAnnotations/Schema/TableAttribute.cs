@@ -9,7 +9,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Specifies the database table that a class is mapped to.
+    /// Specifies the database table that a class is mapped to.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes")]
@@ -19,7 +19,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         private string _schema;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="TableAttribute" /> class.
+        /// Initializes a new instance of the <see cref="TableAttribute" /> class.
         /// </summary>
         /// <param name="name"> The name of the table the class is mapped to. </param>
         public TableAttribute(string name)
@@ -30,7 +30,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         }
 
         /// <summary>
-        ///     The name of the table the class is mapped to.
+        /// The name of the table the class is mapped to.
         /// </summary>
         public string Name
         {
@@ -38,7 +38,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
         }
 
         /// <summary>
-        ///     The schema of the table the class is mapped to.
+        /// The schema of the table the class is mapped to.
         /// </summary>
         public string Schema
         {

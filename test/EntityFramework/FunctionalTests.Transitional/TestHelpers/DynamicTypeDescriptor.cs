@@ -87,7 +87,7 @@ namespace System.Data.Entity
     }
 
     /// <summary>
-    ///     Allows to add or remove attributes on a type and its properties at runtime
+    /// Allows to add or remove attributes on a type and its properties at runtime
     /// </summary>
     public class DynamicTypeDescriptionConfiguration<T> : IDisposable
     {
@@ -115,7 +115,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     If set to true will not return attributes defined on the type at compile time
+        /// If set to true will not return attributes defined on the type at compile time
         /// </summary>
         public bool IgnoreBase { get; set; }
 

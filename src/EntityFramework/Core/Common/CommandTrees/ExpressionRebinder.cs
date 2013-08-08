@@ -13,8 +13,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Linq;
 
     /// <summary>
-    ///     Ensures that all metadata in a given expression tree is from the specified metadata workspace,
-    ///     potentially rebinding and rebuilding the expressions to appropriate replacement metadata where necessary.
+    /// Ensures that all metadata in a given expression tree is from the specified metadata workspace,
+    /// potentially rebinding and rebuilding the expressions to appropriate replacement metadata where necessary.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Rebinder")]
     public class DbExpressionRebinder : DefaultExpressionVisitor

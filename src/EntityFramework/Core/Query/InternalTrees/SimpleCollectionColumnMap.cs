@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a "simple" collection map.
+    /// Represents a "simple" collection map.
     /// </summary>
     internal class SimpleCollectionColumnMap : CollectionColumnMap
     {
         /// <summary>
-        ///     Basic constructor
+        /// Basic constructor
         /// </summary>
         /// <param name="type"> Column datatype </param>
         /// <param name="name"> column name </param>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(

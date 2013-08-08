@@ -6,19 +6,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Used to configure a <see cref="String" /> property of an entity type or
-    ///     complex type.
+    /// Used to configure a <see cref="String" /> property of an entity type or
+    /// complex type.
     /// </summary>
     internal class StringPropertyConfiguration : LengthPropertyConfiguration
     {
         /// <summary>
-        ///     Gets or sets a value indicating whether the property supports Unicode string
-        ///     content.
+        /// Gets or sets a value indicating whether the property supports Unicode string
+        /// content.
         /// </summary>
         public bool? IsUnicode { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the StringPropertyConfiguration class.
+        /// Initializes a new instance of the StringPropertyConfiguration class.
         /// </summary>
         public StringPropertyConfiguration()
         {

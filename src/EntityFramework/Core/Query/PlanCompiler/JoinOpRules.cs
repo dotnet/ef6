@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Transformation rules for JoinOps
+    /// Transformation rules for JoinOps
     /// </summary>
     internal static class JoinOpRules
     {
@@ -72,9 +72,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverProject);
 
         /// <summary>
-        ///     CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
-        ///     InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
-        ///     LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
+        /// CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
+        /// InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
+        /// LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="joinNode"> Current JoinOp tree to process </param>
@@ -256,13 +256,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverFilter);
 
         /// <summary>
-        ///     CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
-        ///     CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
-        ///     InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
-        ///     InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
-        ///     LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
-        ///     Note that the predicate on the right table in a left-outer-join cannot be pulled
-        ///     up above the join.
+        /// CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
+        /// CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
+        /// InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
+        /// InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
+        /// LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
+        /// Note that the predicate on the right table in a left-outer-join cannot be pulled
+        /// up above the join.
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="joinNode"> Current JoinOp tree to process </param>
@@ -366,8 +366,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessJoinOverSingleRowTable);
 
         /// <summary>
-        ///     Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
-        ///     into just "X"
+        /// Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
+        /// into just "X"
         /// </summary>
         /// <param name="context"> rule processing context </param>
         /// <param name="joinNode"> the join node </param>

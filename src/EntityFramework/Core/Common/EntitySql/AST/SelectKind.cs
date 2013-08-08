@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents select kind (value,row).
+    /// Represents select kind (value,row).
     /// </summary>
     internal enum SelectKind
     {

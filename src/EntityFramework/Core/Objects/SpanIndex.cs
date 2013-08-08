@@ -8,15 +8,15 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     An index containing information about how the query was spanned
-    ///     This helps to determine how to materialize the query result
+    /// An index containing information about how the query was spanned
+    /// This helps to determine how to materialize the query result
     /// </summary>
     internal sealed class SpanIndex
     {
         #region Nested types
 
         /// <summary>
-        ///     Helper class to compare two RowTypes using EdmEquals instead of reference equality.
+        /// Helper class to compare two RowTypes using EdmEquals instead of reference equality.
         /// </summary>
         private sealed class RowTypeEqualityComparer : IEqualityComparer<RowType>
         {

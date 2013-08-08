@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Represents all physical operators
+    /// Represents all physical operators
     /// </summary>
     internal abstract class PhysicalOp : Op
     {
         #region constructors
 
         /// <summary>
-        ///     Default constructor
+        /// Default constructor
         /// </summary>
         /// <param name="opType"> the op type </param>
         internal PhysicalOp(OpType opType)
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     This is a physical Op
+        /// This is a physical Op
         /// </summary>
         internal override bool IsPhysicalOp
         {

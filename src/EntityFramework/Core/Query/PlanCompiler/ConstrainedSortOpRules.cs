@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Transformation Rules for ConstrainedSortOp
+    /// Transformation Rules for ConstrainedSortOp
     /// </summary>
     internal static class ConstrainedSortOpRules
     {
@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.ConstrainedSort, ProcessConstrainedSortOpOverEmptySet);
 
         /// <summary>
-        ///     If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
-        ///     CSort(EmptySet) => EmptySet
+        /// If the ConstrainedSortOp's input is guaranteed to produce no rows, remove the ConstrainedSortOp completly:
+        /// CSort(EmptySet) => EmptySet
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> current subtree </param>

@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for StructuredProperty.
+    /// Summary description for StructuredProperty.
     /// </summary>
     internal class Parameter : FacetEnabledSchemaElement
     {

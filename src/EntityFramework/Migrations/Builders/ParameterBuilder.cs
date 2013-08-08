@@ -9,12 +9,12 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Helper class that is used to configure a parameter.
+    /// Helper class that is used to configure a parameter.
     /// </summary>
     public class ParameterBuilder
     {
         /// <summary>
-        ///     Creates a new parameter definition to pass Binary data.
+        /// Creates a new parameter definition to pass Binary data.
         /// </summary>
         /// <param name="maxLength"> The maximum allowable length of the array data. </param>
         /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Boolean data.
+        /// Creates a new parameter definition to pass Boolean data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Byte data.
+        /// Creates a new parameter definition to pass Byte data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass DateTime data.
+        /// Creates a new parameter definition to pass DateTime data.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Decimal data.
+        /// Creates a new parameter definition to pass Decimal data.
         /// </summary>
         /// <param name="precision"> The numeric precision of the parameter. </param>
         /// <param name="scale"> The numeric scale of the parameter. </param>
@@ -161,7 +161,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Double data.
+        /// Creates a new parameter definition to pass Double data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass GUID data.
+        /// Creates a new parameter definition to pass GUID data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Single data.
+        /// Creates a new parameter definition to pass Single data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Short data.
+        /// Creates a new parameter definition to pass Short data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -265,7 +265,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Integer data.
+        /// Creates a new parameter definition to pass Integer data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Long data.
+        /// Creates a new parameter definition to pass Long data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass String data.
+        /// Creates a new parameter definition to pass String data.
         /// </summary>
         /// <param name="maxLength"> The maximum allowable length of the string data. </param>
         /// <param name="fixedLength"> Value indicating whether or not all data should be padded to the maximum length. </param>
@@ -352,7 +352,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass Time data.
+        /// Creates a new parameter definition to pass Time data.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -381,7 +381,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass DateTimeOffset data.
+        /// Creates a new parameter definition to pass DateTimeOffset data.
         /// </summary>
         /// <param name="precision"> The precision of the parameter. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
@@ -410,7 +410,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass geography data.
+        /// Creates a new parameter definition to pass geography data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>
@@ -436,7 +436,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new parameter definition to pass geometry data.
+        /// Creates a new parameter definition to pass geometry data.
         /// </summary>
         /// <param name="defaultValue"> Constant value to use as the default value for this parameter. </param>
         /// <param name="defaultValueSql"> SQL expression used as the default value for this parameter. </param>

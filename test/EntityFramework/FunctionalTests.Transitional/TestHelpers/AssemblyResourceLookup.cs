@@ -7,7 +7,7 @@ namespace System.Data.Entity
     using System.Resources;
 
     /// <summary>
-    ///     Locates localized resources for an assembly
+    /// Locates localized resources for an assembly
     /// </summary>
     public class AssemblyResourceLookup
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity
         private readonly ResourceManager _resourceManager;
 
         /// <summary>
-        ///     Initializes a new instance of the AssemblyResourceLookup class.
+        /// Initializes a new instance of the AssemblyResourceLookup class.
         /// </summary>
         /// <param name="assembly"> Assembly that resources belong to </param>
         public AssemblyResourceLookup(Assembly assembly)
@@ -24,7 +24,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the AssemblyResourceLookup class.
+        /// Initializes a new instance of the AssemblyResourceLookup class.
         /// </summary>
         /// <param name="assembly"> Assembly that resources belong to </param>
         /// <param name="resourceTable"> Resource table to lookup strings in </param>
@@ -41,7 +41,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Finds a specific string resource
+        /// Finds a specific string resource
         /// </summary>
         /// <param name="resourceKey"> Key of the resource to be located </param>
         /// <returns> The localized resource value </returns>

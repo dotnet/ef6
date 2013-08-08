@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Class representing a transaction for the conceptual layer
+    /// Class representing a transaction for the conceptual layer
     /// </summary>
     public class EntityTransaction : DbTransaction
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Constructs the EntityTransaction object with an associated connection and the underlying store transaction
+        /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction
         /// </summary>
         /// <param name="connection"> The EntityConnetion object owning this transaction </param>
         /// <param name="storeTransaction"> The underlying transaction object </param>
@@ -36,13 +36,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />
-        ///     .
+        /// Gets <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> to the underlying data source.
+        /// An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> to the underlying data source.
         /// </returns>
         public new virtual EntityConnection Connection
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     The connection object owning this transaction object
+        /// The connection object owning this transaction object
         /// </summary>
         protected override DbConnection DbConnection
         {
@@ -59,10 +59,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the isolation level of this <see cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />.
+        /// Gets the isolation level of this <see cref="T:System.Data.Entity.Core.EntityClient.EntityTransaction" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.IsolationLevel" /> enumeration value that represents the isolation level of the underlying transaction.
+        /// An <see cref="T:System.Data.IsolationLevel" /> enumeration value that represents the isolation level of the underlying transaction.
         /// </returns>
         public override IsolationLevel IsolationLevel
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the DbTransaction for the underlying provider transaction
+        /// Gets the DbTransaction for the underlying provider transaction
         /// </summary>
         internal virtual DbTransaction StoreTransaction
         {
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Cleans up this transaction object
+        /// Cleans up this transaction object
         /// </summary>
         /// <param name="disposing"> true to release both managed and unmanaged resources; false to release only unmanaged resources </param>
         protected override void Dispose(bool disposing)
@@ -147,7 +147,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Helper method to wrap EntityConnection.ClearCurrentTransaction()
+        /// Helper method to wrap EntityConnection.ClearCurrentTransaction()
         /// </summary>
         private void ClearCurrentTransaction()
         {

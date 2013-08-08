@@ -11,7 +11,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for the Include extension methods on IQueryable.
+    /// Tests for the Include extension methods on IQueryable.
     /// </summary>
     public class IncludeTests : FunctionalTestBase
     {

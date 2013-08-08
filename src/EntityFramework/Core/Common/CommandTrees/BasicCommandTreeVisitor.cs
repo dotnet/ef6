@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An abstract base type for types that implement the IExpressionVisitor interface to derive from.
+    /// An abstract base type for types that implement the IExpressionVisitor interface to derive from.
     /// </summary>
     public abstract class BasicCommandTreeVisitor : BasicExpressionVisitor
     {

@@ -238,8 +238,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     True is property is scalar, otherwise false.
-        ///     During validation (after all types have been resolved).
+        /// True is property is scalar, otherwise false.
+        /// During validation (after all types have been resolved).
         /// </summary>
         internal bool ValidateIsScalar()
         {

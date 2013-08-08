@@ -9,7 +9,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Reflection;
 
     /// <summary>
-    ///     Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration" />.
+    /// Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration" />.
     /// </summary>
     internal class DbConfigurationFinder
     {

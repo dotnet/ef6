@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core
     using System.Text;
 
     /// <summary>
-    ///     An identifier for an entity.
+    /// An identifier for an entity.
     /// </summary>
     [DebuggerDisplay("{ConcatKeyValue()}")]
     [Serializable]
@@ -64,45 +64,45 @@ namespace System.Data.Entity.Core
         private int _hashCode; // computed as needed
 
         /// <summary>
-        ///     A singleton EntityKey by which a read-only entity is identified.
+        /// A singleton EntityKey by which a read-only entity is identified.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private static readonly EntityKey _noEntitySetKey = new EntityKey("NoEntitySetKey.NoEntitySetKey");
 
         /// <summary>
-        ///     Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private static readonly EntityKey _entityNotValidKey = new EntityKey("EntityNotValidKey.EntityNotValidKey");
 
         /// <summary>
-        ///     A dictionary of names so that singleton instances of names can be used
+        /// A dictionary of names so that singleton instances of names can be used
         /// </summary>
         private static readonly ConcurrentDictionary<string, string> NameLookup = new ConcurrentDictionary<string, string>();
 
         #region Public Constructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class.
         /// </summary>
         public EntityKey()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and a generic
-        ///     <see
-        ///         cref="T:System.Collections.Generic.KeyValuePair" />
-        ///     collection.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and a generic
+        /// <see
+        ///     cref="T:System.Collections.Generic.KeyValuePair" />
+        /// collection.
         /// </summary>
         /// <param name="qualifiedEntitySetName">
-        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
         /// </param>
         /// <param name="entityKeyValues">
-        ///     A generic <see cref="T:System.Collections.Generic.KeyValuePair" /> collection.Each key/value pair has a property name as the key and the value of that property as the value. There should be one pair for each property that is part of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     . The order of the key/value pairs is not important, but each key property should be included. The property names are simple names that are not qualified with an entity type name or the schema name.
+        /// A generic <see cref="T:System.Collections.Generic.KeyValuePair" /> collection.Each key/value pair has a property name as the key and the value of that property as the value. There should be one pair for each property that is part of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// . The order of the key/value pairs is not important, but each key property should be included. The property names are simple names that are not qualified with an entity type name or the schema name.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public EntityKey(string qualifiedEntitySetName, IEnumerable<KeyValuePair<string, object>> entityKeyValues)
@@ -118,22 +118,22 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and an
-        ///     <see
-        ///         cref="T:System.Collections.Generic.IEnumerable`1" />
-        ///     collection of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKeyMember" />
-        ///     objects.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and an
+        /// <see
+        ///     cref="T:System.Collections.Generic.IEnumerable`1" />
+        /// collection of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKeyMember" />
+        /// objects.
         /// </summary>
         /// <param name="qualifiedEntitySetName">
-        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
         /// </param>
         /// <param name="entityKeyValues">
-        ///     An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKeyMember" />
-        ///     objects with which to initialize the key.
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1" /> collection of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKeyMember" />
+        /// objects with which to initialize the key.
         /// </param>
         public EntityKey(string qualifiedEntitySetName, IEnumerable<EntityKeyMember> entityKeyValues)
         {
@@ -148,16 +148,16 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and specific entity key pair.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityKey" /> class with an entity set name and specific entity key pair.
         /// </summary>
         /// <param name="qualifiedEntitySetName">
-        ///     A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
+        /// A <see cref="T:System.String" /> that is the entity set name qualified by the entity container name.
         /// </param>
         /// <param name="keyName">
-        ///     A <see cref="T:System.String" /> that is the name of the key.
+        /// A <see cref="T:System.String" /> that is the name of the key.
         /// </param>
         /// <param name="keyValue">
-        ///     An <see cref="T:System.Object" /> that is the key value.
+        /// An <see cref="T:System.Object" /> that is the key value.
         /// </param>
         public EntityKey(string qualifiedEntitySetName, string keyName, object keyValue)
         {
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core
         #region Internal Constructors
 
         /// <summary>
-        ///     Constructs an EntityKey from an IExtendedDataRecord representing the entity.
+        /// Constructs an EntityKey from an IExtendedDataRecord representing the entity.
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         /// <param name="record"> an IExtendedDataRecord that represents the entity </param>
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructs an EntityKey from an IExtendedDataRecord representing the entity.
+        /// Constructs an EntityKey from an IExtendedDataRecord representing the entity.
         /// </summary>
         /// <param name="qualifiedEntitySetName"> EntitySet of the entity </param>
         internal EntityKey(string qualifiedEntitySetName)
@@ -216,8 +216,8 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructs a temporary EntityKey with the given EntitySet.
-        ///     Temporary keys do not store key field names
+        /// Constructs a temporary EntityKey with the given EntitySet.
+        /// Temporary keys do not store key field names
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         internal EntityKey(EntitySetBase entitySet)
@@ -233,9 +233,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructor optimized for a singleton key.
-        ///     SQLBUDT 478655: Performance optimization: Does no integrity checking on the key value.
-        ///     SQLBUDT 523554: Performance optimization: Does no validate type of key members.
+        /// Constructor optimized for a singleton key.
+        /// SQLBUDT 478655: Performance optimization: Does no integrity checking on the key value.
+        /// SQLBUDT 523554: Performance optimization: Does no validate type of key members.
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         /// <param name="singletonKeyValue"> The single value that composes the entity's key, assumed to contain the correct type. </param>
@@ -255,9 +255,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Constructor optimized for a composite key.
-        ///     SQLBUDT 478655: Performance optimization: Does no integrity checking on the key values.
-        ///     SQLBUDT 523554: Performance optimization: Does no validate type of key members.
+        /// Constructor optimized for a composite key.
+        /// SQLBUDT 478655: Performance optimization: Does no integrity checking on the key values.
+        /// SQLBUDT 523554: Performance optimization: Does no validate type of key members.
         /// </summary>
         /// <param name="entitySet"> EntitySet of the entity </param>
         /// <param name="compositeKeyValues"> A list of the values (at least 2) that compose the entity's key, assumed to contain correct types. </param>
@@ -279,7 +279,7 @@ namespace System.Data.Entity.Core
         #endregion
 
         /// <summary>
-        ///     Gets a singleton EntityKey by which a read-only entity is identified.
+        /// Gets a singleton EntityKey by which a read-only entity is identified.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static EntityKey NoEntitySetKey
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Gets a singleton EntityKey identifying an entity resulted from a failed TREAT.
+        /// Gets a singleton EntityKey identifying an entity resulted from a failed TREAT.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static EntityKey EntityNotValidKey
@@ -298,10 +298,10 @@ namespace System.Data.Entity.Core
 
         /// <summary>Gets or sets the name of the entity set.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> value that is the name of the entity set for the entity to which the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     belongs.
+        /// A <see cref="T:System.String" /> value that is the name of the entity set for the entity to which the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// belongs.
         /// </returns>
         [DataMember]
         public string EntitySetName
@@ -316,10 +316,10 @@ namespace System.Data.Entity.Core
 
         /// <summary>Gets or sets the name of the entity container.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> value that is the name of the entity container for the entity to which the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     belongs.
+        /// A <see cref="T:System.String" /> value that is the name of the entity container for the entity to which the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// belongs.
         /// </returns>
         [DataMember]
         public string EntityContainerName
@@ -333,13 +333,13 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Gets or sets the key values associated with this <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// Gets or sets the key values associated with this <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of key values for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     .
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> of key values for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// .
         /// </returns>
         [DataMember]
         [SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Justification = "Required for this feature")]
@@ -387,10 +387,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary.
+        /// Gets a value that indicates whether the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary; otherwise, false.
+        /// true if the <see cref="T:System.Data.Entity.Core.EntityKey" /> is temporary; otherwise, false.
         /// </returns>
         public bool IsTemporary
         {
@@ -423,7 +423,7 @@ namespace System.Data.Entity.Core
 
         /// <summary>Gets the entity set for this entity key from the given metadata workspace.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> for the entity key.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> for the entity key.
         /// </returns>
         /// <param name="metadataWorkspace">The metadata workspace that contains the entity.</param>
         /// <exception cref="T:System.ArgumentException">The entity set could not be located in the specified metadata workspace.</exception>
@@ -452,7 +452,7 @@ namespace System.Data.Entity.Core
         /// <summary>Returns a value that indicates whether this instance is equal to a specified object. </summary>
         /// <returns>true if this instance and  obj  have equal values; otherwise, false. </returns>
         /// <param name="obj">
-        ///     An <see cref="T:System.Object" /> to compare with this instance.
+        /// An <see cref="T:System.Object" /> to compare with this instance.
         /// </param>
         public override bool Equals(object obj)
         {
@@ -460,14 +460,14 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns a value that indicates whether this instance is equal to a specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     .
+        /// Returns a value that indicates whether this instance is equal to a specified
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// .
         /// </summary>
         /// <returns>true if this instance and  other  have equal values; otherwise, false. </returns>
         /// <param name="other">
-        ///     An <see cref="T:System.Data.Entity.Core.EntityKey" /> object to compare with this instance.
+        /// An <see cref="T:System.Data.Entity.Core.EntityKey" /> object to compare with this instance.
         /// </param>
         public bool Equals(EntityKey other)
         {
@@ -475,13 +475,13 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Serves as a hash function for the current <see cref="T:System.Data.Entity.Core.EntityKey" /> object.
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.EntityKey.GetHashCode" />
-        ///     is suitable for hashing algorithms and data structures such as a hash table.
+        /// Serves as a hash function for the current <see cref="T:System.Data.Entity.Core.EntityKey" /> object.
+        /// <see
+        ///     cref="M:System.Data.Entity.Core.EntityKey.GetHashCode" />
+        /// is suitable for hashing algorithms and data structures such as a hash table.
         /// </summary>
         /// <returns>
-        ///     A hash code for the current <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// A hash code for the current <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </returns>
         public override int GetHashCode()
         {
@@ -549,14 +549,14 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
+        /// Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
         /// </summary>
         /// <returns>true if the  key1  and  key2  values are equal; otherwise, false.</returns>
         /// <param name="key1">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
         /// </param>
         /// <param name="key2">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
         /// </param>
         public static bool operator ==(EntityKey key1, EntityKey key2)
         {
@@ -564,14 +564,14 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
+        /// Compares two <see cref="T:System.Data.Entity.Core.EntityKey" /> objects.
         /// </summary>
         /// <returns>true if the  key1  and  key2  values are not equal; otherwise, false.</returns>
         /// <param name="key1">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
         /// </param>
         /// <param name="key2">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
+        /// A <see cref="T:System.Data.Entity.Core.EntityKey" /> to compare.
         /// </param>
         public static bool operator !=(EntityKey key1, EntityKey key2)
         {
@@ -579,7 +579,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Internal function to compare two keys by their values.
+        /// Internal function to compare two keys by their values.
         /// </summary>
         /// <param name="key1"> a key to compare </param>
         /// <param name="key2"> a key to compare </param>
@@ -769,10 +769,10 @@ namespace System.Data.Entity.Core
         #endregion
 
         /// <summary>
-        ///     Returns an array of string/<see cref="DbExpression" /> pairs, one for each key value in this EntityKey,
-        ///     where the string is the key member name and the DbExpression is the value in this EntityKey
-        ///     for that key member, represented as a <see cref="DbConstantExpression" /> with the same result
-        ///     type as the key member.
+        /// Returns an array of string/<see cref="DbExpression" /> pairs, one for each key value in this EntityKey,
+        /// where the string is the key member name and the DbExpression is the value in this EntityKey
+        /// for that key member, represented as a <see cref="DbConstantExpression" /> with the same result
+        /// type as the key member.
         /// </summary>
         /// <param name="entitySet"> The entity set to which this EntityKey refers; used to verify that this key has the required key members </param>
         /// <returns> The name -> expression mappings for the key member values represented by this EntityKey </returns>
@@ -841,9 +841,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns a string representation of this EntityKey, for use in debugging.
-        ///     Note that the returned string contains potentially sensitive information
-        ///     (i.e., key values), and thus shouldn't be publicly exposed.
+        /// Returns a string representation of this EntityKey, for use in debugging.
+        /// Note that the returned string contains potentially sensitive information
+        /// (i.e., key values), and thus shouldn't be publicly exposed.
         /// </summary>
         internal string ConcatKeyValue()
         {
@@ -861,7 +861,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns the appropriate value for the given key name.
+        /// Returns the appropriate value for the given key name.
         /// </summary>
         internal object FindValueByName(string keyName)
         {
@@ -964,9 +964,9 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Validates the record parameter passed to the EntityKey constructor,
-        ///     and converts the data into the form required by EntityKey.  For singleton keys,
-        ///     this is a single object.  For composite keys, this is an object array.
+        /// Validates the record parameter passed to the EntityKey constructor,
+        /// and converts the data into the form required by EntityKey.  For singleton keys,
+        /// this is a single object.  For composite keys, this is an object array.
         /// </summary>
         /// <param name="entitySet"> the entity set metadata object which this key refers to </param>
         /// <param name="record"> the parameter to validate </param>
@@ -1018,10 +1018,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Verify that the types of the objects passed in to be used as keys actually match the types from the model.
-        ///     This error is also caught when the entity is materialized and when the key value is set, at which time it
-        ///     also throws ThrowSetInvalidValue().
-        ///     SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
+        /// Verify that the types of the objects passed in to be used as keys actually match the types from the model.
+        /// This error is also caught when the entity is materialized and when the key value is set, at which time it
+        /// also throws ThrowSetInvalidValue().
+        /// SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
         /// </summary>
         /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
         /// <param name="entitySet"> The EntitySet to validate against </param>
@@ -1031,10 +1031,10 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Verify that the types of the objects passed in to be used as keys actually match the types from the model.
-        ///     This error is also caught when the entity is materialized and when the key value is set, at which time it
-        ///     also throws ThrowSetInvalidValue().
-        ///     SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
+        /// Verify that the types of the objects passed in to be used as keys actually match the types from the model.
+        /// This error is also caught when the entity is materialized and when the key value is set, at which time it
+        /// also throws ThrowSetInvalidValue().
+        /// SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
         /// </summary>
         /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
         /// <param name="entitySet"> The EntitySet to validate against </param>
@@ -1138,7 +1138,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Validates whether type of the key matches the type of the key value.
+        /// Validates whether type of the key matches the type of the key value.
         /// </summary>
         /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
         /// <param name="keyMember"> Edm key member. </param>
@@ -1215,8 +1215,8 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Asserts that the "state" of the EntityKey is correct, by validating assumptions
-        ///     based on whether the key is a singleton, composite, or temporary.
+        /// Asserts that the "state" of the EntityKey is correct, by validating assumptions
+        /// based on whether the key is a singleton, composite, or temporary.
         /// </summary>
         /// <param name="entitySet"> </param>
         /// <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
@@ -1264,7 +1264,7 @@ namespace System.Data.Entity.Core
         #region Serialization
 
         /// <summary>
-        ///     Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
         /// <param name="context">Describes the source and destination of a given serialized stream, and provides an additional caller-defined context.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -1280,7 +1280,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
+        /// Helper method that is used to deserialize an <see cref="T:System.Data.Entity.Core.EntityKey" />.
         /// </summary>
         /// <param name="context">Describes the source and destination of a given serialized stream and provides an additional caller-defined context.</param>
         [OnDeserialized]
@@ -1301,7 +1301,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Dev Note: this must be called from within a _lock block on _nameLookup
+        /// Dev Note: this must be called from within a _lock block on _nameLookup
         /// </summary>
         internal static string LookupSingletonName(string name)
         {

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents altering an existing stored procedure.
+    /// Represents altering an existing stored procedure.
     /// </summary>
     public class AlterProcedureOperation : ProcedureOperation
     {
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that will revert this operation. 
-        ///     Always returns a <see cref="NotSupportedOperation"/>.
+        /// Gets an operation that will revert this operation. 
+        /// Always returns a <see cref="NotSupportedOperation"/>.
         /// </summary>
         public override MigrationOperation Inverse
         {

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Class representing a collection of entity set objects
+    /// Class representing a collection of entity set objects
     /// </summary>
     internal sealed class EntitySetBaseCollection : MetadataCollection<EntitySetBase>
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // is required to update the EntitySet's back-reference to the EntityContainer.
 
         /// <summary>
-        ///     Default constructor for constructing an empty collection
+        /// Default constructor for constructing an empty collection
         /// </summary>
         /// <param name="entityContainer"> The entity container that has this entity set collection </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument entityContainer is null</exception>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing the collection with the given items
+        /// The constructor for constructing the collection with the given items
         /// </summary>
         /// <param name="entityContainer"> The entity container that has this entity set collection </param>
         /// <param name="items"> The items to populate the collection </param>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly EntityContainer _entityContainer;
 
         /// <summary>
-        ///     Gets an item from the collection with the given index
+        /// Gets an item from the collection with the given index
         /// </summary>
         /// <param name="index"> The index to search for </param>
         /// <returns> An item from the collection </returns>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <returns> An item from the collection </returns>
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the collection
+        /// Adds an item to the collection
         /// </summary>
         /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Checks if the given entity set already has a entity container, if so, throw an exception
+        /// Checks if the given entity set already has a entity container, if so, throw an exception
         /// </summary>
         /// <param name="entitySet"> The entity set to check for </param>
         /// <param name="argumentName"> The name of the argument from the caller </param>

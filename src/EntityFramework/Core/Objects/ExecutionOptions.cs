@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Core.Objects
 {
     /// <summary>
-    ///     Options for query execution.
+    /// Options for query execution.
     /// </summary>
     public class ExecutionOptions
     {
         internal static readonly ExecutionOptions Default = new ExecutionOptions(MergeOption.AppendOnly, false);
 
         /// <summary>
-        ///     Creates a new instance of <see cref="ExecutionOptions" />.
+        /// Creates a new instance of <see cref="ExecutionOptions" />.
         /// </summary>
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
@@ -21,12 +21,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Merge option to use for entity results.
+        /// Merge option to use for entity results.
         /// </summary>
         public MergeOption MergeOption { get; private set; }
 
         /// <summary>
-        ///     Whether the query is streaming or buffering.
+        /// Whether the query is streaming or buffering.
         /// </summary>
         public bool Streaming { get; private set; }
 

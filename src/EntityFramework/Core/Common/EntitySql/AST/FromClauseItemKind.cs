@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     From clause item kind.
+    /// From clause item kind.
     /// </summary>
     internal enum FromClauseItemKind
     {

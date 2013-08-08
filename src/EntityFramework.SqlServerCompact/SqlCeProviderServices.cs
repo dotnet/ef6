@@ -20,31 +20,31 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Transactions;
 
     /// <summary>
-    ///     The ProviderServices object for the Sql CE provider
+    /// The ProviderServices object for the Sql CE provider
     /// </summary>
     /// <remarks>
-    ///     Note that instance of this type also resolves additional provider services for Microsoft SQL Server Compact Edition
-    ///     when this type is registered as an EF provider either using an entry in the application's config file or through
-    ///     code-based registration in <see cref="DbConfiguration" />.
-    ///     The services resolved are:
-    ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
-    ///     <see cref="SqlCeConnectionFactory" /> to create connections to SQL Compact by default.
-    ///     Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlServerCe.4.0" are
-    ///     resolved to <see cref="SqlCeMigrationSqlGenerator" /> instances to provide default Migrations SQL
-    ///     generation for SQL Compact.
+    /// Note that instance of this type also resolves additional provider services for Microsoft SQL Server Compact Edition
+    /// when this type is registered as an EF provider either using an entry in the application's config file or through
+    /// code-based registration in <see cref="DbConfiguration" />.
+    /// The services resolved are:
+    /// Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
+    /// <see cref="SqlCeConnectionFactory" /> to create connections to SQL Compact by default.
+    /// Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlServerCe.4.0" are
+    /// resolved to <see cref="SqlCeMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    /// generation for SQL Compact.
     /// </remarks>
     [CLSCompliant(false)]
     public sealed class SqlCeProviderServices : DbProviderServices
     {
         /// <summary>
-        ///     This is the well-known string using in configuration files and code-based configuration as
-        ///     the "provider invariant name" used to specify Microsoft SQL Server Compact Edition 4.0 for
-        ///     ADO.NET and Entity Framework provider services.
+        /// This is the well-known string using in configuration files and code-based configuration as
+        /// the "provider invariant name" used to specify Microsoft SQL Server Compact Edition 4.0 for
+        /// ADO.NET and Entity Framework provider services.
         /// </summary>
         public const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
 
         /// <summary>
-        ///     Singleton object;
+        /// Singleton object;
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly SqlCeProviderServices Instance = new SqlCeProviderServices();
@@ -62,7 +62,7 @@ namespace System.Data.Entity.SqlServerCompact
         #region CodeOnly Methods
 
         /// <summary>
-        ///     API for generating script for creating schema objects from the Store Item Collection.
+        /// API for generating script for creating schema objects from the Store Item Collection.
         /// </summary>
         /// <param name="providerManifestToken"> Provider manifest </param>
         /// <param name="storeItemCollection"> Store items </param>
@@ -77,9 +77,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     API for checkin whether database exists or not.
-        ///     This will internally only check whether the file that the connection points to exists or not.
-        ///     Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
+        /// API for checkin whether database exists or not.
+        /// This will internally only check whether the file that the connection points to exists or not.
+        /// Note: In case of SQLCE, timeout and storeItemCollection parameters are ignored.
         /// </summary>
         /// <param name="connection"> Connection </param>
         /// <param name="timeOut"> Timeout for internal commands. </param>
@@ -114,9 +114,9 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     API for deleting the database.
-        ///     In SQLCE case, this will translate to File.Delete() call.
-        ///     Note: Timeout and storeItemCollection parameters are ignored.
+        /// API for deleting the database.
+        /// In SQLCE case, this will translate to File.Delete() call.
+        /// Note: Timeout and storeItemCollection parameters are ignored.
         /// </summary>
         /// <param name="connection"> Connection </param>
         /// <param name="timeOut"> Timeout for internal commands. </param>
@@ -174,11 +174,11 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     API for creating the databse and schema objects given a StoreItemCollection.
-        ///     This will do following things:
-        ///     1. Create a new database using SqlCeEngine.CreateDatabase().
-        ///     2. Generate scripts for creating schema objects.
-        ///     3. Execute the scrip generated in step2.
+        /// API for creating the databse and schema objects given a StoreItemCollection.
+        /// This will do following things:
+        /// 1. Create a new database using SqlCeEngine.CreateDatabase().
+        /// 2. Generate scripts for creating schema objects.
+        /// 3. Execute the scrip generated in step2.
         /// </summary>
         /// <param name="connection"> Connection </param>
         /// <param name="timeOut"> Timeout for internal commands </param>
@@ -314,7 +314,7 @@ namespace System.Data.Entity.SqlServerCompact
         #endregion
 
         /// <summary>
-        ///     Registers a handler to process non-error messages coming from the database provider.
+        /// Registers a handler to process non-error messages coming from the database provider.
         /// </summary>
         /// <param name="connection">The connection to receive information for.</param>
         /// <param name="handler">The handler to process messages.</param>
@@ -342,7 +342,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Create a Command Definition object, given the connection and command tree
+        /// Create a Command Definition object, given the connection and command tree
         /// </summary>
         /// <param name="providerManifest"> provider manifest that was determined from metadata </param>
         /// <param name="commandTree"> command tree for the statement </param>
@@ -358,7 +358,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Create a SqlCeCommand object, given the provider manifest and command tree
+        /// Create a SqlCeCommand object, given the provider manifest and command tree
         /// </summary>
         /// <param name="providerManifest"> provider manifest </param>
         /// <param name="commandTree"> command tree for the statement </param>
@@ -450,7 +450,7 @@ namespace System.Data.Entity.SqlServerCompact
         // the provider is local provider or remote provider
         //
         /// <summary>
-        ///     Returns provider manifest token for a given connection.
+        /// Returns provider manifest token for a given connection.
         /// </summary>
         /// <param name="connection">Connection to find manifest token from.</param>
         /// <returns>The provider manifest token for the specified connection.</returns>
@@ -483,7 +483,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Returns the provider manifest by using the specified version information.
+        /// Returns the provider manifest by using the specified version information.
         /// </summary>
         /// <returns> The provider manifest by using the specified version information. </returns>
         /// <param name="versionHint"> The token information associated with the provider manifest. </param>
@@ -501,7 +501,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Constructs a SqlCeParameter
+        /// Constructs a SqlCeParameter
         /// </summary>
         internal static DbParameter CreateSqlCeParameter(
             string name, TypeUsage type, object value, bool ignoreMaxLengthFacet, bool isLocalProvider)
@@ -586,8 +586,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Determines SqlDbType for the given primitive type. Extracts facet
-        ///     information as well.
+        /// Determines SqlDbType for the given primitive type. Extracts facet
+        /// information as well.
         /// </summary>
         private static SqlDbType GetSqlDbType(TypeUsage type, out int? size, out byte? precision, out byte? scale)
         {
@@ -658,8 +658,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Determines preferred value for SqlParameter.Size. Returns null
-        ///     where there is no preference.
+        /// Determines preferred value for SqlParameter.Size. Returns null
+        /// where there is no preference.
         /// </summary>
         private static int? GetParameterSize(TypeUsage type)
         {
@@ -679,8 +679,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        ///     returns null.
+        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        /// returns null.
         /// </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
@@ -696,8 +696,8 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        ///     returns null.
+        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        /// returns null.
         /// </summary>
         private static byte? GetScale(TypeUsage type)
         {
@@ -713,7 +713,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Chooses the appropriate SqlDbType for the given string type.
+        /// Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
         private static SqlDbType GetStringDbType(TypeUsage type)
         {
@@ -765,7 +765,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Chooses the appropriate SqlDbType for the given binary type.
+        /// Chooses the appropriate SqlDbType for the given binary type.
         /// </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {

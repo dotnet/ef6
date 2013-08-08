@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents the Structural Type
+    /// Represents the Structural Type
     /// </summary>
     public abstract class StructuralType : EdmType
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EdmMember> _readOnlyMembers;
 
         /// <summary>
-        ///     Internal parameterless constructor for bootstrapping edmtypes
+        /// Internal parameterless constructor for bootstrapping edmtypes
         /// </summary>
         internal StructuralType()
         {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of Structural Type with the given members
+        /// Initializes a new instance of Structural Type with the given members
         /// </summary>
         /// <param name="name"> name of the structural type </param>
         /// <param name="namespaceName"> namespace of the structural type </param>
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the list of members on this type.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains a set of members on this type.
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains a set of members on this type.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmMember, true)]
         public ReadOnlyMetadataCollection<EdmMember> Members
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the declared only members of a particular type
+        /// Get the declared only members of a particular type
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>()
             where T : EdmMember
@@ -56,8 +56,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
-        ///     it can never be changed.
+        /// Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
+        /// it can never be changed.
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -69,15 +69,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's
-        ///     Members collection. If this method returns without throwing, it is assumed
-        ///     the member is valid.
+        /// Validates a EdmMember object to determine if it can be added to this type's
+        /// Members collection. If this method returns without throwing, it is assumed
+        /// the member is valid.
         /// </summary>
         /// <param name="member"> The member to validate </param>
         internal abstract void ValidateMemberForAdd(EdmMember member);
 
         /// <summary>
-        ///     Adds a member to this type
+        /// Adds a member to this type
         /// </summary>
         /// <param name="member"> The member to add </param>
         public void AddMember(EdmMember member)
@@ -86,17 +86,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds a member to this type.
+        /// Adds a member to this type.
         /// </summary>
         /// <param name="member">The member to add.</param>
         /// <param name="forceAdd">
-        ///     Indicates whether the addition is forced, regardless of
-        ///     whether read-only is set.
+        /// Indicates whether the addition is forced, regardless of
+        /// whether read-only is set.
         /// </param>
         /// <remarks>
-        ///     Adding a NavigationProperty to an EntityType introduces a circular dependency between
-        ///     EntityType and AssociationEndMember, which is worked around by calling this method.
-        ///     This is the case of OneToOneMappingBuilder, in the designer. Must not be used in other context.
+        /// Adding a NavigationProperty to an EntityType introduces a circular dependency between
+        /// EntityType and AssociationEndMember, which is worked around by calling this method.
+        /// This is the case of OneToOneMappingBuilder, in the designer. Must not be used in other context.
         /// </remarks>
         internal void AddMember(EdmMember member, bool forceAdd)
         {

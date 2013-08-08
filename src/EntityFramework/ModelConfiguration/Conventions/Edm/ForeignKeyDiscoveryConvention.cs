@@ -11,12 +11,12 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Base class for conventions that discover foreign key properties.
+    /// Base class for conventions that discover foreign key properties.
     /// </summary>
     public abstract class ForeignKeyDiscoveryConvention : IConceptualModelConvention<AssociationType>
     {
         /// <summary>
-        ///     Returns <c>true</c> if the convention supports pairs of entity types that have multiple associations defined between them.
+        /// Returns <c>true</c> if the convention supports pairs of entity types that have multiple associations defined between them.
         /// </summary>
         protected virtual bool SupportsMultipleAssociations
         {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     When overriden returns <c>true</c> if <paramref name="dependentProperty"/> should be part of the foreign key.
+        /// When overriden returns <c>true</c> if <paramref name="dependentProperty"/> should be part of the foreign key.
         /// </summary>
         /// <param name="associationType"> The association type being configured. </param>
         /// <param name="dependentAssociationEnd"> The dependent end. </param>

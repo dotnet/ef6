@@ -8,15 +8,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The RuleProcessor helps apply a set of rules to a query tree
+    /// The RuleProcessor helps apply a set of rules to a query tree
     /// </summary>
     internal class RuleProcessor
     {
         #region private state
 
         /// <summary>
-        ///     A lookup table for rules.
-        ///     The lookup table is an array indexed by OpType and each entry has a list of rules.
+        /// A lookup table for rules.
+        /// The lookup table is an array indexed by OpType and each entry has a list of rules.
         /// </summary>
         private readonly Dictionary<SubTreeId, SubTreeId> m_processedNodeMap;
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        ///     Initializes a new RuleProcessor
+        /// Initializes a new RuleProcessor
         /// </summary>
         internal RuleProcessor()
         {
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Apply rules to the current subtree in a bottom-up fashion.
+        /// Apply rules to the current subtree in a bottom-up fashion.
         /// </summary>
         /// <param name="context"> Current rule processing context </param>
         /// <param name="rules"> The look-up table with the rules to be applied </param>
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     Apply a set of rules to the subtree
+        /// Apply a set of rules to the subtree
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="rules"> </param>

@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an RelationshipSet element.
+    /// Represents an RelationshipSet element.
     /// </summary>
     internal abstract class EntityContainerRelationshipSet : SchemaElement
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private string _unresolvedRelationshipTypeName;
 
         /// <summary>
-        ///     Constructs an EntityContainerRelationshipSet
+        /// Constructs an EntityContainerRelationshipSet
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerRelationshipSet(EntityContainer parentElement)
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         internal abstract IEnumerable<EntityContainerRelationshipSetEnd> Ends { get; }
 
         /// <summary>
-        ///     The method that is called when an Association attribute is encountered.
+        /// The method that is called when an Association attribute is encountered.
         /// </summary>
         /// <param name="reader"> An XmlReader positioned at the Association attribute. </param>
         protected void HandleRelationshipTypeNameAttribute(XmlReader reader)
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Used during the resolve phase to resolve the type name to the object that represents that type
+        /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Do all validation for this element here, and delegate to all sub elements
+        /// Do all validation for this element here, and delegate to all sub elements
         /// </summary>
         internal override void Validate()
         {
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Adds any ends that need to be infered
+        /// Adds any ends that need to be infered
         /// </summary>
         private void InferEnds()
         {
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     For the given relationship end, find the EntityContainer Property that will work for the extent
+        /// For the given relationship end, find the EntityContainer Property that will work for the extent
         /// </summary>
         /// <param name="relationshipEnd"> The relationship end of the RelationshipSet that needs and extent </param>
         /// <returns> Null is none could be found, or the EntityContainerProperty that is the valid extent </returns>
@@ -202,7 +202,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The parent element as an EntityContainer
+        /// The parent element as an EntityContainer
         /// </summary>
         internal new EntityContainer ParentElement
         {

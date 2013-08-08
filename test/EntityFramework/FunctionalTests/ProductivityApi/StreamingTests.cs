@@ -11,7 +11,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for the AsStreaming extension methods on IQueryable.
+    /// Tests for the AsStreaming extension methods on IQueryable.
     /// </summary>
     public class StreamingTests : FunctionalTestBase
     {

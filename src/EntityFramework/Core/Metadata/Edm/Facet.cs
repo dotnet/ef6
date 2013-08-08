@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Globalization;
 
     /// <summary>
-    ///     Class for representing a Facet object
-    ///     This object is Immutable (not just set to readonly) and
-    ///     some parts of the system are depending on that behavior
+    /// Class for representing a Facet object
+    /// This object is Immutable (not just set to readonly) and
+    /// some parts of the system are depending on that behavior
     /// </summary>
     [DebuggerDisplay("{Name,nq}={Value}")]
     public class Facet : MetadataItem
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a Facet object with the facet description and a value
+        /// The constructor for constructing a Facet object with the facet description and a value
         /// </summary>
         /// <param name="facetDescription"> The object describing this facet </param>
         /// <param name="value"> The value of the facet </param>
@@ -34,8 +34,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a Facet instance with the specified value for the given
-        ///     facet description.
+        /// Creates a Facet instance with the specified value for the given
+        /// facet description.
         /// </summary>
         /// <param name="facetDescription"> The object describing this facet </param>
         /// <param name="value"> The value of the facet </param>
@@ -46,8 +46,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a Facet instance with the specified value for the given
-        ///     facet description.
+        /// Creates a Facet instance with the specified value for the given
+        /// facet description.
         /// </summary>
         /// <param name="facetDescription"> The object describing this facet </param>
         /// <param name="value"> The value of the facet </param>
@@ -101,23 +101,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The object describing this facet.
+        /// The object describing this facet.
         /// </summary>
         private readonly FacetDescription _facetDescription;
 
         /// <summary>
-        ///     The value assigned to this facet.
+        /// The value assigned to this facet.
         /// </summary>
         private readonly object _value;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -125,13 +125,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the description of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Gets the description of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.FacetDescription" /> object that represents the description of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.FacetDescription" /> object that represents the description of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        /// .
         /// </returns>
         public FacetDescription Description
         {
@@ -139,10 +139,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Gets the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
         public virtual String Name
@@ -151,13 +151,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Gets the type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.EdmType, false)]
         public EdmType FacetType
@@ -166,10 +166,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Gets the value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     The value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// The value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the Facet instance is in ReadOnly state</exception>
         [MetadataProperty(typeof(Object), false)]
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the identity for this item as a string
+        /// Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {
@@ -194,10 +194,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// Returns the name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </summary>
         /// <returns>
-        ///     The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
+        /// The name of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.Facet" />.
         /// </returns>
         public override string ToString()
         {

@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
 
     /// <summary>
-    ///     Mapping metadata for all OC member maps.
+    /// Mapping metadata for all OC member maps.
     /// </summary>
     internal abstract class ObjectMemberMapping
     {
         /// <summary>
-        ///     Constrcut a new member mapping metadata object
+        /// Constrcut a new member mapping metadata object
         /// </summary>
         protected ObjectMemberMapping(EdmMember edmMember, EdmMember clrMember)
         {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly EdmMember m_clrMember; //EdmMember metadata representing the Clr member for which the mapping is specified
 
         /// <summary>
-        ///     The PropertyMetadata object that represents the Cdm member for which mapping is being specified
+        /// The PropertyMetadata object that represents the Cdm member for which mapping is being specified
         /// </summary>
         internal EdmMember EdmMember
         {
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The PropertyMetadata object that represents the Clr member for which mapping is being specified
+        /// The PropertyMetadata object that represents the Clr member for which mapping is being specified
         /// </summary>
         internal EdmMember ClrMember
         {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Returns the member mapping kind
+        /// Returns the member mapping kind
         /// </summary>
         internal abstract MemberMappingKind MemberMappingKind { get; }
     }

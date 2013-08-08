@@ -5,11 +5,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Collections.Generic;
 
     /// <summary>
-    ///     The KeySet class encapsulates all information about the keys of a RelOp node in
-    ///     the query tree.
-    ///     A KeyVec is logically a set of vars that uniquely identify the row of the current
-    ///     RelOp. Some RelOps may have no unique keys - such a state is identified by the
-    ///     "NoKeys" property
+    /// The KeySet class encapsulates all information about the keys of a RelOp node in
+    /// the query tree.
+    /// A KeyVec is logically a set of vars that uniquely identify the row of the current
+    /// RelOp. Some RelOps may have no unique keys - such a state is identified by the
+    /// "NoKeys" property
     /// </summary>
     internal class KeyVec
     {

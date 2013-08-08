@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Common;
 
     /// <summary>
-    ///     Class representing a parameter collection used in EntityCommand
+    /// Class representing a parameter collection used in EntityCommand
     /// </summary>
     public sealed partial class EntityParameterCollection : DbParameterCollection
     {
@@ -13,17 +13,17 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _isDirty;
 
         /// <summary>
-        ///     Constructs the EntityParameterCollection object
+        /// Constructs the EntityParameterCollection object
         /// </summary>
         internal EntityParameterCollection()
         {
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
+        /// Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> at the specified index.
         /// </returns>
         /// <param name="index">The zero-based index of the parameter to retrieve. </param>
         /// <exception cref="T:System.IndexOutOfRangeException">The specified index does not exist. </exception>
@@ -34,10 +34,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
+        /// Gets the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> with the specified name.
         /// </returns>
         /// <param name="parameterName">The name of the parameter to retrieve. </param>
         /// <exception cref="T:System.IndexOutOfRangeException">The specified name does not exist. </exception>
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets whether this collection has been changes since the last reset
+        /// Gets whether this collection has been changes since the last reset
         /// </summary>
         internal bool IsDirty
         {
@@ -73,25 +73,25 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// Adds the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to add to the collection.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to add to the collection.
         /// </param>
         /// <exception cref="T:System.ArgumentException">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> specified in the  value  parameter is already added to this or another
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> specified in the  value  parameter is already added to this or another
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </exception>
         /// <exception cref="T:System.InvalidCastException">
-        ///     The parameter passed was not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// The parameter passed was not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
         /// </exception>
         /// <exception cref="T:System.ArgumentNullException">The  value  parameter is null. </exception>
         public EntityParameter Add(EntityParameter value)
@@ -101,10 +101,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds a value to the end of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />.
+        /// Adds a value to the end of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
         /// </returns>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="value">The value to be added.</param>
@@ -117,17 +117,17 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     given the parameter name and the data type.
+        /// Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// given the parameter name and the data type.
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
         /// </returns>
         /// <param name="parameterName">The name of the parameter. </param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         public EntityParameter Add(string parameterName, DbType dbType)
         {
@@ -135,17 +135,17 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     with the parameter name, the data type, and the column length.
+        /// Adds a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// with the parameter name, the data type, and the column length.
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
+        /// A new <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object.
         /// </returns>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         /// <param name="size">The column length.</param>
         public EntityParameter Add(string parameterName, DbType dbType, int size)
@@ -154,13 +154,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Adds an array of <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to the end of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// Adds an array of <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to the end of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </summary>
         /// <param name="values">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to add.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> values to add.
         /// </param>
         public void AddRange(EntityParameter[] values)
         {
@@ -168,16 +168,16 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> is in this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// Determines whether the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> is in this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> contains the value; otherwise false.
+        /// true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> contains the value; otherwise false.
         /// </returns>
         /// <param name="parameterName">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> value.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> value.
         /// </param>
         public override bool Contains(string parameterName)
         {
@@ -185,22 +185,22 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Copies all the elements of the current <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> to the specified
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     starting at the specified destination index.
+        /// Copies all the elements of the current <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> to the specified
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// starting at the specified destination index.
         /// </summary>
         /// <param name="array">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> that is the destination of the elements copied from the current
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" /> that is the destination of the elements copied from the current
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </param>
         /// <param name="index">
-        ///     A 32-bit integer that represents the index in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     at which copying starts.
+        /// A 32-bit integer that represents the index in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// at which copying starts.
         /// </param>
         public void CopyTo(EntityParameter[] array, int index)
         {
@@ -208,19 +208,19 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> in the collection.
+        /// Gets the location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> in the collection.
         /// </summary>
         /// <returns>
-        ///     The zero-based location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> that is a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />
-        ///     in the collection. Returns -1 when the object does not exist in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// The zero-based location of the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> that is a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />
+        /// in the collection. Returns -1 when the object does not exist in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </returns>
         /// <param name="value">
-        ///     The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to find.
+        /// The <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> to find.
         /// </param>
         public int IndexOf(EntityParameter value)
         {
@@ -228,17 +228,17 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Inserts a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object into the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     at the specified index.
+        /// Inserts a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object into the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index at which value should be inserted.</param>
         /// <param name="value">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to be inserted in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to be inserted in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityParameterCollection" />
+        /// .
         /// </param>
         public void Insert(int index, EntityParameter value)
         {
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Marks that this collection has been changed
+        /// Marks that this collection has been changed
         /// </summary>
         private void OnChange()
         {
@@ -254,13 +254,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Removes the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> from the collection.
+        /// Removes the specified <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> from the collection.
         /// </summary>
         /// <param name="value">
-        ///     A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to remove from the collection.
+        /// A <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> object to remove from the collection.
         /// </param>
         /// <exception cref="T:System.InvalidCastException">
-        ///     The parameter is not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// The parameter is not a <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
         /// </exception>
         /// <exception cref="T:System.SystemException">The parameter does not exist in the collection. </exception>
         public void Remove(EntityParameter value)
@@ -269,7 +269,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Reset the dirty flag on the collection
+        /// Reset the dirty flag on the collection
         /// </summary>
         internal void ResetIsDirty()
         {

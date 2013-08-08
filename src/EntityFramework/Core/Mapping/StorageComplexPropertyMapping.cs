@@ -7,48 +7,48 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Mapping metadata for Complex properties.
+    /// Mapping metadata for Complex properties.
     /// </summary>
     /// <example>
-    ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping
-    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///     --EntitySetMapping
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ComplexPropertyMap
-    ///     --ComplexTypeMapping
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --ComplexTypeMapping
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --AssociationSetMapping
-    ///     --AssociationTypeMapping
-    ///     --MappingFragment
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     This class represents the metadata for all the complex property map elements in the
-    ///     above example. ComplexPropertyMaps contain ComplexTypeMaps which define mapping based
-    ///     on the type of the ComplexProperty in case of inheritance.
+    /// For Example if conceptually you could represent the CS MSL file as following
+    /// --Mapping
+    /// --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    /// --EntitySetMapping
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ComplexPropertyMap
+    /// --ComplexTypeMapping
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --ComplexTypeMapping
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --DiscriminatorProperyMap ( constant value-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --AssociationSetMapping
+    /// --AssociationTypeMapping
+    /// --MappingFragment
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// This class represents the metadata for all the complex property map elements in the
+    /// above example. ComplexPropertyMaps contain ComplexTypeMaps which define mapping based
+    /// on the type of the ComplexProperty in case of inheritance.
     /// </example>
     internal class StorageComplexPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
-        ///     Construct a new Complex Property mapping object
+        /// Construct a new Complex Property mapping object
         /// </summary>
         /// <param name="cdmMember"> The MemberMetadata object that represents this Complex member </param>
         internal StorageComplexPropertyMapping(EdmProperty cdmMember)
@@ -58,12 +58,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Set of type mappings that make up the EdmProperty mapping.
+        /// Set of type mappings that make up the EdmProperty mapping.
         /// </summary>
         private readonly List<StorageComplexTypeMapping> m_typeMappings;
 
         /// <summary>
-        ///     TypeMappings that make up this property.
+        /// TypeMappings that make up this property.
         /// </summary>
         internal ReadOnlyCollection<StorageComplexTypeMapping> TypeMappings
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Add type mapping as a child under this Property Mapping
+        /// Add type mapping as a child under this Property Mapping
         /// </summary>
         internal void AddTypeMapping(StorageComplexTypeMapping typeMapping)
         {

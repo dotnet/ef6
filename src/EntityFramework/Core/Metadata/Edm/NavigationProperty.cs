@@ -9,12 +9,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Represent the edm navigation property class
+    /// Represent the edm navigation property class
     /// </summary>
     public sealed class NavigationProperty : EdmMember
     {
         /// <summary>
-        ///     Initializes a new instance of the navigation property class
+        /// Initializes a new instance of the navigation property class
         /// </summary>
         /// <param name="name"> name of the navigation property </param>
         /// <param name="typeUsage"> TypeUsage object containing the navigation property type and its facets </param>
@@ -30,13 +30,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.NavigationProperty" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string ToEndMemberNamePropertyName = "ToEndMember";
 
         /// <summary>
-        ///     cached dynamic methods to access the property values from a CLR instance
+        /// cached dynamic methods to access the property values from a CLR instance
         /// </summary>
         private readonly NavigationPropertyAccessor _accessor;
 
@@ -85,9 +85,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Where the given navigation property is on the dependent end of a referential constraint,
-        ///     returns the foreign key properties. Otherwise, returns an empty set. We will return the members in the order
-        ///     of the principal end key properties.
+        /// Where the given navigation property is on the dependent end of a referential constraint,
+        /// returns the foreign key properties. Otherwise, returns an empty set. We will return the members in the order
+        /// of the principal end key properties.
         /// </summary>
         /// <returns>A collection of the foreign key properties.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a NavigationProperty instance from the specified parameters.
+        /// Creates a NavigationProperty instance from the specified parameters.
         /// </summary>
         /// <param name="name">The name of the navigation property.</param>
         /// <param name="typeUsage">Specifies the navigation property type and its facets.</param>

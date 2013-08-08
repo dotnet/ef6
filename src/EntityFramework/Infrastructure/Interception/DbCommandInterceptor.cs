@@ -5,8 +5,8 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Data.Common;
 
     /// <summary>
-    ///     Base class that implements <see cref="IDbCommandInterceptor" />. This class is a convenience for
-    ///     use when only one or two methods of the interface actually need to have any implementation.
+    /// Base class that implements <see cref="IDbCommandInterceptor" />. This class is a convenience for
+    /// use when only one or two methods of the interface actually need to have any implementation.
     /// </summary>
     public class DbCommandInterceptor : IDbCommandInterceptor
     {

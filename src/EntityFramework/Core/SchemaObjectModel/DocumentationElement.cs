@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for Documentation.
+    /// Summary description for Documentation.
     /// </summary>
     internal sealed class DocumentationElement : SchemaElement
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Properties
 
         /// <summary>
-        ///     Returns the wrapped metaDocumentation instance
+        /// Returns the wrapped metaDocumentation instance
         /// </summary>
         public Documentation MetadataDocumentation
         {

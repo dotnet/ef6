@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     This class implements untyped queries at the object-layer.
+    /// This class implements untyped queries at the object-layer.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -35,20 +35,20 @@ namespace System.Data.Entity.Core.Objects
         // -----------------
 
         /// <summary>
-        ///     The underlying implementation of this ObjectQuery as provided by a concrete subclass
-        ///     of ObjectQueryImplementation. Implementations currently exist for Entity-SQL- and Linq-to-Entities-based ObjectQueries.
+        /// The underlying implementation of this ObjectQuery as provided by a concrete subclass
+        /// of ObjectQueryImplementation. Implementations currently exist for Entity-SQL- and Linq-to-Entities-based ObjectQueries.
         /// </summary>
         private readonly ObjectQueryState _state;
 
         /// <summary>
-        ///     The result type of the query - 'TResultType' expressed as an O-Space type usage. Cached here and
-        ///     only instantiated if the <see cref="GetResultType" /> method is called.
+        /// The result type of the query - 'TResultType' expressed as an O-Space type usage. Cached here and
+        /// only instantiated if the <see cref="GetResultType" /> method is called.
         /// </summary>
         private TypeUsage _resultType;
 
         /// <summary>
-        ///     Every instance of ObjectQuery get a unique instance of the provider. This helps propagate state information
-        ///     using the provider through LINQ operators.
+        /// Every instance of ObjectQuery get a unique instance of the provider. This helps propagate state information
+        /// using the provider through LINQ operators.
         /// </summary>
         private ObjectQueryProvider _provider;
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Objects
         // --------------------
 
         /// <summary>
-        ///     The common constructor.
+        /// The common constructor.
         /// </summary>
         /// <param name="queryState"> The underlying implementation of this ObjectQuery </param>
         /// <returns> A new ObjectQuery instance. </returns>
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         internal ObjectQuery()
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Core.Objects
         #region Internal Properties
 
         /// <summary>
-        ///     Gets an untyped instantiation of the underlying ObjectQueryState that implements this ObjectQuery.
+        /// Gets an untyped instantiation of the underlying ObjectQueryState that implements this ObjectQuery.
         /// </summary>
         internal ObjectQueryState QueryState
         {
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the <see cref="ObjectQueryProvider" /> associated with this query instance.
+        /// Gets the <see cref="ObjectQueryProvider" /> associated with this query instance.
         /// </summary>
         internal virtual ObjectQueryProvider ObjectQueryProvider
         {
@@ -141,10 +141,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the object context associated with this object query.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />
-        ///     instance.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />
+        /// instance.
         /// </returns>
         public ObjectContext Context
         {
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets or sets how objects returned from a query are added to the object context. </summary>
         /// <returns>
-        ///     The query <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />.
+        /// The query <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />.
         /// </returns>
         public MergeOption MergeOption
         {
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Whether the query is streaming or buffering
+        /// Whether the query is streaming or buffering
         /// </summary>
         public bool Streaming
         {
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the parameter collection for this object query.</summary>
         /// <returns>
-        ///     The parameter collection for this <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
+        /// The parameter collection for this <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
         /// </returns>
         public ObjectParameterCollection Parameters
         {
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns information about the result type of the query.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> value that contains information about the result type of the query.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> value that contains information about the result type of the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public TypeUsage GetResultType()
@@ -243,11 +243,11 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Executes the untyped object query with the specified merge option.</summary>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
         /// </returns>
         public ObjectResult Execute(MergeOption mergeOption)
         {
@@ -258,20 +258,20 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes the untyped object query with the specified merge option.
+        /// Asynchronously executes the untyped object query with the specified merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
-        ///     that contains a collection of entity objects returned by the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption)
         {
@@ -279,23 +279,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the untyped object query with the specified merge option.
+        /// Asynchronously executes the untyped object query with the specified merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
-        ///     that contains a collection of entity objects returned by the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// that contains a collection of entity objects returned by the query.
         /// </returns>
         public Task<ObjectResult> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
         {
@@ -308,10 +308,10 @@ namespace System.Data.Entity.Core.Objects
         #region IListSource implementation
 
         /// <summary>
-        ///     Returns the collection as an <see cref="T:System.Collections.IList" /> used for data binding.
+        /// Returns the collection as an <see cref="T:System.Collections.IList" /> used for data binding.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IList" /> of entity objects.
+        /// An <see cref="T:System.Collections.IList" /> of entity objects.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Objects
         #region IQueryable implementation
 
         /// <summary>
-        ///     Gets the result element type for this query instance.
+        /// Gets the result element type for this query instance.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Type IQueryable.ElementType
@@ -333,11 +333,11 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the expression describing this query. For queries built using
-        ///     LINQ builder patterns, returns a full LINQ expression tree; otherwise,
-        ///     returns a constant expression wrapping this query. Note that the
-        ///     default expression is not cached. This allows us to differentiate
-        ///     between LINQ and Entity-SQL queries.
+        /// Gets the expression describing this query. For queries built using
+        /// LINQ builder patterns, returns a full LINQ expression tree; otherwise,
+        /// returns a constant expression wrapping this query. Note that the
+        /// default expression is not cached. This allows us to differentiate
+        /// between LINQ and Entity-SQL queries.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Expression IQueryable.Expression
@@ -346,7 +346,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the <see cref="IQueryProvider" /> associated with this query instance.
+        /// Gets the <see cref="IQueryProvider" /> associated with this query instance.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IQueryProvider IQueryable.Provider
@@ -360,7 +360,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the collection.
+        /// An <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the collection.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerator IEnumerable.GetEnumerator()
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]

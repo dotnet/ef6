@@ -9,17 +9,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Class for representing the validator
+    /// Class for representing the validator
     /// </summary>
     internal class EdmValidator
     {
         /// <summary>
-        ///     Gets or Sets whether the validator should skip readonly items
+        /// Gets or Sets whether the validator should skip readonly items
         /// </summary>
         internal bool SkipReadOnlyItems { get; set; }
 
         /// <summary>
-        ///     Validate a collection of items in a batch
+        /// Validate a collection of items in a batch
         /// </summary>
         /// <param name="items"> A collection of items to validate </param>
         /// <param name="ospaceErrors"> List of validation errors that were previously collected by the caller. if it encounters more errors, it adds them to this list of errors </param>
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Event hook to perform preprocessing on the validation error before it gets added to a list of errors
+        /// Event hook to perform preprocessing on the validation error before it gets added to a list of errors
         /// </summary>
         /// <param name="e"> The event args for this event </param>
         protected virtual void OnValidationError(ValidationErrorEventArgs e)
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Invoke the event hook Add an error to the list
+        /// Invoke the event hook Add an error to the list
         /// </summary>
         /// <param name="errors"> The list of errors to add to </param>
         /// <param name="newError"> The new error to add </param>
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Allows derived classes to perform additional validation
+        /// Allows derived classes to perform additional validation
         /// </summary>
         /// <param name="item"> The item to perform additional validation </param>
         /// <returns> A collection of errors </returns>
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an item object
+        /// Validate an item object
         /// </summary>
         /// <param name="item"> The item to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an CollectionType object
+        /// Validate an CollectionType object
         /// </summary>
         /// <param name="item"> The CollectionType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an ComplexType object
+        /// Validate an ComplexType object
         /// </summary>
         /// <param name="item"> The ComplexType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an EdmType object
+        /// Validate an EdmType object
         /// </summary>
         /// <param name="item"> The EdmType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an EntityType object
+        /// Validate an EntityType object
         /// </summary>
         /// <param name="item"> The EntityType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -262,7 +262,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an Facet object
+        /// Validate an Facet object
         /// </summary>
         /// <param name="item"> The Facet object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -289,7 +289,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an MetadataItem object
+        /// Validate an MetadataItem object
         /// </summary>
         /// <param name="item"> The MetadataItem object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -308,7 +308,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an EdmMember object
+        /// Validate an EdmMember object
         /// </summary>
         /// <param name="item"> The item object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -343,7 +343,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an MetadataProperty object
+        /// Validate an MetadataProperty object
         /// </summary>
         /// <param name="item"> The MetadataProperty object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an NavigationProperty object
+        /// Validate an NavigationProperty object
         /// </summary>
         /// <param name="item"> The NavigationProperty object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -386,7 +386,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an GetPrimitiveType object
+        /// Validate an GetPrimitiveType object
         /// </summary>
         /// <param name="item"> The GetPrimitiveType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -397,7 +397,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an EdmProperty object
+        /// Validate an EdmProperty object
         /// </summary>
         /// <param name="item"> The EdmProperty object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -408,7 +408,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an RefType object
+        /// Validate an RefType object
         /// </summary>
         /// <param name="item"> The RefType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -435,7 +435,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an SimpleType object
+        /// Validate an SimpleType object
         /// </summary>
         /// <param name="item"> The SimpleType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -446,7 +446,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an StructuralType object
+        /// Validate an StructuralType object
         /// </summary>
         /// <param name="item"> The StructuralType object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
@@ -475,7 +475,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validate an TypeUsage object
+        /// Validate an TypeUsage object
         /// </summary>
         /// <param name="item"> The TypeUsage object to validate </param>
         /// <param name="errors"> An error collection for adding validation errors </param>
