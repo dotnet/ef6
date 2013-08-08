@@ -161,9 +161,9 @@ namespace System.Data.Entity
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).SetProviderServices("900.FTW", providerServices);
+                new DbConfiguration(mockInternalConfiguration.Object).SetProviderServices("900.ForTheWin", providerServices);
 
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.FTW"));
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerServices, "900.ForTheWin"));
             }
 
             [Fact]
@@ -172,7 +172,7 @@ namespace System.Data.Entity
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerServices = new Mock<DbProviderServices>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).SetProviderServices("900.FTW", providerServices);
+                new DbConfiguration(mockInternalConfiguration.Object).SetProviderServices("900.ForTheWin", providerServices);
 
                 mockInternalConfiguration.Verify(m => m.AddDefaultResolver(providerServices));
             }
@@ -218,10 +218,10 @@ namespace System.Data.Entity
                 var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
                 var providerFactory = new Mock<DbProviderFactory>().Object;
 
-                new DbConfiguration(mockInternalConfiguration.Object).SetProviderFactory("920.FTW", providerFactory);
+                new DbConfiguration(mockInternalConfiguration.Object).SetProviderFactory("920.ForTheWin", providerFactory);
 
-                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerFactory, "920.FTW"));
-                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new InvariantNameResolver(providerFactory, "920.FTW"), false));
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(providerFactory, "920.ForTheWin"));
+                mockInternalConfiguration.Verify(m => m.AddDependencyResolver(new InvariantNameResolver(providerFactory, "920.ForTheWin"), false));
             }
 
             [Fact]

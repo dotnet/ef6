@@ -109,14 +109,14 @@ namespace System.Data.Entity.Validation
                     {
                         AirportCode = "YVR",
                         CityCode = "YVR",
-                        CountryCode = "ZZ"
+                        CountryOrRegionCode = "ZZ"
                     }
                 }
             };
 
             var mockInternalEntityEntry = Internal.MockHelper.CreateMockInternalEntityEntry(entity);
 
-            var validator = new ValidationAttributeValidator(new CustomValidationAttribute(typeof(AirportDetails), "ValidateCountry"), null);
+            var validator = new ValidationAttributeValidator(new CustomValidationAttribute(typeof(AirportDetails), "ValidateCountryOrRegion"), null);
 
             var results = validator.Validate(
                 MockHelper.CreateEntityValidationContext(mockInternalEntityEntry.Object),
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Validation
             ValidationErrorHelper.VerifyResults(
                 new[]
                     {
-                        new Tuple<string, string>("Departure.Airport", "City 'YVR' is not located in country 'ZZ'.")
+                        new Tuple<string, string>("Departure.Airport", "City 'YVR' is not located in country or region 'ZZ'.")
                     }, results);
         }
 

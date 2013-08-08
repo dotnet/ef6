@@ -20,7 +20,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
                 {
                     CreateMockReference("Unicorns.Rule", "PK1", isStrongNamed: false),
                     CreateMockReference("Unicorns.Rule", "PK2"),
-                    CreateMockReference("Horses.FTW", "PK1"),
+                    CreateMockReference("Horses.ForTheWin", "PK1"),
                     CreateMockReference(null, null),
                     toRemove,
                 };

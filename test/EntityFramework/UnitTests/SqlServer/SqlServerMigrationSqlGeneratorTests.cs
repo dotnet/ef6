@@ -348,23 +348,23 @@ END
     @Name_Original [nvarchar](max),
     @Address_Street [nvarchar](max),
     @Address_City [nvarchar](max),
-    @Address_Country_Name [nvarchar](max),
+    @Address_CountryOrRegion_Name [nvarchar](max),
     @OrderGroupId [int],
     @RowVersion_Original [rowversion],
     @OtherAddress_Street [nvarchar](max),
     @OtherAddress_City [nvarchar](max),
-    @OtherAddress_Country_Name [nvarchar](max),
+    @OtherAddress_CountryOrRegion_Name [nvarchar](max),
     @TheSpecialist [int],
     @Customer_CustomerId [int],
     @OtherCustomer_CustomerId [int]
 AS
 BEGIN
     UPDATE [dbo].[Orders]
-    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_CountryOrRegion_Name] = @Address_CountryOrRegion_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
     WHERE (((((([order_id] = @xid) AND ([Key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL)))
     
     UPDATE [dbo].[special_orders]
-    SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_Country_Name] = @OtherAddress_Country_Name
+    SET [OtherCustomer_CustomerId] = @OtherCustomer_CustomerId, [OtherAddress_Street] = @OtherAddress_Street, [OtherAddress_City] = @OtherAddress_City, [OtherAddress_CountryOrRegion_Name] = @OtherAddress_CountryOrRegion_Name
     WHERE (((([order_id] = @xid) AND ([so_key] = @key_for_update)) AND ([Code] = @Code)) AND ([Signature] = @Signature))
     AND @@ROWCOUNT > 0
     
@@ -414,14 +414,14 @@ END", sql);
     @Name_Original [nvarchar](max),
     @Address_Street [nvarchar](max),
     @Address_City [nvarchar](max),
-    @Address_Country_Name [nvarchar](max),
+    @Address_CountryOrRegion_Name [nvarchar](max),
     @OrderGroupId [int],
     @RowVersion_Original [rowversion],
     @Customer_CustomerId [int]
 AS
 BEGIN
     UPDATE [dbo].[Orders]
-    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_Country_Name] = @Address_Country_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
+    SET [Name] = @Name, [Address_Street] = @Address_Street, [Address_City] = @Address_City, [Address_CountryOrRegion_Name] = @Address_CountryOrRegion_Name, [OrderGroupId] = @OrderGroupId, [Customer_CustomerId] = @Customer_CustomerId
     WHERE (((((([order_id] = @order_id) AND ([Key] = @key_for_update2)) AND ([Code] = @Code)) AND ([Signature] = @Signature)) AND (([Name] = @Name_Original) OR ([Name] IS NULL AND @Name_Original IS NULL))) AND (([RowVersion] = @RowVersion_Original) OR ([RowVersion] IS NULL AND @RowVersion_Original IS NULL)))
     
     SELECT t0.[OrderNo], t0.[RowVersion]

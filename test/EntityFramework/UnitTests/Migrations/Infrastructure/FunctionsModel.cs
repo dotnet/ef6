@@ -75,11 +75,11 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
     {
         public string Street { get; set; }
         public string City { get; set; }
-        public Country Country { get; set; }
+        public CountryOrRegion CountryOrRegion { get; set; }
     }
 
     [ComplexType]
-    public class Country
+    public class CountryOrRegion
     {
         public string Name { get; set; }
     }

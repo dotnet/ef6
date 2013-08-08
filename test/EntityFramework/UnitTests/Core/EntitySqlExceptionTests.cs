@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core
         [Fact]
         public void Create_uses_given_message_inner_exception_and_error_context_and_sets_up_serialization()
         {
-            var innerException = new Exception("Ho Ho Ho");
+            var innerException = new Exception("Hello");
             var exception = EntitySqlException.Create(
                 new ErrorContext
                     {

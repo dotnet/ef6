@@ -1121,7 +1121,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             const string Nl = "\u2160"; // Roman numeral one
             const string Nd = "\u0660"; // Arabic-indic digit zero
             const string Mn = "\u0300"; // Hebrew accent etnahta
-            const string Mc = "\u0982"; // Bengali sign anusvara
+            const string Mc = "\u0982"; // Bangla sign anusvara
             const string Pc = "\u203f"; // Undertie
             const string Cf = "\u200f"; // Right to left mark
 
