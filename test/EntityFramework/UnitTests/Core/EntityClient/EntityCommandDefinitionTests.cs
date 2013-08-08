@@ -229,8 +229,7 @@ namespace System.Data.Entity.Core.EntityClient
                     m =>
                     m.Create(
                         It.IsAny<DbDataReader>(), It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(), It.IsAny<IEnumerable<ColumnMap>>()))
-                                           .
-                                            Returns(bridgeDataReader);
+                    .Returns(bridgeDataReader);
 
                 var entityCommandDefinitionMock = new Mock<EntityCommandDefinition>(bridgeDataReaderFactoryMock.Object, null, null)
                     {
@@ -238,11 +237,10 @@ namespace System.Data.Entity.Core.EntityClient
                     };
                 entityCommandDefinitionMock.Setup(
                     m => m.ExecuteStoreCommandsAsync(It.IsAny<EntityCommand>(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>()))
-                                           .
-                                            Returns(Task.FromResult(dbDataReader));
+                    .Returns(Task.FromResult(dbDataReader));
 
-                entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>())).
-                                            Returns(columnMapMock.Object);
+                entityCommandDefinitionMock.Setup(m => m.CreateColumnMap(It.IsAny<DbDataReader>(), It.IsAny<int>()))
+                    .Returns(columnMapMock.Object);
 
                 var metadataWorkspaceMock = new Mock<MetadataWorkspace>();
 
@@ -262,7 +260,7 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityCommandDefinition = entityCommandDefinitionMock.Object;
                 var result =
                     entityCommandDefinition.ExecuteAsync(entityCommandMock.Object, CommandBehavior.SequentialAccess, CancellationToken.None)
-                                           .Result;
+                        .Result;
 
                 Assert.Same(bridgeDataReader, result);
             }

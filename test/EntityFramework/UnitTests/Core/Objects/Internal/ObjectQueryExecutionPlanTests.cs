@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new Type[0],  new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new Type[0], new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(2)),
-                MergeOption.AppendOnly);
+                new Type[0], new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new Type[0], new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new Type[0], new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new Type[0], new bool[0], MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);

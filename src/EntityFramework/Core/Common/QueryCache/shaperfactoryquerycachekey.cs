@@ -10,13 +10,15 @@ namespace System.Data.Entity.Core.Common.QueryCache
         private readonly string _columnMapKey;
         private readonly MergeOption _mergeOption;
         private readonly bool _isValueLayer;
+        private readonly bool _streaming;
 
-        internal ShaperFactoryQueryCacheKey(string columnMapKey, MergeOption mergeOption, bool isValueLayer)
+        internal ShaperFactoryQueryCacheKey(string columnMapKey, MergeOption mergeOption, bool streaming, bool isValueLayer)
         {
             DebugCheck.NotNull(columnMapKey);
             _columnMapKey = columnMapKey;
             _mergeOption = mergeOption;
             _isValueLayer = isValueLayer;
+            _streaming = streaming;
         }
 
         public override bool Equals(object obj)
@@ -28,7 +30,8 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
             return _columnMapKey.Equals(other._columnMapKey, _stringComparison)
                    && _mergeOption == other._mergeOption
-                   && _isValueLayer == other._isValueLayer;
+                   && _isValueLayer == other._isValueLayer
+                   && _streaming == other._streaming;
         }
 
         public override int GetHashCode()
