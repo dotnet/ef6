@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Base class for <see cref="MethodExpr" /> and <see cref="GroupPartitionExpr" />.
+    /// Base class for <see cref="MethodExpr" /> and <see cref="GroupPartitionExpr" />.
     /// </summary>
     internal abstract class GroupAggregateExpr : Node
     {
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     True if it is a "distinct" aggregate.
+        /// True if it is a "distinct" aggregate.
         /// </summary>
         internal readonly DistinctKind DistinctKind;
 

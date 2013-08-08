@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Attribute to mark the assemblies that contain the generated views type.
+    /// Attribute to mark the assemblies that contain the generated views type.
     /// </summary>
     [Obsolete("The mechanism to provide pre-generated views has changed. Implement a class that derives from " +
         "System.Data.Entity.Infrastructure.DbMappingViewCache and has a parameterless constructor, " +
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Mapping
     public sealed class EntityViewGenerationAttribute : Attribute
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Mapping.EntityViewGenerationAttribute" /> class.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Mapping.EntityViewGenerationAttribute" /> class.
         /// </summary>
         /// <param name="viewGenerationType">The view type.</param>
         public EntityViewGenerationAttribute(Type viewGenerationType)

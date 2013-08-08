@@ -18,8 +18,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
-    ///     The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
+    /// Allows the conventions used by a <see cref="DbModelBuilder" /> instance to be customized.
+    /// The default conventions can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
     /// </summary>
     public partial class ConventionsConfiguration
     {
@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Enables one or more conventions for the <see cref="DbModelBuilder" />.
+        /// Enables one or more conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be enabled. </param>
         public void Add(params IConvention[] conventions)
@@ -136,7 +136,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Enables a convention for the <see cref="DbModelBuilder" />.
+        /// Enables a convention for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <typeparam name="TConvention"> The type of the convention to be enabled. </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -147,8 +147,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Enables a convention for the <see cref="DbModelBuilder" />. This convention
-        ///     will run after the one specified.
+        /// Enables a convention for the <see cref="DbModelBuilder" />. This convention
+        /// will run after the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention after which the enabled one will run. </typeparam>
         /// <param name="newConvention"> The convention to enable. </param>
@@ -197,8 +197,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
-        ///     will run before the one specified.
+        /// Enables a configuration convention for the <see cref="DbModelBuilder" />. This convention
+        /// will run before the one specified.
         /// </summary>
         /// <typeparam name="TExistingConvention"> The type of the convention before which the enabled one will run. </typeparam>
         /// <param name="newConvention"> The convention to enable. </param>
@@ -276,7 +276,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Disables one or more conventions for the <see cref="DbModelBuilder" />.
+        /// Disables one or more conventions for the <see cref="DbModelBuilder" />.
         /// </summary>
         /// <param name="conventions"> The conventions to be disabled. </param>
         public void Remove(params IConvention[] conventions)
@@ -311,8 +311,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Disables a convention for the <see cref="DbModelBuilder" />.
-        ///     The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
+        /// Disables a convention for the <see cref="DbModelBuilder" />.
+        /// The default conventions that are available for removal can be found in the System.Data.Entity.ModelConfiguration.Conventions namespace.
         /// </summary>
         /// <typeparam name="TConvention"> The type of the convention to be disabled. </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]

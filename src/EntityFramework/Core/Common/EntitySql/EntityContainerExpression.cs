@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     Represents an eSQL expression classified as <see cref="ExpressionResolutionClass.EntityContainer" />.
+    /// Represents an eSQL expression classified as <see cref="ExpressionResolutionClass.EntityContainer" />.
     /// </summary>
     internal sealed class EntityContainerExpression : ExpressionResolution
     {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents the Seached Case Expression - CASE WHEN THEN [ELSE] END.
+    /// Represents the Seached Case Expression - CASE WHEN THEN [ELSE] END.
     /// </summary>
     internal sealed class CaseExpr : Node
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _elseExpr;
 
         /// <summary>
-        ///     Initializes case expression without else sub-expression.
+        /// Initializes case expression without else sub-expression.
         /// </summary>
         /// <param name="whenThenExpr"> whenThen expression list </param>
         internal CaseExpr(NodeList<WhenThenExpr> whenThenExpr)
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Initializes case expression with else sub-expression.
+        /// Initializes case expression with else sub-expression.
         /// </summary>
         /// <param name="whenThenExpr"> whenThen expression list </param>
         /// <param name="elseExpr"> else expression </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns the list of WhenThen expressions.
+        /// Returns the list of WhenThen expressions.
         /// </summary>
         internal NodeList<WhenThenExpr> WhenThenExprList
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns the optional Else expression.
+        /// Returns the optional Else expression.
         /// </summary>
         internal Node ElseExpr
         {

@@ -14,9 +14,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Reflection;
 
     /// <summary>
-    ///     An immutable representation of an Entity Data Model (EDM) model that can be used to create an
-    ///     <see cref="ObjectContext" /> or can be passed to the constructor of a <see cref="DbContext" />.
-    ///     For increased performance, instances of this type should be cached and re-used to construct contexts.
+    /// An immutable representation of an Entity Data Model (EDM) model that can be used to create an
+    /// <see cref="ObjectContext" /> or can be passed to the constructor of a <see cref="DbContext" />.
+    /// For increased performance, instances of this type should be cached and re-used to construct contexts.
     /// </summary>
     public class DbCompiledModel
     {
@@ -36,14 +36,14 @@ namespace System.Data.Entity.Infrastructure
         private readonly DbModelBuilder _cachedModelBuilder;
 
         /// <summary>
-        ///     For mocking.
+        /// For mocking.
         /// </summary>
         internal DbCompiledModel()
         {
         }
 
         /// <summary>
-        ///     Creates a model for the given EDM metadata model.
+        /// Creates a model for the given EDM metadata model.
         /// </summary>
         /// <param name="model"> The EDM metadata model. </param>
         internal DbCompiledModel(DbModel model)
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Infrastructure
         #region Model/database metadata
 
         /// <summary>
-        ///     A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
+        /// A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
         /// </summary>
         internal virtual DbModelBuilder CachedModelBuilder
         {
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The provider info (provider name and manifest token) that was used to create this model.
+        /// The provider info (provider name and manifest token) that was used to create this model.
         /// </summary>
         internal virtual DbProviderInfo ProviderInfo
         {
@@ -86,12 +86,12 @@ namespace System.Data.Entity.Infrastructure
         #region CreateObjectContext
 
         /// <summary>
-        ///     Creates an instance of ObjectContext or class derived from ObjectContext.  Note that an instance
-        ///     of DbContext can be created instead by using the appropriate DbContext constructor.
-        ///     If a derived ObjectContext is used, then it must have a public constructor with a single
-        ///     EntityConnection parameter.
-        ///     The connection passed is used by the ObjectContext created, but is not owned by the context.  The caller
-        ///     must dispose of the connection once the context has been disposed.
+        /// Creates an instance of ObjectContext or class derived from ObjectContext.  Note that an instance
+        /// of DbContext can be created instead by using the appropriate DbContext constructor.
+        /// If a derived ObjectContext is used, then it must have a public constructor with a single
+        /// EntityConnection parameter.
+        /// The connection passed is used by the ObjectContext created, but is not owned by the context.  The caller
+        /// must dispose of the connection once the context has been disposed.
         /// </summary>
         /// <typeparam name="TContext"> The type of context to create. </typeparam>
         /// <param name="existingConnection"> An existing connection to a database for use by the context. </param>
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets a cached delegate (or creates a new one) used to call the constructor for the given derived ObjectContext type.
+        /// Gets a cached delegate (or creates a new one) used to call the constructor for the given derived ObjectContext type.
         /// </summary>
         internal static Func<EntityConnection, ObjectContext> GetConstructorDelegate<TContext>()
             where TContext : ObjectContext

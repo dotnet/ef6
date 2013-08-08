@@ -7,8 +7,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Xml;
 
     /// <summary>
-    ///     A DataContractResolver that knows how to resolve proxy types created for persistent
-    ///     ignorant classes to their base types. This is used with the DataContractSerializer.
+    /// A DataContractResolver that knows how to resolve proxy types created for persistent
+    /// ignorant classes to their base types. This is used with the DataContractSerializer.
     /// </summary>
     public class ProxyDataContractResolver : DataContractResolver
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="typeNamespace">The namespace of the xsi:type.</param>
         /// <param name="declaredType">The declared type.</param>
         /// <param name="knownTypeResolver">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Objects.ProxyDataContractResolver" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Objects.ProxyDataContractResolver" />.
         /// </param>
         public override Type ResolveName(string typeName, string typeNamespace, Type declaredType, DataContractResolver knownTypeResolver)
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="type">The actual type of the persistence-ignorant object.</param>
         /// <param name="declaredType">The declared type.</param>
         /// <param name="knownTypeResolver">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Objects.ProxyDataContractResolver" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Objects.ProxyDataContractResolver" />.
         /// </param>
         /// <param name="typeName">When this method returns, contains a list of xsi:type declarations.</param>
         /// <param name="typeNamespace">When this method returns, contains a list of namespaces used.</param>

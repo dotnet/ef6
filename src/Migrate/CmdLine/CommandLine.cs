@@ -11,7 +11,7 @@ namespace CmdLine
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Class for parsing command line arguments
+    /// Class for parsing command line arguments
     /// </summary>
     internal static class CommandLine
     {
@@ -32,10 +32,10 @@ namespace CmdLine
         internal const string ValueSeparatorGroup = "ValueSeparator";
 
         /// <summary>
-        ///     Expression for a switch with a value i.e. /S:Value or /S:Some Value
+        /// Expression for a switch with a value i.e. /S:Value or /S:Some Value
         /// </summary>
         /// <remarks>
-        ///     This expression divides the token into groups
+        /// This expression divides the token into groups
         /// </remarks>
         private const string TokenizeExpressionFormat =
             @"(?{0}i) # Case Sensitive Option
@@ -245,7 +245,7 @@ namespace CmdLine
         }
 
         /// <summary>
-        ///     Returns a string with the case sensitive option
+        /// Returns a string with the case sensitive option
         /// </summary>
         /// <returns> null when case sensitive is on, "-" when it is off </returns>
         private static string GetCaseSensitiveOption()

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a column being dropped from a table.
+    /// Represents a column being dropped from a table.
     /// </summary>
     public class DropColumnOperation : MigrationOperation
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Migrations.Model
         private readonly AddColumnOperation _inverse;
 
         /// <summary>
-        ///     Initializes a new instance of the DropColumnOperation class.
+        /// Initializes a new instance of the DropColumnOperation class.
         /// </summary>
         /// <param name="table"> The name of the table the column should be dropped from. </param>
         /// <param name="name"> The name of the column to be dropped. </param>
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Initializes a new instance of the DropColumnOperation class.
+        /// Initializes a new instance of the DropColumnOperation class.
         /// </summary>
         /// <param name="table"> The name of the table the column should be dropped from. </param>
         /// <param name="name"> The name of the column to be dropped. </param>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table the column should be dropped from.
+        /// Gets the name of the table the column should be dropped from.
         /// </summary>
         public string Table
         {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the column to be dropped.
+        /// Gets the name of the column to be dropped.
         /// </summary>
         public string Name
         {
@@ -63,9 +63,9 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that represents reverting dropping the column.
-        ///     The inverse cannot be automatically calculated,
-        ///     if it was not supplied to the constructor this property will return null.
+        /// Gets an operation that represents reverting dropping the column.
+        /// The inverse cannot be automatically calculated,
+        /// if it was not supplied to the constructor this property will return null.
         /// </summary>
         public override MigrationOperation Inverse
         {

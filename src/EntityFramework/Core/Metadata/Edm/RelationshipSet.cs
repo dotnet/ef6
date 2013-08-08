@@ -3,12 +3,12 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    ///     Class for representing a relationship set
+    /// Class for representing a relationship set
     /// </summary>
     public abstract class RelationshipSet : EntitySetBase
     {
         /// <summary>
-        ///     The constructor for constructing the RelationshipSet with a given name and an relationship type
+        /// The constructor for constructing the RelationshipSet with a given name and an relationship type
         /// </summary>
         /// <param name="name"> The name of the RelationshipSet </param>
         /// <param name="schema"> The db schema </param>
@@ -22,13 +22,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the relationship type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
+        /// Gets the relationship type of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipType" /> object that represents the relationship type of this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
-        ///     .
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipType" /> object that represents the relationship type of this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
+        /// .
         /// </returns>
         public new RelationshipType ElementType
         {
@@ -36,13 +36,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {

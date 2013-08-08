@@ -6,7 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Convention to discover foreign key properties whose names match the principal type primary key property name(s).
+    /// Convention to discover foreign key properties whose names match the principal type primary key property name(s).
     /// </summary>
     public class PrimaryKeyNameForeignKeyDiscoveryConvention : ForeignKeyDiscoveryConvention
     {

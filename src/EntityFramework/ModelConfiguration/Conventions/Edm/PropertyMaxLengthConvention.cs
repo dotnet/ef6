@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to set a maximum length for properties whose type supports length facets. The default value is 128.
+    /// Convention to set a maximum length for properties whose type supports length facets. The default value is 128.
     /// </summary>
     public class PropertyMaxLengthConvention : IConceptualModelConvention<EntityType>,
                                                IConceptualModelConvention<ComplexType>,
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         private readonly int _length;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the default length.
+        /// Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the default length.
         /// </summary>
         public PropertyMaxLengthConvention()
             : this(DefaultLength)
@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the specified length.
+        /// Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the specified length.
         /// </summary>
         public PropertyMaxLengthConvention(int length)
         {

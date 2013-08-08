@@ -8,8 +8,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Instances of this class are returned from the ComplexProperty method of
-    ///     <see cref="DbEntityEntry{T}" /> and allow access to the state of a complex property.
+    /// Instances of this class are returned from the ComplexProperty method of
+    /// <see cref="DbEntityEntry{T}" /> and allow access to the state of a complex property.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity to which this property belongs. </typeparam>
     /// <typeparam name="TComplexProperty"> The type of the property. </typeparam>
@@ -19,9 +19,9 @@ namespace System.Data.Entity.Infrastructure
         #region Fields and constructors
 
         /// <summary>
-        ///     Creates a <see cref="DbComplexPropertyEntry" /> from information in the given <see cref="InternalPropertyEntry" />.
-        ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
-        ///     the type of member represented by the InternalCollectionEntry instance.
+        /// Creates a <see cref="DbComplexPropertyEntry" /> from information in the given <see cref="InternalPropertyEntry" />.
+        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
+        /// the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
         /// <param name="internalPropertyEntry"> The internal property entry. </param>
         /// <returns> The new entry. </returns>
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbComplexPropertyEntry{TEntity, TComplexProperty}" /> class.
+        /// Initializes a new instance of the <see cref="DbComplexPropertyEntry{TEntity, TComplexProperty}" /> class.
         /// </summary>
         /// <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbComplexPropertyEntry(InternalPropertyEntry internalPropertyEntry)
@@ -49,8 +49,8 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbComplexPropertyEntry" /> class for
-        ///     the property represented by this object.
+        /// Returns a new instance of the non-generic <see cref="DbComplexPropertyEntry" /> class for
+        /// the property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Infrastructure
         #region Access to nested properties
 
         /// <summary>
-        ///     Gets an object that represents a nested property of this property.
-        ///     This method can be used for both scalar or complex properties.
+        /// Gets an object that represents a nested property of this property.
+        /// This method can be used for both scalar or complex properties.
         /// </summary>
         /// <param name="propertyName"> The name of the nested property. </param>
         /// <returns> An object representing the nested property. </returns>
@@ -78,8 +78,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a nested property of this property.
-        ///     This method can be used for both scalar or complex properties.
+        /// Gets an object that represents a nested property of this property.
+        /// This method can be used for both scalar or complex properties.
         /// </summary>
         /// <typeparam name="TNestedProperty"> The type of the nested property. </typeparam>
         /// <param name="propertyName"> The name of the nested property. </param>
@@ -94,8 +94,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a nested property of this property.
-        ///     This method can be used for both scalar or complex properties.
+        /// Gets an object that represents a nested property of this property.
+        /// This method can be used for both scalar or complex properties.
         /// </summary>
         /// <typeparam name="TNestedProperty"> The type of the nested property. </typeparam>
         /// <param name="property"> An expression representing the nested property. </param>
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a nested complex property of this property.
+        /// Gets an object that represents a nested complex property of this property.
         /// </summary>
         /// <param name="propertyName"> The name of the nested property. </param>
         /// <returns> An object representing the nested property. </returns>
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a nested complex property of this property.
+        /// Gets an object that represents a nested complex property of this property.
         /// </summary>
         /// <typeparam name="TNestedComplexProperty"> The type of the nested property. </typeparam>
         /// <param name="propertyName"> The name of the nested property. </param>
@@ -141,7 +141,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a nested complex property of this property.
+        /// Gets an object that represents a nested complex property of this property.
         /// </summary>
         /// <typeparam name="TNestedComplexProperty"> The type of the nested property. </typeparam>
         /// <param name="property"> An expression representing the nested property. </param>

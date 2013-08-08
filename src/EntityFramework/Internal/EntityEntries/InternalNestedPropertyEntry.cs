@@ -8,7 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     A concrete implementation of <see cref="InternalPropertyEntry" /> used for properties of complex objects.
+    /// A concrete implementation of <see cref="InternalPropertyEntry" /> used for properties of complex objects.
     /// </summary>
     internal class InternalNestedPropertyEntry : InternalPropertyEntry
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Internal
         private readonly InternalPropertyEntry _parentPropertyEntry;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InternalNestedPropertyEntry" /> class.
+        /// Initializes a new instance of the <see cref="InternalNestedPropertyEntry" /> class.
         /// </summary>
         /// <param name="parentPropertyEntry"> The parent property entry. </param>
         /// <param name="propertyMetadata"> The property metadata. </param>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Internal
         #region Parent property access
 
         /// <summary>
-        ///     Returns parent property, or null if this is a property on the top-level entity.
+        /// Returns parent property, or null if this is a property on the top-level entity.
         /// </summary>
         public override InternalPropertyEntry ParentPropertyEntry
         {
@@ -47,8 +47,8 @@ namespace System.Data.Entity.Internal
         #region Property access methods for properties of complex objects
 
         /// <summary>
-        ///     Gets the current values of the parent complex property.
-        ///     That is, the current values that contains the value for this property.
+        /// Gets the current values of the parent complex property.
+        /// That is, the current values that contains the value for this property.
         /// </summary>
         /// <value> The parent current values. </value>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
@@ -68,8 +68,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the original values of the parent complex property.
-        ///     That is, the original values that contains the value for this property.
+        /// Gets the original values of the parent complex property.
+        /// That is, the original values that contains the value for this property.
         /// </summary>
         /// <value> The parent original values. </value>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates a delegate that will get the value of this property.
+        /// Creates a delegate that will get the value of this property.
         /// </summary>
         /// <returns> The delegate. </returns>
         protected override Func<object, object> CreateGetter()
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates a delegate that will set the value of this property.
+        /// Creates a delegate that will set the value of this property.
         /// </summary>
         /// <returns> The delegate. </returns>
         protected override Action<object, object> CreateSetter()
@@ -144,9 +144,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns true if the property of the entity that this property is ultimately part
-        ///     of is set as modified.  Since this is a property of a complex object
-        ///     this method returns true if the top-level complex property on the entity is modified.
+        /// Returns true if the property of the entity that this property is ultimately part
+        /// of is set as modified.  Since this is a property of a complex object
+        /// this method returns true if the top-level complex property on the entity is modified.
         /// </summary>
         /// <returns> True if the entity property is modified. </returns>
         public override bool EntityPropertyIsModified()
@@ -155,9 +155,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Sets the property of the entity that this property is ultimately part of to modified.
-        ///     Since this is a property of a complex object this method marks the top-level
-        ///     complex property as modified.
+        /// Sets the property of the entity that this property is ultimately part of to modified.
+        /// Since this is a property of a complex object this method marks the top-level
+        /// complex property as modified.
         /// </summary>
         public override void SetEntityPropertyModified()
         {
@@ -165,9 +165,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Rejects changes to this property.
-        ///     Since this is a property of a complex object this method rejects changes to the top-level
-        ///     complex property.
+        /// Rejects changes to this property.
+        /// Since this is a property of a complex object this method rejects changes to the top-level
+        /// complex property.
         /// </summary>
         public override void RejectEntityPropertyChanges()
         {
@@ -176,10 +176,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Walks the tree from a property of a complex property back up to the top-level
-        ///     complex property and then checks whether or not DetectChanges still considers
-        ///     the complex property to be modified. If it does not, then the complex property
-        ///     is marked as Unchanged.
+        /// Walks the tree from a property of a complex property back up to the top-level
+        /// complex property and then checks whether or not DetectChanges still considers
+        /// the complex property to be modified. If it does not, then the complex property
+        /// is marked as Unchanged.
         /// </summary>
         public override void UpdateComplexPropertyState()
         {

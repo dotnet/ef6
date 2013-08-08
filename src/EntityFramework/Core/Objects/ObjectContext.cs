@@ -43,8 +43,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Transactions;
 
     /// <summary>
-    ///     ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
-    ///     serving as a gateway for Create, Read, Update, and Delete operations.
+    /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
+    /// serving as a gateway for Create, Read, Update, and Delete operations.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class ObjectContext : IDisposable, IObjectContextAdapter
@@ -107,13 +107,13 @@ namespace System.Data.Entity.Core.Objects
         #region Constructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with the given connection. During construction, the metadata workspace is extracted from the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
-        ///     object.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with the given connection. During construction, the metadata workspace is extracted from the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
+        /// object.
         /// </summary>
         /// <param name="connection">
-        ///     An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> that contains references to the model and to the data source connection.
+        /// An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> that contains references to the model and to the data source connection.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The  connection  is null.</exception>
         /// <exception cref="T:System.ArgumentException">The  connection  is invalid or the metadata workspace is invalid. </exception>
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates an ObjectContext with the given connection and metadata workspace.
+        /// Creates an ObjectContext with the given connection and metadata workspace.
         /// </summary>
         /// <param name="connection"> connection to the store </param>
         /// <param name="contextOwnsConnection"> If set to true the connection is disposed when the context is disposed, otherwise the caller must dispose the connection. </param>
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with the given connection string and default entity container name.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with the given connection string and default entity container name.
         /// </summary>
         /// <param name="connectionString">The connection string, which also provides access to the metadata information.</param>
         /// <exception cref="T:System.ArgumentNullException">The  connectionString  is null.</exception>
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with a given connection string and entity container name.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with a given connection string and entity container name.
         /// </summary>
         /// <param name="connectionString">The connection string, which also provides access to the metadata information.</param>
         /// <param name="defaultContainerName">The name of the default entity container. When the  defaultContainerName  is set through this method, the property becomes read-only.</param>
@@ -172,10 +172,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with a given connection and entity container name.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> class with a given connection and entity container name.
         /// </summary>
         /// <param name="connection">
-        ///     An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> that contains references to the model and to the data source connection.
+        /// An <see cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" /> that contains references to the model and to the data source connection.
         /// </param>
         /// <param name="defaultContainerName">The name of the default entity container. When the  defaultContainerName  is set through this method, the property becomes read-only.</param>
         /// <exception cref="T:System.ArgumentNullException">The  connection  is null.</exception>
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     For testing porpoises only.
+        /// For testing porpoises only.
         /// </summary>
         internal ObjectContext(
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
@@ -275,10 +275,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the connection used by the object context.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Common.DbConnection" /> object that is the connection.
+        /// A <see cref="T:System.Data.Common.DbConnection" /> object that is the connection.
         /// </returns>
         /// <exception cref="T:System.ObjectDisposedException">
-        ///     When the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> instance has been disposed.
+        /// When the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> instance has been disposed.
         /// </exception>
         public virtual DbConnection Connection
         {
@@ -295,7 +295,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets or sets the default container name.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the default container name.
+        /// A <see cref="T:System.String" /> that is the default container name.
         /// </returns>
         public virtual string DefaultContainerName
         {
@@ -319,10 +319,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the metadata workspace used by the object context. </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> object associated with this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" /> object associated with this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </returns>
         public virtual MetadataWorkspace MetadataWorkspace
         {
@@ -331,10 +331,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the object state manager used by the object context to track object changes.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> used by this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> used by this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </returns>
         public virtual ObjectStateManager ObjectStateManager
         {
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     ClrPerspective based on the MetadataWorkspace.
+        /// ClrPerspective based on the MetadataWorkspace.
         /// </summary>
         internal ClrPerspective Perspective
         {
@@ -367,7 +367,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets or sets the timeout value, in seconds, for all object context operations. A null value indicates that the default value of the underlying provider will be used.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Int32" /> value that is the timeout value, in seconds.
+        /// An <see cref="T:System.Int32" /> value that is the timeout value, in seconds.
         /// </returns>
         /// <exception cref="T:System.ArgumentException">The timeout value is less than 0. </exception>
         public virtual int? CommandTimeout
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets the LINQ query provider associated with this object context.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Linq.IQueryProvider" /> instance used by this object context.
+        /// The <see cref="T:System.Linq.IQueryProvider" /> instance used by this object context.
         /// </returns>
         protected internal virtual IQueryProvider QueryProvider
         {
@@ -403,13 +403,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Whether or not we are in the middle of materialization
-        ///     Used to suppress operations such as lazy loading that are not allowed during materialization
+        /// Whether or not we are in the middle of materialization
+        /// Used to suppress operations such as lazy loading that are not allowed during materialization
         /// </summary>
         internal bool InMaterialization { get; set; }
 
         /// <summary>
-        ///     Indicates whether there is an asynchronous method currently running that uses this instance
+        /// Indicates whether there is an asynchronous method currently running that uses this instance
         /// </summary>
         internal ThrowingMonitor AsyncMonitor
         {
@@ -417,16 +417,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Objects.ObjectContextOptions" /> instance that contains options that affect the behavior of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// Gets the <see cref="T:System.Data.Entity.Core.Objects.ObjectContextOptions" /> instance that contains options that affect the behavior of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContextOptions" /> instance that contains options that affect the behavior of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectContextOptions" /> instance that contains options that affect the behavior of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </returns>
         public virtual ObjectContextOptions ContextOptions
         {
@@ -441,9 +441,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns itself. ObjectContext implements <see cref="IObjectContextAdapter" /> to provide a common
-        ///     interface for <see cref="DbContext" /> and ObjectContext both of which will return the underlying
-        ///     ObjectContext.
+        /// Returns itself. ObjectContext implements <see cref="IObjectContextAdapter" /> to provide a common
+        /// interface for <see cref="DbContext" /> and ObjectContext both of which will return the underlying
+        /// ObjectContext.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         ObjectContext IObjectContextAdapter.ObjectContext
@@ -475,7 +475,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     A private helper function for the _savingChanges/SavingChanges event.
+        /// A private helper function for the _savingChanges/SavingChanges event.
         /// </summary>
         private void OnSavingChanges()
         {
@@ -501,9 +501,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns true if any handlers for the ObjectMaterialized event exist.  This is
-        ///     used for perf reasons to avoid collecting the information needed for the event
-        ///     if there is no point in firing it.
+        /// Returns true if any handlers for the ObjectMaterialized event exist.  This is
+        /// used for perf reasons to avoid collecting the information needed for the event
+        /// if there is no point in firing it.
         /// </summary>
         internal bool OnMaterializedHasHandlers
         {
@@ -638,7 +638,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>Adds an object to the object context. </summary>
         /// <param name="entitySetName">Represents the entity set name, which may optionally be qualified by the entity container name. </param>
         /// <param name="entity">
-        ///     The <see cref="T:System.Object" /> to add.
+        /// The <see cref="T:System.Object" /> to add.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The  entity  parameter is null or the  entitySetName  does not qualify.</exception>
         public virtual void AddObject(string entitySetName, object entity)
@@ -726,8 +726,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Adds an object to the cache without adding its related
-        ///     entities.
+        /// Adds an object to the cache without adding its related
+        /// entities.
         /// </summary>
         /// <param name="entitySet"> EntitySet for the Object to be added. </param>
         /// <param name="wrappedEntity"> Object to be added. </param>
@@ -779,13 +779,13 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity">The entity for which related objects are to be loaded.</param>
         /// <param name="navigationProperty">The name of the navigation property that returns the related objects to be loaded.</param>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Added," />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </exception>
         public virtual void LoadProperty(object entity, string navigationProperty)
         {
@@ -797,16 +797,16 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity">The entity for which related objects are to be loaded.</param>
         /// <param name="navigationProperty">The name of the navigation property that returns the related objects to be loaded.</param>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value to use when you load the related objects.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value to use when you load the related objects.
         /// </param>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Added," />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </exception>
         public virtual void LoadProperty(object entity, string navigationProperty, MergeOption mergeOption)
         {
@@ -820,13 +820,13 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.ArgumentException"> selector  does not supply a valid input parameter.</exception>
         /// <exception cref="T:System.ArgumentNullException"> selector  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Added," />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector)
@@ -844,18 +844,18 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="entity">The source object for which related objects are to be loaded.</param>
         /// <param name="selector">A LINQ expression that defines the related objects to be loaded.</param>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value to use when you load the related objects.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value to use when you load the related objects.
         /// </param>
         /// <exception cref="T:System.ArgumentException"> selector  does not supply a valid input parameter.</exception>
         /// <exception cref="T:System.ArgumentNullException"> selector  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Added," />
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The  entity  is in a <see cref="F:System.Data.Entity.EntityState.Detached" />,
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Added," />
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state or the  entity  is attached to another instance of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual void LoadProperty<TEntity>(TEntity entity, Expression<Func<TEntity, object>> selector, MergeOption mergeOption)
@@ -922,19 +922,19 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="changed">The detached object that has property updates to apply to the original object.</param>
         /// <exception cref="T:System.ArgumentNullException">When  entitySetName  is null or an empty string or when  changed  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     of the object’s
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     or Wwen the entity is in a state other than
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Modified" />
-        ///     or
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Unchanged" />
-        ///     or the original object is not attached to the context.
+        /// When the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// of the object’s
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// or Wwen the entity is in a state other than
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Modified" />
+        /// or
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Unchanged" />
+        /// or the original object is not attached to the context.
         /// </exception>
         /// <exception cref="T:System.ArgumentException">When the type of the  changed  object is not the same type as the original object.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -949,38 +949,38 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Copies the scalar values from the supplied object into the object in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     that has the same key.
+        /// Copies the scalar values from the supplied object into the object in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// that has the same key.
         /// </summary>
         /// <returns>The updated object.</returns>
         /// <param name="entitySetName">The name of the entity set to which the object belongs.</param>
         /// <param name="currentEntity">
-        ///     The detached object that has property updates to apply to the original object. The entity key of  currentEntity  must match the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
-        ///     property of an entry in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The detached object that has property updates to apply to the original object. The entity key of  currentEntity  must match the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        /// property of an entry in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         /// <typeparam name="TEntity">The entity type of the object.</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> entitySetName  or  current  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     of the object’s
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///      or the object is not in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     or it is in a
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     state or the entity key of the supplied object is invalid.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// of the object’s
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        ///  or the object is not in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// or it is in a
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Detached" />
+        /// state or the entity key of the supplied object is invalid.
         /// </exception>
         /// <exception cref="T:System.ArgumentException"> entitySetName  is an empty string.</exception>
         public virtual TEntity ApplyCurrentValues<TEntity>(string entitySetName, TEntity currentEntity) where TEntity : class
@@ -1023,44 +1023,44 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Copies the scalar values from the supplied object into set of original values for the object in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     that has the same key.
+        /// Copies the scalar values from the supplied object into set of original values for the object in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// that has the same key.
         /// </summary>
         /// <returns>The updated object.</returns>
         /// <param name="entitySetName">The name of the entity set to which the object belongs.</param>
         /// <param name="originalEntity">
-        ///     The detached object that has original values to apply to the object. The entity key of  originalEntity  must match the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
-        ///     property of an entry in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The detached object that has original values to apply to the object. The entity key of  originalEntity  must match the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        /// property of an entry in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         /// <typeparam name="TEntity">The type of the entity object.</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> entitySetName  or  original  is null.</exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     of the object’s
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///      or an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     for the object cannot be found in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///      or the object is in an
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Added" />
-        ///     or a
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     state  or the entity key of the supplied object is invalid or has property changes.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// of the object’s
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        ///  or an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// for the object cannot be found in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        ///  or the object is in an
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Added" />
+        /// or a
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Detached" />
+        /// state  or the entity key of the supplied object is invalid or has property changes.
         /// </exception>
         /// <exception cref="T:System.ArgumentException"> entitySetName  is an empty string.</exception>
         public virtual TEntity ApplyOriginalValues<TEntity>(string entitySetName, TEntity originalEntity) where TEntity : class
@@ -1126,26 +1126,26 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>Attaches an object or object graph to the object context in a specific entity set. </summary>
         /// <param name="entitySetName">Represents the entity set name, which may optionally be qualified by the entity container name. </param>
         /// <param name="entity">
-        ///     The <see cref="T:System.Object" /> to attach.
+        /// The <see cref="T:System.Object" /> to attach.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The  entity  is null. </exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     Invalid entity set  or the object has a temporary key or the object has an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     and the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     does not match with the entity set passed in as an argument of the method or the object does not have an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     and no entity set is provided or any object from the object graph has a temporary
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///      or any object from the object graph has an invalid
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///     (for example, values in the key do not match values in the object) or the entity set could not be found from a given  entitySetName  name and entity container name or any object from the object graph already exists in another state manager.
+        /// Invalid entity set  or the object has a temporary key or the object has an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// and the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// does not match with the entity set passed in as an argument of the method or the object does not have an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// and no entity set is provided or any object from the object graph has a temporary
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        ///  or any object from the object graph has an invalid
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        /// (for example, values in the key do not match values in the object) or the entity set could not be found from a given  entitySetName  name and entity container name or any object from the object graph already exists in another state manager.
         /// </exception>
         public virtual void AttachTo(string entitySetName, object entity)
         {
@@ -1248,7 +1248,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Attaches single object to the cache without adding its related entities.
+        /// Attaches single object to the cache without adding its related entities.
         /// </summary>
         /// <param name="wrappedEntity"> Entity to be attached. </param>
         /// <param name="entitySet"> "Computed" entity set. </param>
@@ -1354,8 +1354,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     When attaching we need to check that the entity is not already attached to a different context
-        ///     before we wipe away that context.
+        /// When attaching we need to check that the entity is not already attached to a different context
+        /// before we wipe away that context.
         /// </summary>
         private void VerifyContextForAddOrAttach(IEntityWrapper wrappedEntity)
         {
@@ -1370,7 +1370,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Creates the entity key for a specific object, or returns the entity key if it already exists. </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.EntityKey" /> of the object.
+        /// The <see cref="T:System.Data.Entity.Core.EntityKey" /> of the object.
         /// </returns>
         /// <param name="entitySetName">The fully qualified name of the entity set to which the entity object belongs.</param>
         /// <param name="entity">The object for which the entity key is being retrieved. </param>
@@ -1433,19 +1433,19 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance that is used to query, add, modify, and delete objects of the specified entity type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance that is used to query, add, modify, and delete objects of the specified entity type.
         /// </summary>
         /// <returns>
-        ///     The new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
+        /// The new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
         /// </returns>
         /// <typeparam name="TEntity">
-        ///     Entity type of the requested <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />.
+        /// Entity type of the requested <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />.
         /// </typeparam>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The <see cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" /> property is not set on the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///      or the specified type belongs to more than one entity set.
+        /// The <see cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" /> property is not set on the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        ///  or the specified type belongs to more than one entity set.
         /// </exception>
         public virtual ObjectSet<TEntity> CreateObjectSet<TEntity>()
             where TEntity : class
@@ -1455,37 +1455,37 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance that is used to query, add, modify, and delete objects of the specified type and with the specified entity set name.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance that is used to query, add, modify, and delete objects of the specified type and with the specified entity set name.
         /// </summary>
         /// <returns>
-        ///     The new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
+        /// The new <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
         /// </returns>
         /// <param name="entitySetName">
-        ///     Name of the entity set for the returned <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />. The string must be qualified by the default container name if the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" />
-        ///     property is not set on the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// Name of the entity set for the returned <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />. The string must be qualified by the default container name if the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" />
+        /// property is not set on the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         /// <typeparam name="TEntity">
-        ///     Entity type of the requested <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />.
+        /// Entity type of the requested <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" />.
         /// </typeparam>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        ///     of the object’s
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.EntityKey" />
-        ///      or the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" />
-        ///     property is not set on the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     and the name is not qualified as part of the  entitySetName  parameter or the specified type belongs to more than one entity set.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
+        /// of the object’s
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.EntityKey" />
+        ///  or the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectContext.DefaultContainerName" />
+        /// property is not set on the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// and the name is not qualified as part of the  entitySetName  parameter or the specified type belongs to more than one entity set.
         /// </exception>
         public virtual ObjectSet<TEntity> CreateObjectSet<TEntity>(string entitySetName)
             where TEntity : class
@@ -1495,8 +1495,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Find the EntitySet in the default EntityContainer for the specified CLR type.
-        ///     Must be a valid mapped entity type and must be mapped to exactly one EntitySet across all of the EntityContainers in the metadata for this context.
+        /// Find the EntitySet in the default EntityContainer for the specified CLR type.
+        /// Must be a valid mapped entity type and must be mapped to exactly one EntitySet across all of the EntityContainers in the metadata for this context.
         /// </summary>
         /// <param name="entityCLRType"> CLR type to use for EntitySet lookup. </param>
         private EntitySet GetEntitySetForType(Type entityCLRType, string exceptionParameterName)
@@ -1573,7 +1573,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Finds an EntitySet with the specified name and verifies that its type matches the specified type.
+        /// Finds an EntitySet with the specified name and verifies that its type matches the specified type.
         /// </summary>
         /// <param name="entitySetName"> Name of the EntitySet to find. Can be fully-qualified or unqualified if the DefaultContainerName is set </param>
         /// <param name="entityCLRType"> Expected CLR type of the EntitySet. Must exactly match the type for the EntitySet, base types are not valid. </param>
@@ -1599,11 +1599,11 @@ namespace System.Data.Entity.Core.Objects
         #region Connection Management
 
         /// <summary>
-        ///     Ensures that the connection is opened for an operation that requires an open connection to the store.
-        ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
+        /// Ensures that the connection is opened for an operation that requires an open connection to the store.
+        /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the <see cref="ObjectContext" /> instance has been disposed.
+        /// If the <see cref="ObjectContext" /> instance has been disposed.
         /// </exception>
         internal virtual void EnsureConnection()
         {
@@ -1654,11 +1654,11 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Ensures that the connection is opened for an operation that requires an open connection to the store.
-        ///     Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
+        /// Ensures that the connection is opened for an operation that requires an open connection to the store.
+        /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the <see cref="ObjectContext" /> instance has been disposed.
+        /// If the <see cref="ObjectContext" /> instance has been disposed.
         /// </exception>
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
@@ -1803,7 +1803,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Resets the state of connection management when the connection becomes closed.
+        /// Resets the state of connection management when the connection becomes closed.
         /// </summary>
         private void ConnectionStateChange(object sender, StateChangeEventArgs e)
         {
@@ -1816,14 +1816,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Releases the connection, potentially closing the connection if no active operations
-        ///     require the connection to be open. There should be a single ReleaseConnection call
-        ///     for each EnsureConnection call.
+        /// Releases the connection, potentially closing the connection if no active operations
+        /// require the connection to be open. There should be a single ReleaseConnection call
+        /// for each EnsureConnection call.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the
-        ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.
+        /// If the
+        /// <see cref="ObjectContext" />
+        /// instance has been disposed.
         /// </exception>
         internal virtual void ReleaseConnection()
         {
@@ -1853,15 +1853,15 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         /// <summary>
-        ///     Creates an <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> in the current object context by using the specified query string.
+        /// Creates an <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> in the current object context by using the specified query string.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> of the specified type.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> of the specified type.
         /// </returns>
         /// <param name="queryString">The query string to be executed.</param>
         /// <param name="parameters">Parameters to pass to the query.</param>
         /// <typeparam name="T">
-        ///     The entity type of the returned <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
+        /// The entity type of the returned <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
         /// </typeparam>
         /// <exception cref="T:System.ArgumentNullException">The  queryString  or  parameters  parameter is null.</exception>
         public virtual ObjectQuery<T> CreateQuery<T>(string queryString, params ObjectParameter[] parameters)
@@ -1888,7 +1888,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates an EntityConnection from the given connection string.
+        /// Creates an EntityConnection from the given connection string.
         /// </summary>
         /// <param name="connectionString"> the connection string </param>
         /// <returns> the newly created connection </returns>
@@ -1905,13 +1905,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Given an entity connection, returns a copy of its MetadataWorkspace. Ensure we get
-        ///     all of the metadata item collections by priming the entity connection.
+        /// Given an entity connection, returns a copy of its MetadataWorkspace. Ensure we get
+        /// all of the metadata item collections by priming the entity connection.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///     If the
-        ///     <see cref="ObjectContext" />
-        ///     instance has been disposed.
+        /// If the
+        /// <see cref="ObjectContext" />
+        /// instance has been disposed.
         /// </exception>
         private MetadataWorkspace RetrieveMetadataWorkspaceFromConnection()
         {
@@ -1925,10 +1925,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Marks an object for deletion. </summary>
         /// <param name="entity">
-        ///     An object that specifies the entity to delete. The object can be in any state except
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     .
+        /// An object that specifies the entity to delete. The object can be in any state except
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Detached" />
+        /// .
         /// </param>
         public virtual void DeleteObject(object entity)
         {
@@ -1942,7 +1942,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Common DeleteObject method that is used by both ObjectContext.DeleteObject and ObjectSet.DeleteObject.
+        /// Common DeleteObject method that is used by both ObjectContext.DeleteObject and ObjectSet.DeleteObject.
         /// </summary>
         /// <param name="entity"> Object to be deleted. </param>
         /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
@@ -1978,14 +1978,14 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Removes the object from the object context.</summary>
         /// <param name="entity">
-        ///     Object to be detached. Only the  entity  is removed; if there are any related objects that are being tracked by the same
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     , those will not be detached automatically.
+        /// Object to be detached. Only the  entity  is removed; if there are any related objects that are being tracked by the same
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// , those will not be detached automatically.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">The  entity  is null. </exception>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The  entity  is not associated with this <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> (for example, was newly created and not associated with any context yet, or was obtained through some other context, or was already detached).
+        /// The  entity  is not associated with this <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> (for example, was newly created and not associated with any context yet, or was obtained through some other context, or was already detached).
         /// </exception>
         public virtual void Detach(object entity)
         {
@@ -2000,7 +2000,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Common Detach method that is used by both ObjectContext.Detach and ObjectSet.Detach.
+        /// Common Detach method that is used by both ObjectContext.Detach and ObjectSet.Detach.
         /// </summary>
         /// <param name="entity"> Object to be detached. </param>
         /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
@@ -2083,7 +2083,7 @@ namespace System.Data.Entity.Core.Objects
         #region GetEntitySet
 
         /// <summary>
-        ///     Returns the EntitySet with the given name from given container.
+        /// Returns the EntitySet with the given name from given container.
         /// </summary>
         /// <param name="entitySetName"> Name of entity set. </param>
         /// <param name="entityContainerName"> Name of container. </param>
@@ -2161,7 +2161,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Validate that an EntitySet is compatible with a given entity instance's CLR type.
+        /// Validate that an EntitySet is compatible with a given entity instance's CLR type.
         /// </summary>
         /// <param name="entitySet"> an EntitySet </param>
         /// <param name="entityType"> The CLR type of an entity instance </param>
@@ -2196,12 +2196,12 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns an object that has the specified entity key.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Object" /> that is an instance of an entity type.
+        /// An <see cref="T:System.Object" /> that is an instance of an entity type.
         /// </returns>
         /// <param name="key">The key of the object to be found.</param>
         /// <exception cref="T:System.ArgumentNullException">The  key  parameter is null.</exception>
         /// <exception cref="T:System.Data.Entity.Core.ObjectNotFoundException">
-        ///     The object is not found in either the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> or the data source.
+        /// The object is not found in either the <see cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" /> or the data source.
         /// </exception>
         public virtual object GetObjectByKey(EntityKey key)
         {
@@ -2229,11 +2229,11 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Updates a collection of objects in the object context with data from the database. </summary>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="collection">
-        ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
+        /// An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
@@ -2251,8 +2251,8 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Updates an object in the object context with data from the database. </summary>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="entity">The object to be refreshed. </param>
         /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
@@ -2273,18 +2273,18 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously updates a collection of objects in the object context with data from the database. </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="collection">
-        ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
+        /// An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
@@ -2296,21 +2296,21 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously updates a collection of objects in the object context with data from the database. </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="collection">
-        ///     An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
+        /// An <see cref="T:System.Collections.IEnumerable" /> collection of objects to refresh.
         /// </param>
         ///  <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException"> collection  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
@@ -2328,16 +2328,16 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously updates an object in the object context with data from the database. </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="entity">The object to be refreshed. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
@@ -2349,19 +2349,19 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously updates an object in the object context with data from the database. </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="refreshMode">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
-        ///     property changes in the object context are overwritten with property values from the database.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.RefreshMode" /> value that indicates whether 
+        /// property changes in the object context are overwritten with property values from the database.
         /// </param>
         /// <param name="entity">The object to be refreshed. </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException"> entity  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException"> refreshMode  is not valid.</exception>
@@ -2381,9 +2381,9 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         /// <summary>
-        ///     Validates that the given entity/key pair has an ObjectStateEntry
-        ///     and that entry is not in the added state.
-        ///     The entity is added to the entities dictionary, and checked for duplicates.
+        /// Validates that the given entity/key pair has an ObjectStateEntry
+        /// and that entry is not in the added state.
+        /// The entity is added to the entities dictionary, and checked for duplicates.
         /// </summary>
         /// <param name="entities"> on exit, entity is added to this dictionary. </param>
         /// <param name="key"> </param>
@@ -2834,10 +2834,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Persists all updates to the database and resets change tracking in the object context.</summary>
         /// <returns>
-        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges()
@@ -2849,15 +2849,15 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously persists all updates to the database and resets change tracking in the object context.</summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync()
@@ -2867,18 +2867,18 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously persists all updates to the database and resets change tracking in the object context.</summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(CancellationToken cancellationToken)
@@ -2890,16 +2890,16 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <param name="acceptChangesDuringSave">
-        ///     This parameter is needed for client-side transaction support. If true, the change tracking on all objects is reset after
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />
-        ///     finishes. If false, you must call the <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.AcceptAllChanges" />
-        ///     method after <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />.
+        /// This parameter is needed for client-side transaction support. If true, the change tracking on all objects is reset after
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />
+        /// finishes. If false, you must call the <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.AcceptAllChanges" />
+        /// method after <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(System.Boolean)" />.
         /// </param>
         /// <returns>
-        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -2915,13 +2915,13 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <param name="options">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
         /// <returns>
-        ///     The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// The number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
@@ -2948,18 +2948,18 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="options">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options)
@@ -2969,21 +2969,21 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Asynchronously persists all updates to the database and optionally resets change tracking in the object context.</summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="options">
-        ///     A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
+        /// A <see cref="T:System.Data.Entity.Core.Objects.SaveOptions" /> value that determines the behavior of the operation.
         /// </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
-        ///     <see cref="F:System.Data.Entity.EntityState.Modified" />, 
-        ///     or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
-        ///     <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the number of objects in an <see cref="F:System.Data.Entity.EntityState.Added" />,
+        /// <see cref="F:System.Data.Entity.EntityState.Modified" />, 
+        /// or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state when
+        /// <see cref="M:System.Data.Entity.Core.Objects.ObjectContext.SaveChanges" /> was called.
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual Task<Int32> SaveChangesAsync(SaveOptions options, CancellationToken cancellationToken)
@@ -3112,13 +3112,13 @@ namespace System.Data.Entity.Core.Objects
         #endregion //SaveChanges
 
         /// <summary>
-        ///     Executes a function in a local transaction and returns the result.
+        /// Executes a function in a local transaction and returns the result.
         /// </summary>
         /// <remarks>
-        ///     A local transaction is created only if there are no existing local nor ambient transactions.
-        ///     This method will ensure that the connection is opened and release it if an exception is thrown.
-        ///     The caller is responsible of releasing the connection if no exception is thrown, unless
-        ///     <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
+        /// A local transaction is created only if there are no existing local nor ambient transactions.
+        /// This method will ensure that the connection is opened and release it if an exception is thrown.
+        /// The caller is responsible of releasing the connection if no exception is thrown, unless
+        /// <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
@@ -3126,7 +3126,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
         /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <returns>
-        ///     The result from invoking <paramref name="func" />.
+        /// The result from invoking <paramref name="func" />.
         /// </returns>
         internal virtual T ExecuteInTransaction<T>(
             Func<T> func, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, bool releaseConnectionOnSuccess)
@@ -3198,14 +3198,14 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     An asynchronous version of ExecuteStoreQuery, which
-        ///     executes a function in a local transaction and returns the result.
+        /// An asynchronous version of ExecuteStoreQuery, which
+        /// executes a function in a local transaction and returns the result.
         /// </summary>
         /// <remarks>
-        ///     A local transaction is created only if there are no existing local nor ambient transactions.
-        ///     This method will ensure that the connection is opened and release it if an exception is thrown.
-        ///     The caller is responsible of releasing the connection if no exception is thrown, unless
-        ///     <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
+        /// A local transaction is created only if there are no existing local nor ambient transactions.
+        /// This method will ensure that the connection is opened and release it if an exception is thrown.
+        /// The caller is responsible of releasing the connection if no exception is thrown, unless
+        /// <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
         /// </remarks>
         /// <typeparam name="T"> Type of the result. </typeparam>
         /// <param name="func"> The function to invoke. </param>
@@ -3214,7 +3214,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
         /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         /// <returns>
-        ///     A task containing the result from invoking <paramref name="func" />.
+        /// A task containing the result from invoking <paramref name="func" />.
         /// </returns>
         internal virtual async Task<T> ExecuteInTransactionAsync<T>(
             Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
@@ -3287,10 +3287,10 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         /// <summary>
-        ///     Ensures that <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> changes are synchronized with changes in all objects that are tracked by the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     .
+        /// Ensures that <see cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" /> changes are synchronized with changes in all objects that are tracked by the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// .
         /// </summary>
         public virtual void DetectChanges()
         {
@@ -3388,23 +3388,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes a stored procedure or function that is defined in the data source and mapped in the conceptual model, with the specified parameters. Returns a typed
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
-        ///     .
+        /// Executes a stored procedure or function that is defined in the data source and mapped in the conceptual model, with the specified parameters. Returns a typed
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
         /// </returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
         /// <param name="parameters">
-        ///     An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
         /// </param>
         /// <typeparam name="TElement">
-        ///     The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
-        ///     .
+        /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
+        /// .
         /// </typeparam>
         /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
         /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
@@ -3416,26 +3416,26 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes the given stored procedure or function that is defined in the data source and expressed in the conceptual model, with the specified parameters, and merge option. Returns a typed
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
-        ///     .
+        /// Executes the given stored procedure or function that is defined in the data source and expressed in the conceptual model, with the specified parameters, and merge option. Returns a typed
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> for the data that is returned by the stored procedure.
         /// </returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query.
         /// </param>
         /// <param name="parameters">
-        ///     An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
         /// </param>
         /// <typeparam name="TElement">
-        ///     The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
-        ///     .
+        /// The entity type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the function is executed against the data source. This type must implement
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.IEntityWithChangeTracker" />
+        /// .
         /// </typeparam>
         /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
         /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
@@ -3448,18 +3448,18 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes the given function on the default container.
+        /// Executes the given function on the default container.
         /// </summary>
         /// <typeparam name="TElement"> Element type for function results. </typeparam>
         /// <param name="functionName">
-        ///     Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
+        /// Name of function. May include container (e.g. ContainerName.FunctionName) or just function name when DefaultContainerName is known.
         /// </param>
         /// <param name="executionOptions"> The options for executing this function. </param>
         /// <param name="parameters"> The parameter values to use for the function. </param>
         /// <exception cref="ArgumentException"> If function is null or empty </exception>
         /// <exception cref="InvalidOperationException">
-        ///     If function is invalid (syntax,
-        ///     does not exist, refers to a function with return type incompatible with T)
+        /// If function is invalid (syntax,
+        /// does not exist, refers to a function with return type incompatible with T)
         /// </exception>
         public virtual ObjectResult<TElement> ExecuteFunction<TElement>(
             string functionName, ExecutionOptions executionOptions, params ObjectParameter[] parameters)
@@ -3501,7 +3501,7 @@ namespace System.Data.Entity.Core.Objects
         /// <returns>The number of rows affected.</returns>
         /// <param name="functionName">The name of the stored procedure or function. The name can include the container name, such as &lt;Container Name&gt;.&lt;Function Name&gt;. When the default container name is known, only the function name is required.</param>
         /// <param name="parameters">
-        ///     An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
+        /// An array of <see cref="T:System.Data.Entity.Core.Objects.ObjectParameter" /> objects.
         /// </param>
         /// <exception cref="T:System.ArgumentException"> function  is null or empty or function  is not found.</exception>
         /// <exception cref="T:System.InvalidOperationException">The entity reader does not support this  function or there is a type mismatch on the reader and the  function .</exception>
@@ -3647,7 +3647,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Get the materializer for the resultSetIndexth result set of storeReader.
+        /// Get the materializer for the resultSetIndexth result set of storeReader.
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
             EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyMetadataCollection<EntitySet> entitySets,
@@ -3826,7 +3826,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Generates an equivalent type that can be used with the Entity Framework for each type in the supplied enumeration.</summary>
         /// <param name="types">
-        ///     An enumeration of <see cref="T:System.Type" /> objects that represent custom data classes that map to the conceptual model.
+        /// An enumeration of <see cref="T:System.Type" /> objects that represent custom data classes that map to the conceptual model.
         /// </param>
         public virtual void CreateProxyTypes(IEnumerable<Type> types)
         {
@@ -3851,7 +3851,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns all the existing proxy types.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of all the existing proxy types.
+        /// An <see cref="T:System.Collections.Generic.IEnumerable`1" /> of all the existing proxy types.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static IEnumerable<Type> GetKnownProxyTypes()
@@ -3861,10 +3861,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns the entity type of the POCO entity associated with a proxy object of a specified type.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Type" /> of the associated POCO entity.
+        /// The <see cref="T:System.Type" /> of the associated POCO entity.
         /// </returns>
         /// <param name="type">
-        ///     The <see cref="T:System.Type" /> of the proxy object.
+        /// The <see cref="T:System.Type" /> of the proxy object.
         /// </param>
         public static Type GetObjectType(Type type)
         {
@@ -3932,17 +3932,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     If there isn't an existing local transaction a new transaction will be used
-        ///     to execute the command.
+        /// If there isn't an existing local transaction a new transaction will be used
+        /// to execute the command.
         /// </remarks>
         /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
@@ -3953,13 +3953,13 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommand("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText">The command specified in the server's native query language.</param>
@@ -3981,26 +3981,26 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Asynchronously executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// 
-        ///     If there isn't an existing local transaction a new transaction will be used
-        ///     to execute the command.
+        /// If there isn't an existing local transaction a new transaction will be used
+        /// to execute the command.
         /// </remarks>
         /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation.
-        ///     The task result contains the number of rows affected.
+        ///  A task that represents the asynchronous operation.
+        /// The task result contains the number of rows affected.
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(string commandText, params object[] parameters)
         {
@@ -4008,24 +4008,24 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Asynchronously executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation.
-        ///     The task result contains the number of rows affected.
+        ///  A task that represents the asynchronous operation.
+        /// The task result contains the number of rows affected.
         /// </returns>
         public Task<int> ExecuteStoreCommandAsync(TransactionalBehavior transactionalBehavior, string commandText, params object[] parameters)
         {
@@ -4033,29 +4033,29 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Asynchronously executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// 
-        ///     If there isn't an existing local transaction a new transaction will be used
-        ///     to execute the command.
+        /// If there isn't an existing local transaction a new transaction will be used
+        /// to execute the command.
         /// </remarks>
         /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation.
-        ///     The task result contains the number of rows affected.
+        ///  A task that represents the asynchronous operation.
+        /// The task result contains the number of rows affected.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             string commandText, CancellationToken cancellationToken, params object[] parameters)
@@ -4064,27 +4064,27 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes an arbitrary command directly against the data source using the existing connection.
-        ///     The command is specified using the server's native query language, such as SQL.
+        /// Asynchronously executes an arbitrary command directly against the data source using the existing connection.
+        /// The command is specified using the server's native query language, such as SQL.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreCommandAsync("UPDATE dbo.Posts SET Rating = 5 WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="transactionalBehavior"> Controls the creation of a transaction for this command. </param>
         /// <param name="commandText">The command specified in the server's native query language.</param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///      A task that represents the asynchronous operation.
-        ///     The task result contains the number of rows affected.
+        ///  A task that represents the asynchronous operation.
+        /// The task result contains the number of rows affected.
         /// </returns>
         public virtual Task<int> ExecuteStoreCommandAsync(
             TransactionalBehavior transactionalBehavior, string commandText, CancellationToken cancellationToken, params object[] parameters)
@@ -4118,20 +4118,20 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         /// <summary>
-        ///     Executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(string commandText, params object[] parameters)
         {
@@ -4140,21 +4140,21 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, ExecutionOptions executionOptions, params object[] parameters)
@@ -4164,25 +4164,25 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     If an entity set name is specified, results are tracked by the context.
+        /// Executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// If an entity set name is specified, results are tracked by the context.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
-        ///     <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. The default is
+        /// <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, MergeOption mergeOption, params object[] parameters)
@@ -4193,14 +4193,14 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     If an entity set name is specified, results are tracked by the context.
+        /// Executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// If an entity set name is specified, results are tracked by the context.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQuery&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4208,7 +4208,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     An enumeration of objects of type <typeparamref name="TElement" /> .
+        /// An enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         public virtual ObjectResult<TElement> ExecuteStoreQuery<TElement>(
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
@@ -4307,25 +4307,25 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(string commandText, params object[] parameters)
@@ -4334,28 +4334,28 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -4374,26 +4374,26 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -4413,29 +4413,29 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     Results are not tracked by the context, use the overload that specifies an entity set name to track results.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// Results are not tracked by the context, use the overload that specifies an entity set name to track results.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -4455,18 +4455,18 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     If an entity set name is specified, results are tracked by the context.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// If an entity set name is specified, results are tracked by the context.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
@@ -4474,8 +4474,8 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -4485,30 +4485,30 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
-        ///     The query is specified using the server's native query language, such as SQL.
-        ///     If an entity set name is specified, results are tracked by the context.
+        /// Asynchronously executes a query directly against the data source and returns a sequence of typed results. 
+        /// The query is specified using the server's native query language, such as SQL.
+        /// If an entity set name is specified, results are tracked by the context.
         ///
-        ///     As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
-        ///     Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
-        ///     context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
+        /// As with any API that accepts SQL it is important to parameterize any user input to protect against a SQL injection attack. You can include parameter place holders in the SQL query string and then supply parameter values as additional arguments. Any parameter values you supply will automatically be converted to a DbParameter.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @p0", userSuppliedAuthor);
+        /// Alternatively, you can also construct a DbParameter and supply it to SqlQuery. This allows you to use named parameters in the SQL query string.
+        /// context.ExecuteStoreQueryAsync&lt;Post&gt;("SELECT * FROM dbo.Posts WHERE Author = @author", new SqlParameter("@author", userSuppliedAuthor));
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <typeparam name="TElement"> The element type of the result sequence. </typeparam>
         /// <param name="commandText"> The query specified in the server's native query language. </param>
         /// <param name="entitySetName">The entity set of the  TResult  type. If an entity set name is not provided, the results are not going to be tracked.</param>
         /// <param name="executionOptions"> The options for executing this query. </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <param name="parameters"> The parameter values to use for the query. </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an enumeration of objects of type <typeparamref name="TElement" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
@@ -4625,11 +4625,11 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         /// <summary>
-        ///     Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type.
+        /// Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type.
         /// </summary>
         /// <returns>An enumeration of objects of type  TResult .</returns>
         /// <param name="reader">
-        ///     The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
+        /// The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">When  reader  is null.</exception>
         public virtual ObjectResult<TElement> Translate<TElement>(DbDataReader reader)
@@ -4649,22 +4649,22 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type, in a specific entity set, and with the specified merge option.
+        /// Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type, in a specific entity set, and with the specified merge option.
         /// </summary>
         /// <returns>An enumeration of objects of type  TResult .</returns>
         /// <param name="reader">
-        ///     The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
+        /// The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
         /// </param>
         /// <param name="entitySetName">The entity set of the  TResult  type.</param>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when translated objects are added to the object context. The default is
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
-        ///     .
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when translated objects are added to the object context. The default is
+        /// <see
+        ///     cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />
+        /// .
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">When  reader  is null.</exception>
         /// <exception cref="T:System.ArgumentOutOfRangeException">
-        ///     When the supplied  mergeOption  is not a valid <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value.
+        /// When the supplied  mergeOption  is not a valid <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> value.
         /// </exception>
         /// <exception cref="T:System.InvalidOperationException">When the supplied  entitySetName  is not a valid entity set for the  TResult  type. </exception>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
@@ -4798,10 +4798,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates the database by using the current data source connection and the metadata in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
-        ///     .
+        /// Creates the database by using the current data source connection and the metadata in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
+        /// .
         /// </summary>
         public virtual void CreateDatabase()
         {
@@ -4819,8 +4819,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Checks if the database that is specified as the database in the current store connection exists on the store. Most of the actual work
-        ///     is done by the DbProviderServices implementation for the current store connection.
+        /// Checks if the database that is specified as the database in the current store connection exists on the store. Most of the actual work
+        /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual bool DatabaseExists()
@@ -4873,19 +4873,19 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Generates a data definition language (DDL) script that creates schema objects (tables, primary keys, foreign keys) for the metadata in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
-        ///     . The
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
-        ///     loads metadata from store schema definition language (SSDL) files.
+        /// Generates a data definition language (DDL) script that creates schema objects (tables, primary keys, foreign keys) for the metadata in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
+        /// . The
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
+        /// loads metadata from store schema definition language (SSDL) files.
         /// </summary>
         /// <returns>
-        ///     A DDL script that creates schema objects for the metadata in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
-        ///     .
+        /// A DDL script that creates schema objects for the metadata in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.StoreItemCollection" />
+        /// .
         /// </returns>
         public virtual String CreateDatabaseScript()
         {
@@ -4941,7 +4941,7 @@ namespace System.Data.Entity.Core.Objects
         #region Nested types
 
         /// <summary>
-        ///     Supports binding EntityClient parameters to Object Services parameters.
+        /// Supports binding EntityClient parameters to Object Services parameters.
         /// </summary>
         private class ParameterBinder
         {

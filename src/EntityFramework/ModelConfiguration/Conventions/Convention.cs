@@ -12,21 +12,21 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     /// <summary>
-    ///     A convention that doesn't override configuration.
+    /// A convention that doesn't override configuration.
     /// </summary>
     public class Convention : IConvention
     {
         private readonly ConventionsConfiguration _conventionsConfiguration = new ConventionsConfiguration(new ConventionSet());
 
         /// <summary>
-        ///     The derived class can use the default constructor to apply a set rule of that change the model configuration.
+        /// The derived class can use the default constructor to apply a set rule of that change the model configuration.
         /// </summary>
         public Convention()
         {
         }
 
         /// <summary>
-        ///     For testing
+        /// For testing
         /// </summary>
         internal Convention(ConventionsConfiguration conventionsConfiguration)
         {
@@ -34,8 +34,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all mapped types in
-        ///     the model.
+        /// Begins configuration of a lightweight convention that applies to all mapped types in
+        /// the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
         public TypeConventionConfiguration Types()
@@ -44,8 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all mapped types in
-        ///     the model that derive from or implement the specified type.
+        /// Begins configuration of a lightweight convention that applies to all mapped types in
+        /// the model that derive from or implement the specified type.
         /// </summary>
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
@@ -57,8 +57,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all properties
-        ///     in the model.
+        /// Begins configuration of a lightweight convention that applies to all properties
+        /// in the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
         public PropertyConventionConfiguration Properties()
@@ -67,14 +67,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all primitive
-        ///     properties of the specified type in the model.
+        /// Begins configuration of a lightweight convention that applies to all primitive
+        /// properties of the specified type in the model.
         /// </summary>
         /// <typeparam name="T"> The type of the properties that the convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
         /// <remarks>
-        ///     The convention will apply to both nullable and non-nullable properties of the
-        ///     specified type.
+        /// The convention will apply to both nullable and non-nullable properties of the
+        /// specified type.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public PropertyConventionConfiguration Properties<T>()

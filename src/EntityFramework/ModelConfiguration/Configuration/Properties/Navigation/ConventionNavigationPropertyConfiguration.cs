@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Reflection;
 
     /// <summary>
-    ///     Used to create a convention that configures navigation properties.
+    /// Used to create a convention that configures navigation properties.
     /// </summary>
     internal class ConventionNavigationPropertyConfiguration
     {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Gets the <see cref="PropertyInfo" /> for this property.
+        /// Gets the <see cref="PropertyInfo" /> for this property.
         /// </summary>
         public virtual PropertyInfo ClrPropertyInfo
         {
@@ -44,13 +44,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Configures the constraint associated with the navigation property.
+        /// Configures the constraint associated with the navigation property.
         /// </summary>
         /// <typeparam name="T">
-        ///     The type of constraint configuration.
+        /// The type of constraint configuration.
         /// <see cref="ForeignKeyConstraintConfiguration" /> for
-        ///     foreign key constraints and <see cref="IndependentConstraintConfiguration" />
-        ///     for independent constraints.
+        /// foreign key constraints and <see cref="IndependentConstraintConfiguration" />
+        /// for independent constraints.
         /// </typeparam>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public virtual void HasConstraint<T>()
@@ -60,14 +60,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Configures the constraint associated with the navigation property.
+        /// Configures the constraint associated with the navigation property.
         /// </summary>
         /// <param name="constraintConfigurationAction"> Constraint configuration to be applied. </param>
         /// <typeparam name="T">
-        ///     The type of constraint configuration.
+        /// The type of constraint configuration.
         /// <see cref="ForeignKeyConstraintConfiguration" /> for
-        ///     foreign key constraints and <see cref="IndependentConstraintConfiguration" />
-        ///     for independent constraints.
+        /// foreign key constraints and <see cref="IndependentConstraintConfiguration" />
+        /// for independent constraints.
         /// </typeparam>
         public virtual void HasConstraint<T>(Action<T> constraintConfigurationAction)
             where T : ConstraintConfiguration
@@ -134,7 +134,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Sets the inverse navigation property.
+        /// Sets the inverse navigation property.
         /// </summary>
         public virtual ConventionNavigationPropertyConfiguration HasInverseNavigationProperty(
             Func<PropertyInfo, PropertyInfo> inverseNavigationPropertyGetter)
@@ -185,7 +185,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Sets the inverse end multiplicity.
+        /// Sets the inverse end multiplicity.
         /// </summary>
         public virtual ConventionNavigationPropertyConfiguration HasInverseEndMultiplicity(RelationshipMultiplicity multiplicity)
         {
@@ -204,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     True if the navigation property's declaring type is the principal end, false if it is not
+        /// True if the navigation property's declaring type is the principal end, false if it is not
         /// </summary>
         public virtual ConventionNavigationPropertyConfiguration IsDeclaringTypePrincipal(bool isPrincipal)
         {
@@ -218,7 +218,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Sets the action to take when a delete operation is attempted.
+        /// Sets the action to take when a delete operation is attempted.
         /// </summary>
         public virtual ConventionNavigationPropertyConfiguration HasDeleteAction(OperationAction deleteAction)
         {
@@ -232,7 +232,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Sets the multiplicity of this end of the navigation property.
+        /// Sets the multiplicity of this end of the navigation property.
         /// </summary>
         public virtual ConventionNavigationPropertyConfiguration HasRelationshipMultiplicity(RelationshipMultiplicity multiplicity)
         {

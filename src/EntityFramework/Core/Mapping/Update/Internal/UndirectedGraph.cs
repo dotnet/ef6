@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Returns the edges of the graph
+        /// Returns the edges of the graph
         /// </summary>
         internal IEnumerable<KeyValuePair<TVertex, TVertex>> Edges
         {

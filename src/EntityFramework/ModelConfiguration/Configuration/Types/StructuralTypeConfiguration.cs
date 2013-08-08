@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for a type in a model.
+    /// Allows configuration to be performed for a type in a model.
     /// </summary>
     internal abstract class StructuralTypeConfiguration : ConfigurationBase
     {
@@ -106,7 +106,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyInfo"> The property to be configured. </param>
         public void Ignore(PropertyInfo propertyInfo)

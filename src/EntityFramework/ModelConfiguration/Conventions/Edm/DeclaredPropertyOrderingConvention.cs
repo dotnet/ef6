@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to move primary key properties to appear first.
+    /// Convention to move primary key properties to appear first.
     /// </summary>
     public class DeclaredPropertyOrderingConvention : IConceptualModelConvention<EntityType>
     {

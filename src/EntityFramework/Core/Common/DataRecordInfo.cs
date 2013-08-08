@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics;
 
     /// <summary>
-    ///     DataRecordInfo class providing a simple way to access both the type information and the column information.
+    /// DataRecordInfo class providing a simple way to access both the type information and the column information.
     /// </summary>
     public class DataRecordInfo
     {
@@ -22,16 +22,16 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Initializes a new <see cref="T:System.Data.Common.DbDataRecord" /> object for a specific type with an enumerable collection of data fields.
+        /// Initializes a new <see cref="T:System.Data.Common.DbDataRecord" /> object for a specific type with an enumerable collection of data fields.
         /// </summary>
         /// <param name="metadata">
-        ///     The metadata for the type represented by this object, supplied by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
-        ///     .
+        /// The metadata for the type represented by this object, supplied by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" />
+        /// .
         /// </param>
         /// <param name="memberInfo">
-        ///     An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
+        /// An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
         /// </param>
         public DataRecordInfo(TypeUsage metadata, IEnumerable<EdmMember> memberInfo)
         {
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Construct FieldMetadata for structuralType.Members from TypeUsage
+        /// Construct FieldMetadata for structuralType.Members from TypeUsage
         /// </summary>
         internal DataRecordInfo(TypeUsage metadata)
         {
@@ -103,8 +103,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        ///     but with a different EntityKey instance.
+        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        /// but with a different EntityKey instance.
         /// </summary>
         internal DataRecordInfo(DataRecordInfo recordInfo)
         {
@@ -113,13 +113,13 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> for this
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.IExtendedDataRecord.DataRecordInfo" />
-        ///     object.
+        /// Gets <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> for this
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.IExtendedDataRecord.DataRecordInfo" />
+        /// object.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// A <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </returns>
         public ReadOnlyCollection<FieldMetadata> FieldMetadata
         {
@@ -127,10 +127,10 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets type info for this object as a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object.
+        /// Gets type info for this object as a <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> value.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> value.
         /// </returns>
         public virtual TypeUsage RecordType
         {

@@ -12,7 +12,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Reflection;
 
     /// <summary>
-    ///     Resolves dependencies from a config file.
+    /// Resolves dependencies from a config file.
     /// </summary>
     internal class AppConfigDependencyResolver : IDbDependencyResolver
     {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private readonly ProviderServicesFactory _providerServicesFactory;
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         public AppConfigDependencyResolver()
         {

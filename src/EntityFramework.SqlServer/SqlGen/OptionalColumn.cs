@@ -3,10 +3,10 @@
 namespace System.Data.Entity.SqlServer.SqlGen
 {
     /// <summary>
-    ///     Represents a column in a select list that should be printed only if it is later used.
-    ///     Such columns get added by <see cref="SqlGenerator.AddDefaultColumns" />.
-    ///     The SymbolUsageManager associated with the OptionalColumn has the information whether the column
-    ///     has been used based on its symbol.
+    /// Represents a column in a select list that should be printed only if it is later used.
+    /// Such columns get added by <see cref="SqlGenerator.AddDefaultColumns" />.
+    /// The SymbolUsageManager associated with the OptionalColumn has the information whether the column
+    /// has been used based on its symbol.
     /// </summary>
     internal sealed class OptionalColumn
     {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Internal Methods
 
         /// <summary>
-        ///     Append to the "fragment" representing this column
+        /// Append to the "fragment" representing this column
         /// </summary>
         internal void Append(object s)
         {
@@ -52,8 +52,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         #region Internal members
 
         /// <summary>
-        ///     Writes that fragment that represents the optional column
-        ///     if the usage manager says it is used.
+        /// Writes that fragment that represents the optional column
+        /// if the usage manager says it is used.
         /// </summary>
         public bool WriteSqlIfUsed(SqlWriter writer, SqlGenerator sqlGenerator, string separator)
         {

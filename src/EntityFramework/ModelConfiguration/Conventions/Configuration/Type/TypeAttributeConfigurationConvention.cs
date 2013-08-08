@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Base class for conventions that process CLR attributes found in the model.
+    /// Base class for conventions that process CLR attributes found in the model.
     /// </summary>
     /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
     [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes")]

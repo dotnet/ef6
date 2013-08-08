@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    ///     This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader" /> such that
-    ///     it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
-    ///     from are provided by Code First.
+    /// This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader" /> such that
+    /// it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
+    /// from are provided by Code First.
     /// </summary>
     internal abstract class OSpaceTypeFactory
     {
@@ -538,10 +538,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates an Enum property based on <paramref name="clrProperty" /> and adds it to the parent structural type.
+        /// Creates an Enum property based on <paramref name="clrProperty" /> and adds it to the parent structural type.
         /// </summary>
         /// <param name="type">
-        ///     CLR type owning <paramref name="clrProperty" /> .
+        /// CLR type owning <paramref name="clrProperty" /> .
         /// </param>
         /// <param name="ospaceType"> OSpace type the created property will be added to. </param>
         /// <param name="cspaceProperty"> Corresponding property from CSpace. </param>

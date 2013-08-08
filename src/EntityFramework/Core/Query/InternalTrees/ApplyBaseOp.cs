@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Base class for all Apply Ops
+    /// Base class for all Apply Ops
     /// </summary>
     internal abstract class ApplyBaseOp : RelOp
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public surface
 
         /// <summary>
-        ///     2 children - left, right
+        /// 2 children - left, right
         /// </summary>
         internal override int Arity
         {

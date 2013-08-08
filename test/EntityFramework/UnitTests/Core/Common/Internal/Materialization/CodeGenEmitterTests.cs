@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Not really a unit test because of the complexity of setting up everything the materializer needs.
+        /// Not really a unit test because of the complexity of setting up everything the materializer needs.
         /// </summary>
         [Fact]
         public void Materialized_entities_have_override_Equals_flag_set_appropriately()

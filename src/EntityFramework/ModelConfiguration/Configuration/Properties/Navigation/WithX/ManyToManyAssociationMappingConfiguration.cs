@@ -14,8 +14,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Configures the table and column mapping of a many:many relationship.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Configures the table and column mapping of a many:many relationship.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public sealed class ManyToManyAssociationMappingConfiguration : AssociationMappingConfiguration
     {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the join table name for the relationship.
+        /// Configures the join table name for the relationship.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the join table name and schema for the relationship.
+        /// Configures the join table name and schema for the relationship.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         /// <param name="schemaName"> Schema of the table. </param>
@@ -70,8 +70,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the name of the column(s) for the left foreign key.
-        ///     The left foreign key points to the parent entity of the navigation property specified in the HasMany call.
+        /// Configures the name of the column(s) for the left foreign key.
+        /// The left foreign key points to the parent entity of the navigation property specified in the HasMany call.
         /// </summary>
         /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>
@@ -86,8 +86,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the name of the column(s) for the right foreign key.
-        ///     The right foreign key points to the parent entity of the the navigation property specified in the WithMany call.
+        /// Configures the name of the column(s) for the right foreign key.
+        /// The right foreign key points to the parent entity of the the navigation property specified in the WithMany call.
         /// </summary>
         /// <param name="keyColumnNames"> The foreign key column names. When using multiple foreign key properties, the properties must be specified in the same order that the the primary key properties were configured for the target entity type. </param>
         /// <returns> The same ManyToManyAssociationMappingConfiguration instance so that multiple calls can be chained. </returns>

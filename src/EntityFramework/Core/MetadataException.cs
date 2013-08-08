@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     metadata exception class
+    /// metadata exception class
     /// </summary>
     [Serializable]
     public sealed class MetadataException : EntityException
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with a default message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with a default message.
         /// </summary>
         public MetadataException() // required ctor
             : base(Strings.Metadata_General_Error)
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with the specified message.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with the specified message.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public MetadataException(string message) // required ctor
@@ -35,11 +35,11 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with the specified message and inner exception.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.MetadataException" /> class with the specified message and inner exception.
         /// </summary>
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">
-        ///     The exception that is the cause of this <see cref="T:System.Data.Entity.Core.MetadataException" />.
+        /// The exception that is the cause of this <see cref="T:System.Data.Entity.Core.MetadataException" />.
         /// </param>
         public MetadataException(string message, Exception innerException) // required ctor
             : base(message, innerException)
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     constructor for deserialization
+        /// constructor for deserialization
         /// </summary>
         private MetadataException(SerializationInfo info, StreamingContext context)
             : base(info, context)

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Entity SQL Parser result information.
+    /// Entity SQL Parser result information.
     /// </summary>
     public sealed class ParseResult
     {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     List of <see cref="T:System.Data.Entity.Core.Common.EntitySql.FunctionDefinition" /> objects describing query inline function definitions.
+        /// List of <see cref="T:System.Data.Entity.Core.Common.EntitySql.FunctionDefinition" /> objects describing query inline function definitions.
         /// </summary>
         public ReadOnlyCollection<FunctionDefinition> FunctionDefinitions
         {

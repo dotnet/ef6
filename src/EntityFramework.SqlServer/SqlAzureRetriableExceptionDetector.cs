@@ -5,7 +5,7 @@ namespace System.Data.Entity.SqlServer
     using System.Data.SqlClient;
 
     /// <summary>
-    ///     Detects the exceptions caused by SQL Azure transient failures.
+    /// Detects the exceptions caused by SQL Azure transient failures.
     /// </summary>
     internal static class SqlAzureRetriableExceptionDetector
     {

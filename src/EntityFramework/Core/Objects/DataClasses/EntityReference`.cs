@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Xml.Serialization;
 
     /// <summary>
-    ///     Models a relationship end with multiplicity 1.
+    /// Models a relationship end with multiplicity 1.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
@@ -47,12 +47,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     Creates a new instance of <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
+        /// Creates a new instance of <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
         /// </summary>
         /// <remarks>
-        ///     The default constructor is required for some serialization scenarios. It should not be used to
-        ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
-        ///     class instead.
+        /// The default constructor is required for some serialization scenarios. It should not be used to
+        /// create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
+        /// class instead.
         /// </remarks>
         public EntityReference()
         {
@@ -70,13 +70,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ----------
 
         /// <summary>
-        ///     Gets or sets the related object returned by this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />
-        ///     .
+        /// Gets or sets the related object returned by this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The object returned by this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
+        /// The object returned by this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" />.
         /// </returns>
         [SoapIgnore]
         [XmlIgnore]
@@ -170,18 +170,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        ///     Loads the related object for this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> with the specified merge option.
+        /// Loads the related object for this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> with the specified merge option.
         /// </summary>
         /// <param name="mergeOption">
-        ///     Specifies how the object should be returned if it already exists in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// Specifies how the object should be returned if it already exists in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     The source of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> is null 
-        ///     or a query returned more than one related end 
-        ///     or a query returned zero related ends, and one related end was expected.
+        /// The source of the <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityReference`1" /> is null 
+        /// or a query returned more than one related end 
+        /// or a query returned zero related ends, and one related end was expected.
         /// </exception>
         public override void Load(MergeOption mergeOption)
         {
@@ -292,7 +292,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This operation is not allowed if the owner is null
+        /// This operation is not allowed if the owner is null
         /// </summary>
         internal override IEnumerable GetInternalEnumerable()
         {
@@ -628,7 +628,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Disconnected adds are not supported for an EntityReference so we should report this as an error.
+        /// Disconnected adds are not supported for an EntityReference so we should report this as an error.
         /// </summary>
         /// <param name="wrappedEntity"> The entity to add to the related end in a disconnected state. </param>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
@@ -639,7 +639,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Disconnected removes are not supported for an EntityReference so we should report this as an error.
+        /// Disconnected removes are not supported for an EntityReference so we should report this as an error.
         /// </summary>
         /// <param name="wrappedEntity"> The entity to remove from the related end in a disconnected state. </param>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
@@ -651,7 +651,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Remove from the RelatedEnd
+        /// Remove from the RelatedEnd
         /// </summary>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
@@ -679,7 +679,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Remove from the POCO collection
+        /// Remove from the POCO collection
         /// </summary>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
@@ -784,13 +784,13 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // knowledge of the generic type, and the base class isn't generic
         /// <summary>Creates an equivalent object query that returns the related object.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that returns the related object.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> that returns the related object.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
-        ///     or when the object is in a <see cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     state with a <see cref="P:System.Data.Entity.Core.Objects.ObjectQuery.MergeOption" />
-        ///     other than <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the object is in an <see cref="F:System.Data.Entity.EntityState.Added" /> state 
+        /// or when the object is in a <see cref="F:System.Data.Entity.EntityState.Detached" />
+        /// state with a <see cref="P:System.Data.Entity.Core.Objects.ObjectQuery.MergeOption" />
+        /// other than <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public ObjectQuery<TEntity> CreateSourceQuery()
         {
@@ -807,8 +807,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //End identical code
 
         /// <summary>
-        ///     Take any values in the incoming RelatedEnd and sets them onto the values
-        ///     that currently exist in this RelatedEnd
+        /// Take any values in the incoming RelatedEnd and sets them onto the values
+        /// that currently exist in this RelatedEnd
         /// </summary>
         internal void InitializeWithValue(RelatedEnd relatedEnd)
         {
@@ -884,10 +884,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region Add
 
         /// <summary>
-        ///     AddToLocalEnd is used by both APIs a) RelatedEnd.Add b) Value property setter.
-        ///     ApplyConstraints is true in case of RelatedEnd.Add because one cannot add entity to ref it its already set
-        ///     however applyConstraints is false in case of Value property setter because value can be set to a new value
-        ///     even if its non null.
+        /// AddToLocalEnd is used by both APIs a) RelatedEnd.Add b) Value property setter.
+        /// ApplyConstraints is true in case of RelatedEnd.Add because one cannot add entity to ref it its already set
+        /// however applyConstraints is false in case of Value property setter because value can be set to a new value
+        /// even if its non null.
         /// </summary>
         internal override void AddToLocalCache(IEntityWrapper wrappedEntity, bool applyConstraints)
         {

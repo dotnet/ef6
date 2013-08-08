@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql
 {
     /// <summary>
-    ///     Abstract class representing the result of an eSQL expression classification.
+    /// Abstract class representing the result of an eSQL expression classification.
     /// </summary>
     internal abstract class ExpressionResolution
     {

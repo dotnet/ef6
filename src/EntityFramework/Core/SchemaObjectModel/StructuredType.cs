@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for StructuredType.
+    /// Summary description for StructuredType.
     /// </summary>
     internal abstract class StructuredType : SchemaType
     {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region More Public Methods
 
         /// <summary>
-        ///     Find a property by name in the type hierarchy
+        /// Find a property by name in the type hierarchy
         /// </summary>
         /// <param name="name"> simple property name </param>
         /// <returns> the StructuredProperty object if name exists, null otherwise </returns>
@@ -97,8 +97,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Determines whether this type is of the same type as baseType,
-        ///     or is derived from baseType.
+        /// Determines whether this type is of the same type as baseType,
+        /// or is derived from baseType.
         /// </summary>
         /// <returns> true if this type is of the baseType, false otherwise </returns>
         public bool IsOfType(StructuredType baseType)
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Add a member to the type
+        /// Add a member to the type
         /// </summary>
         /// <param name="newMember"> the member being added </param>
         protected void AddMember(SchemaElement newMember)
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     See if a name is a member in a type or any of its base types
+        /// See if a name is a member in a type or any of its base types
         /// </summary>
         /// <param name="name"> name to look for </param>
         /// <param name="definingType"> if defined, the type that defines it </param>
@@ -344,8 +344,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Determine if a cycle exists in the type hierarchy: use two pointers to
-        ///     walk the chain, if one catches up with the other, we have a cycle.
+        /// Determine if a cycle exists in the type hierarchy: use two pointers to
+        /// walk the chain, if one catches up with the other, we have a cycle.
         /// </summary>
         /// <returns> true if a cycle exists in the type hierarchy, false otherwise </returns>
         private bool CheckForInheritanceCycle()

@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     Factory class for creating IEntityWrapper instances.
+    /// Factory class for creating IEntityWrapper instances.
     /// </summary>
     internal class EntityWrapperFactory
     {
@@ -21,11 +21,11 @@ namespace System.Data.Entity.Core.Objects.Internal
             new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
 
         /// <summary>
-        ///     Called to create a new wrapper outside of the normal materialization process.
-        ///     This method is typically used when a new entity is created outside the context and then is
-        ///     added or attached.  The materializer bypasses this method and calls wrapper constructors
-        ///     directory for performance reasons.
-        ///     This method does not check whether or not the wrapper already exists in the context.
+        /// Called to create a new wrapper outside of the normal materialization process.
+        /// This method is typically used when a new entity is created outside the context and then is
+        /// added or attached.  The materializer bypasses this method and calls wrapper constructors
+        /// directory for performance reasons.
+        /// This method does not check whether or not the wrapper already exists in the context.
         /// </summary>
         /// <param name="entity"> The entity for which a wrapper will be created </param>
         /// <param name="key"> The key associated with that entity, or null </param>
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a delegate that creates the fast LightweightEntityWrapper
+        /// Returns a delegate that creates the fast LightweightEntityWrapper
         /// </summary>
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
             where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
@@ -180,8 +180,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Convenience function that gets the ObjectStateManager from the context and calls
-        ///     WrapEntityUsingStateManager.
+        /// Convenience function that gets the ObjectStateManager from the context and calls
+        /// WrapEntityUsingStateManager.
         /// </summary>
         /// <param name="entity"> the entity to wrap </param>
         /// <param name="context"> the context in which the entity may exist, or null </param>
@@ -193,8 +193,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Convenience function that gets the ObjectStateManager from the context and calls
-        ///     WrapEntityUsingStateManager.
+        /// Convenience function that gets the ObjectStateManager from the context and calls
+        /// WrapEntityUsingStateManager.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="context"> The context in which the entity may exist, or null </param>
@@ -207,9 +207,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
-        ///     already exists in the ObjectStateManager or in a RelationshipManager associated with
-        ///     the entity.
+        /// Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
+        /// already exists in the ObjectStateManager or in a RelationshipManager associated with
+        /// the entity.
         /// </summary>
         /// <param name="entity"> the entity to wrap </param>
         /// <param name="stateManager"> the state manager in which the entity may exist, or null </param>
@@ -221,9 +221,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
-        ///     already exists in the ObjectStateManager or in a RelationshipManager associated with
-        ///     the entity.
+        /// Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
+        /// already exists in the ObjectStateManager or in a RelationshipManager associated with
+        /// the entity.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="stateManager"> The state manager in which the entity may exist, or null </param>
@@ -296,8 +296,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
-        ///     assumed to be present. This method updates the wrapper with a key and a context.
+        /// When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
+        /// assumed to be present. This method updates the wrapper with a key and a context.
         /// </summary>
         /// <param name="wrapper"> The wrapped entity </param>
         /// <param name="context"> The context that will be using this wrapper </param>
@@ -315,7 +315,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a PocoPropertyAccessorStrategy object for a given entity.
+        /// Returns a func that will create a PocoPropertyAccessorStrategy object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IPropertyAccessorStrategy> GetPocoPropertyAccessorStrategyFunc()
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a null IPropertyAccessorStrategy strategy object for a given entity.
+        /// Returns a func that will create a null IPropertyAccessorStrategy strategy object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IPropertyAccessorStrategy> GetNullPropertyAccessorStrategyFunc()
@@ -333,7 +333,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a EntityWithChangeTrackerStrategy object for a given entity.
+        /// Returns a func that will create a EntityWithChangeTrackerStrategy object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IChangeTrackingStrategy> GetEntityWithChangeTrackerStrategyFunc()
@@ -342,7 +342,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a SnapshotChangeTrackingStrategy object for a given entity.
+        /// Returns a func that will create a SnapshotChangeTrackingStrategy object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IChangeTrackingStrategy> GetSnapshotChangeTrackingStrategyFunc()
@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a EntityWithKeyStrategy object for a given entity.
+        /// Returns a func that will create a EntityWithKeyStrategy object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IEntityKeyStrategy> GetEntityWithKeyStrategyStrategyFunc()
@@ -360,7 +360,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Returns a func that will create a GetPocoEntityKeyStrategyFunc object for a given entity.
+        /// Returns a func that will create a GetPocoEntityKeyStrategyFunc object for a given entity.
         /// </summary>
         /// <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IEntityKeyStrategy> GetPocoEntityKeyStrategyFunc()

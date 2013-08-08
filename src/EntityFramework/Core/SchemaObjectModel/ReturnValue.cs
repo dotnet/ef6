@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
     /// <summary>
-    ///     Summary description for ReturnValue.
+    /// Summary description for ReturnValue.
     /// </summary>
     internal sealed class ReturnValue<T>
     {

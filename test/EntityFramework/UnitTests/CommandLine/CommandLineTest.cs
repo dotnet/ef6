@@ -131,7 +131,7 @@ namespace CmdLine.Tests
         }
 
         /// <summary>
-        ///     Verifies that you can use alternate seperators
+        /// Verifies that you can use alternate seperators
         /// </summary>
         [Fact]
         public void CommandLineTokenizesWithAlternateSwitchChars()

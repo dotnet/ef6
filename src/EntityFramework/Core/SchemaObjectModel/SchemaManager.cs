@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     internal delegate DbProviderManifest ProviderManifestNeeded(Action<string, ErrorCode, EdmSchemaErrorSeverity> addError);
 
     /// <summary>
-    ///     Class responsible for parsing,validating a collection of schema
+    /// Class responsible for parsing,validating a collection of schema
     /// </summary>
     [DebuggerDisplay("DataModel={DataModel}")]
     internal class SchemaManager
@@ -306,7 +306,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Add the namespace of the given schema to the namespace lookup table
+        /// Add the namespace of the given schema to the namespace lookup table
         /// </summary>
         public void AddSchema(Schema schema)
         {
@@ -328,7 +328,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Resolve the type - if the type is not found, return appropriate error
+        /// Resolve the type - if the type is not found, return appropriate error
         /// </summary>
         public bool TryResolveType(string namespaceName, string typeName, out SchemaType schemaType)
         {
@@ -345,7 +345,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns true if this is a valid namespace name or else returns false
+        /// Returns true if this is a valid namespace name or else returns false
         /// </summary>
         public bool IsValidNamespaceName(string namespaceName)
         {
@@ -357,8 +357,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        ///     Checks if the xml reader has base uri. If it doesn't have, it adds error, other
-        ///     returns the location from the base uri
+        /// Checks if the xml reader has base uri. If it doesn't have, it adds error, other
+        /// returns the location from the base uri
         /// </summary>
         internal static bool TryGetBaseUri(XmlReader xmlReader, out string location)
         {
@@ -382,9 +382,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Add the given list of newErrors to the error collection. If there is a error in the new errors,
-        ///     it sets the errorEncountered to true. Returns true if the number of errors encountered is more
-        ///     than max errors
+        /// Add the given list of newErrors to the error collection. If there is a error in the new errors,
+        /// it sets the errorEncountered to true. Returns true if the number of errors encountered is more
+        /// than max errors
         /// </summary>
         private static bool UpdateErrorCollectionAndCheckForMaxErrors(
             List<EdmSchemaError> errorCollection,

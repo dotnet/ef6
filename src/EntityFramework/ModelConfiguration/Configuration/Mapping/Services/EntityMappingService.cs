@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Populate the table mapping structure
+        /// Populate the table mapping structure
         /// </summary>
         private void Analyze()
         {
@@ -205,8 +205,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
-        ///     when no base types share the the association set mapping's table
+        /// Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
+        /// when no base types share the the association set mapping's table
         /// </summary>
         private void ConfigureAssociationSetMappingForeignKeys(EntitySet entitySet)
         {
@@ -255,7 +255,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Makes sure only the required property mappings are present
+        /// Makes sure only the required property mappings are present
         /// </summary>
         private static void ConfigureTypeMappings(
             TableMapping tableMapping,
@@ -408,7 +408,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         /// <summary>
-        ///     Determines if the table and entity type need mapping, and if not, removes the existing entity type mapping
+        /// Determines if the table and entity type need mapping, and if not, removes the existing entity type mapping
         /// </summary>
         private bool FindPropertyEntityTypeMapping(
             TableMapping tableMapping,

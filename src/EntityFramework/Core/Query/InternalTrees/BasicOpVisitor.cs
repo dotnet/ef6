@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Simple implemenation of the BasicOpVisitor interface.
+    /// Simple implemenation of the BasicOpVisitor interface.
     /// </summary>
     internal abstract class BasicOpVisitor
     {
         #region Visitor Helpers
 
         /// <summary>
-        ///     Visit the children of this Node
+        /// Visit the children of this Node
         /// </summary>
         /// <param name="n"> The Node that references the Op </param>
         protected virtual void VisitChildren(Node n)
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visit the children of this Node. but in reverse order
+        /// Visit the children of this Node. but in reverse order
         /// </summary>
         /// <param name="n"> The current node </param>
         protected virtual void VisitChildrenReverse(Node n)
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visit this node
+        /// Visit this node
         /// </summary>
         internal virtual void VisitNode(Node n)
         {
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default node visitor
+        /// Default node visitor
         /// </summary>
         protected virtual void VisitDefault(Node n)
         {
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all constantOps
+        /// Default handler for all constantOps
         /// </summary>
         /// <param name="op"> the constant op </param>
         /// <param name="n"> the node </param>
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all TableOps
+        /// Default handler for all TableOps
         /// </summary>
         protected virtual void VisitTableOp(ScanTableBaseOp op, Node n)
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all JoinOps
+        /// Default handler for all JoinOps
         /// </summary>
         /// <param name="op"> join op </param>
         /// <param name="n"> </param>
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all ApplyOps
+        /// Default handler for all ApplyOps
         /// </summary>
         /// <param name="op"> apply op </param>
         /// <param name="n"> </param>
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all SetOps
+        /// Default handler for all SetOps
         /// </summary>
         /// <param name="op"> set op </param>
         /// <param name="n"> </param>
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all SortOps
+        /// Default handler for all SortOps
         /// </summary>
         /// <param name="op"> sort op </param>
         /// <param name="n"> </param>
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Default handler for all GroupBy ops
+        /// Default handler for all GroupBy ops
         /// </summary>
         protected virtual void VisitGroupByOp(GroupByBaseOp op, Node n)
         {
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region BasicOpVisitor Members
 
         /// <summary>
-        ///     Trap method for unrecognized Op types
+        /// Trap method for unrecognized Op types
         /// </summary>
         /// <param name="op"> The Op being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ConstantOp
+        /// Visitor pattern method for ConstantOp
         /// </summary>
         /// <param name="op"> The ConstantOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NullOp
+        /// Visitor pattern method for NullOp
         /// </summary>
         /// <param name="op"> The NullOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -164,7 +164,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NullSentinelOp
+        /// Visitor pattern method for NullSentinelOp
         /// </summary>
         /// <param name="op"> The NullSentinelOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for InternalConstantOp
+        /// Visitor pattern method for InternalConstantOp
         /// </summary>
         /// <param name="op"> The InternalConstantOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ConstantPredicateOp
+        /// Visitor pattern method for ConstantPredicateOp
         /// </summary>
         /// <param name="op"> The ConstantPredicateOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for FunctionOp
+        /// Visitor pattern method for FunctionOp
         /// </summary>
         /// <param name="op"> The FunctionOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for PropertyOp
+        /// Visitor pattern method for PropertyOp
         /// </summary>
         /// <param name="op"> The PropertyOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -214,7 +214,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for RelPropertyOp
+        /// Visitor pattern method for RelPropertyOp
         /// </summary>
         /// <param name="op"> The RelPropertyOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -224,7 +224,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for CaseOp
+        /// Visitor pattern method for CaseOp
         /// </summary>
         /// <param name="op"> The CaseOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -234,7 +234,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ComparisonOp
+        /// Visitor pattern method for ComparisonOp
         /// </summary>
         /// <param name="op"> The ComparisonOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -244,7 +244,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for LikeOp
+        /// Visitor pattern method for LikeOp
         /// </summary>
         /// <param name="op"> The LikeOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -254,7 +254,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for AggregateOp
+        /// Visitor pattern method for AggregateOp
         /// </summary>
         /// <param name="op"> The AggregateOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -264,7 +264,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NewInstanceOp
+        /// Visitor pattern method for NewInstanceOp
         /// </summary>
         /// <param name="op"> The NewInstanceOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -274,7 +274,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NewEntityOp
+        /// Visitor pattern method for NewEntityOp
         /// </summary>
         /// <param name="op"> The NewEntityOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -284,7 +284,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for DiscriminatedNewInstanceOp
+        /// Visitor pattern method for DiscriminatedNewInstanceOp
         /// </summary>
         /// <param name="op"> The DiscriminatedNewInstanceOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -294,7 +294,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NewMultisetOp
+        /// Visitor pattern method for NewMultisetOp
         /// </summary>
         /// <param name="op"> The NewMultisetOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -304,7 +304,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NewRecordOp
+        /// Visitor pattern method for NewRecordOp
         /// </summary>
         /// <param name="op"> The NewRecordOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -314,7 +314,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for RefOp
+        /// Visitor pattern method for RefOp
         /// </summary>
         /// <param name="op"> The RefOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for VarRefOp
+        /// Visitor pattern method for VarRefOp
         /// </summary>
         /// <param name="op"> The VarRefOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ConditionalOp
+        /// Visitor pattern method for ConditionalOp
         /// </summary>
         /// <param name="op"> The ConditionalOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -344,7 +344,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ArithmeticOp
+        /// Visitor pattern method for ArithmeticOp
         /// </summary>
         /// <param name="op"> The ArithmeticOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -354,7 +354,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for TreatOp
+        /// Visitor pattern method for TreatOp
         /// </summary>
         /// <param name="op"> The TreatOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -364,7 +364,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for CastOp
+        /// Visitor pattern method for CastOp
         /// </summary>
         /// <param name="op"> The CastOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for SoftCastOp
+        /// Visitor pattern method for SoftCastOp
         /// </summary>
         /// <param name="op"> The SoftCastOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -384,7 +384,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for IsOp
+        /// Visitor pattern method for IsOp
         /// </summary>
         /// <param name="op"> The IsOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -394,7 +394,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ExistsOp
+        /// Visitor pattern method for ExistsOp
         /// </summary>
         /// <param name="op"> The ExistsOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -404,7 +404,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ElementOp
+        /// Visitor pattern method for ElementOp
         /// </summary>
         /// <param name="op"> The ElementOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -414,7 +414,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for GetEntityRefOp
+        /// Visitor pattern method for GetEntityRefOp
         /// </summary>
         /// <param name="op"> The GetEntityRefOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -424,7 +424,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for GetRefKeyOp
+        /// Visitor pattern method for GetRefKeyOp
         /// </summary>
         /// <param name="op"> The GetRefKeyOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -434,7 +434,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for NestOp
+        /// Visitor pattern method for NestOp
         /// </summary>
         /// <param name="op"> The NestOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -463,7 +463,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for VarDefOp
+        /// Visitor pattern method for VarDefOp
         /// </summary>
         /// <param name="op"> The VarDefOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -473,7 +473,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for VarDefListOp
+        /// Visitor pattern method for VarDefListOp
         /// </summary>
         /// <param name="op"> The VarDefListOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -492,7 +492,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ScanTableOp
+        /// Visitor pattern method for ScanTableOp
         /// </summary>
         /// <param name="op"> The ScanTableOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -502,7 +502,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ScanViewOp
+        /// Visitor pattern method for ScanViewOp
         /// </summary>
         /// <param name="op"> The ScanViewOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -512,7 +512,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for UnnestOp
+        /// Visitor pattern method for UnnestOp
         /// </summary>
         /// <param name="op"> The UnnestOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -522,7 +522,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ProjectOp
+        /// Visitor pattern method for ProjectOp
         /// </summary>
         /// <param name="op"> The ProjectOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -532,7 +532,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for FilterOp
+        /// Visitor pattern method for FilterOp
         /// </summary>
         /// <param name="op"> The FilterOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -542,7 +542,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for SortOp
+        /// Visitor pattern method for SortOp
         /// </summary>
         /// <param name="op"> The SortOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -552,7 +552,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ConstrainedSortOp
+        /// Visitor pattern method for ConstrainedSortOp
         /// </summary>
         /// <param name="op"> The ConstrainedSortOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -562,7 +562,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for GroupByOp
+        /// Visitor pattern method for GroupByOp
         /// </summary>
         /// <param name="op"> The GroupByOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -572,7 +572,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for GroupByIntoOp
+        /// Visitor pattern method for GroupByIntoOp
         /// </summary>
         /// <param name="op"> The GroupByIntoOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -582,7 +582,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for CrossJoinOp
+        /// Visitor pattern method for CrossJoinOp
         /// </summary>
         /// <param name="op"> The CrossJoinOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -592,7 +592,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for InnerJoinOp
+        /// Visitor pattern method for InnerJoinOp
         /// </summary>
         /// <param name="op"> The InnerJoinOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -602,7 +602,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for LeftOuterJoinOp
+        /// Visitor pattern method for LeftOuterJoinOp
         /// </summary>
         /// <param name="op"> The LeftOuterJoinOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -612,7 +612,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for FullOuterJoinOp
+        /// Visitor pattern method for FullOuterJoinOp
         /// </summary>
         /// <param name="op"> The FullOuterJoinOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -622,7 +622,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for CrossApplyOp
+        /// Visitor pattern method for CrossApplyOp
         /// </summary>
         /// <param name="op"> The CrossApplyOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -632,7 +632,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for OuterApplyOp
+        /// Visitor pattern method for OuterApplyOp
         /// </summary>
         /// <param name="op"> The OuterApplyOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -642,7 +642,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for UnionAllOp
+        /// Visitor pattern method for UnionAllOp
         /// </summary>
         /// <param name="op"> The UnionAllOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -652,7 +652,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for IntersectOp
+        /// Visitor pattern method for IntersectOp
         /// </summary>
         /// <param name="op"> The IntersectOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -662,7 +662,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for ExceptOp
+        /// Visitor pattern method for ExceptOp
         /// </summary>
         /// <param name="op"> The ExceptOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -672,7 +672,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for DistinctOp
+        /// Visitor pattern method for DistinctOp
         /// </summary>
         /// <param name="op"> The DistinctOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -682,7 +682,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for SingleRowOp
+        /// Visitor pattern method for SingleRowOp
         /// </summary>
         /// <param name="op"> The SingleRowOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -692,7 +692,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for SingleRowTableOp
+        /// Visitor pattern method for SingleRowTableOp
         /// </summary>
         /// <param name="op"> The SingleRowTableOp being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -711,7 +711,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for PhysicalProjectOp
+        /// Visitor pattern method for PhysicalProjectOp
         /// </summary>
         /// <param name="op"> The op being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -723,7 +723,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region NestOps
 
         /// <summary>
-        ///     Common handling for all nestOps
+        /// Common handling for all nestOps
         /// </summary>
         /// <param name="op"> nest op </param>
         /// <param name="n"> </param>
@@ -734,7 +734,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for SingleStreamNestOp
+        /// Visitor pattern method for SingleStreamNestOp
         /// </summary>
         /// <param name="op"> The op being visited </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -744,7 +744,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for MultistreamNestOp
+        /// Visitor pattern method for MultistreamNestOp
         /// </summary>
         /// <param name="op"> The op being visited </param>
         /// <param name="n"> The Node that references the Op </param>

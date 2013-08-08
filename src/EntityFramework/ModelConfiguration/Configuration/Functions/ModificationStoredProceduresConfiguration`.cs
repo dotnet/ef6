@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to modify entities.
+    /// Allows configuration to be performed for a stored procedure that is used to modify entities.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the stored procedure can be used to modify.</typeparam>
     public class ModificationStoredProceduresConfiguration<TEntityType>

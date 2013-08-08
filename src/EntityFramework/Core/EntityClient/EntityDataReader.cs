@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A data reader class for the entity client provider
+    /// A data reader class for the entity client provider
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.EntityClient
         private bool _disposed;
 
         /// <summary>
-        ///     The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
-        ///     DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
-        ///     of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
+        /// The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
+        /// DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
+        /// of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
         /// </summary>
         internal EntityDataReader(EntityCommand command, DbDataReader storeDataReader, CommandBehavior behavior)
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     For test purposes only.
+        /// For test purposes only.
         /// </summary>
         internal EntityDataReader()
         {
@@ -70,10 +70,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets a value that indicates whether this <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> contains one or more rows.
+        /// Gets a value that indicates whether this <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> contains one or more rows.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> contains one or more rows; otherwise, false.
+        /// true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> contains one or more rows; otherwise, false.
         /// </returns>
         public override bool HasRows
         {
@@ -81,10 +81,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> is closed.
+        /// Gets a value indicating whether the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> is closed.
         /// </summary>
         /// <returns>
-        ///     true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> is closed; otherwise, false.
+        /// true if the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> is closed; otherwise, false.
         /// </returns>
         public override bool IsClosed
         {
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
+        /// Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal</param>
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
+        /// Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="name">The name of the column.</param>
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the number of fields in the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> that are not hidden.
+        /// Gets the number of fields in the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> that are not hidden.
         /// </summary>
         /// <returns>The number of fields that are not hidden.</returns>
         public override int VisibleFieldCount
@@ -132,10 +132,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.IExtendedDataRecord" />
-        ///     .
+        /// Gets <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.IExtendedDataRecord" />
+        /// .
         /// </summary>
         /// <returns>The information of a data record.</returns>
         public DataRecordInfo DataRecordInfo
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Closes the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> object.
+        /// Closes the <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> object.
         /// </summary>
         public override void Close()
         {
@@ -176,10 +176,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Releases the resources consumed by this <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> and calls
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.EntityClient.EntityDataReader.Close" />
-        ///     .
+        /// Releases the resources consumed by this <see cref="T:System.Data.Entity.Core.EntityClient.EntityDataReader" /> and calls
+        /// <see
+        ///     cref="M:System.Data.Entity.Core.EntityClient.EntityDataReader.Close" />
+        /// .
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as a <see cref="T:System.DateTime" /> object.
+        /// Gets the value of the specified column as a <see cref="T:System.DateTime" /> object.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Common.DbDataReader" /> object for the requested column ordinal that can be overridden with a provider-specific implementation.
+        /// Returns a <see cref="T:System.Data.Common.DbDataReader" /> object for the requested column ordinal that can be overridden with a provider-specific implementation.
         /// </summary>
         /// <returns>A data reader.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -273,7 +273,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as a <see cref="T:System.Decimal" /> object.
+        /// Gets the value of the specified column as a <see cref="T:System.Decimal" /> object.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -359,7 +359,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         /// <summary>Returns the provider-specific field type of the specified column.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Type" /> object that describes the data type of the specified column.
+        /// The <see cref="T:System.Type" /> object that describes the data type of the specified column.
         /// </returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -369,7 +369,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
+        /// Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -381,10 +381,10 @@ namespace System.Data.Entity.Core.EntityClient
 
         /// <summary>Gets all provider-specific attribute columns in the collection for the current row.</summary>
         /// <returns>
-        ///     The number of instances of <see cref="T:System.Object" /> in the array.
+        /// The number of instances of <see cref="T:System.Object" /> in the array.
         /// </returns>
         /// <param name="values">
-        ///     An array of <see cref="T:System.Object" /> into which to copy the attribute columns.
+        /// An array of <see cref="T:System.Object" /> into which to copy the attribute columns.
         /// </param>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
@@ -393,13 +393,13 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.DataTable" /> that describes the column metadata of the
-        ///     <see
-        ///         cref="T:System.Data.Common.DbDataReader" />
-        ///     .
+        /// Returns a <see cref="T:System.Data.DataTable" /> that describes the column metadata of the
+        /// <see
+        ///     cref="T:System.Data.Common.DbDataReader" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.DataTable" /> that describes the column metadata.
+        /// A <see cref="T:System.Data.DataTable" /> that describes the column metadata.
         /// </returns>
         public override DataTable GetSchemaTable()
         {
@@ -407,7 +407,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as an instance of <see cref="T:System.String" />.
+        /// Gets the value of the specified column as an instance of <see cref="T:System.String" />.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -417,7 +417,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
+        /// Gets the value of the specified column as an instance of <see cref="T:System.Object" />.
         /// </summary>
         /// <returns>The value of the specified column.</returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
@@ -428,10 +428,10 @@ namespace System.Data.Entity.Core.EntityClient
 
         /// <summary>Populates an array of objects with the column values of the current row.</summary>
         /// <returns>
-        ///     The number of instances of <see cref="T:System.Object" /> in the array.
+        /// The number of instances of <see cref="T:System.Object" /> in the array.
         /// </returns>
         /// <param name="values">
-        ///     An array of <see cref="T:System.Object" /> into which to copy the attribute columns.
+        /// An array of <see cref="T:System.Object" /> into which to copy the attribute columns.
         /// </param>
         public override int GetValues(object[] values)
         {
@@ -440,7 +440,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         /// <summary>Gets a value that indicates whether the column contains nonexistent or missing values.</summary>
         /// <returns>
-        ///     true if the specified column is equivalent to <see cref="T:System.DBNull" />; otherwise, false.
+        /// true if the specified column is equivalent to <see cref="T:System.DBNull" />; otherwise, false.
         /// </returns>
         /// <param name="ordinal">The zero-based column ordinal.</param>
         public override bool IsDBNull(int ordinal)
@@ -465,14 +465,14 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously moves the reader to the next result set when reading a batch of statements
+        /// Asynchronously moves the reader to the next result set when reading a batch of statements
         /// </summary>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains true if there are more result sets; false otherwise.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains true if there are more result sets; false otherwise.
         /// </returns>
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
@@ -498,14 +498,14 @@ namespace System.Data.Entity.Core.EntityClient
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously moves the reader to the next row of the current result set
+        /// Asynchronously moves the reader to the next row of the current result set
         /// </summary>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains true if there are more rows; false otherwise.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains true if there are more rows; false otherwise.
         /// </returns>
         public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
@@ -515,10 +515,10 @@ namespace System.Data.Entity.Core.EntityClient
 #endif
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the rows in the data reader.
+        /// Returns an <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the rows in the data reader.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the rows in the data reader.
+        /// An <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the rows in the data reader.
         /// </returns>
         public override IEnumerator GetEnumerator()
         {
@@ -526,7 +526,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns a nested <see cref="T:System.Data.Common.DbDataRecord" />.
+        /// Returns a nested <see cref="T:System.Data.Common.DbDataRecord" />.
         /// </summary>
         /// <returns>The nested data record.</returns>
         /// <param name="i">The number of the DbDataRecord to return.</param>
@@ -544,10 +544,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Returns nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
+        /// Returns nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
         /// </summary>
         /// <returns>
-        ///     The nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
+        /// The nested readers as <see cref="T:System.Data.Common.DbDataReader" /> objects.
         /// </returns>
         /// <param name="i">The ordinal of the column.</param>
         public DbDataReader GetDataReader(int i)

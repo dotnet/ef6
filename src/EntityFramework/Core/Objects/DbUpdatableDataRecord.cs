@@ -182,10 +182,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as an <see cref="T:System.Data.IDataReader" />.
+        /// Retrieves the field value as an <see cref="T:System.Data.IDataReader" />.
         /// </summary>
         /// <returns>
-        ///     The field value as an <see cref="T:System.Data.IDataReader" />.
+        /// The field value as an <see cref="T:System.Data.IDataReader" />.
         /// </returns>
         /// <param name="ordinal">The ordinal of the field.</param>
         IDataReader IDataRecord.GetData(int ordinal)
@@ -194,10 +194,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />
+        /// Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />
         /// </summary>
         /// <returns>
-        ///     The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
+        /// The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         protected override DbDataReader GetDbDataReader(int i)
@@ -214,10 +214,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as a <see cref="T:System.DateTime" />.
+        /// Retrieves the field value as a <see cref="T:System.DateTime" />.
         /// </summary>
         /// <returns>
-        ///     The field value as a <see cref="T:System.DateTime" />.
+        /// The field value as a <see cref="T:System.DateTime" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override DateTime GetDateTime(int i)
@@ -259,10 +259,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as a <see cref="T:System.Guid" />.
+        /// Retrieves the field value as a <see cref="T:System.Guid" />.
         /// </summary>
         /// <returns>
-        ///     The field value as a <see cref="T:System.Guid" />.
+        /// The field value as a <see cref="T:System.Guid" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override Guid GetGuid(int i)
@@ -271,10 +271,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as an <see cref="T:System.Int16" />.
+        /// Retrieves the field value as an <see cref="T:System.Int16" />.
         /// </summary>
         /// <returns>
-        ///     The field value as an <see cref="T:System.Int16" />.
+        /// The field value as an <see cref="T:System.Int16" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override Int16 GetInt16(int i)
@@ -283,10 +283,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as an <see cref="T:System.Int32" />.
+        /// Retrieves the field value as an <see cref="T:System.Int32" />.
         /// </summary>
         /// <returns>
-        ///     The field value as an <see cref="T:System.Int32" />.
+        /// The field value as an <see cref="T:System.Int32" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override Int32 GetInt32(int i)
@@ -295,10 +295,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as an <see cref="T:System.Int64" />.
+        /// Retrieves the field value as an <see cref="T:System.Int64" />.
         /// </summary>
         /// <returns>
-        ///     The field value as an <see cref="T:System.Int64" />.
+        /// The field value as an <see cref="T:System.Int64" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override Int64 GetInt64(int i)
@@ -366,10 +366,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Returns whether the specified field is set to <see cref="T:System.DBNull" />.
+        /// Returns whether the specified field is set to <see cref="T:System.DBNull" />.
         /// </summary>
         /// <returns>
-        ///     true if the field is set to <see cref="T:System.DBNull" />; otherwise false.
+        /// true if the field is set to <see cref="T:System.DBNull" />; otherwise false.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public override bool IsDBNull(int i)
@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Sets a field to the <see cref="T:System.DBNull" /> value.
+        /// Sets a field to the <see cref="T:System.DBNull" /> value.
         /// </summary>
         /// <param name="ordinal">The ordinal of the field.</param>
         public void SetDBNull(int ordinal)
@@ -513,7 +513,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets data record information.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> object.
+        /// A <see cref="T:System.Data.Entity.Core.Common.DataRecordInfo" /> object.
         /// </returns>
         public virtual DataRecordInfo DataRecordInfo
         {
@@ -529,10 +529,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves a field value as a <see cref="T:System.Data.Common.DbDataRecord" />.
+        /// Retrieves a field value as a <see cref="T:System.Data.Common.DbDataRecord" />.
         /// </summary>
         /// <returns>
-        ///     A field value as a <see cref="T:System.Data.Common.DbDataRecord" />.
+        /// A field value as a <see cref="T:System.Data.Common.DbDataRecord" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public DbDataRecord GetDataRecord(int i)
@@ -541,10 +541,10 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />.
+        /// Retrieves the field value as a <see cref="T:System.Common.DbDataReader" />.
         /// </summary>
         /// <returns>
-        ///     The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
+        /// The field value as a <see cref="T:System.Data.Common.DbDataReader" />.
         /// </returns>
         /// <param name="i">The ordinal of the field.</param>
         public DbDataReader GetDataReader(int i)

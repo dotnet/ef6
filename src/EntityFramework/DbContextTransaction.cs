@@ -9,12 +9,12 @@ namespace System.Data.Entity
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Wraps access to the transaction object on the underlying store connection and ensures that the
-    ///     Entity Framework executes commands on the database within the context of that transaction.
-    ///     An instance of this class is retrieved by calling BeginTransaction() on the <see cref="DbContext" />
-    ///     <see
-    ///         cref="Database" />
-    ///     object.
+    /// Wraps access to the transaction object on the underlying store connection and ensures that the
+    /// Entity Framework executes commands on the database within the context of that transaction.
+    /// An instance of this class is retrieved by calling BeginTransaction() on the <see cref="DbContext" />
+    /// <see
+    ///     cref="Database" />
+    /// object.
     /// </summary>
     public class DbContextTransaction : IDisposable
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity
         private bool _isDisposed;
 
         /// <summary>
-        ///     Constructs the DbContextTransaction object with the associated connection object
+        /// Constructs the DbContextTransaction object with the associated connection object
         /// </summary>
         /// <param name="connection">The EntityConnection object owning this transaction</param>
         internal DbContextTransaction(EntityConnection connection)
@@ -36,8 +36,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Constructs the DbContextTransaction object with the associated connection object
-        ///     and with the given isolation level
+        /// Constructs the DbContextTransaction object with the associated connection object
+        /// and with the given isolation level
         /// </summary>
         /// <param name="connection">The EntityConnection object owning this transaction </param>
         /// <param name="isolationLevel">The database isolation level with which the underlying store transaction will be created</param>
@@ -59,7 +59,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the database (store) transaction that is underlying this context transaction.
+        /// Gets the database (store) transaction that is underlying this context transaction.
         /// </summary>
         public DbTransaction UnderlyingTransaction
         {
@@ -67,7 +67,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Commits the underlying store transaction
+        /// Commits the underlying store transaction
         /// </summary>
         public void Commit()
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Rolls back the underlying store transaction
+        /// Rolls back the underlying store transaction
         /// </summary>
         public void Rollback()
         {
@@ -83,8 +83,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Cleans up this transaction object and ensures the Entity Framework
-        ///     is no longer using that transaction.
+        /// Cleans up this transaction object and ensures the Entity Framework
+        /// is no longer using that transaction.
         /// </summary>
         public void Dispose()
         {
@@ -93,7 +93,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Cleans up this transaction object
+        /// Cleans up this transaction object
         /// </summary>
         /// <param name="disposing"> true to release both managed and unmanaged resources; false to release only unmanaged resources </param>
         protected virtual void Dispose(bool disposing)

@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to configure integer primary keys to be identity.
+    /// Convention to configure integer primary keys to be identity.
     /// </summary>
     public class StoreGeneratedIdentityKeyConvention : IConceptualModelConvention<EntityType>
     {
@@ -64,9 +64,9 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Checks for the PK property being an FK in a different table. A PK which is also an FK but
-        ///     in the same table is used for table splitting and can still be an identity column because
-        ///     the update pipeline is only inserting into one column of one table.
+        /// Checks for the PK property being an FK in a different table. A PK which is also an FK but
+        /// in the same table is used for table splitting and can still be an identity column because
+        /// the update pipeline is only inserting into one column of one table.
         /// </summary>
         private static bool IsNonTableSplittingForeignKey(AssociationType association, EdmProperty property)
         {

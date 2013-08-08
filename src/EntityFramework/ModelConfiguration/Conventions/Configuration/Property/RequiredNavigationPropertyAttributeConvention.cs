@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     /// <summary>
-    ///     Convention to process instances of <see cref="RequiredAttribute" /> found on navigation properties in the model.
+    /// Convention to process instances of <see cref="RequiredAttribute" /> found on navigation properties in the model.
     /// </summary>
     public class RequiredNavigationPropertyAttributeConvention : Convention
     {

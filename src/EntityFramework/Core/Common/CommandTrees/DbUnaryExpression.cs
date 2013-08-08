@@ -23,17 +23,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the argument.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnaryExpression" />
-        ///     , or its result type is not equal or promotable to the required type for the argument.
+        /// The expression is not associated with the command tree of a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnaryExpression" />
+        /// , or its result type is not equal or promotable to the required type for the argument.
         /// </exception>
         public virtual DbExpression Argument
         {

@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Common.Utils
         #region String Conversion - Unsorted
 
         /// <summary>
-        ///     Converts an enumeration of values to a delimited string list.
+        /// Converts an enumeration of values to a delimited string list.
         /// </summary>
         /// <typeparam name="T"> Type of elements to convert. </typeparam>
         /// <param name="values"> Values. If null, returns empty string. </param>

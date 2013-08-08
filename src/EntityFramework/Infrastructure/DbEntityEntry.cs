@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A non-generic version of the <see cref="DbEntityEntry{T}" /> class.
+    /// A non-generic version of the <see cref="DbEntityEntry{T}" /> class.
     /// </summary>
     public class DbEntityEntry
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalEntityEntry _internalEntityEntry;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbEntityEntry" /> class.
+        /// Initializes a new instance of the <see cref="DbEntityEntry" /> class.
         /// </summary>
         /// <param name="internalEntityEntry"> The internal entry. </param>
         internal DbEntityEntry(InternalEntityEntry internalEntityEntry)
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Infrastructure
         #region Entity access
 
         /// <summary>
-        ///     Gets the entity.
+        /// Gets the entity.
         /// </summary>
         /// <value> The entity. </value>
         public object Entity
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         #region Entity state
 
         /// <summary>
-        ///     Gets or sets the state of the entity.
+        /// Gets or sets the state of the entity.
         /// </summary>
         /// <value> The state. </value>
         public EntityState State
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Infrastructure
         #region Property values and concurrency
 
         /// <summary>
-        ///     Gets the current property values for the tracked entity represented by this object.
+        /// Gets the current property values for the tracked entity represented by this object.
         /// </summary>
         /// <value> The current values. </value>
         public DbPropertyValues CurrentValues
@@ -73,9 +73,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets the original property values for the tracked entity represented by this object.
-        ///     The original values are usually the entity's property values as they were when last queried from
-        ///     the database.
+        /// Gets the original property values for the tracked entity represented by this object.
+        /// The original values are usually the entity's property values as they were when last queried from
+        /// the database.
         /// </summary>
         /// <value> The original values. </value>
         public DbPropertyValues OriginalValues
@@ -84,9 +84,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Queries the database for copies of the values of the tracked entity as they currently exist in the database.
-        ///     Note that changing the values in the returned dictionary will not update the values in the database.
-        ///     If the entity is not found in the database then null is returned.
+        /// Queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        /// Note that changing the values in the returned dictionary will not update the values in the database.
+        /// If the entity is not found in the database then null is returned.
         /// </summary>
         /// <returns> The store values. </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
@@ -99,17 +99,17 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
-        ///     Note that changing the values in the returned dictionary will not update the values in the database.
-        ///     If the entity is not found in the database then null is returned.
+        /// Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        /// Note that changing the values in the returned dictionary will not update the values in the database.
+        /// If the entity is not found in the database then null is returned.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the store values.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the store values.
         /// </returns>
         public Task<DbPropertyValues> GetDatabaseValuesAsync()
         {
@@ -117,20 +117,20 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
-        ///     Note that changing the values in the returned dictionary will not update the values in the database.
-        ///     If the entity is not found in the database then null is returned.
+        /// Asynchronously queries the database for copies of the values of the tracked entity as they currently exist in the database.
+        /// Note that changing the values in the returned dictionary will not update the values in the database.
+        /// If the entity is not found in the database then null is returned.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the store values.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the store values.
         /// </returns>
         public async Task<DbPropertyValues> GetDatabaseValuesAsync(CancellationToken cancellationToken)
         {
@@ -142,8 +142,8 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
         /// <summary>
-        ///     Reloads the entity from the database overwriting any property values with values from the database.
-        ///     The entity will be in the Unchanged state after calling this method.
+        /// Reloads the entity from the database overwriting any property values with values from the database.
+        /// The entity will be in the Unchanged state after calling this method.
         /// </summary>
         public void Reload()
         {
@@ -153,15 +153,15 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
-        ///     The entity will be in the Unchanged state after calling this method.
+        /// Asynchronously reloads the entity from the database overwriting any property values with values from the database.
+        /// The entity will be in the Unchanged state after calling this method.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         public Task ReloadAsync()
         {
@@ -169,18 +169,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously reloads the entity from the database overwriting any property values with values from the database.
-        ///     The entity will be in the Unchanged state after calling this method.
+        /// Asynchronously reloads the entity from the database overwriting any property values with values from the database.
+        /// The entity will be in the Unchanged state after calling this method.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         public Task ReloadAsync(CancellationToken cancellationToken)
         {
@@ -194,8 +194,8 @@ namespace System.Data.Entity.Infrastructure
         #region Property, Reference, and Collection fluents
 
         /// <summary>
-        ///     Gets an object that represents the reference (i.e. non-collection) navigation property from this
-        ///     entity to another entity.
+        /// Gets an object that represents the reference (i.e. non-collection) navigation property from this
+        /// entity to another entity.
         /// </summary>
         /// <param name="navigationProperty"> The name of the navigation property. </param>
         /// <returns> An object representing the navigation property. </returns>
@@ -207,8 +207,8 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents the collection navigation property from this
-        ///     entity to a collection of related entities.
+        /// Gets an object that represents the collection navigation property from this
+        /// entity to a collection of related entities.
         /// </summary>
         /// <param name="navigationProperty"> The name of the navigation property. </param>
         /// <returns> An object representing the navigation property. </returns>
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a scalar or complex property of this entity.
+        /// Gets an object that represents a scalar or complex property of this entity.
         /// </summary>
         /// <param name="propertyName"> The name of the property. </param>
         /// <returns> An object representing the property. </returns>
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a complex property of this entity.
+        /// Gets an object that represents a complex property of this entity.
         /// </summary>
         /// <param name="propertyName"> The name of the complex property. </param>
         /// <returns> An object representing the complex property. </returns>
@@ -245,13 +245,13 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets an object that represents a member of the entity.  The runtime type of the returned object will
-        ///     vary depending on what kind of member is asked for.  The currently supported member types and their return
-        ///     types are:
-        ///     Reference navigation property: <see cref="DbReferenceEntry" />.
-        ///     Collection navigation property: <see cref="DbCollectionEntry" />.
-        ///     Primitive/scalar property: <see cref="DbPropertyEntry" />.
-        ///     Complex property: <see cref="DbComplexPropertyEntry" />.
+        /// Gets an object that represents a member of the entity.  The runtime type of the returned object will
+        /// vary depending on what kind of member is asked for.  The currently supported member types and their return
+        /// types are:
+        /// Reference navigation property: <see cref="DbReferenceEntry" />.
+        /// Collection navigation property: <see cref="DbCollectionEntry" />.
+        /// Primitive/scalar property: <see cref="DbPropertyEntry" />.
+        /// Complex property: <see cref="DbComplexPropertyEntry" />.
         /// </summary>
         /// <param name="propertyName"> The name of the member. </param>
         /// <returns> An object representing the member. </returns>
@@ -267,10 +267,10 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to generic
 
         /// <summary>
-        ///     Returns a new instance of the generic <see cref="DbEntityEntry{T}" /> class for the given
-        ///     generic type for the tracked entity represented by this object.
-        ///     Note that the type of the tracked entity must be compatible with the generic type or
-        ///     an exception will be thrown.
+        /// Returns a new instance of the generic <see cref="DbEntityEntry{T}" /> class for the given
+        /// generic type for the tracked entity represented by this object.
+        /// Note that the type of the tracked entity must be compatible with the generic type or
+        /// an exception will be thrown.
         /// </summary>
         /// <typeparam name="TEntity"> The type of the entity. </typeparam>
         /// <returns> A generic version. </returns>
@@ -290,13 +290,13 @@ namespace System.Data.Entity.Infrastructure
         #region Validation
 
         /// <summary>
-        ///     Validates this <see cref="DbEntityEntry" /> instance and returns validation result.
+        /// Validates this <see cref="DbEntityEntry" /> instance and returns validation result.
         /// </summary>
         /// <returns>
-        ///     Entity validation result. Possibly null if
-        ///     <see
-        ///         cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" />
-        ///     method is overridden.
+        /// Entity validation result. Possibly null if
+        /// <see
+        ///     cref="DbContext.ValidateEntity(DbEntityEntry, IDictionary{object,object})" />
+        /// method is overridden.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public DbEntityValidationResult GetValidationResult()
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Infrastructure
         #region InternalEntityEntry access
 
         /// <summary>
-        ///     Gets InternalEntityEntry object for this DbEntityEntry instance.
+        /// Gets InternalEntityEntry object for this DbEntityEntry instance.
         /// </summary>
         internal InternalEntityEntry InternalEntry
         {
@@ -323,15 +323,15 @@ namespace System.Data.Entity.Infrastructure
         #region Equals\GetHashCode implementation
 
         /// <summary>
-        ///     Determines whether the specified <see cref="System.Object" /> is equal to this instance.
-        ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref="DbContext" />.
+        /// Determines whether the specified <see cref="System.Object" /> is equal to this instance.
+        /// Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
+        /// the same entity on the same <see cref="DbContext" />.
         /// </summary>
         /// <param name="obj">
-        ///     The <see cref="System.Object" /> to compare with this instance.
+        /// The <see cref="System.Object" /> to compare with this instance.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> .
+        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c> .
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
@@ -347,15 +347,15 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Determines whether the specified <see cref="DbEntityEntry" /> is equal to this instance.
-        ///     Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
-        ///     the same entity on the same <see cref="DbContext" />.
+        /// Determines whether the specified <see cref="DbEntityEntry" /> is equal to this instance.
+        /// Two <see cref="DbEntityEntry" /> instances are considered equal if they are both entries for
+        /// the same entity on the same <see cref="DbContext" />.
         /// </summary>
         /// <param name="other">
-        ///     The <see cref="DbEntityEntry" /> to compare with this instance.
+        /// The <see cref="DbEntityEntry" /> to compare with this instance.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the specified <see cref="DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c> .
+        /// <c>true</c> if the specified <see cref="DbEntityEntry" /> is equal to this instance; otherwise, <c>false</c> .
         /// </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]
         // Still hide it since it is generally not useful to see when dotting in the API.
@@ -370,7 +370,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns a hash code for this instance.
+        /// Returns a hash code for this instance.
         /// </summary>
         /// <returns> A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. </returns>
         [EditorBrowsable(EditorBrowsableState.Never)]

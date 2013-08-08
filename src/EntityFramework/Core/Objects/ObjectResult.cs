@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     This class implements IEnumerable and IDisposable. Instance of this class
-    ///     is returned from ObjectQuery.Execute method.
+    /// This class implements IEnumerable and IDisposable. Instance of this class
+    /// is returned from ObjectQuery.Execute method.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Objects
         #region IListSource
 
         /// <summary>
-        ///     IListSource.ContainsListCollection implementation. Always returns false.
+        /// IListSource.ContainsListCollection implementation. Always returns false.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Returns the results in a format useful for data binding.</summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IList" /> of entity objects.
+        /// An <see cref="T:System.Collections.IList" /> of entity objects.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IList IListSource.GetList()
@@ -69,13 +69,13 @@ namespace System.Data.Entity.Core.Objects
         #endregion
 
         /// <summary>
-        ///     When overridden in a derived class, gets the type of the generic
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
-        ///     .
+        /// When overridden in a derived class, gets the type of the generic
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The type of the generic <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
+        /// The type of the generic <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" />.
         /// </returns>
         public abstract Type ElementType { get; }
 

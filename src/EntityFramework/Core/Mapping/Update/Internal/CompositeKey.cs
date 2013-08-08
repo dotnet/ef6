@@ -9,17 +9,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a key composed of multiple parts.
+    /// Represents a key composed of multiple parts.
     /// </summary>
     internal class CompositeKey
     {
         /// <summary>
-        ///     Gets components of this composite key.
+        /// Gets components of this composite key.
         /// </summary>
         internal readonly PropagatorResult[] KeyComponents;
 
         /// <summary>
-        ///     Initialize a new composite key using the given constant values. Order is important.
+        /// Initialize a new composite key using the given constant values. Order is important.
         /// </summary>
         /// <param name="constants"> Key values. </param>
         internal CompositeKey(PropagatorResult[] constants)
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Creates a key comparer operating in the context of the given translator.
+        /// Creates a key comparer operating in the context of the given translator.
         /// </summary>
         internal static IEqualityComparer<CompositeKey> CreateComparer(KeyManager keyManager)
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Creates a merged key instance where each key component contains both elements.
+        /// Creates a merged key instance where each key component contains both elements.
         /// </summary>
         /// <param name="keyManager"> </param>
         /// <param name="other"> Must be a non-null compatible key (same number of components). </param>
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Equality and comparison implementation for composite keys.
+        /// Equality and comparison implementation for composite keys.
         /// </summary>
         private class CompositeKeyComparer : IEqualityComparer<CompositeKey>
         {

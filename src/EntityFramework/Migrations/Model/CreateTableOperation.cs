@@ -7,7 +7,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents creating a table.
+    /// Represents creating a table.
     /// </summary>
     public class CreateTableOperation : MigrationOperation
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Migrations.Model
         private AddPrimaryKeyOperation _primaryKey;
 
         /// <summary>
-        ///     Initializes a new instance of the CreateTableOperation class.
+        /// Initializes a new instance of the CreateTableOperation class.
         /// </summary>
         /// <param name="name"> Name of the table to be created. </param>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table to be created.
+        /// Gets the name of the table to be created.
         /// </summary>
         public virtual string Name
         {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the columns to be included in the new table.
+        /// Gets the columns to be included in the new table.
         /// </summary>
         public virtual IList<ColumnModel> Columns
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the primary key for the new table.
+        /// Gets or sets the primary key for the new table.
         /// </summary>
         public AddPrimaryKeyOperation PrimaryKey
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation to drop the table.
+        /// Gets an operation to drop the table.
         /// </summary>
         public override MigrationOperation Inverse
         {

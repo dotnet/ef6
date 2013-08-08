@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Base class for all constant Ops
+    /// Base class for all constant Ops
     /// </summary>
     internal abstract class ConstantBaseOp : ScalarOp
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Constructor overload for rules
+        /// Constructor overload for rules
         /// </summary>
         protected ConstantBaseOp(OpType opType)
             : base(opType)
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public properties and methods
 
         /// <summary>
-        ///     Get the constant value
+        /// Get the constant value
         /// </summary>
         internal virtual Object Value
         {
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     0 children
+        /// 0 children
         /// </summary>
         internal override int Arity
         {
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Two CostantBaseOps are equivalent if they are of the same
-        ///     derived type and have the same type and value.
+        /// Two CostantBaseOps are equivalent if they are of the same
+        /// derived type and have the same type and value.
         /// </summary>
         /// <param name="other"> the other Op </param>
         /// <returns> true, if these are equivalent (not a strict equality test) </returns>

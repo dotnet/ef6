@@ -1365,9 +1365,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     #region Visual Studio threading helpers
 
     /// <summary>
-    ///     This class handles re-tries that can be required when calling into Visual Studio
-    ///     from a non-VS thread.
-    ///     See http://msdn.microsoft.com/en-us/library/ms228772(v=VS.100).aspx
+    /// This class handles re-tries that can be required when calling into Visual Studio
+    /// from a non-VS thread.
+    /// See http://msdn.microsoft.com/en-us/library/ms228772(v=VS.100).aspx
     /// </summary>
     public class MessageFilter : IOleMessageFilter
     {

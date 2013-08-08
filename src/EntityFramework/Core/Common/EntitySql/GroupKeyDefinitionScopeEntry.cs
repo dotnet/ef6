@@ -5,8 +5,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.CommandTrees;
 
     /// <summary>
-    ///     Represents group key during GROUP BY clause processing phase, used during group aggregate search mode.
-    ///     This entry will be replaced by the <see cref="SourceScopeEntry" /> when GROUP BY processing is complete.
+    /// Represents group key during GROUP BY clause processing phase, used during group aggregate search mode.
+    /// This entry will be replaced by the <see cref="SourceScopeEntry" /> when GROUP BY processing is complete.
     /// </summary>
     internal sealed class GroupKeyDefinitionScopeEntry : ScopeEntry, IGroupExpressionExtendedInfo, IGetAlternativeName
     {

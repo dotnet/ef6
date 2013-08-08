@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Same as a ValRef in SqlServer.
+    /// Same as a ValRef in SqlServer.
     /// </summary>
     internal abstract class Var
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Id of this var
+        /// Id of this var
         /// </summary>
         internal int Id
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Kind of Var
+        /// Kind of Var
         /// </summary>
         internal VarType VarType
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Datatype of this Var
+        /// Datatype of this Var
         /// </summary>
         internal TypeUsage Type
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Try to get the name of this Var.
+        /// Try to get the name of this Var.
         /// </summary>
         internal virtual bool TryGetName(out string name)
         {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

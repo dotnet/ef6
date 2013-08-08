@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     /// <summary>
-    ///     Represents the various kind of member mapping
+    /// Represents the various kind of member mapping
     /// </summary>
     internal enum MemberMappingKind
     {

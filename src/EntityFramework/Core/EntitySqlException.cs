@@ -11,12 +11,12 @@ namespace System.Data.Entity.Core
     using System.Text;
 
     /// <summary>
-    ///     Represents an eSQL Query compilation exception;
-    ///     The class of exceptional conditions that may cause this exception to be raised are mainly:
-    ///     1) Syntax Errors: raised during query text parsing and when a given query does not conform to eSQL formal grammar;
-    ///     2) Semantic Errors: raised when semantic rules of eSQL language are not met such as metadata or schema information
-    ///     not accurate or not present, type validation errors, scoping rule violations, user of undefined variables, etc.
-    ///     For more information, see eSQL Language Spec.
+    /// Represents an eSQL Query compilation exception;
+    /// The class of exceptional conditions that may cause this exception to be raised are mainly:
+    /// 1) Syntax Errors: raised during query text parsing and when a given query does not conform to eSQL formal grammar;
+    /// 2) Semantic Errors: raised when semantic rules of eSQL language are not met such as metadata or schema information
+    /// not accurate or not present, type validation errors, scoping rule violations, user of undefined variables, etc.
+    /// For more information, see eSQL Language Spec.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
         Justification = "SerializeObjectState used instead")]
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core
         private EntitySqlExceptionState _state;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" />.
+        /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" />.
         /// </summary>
         public EntitySqlException()
             : this(Strings.GeneralQueryError)
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" /> with a specialized error message.
+        /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntitySqlException" /> with a specialized error message.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public EntitySqlException(string message)
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntitySqlException" /> class that uses a specified error message and a reference to the inner exception that is the cause of this exception.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntitySqlException" /> class that uses a specified error message and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that caused the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance EntityException with an ErrorContext instance and a given error message.
+        /// Initializes a new instance EntityException with an ErrorContext instance and a given error message.
         /// </summary>
         internal static EntitySqlException Create(ErrorContext errCtx, string errorMessage, Exception innerException)
         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance EntityException with contextual information to allow detailed error feedback.
+        /// Initializes a new instance EntityException with contextual information to allow detailed error feedback.
         /// </summary>
         internal static EntitySqlException Create(
             string commandText,
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     core constructor
+        /// core constructor
         /// </summary>
         private EntitySqlException(
             string message, string errorDescription, string errorContext, int line, int column, Exception innerException)
@@ -145,8 +145,8 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
-        ///     Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
+        /// Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
+        /// Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
         /// </summary>
         internal static string FormatErrorContext(
             string commandText,
@@ -222,7 +222,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Returns error message in the format: "error such and such[, near errorContext]."
+        /// Returns error message in the format: "error such and such[, near errorContext]."
         /// </summary>
         private static string FormatQueryError(string errorMessage, string errorContext)
         {

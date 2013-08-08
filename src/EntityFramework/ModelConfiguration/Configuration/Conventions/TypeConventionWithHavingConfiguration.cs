@@ -9,8 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model and a captured value.
+    /// Allows configuration to be performed for a lightweight convention based on
+    /// the entity types in a model and a captured value.
     /// </summary>
     /// <typeparam name="T"> Type of the captured value. </typeparam>
     public class TypeConventionWithHavingConfiguration<T>
@@ -50,11 +50,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Allows configuration of the entity types that this convention applies to.
+        /// Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="ConventionTypeConfiguration" />
-        ///     using a captured value.
+        /// An action that performs configuration against a <see cref="ConventionTypeConfiguration" />
+        /// using a captured value.
         /// </param>
         public void Configure(Action<ConventionTypeConfiguration, T> entityConfigurationAction)
         {

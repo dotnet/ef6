@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Xml.Serialization;
 
     /// <summary>
-    ///     Base class for EntityCollection and EntityReference
+    /// Base class for EntityCollection and EntityReference
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [DataContract]
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         //-----------------
 
         /// <summary>
-        ///     The default constructor is required for some serialization scenarios with EntityReference.
+        /// The default constructor is required for some serialization scenarios with EntityReference.
         /// </summary>
         internal RelatedEnd()
         {
@@ -62,8 +62,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // are serialization scenarios where they have to be set after construction
 
         /// <summary>
-        ///     Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
-        ///     field.  This field is retained only for compatibility with the serialization format introduced in v1.
+        /// Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
+        /// field.  This field is retained only for compatibility with the serialization format introduced in v1.
         /// </summary>
         [Obsolete]
         private IEntityWithRelationships _owner;
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     internal event to notify change in collection
+        /// internal event to notify change in collection
         /// </summary>
         internal virtual event CollectionChangeEventHandler AssociationChangedForObjectView
         {
@@ -155,12 +155,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This class describes a relationship navigation from the
-        ///     navigation property on one entity to another entity.
-        ///     RelationshipNavigation uniquely identify a relationship type.
-        ///     The RelationshipNavigation class is internal only, so this property is also internal.
-        ///     See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
-        ///     of the information contained in this RelationshipNavigation.
+        /// This class describes a relationship navigation from the
+        /// navigation property on one entity to another entity.
+        /// RelationshipNavigation uniquely identify a relationship type.
+        /// The RelationshipNavigation class is internal only, so this property is also internal.
+        /// See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
+        /// of the information contained in this RelationshipNavigation.
         /// </summary>
         internal RelationshipNavigation RelationshipNavigation
         {
@@ -169,7 +169,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets the name of the relationship in which this related end participates.</summary>
         /// <returns>
-        ///     The name of the relationship in which this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd" /> participates. The relationship name is not namespace qualified.
+        /// The name of the relationship in which this <see cref="T:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd" /> participates. The relationship name is not namespace qualified.
         /// </returns>
         [SoapIgnore]
         [XmlIgnore]
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets the role name at the source end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the role name.
+        /// A <see cref="T:System.String" /> that is the role name.
         /// </returns>
         [SoapIgnore]
         [XmlIgnore]
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets the role name at the target end of the relationship.</summary>
         /// <returns>
-        ///     A <see cref="T:System.String" /> that is the role name.
+        /// A <see cref="T:System.String" /> that is the role name.
         /// </returns>
         [SoapIgnore]
         [XmlIgnore]
@@ -213,10 +213,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
+        /// Returns an <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
+        /// An <see cref="T:System.Collections.IEnumerable" /> that represents the objects that belong to the related end.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IEnumerable IRelatedEnd.CreateSourceQuery()
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets a reference to the metadata for the related end.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" /> object that contains metadata for the end of a relationship.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipSet" /> object that contains metadata for the end of a relationship.
         /// </returns>
         [SoapIgnore]
         [XmlIgnore]
@@ -307,16 +307,16 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This is the query which represents the source of the
-        ///     related end.  It is constructed on demand using the
-        ///     _connection and _cache fields and a query string based on
-        ///     the type of related end and the metadata passed into its
-        ///     constructor indicating the particular EDM construct the
-        ///     related end models. This method is called by both subclasses of this type
-        ///     and those subclasses pass in their generic type parameter in order
-        ///     to produce an ObjectQuery of the right type. This allows this common
-        ///     functionality to be implemented here in the base class while still
-        ///     allowing the base class to be non-generic.
+        /// This is the query which represents the source of the
+        /// related end.  It is constructed on demand using the
+        /// _connection and _cache fields and a query string based on
+        /// the type of related end and the metadata passed into its
+        /// constructor indicating the particular EDM construct the
+        /// related end models. This method is called by both subclasses of this type
+        /// and those subclasses pass in their generic type parameter in order
+        /// to produce an ObjectQuery of the right type. This allows this common
+        /// functionality to be implemented here in the base class while still
+        /// allowing the base class to be non-generic.
         /// </summary>
         /// <param name="mergeOption"> MergeOption to use when creating the query </param>
         /// <param name="hasResults"> Indicates whether the query can produce results. For instance, a lookup with null key values cannot produce results. </param>
@@ -680,8 +680,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Validates that a call to Load has the correct conditions
-        ///     This helps to reduce the complexity of the Load call (SQLBU 524128)
+        /// Validates that a call to Load has the correct conditions
+        /// This helps to reduce the complexity of the Load call (SQLBU 524128)
         /// </summary>
         /// <returns> See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller </returns>
         internal virtual ObjectQuery<TEntity> ValidateLoad<TEntity>(MergeOption mergeOption, string relatedEndName, out bool hasResults)
@@ -729,18 +729,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // -------
 
         /// <summary>
-        ///     Loads the related object or objects into the related end with the default merge option.
+        /// Loads the related object or objects into the related end with the default merge option.
         /// </summary>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
-        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
-        ///     or the related objects are already loaded
-        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     or when the source object is being tracked but is in the
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
-        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
-        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
+        /// and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        /// or the related objects are already loaded
+        /// or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// or when the source object is being tracked but is in the
+        /// <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        /// or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        /// is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public void Load()
         {
@@ -751,28 +751,28 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously loads the related object or objects into the related end with the default merge option.
+        /// Asynchronously loads the related object or objects into the related end with the default merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
-        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
-        ///     or the related objects are already loaded
-        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     or when the source object is being tracked but is in the
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
-        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
-        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the source object was retrieved by using a <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" /> query 
+        /// and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        /// or the related objects are already loaded
+        /// or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// or when the source object is being tracked but is in the
+        /// <see cref="F:System.Data.Entity.EntityState.Added" /> or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state
+        /// or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        /// is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
@@ -782,56 +782,56 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 #endif
 
         /// <summary>
-        ///     Loads an object or objects from the related end with the specified merge option.
+        /// Loads an object or objects from the related end with the specified merge option.
         /// </summary>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
-        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
+        /// <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
-        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
-        ///     or the related objects are already loaded
-        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     or when the source object is being tracked but is in the
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
-        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
-        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
+        /// and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        /// or the related objects are already loaded
+        /// or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// or when the source object is being tracked but is in the
+        /// <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        /// or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        /// is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public abstract void Load(MergeOption mergeOption);
 
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously loads an object or objects from the related end with the specified merge option.
+        /// Asynchronously loads an object or objects from the related end with the specified merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
-        ///     <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when merging objects into an existing
+        /// <see cref="T:System.Data.Entity.Core.Objects.DataClasses.EntityCollection`1" />.
         /// </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         /// <exception cref="T:System.InvalidOperationException">
-        ///     When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
-        ///     and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
-        ///     or the related objects are already loaded
-        ///     or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     or when the source object is being tracked but is in the
-        ///     <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
-        ///     or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
-        ///     used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
-        ///     is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
+        /// When the source object was retrieved by using a <see  cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />  query 
+        /// and the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// is not <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />
+        /// or the related objects are already loaded
+        /// or when the source object is not attached to the <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// or when the source object is being tracked but is in the
+        /// <see cref="F:System.Data.Entity.EntityState.Added" />  or <see cref="F:System.Data.Entity.EntityState.Deleted" /> state 
+        /// or the <see cref="T:System.Data.Entity.Core.Objects.MergeOption" />
+        /// used for <see cref="M:System.Data.Entity.Core.Objects.DataClasses.RelatedEnd.Load" />
+        /// is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.NoTracking" />.
         /// </exception>
         public abstract Task LoadAsync(MergeOption mergeOption, CancellationToken cancellationToken);
 
@@ -884,7 +884,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Takes a list of related entities and merges them into the current collection.
+        /// Takes a list of related entities and merges them into the current collection.
         /// </summary>
         /// <param name="collection"> Entities to relate to the owner of this EntityCollection </param>
         /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
@@ -934,14 +934,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Attaches an entity to the related end.  This method works in exactly the same way as Attach(object).
-        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        /// Attaches an entity to the related end.  This method works in exactly the same way as Attach(object).
+        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
         /// <param name="entity"> The entity to attach to the related end </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when
-        ///     <paramref name="entity" />
-        ///     is null.
+        /// Thrown when
+        /// <paramref name="entity" />
+        /// is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -953,18 +953,18 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Attaches an entity to the related end. If the related end is already filled
-        ///     or partially filled, this merges the existing entities with the given entity. The given
-        ///     entity is not assumed to be the complete set of related entities.
-        ///     Owner and all entities passed in must be in Unchanged or Modified state.
-        ///     Deleted elements are allowed only when the state manager is already tracking the relationship
-        ///     instance.
+        /// Attaches an entity to the related end. If the related end is already filled
+        /// or partially filled, this merges the existing entities with the given entity. The given
+        /// entity is not assumed to be the complete set of related entities.
+        /// Owner and all entities passed in must be in Unchanged or Modified state.
+        /// Deleted elements are allowed only when the state manager is already tracking the relationship
+        /// instance.
         /// </summary>
         /// <param name="entity"> The entity to attach to the related end </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown when
-        ///     <paramref name="entity" />
-        ///     is null.
+        /// Thrown when
+        /// <paramref name="entity" />
+        /// is null.
         /// </exception>
         /// <exception cref="InvalidOperationException">Thrown when the entity cannot be related via the current relationship end.</exception>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -1115,8 +1115,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal abstract IEnumerable CreateSourceQueryInternal();
 
         /// <summary>
-        ///     Adds an entity to the related end.  This method works in exactly the same way as Add(object).
-        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        /// Adds an entity to the related end.  This method works in exactly the same way as Add(object).
+        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
         /// <param name="entity"> Entity instance to add to the related end </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -1128,11 +1128,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Adds an entity to the related end.  If the owner is
-        ///     attached to a cache then the all the connected ends are
-        ///     added to the object cache and their corresponding relationships
-        ///     are also added to the ObjectStateManager. The RelatedEnd of the
-        ///     relationship is also fixed.
+        /// Adds an entity to the related end.  If the owner is
+        /// attached to a cache then the all the connected ends are
+        /// added to the object cache and their corresponding relationships
+        /// are also added to the ObjectStateManager. The RelatedEnd of the
+        /// relationship is also fixed.
         /// </summary>
         /// <param name="entity"> Entity instance to add to the related end </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -1160,8 +1160,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Removes an entity from the related end.  This method works in exactly the same way as Remove(object).
-        ///     It is maintained for backward compatibility with previous versions of IRelatedEnd.
+        /// Removes an entity from the related end.  This method works in exactly the same way as Remove(object).
+        /// It is maintained for backward compatibility with previous versions of IRelatedEnd.
         /// </summary>
         /// <param name="entity"> Entity instance to remove from the related end </param>
         /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
@@ -1174,9 +1174,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Removes an entity from the related end.  If owner is
-        ///     attached to a cache, marks relationship for deletion and if
-        ///     the relationship is composition also marks the entity for deletion.
+        /// Removes an entity from the related end.  If owner is
+        /// attached to a cache, marks relationship for deletion and if
+        /// the relationship is composition also marks the entity for deletion.
         /// </summary>
         /// <param name="entity"> Entity instance to remove from the related end </param>
         /// <returns> Returns true if the entity was successfully removed, false if the entity was not part of the RelatedEnd. </returns>
@@ -1697,7 +1697,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns true if this Related end represents the dependent of a Referential Constraint
+        /// Returns true if this Related end represents the dependent of a Referential Constraint
         /// </summary>
         /// <param name="checkIdentifying"> If true then the method will only return true if the Referential Constraint is identifying </param>
         internal bool IsDependentEndOfReferentialConstraint(bool checkIdentifying)
@@ -1734,7 +1734,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
+        /// Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
         /// </summary>
         internal bool IsPrincipalEndOfReferentialConstraint()
         {
@@ -2074,10 +2074,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
+        /// Returns an <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
+        /// An <see cref="T:System.Collections.IEnumerator" /> that iterates through the collection of related objects.
         /// </returns>
         public IEnumerator GetEnumerator()
         {
@@ -2455,7 +2455,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Set the context and load options so that Query can be constructed on demand.
+        /// Set the context and load options so that Query can be constructed on demand.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         internal void AttachContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
@@ -2595,7 +2595,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Clear the source and context.
+        /// Clear the source and context.
         /// </summary>
         internal void DetachContext()
         {
@@ -2673,10 +2673,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Note that this is only expected to work for non-POCO entities, since serialization of POCO
         // entities will not result in serialization of the RelationshipManager or its related objects.
         /// <summary>
-        ///     Used internally to deserialize entity objects along with the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
-        ///     instances.
+        /// Used internally to deserialize entity objects along with the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.DataClasses.RelationshipManager" />
+        /// instances.
         /// </summary>
         /// <param name="context">The serialized stream.</param>
         [OnDeserialized]

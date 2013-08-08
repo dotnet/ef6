@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The StructuredVarInfo class contains information about a structured type Var
-    ///     and how it can be replaced. This is targeted towards Vars of complex/record/
-    ///     entity/ref types, and the goal is to replace all such Vars in this module.
+    /// The StructuredVarInfo class contains information about a structured type Var
+    /// and how it can be replaced. This is targeted towards Vars of complex/record/
+    /// entity/ref types, and the goal is to replace all such Vars in this module.
     /// </summary>
     internal class StructuredVarInfo : VarInfo
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly TypeUsage m_newTypeUsage;
 
         /// <summary>
-        ///     Constructor
+        /// Constructor
         /// </summary>
         /// <param name="newType"> new "flat" record type corresponding to the Var's datatype </param>
         /// <param name="newVars"> List of vars to replace current Var </param>
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets <see cref="VarInfoKind" /> for this <see cref="VarInfo" />. Always
-        ///     <see
-        ///         cref="VarInfoKind.StructuredTypeVarInfo" />
-        ///     .
+        /// Gets <see cref="VarInfoKind" /> for this <see cref="VarInfo" />. Always
+        /// <see
+        ///     cref="VarInfoKind.StructuredTypeVarInfo" />
+        /// .
         /// </summary>
         internal override VarInfoKind Kind
         {
@@ -55,11 +55,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The NewVars property of the VarInfo is a list of the corresponding
-        ///     "scalar" Vars that can be used to replace the current Var. This is
-        ///     mainly intended for use by other RelOps that maintain lists of Vars
-        ///     - for example, the "Vars" property of ProjectOp and other similar
-        ///     locations.
+        /// The NewVars property of the VarInfo is a list of the corresponding
+        /// "scalar" Vars that can be used to replace the current Var. This is
+        /// mainly intended for use by other RelOps that maintain lists of Vars
+        /// - for example, the "Vars" property of ProjectOp and other similar
+        /// locations.
         /// </summary>
         internal override List<Var> NewVars
         {
@@ -67,9 +67,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The Fields property is matched 1-1 with the NewVars property, and
-        ///     specifies the properties of the record type corresponding to the
-        ///     original VarType
+        /// The Fields property is matched 1-1 with the NewVars property, and
+        /// specifies the properties of the record type corresponding to the
+        /// original VarType
         /// </summary>
         internal List<EdmProperty> Fields
         {
@@ -77,12 +77,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Indicates whether any of the vars in NewVars 'derives'
-        ///     from a null sentinel. For example, for a type that is a Record with two
-        ///     nested records, if any has a null sentinel, it would be set to true.
-        ///     It is used when expanding sort keys, to be able to indicate that there is a
-        ///     sorting operation that includes null sentinels. This indication is later
-        ///     used by transformation rules.
+        /// Indicates whether any of the vars in NewVars 'derives'
+        /// from a null sentinel. For example, for a type that is a Record with two
+        /// nested records, if any has a null sentinel, it would be set to true.
+        /// It is used when expanding sort keys, to be able to indicate that there is a
+        /// sorting operation that includes null sentinels. This indication is later
+        /// used by transformation rules.
         /// </summary>
         internal bool NewVarsIncludeNullSentinelVar
         {
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the Var corresponding to a specific property
+        /// Get the Var corresponding to a specific property
         /// </summary>
         /// <param name="p"> the requested property </param>
         /// <param name="v"> the corresponding Var </param>
@@ -105,8 +105,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The NewType property describes the new "flattened" record type
-        ///     that is a replacement for the original type of the Var
+        /// The NewType property describes the new "flattened" record type
+        /// that is a replacement for the original type of the Var
         /// </summary>
         internal RowType NewType
         {
@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Returns the NewType wrapped in a TypeUsage
+        /// Returns the NewType wrapped in a TypeUsage
         /// </summary>
         internal TypeUsage NewTypeUsage
         {
@@ -122,7 +122,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Initialize mapping from properties to the corresponding Var
+        /// Initialize mapping from properties to the corresponding Var
         /// </summary>
         private void InitPropertyToVarMap()
         {

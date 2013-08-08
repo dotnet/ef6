@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    ///     Represents a column map for a structured column
+    /// Represents a column map for a structured column
     /// </summary>
     internal abstract class StructuredColumnMap : ColumnMap
     {
         private readonly ColumnMap[] m_properties;
 
         /// <summary>
-        ///     Structured columnmap constructor
+        /// Structured columnmap constructor
         /// </summary>
         /// <param name="type"> datatype for this column </param>
         /// <param name="name"> column name </param>
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the null sentinel column, if any.  Virtual so only derived column map
-        ///     types that can have NullSentinel have to provide storage, etc.
+        /// Get the null sentinel column, if any.  Virtual so only derived column map
+        /// types that can have NullSentinel have to provide storage, etc.
         /// </summary>
         internal virtual SimpleColumnMap NullSentinel
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the list of properties that constitute this structured type
+        /// Get the list of properties that constitute this structured type
         /// </summary>
         internal ColumnMap[] Properties
         {
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

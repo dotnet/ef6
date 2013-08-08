@@ -10,15 +10,15 @@ namespace System.Data.Entity.Migrations.Model
     using System.Linq;
 
     /// <summary>
-    ///     Operation representing DML changes to the migrations history table.
-    ///     The migrations history table is used to store a log of the migrations that have been applied to the database.
+    /// Operation representing DML changes to the migrations history table.
+    /// The migrations history table is used to store a log of the migrations that have been applied to the database.
     /// </summary>
     public class HistoryOperation : MigrationOperation
     {
         private readonly IList<DbModificationCommandTree> _commandTrees;
 
         /// <summary>
-        ///     Initializes a new instance of the HistoryOperation class.
+        /// Initializes a new instance of the HistoryOperation class.
         /// </summary>
         /// <param name="commandTrees"> A sequence of command trees representing the operations being applied to the history table. </param>
         /// <param name="anonymousArguments"> Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     A sequence of commands representing the operations being applied to the history table.
+        /// A sequence of commands representing the operations being applied to the history table.
         /// </summary>
         public IList<DbModificationCommandTree> CommandTrees
         {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     /// <summary>
-    ///     Services related to different identifier types for Boolean expressions.
+    /// Services related to different identifier types for Boolean expressions.
     /// </summary>
     internal abstract class IdentifierService<T_Identifier>
     {
@@ -45,17 +45,17 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         #region Service methods
 
         /// <summary>
-        ///     Returns negation of the given literal.
+        /// Returns negation of the given literal.
         /// </summary>
         internal abstract Literal<T_Identifier> NegateLiteral(Literal<T_Identifier> literal);
 
         /// <summary>
-        ///     Creates a new conversion context.
+        /// Creates a new conversion context.
         /// </summary>
         internal abstract ConversionContext<T_Identifier> CreateConversionContext();
 
         /// <summary>
-        ///     Performs local simplification appropriate to the current identifier.
+        /// Performs local simplification appropriate to the current identifier.
         /// </summary>
         internal abstract BoolExpr<T_Identifier> LocalSimplify(BoolExpr<T_Identifier> expression);
 

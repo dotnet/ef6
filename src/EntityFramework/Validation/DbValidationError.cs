@@ -3,23 +3,23 @@
 namespace System.Data.Entity.Validation
 {
     /// <summary>
-    ///     Validation error. Can be either entity or property level validation error.
+    /// Validation error. Can be either entity or property level validation error.
     /// </summary>
     [Serializable]
     public class DbValidationError
     {
         /// <summary>
-        ///     Name of the invalid property. Can be null (e.g. for entity level validations).
+        /// Name of the invalid property. Can be null (e.g. for entity level validations).
         /// </summary>
         private readonly string _propertyName;
 
         /// <summary>
-        ///     Validation error message.
+        /// Validation error message.
         /// </summary>
         private readonly string _errorMessage;
 
         /// <summary>
-        ///     Creates an instance of <see cref="DbValidationError" />.
+        /// Creates an instance of <see cref="DbValidationError" />.
         /// </summary>
         /// <param name="propertyName"> Name of the invalid property. Can be null. </param>
         /// <param name="errorMessage"> Validation error message. Can be null. </param>
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Gets name of the invalid property.
+        /// Gets name of the invalid property.
         /// </summary>
         public string PropertyName
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Gets validation error message.
+        /// Gets validation error message.
         /// </summary>
         public string ErrorMessage
         {

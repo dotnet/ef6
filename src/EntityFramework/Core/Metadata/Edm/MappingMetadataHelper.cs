@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Helps answer mapping questions since we don't have a good API for mapping information
+    /// Helps answer mapping questions since we don't have a good API for mapping information
     /// </summary>
     internal static class MappingMetadataHelper
     {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns all mapping fragments for the given entity set's types and their parent types.
+        /// Returns all mapping fragments for the given entity set's types and their parent types.
         /// </summary>
         internal static IEnumerable<StorageTypeMapping> GetMappingsForEntitySetAndSuperTypes(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet,
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
+        /// Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
         /// </summary>
         private static IEnumerable<StorageTypeMapping> GetIsTypeOfMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType,

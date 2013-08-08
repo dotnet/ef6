@@ -897,23 +897,23 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var entityConnection = new EntityConnection(connectionString);
-        ////        entityConnection.Open();
-        ////        using (var transactionScope = new TransactionScope())
+        ////    var entityConnection = new EntityConnection(connectionString);
+        ////    entityConnection.Open();
+        ////    using (var transactionScope = new TransactionScope())
+        ////    {
+        ////        using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
         ////        {
-        ////            using (var ctx = CreateTransactionDbContext(entityConnection, contextOwnsConnection: true))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////            }
+        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
         ////        }
+        ////    }
 
-        ////        // "Transaction not commited. No entities should be saved to the database."
-        ////        Assert.Equal(0, LogEntriesCount());
+        ////    // "Transaction not commited. No entities should be saved to the database."
+        ////    Assert.Equal(0, LogEntriesCount());
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -1179,24 +1179,24 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var connection = new EntityConnection(connectionString);
-        ////        connection.Open();
-        ////        using (var transactionScope = new TransactionScope())
+        ////    var connection = new EntityConnection(connectionString);
+        ////    connection.Open();
+        ////    using (var transactionScope = new TransactionScope())
+        ////    {
+        ////        using (var ctx = CreateTransactionContext(connection))
         ////        {
-        ////            using (var ctx = CreateTransactionContext(connection))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////            }
+        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
+        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
         ////        }
+        ////    }
 
-        ////        // Transaction not commited. No entities should be saved to the database.
-        ////        Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
+        ////    // Transaction not commited. No entities should be saved to the database.
+        ////    Assert.Equal(0, CreateTransactionContext().LogEntries.Count());
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -1206,27 +1206,27 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var connection = new EntityConnection(connectionString);
-        ////        connection.Open();
-        ////        using (var transactionScope = new TransactionScope())
+        ////    var connection = new EntityConnection(connectionString);
+        ////    connection.Open();
+        ////    using (var transactionScope = new TransactionScope())
+        ////    {
+        ////        // need to enlist store connection so that AdoNet calls execute inside a transaction
+        ////        connection.StoreConnection.EnlistTransaction(Transaction.Current);
+        ////        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
+        ////        using (var ctx = CreateTransactionContext(connection))
         ////        {
-        ////            // need to enlist store connection so that AdoNet calls execute inside a transaction
-        ////            connection.StoreConnection.EnlistTransaction(Transaction.Current);
-        ////            AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-        ////            using (var ctx = CreateTransactionContext(connection))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////            }
+        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
+        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
         ////        }
+        ////    }
 
-        ////        // Transaction not commited. No entities should be saved to the database.
-        ////        Assert.Equal(0, LogEntriesCount());
+        ////    // Transaction not commited. No entities should be saved to the database.
+        ////    Assert.Equal(0, LogEntriesCount());
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -1236,34 +1236,34 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var connection = new EntityConnection(connectionString);
-        ////        connection.Open();
-        ////        using (var transactionScope = new TransactionScope())
+        ////    var connection = new EntityConnection(connectionString);
+        ////    connection.Open();
+        ////    using (var transactionScope = new TransactionScope())
+        ////    {
+        ////        // need to enlist store connection so that AdoNet calls execute inside a transaction
+        ////        connection.StoreConnection.EnlistTransaction(Transaction.Current);
+        ////        AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
+        ////        using (var ctx = CreateTransactionContext(connection))
         ////        {
-        ////            // need to enlist store connection so that AdoNet calls execute inside a transaction
-        ////            connection.StoreConnection.EnlistTransaction(Transaction.Current);
-        ////            AddLogEntryUsingAdoNet((SqlConnection)connection.StoreConnection);
-        ////            using (var ctx = CreateTransactionContext(connection))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                transactionScope.Complete();
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////            }
+        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            transactionScope.Complete();
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
+        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
         ////        }
+        ////    }
 
-        ////        // verify that there are two entries (one for AdoNet and one for EF, but only one transaction
-        ////        using (var ctx = CreateTransactionContext())
-        ////        {
-        ////            var transactionCountEntries = ctx.LogEntries.Select(e => e.TransactionCount).OrderBy(c => c).ToList();
-        ////            Assert.Equal(2, transactionCountEntries.Count());
-        ////            Assert.Equal(-1, transactionCountEntries[0]);
-        ////            Assert.Equal(1, transactionCountEntries[1]);
-        ////        }
+        ////    // verify that there are two entries (one for AdoNet and one for EF, but only one transaction
+        ////    using (var ctx = CreateTransactionContext())
+        ////    {
+        ////        var transactionCountEntries = ctx.LogEntries.Select(e => e.TransactionCount).OrderBy(c => c).ToList();
+        ////        Assert.Equal(2, transactionCountEntries.Count());
+        ////        Assert.Equal(-1, transactionCountEntries[0]);
+        ////        Assert.Equal(1, transactionCountEntries[1]);
+        ////    }
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -1296,28 +1296,28 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var connection = new EntityConnection(connectionString);
-        ////        connection.Open();
-        ////        using (var transactionScope = new TransactionScope())
+        ////    var connection = new EntityConnection(connectionString);
+        ////    connection.Open();
+        ////    using (var transactionScope = new TransactionScope())
+        ////    {
+        ////        using (var ctx = CreateTransactionContext(connection))
         ////        {
-        ////            using (var ctx = CreateTransactionContext(connection))
-        ////            {
-        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
+        ////            var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
+        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
 
-        ////                transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                Assert.Equal(1, transactionLogEntry.TransactionCount);
-        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////            }
+        ////            transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////            Assert.Equal(1, transactionLogEntry.TransactionCount);
+        ////            Assert.Equal(ConnectionState.Open, ctx.Connection.State);
         ////        }
+        ////    }
 
-        ////        // "Transaction not commited. No entities should be saved to the database."
-        ////        Assert.Equal(0, LogEntriesCount());
+        ////    // "Transaction not commited. No entities should be saved to the database."
+        ////    Assert.Equal(0, LogEntriesCount());
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -1487,29 +1487,29 @@ namespace System.Data.Entity.Objects
         ////{
         ////    try
         ////    {
-        ////        var connection = new EntityConnection(connectionString);
-        ////        connection.Open();
-        ////        using (var ctx = CreateTransactionContext(connection))
+        ////    var connection = new EntityConnection(connectionString);
+        ////    connection.Open();
+        ////    using (var ctx = CreateTransactionContext(connection))
+        ////    {
+        ////        using (var transactionScope = new TransactionScope())
         ////        {
-        ////            using (var transactionScope = new TransactionScope())
+        ////            // need to enlist connection here, otherwise test will fail
+        ////            ctx.Connection.EnlistTransaction(Transaction.Current);
+        ////            using (var dbTransaction = ctx.Connection.BeginTransaction())
         ////            {
-        ////                // need to enlist connection here, otherwise test will fail
-        ////                ctx.Connection.EnlistTransaction(Transaction.Current);
-        ////                using (var dbTransaction = ctx.Connection.BeginTransaction())
-        ////                {
-        ////                    var transactionLogEntry = AddLogEntryToDatabase(ctx);
-        ////                    Assert.Equal(2, transactionLogEntry.TransactionCount);
-        ////                    Assert.Equal(ConnectionState.Open, ctx.Connection.State);
-        ////                }
+        ////                var transactionLogEntry = AddLogEntryToDatabase(ctx);
+        ////                Assert.Equal(2, transactionLogEntry.TransactionCount);
+        ////                Assert.Equal(ConnectionState.Open, ctx.Connection.State);
         ////            }
         ////        }
+        ////    }
 
-        ////        // "Transaction not commited. No entities should be saved to the database."
-        ////        Assert.Equal(0, LogEntriesCount());
+        ////    // "Transaction not commited. No entities should be saved to the database."
+        ////    Assert.Equal(0, LogEntriesCount());
         ////    }
         ////    finally
         ////    {
-        ////        ResetTables();
+        ////    ResetTables();
         ////    }
         ////}
 
@@ -2187,8 +2187,8 @@ namespace System.Data.Entity.Objects
         }
 
         /// <summary>
-        ///     Removes all entries from the tables used for tests. Must be called from tests that are committing transactions
-        ///     as each test expects that the db will be initially clean.
+        /// Removes all entries from the tables used for tests. Must be called from tests that are committing transactions
+        /// as each test expects that the db will be initially clean.
         /// </summary>
         private void ResetTables()
         {

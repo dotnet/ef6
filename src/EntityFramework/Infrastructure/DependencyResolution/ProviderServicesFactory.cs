@@ -8,7 +8,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Reflection;
 
     /// <summary>
-    ///     Responsible for obtaining <see cref="DbProviderServices" /> Singleton instances.
+    /// Responsible for obtaining <see cref="DbProviderServices" /> Singleton instances.
     /// </summary>
     internal class ProviderServicesFactory
     {

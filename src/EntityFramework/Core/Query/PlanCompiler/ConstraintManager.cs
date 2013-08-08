@@ -28,14 +28,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
 
     /// <summary>
-    ///     Keeps track of all foreign key relationships
+    /// Keeps track of all foreign key relationships
     /// </summary>
     internal class ConstraintManager
     {
         #region public methods
 
         /// <summary>
-        ///     Is there a parent child relationship between table1 and table2 ?
+        /// Is there a parent child relationship between table1 and table2 ?
         /// </summary>
         /// <param name="table1"> parent table ? </param>
         /// <param name="table2"> child table ? </param>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Load all relationships in this entity container
+        /// Load all relationships in this entity container
         /// </summary>
         internal void LoadRelationships(md.EntityContainer entityContainer)
         {
@@ -128,8 +128,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        ///     Is this relationship a binary relationship (ie) does it have exactly 2 end points?
-        ///     This should ideally be a method supported by RelationType itself
+        /// Is this relationship a binary relationship (ie) does it have exactly 2 end points?
+        /// This should ideally be a method supported by RelationType itself
         /// </summary>
         /// <returns> true, if this is a binary relationship </returns>
         private static bool IsBinary(md.RelationshipType relationshipType)

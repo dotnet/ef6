@@ -12,7 +12,7 @@ namespace ProductivityApiUnitTests
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for WriteEdmx methods.
+    /// Unit tests for WriteEdmx methods.
     /// </summary>
     public class WriteEdmxTests : TestBase
     {

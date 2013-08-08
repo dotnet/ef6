@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to ensure an invalid/unsupported mapping is not created when mapping inherited properties
+    /// Convention to ensure an invalid/unsupported mapping is not created when mapping inherited properties
     /// </summary>
     public class MappingInheritedPropertiesSupportConvention : IDbMappingConvention
     {

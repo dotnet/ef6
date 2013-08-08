@@ -37,19 +37,19 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets discriminator values aligned with DiscriminatorColumns of the parent FunctionImportMapping.
-        ///     A null ValueCondition indicates 'anything goes'.
+        /// Gets discriminator values aligned with DiscriminatorColumns of the parent FunctionImportMapping.
+        /// A null ValueCondition indicates 'anything goes'.
         /// </summary>
         internal readonly ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> ColumnConditions;
 
         /// <summary>
-        ///     Gets bit array with 'true' indicating the corresponding MappedEntityType of the parent
-        ///     FunctionImportMapping is implied by this fragment.
+        /// Gets bit array with 'true' indicating the corresponding MappedEntityType of the parent
+        /// FunctionImportMapping is implied by this fragment.
         /// </summary>
         internal readonly BitArray ImpliedEntityTypes;
 
         /// <summary>
-        ///     Gets the complement of the ImpliedEntityTypes BitArray.
+        /// Gets the complement of the ImpliedEntityTypes BitArray.
         /// </summary>
         internal readonly BitArray ComplementImpliedEntityTypes;
 

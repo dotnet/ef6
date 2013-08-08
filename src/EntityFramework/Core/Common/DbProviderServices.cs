@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Common
     using System.Xml;
 
     /// <summary>
-    ///     The factory for building command definitions; use the type of this object
-    ///     as the argument to the IServiceProvider.GetService method on the provider
-    ///     factory;
+    /// The factory for building command definitions; use the type of this object
+    /// as the argument to the IServiceProvider.GetService method on the provider
+    /// factory;
     /// </summary>
     [CLSCompliant(false)]
     public abstract class DbProviderServices : IDbDependencyResolver
@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Common
         private readonly ResolverChain _resolvers = new ResolverChain();
 
         /// <summary>
-        ///     Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
-        ///     the app domain <see cref="DbConfiguration" /> Singleton for resolving EF dependencies such
-        ///     as the <see cref="DbSpatialServices" /> instance to use.
+        /// Constructs an EF provider that will use the <see cref="IDbDependencyResolver" /> obtained from
+        /// the app domain <see cref="DbConfiguration" /> Singleton for resolving EF dependencies such
+        /// as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         protected DbProviderServices()
             : this(() => DbConfiguration.DependencyResolver)
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Constructs an EF provider that will use the given <see cref="IDbDependencyResolver" /> for
-        ///     resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
+        /// Constructs an EF provider that will use the given <see cref="IDbDependencyResolver" /> for
+        /// resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
         /// </summary>
         /// <param name="resolver"> The resolver to use. </param>
         internal DbProviderServices(Func<IDbDependencyResolver> resolver)
@@ -80,12 +80,12 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Create a Command Definition object given a command tree.
+        /// Create a Command Definition object given a command tree.
         /// </summary>
         /// <param name="commandTree"> command tree for the statement </param>
         /// <returns> an executable command definition object </returns>
         /// <remarks>
-        ///     This method simply delegates to the provider's implementation of CreateDbCommandDefinition.
+        /// This method simply delegates to the provider's implementation of CreateDbCommandDefinition.
         /// </remarks>
         public DbCommandDefinition CreateCommandDefinition(DbCommandTree commandTree)
         {
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Common
             DbCommandTree commandTree);
 
         /// <summary>
-        ///     Ensures that the data space of the specified command tree is the target (S-) space
+        /// Ensures that the data space of the specified command tree is the target (S-) space
         /// </summary>
         /// <param name="commandTree"> The command tree for which the data space should be validated </param>
         internal virtual void ValidateDataSpace(DbCommandTree commandTree)
@@ -182,10 +182,10 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Create the default DbCommandDefinition object based on the prototype command
-        ///     This method is intended for provider writers to build a default command definition
-        ///     from a command.
-        ///     Note: This will clone the prototype
+        /// Create the default DbCommandDefinition object based on the prototype command
+        /// This method is intended for provider writers to build a default command definition
+        /// from a command.
+        /// Note: This will clone the prototype
         /// </summary>
         /// <param name="prototype"> the prototype command </param>
         /// <returns> an executable command definition object </returns>
@@ -231,7 +231,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Returns provider manifest token for a given connection.
+        /// Returns provider manifest token for a given connection.
         /// </summary>
         /// <param name="connection"> Connection to find manifest token from. </param>
         /// <returns> The provider manifest token for the specified connection. </returns>
@@ -274,11 +274,11 @@ namespace System.Data.Entity.Core.Common
         protected abstract DbProviderManifest GetDbProviderManifest(string manifestToken);
 
         /// <summary>
-        ///     Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        /// Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
         /// </summary>
         /// <param name="connection">The database connection</param>
         /// <returns>
-        ///     A new instance of <see cref="DbExecutionStrategy" />
+        /// A new instance of <see cref="DbExecutionStrategy" />
         /// </returns>
         public static IDbExecutionStrategy GetExecutionStrategy(DbConnection connection)
         {
@@ -286,12 +286,12 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
-        ///     Uses MetadataWorkspace for faster lookup.
+        /// Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        /// Uses MetadataWorkspace for faster lookup.
         /// </summary>
         /// <param name="connection">The database connection</param>
         /// <returns>
-        ///     A new instance of <see cref="DbExecutionStrategy" />
+        /// A new instance of <see cref="DbExecutionStrategy" />
         /// </returns>
         internal static IDbExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
@@ -326,7 +326,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the spatial data reader for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
+        /// Gets the spatial data reader for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
         /// </summary>
         /// <returns>The spatial data reader.</returns>
         /// <param name="fromReader">The reader where the spatial data came from.</param>
@@ -352,7 +352,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the spatial services for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
+        /// Gets the spatial services for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
         /// </summary>
         /// <returns>The spatial services.</returns>
         /// <param name="manifestToken">The token information associated with the provider manifest.</param>
@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the spatial data reader for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
+        /// Gets the spatial data reader for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
         /// </summary>
         /// <returns>The spatial data reader.</returns>
         /// <param name="fromReader">The reader where the spatial data came from.</param>
@@ -441,7 +441,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the spatial services for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
+        /// Gets the spatial services for the <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" />.
         /// </summary>
         /// <returns>The spatial services.</returns>
         /// <param name="manifestToken">The token information associated with the provider manifest.</param>
@@ -462,7 +462,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
+        /// Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
         /// </summary>
         /// <param name="parameter">The parameter.</param>
         /// <param name="parameterType">The type of the parameter.</param>
@@ -477,7 +477,7 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>Returns providers given a connection.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" /> instanced based on the specified connection.
+        /// The <see cref="T:System.Data.Entity.Core.Common.DbProviderServices" /> instanced based on the specified connection.
         /// </returns>
         /// <param name="connection">Connection to provider.</param>
         public static DbProviderServices GetProviderServices(DbConnection connection)
@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Return an XML reader which represents the CSDL description
+        /// Return an XML reader which represents the CSDL description
         /// </summary>
         /// <returns> An XmlReader that represents the CSDL description </returns>
         public static XmlReader GetConceptualSchemaDefinition(string csdlName)
@@ -530,10 +530,10 @@ namespace System.Data.Entity.Core.Common
 
         /// <summary>Generates a data definition language (DDL script that creates schema objects (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</summary>
         /// <remarks>
-        ///     Individual statements should be separated using database-specific DDL command separator.
-        ///     It is expected that the generated script would be executed in the context of existing database with
-        ///     sufficient permissions, and it should not include commands to create the database, but it may include
-        ///     commands to create schemas and other auxiliary objects such as sequences, etc.
+        /// Individual statements should be separated using database-specific DDL command separator.
+        /// It is expected that the generated script would be executed in the context of existing database with
+        /// sufficient permissions, and it should not include commands to create the database, but it may include
+        /// commands to create schemas and other auxiliary objects such as sequences, etc.
         /// </remarks>
         /// <returns>A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter and targeted for the version of the database corresponding to the provider manifest token.</returns>
         /// <param name="providerManifestToken">The provider manifest token identifying the target version.</param>
@@ -547,21 +547,21 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Generates a data definition language (DDL) script that creates schema objects 
-        ///     (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
-        ///     parameter and targeted for the version of the database corresponding to the provider manifest token.
+        /// Generates a data definition language (DDL) script that creates schema objects 
+        /// (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
+        /// parameter and targeted for the version of the database corresponding to the provider manifest token.
         /// </summary>
         /// <remarks>
-        ///     Individual statements should be separated using database-specific DDL command separator.
-        ///     It is expected that the generated script would be executed in the context of existing database with
-        ///     sufficient permissions, and it should not include commands to create the database, but it may include
-        ///     commands to create schemas and other auxiliary objects such as sequences, etc.
+        /// Individual statements should be separated using database-specific DDL command separator.
+        /// It is expected that the generated script would be executed in the context of existing database with
+        /// sufficient permissions, and it should not include commands to create the database, but it may include
+        /// commands to create schemas and other auxiliary objects such as sequences, etc.
         /// </remarks>
         /// <param name="providerManifestToken"> The provider manifest token identifying the target version. </param>
         /// <param name="storeItemCollection"> The structure of the database. </param>
         /// <returns>
-        ///     A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
-        ///     and targeted for the version of the database corresponding to the provider manifest token.
+        /// A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
+        /// and targeted for the version of the database corresponding to the provider manifest token.
         /// </returns>
         protected virtual string DbCreateDatabaseScript(
             string providerManifestToken,
@@ -574,8 +574,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Creates a database indicated by connection and creates schema objects
-        ///     (tables, primary keys, foreign keys) based on the contents of storeItemCollection.
+        /// Creates a database indicated by connection and creates schema objects
+        /// (tables, primary keys, foreign keys) based on the contents of storeItemCollection.
         /// </summary>
         /// <param name="connection">Connection to a non-existent database that needs to be created and populated with the store objects indicated with the storeItemCollection parameter.</param>
         /// <param name="commandTimeout">Execution timeout for any commands needed to create the database.</param>
@@ -660,8 +660,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Expands |DataDirectory| in the given path if it begins with |DataDirectory| and returns the expanded path,
-        ///     or returns the given string if it does not start with |DataDirectory|.
+        /// Expands |DataDirectory| in the given path if it begins with |DataDirectory| and returns the expanded path,
+        /// or returns the given string if it does not start with |DataDirectory|.
         /// </summary>
         /// <param name="path"> The path to expand. </param>
         /// <returns> The expanded path. </returns>
@@ -716,9 +716,9 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve additional default provider
-        ///     services when a derived type is registered as an EF provider either using an entry in the application's
-        ///     config file or through code-based registration in <see cref="DbConfiguration" />.
+        /// Adds an <see cref="IDbDependencyResolver" /> that will be used to resolve additional default provider
+        /// services when a derived type is registered as an EF provider either using an entry in the application's
+        /// config file or through code-based registration in <see cref="DbConfiguration" />.
         /// </summary>
         /// <param name="resolver">The resolver to add.</param>
         protected void AddDependencyResolver(IDbDependencyResolver resolver)
@@ -729,18 +729,18 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Called to resolve additional default provider services when a derived type is registered as an
-        ///     EF provider either using an entry in the application's config file or through code-based
-        ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
-        ///     class uses the resolvers added with the AddDependencyResolver method to resolve
-        ///     dependencies.
+        /// Called to resolve additional default provider services when a derived type is registered as an
+        /// EF provider either using an entry in the application's config file or through code-based
+        /// registration in <see cref="DbConfiguration" />. The implementation of this method in this
+        /// class uses the resolvers added with the AddDependencyResolver method to resolve
+        /// dependencies.
         /// </summary>
         /// <remarks>
-        ///     Use this method to set, add, or change other provider-related services. Note that this method
-        ///     will only be called for such services if they are not already explicitly configured in some
-        ///     other way by the application. This allows providers to set default services while the
-        ///     application is still able to override and explicitly configure each service if required.
-        ///     See <see cref="IDbDependencyResolver" /> and <see cref="DbConfiguration" /> for more details.
+        /// Use this method to set, add, or change other provider-related services. Note that this method
+        /// will only be called for such services if they are not already explicitly configured in some
+        /// other way by the application. This allows providers to set default services while the
+        /// application is still able to override and explicitly configure each service if required.
+        /// See <see cref="IDbDependencyResolver" /> and <see cref="DbConfiguration" /> for more details.
         /// </remarks>
         /// <param name="type">The type of the service to be resolved.</param>
         /// <param name="key">An optional key providing additional information for resolving the service.</param>
@@ -751,11 +751,11 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Called to resolve additional default provider services when a derived type is registered as an
-        ///     EF provider either using an entry in the application's config file or through code-based
-        ///     registration in <see cref="DbConfiguration" />. The implementation of this method in this
-        ///     class uses the resolvers added with the AddDependencyResolver method to resolve
-        ///     dependencies.
+        /// Called to resolve additional default provider services when a derived type is registered as an
+        /// EF provider either using an entry in the application's config file or through code-based
+        /// registration in <see cref="DbConfiguration" />. The implementation of this method in this
+        /// class uses the resolvers added with the AddDependencyResolver method to resolve
+        /// dependencies.
         /// </summary>
         /// <param name="type">The type of the service to be resolved.</param>
         /// <param name="key">An optional key providing additional information for resolving the service.</param>

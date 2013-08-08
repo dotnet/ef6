@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     This class represents one resource item to be loaded from an assembly.
+    /// This class represents one resource item to be loaded from an assembly.
     /// </summary>
     internal class MetadataArtifactLoaderResource : MetadataArtifactLoader, IComparable
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly string _resourceName;
 
         /// <summary>
-        ///     Constructor - loads the resource stream
+        /// Constructor - loads the resource stream
         /// </summary>
         /// <param name="assembly"> </param>
         /// <param name="resourceName"> </param>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Implementation of IComparable.CompareTo()
+        /// Implementation of IComparable.CompareTo()
         /// </summary>
         /// <param name="obj"> The object to compare to </param>
         /// <returns> 0 if the loaders are "equal" (i.e., have the same _path value) </returns>
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Equals() returns true if the objects have the same _path value
+        /// Equals() returns true if the objects have the same _path value
         /// </summary>
         /// <param name="obj"> The object to compare to </param>
         /// <returns> true if the objects have the same _path value </returns>
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     GetHashCode override that defers the result to the _path member variable.
+        /// GetHashCode override that defers the result to the _path member variable.
         /// </summary>
         public override int GetHashCode()
         {
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to artifacts for a specific DataSpace.
+        /// Get paths to artifacts for a specific DataSpace.
         /// </summary>
         /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
         /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
@@ -106,7 +106,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get paths to all artifacts
+        /// Get paths to all artifacts
         /// </summary>
         /// <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetPaths()
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Create and return an XmlReader around the resource represented by this instance.
+        /// Create and return an XmlReader around the resource represented by this instance.
         /// </summary>
         /// <returns> A List of XmlReaders for all resources </returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
@@ -158,8 +158,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Create and return an XmlReader around the resource represented by this instance
-        ///     if it is of the requested DataSpace type.
+        /// Create and return an XmlReader around the resource represented by this instance
+        /// if it is of the requested DataSpace type.
         /// </summary>
         /// <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
         /// <returns> A List of XmlReader objects </returns>
@@ -178,8 +178,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     This method parses the path to the resource and attempts to load it.
-        ///     The method also accounts for the wildcard assembly name.
+        /// This method parses the path to the resource and attempts to load it.
+        /// The method also accounts for the wildcard assembly name.
         /// </summary>
         private Stream LoadResource()
         {

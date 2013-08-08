@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Rewrites the terms in a Boolean expression tree.
+    /// Rewrites the terms in a Boolean expression tree.
     /// </summary>
     /// <typeparam name="T_From"> Term type for leaf nodes of input </typeparam>
     /// <typeparam name="T_To"> Term type for leaf nodes of output </typeparam>
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly Func<TermExpr<T_From>, BoolExpr<T_To>> _translator;
 
         /// <summary>
-        ///     Initialize a new translator
+        /// Initialize a new translator
         /// </summary>
         /// <param name="translator"> Translator delegate; must not be null </param>
         internal BooleanExpressionTermRewriter(Func<TermExpr<T_From>, BoolExpr<T_To>> translator)

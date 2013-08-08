@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
 
     /// <summary>
-    ///     Class that contains all the constants for various schemas
+    /// Class that contains all the constants for various schemas
     /// </summary>
     internal static class XmlConstants
     {

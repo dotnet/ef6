@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public methods
 
         /// <summary>
-        ///     This involves
-        ///     * Converting the ITree into a set of ProviderCommandInfo objects
-        ///     * Creating a column map to enable result assembly
-        ///     Currently, we only produce a single ITree, and correspondingly, the
-        ///     following steps are trivial
+        /// This involves
+        /// * Converting the ITree into a set of ProviderCommandInfo objects
+        /// * Creating a column map to enable result assembly
+        /// Currently, we only produce a single ITree, and correspondingly, the
+        /// following steps are trivial
         /// </summary>
         /// <param name="compilerState"> current compiler state </param>
         /// <param name="childCommands"> CQTs for each store command </param>
@@ -52,13 +52,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        ///     The real driver. This routine walks the tree, converts each subcommand
-        ///     into a CTree, and converts the columnmap into a real column map.
-        ///     Finally, it produces a "real" plan that can be used by the bridge execution, and
-        ///     returns this plan
-        ///     The root of the tree must be a PhysicalProjectOp. Each child of this Op
-        ///     represents a command to be executed, and the ColumnMap of this Op represents
-        ///     the eventual columnMap to be used for result assembly
+        /// The real driver. This routine walks the tree, converts each subcommand
+        /// into a CTree, and converts the columnmap into a real column map.
+        /// Finally, it produces a "real" plan that can be used by the bridge execution, and
+        /// returns this plan
+        /// The root of the tree must be a PhysicalProjectOp. Each child of this Op
+        /// represents a command to be executed, and the ColumnMap of this Op represents
+        /// the eventual columnMap to be used for result assembly
         /// </summary>
         /// <param name="childCommands"> CQTs for store commands </param>
         /// <param name="resultColumnMap"> column map for result assembly </param>
@@ -93,9 +93,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     For each subcommand, build up a "location-map" for each top-level var that
-        ///     is projected out. This location map will ultimately be used to convert VarRefColumnMap
-        ///     into SimpleColumnMap
+        /// For each subcommand, build up a "location-map" for each top-level var that
+        /// is projected out. This location map will ultimately be used to convert VarRefColumnMap
+        /// into SimpleColumnMap
         /// </summary>
         private Dictionary<Var, KeyValuePair<int, int>> BuildVarMap()
         {

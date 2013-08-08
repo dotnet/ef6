@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     In conceptual-space, EdmProperty represents a property on an Entity.
-    ///     In store-space, EdmProperty represents a column in a table.
+    /// In conceptual-space, EdmProperty represents a property on an Entity.
+    /// In store-space, EdmProperty represents a column in a table.
     /// </summary>
     public class EdmProperty : EdmMember
     {
@@ -63,11 +63,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a new instance of EdmProperty type.
+        /// Creates a new instance of EdmProperty type.
         /// </summary>
         /// <param name="name">Name of the property.</param>
         /// <param name="typeUsage">
-        ///     Property <see cref="TypeUsage" />
+        /// Property <see cref="TypeUsage" />
         /// </param>
         /// <returns>A new instance of EdmProperty type</returns>
         public static EdmProperty Create(string name, TypeUsage typeUsage)
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the property class
+        /// Initializes a new instance of the property class
         /// </summary>
         /// <param name="name"> name of the property </param>
         /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new OSpace instance of the property class
+        /// Initializes a new OSpace instance of the property class
         /// </summary>
         /// <param name="name"> name of the property </param>
         /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
@@ -151,23 +151,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to get the property value from a CLR instance
+        /// cached dynamic method to get the property value from a CLR instance
         /// </summary>
         private Func<object, object> _memberGetter;
 
         /// <summary>
-        ///     cached dynamic method to set a CLR property value on a CLR instance
+        /// cached dynamic method to set a CLR property value on a CLR instance
         /// </summary>
         private Action<object, object> _memberSetter;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -175,27 +175,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value.
+        /// Gets a value indicating whether this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value.
         /// </summary>
         /// <remarks>
-        ///     Nullability in the conceptual model and store model is a simple indication of whether or not
-        ///     the property is considered nullable. Nullability in the object model is more complex.
-        ///     When using convention based mapping (as usually happens with POCO entities), a property in the
-        ///     object model is considered nullable if and only if the underlying CLR type is nullable and
-        ///     the property is not part of the primary key.
-        ///     When using attribute based mapping (usually used with entities that derive from the EntityObject
-        ///     base class), a property is considered nullable if the IsNullable flag is set to true in the
-        ///     <see cref="System.Data.Entity.Core.Objects.DataClasses.EdmScalarPropertyAttribute" /> attribute. This flag can
-        ///     be set to true even if the underlying type is not nullable, and can be set to false even if the
-        ///     underlying type is nullable. The latter case happens as part of default code generation when
-        ///     a non-nullable property in the conceptual model is mapped to a nullable CLR type such as a string.
-        ///     In such a case, the Entity Framework treats the property as non-nullable even though the CLR would
-        ///     allow null to be set.
-        ///     There is no good reason to set a non-nullable CLR type as nullable in the object model and this
-        ///     should not be done even though the attribute allows it.
+        /// Nullability in the conceptual model and store model is a simple indication of whether or not
+        /// the property is considered nullable. Nullability in the object model is more complex.
+        /// When using convention based mapping (as usually happens with POCO entities), a property in the
+        /// object model is considered nullable if and only if the underlying CLR type is nullable and
+        /// the property is not part of the primary key.
+        /// When using attribute based mapping (usually used with entities that derive from the EntityObject
+        /// base class), a property is considered nullable if the IsNullable flag is set to true in the
+        /// <see cref="System.Data.Entity.Core.Objects.DataClasses.EdmScalarPropertyAttribute" /> attribute. This flag can
+        /// be set to true even if the underlying type is not nullable, and can be set to false even if the
+        /// underlying type is nullable. The latter case happens as part of default code generation when
+        /// a non-nullable property in the conceptual model is mapped to a nullable CLR type such as a string.
+        /// In such a case, the Entity Framework treats the property as non-nullable even though the CLR would
+        /// allow null to be set.
+        /// There is no good reason to set a non-nullable CLR type as nullable in the object model and this
+        /// should not be done even though the attribute allows it.
         /// </remarks>
         /// <returns>
-        ///     true if this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value; otherwise, false.
+        /// true if this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" /> can have a null value; otherwise, false.
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public bool Nullable
@@ -221,10 +221,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
+        /// Gets the default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
         /// </summary>
         /// <returns>
-        ///     The default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
+        /// The default value for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmProperty" />.
         /// </returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the setter is called when the EdmProperty instance is in ReadOnly state</exception>
         public Object DefaultValue
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to get the property value from a CLR instance
+        /// cached dynamic method to get the property value from a CLR instance
         /// </summary>
         internal Func<object, object> ValueGetter
         {
@@ -247,7 +247,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to set a CLR property value on a CLR instance
+        /// cached dynamic method to set a CLR property value on a CLR instance
         /// </summary>
         internal Action<object, object> ValueSetter
         {

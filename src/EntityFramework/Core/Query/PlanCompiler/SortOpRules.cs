@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Transformation Rules for SortOp
+    /// Transformation Rules for SortOp
     /// </summary>
     internal static class SortOpRules
     {
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly SimpleRule Rule_SortOpOverAtMostOneRow = new SimpleRule(OpType.Sort, ProcessSortOpOverAtMostOneRow);
 
         /// <summary>
-        ///     If the SortOp's input is guaranteed to produce at most 1 row, remove the node with the SortOp:
-        ///     Sort(X) => X, if X is guaranteed to produce no more than 1 row
+        /// If the SortOp's input is guaranteed to produce at most 1 row, remove the node with the SortOp:
+        /// Sort(X) => X, if X is guaranteed to produce no more than 1 row
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> current subtree </param>

@@ -10,17 +10,17 @@ namespace System.Data.Entity
     using Xunit.Sdk;
 
     /// <summary>
-    ///     Attribute that is applied to a method to indicate that it is a fact that
-    ///     should be run by the test runner in partial trust.
+    /// Attribute that is applied to a method to indicate that it is a fact that
+    /// should be run by the test runner in partial trust.
     /// </summary>
     /// <remarks>
-    ///     The class containing the method must derive from <see cref="MarshalByRefObject" />.
+    /// The class containing the method must derive from <see cref="MarshalByRefObject" />.
     /// 
-    ///     If the test class is decorated using <see cref="IUseFixture{T}" />, the fixture data is
-    ///                                              instantiated in the main
-    ///                                              <see cref="AppDomain" />
-    ///                                              and then serialized to the partial trust
-    ///                                              sandbox.
+    /// If the test class is decorated using <see cref="IUseFixture{T}" />, the fixture data is
+    ///                                          instantiated in the main
+    ///                                          <see cref="AppDomain" />
+    ///                                          and then serialized to the partial trust
+    ///                                          sandbox.
     /// </remarks>
     public class PartialTrustFactAttribute : ExtendedFactAttribute
     {

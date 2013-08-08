@@ -63,7 +63,7 @@ namespace CmdLine
         private string description;
 
         /// <summary>
-        ///     The description of the command
+        /// The description of the command
         /// </summary>
         public string Description
         {
@@ -88,7 +88,7 @@ namespace CmdLine
         private string descriptionResourceId;
 
         /// <summary>
-        ///     The resource id of the command description
+        /// The resource id of the command description
         /// </summary>
         public string DescriptionResourceId
         {
@@ -181,7 +181,7 @@ namespace CmdLine
         }
 
         /// <summary>
-        ///     Searches a type for all properties with the CommandLineParameterAttribute and does action
+        /// Searches a type for all properties with the CommandLineParameterAttribute and does action
         /// </summary>
         /// <param name="argumentType"> The argument type </param>
         /// <param name="action"> The action to apply </param>
@@ -191,7 +191,7 @@ namespace CmdLine
         }
 
         /// <summary>
-        ///     Searches a type for all properties with the CommandLineParameterAttribute and does action
+        /// Searches a type for all properties with the CommandLineParameterAttribute and does action
         /// </summary>
         /// <param name="argumentType"> The argument type </param>
         /// <param name="selector"> </param>

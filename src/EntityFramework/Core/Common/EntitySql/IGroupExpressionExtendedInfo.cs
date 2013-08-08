@@ -7,15 +7,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
     internal interface IGroupExpressionExtendedInfo
     {
         /// <summary>
-        ///     Returns <see cref="DbGroupExpressionBinding.GroupVariable" /> based expression during the
-        ///     <see
-        ///         cref="DbGroupByExpression" />
-        ///     construction process, otherwise null.
+        /// Returns <see cref="DbGroupExpressionBinding.GroupVariable" /> based expression during the
+        /// <see
+        ///     cref="DbGroupByExpression" />
+        /// construction process, otherwise null.
         /// </summary>
         DbExpression GroupVarBasedExpression { get; }
 
         /// <summary>
-        ///     Returns <see cref="DbGroupAggregate" /> based expression during the <see cref="DbGroupByExpression" /> construction process, otherwise null.
+        /// Returns <see cref="DbGroupAggregate" /> based expression during the <see cref="DbGroupByExpression" /> construction process, otherwise null.
         /// </summary>
         DbExpression GroupAggBasedExpression { get; }
     }

@@ -14,7 +14,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for DbSet.Find.
+    /// Tests for DbSet.Find.
     /// </summary>
     public class FindTests : FunctionalTestBase
     {

@@ -10,8 +10,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    ///     Represents a polymorphic typed column - either an entity or
-    ///     a complex type.
+    /// Represents a polymorphic typed column - either an entity or
+    /// a complex type.
     /// </summary>
     internal class SimplePolymorphicColumnMap : TypedColumnMap
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         private readonly Dictionary<object, TypedColumnMap> m_typedColumnMap;
 
         /// <summary>
-        ///     Internal constructor
+        /// Internal constructor
         /// </summary>
         /// <param name="type"> datatype of the column </param>
         /// <param name="name"> column name </param>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the type discriminator column
+        /// Get the type discriminator column
         /// </summary>
         internal SimpleColumnMap TypeDiscriminator
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the type mapping
+        /// Get the type mapping
         /// </summary>
         internal Dictionary<object, TypedColumnMap> TypeChoices
         {
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

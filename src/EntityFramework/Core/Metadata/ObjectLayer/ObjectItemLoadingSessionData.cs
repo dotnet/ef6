@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         internal ObjectItemLoadingSessionData()
         {

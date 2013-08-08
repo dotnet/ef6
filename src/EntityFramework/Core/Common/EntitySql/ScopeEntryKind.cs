@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         FreeVar,
 
         /// <summary>
-        ///     Represents a group input scope entry that should no longer be referenced.
+        /// Represents a group input scope entry that should no longer be referenced.
         /// </summary>
         InvalidGroupInputRef
     }

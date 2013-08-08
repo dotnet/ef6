@@ -23,12 +23,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Xml;
 
     /// <summary>
-    ///     Class for representing a collection of items in Edm space.
+    /// Class for representing a collection of items in Edm space.
     /// </summary>
     public sealed class EdmItemCollection : ItemCollection
     {
         /// <summary>
-        ///     constructor that loads the metadata files from the specified xmlReaders
+        /// constructor that loads the metadata files from the specified xmlReaders
         /// </summary>
         /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
         /// <param name="filePaths"> Paths (URIs)to the CSDL files or resources </param>
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> class by using the collection of the XMLReader objects where the conceptual schema definition language (CSDL) files exist.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> class by using the collection of the XMLReader objects where the conceptual schema definition language (CSDL) files exist.
         /// </summary>
         /// <param name="xmlReaders">The collection of the XMLReader objects where the conceptual schema definition language (CSDL) files exist.</param>
         public EdmItemCollection(IEnumerable<XmlReader> xmlReaders)
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> class by using the paths where the conceptual schema definition language (CSDL) files exist.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmItemCollection" /> class by using the paths where the conceptual schema definition language (CSDL) files exist.
         /// </summary>
         /// <param name="filePaths">The paths where the conceptual schema definition language (CSDL) files exist.</param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file path names which are a Machine resource
@@ -119,8 +119,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        ///     encountered during load as the out parameter errors.
+        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        /// encountered during load as the out parameter errors.
         /// </summary>
         /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         /// <param name="filePaths">Paths (URIs)to the CSDL files or resources</param>
@@ -145,8 +145,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Public constructor that loads the metadata files from the specified XmlReaders, and
-        ///     returns the list of errors encountered during load as the out parameter 'errors'.
+        /// Public constructor that loads the metadata files from the specified XmlReaders, and
+        /// returns the list of errors encountered during load as the out parameter 'errors'.
         /// </summary>
         /// <param name="xmlReaders"> XmlReader objects where the EDM schemas are loaded </param>
         /// <param name="filePaths"> Paths (URIs) to the CSDL files or resources </param>
@@ -174,13 +174,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Double _edmVersion = XmlConstants.UndefinedVersion;
 
         /// <summary>
-        ///     Gets canonical versions of InitializerMetadata instances. This avoids repeatedly
-        ///     compiling delegates for materialization.
+        /// Gets canonical versions of InitializerMetadata instances. This avoids repeatedly
+        /// compiling delegates for materialization.
         /// </summary>
         private Memoizer<InitializerMetadata, InitializerMetadata> _getCanonicalInitializerMetadataMemoizer;
 
         /// <summary>
-        ///     Manages user defined function definitions.
+        /// Manages user defined function definitions.
         /// </summary>
         private Memoizer<EdmFunction, DbLambda> _getGeneratedFunctionDefinitionsMemoizer;
 
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     conventional oc mapping cache, the locking mechanism is provided by AsssemblyCache
+        /// conventional oc mapping cache, the locking mechanism is provided by AsssemblyCache
         /// </summary>
         internal OcAssemblyCache ConventionalOcCache
         {
@@ -203,9 +203,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given an InitializerMetadata instance, returns the canonical version of that instance.
-        ///     This allows us to avoid compiling materialization delegates repeatedly for the same
-        ///     pattern.
+        /// Given an InitializerMetadata instance, returns the canonical version of that instance.
+        /// This allows us to avoid compiling materialization delegates repeatedly for the same
+        /// pattern.
         /// </summary>
         internal InitializerMetadata GetCanonicalInitializerMetadata(InitializerMetadata metadata)
         {
@@ -241,8 +241,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load stuff from xml readers - this now includes XmlReader instances created over embedded
-        ///     resources. See the remarks section below for some useful information.
+        /// Load stuff from xml readers - this now includes XmlReader instances created over embedded
+        /// resources. See the remarks section below for some useful information.
         /// </summary>
         /// <param name="xmlReaders"> A list of XmlReader instances </param>
         /// <param name="sourceFilePaths"> </param>
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load metadata from a SOM schema directly
+        /// Load metadata from a SOM schema directly
         /// </summary>
         /// <param name="somSchemas"> The SOM schemas to load from </param>
         /// <param name="providerManifest"> The provider manifest used for loading the type </param>
@@ -356,13 +356,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects.
+        /// Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects.
         /// </summary>
         /// <returns>
-        ///     A ReadOnlyCollection object that represents a collection of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     objects.
+        /// A ReadOnlyCollection object that represents a collection of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// objects.
         /// </returns>
         public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes()
         {
@@ -370,13 +370,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects with the specified conceptual model version.
+        /// Returns a collection of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" /> objects with the specified conceptual model version.
         /// </summary>
         /// <returns>
-        ///     A ReadOnlyCollection object that represents a collection of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
-        ///     objects.
+        /// A ReadOnlyCollection object that represents a collection of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.PrimitiveType" />
+        /// objects.
         /// </returns>
         /// <param name="edmVersion">The conceptual model version.</param>
         public ReadOnlyCollection<PrimitiveType> GetPrimitiveTypes(double edmVersion)
@@ -397,7 +397,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
         /// <param name="primitiveTypeKind"> canonical primitive type </param>
         /// <returns> The mapped scalar type </returns>
@@ -425,11 +425,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Generates function definition or returns a cached one.
-        ///     Guarantees type match of declaration and generated parameters.
-        ///     Guarantees return type match.
-        ///     Throws internal error for functions without definition.
-        ///     Passes thru exceptions occured during definition generation.
+        /// Generates function definition or returns a cached one.
+        /// Guarantees type match of declaration and generated parameters.
+        /// Guarantees return type match.
+        /// Throws internal error for functions without definition.
+        /// Passes thru exceptions occured during definition generation.
         /// </summary>
         internal DbLambda GetGeneratedFunctionDefinition(EdmFunction function)
         {
@@ -445,11 +445,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Generates function definition or returns a cached one.
-        ///     Guarantees type match of declaration and generated parameters.
-        ///     Guarantees return type match.
-        ///     Throws internal error for functions without definition.
-        ///     Passes thru exceptions occured during definition generation.
+        /// Generates function definition or returns a cached one.
+        /// Guarantees type match of declaration and generated parameters.
+        /// Guarantees return type match.
+        /// Throws internal error for functions without definition.
+        /// Passes thru exceptions occured during definition generation.
         /// </summary>
         internal DbLambda GenerateFunctionDefinition(EdmFunction function)
         {
@@ -483,20 +483,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Factory method that creates an <see cref="EdmItemCollection" />.
+        /// Factory method that creates an <see cref="EdmItemCollection" />.
         /// </summary>
         /// <param name="xmlReaders">
-        ///     CSDL artifacts to load. Must not be <c>null</c>.
+        /// CSDL artifacts to load. Must not be <c>null</c>.
         /// </param>
         /// <param name="filePaths">
-        ///     Paths to CSDL artifacts. Used in error messages. Can be <c>null</c> in which case
-        ///     the base Uri of the XmlReader will be used as a path.
+        /// Paths to CSDL artifacts. Used in error messages. Can be <c>null</c> in which case
+        /// the base Uri of the XmlReader will be used as a path.
         /// </param>
         /// <param name="errors">
-        ///     The collection of errors encountered while loading.
+        /// The collection of errors encountered while loading.
         /// </param>
         /// <returns>
-        ///     <see cref="EdmItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.
+        /// <see cref="EdmItemCollection" /> instance if no errors encountered. Otherwise <c>null</c>.
         /// </returns>
         public static EdmItemCollection Create(
             IEnumerable<XmlReader> xmlReaders,

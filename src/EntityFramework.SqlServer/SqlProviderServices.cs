@@ -23,38 +23,38 @@ namespace System.Data.Entity.SqlServer
     using System.IO;
 
     /// <summary>
-    ///     The DbProviderServices implementation for the SqlClient provider for SQL Server.
+    /// The DbProviderServices implementation for the SqlClient provider for SQL Server.
     /// </summary>
     /// <remarks>
-    ///     Note that instance of this type also resolve additional provider services for Microsoft SQL Server
-    ///     when this type is registered as an EF provider either using an entry in the application's config file
-    ///     or through code-based registration in <see cref="DbConfiguration" />.
-    ///     The services resolved are:
-    ///     Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
-    ///     <see cref="SqlConnectionFactory" /> to create connections to SQL Express by default.
-    ///     Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
-    ///     for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
-    ///     to provide a non-retrying policy for SQL Server.
-    ///     Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlClient" are
-    ///     resolved to <see cref="SqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
-    ///     generation for SQL Server.
-    ///     Requests for <see cref="DbSpatialServices" /> for the invariant name "System.Data.SqlClient" are
-    ///     resolved to a Singleton instance of <see cref="SqlSpatialServices" /> to provide default spatial
-    ///     services for SQL Server.
+    /// Note that instance of this type also resolve additional provider services for Microsoft SQL Server
+    /// when this type is registered as an EF provider either using an entry in the application's config file
+    /// or through code-based registration in <see cref="DbConfiguration" />.
+    /// The services resolved are:
+    /// Requests for <see cref="IDbConnectionFactory" /> are resolved to a Singleton instance of
+    /// <see cref="SqlConnectionFactory" /> to create connections to SQL Express by default.
+    /// Requests for <see cref="Func{IDbExecutionStrategy}" /> for the invariant name "System.Data.SqlClient"
+    /// for any server name are resolved to a delegate that returns a <see cref="DefaultSqlExecutionStrategy" />
+    /// to provide a non-retrying policy for SQL Server.
+    /// Requests for <see cref="MigrationSqlGenerator" /> for the invariant name "System.Data.SqlClient" are
+    /// resolved to <see cref="SqlServerMigrationSqlGenerator" /> instances to provide default Migrations SQL
+    /// generation for SQL Server.
+    /// Requests for <see cref="DbSpatialServices" /> for the invariant name "System.Data.SqlClient" are
+    /// resolved to a Singleton instance of <see cref="SqlSpatialServices" /> to provide default spatial
+    /// services for SQL Server.
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [CLSCompliant(false)]
     public sealed class SqlProviderServices : DbProviderServices
     {
         /// <summary>
-        ///     This is the well-known string using in configuration files and code-based configuration as
-        ///     the "provider invariant name" used to specify Microsoft SQL Server for ADO.NET and
-        ///     Entity Framework provider services.
+        /// This is the well-known string using in configuration files and code-based configuration as
+        /// the "provider invariant name" used to specify Microsoft SQL Server for ADO.NET and
+        /// Entity Framework provider services.
         /// </summary>
         public const string ProviderInvariantName = "System.Data.SqlClient";
 
         /// <summary>
-        ///     Private constructor to ensure only Singleton instance is created.
+        /// Private constructor to ensure only Singleton instance is created.
         /// </summary>
         private SqlProviderServices()
         {
@@ -88,14 +88,14 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Singleton object
+        /// Singleton object
         /// </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
         private static bool _truncateDecimalsToScale = true;
 
         /// <summary>
-        ///     The Singleton instance of the SqlProviderServices type.
+        /// The Singleton instance of the SqlProviderServices type.
         /// </summary>
         public static SqlProviderServices Instance
         {
@@ -103,15 +103,15 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Set this flag to false to prevent <see cref="decimal" /> values from being truncated to
-        ///     the scale (number of decimal places) defined for the column. The default value is true,
-        ///     indicating that decimal values will be truncated, in order to prevent breaking existing
-        ///     applications that depend on this behavior.
+        /// Set this flag to false to prevent <see cref="decimal" /> values from being truncated to
+        /// the scale (number of decimal places) defined for the column. The default value is true,
+        /// indicating that decimal values will be truncated, in order to prevent breaking existing
+        /// applications that depend on this behavior.
         /// </summary>
         /// <remarks>
-        ///     With this flag set to true <see cref="SqlParameter" /> objects are created with their Scale
-        ///     properties set. When this flag is set to false then the Scale properties are not set, meaning
-        ///     that the truncation behavior of SqlParameter is avoided.
+        /// With this flag set to true <see cref="SqlParameter" /> objects are created with their Scale
+        /// properties set. When this flag is set to false then the Scale properties are not set, meaning
+        /// that the truncation behavior of SqlParameter is avoided.
         /// </remarks>
         public static bool TruncateDecimalsToScale
         {
@@ -120,7 +120,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Registers a handler to process non-error messages coming from the database provider.
+        /// Registers a handler to process non-error messages coming from the database provider.
         /// </summary>
         /// <param name="connection"> The connection to receive information for. </param>
         /// <param name="handler"> The handler to process messages. </param>
@@ -148,7 +148,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Create a Command Definition object, given the connection and command tree
+        /// Create a Command Definition object, given the connection and command tree
         /// </summary>
         /// <param name="providerManifest"> provider manifest that was determined from metadata </param>
         /// <param name="commandTree"> command tree for the statement </param>
@@ -165,7 +165,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Create a SqlCommand object, given the provider manifest and command tree
+        /// Create a SqlCommand object, given the provider manifest and command tree
         /// </summary>
         /// <param name="providerManifest"> provider manifest </param>
         /// <param name="commandTree"> command tree for the statement </param>
@@ -254,7 +254,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
+        /// Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
         /// </summary>
         /// <param name="parameter">The parameter.</param>
         /// <param name="parameterType">The type of the parameter.</param>
@@ -326,7 +326,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns provider manifest token for a given connection.
+        /// Returns provider manifest token for a given connection.
         /// </summary>
         /// <param name="connection"> Connection to find manifest token from. </param>
         /// <returns> The provider manifest token for the specified connection. </returns>
@@ -362,7 +362,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns the provider manifest by using the specified version information.
+        /// Returns the provider manifest by using the specified version information.
         /// </summary>
         /// <param name="versionHint"> The token information associated with the provider manifest. </param>
         /// <returns> The provider manifest by using the specified version information. </returns>
@@ -377,7 +377,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Gets a spatial data reader for SQL Server.
+        /// Gets a spatial data reader for SQL Server.
         /// </summary>
         /// <param name="fromReader"> The reader where the spatial data came from. </param>
         /// <param name="versionHint"> The manifest token associated with the provider manifest. </param>
@@ -398,7 +398,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Gets a spatial data reader for SQL Server.
+        /// Gets a spatial data reader for SQL Server.
         /// </summary>
         /// <param name="versionHint"> The manifest token associated with the provider manifest. </param>
         /// <returns> The spatial data reader. </returns>
@@ -426,7 +426,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Creates a SqlParameter given a name, type, and direction
+        /// Creates a SqlParameter given a name, type, and direction
         /// </summary>
         internal static SqlParameter CreateSqlParameter(
             string name, TypeUsage type, ParameterMode mode, object value, bool preventTruncation, SqlVersion version)
@@ -543,13 +543,13 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
-        ///     Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
-        ///     of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
-        ///     <paramref name="value" />.
-        ///     If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
-        ///     CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
-        ///     DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
+        /// Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
+        /// Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
+        /// of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
+        /// <paramref name="value" />.
+        /// If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
+        /// CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
+        /// DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
         /// </summary>
         internal static object EnsureSqlParameterValue(object value)
         {
@@ -579,8 +579,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Determines SqlDbType for the given primitive type. Extracts facet
-        ///     information as well.
+        /// Determines SqlDbType for the given primitive type. Extracts facet
+        /// information as well.
         /// </summary>
         private static SqlDbType GetSqlDbType(
             TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName)
@@ -682,8 +682,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Determines preferred value for SqlParameter.Size. Returns null
-        ///     where there is no preference.
+        /// Determines preferred value for SqlParameter.Size. Returns null
+        /// where there is no preference.
         /// </summary>
         private static int? GetParameterSize(TypeUsage type, bool isOutParam)
         {
@@ -770,9 +770,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        ///     returns null or the maximum available precision to avoid truncation (which can occur
-        ///     for output parameters).
+        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        /// returns null or the maximum available precision to avoid truncation (which can occur
+        /// for output parameters).
         /// </summary>
         private static byte? GetKatmaiDateTimePrecision(TypeUsage type, bool isOutParam)
         {
@@ -781,8 +781,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        ///     returns null.
+        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        /// returns null.
         /// </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
@@ -798,8 +798,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        ///     returns null.
+        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        /// returns null.
         /// </summary>
         private static byte? GetScale(TypeUsage type)
         {
@@ -815,7 +815,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Chooses the appropriate SqlDbType for the given string type.
+        /// Chooses the appropriate SqlDbType for the given string type.
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static SqlDbType GetStringDbType(TypeUsage type)
@@ -853,7 +853,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Chooses the appropriate SqlDbType for the given binary type.
+        /// Chooses the appropriate SqlDbType for the given binary type.
         /// </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {
@@ -867,15 +867,15 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates a data definition language (DDL) script that creates schema objects 
-        ///     (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
-        ///     parameter and targeted for the version of the database corresponding to the provider manifest token.
+        /// Generates a data definition language (DDL) script that creates schema objects 
+        /// (tables, primary keys, foreign keys) based on the contents of the StoreItemCollection 
+        /// parameter and targeted for the version of the database corresponding to the provider manifest token.
         /// </summary>
         /// <param name="providerManifestToken"> The provider manifest token identifying the target version. </param>
         /// <param name="storeItemCollection"> The structure of the database. </param>
         /// <returns>
-        ///     A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
-        ///     and targeted for the version of the database corresponding to the provider manifest token.
+        /// A DDL script that creates schema objects based on the contents of the StoreItemCollection parameter 
+        /// and targeted for the version of the database corresponding to the provider manifest token.
         /// </returns>
         protected override string DbCreateDatabaseScript(string providerManifestToken, StoreItemCollection storeItemCollection)
         {
@@ -887,14 +887,14 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Create the database and the database objects.
-        ///     If initial catalog is not specified, but AttachDBFilename is specified, we generate a random database name based on the AttachDBFilename.
-        ///     Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name.
-        ///     However if we try to replicate the name under which it would be attached, the following scenario would fail:
-        ///     The file does not exist, but registered with database.
-        ///     The user calls:  If (DatabaseExists) DeleteDatabase
-        ///     CreateDatabase
-        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
+        /// Create the database and the database objects.
+        /// If initial catalog is not specified, but AttachDBFilename is specified, we generate a random database name based on the AttachDBFilename.
+        /// Note: this causes pollution of the db, as when the connection string is later used, the mdf will get attached under a different name.
+        /// However if we try to replicate the name under which it would be attached, the following scenario would fail:
+        /// The file does not exist, but registered with database.
+        /// The user calls:  If (DatabaseExists) DeleteDatabase
+        /// CreateDatabase
+        /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
@@ -1000,7 +1000,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Get the Ldf name given the Mdf full name
+        /// Get the Ldf name given the Mdf full name
         /// </summary>
         private static string GetLdfFileName(string dataFileName)
         {
@@ -1011,8 +1011,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates database name based on the given mdfFileName.
-        ///     The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
+        /// Generates database name based on the given mdfFileName.
+        /// The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
         /// </summary>
         private static string GenerateDatabaseName(string mdfFileName)
         {
@@ -1037,7 +1037,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Get the full mdf file name given the attachDBFile value from the connection string
+        /// Get the full mdf file name given the attachDBFile value from the connection string
         /// </summary>
         private static string GetMdfFileName(string attachDBFile)
         {
@@ -1065,17 +1065,17 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Determines whether the database for the given connection exists.
-        ///     There are three cases:
-        ///     1.  Initial Catalog = X, AttachDBFilename = null:   (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
-        ///     2.  Initial Catalog = X, AttachDBFilename = F:      if (SELECT Count(*) FROM sys.databases WHERE [name]= X) >  true,
-        ///     if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
-        ///     3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
-        ///     if the there are no databases corresponding to the given file return false, otherwise throw.
-        ///     Note: We open the connection to cover the scenario when the mdf exists, but is not attached.
-        ///     Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case.
-        ///     Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
-        ///     For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
+        /// Determines whether the database for the given connection exists.
+        /// There are three cases:
+        /// 1.  Initial Catalog = X, AttachDBFilename = null:   (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        /// 2.  Initial Catalog = X, AttachDBFilename = F:      if (SELECT Count(*) FROM sys.databases WHERE [name]= X) >  true,
+        /// if not, try to open the connection and then return (SELECT Count(*) FROM sys.databases WHERE [name]= X) > 0
+        /// 3.  Initial Catalog = null, AttachDBFilename = F:   Try to open the connection. If that succeeds the result is true, otherwise
+        /// if the there are no databases corresponding to the given file return false, otherwise throw.
+        /// Note: We open the connection to cover the scenario when the mdf exists, but is not attached.
+        /// Given that opening the connection would auto-attach it, it would not be appropriate to return false in this case.
+        /// Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
+        /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
@@ -1163,14 +1163,14 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Delete the database for the given connection.
-        ///     There are three cases:
-        ///     1.  If Initial Catalog is specified (X) drop database X
-        ///     2.  Else if AttachDBFilename is specified (F) drop all the databases corresponding to F
-        ///     if none throw
-        ///     3.  If niether the catalog not the file name is specified - throw
-        ///     Note that directly deleting the files does not work for a remote server.  However, even for not attached
-        ///     databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
+        /// Delete the database for the given connection.
+        /// There are three cases:
+        /// 1.  If Initial Catalog is specified (X) drop database X
+        /// 2.  Else if AttachDBFilename is specified (F) drop all the databases corresponding to F
+        /// if none throw
+        /// 3.  If niether the catalog not the file name is specified - throw
+        /// Note that directly deleting the files does not work for a remote server.  However, even for not attached
+        /// databases the current logic would work assuming the user does: if (DatabaseExists) DeleteDatabase
         /// </summary>
         /// <param name="connection"> Connection </param>
         /// <param name="commandTimeout"> Timeout for internal commands. </param>

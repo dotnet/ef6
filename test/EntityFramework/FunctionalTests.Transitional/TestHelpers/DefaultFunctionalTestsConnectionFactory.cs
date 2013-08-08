@@ -7,8 +7,8 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.Infrastructure;
 
     /// <summary>
-    ///     This connection factory is set in the functional tests app.config, but is then replaced by
-    ///     the Loaded event handler of <see cref="FunctionalTestsConfiguration" />.
+    /// This connection factory is set in the functional tests app.config, but is then replaced by
+    /// the Loaded event handler of <see cref="FunctionalTestsConfiguration" />.
     /// </summary>
     public class DefaultFunctionalTestsConnectionFactory : IDbConnectionFactory
     {

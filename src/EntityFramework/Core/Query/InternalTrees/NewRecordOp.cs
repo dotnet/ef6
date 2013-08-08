@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a new record constructor
+    /// Represents a new record constructor
     /// </summary>
     internal sealed class NewRecordOp : ScalarOp
     {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region constructors
 
         /// <summary>
-        ///     Basic constructor. All fields have a value specified
+        /// Basic constructor. All fields have a value specified
         /// </summary>
         internal NewRecordOp(TypeUsage type)
             : base(OpType.NewRecord, type)
@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Alternate form of the constructor. Only some fields have a value specified
-        ///     The arguments to the corresponding Node are exactly 1-1 with the fields
-        ///     described here.
-        ///     The missing fields are considered to be "null"
+        /// Alternate form of the constructor. Only some fields have a value specified
+        /// The arguments to the corresponding Node are exactly 1-1 with the fields
+        /// described here.
+        /// The missing fields are considered to be "null"
         /// </summary>
         internal NewRecordOp(TypeUsage type, List<EdmProperty> fields)
             : base(OpType.NewRecord, type)
@@ -57,15 +57,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     Pattern for transformation rules
+        /// Pattern for transformation rules
         /// </summary>
         internal static readonly NewRecordOp Pattern = new NewRecordOp();
 
         /// <summary>
-        ///     Determine if a value has been provided for the specified field.
-        ///     Returns the position of this field (ie) the specific argument in the Node's
-        ///     children. If no value has been provided for this field, then simply
-        ///     return false
+        /// Determine if a value has been provided for the specified field.
+        /// Returns the position of this field (ie) the specific argument in the Node's
+        /// children. If no value has been provided for this field, then simply
+        /// return false
         /// </summary>
         internal bool GetFieldPosition(EdmProperty field, out int fieldPosition)
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     List of all properties that have values specified
+        /// List of all properties that have values specified
         /// </summary>
         internal List<EdmProperty> Properties
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

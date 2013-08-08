@@ -5,12 +5,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Additional information for a "Table" node
-    ///     AugmentedTableNode - the augmentedTableNode is a subclass of AugmentedNode,
-    ///     and represents a ScanTable node. In addition to the information above, this
-    ///     class keeps track of all join edges that this node participates in,
-    ///     whether this table has been eliminated, and finally, how high in the tree
-    ///     this node is visible
+    /// Additional information for a "Table" node
+    /// AugmentedTableNode - the augmentedTableNode is a subclass of AugmentedNode,
+    /// and represents a ScanTable node. In addition to the information above, this
+    /// class keeps track of all join edges that this node participates in,
+    /// whether this table has been eliminated, and finally, how high in the tree
+    /// this node is visible
     /// </summary>
     internal sealed class AugmentedTableNode : AugmentedNode
     {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        ///     Basic constructor
+        /// Basic constructor
         /// </summary>
         /// <param name="id"> node id </param>
         /// <param name="node"> scan table node </param>
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region public properties
 
         /// <summary>
-        ///     The Table
+        /// The Table
         /// </summary>
         internal Table Table
         {
@@ -58,12 +58,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The highest node (id) at which this table is visible
+        /// The highest node (id) at which this table is visible
         /// </summary>
         internal int LastVisibleId { get; set; }
 
         /// <summary>
-        ///     Has this table been eliminated
+        /// Has this table been eliminated
         /// </summary>
         internal bool IsEliminated
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The replacement table (if any) for this table
+        /// The replacement table (if any) for this table
         /// </summary>
         internal AugmentedTableNode ReplacementTable
         {
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     New location for this table
+        /// New location for this table
         /// </summary>
         internal int NewLocationId
         {
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Has this table "moved" ?
+        /// Has this table "moved" ?
         /// </summary>
         internal bool IsMoved
         {
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the list of nullable columns (that require special handling)
+        /// Get the list of nullable columns (that require special handling)
         /// </summary>
         internal VarVec NullableColumns { get; set; }
 

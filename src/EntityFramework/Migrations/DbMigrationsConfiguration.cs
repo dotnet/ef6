@@ -16,10 +16,10 @@ namespace System.Data.Entity.Migrations
     using System.Reflection;
 
     /// <summary>
-    ///     Configuration relating to the use of migrations for a given model.
-    ///     You will typically create a configuration class that derives
-    ///     from <see cref="DbMigrationsConfiguration{TContext}" /> rather than
-    ///     using this class.
+    /// Configuration relating to the use of migrations for a given model.
+    /// You will typically create a configuration class that derives
+    /// from <see cref="DbMigrationsConfiguration{TContext}" /> rather than
+    /// using this class.
     /// </summary>
     public class DbMigrationsConfiguration
     {
@@ -45,7 +45,7 @@ namespace System.Data.Entity.Migrations
         private int? _commandTimeout;
 
         /// <summary>
-        ///     Initializes a new instance of the DbMigrationsConfiguration class.
+        /// Initializes a new instance of the DbMigrationsConfiguration class.
         /// </summary>
         public DbMigrationsConfiguration()
             : this(new Lazy<IDbDependencyResolver>(() => DbConfiguration.DependencyResolver))
@@ -60,14 +60,14 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating if automatic migrations can be used when migration the database.
+        /// Gets or sets a value indicating if automatic migrations can be used when migration the database.
         /// </summary>
         public bool AutomaticMigrationsEnabled { get; set; }
 
         /// <summary>
-        ///     Gets or sets the string used to distinguish migrations belonging to this configuration
-        ///     from migrations belonging to other configurations using the same database.
-        ///     This property enables migrations from multiple different models to be applied to applied to a single database.
+        /// Gets or sets the string used to distinguish migrations belonging to this configuration
+        /// from migrations belonging to other configurations using the same database.
+        /// This property enables migrations from multiple different models to be applied to applied to a single database.
         /// </summary>
         public string ContextKey
         {
@@ -81,13 +81,13 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating if data loss is acceptable during automatic migration.
-        ///     If set to false an exception will be thrown if data loss may occur as part of an automatic migration.
+        /// Gets or sets a value indicating if data loss is acceptable during automatic migration.
+        /// If set to false an exception will be thrown if data loss may occur as part of an automatic migration.
         /// </summary>
         public bool AutomaticMigrationDataLossAllowed { get; set; }
 
         /// <summary>
-        ///     Adds a new SQL generator to be used for a given database provider.
+        /// Adds a new SQL generator to be used for a given database provider.
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to set the SQL generator for. </param>
         /// <param name="migrationSqlGenerator"> The SQL generator to be used. </param>
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets the SQL generator that is set to be used with a given database provider.
+        /// Gets the SQL generator that is set to be used with a given database provider.
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to get the SQL generator for. </param>
         /// <returns> The SQL generator that is set for the database provider. </returns>
@@ -126,12 +126,12 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Adds a new factory for creating <see cref="HistoryContext"/> instances to be used for a given database provider.
+        /// Adds a new factory for creating <see cref="HistoryContext"/> instances to be used for a given database provider.
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to set the SQL generator for. </param>
         /// <param name="factory">
-        ///     A factory for creating <see cref="HistoryContext" /> instances for a given <see cref="DbConnection" /> and
-        ///     <see cref="String" /> representing the default schema.
+        /// A factory for creating <see cref="HistoryContext" /> instances for a given <see cref="DbConnection" /> and
+        /// <see cref="String" /> representing the default schema.
         /// </param>
         public void SetHistoryContextFactory(string providerInvariantName, Func<DbConnection, string, HistoryContext> factory)
         {
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets the history context factory that is set to be used with a given database provider.
+        /// Gets the history context factory that is set to be used with a given database provider.
         /// </summary>
         /// <param name="providerInvariantName"> Name of the database provider to get thefactory for. </param>
         /// <returns> The history context factory that is set for the database provider. </returns>
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets the derived DbContext representing the model to be migrated.
+        /// Gets or sets the derived DbContext representing the model to be migrated.
         /// </summary>
         public Type ContextType
         {
@@ -183,16 +183,16 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets the namespace used for code-based migrations.
+        /// Gets or sets the namespace used for code-based migrations.
         /// </summary>
         public string MigrationsNamespace { get; set; }
 
         // Allowed to be null
 
         /// <summary>
-        ///     Gets or sets the sub-directory that code-based migrations are stored in.
-        ///     Note that this property must be set to a relative path for a sub-directory under the
-        ///     Visual Studio project root; it cannot be set to an absolute path.
+        /// Gets or sets the sub-directory that code-based migrations are stored in.
+        /// Note that this property must be set to a relative path for a sub-directory under the
+        /// Visual Studio project root; it cannot be set to an absolute path.
         /// </summary>
         public string MigrationsDirectory
         {
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets the code generator to be used when scaffolding migrations.
+        /// Gets or sets the code generator to be used when scaffolding migrations.
         /// </summary>
         public MigrationCodeGenerator CodeGenerator
         {
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets the assembly containing code-based migrations.
+        /// Gets or sets the assembly containing code-based migrations.
         /// </summary>
         public Assembly MigrationsAssembly
         {
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets a value to override the connection of the database to be migrated.
+        /// Gets or sets a value to override the connection of the database to be migrated.
         /// </summary>
         public DbConnectionInfo TargetDatabase
         {
@@ -253,9 +253,9 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets or sets the timeout value used for the individual commands within a
-        ///     migration. A null value indicates that the default value of the underlying
-        ///     provider will be used.
+        /// Gets or sets the timeout value used for the individual commands within a
+        /// migration. A null value indicates that the default value of the underlying
+        /// provider will be used.
         /// </summary>
         public int? CommandTimeout
         {

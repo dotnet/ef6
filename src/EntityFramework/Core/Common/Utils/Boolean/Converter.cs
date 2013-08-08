@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
 
     /// <summary>
-    ///     Handles conversion of expressions to different forms (decision diagram, etc)
+    /// Handles conversion of expressions to different forms (decision diagram, etc)
     /// </summary>
     internal sealed class Converter<T_Identifier>
     {
@@ -44,28 +44,28 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         }
 
         /// <summary>
-        ///     Converts the decision diagram (Vertex) wrapped by this converter and translates it into DNF
-        ///     and CNF forms. I'll first explain the strategy with respect to DNF, and then explain how CNF
-        ///     is achieved in parallel. A DNF sentence representing the expression is simply a disjunction
-        ///     of every rooted path through the decision diagram ending in one. For instance, given the
-        ///     following decision diagram:
-        ///     A
-        ///     0/ \1
-        ///     B     C
-        ///     0/ \1 0/ \1
-        ///     One   Zero   One
-        ///     the following paths evaluate to 'One'
-        ///     !A, !B
-        ///     A, C
-        ///     and the corresponding DNF is (!A.!B) + (A.C)
-        ///     It is easy to compute CNF from the DNF of the negation, e.g.:
-        ///     !((A.B) + (C.D)) iff. (!A+!B) . (!C+!D)
-        ///     To compute the CNF form in parallel, we negate the expression (by swapping One and Zero sinks)
-        ///     and collect negation of the literals along the path. In the above example, the following paths
-        ///     evaluate to 'Zero':
-        ///     !A, B
-        ///     A, !C
-        ///     and the CNF (which takes the negation of all literals in the path) is (!A+B) . (A+!C)
+        /// Converts the decision diagram (Vertex) wrapped by this converter and translates it into DNF
+        /// and CNF forms. I'll first explain the strategy with respect to DNF, and then explain how CNF
+        /// is achieved in parallel. A DNF sentence representing the expression is simply a disjunction
+        /// of every rooted path through the decision diagram ending in one. For instance, given the
+        /// following decision diagram:
+        /// A
+        /// 0/ \1
+        /// B     C
+        /// 0/ \1 0/ \1
+        /// One   Zero   One
+        /// the following paths evaluate to 'One'
+        /// !A, !B
+        /// A, C
+        /// and the corresponding DNF is (!A.!B) + (A.C)
+        /// It is easy to compute CNF from the DNF of the negation, e.g.:
+        /// !((A.B) + (C.D)) iff. (!A+!B) . (!C+!D)
+        /// To compute the CNF form in parallel, we negate the expression (by swapping One and Zero sinks)
+        /// and collect negation of the literals along the path. In the above example, the following paths
+        /// evaluate to 'Zero':
+        /// !A, B
+        /// A, !C
+        /// and the CNF (which takes the negation of all literals in the path) is (!A+B) . (A+!C)
         /// </summary>
         private void InitializeNormalForms()
         {

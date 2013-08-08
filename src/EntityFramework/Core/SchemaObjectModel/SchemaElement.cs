@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml.Schema;
 
     /// <summary>
-    ///     Summary description for SchemaElement.
+    /// Summary description for SchemaElement.
     /// </summary>
     [DebuggerDisplay("Name={Name}")]
     internal abstract class SchemaElement
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Internal Methods
 
         /// <summary>
-        ///     Validates this element and its children
+        /// Validates this element and its children
         /// </summary>
         internal virtual void Validate()
         {
@@ -216,7 +216,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Set the current line number and position for an XmlReader
+        /// Set the current line number and position for an XmlReader
         /// </summary>
         /// <param name="reader"> the reader whose position is desired </param>
         internal void GetPositionInfo(XmlReader reader)
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Get the current line number and position for an XmlReader
+        /// Get the current line number and position for an XmlReader
         /// </summary>
         /// <param name="reader"> the reader whose position is desired </param>
         /// <param name="lineNumber"> the line number </param>
@@ -325,7 +325,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Use to handle an attribute with an int data type
+        /// Use to handle an attribute with an int data type
         /// </summary>
         /// <param name="reader"> the reader positioned at the int attribute </param>
         /// <param name="field"> The int field to be given the value found </param>
@@ -343,7 +343,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Use to handle an attribute with an int data type
+        /// Use to handle an attribute with an int data type
         /// </summary>
         /// <param name="reader"> the reader positioned at the int attribute </param>
         /// <param name="field"> The int field to be given the value found </param>
@@ -373,7 +373,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Use this to jump through an element that doesn't need any processing
+        /// Use this to jump through an element that doesn't need any processing
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at an element </param>
         protected virtual void SkipThroughElement(XmlReader reader)
@@ -459,7 +459,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Call handler for the current attribute
+        /// Call handler for the current attribute
         /// </summary>
         /// <param name="reader"> XmlReader positioned at the attribute </param>
         private void ParseAttribute(XmlReader reader)
@@ -507,7 +507,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     This overload assumes the default namespace
+        /// This overload assumes the default namespace
         /// </summary>
         internal static bool CanHandleAttribute(XmlReader reader, string localName)
         {
@@ -618,7 +618,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Call handler for the current element
+        /// Call handler for the current element
         /// </summary>
         /// <param name="reader"> XmlReader positioned at the element </param>
         /// <returns> true if element content should be skipped </returns>
@@ -667,7 +667,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handle text data.
+        /// Handle text data.
         /// </summary>
         /// <param name="reader"> XmlReader positioned at Text, CData, or SignificantWhitespace </param>
         private void ParseText(XmlReader reader)

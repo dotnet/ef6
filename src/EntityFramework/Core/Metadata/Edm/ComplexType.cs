@@ -10,13 +10,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the Edm Complex Type.  This can be used to configure complex types
-    ///     from a conceptual-space model-based convention. Complex types are not supported in the store model.
+    /// Represents the Edm Complex Type.  This can be used to configure complex types
+    /// from a conceptual-space model-based convention. Complex types are not supported in the store model.
     /// </summary>
     public class ComplexType : StructuralType
     {
         /// <summary>
-        ///     Initializes a new instance of Complex Type with the given properties
+        /// Initializes a new instance of Complex Type with the given properties
         /// </summary>
         /// <param name="name"> The name of the complex type </param>
         /// <param name="namespaceName"> The namespace name of the type </param>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of Complex Type - required for bootstraping code
+        /// Initializes a new instance of Complex Type - required for bootstraping code
         /// </summary>
         internal ComplexType()
         {
@@ -43,13 +43,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -57,13 +57,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the list of properties for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />.
+        /// Gets the list of properties for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.ComplexType" />
+        /// .
         /// </returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
@@ -75,9 +75,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's
-        ///     Members collection. If this method returns without throwing, it is assumed
-        ///     the member is valid.
+        /// Validates a EdmMember object to determine if it can be added to this type's
+        /// Members collection. If this method returns without throwing, it is assumed
+        /// the member is valid.
         /// </summary>
         /// <param name="member"> The member to validate </param>
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a new instance of the <see cref="ComplexType " /> type.
+        /// Creates a new instance of the <see cref="ComplexType " /> type.
         /// </summary>
         /// <param name="name">The name of the complex type.</param>
         /// <param name="namespaceName">The namespace of the complex type.</param>
@@ -98,10 +98,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
         /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or members argument is null.</exception>
         /// <returns>
-        ///     A new instance a the <see cref="ComplexType " /> type.
+        /// A new instance a the <see cref="ComplexType " /> type.
         /// </returns>
         /// <notes>
-        ///     The newly created <see cref="ComplexType " /> will be read only.
+        /// The newly created <see cref="ComplexType " /> will be read only.
         /// </notes>
         public static ComplexType Create(
             string name,
@@ -137,14 +137,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly Type _type;
 
         /// <summary>
-        ///     cached dynamic method to construct a CLR instance
+        /// cached dynamic method to construct a CLR instance
         /// </summary>
         private Func<object> _constructor;
 
         private readonly string _cspaceTypeName;
 
         /// <summary>
-        ///     Initializes a new instance of Complex Type with properties from the type.
+        /// Initializes a new instance of Complex Type with properties from the type.
         /// </summary>
         /// <param name="clrType"> The CLR type to construct from </param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
@@ -168,7 +168,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to construct a CLR instance
+        /// cached dynamic method to construct a CLR instance
         /// </summary>
         internal Func<object> Constructor
         {

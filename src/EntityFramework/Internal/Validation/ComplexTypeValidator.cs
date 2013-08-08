@@ -8,15 +8,15 @@ namespace System.Data.Entity.Internal.Validation
     using System.Diagnostics;
 
     /// <summary>
-    ///     Validator used to validate a property of a given EDM ComplexType.
+    /// Validator used to validate a property of a given EDM ComplexType.
     /// </summary>
     /// <remarks>
-    ///     This is a composite validator.
+    /// This is a composite validator.
     /// </remarks>
     internal class ComplexTypeValidator : TypeValidator
     {
         /// <summary>
-        ///     Creates an instance <see cref="EntityValidator" /> for a given EDM complex type.
+        /// Creates an instance <see cref="EntityValidator" /> for a given EDM complex type.
         /// </summary>
         /// <param name="propertyValidators"> Property validators. </param>
         /// <param name="typeLevelValidators"> Type level validators. </param>
@@ -28,12 +28,12 @@ namespace System.Data.Entity.Internal.Validation
         }
 
         /// <summary>
-        ///     Validates an instance.
+        /// Validates an instance.
         /// </summary>
         /// <param name="entityValidationContext"> Entity validation context. Must not be null. </param>
         /// <param name="property"> The entry for the complex property. Null if validating an entity. </param>
         /// <returns>
-        ///     <see cref="DbEntityValidationResult" /> instance. Never null.
+        /// <see cref="DbEntityValidationResult" /> instance. Never null.
         /// </returns>
         public new IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalPropertyEntry property)
@@ -42,16 +42,16 @@ namespace System.Data.Entity.Internal.Validation
         }
 
         /// <summary>
-        ///     Validates type properties. Any validation errors will be added to <paramref name="validationErrors" />
-        ///     collection.
+        /// Validates type properties. Any validation errors will be added to <paramref name="validationErrors" />
+        /// collection.
         /// </summary>
         /// <param name="entityValidationContext"> Validation context. Must not be null. </param>
         /// <param name="parentProperty"> The entry for the complex property. Null if validating an entity. </param>
         /// <param name="validationErrors"> Collection of validation errors. Any validation errors will be added to it. </param>
         /// <remarks>
-        ///     Note that <paramref name="validationErrors" /> will be modified by this method. Errors should be only added,
-        ///     never removed or changed. Taking a collection as a modifiable parameter saves a couple of memory allocations
-        ///     and a merge of validation error lists per entity.
+        /// Note that <paramref name="validationErrors" /> will be modified by this method. Errors should be only added,
+        /// never removed or changed. Taking a collection as a modifiable parameter saves a couple of memory allocations
+        /// and a merge of validation error lists per entity.
         /// </remarks>
         protected override void ValidateProperties(
             EntityValidationContext entityValidationContext, InternalPropertyEntry parentProperty,

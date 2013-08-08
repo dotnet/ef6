@@ -17,8 +17,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for creating and managing connections at the DbContext, DbContextFactory, and Database level.
-    ///     Note that the LazyConnectionTests in the UnitTests project cover more low-level cases that don't require an actual context.
+    /// Tests for creating and managing connections at the DbContext, DbContextFactory, and Database level.
+    /// Note that the LazyConnectionTests in the UnitTests project cover more low-level cases that don't require an actual context.
     /// </summary>
     public class ConnectionTests : FunctionalTestBase
     {

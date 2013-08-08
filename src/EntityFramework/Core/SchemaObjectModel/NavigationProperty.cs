@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Summary description for Association.
+    /// Summary description for Association.
     /// </summary>
     [DebuggerDisplay(
         "Name={Name}, Relationship={_unresolvedRelationshipName}, FromRole={_unresolvedFromEndRole}, ToRole={_unresolvedToEndRole}")]
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Gets the Type of the property
+        /// Gets the Type of the property
         /// </summary>
         public override SchemaType Type
         {

@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
 
     /// <summary>
-    ///     An implementation of <see cref="IPropertyValuesItem" /> for an item in a <see cref="DbDataRecordPropertyValues" />.
+    /// An implementation of <see cref="IPropertyValuesItem" /> for an item in a <see cref="DbDataRecordPropertyValues" />.
     /// </summary>
     internal class DbDataRecordPropertyValuesItem : IPropertyValuesItem
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Internal
         private object _value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbDataRecordPropertyValuesItem" /> class.
+        /// Initializes a new instance of the <see cref="DbDataRecordPropertyValuesItem" /> class.
         /// </summary>
         /// <param name="dataRecord"> The data record. </param>
         /// <param name="ordinal"> The ordinal. </param>
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Internal
         #region IPropertyValuesItem implementation
 
         /// <summary>
-        ///     Gets or sets the value of the property represented by this item.
+        /// Gets or sets the value of the property represented by this item.
         /// </summary>
         /// <value> The value. </value>
         public object Value
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the name of the property.
+        /// Gets the name of the property.
         /// </summary>
         /// <value> The name. </value>
         public string Name
@@ -57,10 +57,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this item represents a complex property.
+        /// Gets a value indicating whether this item represents a complex property.
         /// </summary>
         /// <value>
-        ///     <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> .
+        /// <c>true</c> If this instance represents a complex property; otherwise, <c>false</c> .
         /// </value>
         public bool IsComplex
         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the type of the underlying property.
+        /// Gets the type of the underlying property.
         /// </summary>
         /// <value> The property type. </value>
         public Type Type

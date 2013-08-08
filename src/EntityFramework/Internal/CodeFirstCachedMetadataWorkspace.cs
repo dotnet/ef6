@@ -14,7 +14,7 @@ namespace System.Data.Entity.Internal
     using System.Reflection;
 
     /// <summary>
-    ///     Implements ICachedMetadataWorkspace for a Code First model.
+    /// Implements ICachedMetadataWorkspace for a Code First model.
     /// </summary>
     internal class CodeFirstCachedMetadataWorkspace : ICachedMetadataWorkspace
     {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal
         private readonly string _defaultContainerName;
 
         /// <summary>
-        ///     Builds and stores the workspace based on the given code first configuration.
+        /// Builds and stores the workspace based on the given code first configuration.
         /// </summary>
         /// <param name="databaseMapping"> The code first EDM model. </param>
         public CodeFirstCachedMetadataWorkspace(DbDatabaseMapping databaseMapping)
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Internal
         #region ICachedMetadataWorkspace implementation
 
         /// <summary>
-        ///     Gets the <see cref="MetadataWorkspace" />.
-        ///     If the workspace is not compatible with the provider manifest obtained from the given
-        ///     connection then an exception is thrown.
+        /// Gets the <see cref="MetadataWorkspace" />.
+        /// If the workspace is not compatible with the provider manifest obtained from the given
+        /// connection then an exception is thrown.
         /// </summary>
         /// <param name="connection"> The connection to use to create or check SSDL provider info. </param>
         /// <returns> The workspace. </returns>
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The default container name for code first is the container name that is set from the DbModelBuilder
+        /// The default container name for code first is the container name that is set from the DbModelBuilder
         /// </summary>
         public string DefaultContainerName
         {
@@ -76,8 +76,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The list of assemblies that contain entity types for this workspace, which may be empty, but
-        ///     will never be null.
+        /// The list of assemblies that contain entity types for this workspace, which may be empty, but
+        /// will never be null.
         /// </summary>
         public IEnumerable<Assembly> Assemblies
         {
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The provider info used to construct the workspace.
+        /// The provider info used to construct the workspace.
         /// </summary>
         public DbProviderInfo ProviderInfo
         {

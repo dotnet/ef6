@@ -634,7 +634,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         }
 
         /// <summary>
-        ///     Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
+        /// Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
         /// </summary>
         internal static string OpToEsql(CellTreeOpType opType)
         {

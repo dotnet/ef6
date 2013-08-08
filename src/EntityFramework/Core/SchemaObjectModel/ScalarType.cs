@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     This is an adapter to make PrimitiveTypeKindData fit in the Schema Object Model tree
+    /// This is an adapter to make PrimitiveTypeKindData fit in the Schema Object Model tree
     /// </summary>
     internal sealed class ScalarType : SchemaType
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private readonly PrimitiveType _primitiveType;
 
         /// <summary>
-        ///     Construct an internal (not from schema) CDM scalar type
+        /// Construct an internal (not from schema) CDM scalar type
         /// </summary>
         /// <param name="parentElement"> the owning schema </param>
         /// <param name="typeName"> the naem of the type </param>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     try to parse a string
+        /// try to parse a string
         /// </summary>
         /// <param name="text"> the string to parse </param>
         /// <param name="value"> the value of the string </param>
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The type kind of this type.
+        /// The type kind of this type.
         /// </summary>
         public PrimitiveTypeKind TypeKind
         {
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Returns the PrimitiveType of the scalar type.
+        /// Returns the PrimitiveType of the scalar type.
         /// </summary>
         public PrimitiveType Type
         {
@@ -208,8 +208,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Parses the default value for Edm Type Time based on the DateTime format "HH:mm:ss.fffffffz".
-        ///     The value is first converted to DateTime value and then converted to TimeSpan.
+        /// Parses the default value for Edm Type Time based on the DateTime format "HH:mm:ss.fffffffz".
+        /// The value is first converted to DateTime value and then converted to TimeSpan.
         /// </summary>
         private static bool TryParseTime(string text, out object value)
         {

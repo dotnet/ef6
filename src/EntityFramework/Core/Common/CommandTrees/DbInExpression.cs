@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Linq;
 
     /// <summary>
-    ///     Represents a boolean expression that tests whether a specified item matches any element in a list.
+    /// Represents a boolean expression that tests whether a specified item matches any element in a list.
     /// </summary>
     public class DbInExpression : DbExpression
     {
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a DbExpression that specifies the item to be matched.
+        /// Gets a DbExpression that specifies the item to be matched.
         /// </summary>
         public DbExpression Item
         {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the list of DbExpression to test for a match.
+        /// Gets the list of DbExpression to test for a match.
         /// </summary>
         public IList<DbExpression> List
         {
@@ -48,12 +48,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     The visitor pattern method for expression visitors that do not produce a result value.
+        /// The visitor pattern method for expression visitors that do not produce a result value.
         /// </summary>
         /// <param name="visitor"> An instance of DbExpressionVisitor. </param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
+        /// <paramref name="visitor" />
+        /// is null
         /// </exception>
         public override void Accept(DbExpressionVisitor visitor)
         {
@@ -63,18 +63,18 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     The visitor pattern method for expression visitors that produce a result value of a specific type.
+        /// The visitor pattern method for expression visitors that produce a result value of a specific type.
         /// </summary>
         /// <param name="visitor"> An instance of a typed DbExpressionVisitor that produces a result value of type TResultType. </param>
         /// <typeparam name="TResultType">
-        ///     The type of the result produced by <paramref name="visitor" />
+        /// The type of the result produced by <paramref name="visitor" />
         /// </typeparam>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="visitor" />
-        ///     is null
+        /// <paramref name="visitor" />
+        /// is null
         /// </exception>
         /// <returns>
-        ///     An instance of <typeparamref name="TResultType" /> .
+        /// An instance of <typeparamref name="TResultType" /> .
         /// </returns>
         public override TResultType Accept<TResultType>(DbExpressionVisitor<TResultType> visitor)
         {

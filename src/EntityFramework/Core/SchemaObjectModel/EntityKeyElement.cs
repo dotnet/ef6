@@ -9,14 +9,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an Key element in an EntityType element.
+    /// Represents an Key element in an EntityType element.
     /// </summary>
     internal sealed class EntityKeyElement : SchemaElement
     {
         private List<PropertyRefElement> _keyProperties;
 
         /// <summary>
-        ///     Constructs an EntityContainerAssociationSetEnd
+        /// Constructs an EntityContainerAssociationSetEnd
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityKeyElement(SchemaEntityType parentElement)
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Used during the resolve phase to resolve the type name to the object that represents that type
+        /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Validate all the key properties
+        /// Validate all the key properties
         /// </summary>
         internal override void Validate()
         {

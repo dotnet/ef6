@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     /// <summary>
-    ///     Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
+    /// Convention to distinguish between optional and required relationships based on CLR nullability of the foreign key property.
     /// </summary>
     public class ForeignKeyAssociationMultiplicityConvention : IConceptualModelConvention<AssociationType>
     {

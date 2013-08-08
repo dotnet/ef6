@@ -5,10 +5,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Specifies a sort key that can be used as part of the sort order in a
-    ///     <see
-    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" />
-    ///     . This class cannot be inherited.
+    /// Specifies a sort key that can be used as part of the sort order in a
+    /// <see
+    ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" />
+    /// . This class cannot be inherited.
     /// </summary>
     public sealed class DbSortClause
     {
@@ -40,10 +40,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the value for this sort key.
         /// </returns>
         public DbExpression Expression
         {

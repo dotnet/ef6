@@ -8,8 +8,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     A subclass of the TypeInfo class above that only represents information
-    ///     about "root" types
+    /// A subclass of the TypeInfo class above that only represents information
+    /// about "root" types
     /// </summary>
     internal class RootTypeInfo : TypeInfo
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Constructor
 
         /// <summary>
-        ///     Constructor for a root type
+        /// Constructor for a root type
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -49,19 +49,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region "public" surface area
 
         /// <summary>
-        ///     Kind of the typeid column (if any)
+        /// Kind of the typeid column (if any)
         /// </summary>
         internal TypeIdKind TypeIdKind { get; set; }
 
         /// <summary>
-        ///     Datatype of the typeid column (if any)
+        /// Datatype of the typeid column (if any)
         /// </summary>
         internal TypeUsage TypeIdType { get; set; }
 
         /// <summary>
-        ///     Add a mapping from the propertyRef (of the old type) to the
-        ///     corresponding property in the new type.
-        ///     NOTE: Only to be used by StructuredTypeInfo
+        /// Add a mapping from the propertyRef (of the old type) to the
+        /// corresponding property in the new type.
+        /// NOTE: Only to be used by StructuredTypeInfo
         /// </summary>
         internal void AddPropertyMapping(PropertyRef propertyRef, EdmProperty newProperty)
         {
@@ -81,8 +81,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Adds a new property reference to the list of desired properties
-        ///     NOTE: Only to be used by StructuredTypeInfo
+        /// Adds a new property reference to the list of desired properties
+        /// NOTE: Only to be used by StructuredTypeInfo
         /// </summary>
         internal void AddPropertyRef(PropertyRef propertyRef)
         {
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Flattened record version of the type
+        /// Flattened record version of the type
         /// </summary>
         internal new RowType FlattenedType
         {
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     TypeUsage that encloses the Flattened record version of the type
+        /// TypeUsage that encloses the Flattened record version of the type
         /// </summary>
         internal new TypeUsage FlattenedTypeUsage
         {
@@ -111,7 +111,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets map information for types mapped using simple discriminator pattern.
+        /// Gets map information for types mapped using simple discriminator pattern.
         /// </summary>
         internal ExplicitDiscriminatorMap DiscriminatorMap
         {
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the property describing the entityset (if any)
+        /// Get the property describing the entityset (if any)
         /// </summary>
         internal new EdmProperty EntitySetIdProperty
         {
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Get the list of property refs for this type
+        /// Get the list of property refs for this type
         /// </summary>
         internal new IEnumerable<PropertyRef> PropertyRefList
         {
@@ -140,11 +140,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Determines the offset for structured types in Flattened type. For instance, if the original type is of the form:
-        ///     { int X, ComplexType Y }
-        ///     and the flattened type is of the form:
-        ///     { int X, Y_ComplexType_Prop1, Y_ComplexType_Prop2 }
-        ///     GetNestedStructureOffset(Y) returns 1
+        /// Determines the offset for structured types in Flattened type. For instance, if the original type is of the form:
+        /// { int X, ComplexType Y }
+        /// and the flattened type is of the form:
+        /// { int X, Y_ComplexType_Prop1, Y_ComplexType_Prop2 }
+        /// GetNestedStructureOffset(Y) returns 1
         /// </summary>
         /// <param name="property"> Complex property. </param>
         /// <returns> Offset. </returns>
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Try get the new property for the supplied propertyRef
+        /// Try get the new property for the supplied propertyRef
         /// </summary>
         /// <param name="propertyRef"> property reference (on the old type) </param>
         /// <param name="throwIfMissing"> throw if the property is not found </param>
@@ -191,8 +191,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The typeid property in the flattened type - applies only to nominal types
-        ///     this will be used as the type discriminator column.
+        /// The typeid property in the flattened type - applies only to nominal types
+        /// this will be used as the type discriminator column.
         /// </summary>
         internal new EdmProperty TypeIdProperty
         {

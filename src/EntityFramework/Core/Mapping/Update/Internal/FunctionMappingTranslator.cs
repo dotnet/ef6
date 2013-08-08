@@ -12,15 +12,15 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
 
     /// <summary>
-    ///     Modification function mapping translators are defined per extent (entity set
-    ///     or association set) and manage the creation of function commands.
+    /// Modification function mapping translators are defined per extent (entity set
+    /// or association set) and manage the creation of function commands.
     /// </summary>
     internal abstract class ModificationFunctionMappingTranslator
     {
         /// <summary>
-        ///     Requires: this translator must be registered to handle the entity set
-        ///     for the given state entry.
-        ///     Translates the given state entry to a command.
+        /// Requires: this translator must be registered to handle the entity set
+        /// for the given state entry.
+        /// Translates the given state entry to a command.
         /// </summary>
         /// <param name="translator"> Parent update translator (global state for the workload) </param>
         /// <param name="stateEntry"> State entry to translate. Must belong to the entity/association set handled by this translator </param>
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             ExtractedStateEntry stateEntry);
 
         /// <summary>
-        ///     Initialize a translator for the given entity set mapping.
+        /// Initialize a translator for the given entity set mapping.
         /// </summary>
         /// <param name="setMapping"> Entity set mapping. </param>
         /// <returns> Translator. </returns>
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Initialize a translator for the given association set mapping.
+        /// Initialize a translator for the given association set mapping.
         /// </summary>
         /// <param name="setMapping"> Association set mapping. </param>
         /// <returns> Translator. </returns>

@@ -7,14 +7,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     A column map that represents a ref column.
+    /// A column map that represents a ref column.
     /// </summary>
     internal class RefColumnMap : ColumnMap
     {
         private readonly EntityIdentity m_entityIdentity;
 
         /// <summary>
-        ///     Constructor for a ref column
+        /// Constructor for a ref column
         /// </summary>
         /// <param name="type"> column datatype </param>
         /// <param name="name"> column name </param>
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the entity identity information for this ref
+        /// Get the entity identity information for this ref
         /// </summary>
         internal EntityIdentity EntityIdentity
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(

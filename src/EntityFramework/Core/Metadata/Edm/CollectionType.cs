@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Text;
 
     /// <summary>
-    ///     Represents the Edm Collection Type
+    /// Represents the Edm Collection Type
     /// </summary>
     public class CollectionType : EdmType
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a CollectionType object with the element type it contains
+        /// The constructor for constructing a CollectionType object with the element type it contains
         /// </summary>
         /// <param name="elementType"> The element type that this collection type contains </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
+        /// The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
         /// </summary>
         /// <param name="elementType"> The element type that this collection type contains </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
@@ -45,13 +45,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly TypeUsage _typeUsage;
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -59,16 +59,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
-        ///     object includes and facets for that type.
+        /// Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        /// object includes and facets for that type.
         /// </summary>
         /// <returns>
-        ///     The instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
-        ///     object includes and facets for that type.
+        /// The instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains the type of the element that this current
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.CollectionType" />
+        /// object includes and facets for that type.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public virtual TypeUsage TypeUsage
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Constructs the name of the collection type
+        /// Constructs the name of the collection type
         /// </summary>
         /// <param name="typeUsage"> The typeusage for the element type that this collection type refers to </param>
         /// <returns> The identity of the resulting collection type </returns>
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Override EdmEquals to support value comparison of TypeUsage property
+        /// Override EdmEquals to support value comparison of TypeUsage property
         /// </summary>
         internal override bool EdmEquals(MetadataItem item)
         {

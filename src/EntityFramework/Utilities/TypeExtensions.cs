@@ -62,15 +62,15 @@ namespace System.Data.Entity.Utilities
         }
 
         /// <summary>
-        ///     Determine if the given type type implements the given generic interface or derives from the given generic type,
-        ///     and if so return the element type of the collection. If the type implements the generic interface several times
-        ///     <c>null</c> will be returned.
+        /// Determine if the given type type implements the given generic interface or derives from the given generic type,
+        /// and if so return the element type of the collection. If the type implements the generic interface several times
+        /// <c>null</c> will be returned.
         /// </summary>
         /// <param name="type"> The type to examine. </param>
         /// <param name="interfaceOrBaseType"> The generic type to be queried for. </param>
         /// <returns> 
-        ///     <c>null</c> if <paramref name="interfaceOrBaseType"/> isn't implemented or implemented multiple times,
-        ///     otherwise the generic argument.
+        /// <c>null</c> if <paramref name="interfaceOrBaseType"/> isn't implemented or implemented multiple times,
+        /// otherwise the generic argument.
         /// </returns>
         public static Type TryGetElementType(this Type type, Type interfaceOrBaseType)
         {
@@ -92,13 +92,13 @@ namespace System.Data.Entity.Utilities
         }
 
         /// <summary>
-        ///     Determine if the given type type implements the given generic interface or derives from the given generic type,
-        ///     and if so return the concrete types implemented.
+        /// Determine if the given type type implements the given generic interface or derives from the given generic type,
+        /// and if so return the concrete types implemented.
         /// </summary>
         /// <param name="type"> The type to examine. </param>
         /// <param name="interfaceOrBaseType"> The generic type to be queried for. </param>
         /// <returns> 
-        ///     The generic types constructed from <paramref name="interfaceOrBaseType"/> and implemented by <paramref name="type"/>.
+        /// The generic types constructed from <paramref name="interfaceOrBaseType"/> and implemented by <paramref name="type"/>.
         /// </returns>
         public static IEnumerable<Type> GetGenericTypeImplementations(this Type type, Type interfaceOrBaseType)
         {
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Utilities
         }
 
         /// <summary>
-        ///     Returns true if a variable of this type can be assigned a null value
+        /// Returns true if a variable of this type can be assigned a null value
         /// </summary>
         /// <returns> True if a reference type or a nullable value type, false otherwise </returns>
         public static bool IsNullable(this Type type)

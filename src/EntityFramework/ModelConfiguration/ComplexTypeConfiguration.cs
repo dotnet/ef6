@@ -12,10 +12,10 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Allows configuration to be performed for an complex type in a model.
-    ///     A ComplexTypeConfiguration can be obtained via the ComplexType method on
-    ///     <see cref="DbModelBuilder" /> or a custom type derived from ComplexTypeConfiguration
-    ///     can be registered via the Configurations property on <see cref="DbModelBuilder" />.
+    /// Allows configuration to be performed for an complex type in a model.
+    /// A ComplexTypeConfiguration can be obtained via the ComplexType method on
+    /// <see cref="DbModelBuilder" /> or a custom type derived from ComplexTypeConfiguration
+    /// can be registered via the Configurations property on <see cref="DbModelBuilder" />.
     /// </summary>
     /// <typeparam name="TComplexType"> The complex type to be configured. </typeparam>
     public class ComplexTypeConfiguration<TComplexType> : StructuralTypeConfiguration<TComplexType>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration
         private readonly ComplexTypeConfiguration _complexTypeConfiguration;
 
         /// <summary>
-        ///     Initializes a new instance of ComplexTypeConfiguration
+        /// Initializes a new instance of ComplexTypeConfiguration
         /// </summary>
         public ComplexTypeConfiguration()
             : this(new ComplexTypeConfiguration(typeof(TComplexType)))
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>

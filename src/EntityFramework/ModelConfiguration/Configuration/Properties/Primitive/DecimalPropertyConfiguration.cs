@@ -6,23 +6,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Used to configure a <see cref="Decimal" /> property of an entity type or
-    ///     complex type.
+    /// Used to configure a <see cref="Decimal" /> property of an entity type or
+    /// complex type.
     /// </summary>
     internal class DecimalPropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
-        ///     Gets or sets the precision of the property.
+        /// Gets or sets the precision of the property.
         /// </summary>
         public byte? Precision { get; set; }
 
         /// <summary>
-        ///     Gets or sets the scale of the property.
+        /// Gets or sets the scale of the property.
         /// </summary>
         public byte? Scale { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the DecimalPropertyConfiguration class.
+        /// Initializes a new instance of the DecimalPropertyConfiguration class.
         /// </summary>
         public DecimalPropertyConfiguration()
         {

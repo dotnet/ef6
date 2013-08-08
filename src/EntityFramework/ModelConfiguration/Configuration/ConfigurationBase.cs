@@ -7,8 +7,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Identifies configurations that can be used when implementing
-    ///     <see cref="IConfigurationConvention{TMemberInfo,TConfiguration}" />.
+    /// Identifies configurations that can be used when implementing
+    /// <see cref="IConfigurationConvention{TMemberInfo,TConfiguration}" />.
     /// </summary>
     internal abstract class ConfigurationBase
     {

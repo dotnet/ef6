@@ -13,14 +13,14 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for database initialization.
+    /// Unit tests for database initialization.
     /// </summary>
     public class DatabaseInitializerTests : TestBase
     {
         #region Helpers
 
         /// <summary>
-        ///     Used as a fake context type for tests that don't actually register a strategy.
+        /// Used as a fake context type for tests that don't actually register a strategy.
         /// </summary>
         public class FakeNoRegContext : DbContext
         {

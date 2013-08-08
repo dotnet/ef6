@@ -8,17 +8,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via
-    ///     <see
-    ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
-    ///     or the <see cref="DbModelBuilder" /> API. This convention throws if a duplicate configured column order
-    ///     is detected.
+    /// Convention to apply column ordering specified via
+    /// <see
+    ///     cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
+    /// or the <see cref="DbModelBuilder" /> API. This convention throws if a duplicate configured column order
+    /// is detected.
     /// </summary>
     public class ColumnOrderingConventionStrict : ColumnOrderingConvention
     {
         /// <summary>
-        ///     Validates the ordering configuration supplied for columns to ensure 
-        ///     that the same ordinal was not supplied for two columns.
+        /// Validates the ordering configuration supplied for columns to ensure 
+        /// that the same ordinal was not supplied for two columns.
         /// </summary>
         /// <param name="table">The name of the table that the columns belong to.</param>
         /// <param name="tableName">The definition of the table.</param>

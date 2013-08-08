@@ -9,27 +9,27 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Represents the Mapping metadata for an EnitytSet in CS space.
+    /// Represents the Mapping metadata for an EnitytSet in CS space.
     /// </summary>
     /// <example>
-    ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping
-    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///     --EntitySetMapping
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --AssociationSetMapping
-    ///     --AssociationTypeMapping
-    ///     --MappingFragment
-    ///     This class represents the metadata for the EntitySetMapping elements in the
-    ///     above example. And it is possible to access the EntityTypeMaps underneath it.
+    /// For Example if conceptually you could represent the CS MSL file as following
+    /// --Mapping
+    /// --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    /// --EntitySetMapping
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --AssociationSetMapping
+    /// --AssociationTypeMapping
+    /// --MappingFragment
+    /// This class represents the metadata for the EntitySetMapping elements in the
+    /// above example. And it is possible to access the EntityTypeMaps underneath it.
     /// </example>
     internal class StorageEntitySetMapping : StorageSetMapping
     {
         /// <summary>
-        ///     Construct a EntitySet mapping object
+        /// Construct a EntitySet mapping object
         /// </summary>
         /// <param name="extent"> EntitySet metadata object </param>
         /// <param name="entityContainerMapping"> The entity Container Mapping that contains this Set mapping </param>
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Mapping
         private readonly List<AssociationSetEnd> m_implicitlyMappedAssociationSetEnds;
 
         /// <summary>
-        ///     Gets all function mappings for this entity set.
+        /// Gets all function mappings for this entity set.
         /// </summary>
         public IList<StorageEntityTypeModificationFunctionMapping> ModificationFunctionMappings
         {
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets all association sets that are implicitly "covered" through function mappings.
+        /// Gets all association sets that are implicitly "covered" through function mappings.
         /// </summary>
         public IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
         {
@@ -77,8 +77,8 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Whether the EntitySetMapping has empty content
-        ///     Returns true if there are no Function Maps and no table Mapping fragments
+        /// Whether the EntitySetMapping has empty content
+        /// Returns true if there are no Function Maps and no table Mapping fragments
         /// </summary>
         internal override bool HasNoContent
         {
@@ -93,10 +93,10 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Requires:
-        ///     - Function mapping refers to a sub-type of this entity set's element type
-        ///     - Function mappings for types are not redundantly specified
-        ///     Adds a new function mapping for this class.
+        /// Requires:
+        /// - Function mapping refers to a sub-type of this entity set's element type
+        /// - Function mappings for types are not redundantly specified
+        /// Adds a new function mapping for this class.
         /// </summary>
         /// <param name="modificationFunctionMapping"> Function mapping to add. May not be null. </param>
         internal void AddModificationFunctionMapping(StorageEntityTypeModificationFunctionMapping modificationFunctionMapping)

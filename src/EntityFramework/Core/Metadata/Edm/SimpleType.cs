@@ -3,12 +3,12 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    ///     Class representing a simple type
+    /// Class representing a simple type
     /// </summary>
     public abstract class SimpleType : EdmType
     {
         /// <summary>
-        ///     The default constructor for SimpleType
+        /// The default constructor for SimpleType
         /// </summary>
         internal SimpleType()
         {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for SimpleType.  It takes the required information to identify this type.
+        /// The constructor for SimpleType.  It takes the required information to identify this type.
         /// </summary>
         /// <param name="name"> The name of this type </param>
         /// <param name="namespaceName"> The namespace name of this type </param>

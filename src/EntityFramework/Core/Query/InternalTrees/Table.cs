@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     Represents one instance of a table. Contains the table metadata
+    /// Represents one instance of a table. Contains the table metadata
     /// </summary>
     internal class Table
     {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Metadata for the table instance
+        /// Metadata for the table instance
         /// </summary>
         internal TableMD TableMetadata
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     List of column references
+        /// List of column references
         /// </summary>
         internal VarList Columns
         {
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the list of all referenced columns.
+        /// Get the list of all referenced columns.
         /// </summary>
         internal VarVec ReferencedColumns
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     List of keys
+        /// List of keys
         /// </summary>
         internal VarVec Keys
         {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     (internal) id for this table instance
+        /// (internal) id for this table instance
         /// </summary>
         internal int TableId
         {
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     String form - for debugging
+        /// String form - for debugging
         /// </summary>
         public override string ToString()
         {

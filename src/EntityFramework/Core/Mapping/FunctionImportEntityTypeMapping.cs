@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
         internal readonly ReadOnlyCollection<EntityType> IsOfTypeEntityTypes;
 
         /// <summary>
-        ///     Gets all (concrete) entity types implied by this type mapping.
+        /// Gets all (concrete) entity types implied by this type mapping.
         /// </summary>
         internal IEnumerable<EntityType> GetMappedEntityTypes(ItemCollection itemCollection)
         {

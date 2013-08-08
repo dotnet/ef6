@@ -9,9 +9,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model that inherit from a common, specified type and a
-    ///     captured value.
+    /// Allows configuration to be performed for a lightweight convention based on
+    /// the entity types in a model that inherit from a common, specified type and a
+    /// captured value.
     /// </summary>
     /// <typeparam name="T"> The common type of the entity types that this convention applies to. </typeparam>
     /// <typeparam name="TValue"> Type of the captured value. </typeparam>
@@ -53,11 +53,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Allows configuration of the entity types that this convention applies to.
+        /// Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a <see cref="ConventionTypeConfiguration{T}" />
-        ///     using a captured value.
+        /// An action that performs configuration against a <see cref="ConventionTypeConfiguration{T}" />
+        /// using a captured value.
         /// </param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public void Configure(Action<ConventionTypeConfiguration<T>, TValue> entityConfigurationAction)

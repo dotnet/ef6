@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that invoke spatial realted canonical EDM functions, and, where appropriate, allows that API to be accessed as extension methods on the expression type itself.
+    /// Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that invoke spatial realted canonical EDM functions, and, where appropriate, allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
     public static class SpatialEdmFunctions
     {
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         // Geometry – well known text Constructors
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromText' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geometry. Its value has the default coordinate system id (SRID) of the underlying provider.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromText' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geometry. Its value has the default coordinate system id (SRID) of the underlying provider.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified value.</returns>
         /// <param name="wellKnownText">An expression that provides the well known text representation of the geometry value.</param>
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromText' function with the specified arguments. wellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromText' function with the specified arguments. wellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified values.</returns>
         /// <param name="wellKnownText">An expression that provides the well known text representation of the geometry value.</param>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPointFromText' function with the specified arguments. pointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPointFromText' function with the specified arguments. pointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry point value based on the specified values.</returns>
         /// <param name="pointWellKnownText">An expression that provides the well known text representation of the geometry point value.</param>
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryLineFromText' function with the specified arguments. lineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryLineFromText' function with the specified arguments. lineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry line value based on the specified values.</returns>
         /// <param name="lineWellKnownText">An expression that provides the well known text representation of the geometry line value.</param>
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPolygonFromText' function with the specified arguments. polygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPolygonFromText' function with the specified arguments. polygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry polygon value based on the specified values.</returns>
         /// <param name="polygonWellKnownText">An expression that provides the well known text representation of the geometry polygon value.</param>
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPointFromText' function with the specified arguments. multiPointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPointFromText' function with the specified arguments. multiPointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-point value based on the specified values.</returns>
         /// <param name="multiPointWellKnownText">An expression that provides the well known text representation of the geometry multi-point value.</param>
@@ -100,7 +100,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiLineFromText' function with the specified arguments. multiLineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiLineFromText' function with the specified arguments. multiLineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-line value based on the specified values.</returns>
         /// <param name="multiLineWellKnownText">An expression that provides the well known text representation of the geometry multi-line value.</param>
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPolygonFromText' function with the specified arguments. multiPolygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPolygonFromText' function with the specified arguments. multiPolygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-polygon value based on the specified values.</returns>
         /// <param name="multiPolygonWellKnownText">An expression that provides the well known text representation of the geometry multi-polygon value.</param>
@@ -139,7 +139,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryCollectionFromText' function with the specified arguments. geometryCollectionWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryCollectionFromText' function with the specified arguments. geometryCollectionWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry collection value based on the specified values.</returns>
         /// <param name="geometryCollectionWellKnownText">An expression that provides the well known text representation of the geometry collection value.</param>
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         // Geometry – Well Known Binary Constructors
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromBinary' function with the specified argument, which must have a binary result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromBinary' function with the specified argument, which must have a binary result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified binary value.</returns>
         /// <param name="wellKnownBinaryValue">An expression that provides the well known binary representation of the geometry value.</param>
@@ -170,7 +170,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromBinary' function with the specified arguments. wellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromBinary' function with the specified arguments. wellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified values.</returns>
         /// <param name="wellKnownBinaryValue">An expression that provides the well known binary representation of the geometry value.</param>
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPointFromBinary' function with the specified arguments. pointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPointFromBinary' function with the specified arguments. pointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry point value based on the specified values.</returns>
         /// <param name="pointWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry point value.</param>
@@ -196,7 +196,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryLineFromBinary' function with the specified arguments. lineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryLineFromBinary' function with the specified arguments. lineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry line value based on the specified values.</returns>
         /// <param name="lineWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry line value.</param>
@@ -209,7 +209,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPolygonFromBinary' function with the specified arguments. polygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryPolygonFromBinary' function with the specified arguments. polygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry polygon value based on the specified values.</returns>
         /// <param name="polygonWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry polygon value.</param>
@@ -223,7 +223,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPointFromBinary' function with the specified arguments. multiPointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPointFromBinary' function with the specified arguments. multiPointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-point value based on the specified values.</returns>
         /// <param name="multiPointWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry multi-point value.</param>
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiLineFromBinary' function with the specified arguments. multiLineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiLineFromBinary' function with the specified arguments. multiLineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-line value based on the specified values.</returns>
         /// <param name="multiLineWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry multi-line value.</param>
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPolygonFromBinary' function with the specified arguments. multiPolygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryMultiPolygonFromBinary' function with the specified arguments. multiPolygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry multi-polygon value based on the specified values.</returns>
         /// <param name="multiPolygonWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry multi-polygon value.</param>
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryCollectionFromBinary' function with the specified arguments. geometryCollectionWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryCollectionFromBinary' function with the specified arguments. geometryCollectionWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry collection value based on the specified values.</returns>
         /// <param name="geometryCollectionWellKnownBinaryValue">An expression that provides the well known binary representation of the geometry collection value.</param>
@@ -305,7 +305,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Geometry GML Constructors (non-OGC)
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromGml' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromGml' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified value with the default coordinate system id (SRID) of the underlying provider.</returns>
         /// <param name="geometryMarkup">An expression that provides the Geography Markup Language (GML) representation of the geometry value.</param>
@@ -318,7 +318,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromGml' function with the specified arguments. geometryMarkup must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeometryFromGml' function with the specified arguments. geometryMarkup must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geometry value based on the specified values.</returns>
         /// <param name="geometryMarkup">An expression that provides the Geography Markup Language (GML) representation of the geometry value.</param>
@@ -337,7 +337,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Geography well known text Constructors
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromText' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geography. Its value has the default coordinate system id (SRID) of the underlying provider.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromText' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geography. Its value has the default coordinate system id (SRID) of the underlying provider.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified value.</returns>
         /// <param name="wellKnownText">An expression that provides the well known text representation of the geography value.</param>
@@ -348,7 +348,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromText' function with the specified arguments. wellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromText' function with the specified arguments. wellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified values.</returns>
         /// <param name="wellKnownText">An expression that provides the well known text representation of the geography value.</param>
@@ -361,7 +361,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPointFromText' function with the specified arguments.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPointFromText' function with the specified arguments.
         /// </summary>
         /// <returns>The canonical 'GeographyPointFromText' function.</returns>
         /// <param name="pointWellKnownText">An expression that provides the well-known text representation of the geography point value.</param>
@@ -374,7 +374,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyLineFromText' function with the specified arguments. lineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyLineFromText' function with the specified arguments. lineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography line value based on the specified values.</returns>
         /// <param name="lineWellKnownText">An expression that provides the well known text representation of the geography line value.</param>
@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPolygonFromText' function with the specified arguments. polygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPolygonFromText' function with the specified arguments. polygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography polygon value based on the specified values.</returns>
         /// <param name="polygonWellKnownText">An expression that provides the well known text representation of the geography polygon value.</param>
@@ -400,7 +400,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPointFromText' function with the specified arguments. multiPointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPointFromText' function with the specified arguments. multiPointWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-point value based on the specified values.</returns>
         /// <param name="multiPointWellKnownText">An expression that provides the well known text representation of the geography multi-point value.</param>
@@ -422,7 +422,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiLineFromText' function with the specified arguments. multiLineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiLineFromText' function with the specified arguments. multiLineWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-line value based on the specified values.</returns>
         /// <param name="multiLineWellKnownText">An expression that provides the well known text representation of the geography multi-line value.</param>
@@ -443,7 +443,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPolygonFromText' function with the specified arguments. multiPolygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPolygonFromText' function with the specified arguments. multiPolygonWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-polygon value based on the specified values.</returns>
         /// <param name="multiPolygonWellKnownText">An expression that provides the well known text representation of the geography multi-polygon value.</param>
@@ -461,7 +461,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyCollectionFromText' function with the specified arguments. geographyCollectionWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyCollectionFromText' function with the specified arguments. geographyCollectionWellKnownText must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography collection value based on the specified values.</returns>
         /// <param name="geographyCollectionWellKnownText">An expression that provides the well known text representation of the geography collection value.</param>
@@ -481,7 +481,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         // Geography – Well Known Binary Constructors
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromBinary' function with the specified argument, which must have a binary result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromBinary' function with the specified argument, which must have a binary result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified binary value.</returns>
         /// <param name="wellKnownBinaryValue">An expression that provides the well known binary representation of the geography value.</param>
@@ -492,7 +492,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromBinary' function with the specified arguments. wellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromBinary' function with the specified arguments. wellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified values.</returns>
         /// <param name="wellKnownBinaryValue">An expression that provides the well known binary representation of the geography value.</param>
@@ -505,7 +505,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPointFromBinary' function with the specified arguments. pointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPointFromBinary' function with the specified arguments. pointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography point value based on the specified values.</returns>
         /// <param name="pointWellKnownBinaryValue">An expression that provides the well known binary representation of the geography point value.</param>
@@ -518,7 +518,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyLineFromBinary' function with the specified arguments. lineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyLineFromBinary' function with the specified arguments. lineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography line value based on the specified values.</returns>
         /// <param name="lineWellKnownBinaryValue">An expression that provides the well known binary representation of the geography line value.</param>
@@ -531,7 +531,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPolygonFromBinary' function with the specified arguments. polygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyPolygonFromBinary' function with the specified arguments. polygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography polygon value based on the specified values.</returns>
         /// <param name="polygonWellKnownBinaryValue">An expression that provides the well known binary representation of the geography polygon value.</param>
@@ -545,7 +545,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPointFromBinary' function with the specified arguments. multiPointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPointFromBinary' function with the specified arguments. multiPointWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-point value based on the specified values.</returns>
         /// <param name="multiPointWellKnownBinaryValue">An expression that provides the well known binary representation of the geography multi-point value.</param>
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiLineFromBinary' function with the specified arguments. multiLineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiLineFromBinary' function with the specified arguments. multiLineWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-line value based on the specified values.</returns>
         /// <param name="multiLineWellKnownBinaryValue">An expression that provides the well known binary representation of the geography multi-line value.</param>
@@ -589,7 +589,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPolygonFromBinary' function with the specified arguments. multiPolygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyMultiPolygonFromBinary' function with the specified arguments. multiPolygonWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography multi-polygon value based on the specified values.</returns>
         /// <param name="multiPolygonWellKnownBinaryValue">An expression that provides the well known binary representation of the geography multi-polygon value.</param>
@@ -608,7 +608,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyCollectionFromBinary' function with the specified arguments. geographyCollectionWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyCollectionFromBinary' function with the specified arguments. geographyCollectionWellKnownBinaryValue must have a binary result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography collection value based on the specified values.</returns>
         /// <param name="geographyCollectionWellKnownBinaryValue">An expression that provides the well known binary representation of the geography collection value.</param>
@@ -627,7 +627,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Geography GML Constructors (non-OGC)
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromGml' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromGml' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified value with the default coordinate system id (SRID) of the underlying provider.</returns>
         /// <param name="geographyMarkup">An expression that provides the Geography Markup Language (GML) representation of the geography value.</param>
@@ -639,7 +639,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromGml' function with the specified arguments. geographyMarkup must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GeographyFromGml' function with the specified arguments. geographyMarkup must have a string result type, while coordinateSystemId must have an integer numeric result type. The result type of the expression is Edm.Geography.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new geography value based on the specified values.</returns>
         /// <param name="geographyMarkup">An expression that provides the Geography Markup Language (GML) representation of the geography value.</param>
@@ -660,7 +660,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         // Spatial Member Access
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CoordinateSystemId' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CoordinateSystemId' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer SRID value from spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the value from which the coordinate system id (SRID) should be retrieved.</param>
@@ -671,7 +671,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialTypeName' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialTypeName' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the string Geometry Type name from spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the value from which the Geometry Type name should be retrieved.</param>
@@ -682,7 +682,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDimension' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDimension' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the Dimension value from spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the value from which the Dimension value should be retrieved.</param>
@@ -693,7 +693,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialEnvelope' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialEnvelope' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the the minimum bounding box for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the value from which the Envelope value should be retrieved.</param>
@@ -704,7 +704,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsBinary' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Binary.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsBinary' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Binary.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the well known binary representation of spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial value from which the well known binary representation should be produced.</param>
@@ -715,7 +715,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsGml' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsGml' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the Geography Markup Language (GML) representation of spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial value from which the Geography Markup Language (GML) representation should be produced.</param>
@@ -727,7 +727,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsText' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AsText' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.String.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the well known text representation of spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial value from which the well known text representation should be produced.</param>
@@ -738,7 +738,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsEmptySpatial' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsEmptySpatial' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether spatialValue is empty.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial value from which the IsEmptySptiaal value should be retrieved.</param>
@@ -749,7 +749,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsSimpleGeometry' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsSimpleGeometry' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue is a simple geometry.</returns>
         /// <param name="geometryValue">The geometry value.</param>
@@ -760,7 +760,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialBoundary' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialBoundary' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the the boundary for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry value from which the SpatialBoundary value should be retrieved.</param>
@@ -772,7 +772,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
 
         // Non-OGC
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsValidGeometry' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsValidGeometry' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue is valid.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry value which should be tested for spatial validity.</param>
@@ -787,7 +787,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Spatial Relation
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialEquals' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialEquals' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether spatialValue1 and spatialValue2 are equal.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -800,7 +800,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDisjoint' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDisjoint' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether spatialValue1 and spatialValue2 are spatially disjoint.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -813,7 +813,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialIntersects' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialIntersects' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether spatialValue1 and spatialValue2 intersect.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -826,7 +826,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialTouches' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialTouches' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 touches geometryValue2.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -839,7 +839,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialCrosses' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialCrosses' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 crosses geometryValue2 intersect.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -852,7 +852,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialWithin' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialWithin' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 is spatially within geometryValue2.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -865,7 +865,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialContains' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialContains' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 spatially contains geometryValue2.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -878,7 +878,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialOverlaps' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialOverlaps' function with the specified arguments, which must each have an Edm.Geometry result type. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 spatially overlaps geometryValue2.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -891,7 +891,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialRelate' function with the specified arguments, which must have Edm.Geometry and string result types. The result type of the expression is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialRelate' function with the specified arguments, which must have Edm.Geometry and string result types. The result type of the expression is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether geometryValue1 is spatially related to geometryValue2 according to the spatial relationship designated by intersectionPatternMatrix.</returns>
         /// <param name="geometryValue1">An expression that specifies the first geometry value.</param>
@@ -911,7 +911,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Spatial Analysis
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialBuffer' function with the specified arguments, which must have a Edm.Geography or Edm.Geometry and Edm.Double result types. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialBuffer' function with the specified arguments, which must have a Edm.Geography or Edm.Geometry and Edm.Double result types. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a geometry value representing all points less than or equal to distance from spatialValue.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial value.</param>
@@ -924,7 +924,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Distance' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type.  The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Distance' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type.  The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the distance between the closest points in spatialValue1 and spatialValue1.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -937,7 +937,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialConvexHull' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialConvexHull' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the the convex hull for geometryValue.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry value from which the convex hull value should be retrieved.</param>
@@ -948,7 +948,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialIntersection' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialIntersection' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the spatial value representing the intersection of spatialValue1 and spatialValue2.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -961,7 +961,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialUnion' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialUnion' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the spatial value representing the union of spatialValue1 and spatialValue2.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -974,7 +974,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDifference' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialDifference' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the geometry value representing the difference of spatialValue2 with spatialValue1.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -987,7 +987,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialSymmetricDifference' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialSymmetricDifference' function with the specified arguments, which must each have an Edm.Geography or Edm.Geometry result type. The result type of spatialValue1 must match the result type of spatialValue2. The result type of the expression is the same as the type of spatialValue1 and spatialValue2.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the geometry value representing the symmetric difference of spatialValue2 with spatialValue1.</returns>
         /// <param name="spatialValue1">An expression that specifies the first spatial value.</param>
@@ -1004,7 +1004,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Spatial Collection
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialElementCount' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialElementCount' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the number of elements in spatialValue or null if spatialValue is not a collection.</returns>
         /// <param name="spatialValue">An expression that specifies the geography or geometry collection value from which the number of elements should be retrieved.</param>
@@ -1015,7 +1015,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialElementAt' function with the specified arguments. The first argument must have an Edm.Geography or Edm.Geometry result type. The second argument must have an integer numeric result type. The result type of the expression is the same as that of spatialValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialElementAt' function with the specified arguments. The first argument must have an Edm.Geography or Edm.Geometry result type. The second argument must have an integer numeric result type. The result type of the expression is the same as that of spatialValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the collection element at position indexValue in spatialValue or null if spatialValue is not a collection.</returns>
         /// <param name="spatialValue">An expression that specifies the geography or geometry collection value.</param>
@@ -1032,7 +1032,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - GeographyPoint
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'XCoordinate' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'XCoordinate' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the X co-ordinate value of geometryValue or null if geometryValue is not a point.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry point value from which the X co-ordinate value should be retrieved.</param>
@@ -1043,7 +1043,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'YCoordinate' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'YCoordinate' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the Y co-ordinate value of geometryValue or null if geometryValue is not a point.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry point value from which the Y co-ordinate value should be retrieved.</param>
@@ -1054,7 +1054,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Elevation' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Elevation' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the elevation value of spatialValue or null if spatialValue is not a point.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial point value from which the elevation (Z co-ordinate) value should be retrieved.</param>
@@ -1065,7 +1065,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Measure' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Measure' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the Measure of spatialValue or null if spatialValue is not a point.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial point value from which the Measure (M) co-ordinate value should be retrieved.</param>
@@ -1076,7 +1076,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Latitude' function with the specified argument, which must have an Edm.Geography result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Latitude' function with the specified argument, which must have an Edm.Geography result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the Latitude value of geographyValue or null if geographyValue is not a point.</returns>
         /// <param name="geographyValue">An expression that specifies the geography point value from which the Latitude value should be retrieved.</param>
@@ -1087,7 +1087,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Longitude' function with the specified argument, which must have an Edm.Geography result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Longitude' function with the specified argument, which must have an Edm.Geography result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the Longitude value of geographyValue or null if geographyValue is not a point.</returns>
         /// <param name="geographyValue">An expression that specifies the geography point value from which the Longitude value should be retrieved.</param>
@@ -1102,7 +1102,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Curve
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialLength' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'SpatialLength' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the length of spatialValue or null if spatialValue is not a curve.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial curve value from which the length should be retrieved.</param>
@@ -1113,7 +1113,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StartPoint' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is the same as that of spatialValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StartPoint' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is the same as that of spatialValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the start point of spatialValue or null if spatialValue is not a curve.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial curve value from which the start point should be retrieved.</param>
@@ -1124,7 +1124,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'EndPoint' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is the same as that of spatialValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'EndPoint' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is the same as that of spatialValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the end point of spatialValue or null if spatialValue is not a curve.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial curve value from which the end point should be retrieved.</param>
@@ -1135,7 +1135,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsClosedSpatial' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsClosedSpatial' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either a Boolean value indicating whether spatialValue is closed, or null if spatialValue is not a curve.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial curve value from which the IsClosedSpatial value should be retrieved.</param>
@@ -1146,7 +1146,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsRing' function with the specified argument, which must have an Edm.Geometry result type. The result type is Edm.Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IsRing' function with the specified argument, which must have an Edm.Geometry result type. The result type is Edm.Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either a Boolean value indicating whether geometryValue is a ring (both closed and simple), or null if geometryValue is not a curve.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry curve value from which the IsRing value should be retrieved.</param>
@@ -1161,7 +1161,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - GeographyLineString, Line, LinearRing
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointCount' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointCount' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the number of points in spatialValue or null if spatialValue is not a line string.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial line string value from which the number of points should be retrieved.</param>
@@ -1172,7 +1172,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointAt' function with the specified arguments. The first argument must have an Edm.Geography or Edm.Geometry result type. The second argument must have an integer numeric result type. The result type of the expression is the same as that of spatialValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointAt' function with the specified arguments. The first argument must have an Edm.Geography or Edm.Geometry result type. The second argument must have an integer numeric result type. The result type of the expression is the same as that of spatialValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the point at position indexValue in spatialValue or null if spatialValue is not a line string.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial line string value.</param>
@@ -1189,7 +1189,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - Surface
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Area' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Area' function with the specified argument, which must have an Edm.Geography or Edm.Geometry result type. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the area of spatialValue or null if spatialValue is not a surface.</returns>
         /// <param name="spatialValue">An expression that specifies the spatial surface value for which the area should be calculated.</param>
@@ -1200,7 +1200,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Centroid' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Centroid' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the centroid point of geometryValue (which may not be on the surface itself) or null if geometryValue is not a surface.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry surface value from which the centroid should be retrieved.</param>
@@ -1213,7 +1213,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointOnSurface' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'PointOnSurface' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either a point guaranteed to be on the surface geometryValue or null if geometryValue is not a surface.</returns>
         /// <param name="geometryValue">An expression that specifies the geometry surface value from which the point should be retrieved.</param>
@@ -1228,7 +1228,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         #region Spatial Functions - GeographyPolygon
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ExteriorRing' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ExteriorRing' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the exterior ring of the polygon geometryValue or null if geometryValue is not a polygon.</returns>
         /// <param name="geometryValue">The geometry value.</param>
@@ -1239,7 +1239,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'InteriorRingCount' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'InteriorRingCount' function with the specified argument, which must have an Edm.Geometry result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the number of interior rings in the polygon geometryValue or null if geometryValue is not a polygon.</returns>
         /// <param name="geometryValue">The geometry value.</param>
@@ -1250,7 +1250,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Spatial
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'InteriorRingAt' function with the specified arguments. The first argument must have an Edm.Geometry result type. The second argument must have an integer numeric result types. The result type of the expression is Edm.Geometry.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'InteriorRingAt' function with the specified arguments. The first argument must have an Edm.Geometry result type. The second argument must have an integer numeric result types. The result type of the expression is Edm.Geometry.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns either the interior ring at position indexValue in geometryValue or null if geometryValue is not a polygon.</returns>
         /// <param name="geometryValue">The geometry value.</param>

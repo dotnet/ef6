@@ -26,9 +26,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     ObjectQuery implements strongly-typed queries at the object-layer.
-    ///     Queries are specified using Entity-SQL strings and may be created by calling
-    ///     the Entity-SQL-based query builder methods declared by ObjectQuery.
+    /// ObjectQuery implements strongly-typed queries at the object-layer.
+    /// Queries are specified using Entity-SQL strings and may be created by calling
+    /// the Entity-SQL-based query builder methods declared by ObjectQuery.
     /// </summary>
     /// <typeparam name="T"> The result type of this ObjectQuery </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
@@ -40,12 +40,12 @@ namespace System.Data.Entity.Core.Objects
         #region Private Static Members
 
         /// <summary>
-        ///     The default query name, which is used in query-building to refer to an
-        ///     element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
-        ///     the form "it.Name = 'Foo'" can be specified, where "it" refers to a T.
-        ///     Note that the query name may eventually become a parameter in the command
-        ///     tree, so it must conform to the parameter name restrictions enforced by
-        ///     ObjectParameter.ValidateParameterName(string).
+        /// The default query name, which is used in query-building to refer to an
+        /// element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
+        /// the form "it.Name = 'Foo'" can be specified, where "it" refers to a T.
+        /// Note that the query name may eventually become a parameter in the command
+        /// tree, so it must conform to the parameter name restrictions enforced by
+        /// ObjectParameter.ValidateParameterName(string).
         /// </summary>
         private const string DefaultName = "it";
 
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.Objects
         #region Private Instance Fields
 
         /// <summary>
-        ///     The name of the current sequence, which defaults to "it". Used in query-
-        ///     builder methods that process an Entity-SQL command text fragment to refer to an
-        ///     instance of the return type of this query.
+        /// The name of the current sequence, which defaults to "it". Used in query-
+        /// builder methods that process an Entity-SQL command text fragment to refer to an
+        /// instance of the return type of this query.
         /// </summary>
         private string _name = DefaultName;
 
@@ -70,11 +70,11 @@ namespace System.Data.Entity.Core.Objects
         #region Constructors
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query.
         /// </summary>
         /// <param name="commandText">The Entity SQL query.</param>
         /// <param name="context">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
         /// </param>
         public ObjectQuery(string commandText, ObjectContext context)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
@@ -91,17 +91,17 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query and the specified merge option.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance using the specified Entity SQL command as the initial query and the specified merge option.
         /// </summary>
         /// <param name="commandText">The Entity SQL query.</param>
         /// <param name="context">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.ObjectContext" /> on which to execute the query.
         /// </param>
         /// <param name="mergeOption">
-        ///     Specifies how the entities that are retrieved through this query should be merged with the entities that have been returned from previous queries against the same
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// Specifies how the entities that are retrieved through this query should be merged with the entities that have been returned from previous queries against the same
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         public ObjectQuery(string commandText, ObjectContext context, MergeOption mergeOption)
             : this(new EntitySqlQueryState(typeof(T), commandText, false, context, null, null))
@@ -121,16 +121,16 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This method creates a new ObjectQuery instance that represents a scan over
-        ///     the specified <paramref name="entitySet" />. This ObjectQuery carries the scan as <see cref="DbExpression" />
-        ///     and as Entity SQL. This is needed to allow case-sensitive metadata access (provided by the <see cref="DbExpression" /> by default).
-        ///     The context specifies the connection on which to execute the query as well as the metadata and result cache.
-        ///     The merge option specifies how the cache should be populated/updated.
+        /// This method creates a new ObjectQuery instance that represents a scan over
+        /// the specified <paramref name="entitySet" />. This ObjectQuery carries the scan as <see cref="DbExpression" />
+        /// and as Entity SQL. This is needed to allow case-sensitive metadata access (provided by the <see cref="DbExpression" /> by default).
+        /// The context specifies the connection on which to execute the query as well as the metadata and result cache.
+        /// The merge option specifies how the cache should be populated/updated.
         /// </summary>
         /// <param name="entitySet"> The entity set this query scans. </param>
         /// <param name="context">
-        ///     The ObjectContext containing the metadata workspace the query will be built against, the connection
-        ///     on which to execute the query, and the cache to store the results in.
+        /// The ObjectContext containing the metadata workspace the query will be built against, the connection
+        /// on which to execute the query, and the cache to store the results in.
         /// </param>
         /// <param name="mergeOption"> The MergeOption to use when executing the query. </param>
         /// <returns> A new ObjectQuery instance. </returns>
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         internal ObjectQuery()
         {
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Gets or sets the name of this object query.</summary>
         /// <returns>
-        ///     A string value that is the name of this <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
+        /// A string value that is the name of this <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />.
         /// </returns>
         /// <exception cref="T:System.ArgumentException">The value specified on set is not valid.</exception>
         public string Name
@@ -204,11 +204,11 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Executes the object query with the specified merge option.</summary>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
+        /// An <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> that contains a collection of entity objects returned by the query.
         /// </returns>
         public new ObjectResult<T> Execute(MergeOption mergeOption)
         {
@@ -219,20 +219,20 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously executes the object query with the specified merge option.
+        /// Asynchronously executes the object query with the specified merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
-        ///     that contains a collection of entity objects returned by the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// that contains a collection of entity objects returned by the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption)
@@ -241,23 +241,23 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Asynchronously executes the object query with the specified merge option.
+        /// Asynchronously executes the object query with the specified merge option.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="mergeOption">
-        ///     The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
-        ///     The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
+        /// The <see cref="T:System.Data.Entity.Core.Objects.MergeOption" /> to use when executing the query. 
+        /// The default is <see cref="F:System.Data.Entity.Core.Objects.MergeOption.AppendOnly" />.
         /// </param>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
-        ///     that contains a collection of entity objects returned by the query.
+        /// A task that represents the asynchronous operation.
+        /// The task result contains an <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> 
+        /// that contains a collection of entity objects returned by the query.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public new Task<ObjectResult<T>> ExecuteAsync(MergeOption mergeOption, CancellationToken cancellationToken)
@@ -271,7 +271,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Specifies the related objects to include in the query results.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> with the defined query path.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> with the defined query path.
         /// </returns>
         /// <param name="path">Dot-separated list of related objects to return in the query results.</param>
         /// <exception cref="T:System.ArgumentNullException"> path  is null.</exception>
@@ -290,7 +290,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query to unique results.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with SELECT DISTINCT applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with SELECT DISTINCT applied.
         /// </returns>
         public ObjectQuery<T> Distinct()
         {
@@ -302,9 +302,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This query-builder method creates a new query whose results are all of
-        ///     the results of this query, except those that are also part of the other
-        ///     query specified.
+        /// This query-builder method creates a new query whose results are all of
+        /// the results of this query, except those that are also part of the other
+        /// query specified.
         /// </summary>
         /// <param name="query"> A query representing the results to exclude. </param>
         /// <returns> a new ObjectQuery instance. </returns>
@@ -323,10 +323,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Groups the query results by the specified criteria.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
-        ///     <see
-        ///         cref="T:System.Data.Common.DbDataRecord" />
-        ///     that is equivalent to the original instance with GROUP BY applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
+        /// <see
+        ///     cref="T:System.Data.Common.DbDataRecord" />
+        /// that is equivalent to the original instance with GROUP BY applied.
         /// </returns>
         /// <param name="keys">The key columns by which to group the results.</param>
         /// <param name="projection">The list of selected properties that defines the projection. </param>
@@ -343,8 +343,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This query-builder method creates a new query whose results are those that
-        ///     are both in this query and the other query specified.
+        /// This query-builder method creates a new query whose results are those that
+        /// are both in this query and the other query specified.
         /// </summary>
         /// <param name="query"> A query representing the results to intersect with. </param>
         /// <returns> a new ObjectQuery instance. </returns>
@@ -363,10 +363,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query to only results of a specific type.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with OFTYPE applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with OFTYPE applied.
         /// </returns>
         /// <typeparam name="TResultType">
-        ///     The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the query is executed with the applied filter.
+        /// The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectResult`1" /> returned when the query is executed with the applied filter.
         /// </typeparam>
         /// <exception cref="T:System.Data.Entity.Core.EntitySqlException">The type specified is not valid.</exception>
         public ObjectQuery<TResultType> OfType<TResultType>()
@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Orders the query results by the specified criteria.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with ORDER BY applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with ORDER BY applied.
         /// </returns>
         /// <param name="keys">The key columns by which to order the results.</param>
         /// <param name="parameters">Zero or more parameters that are used in this method.</param>
@@ -415,10 +415,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query results to only the properties that are defined in the specified projection.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
-        ///     <see
-        ///         cref="T:System.Data.Common.DbDataRecord" />
-        ///     that is equivalent to the original instance with SELECT applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of type
+        /// <see
+        ///     cref="T:System.Data.Common.DbDataRecord" />
+        /// that is equivalent to the original instance with SELECT applied.
         /// </returns>
         /// <param name="projection">The list of selected properties that defines the projection.</param>
         /// <param name="parameters">Zero or more parameters that are used in this method.</param>
@@ -434,18 +434,18 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query results to only the property specified in the projection.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of a type compatible with the specific projection. The returned
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />
-        ///     is equivalent to the original instance with SELECT VALUE applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance of a type compatible with the specific projection. The returned
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" />
+        /// is equivalent to the original instance with SELECT VALUE applied.
         /// </returns>
         /// <param name="projection">The projection list.</param>
         /// <param name="parameters">An optional set of query parameters that should be in scope when parsing.</param>
         /// <typeparam name="TResultType">
-        ///     The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> returned by the
-        ///     <see
-        ///         cref="M:System.Data.Entity.Core.Objects.ObjectQuery`1.SelectValue``1(System.String,System.Data.Entity.Core.Objects.ObjectParameter[])" />
-        ///     method.
+        /// The type of the <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> returned by the
+        /// <see
+        ///     cref="M:System.Data.Entity.Core.Objects.ObjectQuery`1.SelectValue``1(System.String,System.Data.Entity.Core.Objects.ObjectParameter[])" />
+        /// method.
         /// </typeparam>
         /// <exception cref="T:System.ArgumentNullException"> projection  is null or parameters  is null.</exception>
         /// <exception cref="T:System.ArgumentException">The  projection  is an empty string.</exception>
@@ -464,7 +464,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Orders the query results by the specified criteria and skips a specified number of results.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with both ORDER BY and SKIP applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with both ORDER BY and SKIP applied.
         /// </returns>
         /// <param name="keys">The key columns by which to order the results.</param>
         /// <param name="count">The number of results to skip. This must be either a constant or a parameter reference.</param>
@@ -482,7 +482,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query results to a specified number of items.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with TOP applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with TOP applied.
         /// </returns>
         /// <param name="count">The number of items in the results as a string. </param>
         /// <param name="parameters">An optional set of query parameters that should be in scope when parsing.</param>
@@ -496,9 +496,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This query-builder method creates a new query whose results are all of
-        ///     the results of this query, plus all of the results of the other query,
-        ///     without duplicates (i.e., results are unique).
+        /// This query-builder method creates a new query whose results are all of
+        /// the results of this query, plus all of the results of the other query,
+        /// without duplicates (i.e., results are unique).
         /// </summary>
         /// <param name="query"> A query representing the results to add. </param>
         /// <returns> a new ObjectQuery instance. </returns>
@@ -516,9 +516,9 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     This query-builder method creates a new query whose results are all of
-        ///     the results of this query, plus all of the results of the other query,
-        ///     including any duplicates (i.e., results are not necessarily unique).
+        /// This query-builder method creates a new query whose results are all of
+        /// the results of this query, plus all of the results of the other query,
+        /// including any duplicates (i.e., results are not necessarily unique).
         /// </summary>
         /// <param name="query"> A query representing the results to add. </param>
         /// <returns> a new ObjectQuery instance. </returns>
@@ -532,7 +532,7 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Limits the query to results that match specified filtering criteria.</summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with WHERE applied.
+        /// A new <see cref="T:System.Data.Entity.Core.Objects.ObjectQuery`1" /> instance that is equivalent to the original instance with WHERE applied.
         /// </returns>
         /// <param name="predicate">The filter predicate.</param>
         /// <param name="parameters">Zero or more parameters that are used in this method.</param>
@@ -553,7 +553,7 @@ namespace System.Data.Entity.Core.Objects
         #region IEnumerable<T> implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
+        /// Returns an <see cref="IEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -588,7 +588,7 @@ namespace System.Data.Entity.Core.Objects
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator{T}" /> which when enumerated will execute the given SQL query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -661,11 +661,11 @@ namespace System.Data.Entity.Core.Objects
 #endif
 
         /// <summary>
-        ///     Retrieves the LINQ expression that backs this ObjectQuery for external consumption.
-        ///     It is important that the work to wrap the expression in an appropriate MergeAs call
-        ///     takes place in this method and NOT in ObjectQueryState.TryGetExpression which allows
-        ///     the unmodified expression (that does not include the MergeOption-preserving MergeAs call)
-        ///     to be retrieved and processed by the ELinq ExpressionConverter.
+        /// Retrieves the LINQ expression that backs this ObjectQuery for external consumption.
+        /// It is important that the work to wrap the expression in an appropriate MergeAs call
+        /// takes place in this method and NOT in ObjectQueryState.TryGetExpression which allows
+        /// the unmodified expression (that does not include the MergeOption-preserving MergeAs call)
+        /// to be retrieved and processed by the ELinq ExpressionConverter.
         /// </summary>
         /// <returns> The LINQ expression for this ObjectQuery, wrapped in a MergeOption-preserving call to the MergeAs method if the ObjectQuery.MergeOption property has been set. </returns>
         internal override Expression GetExpression()

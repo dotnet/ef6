@@ -30,10 +30,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An expression that specifies the input collection.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
-        ///     , or its result type is not a collection type.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
+        /// , or its result type is not a collection type.
         /// </exception>
         public DbExpression Argument
         {
@@ -44,16 +44,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An expression that specifies the limit on the number of elements returned from the input collection.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
-        ///     , or is not one of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" />
-        ///     or
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
-        ///     , or its result type is not equal or promotable to a 64-bit integer type.
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" />
+        /// , or is not one of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" />
+        /// or
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        /// , or its result type is not equal or promotable to a 64-bit integer type.
         /// </exception>
         public DbExpression Limit
         {
@@ -61,10 +61,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets whether the limit operation will include tied results. Including tied results might produce more results than specified by the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression.Limit" />
-        ///     value.
+        /// Gets whether the limit operation will include tied results. Including tied results might produce more results than specified by the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression.Limit" />
+        /// value.
         /// </summary>
         /// <returns>true if the limit operation will include tied results; otherwise, false. The default is false.</returns>
         public bool WithTies
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -86,13 +86,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

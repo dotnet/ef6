@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents invocation expression: expr(...)
+    /// Represents invocation expression: expr(...)
     /// </summary>
     internal sealed class MethodExpr : GroupAggregateExpr
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly NodeList<RelshipNavigationExpr> _relationships;
 
         /// <summary>
-        ///     Initializes method ast node.
+        /// Initializes method ast node.
         /// </summary>
         internal MethodExpr(
             Node expr,
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Intializes a method ast node with relationships.
+        /// Intializes a method ast node with relationships.
         /// </summary>
         internal MethodExpr(
             Node expr,
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     For the following expression: "a.b.c.Foo()", returns "a.b.c.Foo".
+        /// For the following expression: "a.b.c.Foo()", returns "a.b.c.Foo".
         /// </summary>
         internal Node Expr
         {
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Argument list.
+        /// Argument list.
         /// </summary>
         internal NodeList<Node> Args
         {
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     True if there are associated relationship expressions.
+        /// True if there are associated relationship expressions.
         /// </summary>
         internal bool HasRelationships
         {
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Optional relationship list.
+        /// Optional relationship list.
         /// </summary>
         internal NodeList<RelshipNavigationExpr> Relationships
         {

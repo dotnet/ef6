@@ -5,15 +5,15 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Globalization;
 
     /// <summary>
-    ///     SkipClause represents the a SKIP expression in a SqlSelectStatement.
-    ///     It has a count property, which indicates how many rows should be discarded.
+    /// SkipClause represents the a SKIP expression in a SqlSelectStatement.
+    /// It has a count property, which indicates how many rows should be discarded.
     /// </summary>
     internal class SkipClause : ISqlFragment
     {
         private readonly ISqlFragment skipCount;
 
         /// <summary>
-        ///     How many top rows should be discarded.
+        /// How many top rows should be discarded.
         /// </summary>
         internal ISqlFragment SkipCount
         {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Creates a SkipClause with the given skipCount.
+        /// Creates a SkipClause with the given skipCount.
         /// </summary>
         internal SkipClause(ISqlFragment skipCount)
         {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Creates a SkipClause with the given skipCount.
+        /// Creates a SkipClause with the given skipCount.
         /// </summary>
         internal SkipClause(int skipCount)
         {
@@ -41,8 +41,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         #region ISqlFragment Members
 
         /// <summary>
-        ///     Write out the OFFSET part of sql select statement
-        ///     It basically writes OFFSET X ROWS.
+        /// Write out the OFFSET part of sql select statement
+        /// It basically writes OFFSET X ROWS.
         /// </summary>
         public void WriteSql(SqlWriter writer, SqlGenerator sqlGenerator)
         {

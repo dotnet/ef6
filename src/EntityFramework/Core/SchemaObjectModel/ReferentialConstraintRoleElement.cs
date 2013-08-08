@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an role element in referential constraint element.
+    /// Represents an role element in referential constraint element.
     /// </summary>
     internal sealed class ReferentialConstraintRoleElement : SchemaElement
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private IRelationshipEnd _end;
 
         /// <summary>
-        ///     Constructs an EntityContainerAssociationSetEnd
+        /// Constructs an EntityContainerAssociationSetEnd
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public ReferentialConstraintRoleElement(ReferentialConstraint parentElement)
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Used during the resolve phase to resolve the type name to the object that represents that type
+        /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {

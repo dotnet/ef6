@@ -10,10 +10,10 @@ namespace System.Data.Entity
     using System.Reflection;
 
     /// <summary>
-    ///     A resolver that allows to add dependency resolvers at runtime.
+    /// A resolver that allows to add dependency resolvers at runtime.
     /// </summary>
     /// <remarks>
-    ///     This class isn't thread-safe as the tests using it aren't expected to be run in parallel.
+    /// This class isn't thread-safe as the tests using it aren't expected to be run in parallel.
     /// </remarks>
     public class MutableResolver : IDbDependencyResolver
     {
@@ -49,10 +49,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Adds or replaces a resolver for a dependency of type <typeparamref name="TResolver" />.
+        /// Adds or replaces a resolver for a dependency of type <typeparamref name="TResolver" />.
         /// </summary>
         /// <remarks>
-        ///     Remember to call <see cref="ClearResolvers" /> from a <c>finally</c> block or Dispose method after using this method.
+        /// Remember to call <see cref="ClearResolvers" /> from a <c>finally</c> block or Dispose method after using this method.
         /// </remarks>
         /// <typeparam name="TResolver">The type of dependency to resolve.</typeparam>
         /// <param name="resolver">A delegate that takes a key object and returns a dependency instance.</param>
@@ -66,10 +66,10 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Adds or replaces a resolver for a dependency of type <typeparamref name="TResolver" />.
+        /// Adds or replaces a resolver for a dependency of type <typeparamref name="TResolver" />.
         /// </summary>
         /// <remarks>
-        ///     Remember to call <see cref="ClearResolvers" /> from a <c>finally</c> block or Dispose method after using this method.
+        /// Remember to call <see cref="ClearResolvers" /> from a <c>finally</c> block or Dispose method after using this method.
         /// </remarks>
         public static void AddResolver<TResolver>(IDbDependencyResolver resolver)
         {
@@ -77,7 +77,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Removes all added resolvers.
+        /// Removes all added resolvers.
         /// </summary>
         public static void ClearResolvers()
         {

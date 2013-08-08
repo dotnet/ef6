@@ -23,24 +23,24 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     A PropertyRef class encapsulates a reference to one or more properties of
-    ///     a complex instance - a record type, a complex type or an entity type.
-    ///     A PropertyRef may be of the following kinds.
-    ///     - a simple property reference (just a reference to a simple property)
-    ///     - a typeid reference - applies only to entitytype and complextypes
-    ///     - an entitysetid reference - applies only to ref and entity types
-    ///     - a nested property reference (a reference to a nested property - a.b)
-    ///     - an "all" property reference (all properties)
+    /// A PropertyRef class encapsulates a reference to one or more properties of
+    /// a complex instance - a record type, a complex type or an entity type.
+    /// A PropertyRef may be of the following kinds.
+    /// - a simple property reference (just a reference to a simple property)
+    /// - a typeid reference - applies only to entitytype and complextypes
+    /// - an entitysetid reference - applies only to ref and entity types
+    /// - a nested property reference (a reference to a nested property - a.b)
+    /// - an "all" property reference (all properties)
     /// </summary>
     internal abstract class PropertyRef
     {
         /// <summary>
-        ///     Create a nested property ref, with "p" as the prefix.
-        ///     The best way to think of this function as follows.
-        ///     Consider a type T where "this" describes a property X on T. Now
-        ///     consider a new type S, where "p" is a property of S and is of type T.
-        ///     This function creates a PropertyRef that describes the same property X
-        ///     from S.p instead
+        /// Create a nested property ref, with "p" as the prefix.
+        /// The best way to think of this function as follows.
+        /// Consider a type T where "this" describes a property X on T. Now
+        /// consider a new type S, where "p" is a property of S and is of type T.
+        /// This function creates a PropertyRef that describes the same property X
+        /// from S.p instead
         /// </summary>
         /// <param name="p"> the property to prefix with </param>
         /// <returns> the nested property reference </returns>
@@ -50,8 +50,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a nested property ref for a simple property. Delegates to the function
-        ///     above
+        /// Create a nested property ref for a simple property. Delegates to the function
+        /// above
         /// </summary>
         /// <param name="p"> the simple property </param>
         /// <returns> a nestedPropertyRef </returns>
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Creates a nested property ref for a rel-property. Delegates to the function above
+        /// Creates a nested property ref for a rel-property. Delegates to the function above
         /// </summary>
         /// <param name="p"> the rel-property </param>
         /// <returns> a nested property ref </returns>
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     The tostring method for easy debuggability
+        /// The tostring method for easy debuggability
         /// </summary>
         public override string ToString()
         {

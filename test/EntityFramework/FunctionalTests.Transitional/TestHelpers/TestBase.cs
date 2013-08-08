@@ -122,7 +122,7 @@ namespace System.Data.Entity
         #region Assemblies and exceptions
 
         /// <summary>
-        ///     The assembly containing Code First and the Productivity API.
+        /// The assembly containing Code First and the Productivity API.
         /// </summary>
         public static Assembly EntityFrameworkAssembly
         {
@@ -130,7 +130,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     System.ComponentModel.DataAnnotations.
+        /// System.ComponentModel.DataAnnotations.
         /// </summary>
         public static Assembly SystemComponentModelDataAnnotationsAssembly
         {
@@ -138,7 +138,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     EntityFramework.SqlServer
+        /// EntityFramework.SqlServer
         /// </summary>
         public static Assembly EntityFrameworkSqlServerAssembly
         {
@@ -146,7 +146,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets an embedded resource string from the specified assembly
+        /// Gets an embedded resource string from the specified assembly
         /// </summary>
         public static string LookupString(Assembly assembly, string resourceTable, string resourceKey)
         {
@@ -154,7 +154,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Executes the given delegate and returns the exception that it throws.
+        /// Executes the given delegate and returns the exception that it throws.
         /// </summary>
         protected Exception GenerateException(Action willThrow)
         {
@@ -162,7 +162,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Executes the given test multiple times in parallel.
+        /// Executes the given test multiple times in parallel.
         /// </summary>
         /// <param name="test"> The test. </param>
         /// <param name="count"> The number of copies to run in parallel. </param>
@@ -181,7 +181,7 @@ namespace System.Data.Entity
         #region GetObjectContext
 
         /// <summary>
-        ///     Returns the ObjectContext for the given DbContext.
+        /// Returns the ObjectContext for the given DbContext.
         /// </summary>
         public static ObjectContext GetObjectContext(DbContext context)
         {
@@ -193,7 +193,7 @@ namespace System.Data.Entity
         #region State entry helpers
 
         /// <summary>
-        ///     Gets all GetStateEntries for the given DbContext,.
+        /// Gets all GetStateEntries for the given DbContext,.
         /// </summary>
         /// <param name="dbContext"> A DbContext instance. </param>
         /// <returns> All state entries in the ObjectStateManager. </returns>
@@ -203,7 +203,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets all GetStateEntries for the given ObjectContext,.
+        /// Gets all GetStateEntries for the given ObjectContext,.
         /// </summary>
         /// <param name="objectContext"> A ObjectContext instance. </param>
         /// <returns> All state entries in the ObjectStateManager. </returns>
@@ -213,7 +213,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the ObjectStateEntry for the given entity in the given DbContext.
+        /// Gets the ObjectStateEntry for the given entity in the given DbContext.
         /// </summary>
         /// <param name="dbContext"> A DbContext instance. </param>
         /// <param name="entity"> The entity to lookup. </param>
@@ -224,7 +224,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the ObjectStateEntry for the given entity in the given ObjectContext.
+        /// Gets the ObjectStateEntry for the given entity in the given ObjectContext.
         /// </summary>
         /// <param name="objectContext"> A ObjectContext instance. </param>
         /// <param name="entity"> The entity to lookup. </param>
@@ -235,7 +235,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Asserts that there's no ObjectStateEntry for the given entity in the given DbContext.
+        /// Asserts that there's no ObjectStateEntry for the given entity in the given DbContext.
         /// </summary>
         /// <param name="dbContext"> A DbContext instance. </param>
         /// <param name="entity"> The entity to lookup. </param>
@@ -245,7 +245,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Asserts that there's no ObjectStateEntry for the given entity in the given ObjectContext.
+        /// Asserts that there's no ObjectStateEntry for the given entity in the given ObjectContext.
         /// </summary>
         /// <param name="objectContext"> A ObjectContext instance. </param>
         /// <param name="entity"> The entity to lookup. </param>
@@ -259,7 +259,7 @@ namespace System.Data.Entity
         #region Connection helpers
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine with the given database name.
+        /// Returns a simple SQL Server connection string to the local machine with the given database name.
         /// </summary>
         /// <param name="databaseName"> The database name. </param>
         /// <returns> The connection string. </returns>
@@ -269,14 +269,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string with the specified credentials.
+        /// Returns a simple SQL Server connection string with the specified credentials.
         /// </summary>
         /// <param name="databaseName"> The database name. </param>
         /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
         /// <param name="password"> Password for the SQL Server account. </param>
         /// <param name="persistSecurityInfo">
-        ///     Indicates if security-sensitive information is not returned as part of the
-        ///     connection if the connection has ever been opened.
+        /// Indicates if security-sensitive information is not returned as part of the
+        /// connection if the connection has ever been opened.
         /// </param>
         /// <returns> The connection string. </returns>
         protected static string SimpleConnectionStringWithCredentials(
@@ -293,7 +293,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns the default name that will be created for the context of the given type.
+        /// Returns the default name that will be created for the context of the given type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a name for. </typeparam>
         /// <returns> The name. </returns>
@@ -303,7 +303,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns the transaction count from the server.
+        /// Returns the transaction count from the server.
         /// </summary>
         /// <param name="connection"> Database connection to connect against. </param>
         /// <returns> The transaction count. </returns>
@@ -331,7 +331,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a local transaction.
+        /// Returns a local transaction.
         /// </summary>
         /// <param name="context"> </param>
         /// <returns> </returns>
@@ -341,8 +341,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Opens the underlying <see cref="EntityConnection" /> obtained from the underlying
-        ///     <see cref="ObjectContext" /> and creates a new <see cref="CommittableTransaction" />.
+        /// Opens the underlying <see cref="EntityConnection" /> obtained from the underlying
+        /// <see cref="ObjectContext" /> and creates a new <see cref="CommittableTransaction" />.
         /// </summary>
         /// <param name="context"> </param>
         /// <returns> </returns>
@@ -354,8 +354,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Opens the underlying <see cref="EntityConnection" /> obtained from the underlying
-        ///     <see cref="ObjectContext" /> and returns it.
+        /// Opens the underlying <see cref="EntityConnection" /> obtained from the underlying
+        /// <see cref="ObjectContext" /> and returns it.
         /// </summary>
         /// <param name="context"> The context. </param>
         /// <returns> The connection. </returns>
@@ -372,8 +372,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Closes the underlying <see cref="EntityConnection" /> obtained from the underlying
-        ///     <see cref="ObjectContext" /> if the connection is open.
+        /// Closes the underlying <see cref="EntityConnection" /> obtained from the underlying
+        /// <see cref="ObjectContext" /> if the connection is open.
         /// </summary>
         protected void CloseEntityConnection(DbContext context)
         {
@@ -386,7 +386,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine for the given context type.
+        /// Returns a simple SQL Server connection string to the local machine for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
         /// <returns> The connection string. </returns>
@@ -396,14 +396,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine for the given context type
-        ///     with the specified credentials.
+        /// Returns a simple SQL Server connection string to the local machine for the given context type
+        /// with the specified credentials.
         /// </summary>
         /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
         /// <param name="password"> Password for the SQL Server account. </param>
         /// <param name="persistSecurityInfo">
-        ///     Indicates if security-sensitive information is not returned as part of the 
-        ///     connection if the connection has ever been opened.
+        /// Indicates if security-sensitive information is not returned as part of the 
+        /// connection if the connection has ever been opened.
         /// </param>
         /// <returns> The connection string. </returns>
         public static string SimpleConnectionStringWithCredentials<TContext>(
@@ -419,12 +419,12 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine using attached database
-        ///     for the given context type.
+        /// Returns a simple SQL Server connection string to the local machine using attached database
+        /// for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection string for. </typeparam>
         /// <param name="useInitialCatalog">
-        ///     Specifies whether the InitialCatalog should be created from the context name.
+        /// Specifies whether the InitialCatalog should be created from the context name.
         /// </param>
         /// <returns> The connection string. </returns>
         protected static string SimpleAttachConnectionString<TContext>(bool useInitialCatalog = true) where TContext : DbContext
@@ -433,14 +433,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection string to the local machine using an attachable database
-        ///     for the given context type with the specified credentials.
+        /// Returns a simple SQL Server connection string to the local machine using an attachable database
+        /// for the given context type with the specified credentials.
         /// </summary>
         /// <param name="userId"> User ID to be use when connecting to SQL Server. </param>
         /// <param name="password"> Password for the SQL Server account. </param>
         /// <param name="persistSecurityInfo">
-        ///     Indicates if security-sensitive information is not returned as part of the 
-        ///     connection if the connection has ever been opened.
+        /// Indicates if security-sensitive information is not returned as part of the 
+        /// connection if the connection has ever been opened.
         /// </param>
         /// <returns> The connection string. </returns>
         public static string SimpleAttachConnectionStringWithCredentials<TContext>(
@@ -455,7 +455,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQLCE connection string to the local machine for the given context type.
+        /// Returns a simple SQLCE connection string to the local machine for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context. </typeparam>
         /// <returns> The connection string. </returns>
@@ -465,7 +465,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL Server connection to the local machine for the given context type.
+        /// Returns a simple SQL Server connection to the local machine for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection for. </typeparam>
         /// <returns> The connection. </returns>
@@ -475,7 +475,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Returns a simple SQL CE connection for the given context type.
+        /// Returns a simple SQL CE connection for the given context type.
         /// </summary>
         /// <typeparam name="TContext"> The type of the context to create a connection for. </typeparam>
         /// <returns> The connection. </returns>
@@ -489,7 +489,7 @@ namespace System.Data.Entity
         #region Entity set name helpers
 
         /// <summary>
-        ///     Gets the entity set name for the given CLR type, assuming no MEST.
+        /// Gets the entity set name for the given CLR type, assuming no MEST.
         /// </summary>
         /// <param name="dbContext"> The context to look in. </param>
         /// <param name="clrType"> The type to lookup. </param>
@@ -500,7 +500,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the entity set name for the given CLR type, assuming no MEST.
+        /// Gets the entity set name for the given CLR type, assuming no MEST.
         /// </summary>
         /// <param name="objetContext"> The context to look in. </param>
         /// <param name="clrType"> The type to lookup. </param>
@@ -515,7 +515,7 @@ namespace System.Data.Entity
         #region Entity Type helpers
 
         /// <summary>
-        ///     Gets the EntityType of the given CLR type
+        /// Gets the EntityType of the given CLR type
         /// </summary>
         /// <param name="dbContext"> The context to look in. </param>
         /// <param name="clrType"> The CLR type </param>
@@ -526,7 +526,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the EntityType of the given CLR type
+        /// Gets the EntityType of the given CLR type
         /// </summary>
         /// <param name="objectContext"> The context to look in. </param>
         /// <param name="clrType"> The CLR type </param>

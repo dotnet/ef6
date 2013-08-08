@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents a query expression ast node.
+    /// Represents a query expression ast node.
     /// </summary>
     internal sealed class QueryExpr : Node
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly OrderByClause _orderByClause;
 
         /// <summary>
-        ///     Initializes a query expression ast node.
+        /// Initializes a query expression ast node.
         /// </summary>
         /// <param name="selectClause"> select clause </param>
         /// <param name="fromClause"> from clasuse </param>
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns select clause.
+        /// Returns select clause.
         /// </summary>
         internal SelectClause SelectClause
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns from clause.
+        /// Returns from clause.
         /// </summary>
         internal FromClause FromClause
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional where clause (expr).
+        /// Returns optional where clause (expr).
         /// </summary>
         internal Node WhereClause
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional group by clause.
+        /// Returns optional group by clause.
         /// </summary>
         internal GroupByClause GroupByClause
         {
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional having clause (expr).
+        /// Returns optional having clause (expr).
         /// </summary>
         internal HavingClause HavingClause
         {
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional order by clause.
+        /// Returns optional order by clause.
         /// </summary>
         internal OrderByClause OrderByClause
         {
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns true if method calls are present.
+        /// Returns true if method calls are present.
         /// </summary>
         internal bool HasMethodCall
         {

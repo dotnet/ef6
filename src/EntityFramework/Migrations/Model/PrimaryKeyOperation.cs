@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Globalization;
 
     /// <summary>
-    ///     Common base class to represent operations affecting primary keys.
+    /// Common base class to represent operations affecting primary keys.
     /// </summary>
     public abstract class PrimaryKeyOperation : MigrationOperation
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Migrations.Model
         private string _name;
 
         /// <summary>
-        ///     Initializes a new instance of the PrimaryKeyOperation class.
+        /// Initializes a new instance of the PrimaryKeyOperation class.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of the table that contains the primary key.
+        /// Gets or sets the name of the table that contains the primary key.
         /// </summary>
         public string Table
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the column(s) that make up the primary key.
+        /// Gets the column(s) that make up the primary key.
         /// </summary>
         public IList<string> Columns
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets a value indicating if a specific name has been supplied for this primary key.
+        /// Gets a value indicating if a specific name has been supplied for this primary key.
         /// </summary>
         public bool HasDefaultName
         {
@@ -58,8 +58,8 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of this primary key.
-        ///     If no name is supplied, a default name will be calculated.
+        /// Gets or sets the name of this primary key.
+        /// If no name is supplied, a default name will be calculated.
         /// </summary>
         public string Name
         {

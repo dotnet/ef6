@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Diagnostics;
 
     /// <summary>
-    ///     Extends IComparer support to the (non-IComparable) byte[] type, based on by-value comparison.
+    /// Extends IComparer support to the (non-IComparable) byte[] type, based on by-value comparison.
     /// </summary>
     internal class ByValueComparer : IComparer
     {

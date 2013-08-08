@@ -12,8 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Allows configuration to be performed for an entity type in a model.
-    ///     This configuration functionality is available via lightweight conventions.
+    /// Allows configuration to be performed for an entity type in a model.
+    /// This configuration functionality is available via lightweight conventions.
     /// </summary>
     /// <typeparam name="T"> A type inherited by the entity type. </typeparam>
     public class ConventionTypeConfiguration<T>
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets the <see cref="Type" /> of this entity type.
+        /// Gets the <see cref="Type" /> of this entity type.
         /// </summary>
         public Type ClrType
         {
@@ -68,15 +68,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the entity set name to be used for this entity type.
-        ///     The entity set name can only be configured for the base type in each set.
+        /// Configures the entity set name to be used for this entity type.
+        /// The entity set name can only be configured for the base type in each set.
         /// </summary>
         /// <param name="entitySetName"> The name of the entity set. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration<T> HasEntitySetName(string entitySetName)
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes this entity type from the model so that it will not be mapped to the database.
+        /// Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
         public ConventionTypeConfiguration<T> Ignore()
         {
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Changes this entity type to a complex type.
+        /// Changes this entity type to a complex type.
         /// </summary>
         public ConventionTypeConfiguration<T> IsComplexType()
         {
@@ -106,7 +106,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -121,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type.
+        /// Configures a property that is defined on this type.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property being configured. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type as a navigation property.
+        /// Configures a property that is defined on this type as a navigation property.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property being configured. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -149,15 +149,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the primary key property(s) for this entity type.
+        /// Configures the primary key property(s) for this entity type.
         /// </summary>
         /// <typeparam name="TProperty"> The type of the key. </typeparam>
         /// <param name="keyExpression"> A lambda expression representing the property to be used as the primary key. C#: t => t.Id VB.Net: Function(t) t.Id If the primary key is made up of multiple properties then specify an anonymous type including the properties. C#: t => new { t.Id1, t.Id2 } VB.Net: Function(t) New With { t.Id1, t.Id2 } </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ConventionTypeConfiguration<T> HasKey<TProperty>(Expression<Func<T, TProperty>> keyExpression)
@@ -170,11 +170,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name that this entity type is mapped to.
+        /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration<T> ToTable(string tableName)
         {
@@ -186,12 +186,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name that this entity type is mapped to.
+        /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <param name="schemaName"> The database schema of the table. </param>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration<T> ToTable(string tableName, string schemaName)
         {
@@ -218,7 +218,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
         /// <param name="modificationStoredProceduresConfigurationAction">
-        ///     Configuration to override the default conventions for procedure and parameter names.
+        /// Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     class representing the Schema element in the schema
+    /// class representing the Schema element in the schema
     /// </summary>
     internal sealed class ModelFunction : Function
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        ///     ctor for a schema function
+        /// ctor for a schema function
         /// </summary>
         public ModelFunction(Schema parentElement)
             :

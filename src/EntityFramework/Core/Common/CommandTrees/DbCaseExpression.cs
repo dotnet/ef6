@@ -9,10 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents the When, Then, and Else clauses of the
-    ///     <see
-    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
-    ///     . This class cannot be inherited.
+    /// Represents the When, Then, and Else clauses of the
+    /// <see
+    ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+    /// . This class cannot be inherited.
     /// </summary>
     public sealed class DbCaseExpression : DbExpression
     {
@@ -34,10 +34,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// Gets the When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
         /// <returns>
-        ///     The When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// The When clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </returns>
         public IList<DbExpression> When
         {
@@ -45,10 +45,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// Gets the Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
         /// <returns>
-        ///     The Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// The Then clauses of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </returns>
         public IList<DbExpression> Then
         {
@@ -56,20 +56,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// Gets the Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
         /// <returns>
-        ///     The Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// The Else clause of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
-        ///     ,or its result type is not equal or promotable to the result type of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
-        ///     .
+        /// The expression is not associated with the command tree of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+        /// ,or its result type is not equal or promotable to the result type of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />
+        /// .
         /// </exception>
         public DbExpression Else
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -90,13 +90,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor. </typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

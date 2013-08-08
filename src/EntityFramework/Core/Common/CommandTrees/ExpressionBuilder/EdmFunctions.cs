@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Linq;
 
     /// <summary>
-    ///     Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that invoke canonical EDM functions, and allows that API to be accessed as extension methods on the expression type itself.
+    /// Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that invoke canonical EDM functions, and allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
     public static class EdmFunctions
     {
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Aggregate functions - Average, Count, LongCount, Max, Min, Sum, StDev, StDevP, Var, VarP
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Avg' function over the specified collection. The result type of the expression is the same as the element type of the collection.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Avg' function over the specified collection. The result type of the expression is the same as the element type of the collection.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the average value.</returns>
         /// <param name="collection">An expression that specifies the collection from which the average value should be computed.</param>
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Count' function over the specified collection. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Count' function over the specified collection. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the count value.</returns>
         /// <param name="collection">An expression that specifies the collection over which the count value should be computed.</param>
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BigCount' function over the specified collection. The result type of the expression is Edm.Int64.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BigCount' function over the specified collection. The result type of the expression is Edm.Int64.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the count value.</returns>
         /// <param name="collection">An expression that specifies the collection over which the count value should be computed.</param>
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Max' function over the specified collection. The result type of the expression is the same as the element type of the collection.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Max' function over the specified collection. The result type of the expression is the same as the element type of the collection.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the maximum value.</returns>
         /// <param name="collection">An expression that specifies the collection from which the maximum value should be retrieved</param>
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Min' function over the specified collection. The result type of the expression is the same as the element type of the collection.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Min' function over the specified collection. The result type of the expression is the same as the element type of the collection.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the minimum value.</returns>
         /// <param name="collection">An expression that specifies the collection from which the minimum value should be retrieved.</param>
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Sum' function over the specified collection. The result type of the expression is the same as the element type of the collection.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Sum' function over the specified collection. The result type of the expression is the same as the element type of the collection.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the sum.</returns>
         /// <param name="collection">An expression that specifies the collection from which the sum should be computed.</param>
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StDev' function over the non-null members of the specified collection. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StDev' function over the non-null members of the specified collection. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the standard deviation value over non-null members of the collection.</returns>
         /// <param name="collection">An expression that specifies the collection for which the standard deviation should be computed.</param>
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StDevP' function over the population of the specified collection. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StDevP' function over the population of the specified collection. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the standard deviation value.</returns>
         /// <param name="collection">An expression that specifies the collection for which the standard deviation should be computed.</param>
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Var' function over the non-null members of the specified collection. The result type of the expression is Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Var' function over the non-null members of the specified collection. The result type of the expression is Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the statistical variance value for the non-null members of the collection.</returns>
         /// <param name="collection">An expression that specifies the collection for which the statistical variance should be computed.</param>
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'VarP' function over the population of the specified collection. The result type of the expression Edm.Double.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'VarP' function over the population of the specified collection. The result type of the expression Edm.Double.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the statistical variance value.</returns>
         /// <param name="collection">An expression that specifies the collection for which the statistical variance should be computed.</param>
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region String functions - Concat, Contains, EndsWith, IndexOf, Left, Length, LTrim, Replace, Reverse, Right, RTrim, StartsWith, Substring, ToUpper, ToLower, Trim
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Concat' function with the specified arguments, which must each have a string result type. The result type of the expression is string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Concat' function with the specified arguments, which must each have a string result type. The result type of the expression is string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the concatenated string.</returns>
         /// <param name="string1">An expression that specifies the string that should appear first in the concatenated result string.</param>
@@ -194,7 +194,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Contains' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Contains' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether or not searchedForString occurs within searchedString.</returns>
         /// <param name="searchedString">An expression that specifies the string to search for any occurence of searchedForString.</param>
@@ -207,7 +207,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'EndsWith' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'EndsWith' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether or not stringArgument ends with suffix.</returns>
         /// <param name="stringArgument">An expression that specifies the string that is searched at the end for string suffix.</param>
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IndexOf' function with the specified arguments, which must each have a string result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'IndexOf' function with the specified arguments, which must each have a string result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the first index of stringToFind in searchString.</returns>
         /// <param name="searchString">An expression that specifies the string to search for stringToFind.</param>
@@ -233,7 +233,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Left' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Left' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the the leftmost substring of length length from stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the leftmost substring.</param>
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Length' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Length' function with the specified argument, which must have a string result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the length of stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string for which the length should be computed.</param>
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Replace' function with the specified arguments, which must each have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Replace' function with the specified arguments, which must each have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression than returns a new string based on stringArgument where every occurence of toReplace is replaced by replacement.</returns>
         /// <param name="stringArgument">An expression that specifies the string in which to perform the replacement operation.</param>
@@ -272,7 +272,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Reverse' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Reverse' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that produces the reversed value of stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string to reverse.</param>
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Right' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Right' function with the specified arguments, which must have a string and integer numeric result type. The result type of the expression is string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the the rightmost substring of length length from stringArgument.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the rightmost substring.</param>
@@ -296,7 +296,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StartsWith' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'StartsWith' function with the specified arguments, which must each have a string result type. The result type of the expression is Boolean.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a Boolean value indicating whether or not stringArgument starts with prefix.</returns>
         /// <param name="stringArgument">An expression that specifies the string that is searched at the start for string prefix.</param>
@@ -309,7 +309,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Substring' function with the specified arguments, which must have a string and integer numeric result types. The result type of the expression is string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Substring' function with the specified arguments, which must have a string and integer numeric result types. The result type of the expression is string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the substring of length length from stringArgument starting at start.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which to extract the substring.</param>
@@ -324,7 +324,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ToLower' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ToLower' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns value of stringArgument converted to lower case.</returns>
         /// <param name="stringArgument">An expression that specifies the string that should be converted to lower case.</param>
@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ToUpper' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'ToUpper' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns value of stringArgument converted to upper case.</returns>
         /// <param name="stringArgument">An expression that specifies the string that should be converted to upper case.</param>
@@ -346,7 +346,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Trim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Trim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns value of stringArgument with leading and trailing space removed.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which leading and trailing space should be removed.</param>
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'RTrim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'RTrim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns value of stringArgument with trailing space removed.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which trailing space should be removed.</param>
@@ -368,7 +368,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'LTrim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'LTrim' function with the specified argument, which must have a string result type. The result type of the expression is also string.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns value of stringArgument with leading space removed.</returns>
         /// <param name="stringArgument">An expression that specifies the string from which leading space should be removed.</param>
@@ -383,7 +383,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Date/Time member access methods - Year, Month, Day, DayOfYear, Hour, Minute, Second, Millisecond, GetTotalOffsetMinutes
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Year' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Year' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer year value from dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value from which the year should be retrieved.</param>
@@ -394,7 +394,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Month' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Month' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer month value from dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value from which the month should be retrieved.</param>
@@ -405,7 +405,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Day' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Day' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer day value from dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value from which the day should be retrieved.</param>
@@ -416,7 +416,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DayOfYear' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DayOfYear' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer day of year value from dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value from which the day within the year should be retrieved.</param>
@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Hour' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Hour' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer hour value from timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value from which the hour should be retrieved.</param>
@@ -438,7 +438,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Minute' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Minute' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer minute value from timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value from which the minute should be retrieved.</param>
@@ -449,7 +449,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Second' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Second' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer second value from timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value from which the second should be retrieved.</param>
@@ -460,7 +460,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Millisecond' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Millisecond' function with the specified argument, which must have a DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the integer millisecond value from timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value from which the millisecond should be retrieved.</param>
@@ -471,7 +471,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GetTotalOffsetMinutes' function with the specified argument, which must have a DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'GetTotalOffsetMinutes' function with the specified argument, which must have a DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of minutes dateTimeOffsetArgument is offset from GMT.</returns>
         /// <param name="dateTimeOffsetArgument">An expression that specifies the DateTimeOffset value from which the minute offset from GMT should be retrieved.</param>
@@ -486,7 +486,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Date/Time creation methods - CurrentDateTime, CurrentDateTimeOffset, CurrentUtcDateTime, CreateDateTime, CreateDateTimeOffset, CreateTime, TruncateTime
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentDateTime' function.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentDateTime' function.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the current date and time as an Edm.DateTime instance.</returns>
         public static DbFunctionExpression CurrentDateTime()
@@ -495,7 +495,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentDateTimeOffset' function.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentDateTimeOffset' function.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the current date and time as an Edm.DateTimeOffset instance.</returns>
         public static DbFunctionExpression CurrentDateTimeOffset()
@@ -504,7 +504,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentUtcDateTime' function.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CurrentUtcDateTime' function.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the current UTC date and time as an Edm.DateTime instance.</returns>
         public static DbFunctionExpression CurrentUtcDateTime()
@@ -513,7 +513,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'TruncateTime' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is the same as the result type of dateValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'TruncateTime' function with the specified argument, which must have a DateTime or DateTimeOffset result type. The result type of the expression is the same as the result type of dateValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value of dateValue with time set to zero.</returns>
         /// <param name="dateValue">An expression that specifies the value for which the time portion should be truncated.</param>
@@ -524,7 +524,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateDateTime' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.DateTime.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateDateTime' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.DateTime.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new DateTime based on the specified values.</returns>
         /// <param name="year">An expression that provides the year value for the new DateTime instance.</param>
@@ -546,7 +546,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateDateTimeOffset' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.DateTimeOffset.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateDateTimeOffset' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.DateTimeOffset.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new DateTimeOffset based on the specified values.</returns>
         /// <param name="year">An expression that provides the year value for the new DateTimeOffset instance.</param>
@@ -571,7 +571,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateTime' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.Time.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'CreateTime' function with the specified arguments. second must have a result type of Edm.Double, while all other arguments must have a result type of Edm.Int32. The result type of the expression is Edm.Time.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new Time based on the specified values.</returns>
         /// <param name="hour">An expression that provides the hour value for the new DateTime instance.</param>
@@ -590,7 +590,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Date/Time addition - AddYears, AddMonths, AddDays, AddHours, AddMinutes, AddSeconds, AddMilliseconds, AddMicroseconds, AddNanoseconds
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddYears' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddYears' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of years specified by addValue to the value specified by dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -603,7 +603,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMonths' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMonths' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of months specified by addValue to the value specified by dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -616,7 +616,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddDays' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddDays' function with the specified arguments, which must have DateTime or DateTimeOffset and integer result types. The result type of the expression is the same as the result type of dateValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of days specified by addValue to the value specified by dateValue.</returns>
         /// <param name="dateValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -629,7 +629,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddHours' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddHours' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of hours specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -642,7 +642,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMinutes' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMinutes' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of minutes specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -655,7 +655,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddSeconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddSeconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of seconds specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMilliseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMilliseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of milliseconds specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -681,7 +681,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMicroseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddMicroseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of microseconds specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -694,7 +694,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddNanoseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'AddNanoseconds' function with the specified arguments, which must have DateTime, DateTimeOffset or Time, and integer result types. The result type of the expression is the same as the result type of timeValue.
         /// </summary>
         /// <returns>A new DbFunctionExpression that adds the number of nanoseconds specified by addValue to the value specified by timeValue.</returns>
         /// <param name="timeValue">An expression that specifies the value to which addValueshould be added.</param>
@@ -711,7 +711,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Date/Time difference - DiffYears, DiffMonths, DiffDays, DiffHours, DiffMinutes, DiffSeconds, DiffMilliseconds, DiffMicroseconds, DiffNanoseconds
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffYears' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffYears' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of years that is the difference between dateValue1 and dateValue2.</returns>
         /// <param name="dateValue1">An expression that specifies the first date value argument.</param>
@@ -724,7 +724,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMonths' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMonths' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of months that is the difference between dateValue1 and dateValue2.</returns>
         /// <param name="dateValue1">An expression that specifies the first date value argument.</param>
@@ -737,7 +737,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffDays' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffDays' function with the specified arguments, which must each have DateTime or DateTimeOffset result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of days that is the difference between dateValue1 and dateValue2.</returns>
         /// <param name="dateValue1">An expression that specifies the first date value argument.</param>
@@ -750,7 +750,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffHours' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffHours' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of hours that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -763,7 +763,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMinutes' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMinutes' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of minutes that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -776,7 +776,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffSeconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffSeconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of seconds that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -789,7 +789,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMilliseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMilliseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of milliseconds that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -802,7 +802,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMicroseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffMicroseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of microseconds that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -815,7 +815,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffNanoseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'DiffNanoseconds' function with the specified arguments, which must each have DateTime, DateTimeOffset or Time result type. The result type of the expression is Edm.Int32.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the number of nanoseconds that is the difference between timeValue1 and timeValue2.</returns>
         /// <param name="timeValue1">An expression that specifies the first time value argument.</param>
@@ -832,7 +832,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Math functions - Floor, Ceiling, Round, Truncate, Abs, Power
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Round' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Round' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that rounds the specified argument to the nearest integer value.</returns>
         /// <param name="value">An expression that specifies the numeric value to round.</param>
@@ -843,7 +843,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Round' function with the specified arguments, which must have a single, double or decimal, and integer result types. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Round' function with the specified arguments, which must have a single, double or decimal, and integer result types. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that rounds the specified argument to the nearest integer value, with precision as specified by digits.</returns>
         /// <param name="value">An expression that specifies the numeric value to round.</param>
@@ -856,7 +856,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Floor' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Floor' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the largest integer value not greater than value.</returns>
         /// <param name="value">An expression that specifies the numeric value.</param>
@@ -867,7 +867,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Ceiling' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Ceiling' function with the specified argument, which must each have a single, double or decimal result type. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the smallest integer value not less than than value.</returns>
         /// <param name="value">An expression that specifies the numeric value.</param>
@@ -878,7 +878,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Abs' function with the specified argument, which must each have a numeric result type. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Abs' function with the specified argument, which must each have a numeric result type. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the absolute value of value.</returns>
         /// <param name="value">An expression that specifies the numeric value.</param>
@@ -889,7 +889,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Truncate' function with the specified arguments, which must have a single, double or decimal, and integer result types. The result type of the expression is the same as the result type of value.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Truncate' function with the specified arguments, which must have a single, double or decimal, and integer result types. The result type of the expression is the same as the result type of value.
         /// </summary>
         /// <returns>A new DbFunctionExpression that truncates the specified argument to the nearest integer value, with precision as specified by digits.</returns>
         /// <param name="value">An expression that specifies the numeric value to truncate.</param>
@@ -902,7 +902,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Power' function with the specified arguments, which must have numeric result types. The result type of the expression is the same as the result type of baseArgument.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'Power' function with the specified arguments, which must have numeric result types. The result type of the expression is the same as the result type of baseArgument.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value of baseArgument raised to the power specified by exponent.</returns>
         /// <param name="baseArgument">An expression that specifies the numeric value to raise to the given power.</param>
@@ -919,7 +919,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Bitwise functions - And, Or, Not, Xor
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseAnd' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseAnd' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value produced by performing the bitwise AND of value1 and value2.</returns>
         /// <param name="value1">An expression that specifies the first operand.</param>
@@ -932,7 +932,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseOr' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseOr' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value produced by performing the bitwise OR of value1 and value2.</returns>
         /// <param name="value1">An expression that specifies the first operand.</param>
@@ -945,7 +945,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseNot' function with the specified argument, which must have an integer numeric result type. The result type of the expression is the same as the type of the arguments.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseNot' function with the specified argument, which must have an integer numeric result type. The result type of the expression is the same as the type of the arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value produced by performing the bitwise NOT of value.</returns>
         /// <param name="value">An expression that specifies the first operand.</param>
@@ -956,7 +956,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseXor' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'BitwiseXor' function with the specified arguments, which must have the same integer numeric result type. The result type of the expression is the same as the type of the arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns the value produced by performing the bitwise XOR (exclusive OR) of value1 and value2.</returns>
         /// <param name="value1">An expression that specifies the first operand.</param>
@@ -973,7 +973,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region GUID Generation - NewGuid
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'NewGuid' function.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> that invokes the canonical 'NewGuid' function.
         /// </summary>
         /// <returns>A new DbFunctionExpression that returns a new GUID value.</returns>
         public static DbFunctionExpression NewGuid()

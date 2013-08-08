@@ -8,12 +8,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     An <see cref="IDbDependencyResolver" /> implementation used for resolving <see cref="IDbExecutionStrategy" />
-    ///     factories.
+    /// An <see cref="IDbDependencyResolver" /> implementation used for resolving <see cref="IDbExecutionStrategy" />
+    /// factories.
     /// </summary>
     /// <remarks>
-    ///     This class can be used by <see cref="DbProviderServices" /> to aid in the resolving
-    ///     of <see cref="IDbExecutionStrategy" /> factories as a default service for the provider.
+    /// This class can be used by <see cref="DbProviderServices" /> to aid in the resolving
+    /// of <see cref="IDbExecutionStrategy" /> factories as a default service for the provider.
     /// </remarks>
     /// <typeparam name="T">The type of execution strategy that is resolved.</typeparam>
     public class ExecutionStrategyResolver<T> : IDbDependencyResolver
@@ -24,11 +24,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private readonly string _serverName;
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="ExecutionStrategyResolver{T}" />
+        /// Initializes a new instance of <see cref="ExecutionStrategyResolver{T}" />
         /// </summary>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
         /// <param name="serverName">
-        ///     A string that will be matched against the server name in the connection string. <c>null</c> will match anything.
+        /// A string that will be matched against the server name in the connection string. <c>null</c> will match anything.
         /// </param>
         /// <param name="getExecutionStrategy">A function that returns a new instance of an execution strategy.</param>
         public ExecutionStrategyResolver(string providerInvariantName, string serverName, Func<T> getExecutionStrategy)
@@ -42,14 +42,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     If the given type is <see cref="Func{IExecutionStrategy}" />, then this resolver will attempt
-        ///     to return the service to use, otherwise it will return null. When the given type is
-        ///     Func{IExecutionStrategy}, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
+        /// If the given type is <see cref="Func{IExecutionStrategy}" />, then this resolver will attempt
+        /// to return the service to use, otherwise it will return null. When the given type is
+        /// Func{IExecutionStrategy}, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
         /// </summary>
         /// <param name="type">The service type to resolve.</param>
         /// <param name="key">A key used to make a determination of the service to return.</param>
         /// <returns>
-        ///     An <see cref="Func{IExecutionStrategy}" />, or null.
+        /// An <see cref="Func{IExecutionStrategy}" />, or null.
         /// </returns>
         public object GetService(Type type, object key)
         {
@@ -80,14 +80,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     If the given type is <see cref="Func{IExecutionStrategy}" />, then this resolver will attempt
-        ///     to return the service to use, otherwise it will return an empty enumeration. When the given type is
-        ///     Func{IExecutionStrategy}, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
+        /// If the given type is <see cref="Func{IExecutionStrategy}" />, then this resolver will attempt
+        /// to return the service to use, otherwise it will return an empty enumeration. When the given type is
+        /// Func{IExecutionStrategy}, then the key is expected to be an <see cref="ExecutionStrategyKey" />.
         /// </summary>
         /// <param name="type">The service type to resolve.</param>
         /// <param name="key">A key used to make a determination of the service to return.</param>
         /// <returns>
-        ///     An <see cref="Func{IExecutionStrategy}" />, or an empty enumeration.
+        /// An <see cref="Func{IExecutionStrategy}" />, or an empty enumeration.
         /// </returns>
         public IEnumerable<object> GetServices(Type type, object key)
         {

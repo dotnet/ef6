@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Text;
 
     /// <summary>
-    ///     This class denotes a constant that can be stored in multiconstants or projected in fields.
+    /// This class denotes a constant that can be stored in multiconstants or projected in fields.
     /// </summary>
     internal abstract class Constant : InternalBase
     {
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly Constant Undefined = UndefinedConstant.Instance;
 
         /// <summary>
-        ///     Represents scalar constants within a finite set that are not specified explicitly in the domain.
-        ///     Currently only used as a Sentinel node to prevent expression optimization
+        /// Represents scalar constants within a finite set that are not specified explicitly in the domain.
+        /// Currently only used as a Sentinel node to prevent expression optimization
         /// </summary>
         internal static readonly Constant AllOtherConstants = AllOtherConstantsConstant.Instance;
 
@@ -37,13 +37,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal abstract bool IsUndefined();
 
         /// <summary>
-        ///     Returns true if this constant contains not null.
-        ///     Implemented in <see cref="NegatedConstant" /> class, all other implementations return false.
+        /// Returns true if this constant contains not null.
+        /// Implemented in <see cref="NegatedConstant" /> class, all other implementations return false.
         /// </summary>
         internal abstract bool HasNotNull();
 
         /// <summary>
-        ///     Generates eSQL for the constant expression.
+        /// Generates eSQL for the constant expression.
         /// </summary>
         /// <param name="builder"> </param>
         /// <param name="outputMember"> The member to which this constant is directed </param>
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal abstract StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias);
 
         /// <summary>
-        ///     Generates CQT for the constant expression.
+        /// Generates CQT for the constant expression.
         /// </summary>
         /// <param name="row"> The input row. </param>
         /// <param name="outputMember"> The member to which this constant is directed </param>
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override string ToUserString()
             {
@@ -292,7 +292,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
@@ -301,7 +301,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
@@ -321,7 +321,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
 
             /// <summary>
-            ///     Not supported in this class.
+            /// Not supported in this class.
             /// </summary>
             internal override string ToUserString()
             {

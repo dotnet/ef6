@@ -10,22 +10,22 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     What we return from our materialization of a collection column must be
-    ///     exactly the type that the compilers expected when they generated the
-    ///     code that asked for it.  This class wraps our enumerators and derives
-    ///     from all the possible options, covering all the bases.
+    /// What we return from our materialization of a collection column must be
+    /// exactly the type that the compilers expected when they generated the
+    /// code that asked for it.  This class wraps our enumerators and derives
+    /// from all the possible options, covering all the bases.
     /// </summary>
     internal class CompensatingCollection<TElement> : IOrderedQueryable<TElement>, IOrderedEnumerable<TElement>
     {
         #region private state
 
         /// <summary>
-        ///     The thing we're compensating for
+        /// The thing we're compensating for
         /// </summary>
         private readonly IEnumerable<TElement> _source;
 
         /// <summary>
-        ///     An expression that returns the source as a constant
+        /// An expression that returns the source as a constant
         /// </summary>
         private readonly Expression _expression;
 

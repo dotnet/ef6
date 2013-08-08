@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a record (an untyped structured column)
+    /// Represents a record (an untyped structured column)
     /// </summary>
     internal class RecordColumnMap : StructuredColumnMap
     {
         private readonly SimpleColumnMap m_nullSentinel;
 
         /// <summary>
-        ///     Constructor for a record column map
+        /// Constructor for a record column map
         /// </summary>
         /// <param name="type"> Datatype of this column </param>
         /// <param name="name"> column name </param>
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the type Nullability column
+        /// Get the type Nullability column
         /// </summary>
         internal override SimpleColumnMap NullSentinel
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(

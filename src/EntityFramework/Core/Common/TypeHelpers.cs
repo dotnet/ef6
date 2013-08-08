@@ -15,12 +15,12 @@ namespace System.Data.Entity.Core.Common
     using System.Globalization;
 
     /// <summary>
-    ///     Represents a set of static Type helpers operating on TypeMetadata
+    /// Represents a set of static Type helpers operating on TypeMetadata
     /// </summary>
     internal static class TypeHelpers
     {
         /// <summary>
-        ///     Asserts types are in Model space
+        /// Asserts types are in Model space
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType")]
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Asserts querycommandtrees are in model space type terms
+        /// Asserts querycommandtrees are in model space type terms
         /// </summary>
         [Conditional("DEBUG")]
         internal static void AssertEdmType(DbCommandTree commandTree)
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Common
         //
 
         /// <summary>
-        ///     Determines whether a given typeUsage is valid as OrderBy sort key
+        /// Determines whether a given typeUsage is valid as OrderBy sort key
         /// </summary>
         internal static bool IsValidSortOpKeyType(TypeUsage typeUsage)
         {
@@ -97,7 +97,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Determines whether a given typeusage is valid as GroupBy key
+        /// Determines whether a given typeusage is valid as GroupBy key
         /// </summary>
         internal static bool IsValidGroupKeyType(TypeUsage typeUsage)
         {
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Determine wheter a given typeusage is valid for Distinct operator
+        /// Determine wheter a given typeusage is valid for Distinct operator
         /// </summary>
         internal static bool IsValidDistinctOpType(TypeUsage typeUsage)
         {
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
+        /// Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
         /// </summary>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Returns true if typeUsage type is valid for IS [NOT] NULL (expr) operator
+        /// Returns true if typeUsage type is valid for IS [NOT] NULL (expr) operator
         /// </summary>
         internal static bool IsValidIsNullOpType(TypeUsage typeUsage)
         {
@@ -386,7 +386,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Creates metadata for a new row type with column names and types based on the key members of the specified Entity type
+        /// Creates metadata for a new row type with column names and types based on the key members of the specified Entity type
         /// </summary>
         /// <param name="entityType"> The Entity type that provides the Key members on which the column names and types of the new row type will be based </param>
         /// <returns> A new RowType info with column names and types corresponding to the Key members of the specified Entity type </returns>
@@ -415,15 +415,15 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets primitive type usage for <paramref name="scalarType" />.
+        /// Gets primitive type usage for <paramref name="scalarType" />.
         /// </summary>
         /// <param name="scalarType"> Primitive or enum type usage. </param>
         /// <returns>
-        ///     Primitive type usage for <paramref name="scalarType" /> .
+        /// Primitive type usage for <paramref name="scalarType" /> .
         /// </returns>
         /// <remarks>
-        ///     For enum types a new type usage based on the underlying type will be created. For primitive types
-        ///     the value passed to the function will be returned.
+        /// For enum types a new type usage based on the underlying type will be created. For primitive types
+        /// the value passed to the function will be returned.
         /// </remarks>
         internal static TypeUsage GetPrimitiveTypeUsageForScalar(TypeUsage scalarType)
         {
@@ -436,7 +436,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Factory method for creating a type usage for underlying type of enum type usage.
+        /// Factory method for creating a type usage for underlying type of enum type usage.
         /// </summary>
         /// <param name="enumTypeUsage"> Enum type usage used to create an underlying type usage of. </param>
         /// <returns> Type usage for the underlying enum type. </returns>
@@ -449,7 +449,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Factory method for creating a type usage for underlying union type of spatial type usage.
+        /// Factory method for creating a type usage for underlying union type of spatial type usage.
         /// </summary>
         /// <param name="spatialTypeUsage"> Spatial type usage used to create a union type usage of. </param>
         /// <returns> Type usage for the spatial union type of the correct topology. </returns>
@@ -465,7 +465,7 @@ namespace System.Data.Entity.Core.Common
         //
 
         /// <summary>
-        ///     Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
+        /// Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
         /// </summary>
         internal static IBaseList<EdmMember> GetAllStructuralMembers(TypeUsage type)
         {
@@ -491,7 +491,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
+        /// Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
         /// </summary>
         internal static IEnumerable GetDeclaredStructuralMembers(TypeUsage type)
         {
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
+        /// Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
         /// </summary>
         internal static IEnumerable GetDeclaredStructuralMembers(EdmType edmType)
         {
@@ -559,7 +559,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Returns row type if supplied function is a tvf returning Collection(RowType), otherwise null.
+        /// Returns row type if supplied function is a tvf returning Collection(RowType), otherwise null.
         /// </summary>
         internal static RowType GetTvfReturnType(EdmFunction tvf)
         {
@@ -592,8 +592,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
-        ///     otherwise returns false.
+        /// If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
+        /// otherwise returns false.
         /// </summary>
         /// <param name="type"> TypeUsage that may or may not refer to a RefType </param>
         /// <param name="referencedEntityType"> Non-null if the TypeUsage refers to a RefType, null otherwise </param>
@@ -651,7 +651,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Converts the given CLR type into a DbType
+        /// Converts the given CLR type into a DbType
         /// </summary>
         /// <param name="clrType"> The CLR type to convert </param>
         internal static DbType ConvertClrTypeToDbType(Type clrType)
@@ -765,7 +765,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     returns a Typeusage
+        /// returns a Typeusage
         /// </summary>
         internal static TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind)
         {

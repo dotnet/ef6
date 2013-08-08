@@ -13,9 +13,9 @@ namespace System.Data.Entity
     using MockHelper = System.Data.Entity.Core.Objects.MockHelper;
 
     /// <summary>
-    ///     Unit tests for <see cref="DbSet" /> and <see cref="DbSet{T}" />.
-    ///     Note that some tests that would normally be unit tests are in the functional tests project because they
-    ///     were created before the functional/unit division.
+    /// Unit tests for <see cref="DbSet" /> and <see cref="DbSet{T}" />.
+    /// Note that some tests that would normally be unit tests are in the functional tests project because they
+    /// were created before the functional/unit division.
     /// </summary>
     public class DbSetTests : TestBase
     {

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.FunctionGroup" />.
+    /// Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.FunctionGroup" />.
     /// </summary>
     internal sealed class MetadataFunctionGroup : MetadataMember
     {

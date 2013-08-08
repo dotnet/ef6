@@ -11,12 +11,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Text;
 
     /// <summary>
-    ///     Error reporting Helper
+    /// Error reporting Helper
     /// </summary>
     internal static class CqlErrorHelper
     {
         /// <summary>
-        ///     Reports function overload resolution error.
+        /// Reports function overload resolution error.
         /// </summary>
         internal static void ReportFunctionOverloadError(MethodExpr functionExpr, EdmFunction functionType, List<TypeUsage> argTypes)
         {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     provides error feedback for aliases already used in a given context
+        /// provides error feedback for aliases already used in a given context
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId =
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Reports incompatible type error
+        /// Reports incompatible type error
         /// </summary>
         internal static void ReportIncompatibleCommonType(ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType)
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     navigates through the type structure to find where the incompatibility happens
+        /// navigates through the type structure to find where the incompatibility happens
         /// </summary>
         private static void ReportIncompatibleCommonType(
             ErrorContext errCtx, TypeUsage rootLeftType, TypeUsage rootRightType, TypeUsage leftType, TypeUsage rightType)

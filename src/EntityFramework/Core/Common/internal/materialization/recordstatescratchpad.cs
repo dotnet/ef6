@@ -7,10 +7,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Used in the Translator to aggregate information about a (nested) record
-    ///     state.  After the translator visits the columnMaps, it will compile
-    ///     the recordState(s) which produces an immutable RecordStateFactory that
-    ///     can be shared amongst many query instances.
+    /// Used in the Translator to aggregate information about a (nested) record
+    /// state.  After the translator visits the columnMaps, it will compile
+    /// the recordState(s) which produces an immutable RecordStateFactory that
+    /// can be shared amongst many query instances.
     /// </summary>
     internal class RecordStateScratchpad
     {

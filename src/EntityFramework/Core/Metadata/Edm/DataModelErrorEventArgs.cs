@@ -9,17 +9,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class DataModelErrorEventArgs : EventArgs
     {
         /// <summary>
-        ///     Gets an optional value indicating which property of the source item caused the event to be raised.
+        /// Gets an optional value indicating which property of the source item caused the event to be raised.
         /// </summary>
         public string PropertyName { get; internal set; }
 
         /// <summary>
-        ///     Gets an optional descriptive message the describes the error that is being raised.
+        /// Gets an optional descriptive message the describes the error that is being raised.
         /// </summary>
         public string ErrorMessage { get; internal set; }
 
         /// <summary>
-        ///     Gets a value indicating the <see cref="MetadataItem" /> that caused the event to be raised.
+        /// Gets a value indicating the <see cref="MetadataItem" /> that caused the event to be raised.
         /// </summary>
         public MetadataItem Item
         {

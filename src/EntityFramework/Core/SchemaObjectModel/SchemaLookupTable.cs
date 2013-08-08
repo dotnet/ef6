@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
 
     /// <summary>
-    ///     Reponsible for keep map from alias to namespace for a given schema.
+    /// Reponsible for keep map from alias to namespace for a given schema.
     /// </summary>
     internal sealed class AliasResolver
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        ///     Construct the LookUp table
+        /// Construct the LookUp table
         /// </summary>
         public AliasResolver(Schema schema)
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Add a UsingElement to the table
+        /// Add a UsingElement to the table
         /// </summary>
         /// <param name="usingElement"> the UsingElement to add </param>
         public void Add(UsingElement usingElement)
@@ -80,8 +80,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Get the Schema(s) a namespace or alias might refer to
-        ///     returned schemas may be null is called before or during Schema Resolution
+        /// Get the Schema(s) a namespace or alias might refer to
+        /// returned schemas may be null is called before or during Schema Resolution
         /// </summary>
         public bool TryResolveAlias(string alias, out string namespaceName)
         {
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Resolves all the namespace specified in the using elements in this schema
+        /// Resolves all the namespace specified in the using elements in this schema
         /// </summary>
         public void ResolveNamespaces()
         {
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        ///     Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
+        /// Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
         /// </summary>
         private bool CheckForSystemNamespace(UsingElement refSchema, string name, NameKind nameKind)
         {
@@ -145,17 +145,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Private Types
 
         /// <summary>
-        ///     Kind of Name
+        /// Kind of Name
         /// </summary>
         private enum NameKind
         {
             /// <summary>
-            ///     It's an Alias
+            /// It's an Alias
             /// </summary>
             Alias,
 
             /// <summary>
-            ///     It's a namespace
+            /// It's a namespace
             /// </summary>
             Namespace,
         }

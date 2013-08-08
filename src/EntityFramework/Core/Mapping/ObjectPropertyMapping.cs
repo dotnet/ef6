@@ -5,12 +5,12 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     Mapping metadata for all OC member maps.
+    /// Mapping metadata for all OC member maps.
     /// </summary>
     internal class ObjectPropertyMapping : ObjectMemberMapping
     {
         /// <summary>
-        ///     Constrcut a new member mapping metadata object
+        /// Constrcut a new member mapping metadata object
         /// </summary>
         internal ObjectPropertyMapping(EdmProperty edmProperty, EdmProperty clrProperty)
             :
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     The PropertyMetadata object that represents the Clr member for which mapping is being specified
+        /// The PropertyMetadata object that represents the Clr member for which mapping is being specified
         /// </summary>
         internal EdmProperty ClrProperty
         {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     return the member mapping kind
+        /// return the member mapping kind
         /// </summary>
         internal override MemberMappingKind MemberMappingKind
         {

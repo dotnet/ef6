@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     /// <summary>
-    ///     Convention to process instances of <see cref="NotMappedAttribute" /> found on properties in the model.
+    /// Convention to process instances of <see cref="NotMappedAttribute" /> found on properties in the model.
     /// </summary>
     public class NotMappedPropertyAttributeConvention
         : PropertyAttributeConfigurationConvention<NotMappedAttribute>

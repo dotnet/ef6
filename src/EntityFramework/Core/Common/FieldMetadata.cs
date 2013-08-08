@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     FieldMetadata class providing the correlation between the column ordinals and MemberMetadata.
+    /// FieldMetadata class providing the correlation between the column ordinals and MemberMetadata.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
     public struct FieldMetadata
@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Common
         private readonly int _ordinal;
 
         /// <summary>
-        ///     Initializes a new <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object with the specified ordinal value and field type.
+        /// Initializes a new <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object with the specified ordinal value and field type.
         /// </summary>
         /// <param name="ordinal">An integer specified the location of the metadata.</param>
         /// <param name="fieldType">The field type.</param>
@@ -33,10 +33,10 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// Gets the type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </summary>
         /// <returns>
-        ///     The type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// The type of field for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </returns>
         public EdmMember FieldType
         {
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the ordinal for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
+        /// Gets the ordinal for this <see cref="T:System.Data.Entity.Core.Common.FieldMetadata" /> object.
         /// </summary>
         /// <returns>An integer representing the ordinal value.</returns>
         public int Ordinal

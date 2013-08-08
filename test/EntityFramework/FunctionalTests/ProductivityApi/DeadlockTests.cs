@@ -12,7 +12,7 @@ namespace System.Data.Entity.ProductivityApi
 #if !NET40
 
     /// <summary>
-    ///     Tests that check that ConfigureAwait(false) is called before each await
+    /// Tests that check that ConfigureAwait(false) is called before each await
     /// </summary>
     public class DeadlockTests : TestBase
     {

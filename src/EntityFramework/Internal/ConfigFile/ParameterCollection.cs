@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Linq;
 
     /// <summary>
-    ///     Represents a series of parameters to pass to a method
+    /// Represents a series of parameters to pass to a method
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ParameterCollection : ConfigurationElementCollection
@@ -45,8 +45,8 @@ namespace System.Data.Entity.Internal.ConfigFile
         }
 
         /// <summary>
-        ///     Adds a new parameter to the collection
-        ///     Used for unit testing
+        /// Adds a new parameter to the collection
+        /// Used for unit testing
         /// </summary>
         internal ParameterElement NewElement()
         {

@@ -12,8 +12,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Used to configure a primitive property of an entity type or complex type.
-    ///     This configuration functionality is available via lightweight conventions.
+    /// Used to configure a primitive property of an entity type or complex type.
+    /// This configuration functionality is available via lightweight conventions.
     /// </summary>
     public class ConventionPrimitivePropertyConfiguration
     {
@@ -26,10 +26,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private readonly Lazy<Properties.Primitive.StringPropertyConfiguration> _stringConfiguration;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ConventionPrimitivePropertyConfiguration" /> class.
+        /// Initializes a new instance of the <see cref="ConventionPrimitivePropertyConfiguration" /> class.
         /// </summary>
         /// <param name="propertyInfo">
-        ///     The <see cref="PropertyInfo" /> for this property
+        /// The <see cref="PropertyInfo" /> for this property
         /// </param>
         /// <param name="configuration"> The configuration object that this instance wraps. </param>
         internal ConventionPrimitivePropertyConfiguration(PropertyInfo propertyInfo, Func<Properties.Primitive.PrimitivePropertyConfiguration> configuration)
@@ -52,7 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets the <see cref="PropertyInfo" /> for this property.
+        /// Gets the <see cref="PropertyInfo" /> for this property.
         /// </summary>
         public virtual PropertyInfo ClrPropertyInfo
         {
@@ -65,14 +65,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the name of the database column used to store the property.
+        /// Configures the name of the database column used to store the property.
         /// </summary>
         /// <param name="columnName"> The name of the column. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasColumnName(string columnName)
         {
@@ -88,11 +88,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the name of the parameter used in stored procedures for this property.
+        /// Configures the name of the parameter used in stored procedures for this property.
         /// </summary>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public virtual ConventionPrimitivePropertyConfiguration HasParameterName(string parameterName)
         {
@@ -108,15 +108,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the order of the database column used to store the property.
-        ///     This method is also used to specify key ordering when an entity type has a composite key.
+        /// Configures the order of the database column used to store the property.
+        /// This method is also used to specify key ordering when an entity type has a composite key.
         /// </summary>
         /// <param name="columnOrder"> The order that this column should appear in the database table. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasColumnOrder(int columnOrder)
         {
@@ -135,14 +135,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the data type of the database column used to store the property.
+        /// Configures the data type of the database column used to store the property.
         /// </summary>
         /// <param name="columnType"> Name of the database provider specific data type. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasColumnType(string columnType)
         {
@@ -158,13 +158,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be used as an optimistic concurrency token.
+        /// Configures the property to be used as an optimistic concurrency token.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsConcurrencyToken()
         {
@@ -172,14 +172,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures whether or not the property is to be used as an optimistic concurrency token.
+        /// Configures whether or not the property is to be used as an optimistic concurrency token.
         /// </summary>
         /// <param name="concurrencyToken"> Value indicating if the property is a concurrency token or not. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsConcurrencyToken(bool concurrencyToken)
         {
@@ -195,14 +195,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures how values for the property are generated by the database.
+        /// Configures how values for the property are generated by the database.
         /// </summary>
         /// <param name="databaseGeneratedOption"> The pattern used to generate values for the property in the database. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasDatabaseGeneratedOption(
             DatabaseGeneratedOption databaseGeneratedOption)
@@ -222,14 +222,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be optional.
-        ///     The database column used to store this property will be nullable.
+        /// Configures the property to be optional.
+        /// The database column used to store this property will be nullable.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsOptional()
         {
@@ -251,14 +251,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be required.
-        ///     The database column used to store this property will be non-nullable.
+        /// Configures the property to be required.
+        /// The database column used to store this property will be non-nullable.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsRequired()
         {
@@ -272,14 +272,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to support Unicode string content.
+        /// Configures the property to support Unicode string content.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property is not a <see cref="String" />.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property is not a <see cref="String" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsUnicode()
         {
@@ -287,15 +287,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures whether or not the property supports Unicode string content.
+        /// Configures whether or not the property supports Unicode string content.
         /// </summary>
         /// <param name="unicode"> Value indicating if the property supports Unicode string content or not. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property is not a <see cref="String" />.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property is not a <see cref="String" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsUnicode(bool unicode)
         {
@@ -316,15 +316,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be fixed length.
-        ///     Use HasMaxLength to set the length that the property is fixed to.
+        /// Configures the property to be fixed length.
+        /// Use HasMaxLength to set the length that the property is fixed to.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property does not have length facets.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property does not have length facets.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsFixedLength()
         {
@@ -344,15 +344,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be variable length.
-        ///     Properties are variable length by default.
+        /// Configures the property to be variable length.
+        /// Properties are variable length by default.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property does not have length facets.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property does not have length facets.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsVariableLength()
         {
@@ -372,15 +372,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to have the specified maximum length.
+        /// Configures the property to have the specified maximum length.
         /// </summary>
         /// <param name="maxLength"> The maximum length for the property. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property does not have length facets.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property does not have length facets.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasMaxLength(int maxLength)
         {
@@ -417,14 +417,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to allow the maximum length supported by the database provider.
+        /// Configures the property to allow the maximum length supported by the database provider.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property does not have length facets.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property does not have length facets.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsMaxLength()
         {
@@ -445,16 +445,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the precision of the <see cref="DateTime" /> property.
-        ///     If the database provider does not support precision for the data type of the column then the value is ignored.
+        /// Configures the precision of the <see cref="DateTime" /> property.
+        /// If the database provider does not support precision for the data type of the column then the value is ignored.
         /// </summary>
         /// <param name="value"> Precision of the property. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method will throw if the property is not a <see cref="DateTime" />.
+        /// Calling this will have no effect once it has been configured.
+        /// This method will throw if the property is not a <see cref="DateTime" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasPrecision(byte value)
         {
@@ -481,16 +481,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the precision and scale of the <see cref="Decimal" /> property.
+        /// Configures the precision and scale of the <see cref="Decimal" /> property.
         /// </summary>
         /// <param name="precision"> The precision of the property. </param>
         /// <param name="scale"> The scale of the property. </param>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method will throw if the property is not a <see cref="Decimal" />.
+        /// Calling this will have no effect once it has been configured.
+        /// This method will throw if the property is not a <see cref="Decimal" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration HasPrecision(byte precision, byte scale)
         {
@@ -519,17 +519,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the property to be a row version in the database.
-        ///     The actual data type will vary depending on the database provider being used.
-        ///     Setting the property to be a row version will automatically configure it to be an
-        ///     optimistic concurrency token.
+        /// Configures the property to be a row version in the database.
+        /// The actual data type will vary depending on the database provider being used.
+        /// Setting the property to be a row version will automatically configure it to be an
+        /// optimistic concurrency token.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
-        ///     This method throws if the property is not a <see cref="T:Byte[]" />.
+        /// Calling this will have no effect once it has been configured.
+        /// This method throws if the property is not a <see cref="T:Byte[]" />.
         /// </remarks>
         public virtual ConventionPrimitivePropertyConfiguration IsRowVersion()
         {
@@ -550,11 +550,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures this property to be part of the entity type's primary key.
+        /// Configures this property to be part of the entity type's primary key.
         /// </summary>
         /// <returns>
-        ///     The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that
-        ///     multiple calls can be chained.
+        /// The same <see cref="ConventionPrimitivePropertyConfiguration" /> instance so that
+        /// multiple calls can be chained.
         /// </returns>
         public virtual ConventionPrimitivePropertyConfiguration IsKey()
         {

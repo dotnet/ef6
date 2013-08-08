@@ -6,7 +6,7 @@ namespace SimpleModel
     using System.Linq;
 
     /// <summary>
-    ///     A simple context for use in DbQuery LINQ testing.
+    /// A simple context for use in DbQuery LINQ testing.
     /// </summary>
     public class SimpleModelForLinq : DbContext
     {

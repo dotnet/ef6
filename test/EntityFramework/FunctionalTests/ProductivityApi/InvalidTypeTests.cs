@@ -28,7 +28,7 @@ namespace ProductivityApiTests
         #region Infrastructure/setup
 
         /// <summary>
-        ///     Asserts that an operation on a set throws if the type of the set is not valid for the model.
+        /// Asserts that an operation on a set throws if the type of the set is not valid for the model.
         /// </summary>
         /// <typeparam name="TEntity"> The type of entity for which a set should be created. </typeparam>
         /// <param name="test"> The test to run on the set. </param>
@@ -44,7 +44,7 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Asserts that an operation on a set throws if the type of the set is not valid for the model.
+        /// Asserts that an operation on a set throws if the type of the set is not valid for the model.
         /// </summary>
         /// <param name="entityType"> The type of entity for which the set is for. </param>
         /// <param name="test"> The test to run on the set. </param>

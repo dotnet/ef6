@@ -22,27 +22,27 @@ namespace System.Data.Entity
     using System.Linq;
 
     /// <summary>
-    ///     DbModelBuilder is used to map CLR classes to a database schema.
-    ///     This code centric approach to building an Entity Data Model (EDM) model is known as 'Code First'.
+    /// DbModelBuilder is used to map CLR classes to a database schema.
+    /// This code centric approach to building an Entity Data Model (EDM) model is known as 'Code First'.
     /// </summary>
     /// <remarks>
-    ///     DbModelBuilder is typically used to configure a model by overriding
-    ///     <see
-    ///         cref="DbContext.OnModelCreating(DbModelBuilder)" />
-    ///     .
-    ///     You can also use DbModelBuilder independently of DbContext to build a model and then construct a
-    ///     <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" />.
-    ///     The recommended approach, however, is to use OnModelCreating in <see cref="DbContext" /> as
-    ///     the workflow is more intuitive and takes care of common tasks, such as caching the created model.
-    ///     Types that form your model are registered with DbModelBuilder and optional configuration can be
-    ///     performed by applying data annotations to your classes and/or using the fluent style DbModelBuilder
-    ///     API.
-    ///     When the Build method is called a set of conventions are run to discover the initial model.
-    ///     These conventions will automatically discover aspects of the model, such as primary keys, and
-    ///     will also process any data annotations that were specified on your classes. Finally
-    ///     any configuration that was performed using the DbModelBuilder API is applied.
-    ///     Configuration done via the DbModelBuilder API takes precedence over data annotations which
-    ///     in turn take precedence over the default conventions.
+    /// DbModelBuilder is typically used to configure a model by overriding
+    /// <see
+    ///     cref="DbContext.OnModelCreating(DbModelBuilder)" />
+    /// .
+    /// You can also use DbModelBuilder independently of DbContext to build a model and then construct a
+    /// <see cref="DbContext" /> or <see cref="T:System.Data.Objects.ObjectContext" />.
+    /// The recommended approach, however, is to use OnModelCreating in <see cref="DbContext" /> as
+    /// the workflow is more intuitive and takes care of common tasks, such as caching the created model.
+    /// Types that form your model are registered with DbModelBuilder and optional configuration can be
+    /// performed by applying data annotations to your classes and/or using the fluent style DbModelBuilder
+    /// API.
+    /// When the Build method is called a set of conventions are run to discover the initial model.
+    /// These conventions will automatically discover aspects of the model, such as primary keys, and
+    /// will also process any data annotations that were specified on your classes. Finally
+    /// any configuration that was performed using the DbModelBuilder API is applied.
+    /// Configuration done via the DbModelBuilder API takes precedence over data annotations which
+    /// in turn take precedence over the default conventions.
     /// </remarks>
     public class DbModelBuilder
     {
@@ -52,15 +52,15 @@ namespace System.Data.Entity
         private readonly object _lock = new object();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class.
-        ///     The process of discovering the initial model will use the set of conventions included
-        ///     in the most recent version of the Entity Framework installed on your machine.
+        /// Initializes a new instance of the <see cref="DbModelBuilder" /> class.
+        /// The process of discovering the initial model will use the set of conventions included
+        /// in the most recent version of the Entity Framework installed on your machine.
         /// </summary>
         /// <remarks>
-        ///     Upgrading to newer versions of the Entity Framework may cause breaking changes
-        ///     in your application because new conventions may cause the initial model to be
-        ///     configured differently. There is an alternate constructor that allows a specific
-        ///     version of conventions to be specified.
+        /// Upgrading to newer versions of the Entity Framework may cause breaking changes
+        /// in your application because new conventions may cause the initial model to be
+        /// configured differently. There is an alternate constructor that allows a specific
+        /// version of conventions to be specified.
         /// </remarks>
         public DbModelBuilder()
             : this(new ModelConfiguration.Configuration.ModelConfiguration())
@@ -68,8 +68,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbModelBuilder" /> class that will use
-        ///     a specific set of conventions to discover the initial model.
+        /// Initializes a new instance of the <see cref="DbModelBuilder" /> class that will use
+        /// a specific set of conventions to discover the initial model.
         /// </summary>
         /// <param name="modelBuilderVersion"> The version of conventions to be used. </param>
         public DbModelBuilder(DbModelBuilderVersion modelBuilderVersion)
@@ -161,8 +161,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Excludes a type from the model. This is used to remove types from the model that were added
-        ///     by convention during initial model discovery.
+        /// Excludes a type from the model. This is used to remove types from the model that were added
+        /// by convention during initial model discovery.
         /// </summary>
         /// <typeparam name="T"> The type to be excluded. </typeparam>
         /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
@@ -176,8 +176,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Configures the default database schema name. This default database schema name is used
-        ///     for database objects that do not have an explicitly configured schema name.
+        /// Configures the default database schema name. This default database schema name is used
+        /// for database objects that do not have an explicitly configured schema name.
         /// </summary>
         /// <param name="schema"> The name of the default database schema. </param>
         public virtual DbModelBuilder HasDefaultSchema(string schema)
@@ -188,8 +188,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Excludes the specified type(s) from the model. This is used to remove types from the model that were added
-        ///     by convention during initial model discovery.
+        /// Excludes the specified type(s) from the model. This is used to remove types from the model that were added
+        /// by convention during initial model discovery.
         /// </summary>
         /// <param name="types"> The types to be excluded from the model. </param>
         /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
@@ -206,9 +206,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Registers an entity type as part of the model and returns an object that can be used to
-        ///     configure the entity. This method can be called multiple times for the same entity to
-        ///     perform multiple lines of configuration.
+        /// Registers an entity type as part of the model and returns an object that can be used to
+        /// configure the entity. This method can be called multiple times for the same entity to
+        /// perform multiple lines of configuration.
         /// </summary>
         /// <typeparam name="TEntityType"> The type to be registered or configured. </typeparam>
         /// <returns> The configuration object for the specified entity type. </returns>
@@ -221,9 +221,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Registers a type as an entity in the model and returns an object that can be used to
-        ///     configure the entity. This method can be called multiple times for the same type to
-        ///     perform multiple lines of configuration.
+        /// Registers a type as an entity in the model and returns an object that can be used to
+        /// configure the entity. This method can be called multiple times for the same type to
+        /// perform multiple lines of configuration.
         /// </summary>
         /// <param name="entityType"> The type to be registered or configured. </param>
         /// <returns> The configuration object for the specified entity type. </returns>
@@ -237,9 +237,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Registers a type as a complex type in the model and returns an object that can be used to
-        ///     configure the complex type. This method can be called multiple times for the same type to
-        ///     perform multiple lines of configuration.
+        /// Registers a type as a complex type in the model and returns an object that can be used to
+        /// configure the complex type. This method can be called multiple times for the same type to
+        /// perform multiple lines of configuration.
         /// </summary>
         /// <typeparam name="TComplexType"> The type to be registered or configured. </typeparam>
         /// <returns> The configuration object for the specified complex type. </returns>
@@ -250,8 +250,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all entities in
-        ///     the model.
+        /// Begins configuration of a lightweight convention that applies to all entities in
+        /// the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
         public TypeConventionConfiguration Types()
@@ -260,9 +260,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all entities of
-        ///     the specified type in the model. This method does not register entity types as
-        ///     part of the model.
+        /// Begins configuration of a lightweight convention that applies to all entities of
+        /// the specified type in the model. This method does not register entity types as
+        /// part of the model.
         /// </summary>
         /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
@@ -273,8 +273,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all properties
-        ///     in the model.
+        /// Begins configuration of a lightweight convention that applies to all properties
+        /// in the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
         public PropertyConventionConfiguration Properties()
@@ -283,14 +283,14 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Begins configuration of a lightweight convention that applies to all primitive
-        ///     properties of the specified type in the model.
+        /// Begins configuration of a lightweight convention that applies to all primitive
+        /// properties of the specified type in the model.
         /// </summary>
         /// <typeparam name="T"> The type of the properties that the convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
         /// <remarks>
-        ///     The convention will apply to both nullable and non-nullable properties of the
-        ///     specified type.
+        /// The convention will apply to both nullable and non-nullable properties of the
+        /// specified type.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
         public PropertyConventionConfiguration Properties<T>()
@@ -313,7 +313,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Provides access to the settings of this DbModelBuilder that deal with conventions.
+        /// Provides access to the settings of this DbModelBuilder that deal with conventions.
         /// </summary>
         public virtual ConventionsConfiguration Conventions
         {
@@ -321,8 +321,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Gets the <see cref="ConfigurationRegistrar" /> for this DbModelBuilder.
-        ///     The registrar allows derived entity and complex type configurations to be registered with this builder.
+        /// Gets the <see cref="ConfigurationRegistrar" /> for this DbModelBuilder.
+        /// The registrar allows derived entity and complex type configurations to be registered with this builder.
         /// </summary>
         public virtual ConfigurationRegistrar Configurations
         {
@@ -330,9 +330,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
-        ///     The connection is used to determine the database provider being used as this
-        ///     affects the database layer of the generated model.
+        /// Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
+        /// The connection is used to determine the database provider being used as this
+        /// affects the database layer of the generated model.
         /// </summary>
         /// <param name="providerConnection"> Connection to use to determine provider information. </param>
         /// <returns> The model that was built. </returns>
@@ -347,9 +347,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
-        ///     Provider information must be specified because this affects the database layer of the generated model.
-        ///     For SqlClient the invariant name is 'System.Data.SqlClient' and the manifest token is the version year (i.e. '2005', '2008' etc.)
+        /// Creates a <see cref="DbModel" /> based on the configuration performed using this builder.
+        /// Provider information must be specified because this affects the database layer of the generated model.
+        /// For SqlClient the invariant name is 'System.Data.SqlClient' and the manifest token is the version year (i.e. '2005', '2008' etc.)
         /// </summary>
         /// <param name="providerInfo"> The database provider that the model will be used with. </param>
         /// <returns> The model that was built. </returns>

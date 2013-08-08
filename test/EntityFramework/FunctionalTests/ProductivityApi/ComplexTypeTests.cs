@@ -7,7 +7,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests for complex types.
+    /// Tests for complex types.
     /// </summary>
     public class ComplexTypeTests : FunctionalTestBase
     {

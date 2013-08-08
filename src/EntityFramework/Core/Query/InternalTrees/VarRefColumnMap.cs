@@ -7,15 +7,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
 
     /// <summary>
-    ///     A VarRefColumnMap is our intermediate representation of a ColumnMap.
-    ///     Eventually, this gets translated into a regular ColumnMap - during the CodeGen phase
+    /// A VarRefColumnMap is our intermediate representation of a ColumnMap.
+    /// Eventually, this gets translated into a regular ColumnMap - during the CodeGen phase
     /// </summary>
     internal class VarRefColumnMap : SimpleColumnMap
     {
         #region Public Methods
 
         /// <summary>
-        ///     Get the Var that produces this column's value
+        /// Get the Var that produces this column's value
         /// </summary>
         internal Var Var
         {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region Constructors
 
         /// <summary>
-        ///     Simple constructor
+        /// Simple constructor
         /// </summary>
         /// <param name="type"> datatype of this Var </param>
         /// <param name="name"> the name of the column </param>
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor Design Pattern
+        /// Visitor Design Pattern
         /// </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

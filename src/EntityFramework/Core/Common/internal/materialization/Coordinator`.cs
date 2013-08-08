@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Linq;
 
     /// <summary>
-    ///     Typed <see cref="Coordinator" />
+    /// Typed <see cref="Coordinator" />
     /// </summary>
     internal class Coordinator<T> : Coordinator
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal readonly CoordinatorFactory<T> TypedCoordinatorFactory;
 
         /// <summary>
-        ///     Exposes the Current element that has been materialized (and is being populated) by this coordinator.
+        /// Exposes the Current element that has been materialized (and is being populated) by this coordinator.
         /// </summary>
         internal virtual T Current
         {
@@ -28,25 +28,25 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private T _current;
 
         /// <summary>
-        ///     For ObjectResult, aggregates all elements for in the nested collection handled by this coordinator.
+        /// For ObjectResult, aggregates all elements for in the nested collection handled by this coordinator.
         /// </summary>
         private ICollection<T> _elements;
 
         /// <summary>
-        ///     For ObjectResult, aggregates all elements as wrapped entities for in the nested collection handled by this coordinator.
+        /// For ObjectResult, aggregates all elements as wrapped entities for in the nested collection handled by this coordinator.
         /// </summary>
         private List<IEntityWrapper> _wrappedElements;
 
         /// <summary>
-        ///     Delegate called when the current nested collection has been consumed. This is necessary in Span
-        ///     scenarios where an EntityCollection RelatedEnd is populated only when all related entities have
-        ///     been materialized.  This version of the close handler works with wrapped entities.
+        /// Delegate called when the current nested collection has been consumed. This is necessary in Span
+        /// scenarios where an EntityCollection RelatedEnd is populated only when all related entities have
+        /// been materialized.  This version of the close handler works with wrapped entities.
         /// </summary>
         private Action<Shaper, List<IEntityWrapper>> _handleClose;
 
         /// <summary>
-        ///     For nested, object-layer coordinators we want to collect all the elements we find and handle them
-        ///     when the root coordinator advances.  Otherwise we just want to return them as we find them.
+        /// For nested, object-layer coordinators we want to collect all the elements we find and handle them
+        /// when the root coordinator advances.  Otherwise we just want to return them as we find them.
         /// </summary>
         private readonly bool IsUsingElementCollection;
 
@@ -150,8 +150,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Sets the delegate called when this collection is closed.  This close handler works on
-        ///     a collection of wrapped entities, rather than on the raw entity objects.
+        /// Sets the delegate called when this collection is closed.  This close handler works on
+        /// a collection of wrapped entities, rather than on the raw entity objects.
         /// </summary>
         internal void RegisterCloseHandler(Action<Shaper, List<IEntityWrapper>> closeHandler)
         {
@@ -160,7 +160,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Called when we're disposing the enumerator;
+        /// Called when we're disposing the enumerator;
         /// </summary>
         internal void SetCurrentToDefault()
         {
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // not show up if you search using Find All References
 
         /// <summary>
-        ///     Returns a handle to the element aggregator for this nested collection.
+        /// Returns a handle to the element aggregator for this nested collection.
         /// </summary>
         private IEnumerable<T> GetElements()
         {

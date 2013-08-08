@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Public Entity SQL Parser class.
+    /// Public Entity SQL Parser class.
     /// </summary>
     public sealed class EntitySqlParser
     {
         private readonly Perspective _perspective;
 
         /// <summary>
-        ///     Construct a parser bound to the specified workspace with the specified perspective.
+        /// Construct a parser bound to the specified workspace with the specified perspective.
         /// </summary>
         internal EntitySqlParser(Perspective perspective)
         {
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         /// <summary>Parse the specified query with the specified parameters.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
-        ///     and information describing inline function definitions if any.
+        /// The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        /// and information describing inline function definitions if any.
         /// </returns>
         /// <param name="query">The EntitySQL query to be parsed.</param>
         /// <param name="parameters">The optional query parameters.</param>
@@ -46,16 +46,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Parse a specific query with a specific set variables and produce a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" />
-        ///     .
+        /// Parse a specific query with a specific set variables and produce a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
-        ///     and information describing inline function definitions if any.
+        /// The <see cref="T:System.Data.Entity.Core.Common.EntitySql.ParseResult" /> containing
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        /// and information describing inline function definitions if any.
         /// </returns>
         /// <param name="query">The query to be parsed.</param>
         /// <param name="variables">The optional query variables.</param>

@@ -14,8 +14,8 @@ namespace System.Data.Entity.Infrastructure
     using Xunit;
 
     /// <summary>
-    ///     General unit tests for DbPropertyValues and related classes/methods.
-    ///     Some specific features, such as concurrency, are tested elsewhere.
+    /// General unit tests for DbPropertyValues and related classes/methods.
+    /// Some specific features, such as concurrency, are tested elsewhere.
     /// </summary>
     public class DbPropertyValuesTests : TestBase
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Infrastructure
         private const BindingFlags PropertyBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>
-        ///     A type with a variety of different types of properties used for the tests in this class.
+        /// A type with a variety of different types of properties used for the tests in this class.
         /// </summary>
         public class FakeTypeWithProps
         {

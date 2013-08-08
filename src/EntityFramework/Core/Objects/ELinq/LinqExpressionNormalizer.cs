@@ -10,37 +10,37 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
 
     /// <summary>
-    ///     Replaces expression patterns produced by the compiler with approximations
-    ///     used in query translation. For instance, the following VB code:
-    ///     x = y
-    ///     becomes the expression
-    ///     Equal(MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
-    ///     which is normalized to
-    ///     Equal(x, y)
-    ///     Comment convention:
-    ///     CODE(Lang): _VB or C# coding pattern being simplified_
-    ///     ORIGINAL: _original LINQ expression_
-    ///     NORMALIZED: _normalized LINQ expression_
+    /// Replaces expression patterns produced by the compiler with approximations
+    /// used in query translation. For instance, the following VB code:
+    /// x = y
+    /// becomes the expression
+    /// Equal(MethodCallExpression(Microsoft.VisualBasic.CompilerServices.Operators.CompareString(x, y, False), 0)
+    /// which is normalized to
+    /// Equal(x, y)
+    /// Comment convention:
+    /// CODE(Lang): _VB or C# coding pattern being simplified_
+    /// ORIGINAL: _original LINQ expression_
+    /// NORMALIZED: _normalized LINQ expression_
     /// </summary>
     internal class LinqExpressionNormalizer : EntityExpressionVisitor
     {
         /// <summary>
-        ///     If we encounter a MethodCallExpression, we never need to lift to lift to null. This capability
-        ///     exists to translate certain patterns in the language. In this case, the user (or compiler)
-        ///     has explicitly asked for a method invocation (at which point, lifting can no longer occur).
+        /// If we encounter a MethodCallExpression, we never need to lift to lift to null. This capability
+        /// exists to translate certain patterns in the language. In this case, the user (or compiler)
+        /// has explicitly asked for a method invocation (at which point, lifting can no longer occur).
         /// </summary>
         private const bool LiftToNull = false;
 
         /// <summary>
-        ///     Gets a dictionary mapping from LINQ expressions to matched by those expressions. Used
-        ///     to identify composite expression patterns.
+        /// Gets a dictionary mapping from LINQ expressions to matched by those expressions. Used
+        /// to identify composite expression patterns.
         /// </summary>
         private readonly Dictionary<Expression, Pattern> _patterns = new Dictionary<Expression, Pattern>();
 
         /// <summary>
-        ///     Handle binary patterns:
-        ///     - VB 'Is' operator
-        ///     - Compare patterns
+        /// Handle binary patterns:
+        /// - VB 'Is' operator
+        /// - Compare patterns
         /// </summary>
         internal override Expression VisitBinary(BinaryExpression b)
         {
@@ -82,10 +82,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     CODE: x
-        ///     ORIGINAL: Convert(x, typeof(object))
-        ///     ORIGINAL(Funcletized): Constant(x, typeof(object))
-        ///     NORMALIZED: x
+        /// CODE: x
+        /// ORIGINAL: Convert(x, typeof(object))
+        /// ORIGINAL(Funcletized): Constant(x, typeof(object))
+        /// NORMALIZED: x
         /// </summary>
         private static Expression UnwrapObjectConvert(Expression input)
         {
@@ -115,7 +115,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Returns true if the given expression is a constant '0'.
+        /// Returns true if the given expression is a constant '0'.
         /// </summary>
         private static bool IsConstantZero(Expression expression)
         {
@@ -124,9 +124,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Handles MethodCall patterns:
-        ///     - Operator overloads
-        ///     - VB operators
+        /// Handles MethodCall patterns:
+        /// - Operator overloads
+        /// - VB operators
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override Expression VisitMethodCall(MethodCallExpression m)
@@ -308,9 +308,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Identifies and normalizes any predicate argument in the given call expression. If no changes
-        ///     are needed, returns the existing expression. Otherwise, returns a new call expression
-        ///     with a normalized predicate argument.
+        /// Identifies and normalizes any predicate argument in the given call expression. If no changes
+        /// are needed, returns the existing expression. Otherwise, returns a new call expression
+        /// with a normalized predicate argument.
         /// </summary>
         private static MethodCallExpression NormalizePredicateArgument(MethodCallExpression callExpression)
         {
@@ -339,11 +339,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate))
-        ///     and returns the ordinal for the predicate.
+        /// Determines whether the given call expression has a 'predicate' argument (e.g. Where(source, predicate))
+        /// and returns the ordinal for the predicate.
         /// </summary>
         /// <remarks>
-        ///     Obviously this method will need to be replaced if we ever encounter a method with multiple predicates.
+        /// Obviously this method will need to be replaced if we ever encounter a method with multiple predicates.
         /// </remarks>
         private static bool HasPredicateArgument(MethodCallExpression callExpression, out int argumentOrdinal)
         {
@@ -386,9 +386,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Determines whether the given expression of the form Lambda(Coalesce(left, Constant(false)), ...), a pattern
-        ///     introduced by the VB compiler for predicate arguments. Returns the 'normalized' version of the expression
-        ///     Lambda((bool)left, ...)
+        /// Determines whether the given expression of the form Lambda(Coalesce(left, Constant(false)), ...), a pattern
+        /// introduced by the VB compiler for predicate arguments. Returns the 'normalized' version of the expression
+        /// Lambda((bool)left, ...)
         /// </summary>
         private static bool TryMatchCoalescePattern(Expression expression, out Expression normalized)
         {
@@ -435,8 +435,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             typeof(LinqExpressionNormalizer).GetMethod("RelationalOperatorPlaceholder", BindingFlags.Static | BindingFlags.NonPublic);
 
         /// <summary>
-        ///     This method exists solely to support creation of valid relational operator LINQ expressions that are not natively supported
-        ///     by the CLR (e.g. String > String). This method must not be invoked.
+        /// This method exists solely to support creation of valid relational operator LINQ expressions that are not natively supported
+        /// by the CLR (e.g. String > String). This method must not be invoked.
         /// </summary>
         private static bool RelationalOperatorPlaceholder<TLeft, TRight>(TLeft left, TRight right)
         {
@@ -445,7 +445,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Create an operator relating 'left' and 'right' given a relational operator.
+        /// Create an operator relating 'left' and 'right' given a relational operator.
         /// </summary>
         private static BinaryExpression CreateRelationalOperator(ExpressionType op, Expression left, Expression right)
         {
@@ -458,8 +458,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Try to create an operator relating 'left' and 'right' using the given operator. If the given operator
-        ///     does not define a known relation, returns false.
+        /// Try to create an operator relating 'left' and 'right' using the given operator. If the given operator
+        /// does not define a known relation, returns false.
         /// </summary>
         private static bool TryCreateRelationalOperator(ExpressionType op, Expression left, Expression right, out BinaryExpression result)
         {
@@ -498,13 +498,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     CODE(C#): Class.Compare(left, right)
-        ///     ORIGINAL: MethodCallExpression(Compare, left, right)
-        ///     NORMALIZED: Condition(Equal(left, right), 0, Condition(left > right, 1, -1))
-        ///     Why is this an improvement? We know how to evaluate Condition in the store, but we don't
-        ///     know how to evaluate MethodCallExpression... Where the CompareTo appears within a larger expression,
-        ///     e.g. left.CompareTo(right) > 0, we can further simplify to left > right (we register the "ComparePattern"
-        ///     to make this possible).
+        /// CODE(C#): Class.Compare(left, right)
+        /// ORIGINAL: MethodCallExpression(Compare, left, right)
+        /// NORMALIZED: Condition(Equal(left, right), 0, Condition(left > right, 1, -1))
+        /// Why is this an improvement? We know how to evaluate Condition in the store, but we don't
+        /// know how to evaluate MethodCallExpression... Where the CompareTo appears within a larger expression,
+        /// e.g. left.CompareTo(right) > 0, we can further simplify to left > right (we register the "ComparePattern"
+        /// to make this possible).
         /// </summary>
         private Expression CreateCompareExpression(Expression left, Expression right)
         {
@@ -523,18 +523,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Encapsulates an expression matching some pattern.
+        /// Encapsulates an expression matching some pattern.
         /// </summary>
         private abstract class Pattern
         {
             /// <summary>
-            ///     Gets pattern kind.
+            /// Gets pattern kind.
             /// </summary>
             internal abstract PatternKind Kind { get; }
         }
 
         /// <summary>
-        ///     Gets pattern kind.
+        /// Gets pattern kind.
         /// </summary>
         private enum PatternKind
         {
@@ -542,7 +542,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         /// <summary>
-        ///     Matches expression of the form x.CompareTo(y) or Class.CompareTo(x, y)
+        /// Matches expression of the form x.CompareTo(y) or Class.CompareTo(x, y)
         /// </summary>
         private sealed class ComparePattern : Pattern
         {
@@ -553,12 +553,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             /// <summary>
-            ///     Gets left-hand argument to Compare operation.
+            /// Gets left-hand argument to Compare operation.
             /// </summary>
             internal readonly Expression Left;
 
             /// <summary>
-            ///     Gets right-hand argument to Compare operation.
+            /// Gets right-hand argument to Compare operation.
             /// </summary>
             internal readonly Expression Right;
 

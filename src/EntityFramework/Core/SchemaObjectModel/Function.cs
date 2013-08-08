@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     class representing the Schema element in the schema
+    /// class representing the Schema element in the schema
     /// </summary>
     internal class Function : SchemaType
     {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Public Methods
 
         /// <summary>
-        ///     ctor for a schema function
+        /// ctor for a schema function
         /// </summary>
         public Function(Schema parentElement)
             : base(parentElement)
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Perform local validation on function definition.
+        /// Perform local validation on function definition.
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         #region Private Methods
 
         /// <summary>
-        ///     The method that is called when a DbSchema attribute is encountered.
+        /// The method that is called when a DbSchema attribute is encountered.
         /// </summary>
         /// <param name="reader"> An XmlReader positioned at the Type attribute. </param>
         private void HandleDbSchemaAttribute(XmlReader reader)
@@ -580,7 +580,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the Version attribute
+        /// Handler for the Version attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Version attribute </param>
         private void HandleAggregateAttribute(XmlReader reader)
@@ -592,7 +592,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the Namespace attribute
+        /// Handler for the Namespace attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleBuiltInAttribute(XmlReader reader)
@@ -604,7 +604,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the Alias attribute
+        /// Handler for the Alias attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Alias attribute </param>
         private void HandleStoreFunctionNameAttribute(XmlReader reader)
@@ -619,7 +619,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the NiladicFunctionAttribute attribute
+        /// Handler for the NiladicFunctionAttribute attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleNiladicFunctionAttribute(XmlReader reader)
@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the IsComposableAttribute attribute
+        /// Handler for the IsComposableAttribute attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleIsComposableAttribute(XmlReader reader)
@@ -687,7 +687,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the Parameter Element
+        /// Handler for the Parameter Element
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Parameter Element </param>
         protected void HandleParameterElement(XmlReader reader)
@@ -702,7 +702,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handler for the ReturnType element
+        /// Handler for the ReturnType element
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at ReturnType element </param>
         protected void HandleReturnTypeElement(XmlReader reader)
@@ -721,7 +721,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Handles ParameterTypeSemantics attribute
+        /// Handles ParameterTypeSemantics attribute
         /// </summary>
         private void HandleParameterTypeSemanticsAttribute(XmlReader reader)
         {

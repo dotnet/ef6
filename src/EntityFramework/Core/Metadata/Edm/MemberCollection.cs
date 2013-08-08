@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Class representing a collection of member objects
+    /// Class representing a collection of member objects
     /// </summary>
     internal sealed class MemberCollection : MetadataCollection<EdmMember>
     {
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Enumerator class for details on how it works.
 
         /// <summary>
-        ///     Default constructor for constructing an empty collection
+        /// Default constructor for constructing an empty collection
         /// </summary>
         /// <param name="declaringType"> The type that has this member collection </param>
         /// <exception cref="System.ArgumentNullException">Thrown if the declaring type is null</exception>
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The constructor for constructing the collection with the given items
+        /// The constructor for constructing the collection with the given items
         /// </summary>
         /// <param name="declaringType"> The type that has this member collection </param>
         /// <param name="items"> The items to populate the collection </param>
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly StructuralType _declaringType;
 
         /// <summary>
-        ///     Returns the collection as a readonly collection
+        /// Returns the collection as a readonly collection
         /// </summary>
         public override ReadOnlyCollection<EdmMember> AsReadOnly
         {
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the count on the number of items in the collection
+        /// Gets the count on the number of items in the collection
         /// </summary>
         public override int Count
         {
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given index
+        /// Gets an item from the collection with the given index
         /// </summary>
         /// <param name="index"> The index to search for </param>
         /// <returns> An item from the collection </returns>
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <returns> An item from the collection </returns>
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the collection
+        /// Adds an item to the collection
         /// </summary>
         /// <param name="member"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if member argument is null</exception>
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if this collection contains an item of the given identity
+        /// Determines if this collection contains an item of the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to check for </param>
         /// <returns> True if the collection contains the item with the given identity </returns>
@@ -147,7 +147,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Find the index of an item
+        /// Find the index of an item
         /// </summary>
         /// <param name="item"> The item whose index is to be looked for </param>
         /// <returns> The index of the found item, -1 if not found </returns>
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Copies the items in this collection to an array
+        /// Copies the items in this collection to an array
         /// </summary>
         /// <param name="array"> The array to copy to </param>
         /// <param name="arrayIndex"> The index in the array at which to start the copy </param>
@@ -205,7 +205,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an itme with identity
+        /// Gets an itme with identity
         /// </summary>
         public override EdmMember GetValue(string identity, bool ignoreCase)
         {
@@ -244,7 +244,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the declared only members of a particular type
+        /// Get the declared only members of a particular type
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
         {
@@ -262,8 +262,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get the number of members the base type has.  If the base type is not a structural type or has no
-        ///     members, it returns 0
+        /// Get the number of members the base type has.  If the base type is not a structural type or has no
+        /// members, it returns 0
         /// </summary>
         /// <returns> The number of members in the base type </returns>
         private int GetBaseTypeMemberCount()
@@ -279,9 +279,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the index relative to this collection for the given index.  For an index to really refers to something in
-        ///     the base type, the return value is negative relative to this collection.  For an index refers to something in this
-        ///     collection, the return value is positive.  In both cases, it's simply (index) - (base type member count)
+        /// Gets the index relative to this collection for the given index.  For an index to really refers to something in
+        /// the base type, the return value is negative relative to this collection.  For an index refers to something in this
+        /// collection, the return value is positive.  In both cases, it's simply (index) - (base type member count)
         /// </summary>
         /// <returns> The relative index </returns>
         private int GetRelativeIndex(int index)

@@ -8,8 +8,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Text;
 
     /// <summary>
-    ///     This extends StringWriter primarily to add the ability to add an indent
-    ///     to each line that is written out.
+    /// This extends StringWriter primarily to add the ability to add an indent
+    /// to each line that is written out.
     /// </summary>
     internal class SqlWriter : IndentedTextWriter
     {

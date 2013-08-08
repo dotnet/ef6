@@ -39,10 +39,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An expression that specifies the string to compare against the given pattern.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
-        ///     , or its result type is not a string type.
+        /// The expression is not associated with the command tree of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
+        /// , or its result type is not a string type.
         /// </exception>
         public DbExpression Argument
         {
@@ -53,10 +53,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An expression that specifies the pattern against which the given string should be compared.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
-        ///     , or its result type is not a string type.
+        /// The expression is not associated with the command tree of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
+        /// , or its result type is not a string type.
         /// </exception>
         public DbExpression Pattern
         {
@@ -67,10 +67,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <returns>An expression that provides an optional escape string to use for the comparison.</returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     The expression is not associated with the command tree of
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
-        ///     , or its result type is not a string type.
+        /// The expression is not associated with the command tree of
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" />
+        /// , or its result type is not a string type.
         /// </exception>
         public DbExpression Escape
         {
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -91,13 +91,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>Implements the visitor pattern for expressions that produce a result value of a specific type.</summary>
         /// <returns>
-        ///     A result value of a specific type produced by
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
-        ///     .
+        /// A result value of a specific type produced by
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />
+        /// .
         /// </returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of a specific type.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor .</typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null.</exception>

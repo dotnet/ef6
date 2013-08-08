@@ -3,12 +3,12 @@
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
     /// <summary>
-    ///     The possible operations for an On&lt;Operation&gt; element
+    /// The possible operations for an On&lt;Operation&gt; element
     /// </summary>
     internal enum Operation
     {
         /// <summary>
-        ///     the delete operation
+        /// the delete operation
         /// </summary>
         Delete,
     }

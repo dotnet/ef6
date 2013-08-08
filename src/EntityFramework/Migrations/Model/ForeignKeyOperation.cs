@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Globalization;
 
     /// <summary>
-    ///     Base class for changes that affect foreign key constraints.
+    /// Base class for changes that affect foreign key constraints.
     /// </summary>
     public abstract class ForeignKeyOperation : MigrationOperation
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Migrations.Model
         private string _name;
 
         /// <summary>
-        ///     Initializes a new instance of the ForeignKeyOperation class.
+        /// Initializes a new instance of the ForeignKeyOperation class.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of the table that the foreign key constraint targets.
+        /// Gets or sets the name of the table that the foreign key constraint targets.
         /// </summary>
         public string PrincipalTable
         {
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of the table that the foreign key columns exist in.
+        /// Gets or sets the name of the table that the foreign key columns exist in.
         /// </summary>
         public string DependentTable
         {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     The names of the foreign key column(s).
+        /// The names of the foreign key column(s).
         /// </summary>
         public IList<string> DependentColumns
         {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets a value indicating if a specific name has been supplied for this foreign key constraint.
+        /// Gets a value indicating if a specific name has been supplied for this foreign key constraint.
         /// </summary>
         public bool HasDefaultName
         {
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of this foreign key constraint.
-        ///     If no name is supplied, a default name will be calculated.
+        /// Gets or sets the name of this foreign key constraint.
+        /// If no name is supplied, a default name will be calculated.
         /// </summary>
         public string Name
         {

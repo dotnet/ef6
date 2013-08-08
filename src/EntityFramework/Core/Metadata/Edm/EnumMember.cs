@@ -6,22 +6,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an enumeration member.
+    /// Represents an enumeration member.
     /// </summary>
     public sealed class EnumMember : MetadataItem
     {
         /// <summary>
-        ///     The name of this enumeration member.
+        /// The name of this enumeration member.
         /// </summary>
         private readonly string _name;
 
         /// <summary>
-        ///     The value of this enumeration member.
+        /// The value of this enumeration member.
         /// </summary>
         private readonly object _value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="EnumMember" /> type by using the specified name and value.
+        /// Initializes a new instance of the <see cref="EnumMember" /> type by using the specified name and value.
         /// </summary>
         /// <param name="name"> The name of this enumeration member. Must not be null or the empty string. </param>
         /// <param name="value"> The value of this enumeration member. </param>
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the identity for this item as a string
+        /// Gets the identity for this item as a string
         /// </summary>
         internal override string Identity
         {

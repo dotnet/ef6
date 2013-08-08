@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Base class for set operations - union, intersect, except
+    /// Base class for set operations - union, intersect, except
     /// </summary>
     internal abstract class SetOp : RelOp
     {
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     2 children - left, right
+        /// 2 children - left, right
         /// </summary>
         internal override int Arity
         {
@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Map of result vars to the vars of each branch of the setOp
+        /// Map of result vars to the vars of each branch of the setOp
         /// </summary>
         internal VarMap[] VarMap
         {
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Get the set of output vars produced
+        /// Get the set of output vars produced
         /// </summary>
         internal VarVec Outputs
         {

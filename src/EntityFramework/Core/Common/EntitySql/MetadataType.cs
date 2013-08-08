@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.Type" />.
+    /// Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.Type" />.
     /// </summary>
     internal sealed class MetadataType : MetadataMember
     {

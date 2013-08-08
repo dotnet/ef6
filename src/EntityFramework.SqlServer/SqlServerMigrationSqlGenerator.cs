@@ -25,8 +25,8 @@ namespace System.Data.Entity.SqlServer
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Provider to convert provider agnostic migration operations into SQL commands
-    ///     that can be run against a Microsoft SQL Server database.
+    /// Provider to convert provider agnostic migration operations into SQL commands
+    /// that can be run against a Microsoft SQL Server database.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class SqlServerMigrationSqlGenerator : MigrationSqlGenerator
@@ -50,7 +50,7 @@ namespace System.Data.Entity.SqlServer
         private int _variableCounter;
 
         /// <summary>
-        ///     Converts a set of migration operations into Microsoft SQL Server specific SQL.
+        /// Converts a set of migration operations into Microsoft SQL Server specific SQL.
         /// </summary>
         /// <param name="migrationOperations"> The operations to be converted. </param>
         /// <param name="providerManifestToken"> Token representing the version of SQL Server being targeted (i.e. "2005", "2008"). </param>
@@ -78,7 +78,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the SQL body for a stored procedure.
+        /// Generates the SQL body for a stored procedure.
         /// </summary>
         /// <param name="commandTrees">The command trees representing the commands for an insert, update or delete operation.</param>
         /// <param name="rowsAffectedParameter">The rows affected parameter name.</param>
@@ -140,9 +140,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified update database operation which represents applying a series of migrations.
-        ///     The generated script is idempotent, meaning it contains conditional logic to check if individual migrations 
-        ///     have already been applied and only apply the pending ones.
+        /// Generates the specified update database operation which represents applying a series of migrations.
+        /// The generated script is idempotent, meaning it contains conditional logic to check if individual migrations 
+        /// have already been applied and only apply the pending ones.
         /// </summary>
         /// <param name="updateDatabaseOperation">The update database operation.</param>
         protected virtual void Generate(UpdateDatabaseOperation updateDatabaseOperation)
@@ -242,9 +242,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="MigrationOperation" />.
-        ///     Allows derived providers to handle additional operation types.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="MigrationOperation" />.
+        /// Allows derived providers to handle additional operation types.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="migrationOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(MigrationOperation migrationOperation)
@@ -255,8 +255,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Creates an empty connection for the current provider.
-        ///     Allows derived providers to use connection other than <see cref="SqlConnection" />.
+        /// Creates an empty connection for the current provider.
+        /// Allows derived providers to use connection other than <see cref="SqlConnection" />.
         /// </summary>
         /// <returns> An empty connection for the current provider. </returns>
         protected virtual DbConnection CreateConnection()
@@ -265,7 +265,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified create procedure operation.
+        /// Generates the specified create procedure operation.
         /// </summary>
         /// <param name="createProcedureOperation">The create procedure operation.</param>
         protected virtual void Generate(CreateProcedureOperation createProcedureOperation)
@@ -276,7 +276,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified alter procedure operation.
+        /// Generates the specified alter procedure operation.
         /// </summary>
         /// <param name="alterProcedureOperation">The alter procedure operation.</param>
         protected virtual void Generate(AlterProcedureOperation alterProcedureOperation)
@@ -352,7 +352,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified drop procedure operation.
+        /// Generates the specified drop procedure operation.
         /// </summary>
         /// <param name="dropProcedureOperation">The drop procedure operation.</param>
         protected virtual void Generate(DropProcedureOperation dropProcedureOperation)
@@ -369,8 +369,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="CreateTableOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="CreateTableOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="createTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateTableOperation createTableOperation)
@@ -443,8 +443,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to mark a table as a system table.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL to mark a table as a system table.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="createTableOperation"> The table to mark as a system table. </param>
         /// <param name="writer"> The <see cref='IndentedTextWriter' /> to write the generated SQL to. </param>
@@ -465,8 +465,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to create a database schema.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL to create a database schema.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="schema"> The name of the schema to create. </param>
         protected virtual void GenerateCreateSchema(string schema)
@@ -488,8 +488,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="AddForeignKeyOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="AddForeignKeyOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="addForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddForeignKeyOperation addForeignKeyOperation)
@@ -520,8 +520,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="DropForeignKeyOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="DropForeignKeyOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="dropForeignKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropForeignKeyOperation dropForeignKeyOperation)
@@ -554,8 +554,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="CreateIndexOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="CreateIndexOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="createIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(CreateIndexOperation createIndexOperation)
@@ -589,8 +589,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="DropIndexOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="DropIndexOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="dropIndexOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropIndexOperation dropIndexOperation)
@@ -616,8 +616,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="AddPrimaryKeyOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="AddPrimaryKeyOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="addPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddPrimaryKeyOperation addPrimaryKeyOperation)
@@ -646,8 +646,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="DropPrimaryKeyOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="DropPrimaryKeyOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="dropPrimaryKeyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropPrimaryKeyOperation dropPrimaryKeyOperation)
@@ -666,8 +666,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="AddColumnOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="AddColumnOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="addColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AddColumnOperation addColumnOperation)
@@ -710,8 +710,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="DropColumnOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="DropColumnOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="dropColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropColumnOperation dropColumnOperation)
@@ -732,8 +732,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="AlterColumnOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="AlterColumnOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="alterColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(AlterColumnOperation alterColumnOperation)
@@ -819,8 +819,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="DropTableOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="DropTableOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="dropTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(DropTableOperation dropTableOperation)
@@ -837,8 +837,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="SqlOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="SqlOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="sqlOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(SqlOperation sqlOperation)
@@ -849,8 +849,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="RenameColumnOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="RenameColumnOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="renameColumnOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameColumnOperation renameColumnOperation)
@@ -872,8 +872,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="RenameTableOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="RenameTableOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="renameTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(RenameTableOperation renameTableOperation)
@@ -898,7 +898,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified rename procedure operation.
+        /// Generates the specified rename procedure operation.
         /// </summary>
         /// <param name="renameProcedureOperation">The rename procedure operation.</param>
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation)
@@ -918,7 +918,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates the specified move procedure operation.
+        /// Generates the specified move procedure operation.
         /// </summary>
         /// <param name="moveProcedureOperation">The move procedure operation.</param>
         protected virtual void Generate(MoveProcedureOperation moveProcedureOperation)
@@ -947,8 +947,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="MoveTableOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="MoveTableOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="moveTableOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(MoveTableOperation moveTableOperation)
@@ -1058,10 +1058,10 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns the column default value to use for store-generated GUID columns when
-        ///     no default value is explicitly specified in the migration.
-        ///     Returns newsequentialid() for on-premises SQL Server 2005 and later.
-        ///     Returns newid() for SQL Azure.
+        /// Returns the column default value to use for store-generated GUID columns when
+        /// no default value is explicitly specified in the migration.
+        /// Returns newsequentialid() for on-premises SQL Server 2005 and later.
+        /// Returns newid() for SQL Azure.
         /// </summary>
         /// <value>Either newsequentialid() or newid() as described above.</value>
         protected virtual string GuidColumnDefault
@@ -1076,8 +1076,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL for a <see cref="HistoryOperation" />.
-        ///     Generated SQL should be added using the Statement method.
+        /// Generates SQL for a <see cref="HistoryOperation" />.
+        /// Generated SQL should be added using the Statement method.
         /// </summary>
         /// <param name="historyOperation"> The operation to produce SQL for. </param>
         protected virtual void Generate(HistoryOperation historyOperation)
@@ -1124,8 +1124,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant byte[] default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant byte[] default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1137,8 +1137,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant bool default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant bool default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1148,8 +1148,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant DateTime default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant DateTime default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1159,8 +1159,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant DateTimeOffset default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant DateTimeOffset default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1170,8 +1170,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant Guid default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant Guid default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1181,8 +1181,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant string default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant string default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1194,8 +1194,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant TimeSpan default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant TimeSpan default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1205,8 +1205,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant geogrpahy default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant geogrpahy default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1216,8 +1216,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant geometry default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant geometry default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1227,8 +1227,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify a constant default value being set on a column.
-        ///     This method just generates the actual value, not the SQL to set the default value.
+        /// Generates SQL to specify a constant default value being set on a column.
+        /// This method just generates the actual value, not the SQL to set the default value.
         /// </summary>
         /// <param name="defaultValue"> The value to be set. </param>
         /// <returns> SQL representing the default value. </returns>
@@ -1241,8 +1241,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates SQL to specify the data type of a column.
-        ///     This method just generates the actual type, not the SQL to create the column.
+        /// Generates SQL to specify the data type of a column.
+        /// This method just generates the actual type, not the SQL to create the column.
         /// </summary>
         /// <param name="columnModel"> The definition of the column. </param>
         /// <returns> SQL representing the data type. </returns>
@@ -1310,7 +1310,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Generates a quoted name. The supplied name may or may not contain the schema.
+        /// Generates a quoted name. The supplied name may or may not contain the schema.
         /// </summary>
         /// <param name="name"> The name to be quoted. </param>
         /// <returns> The quoted name. </returns>
@@ -1325,7 +1325,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Quotes an identifier for SQL Server.
+        /// Quotes an identifier for SQL Server.
         /// </summary>
         /// <param name="identifier"> The identifier to be quoted. </param>
         /// <returns> The quoted identifier. </returns>
@@ -1352,7 +1352,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Adds a new Statement to be executed against the database.
+        /// Adds a new Statement to be executed against the database.
         /// </summary>
         /// <param name="sql"> The statement to be executed. </param>
         /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
@@ -1371,10 +1371,10 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Gets a new <see cref="IndentedTextWriter" /> that can be used to build SQL.
-        ///     This is just a helper method to create a writer. Writing to the writer will
-        ///     not cause SQL to be registered for execution. You must pass the generated
-        ///     SQL to the Statement method.
+        /// Gets a new <see cref="IndentedTextWriter" /> that can be used to build SQL.
+        /// This is just a helper method to create a writer. Writing to the writer will
+        /// not cause SQL to be registered for execution. You must pass the generated
+        /// SQL to the Statement method.
         /// </summary>
         /// <returns> An empty text writer to use for SQL generation. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
@@ -1384,7 +1384,7 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Adds a new Statement to be executed against the database.
+        /// Adds a new Statement to be executed against the database.
         /// </summary>
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -1462,9 +1462,9 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Creates a shallow copy of the source CreateTableOperation and the associated
-        ///     AddPrimaryKeyOperation but renames the table and the primary key in order
-        ///     to avoid name conflicts with existing objects.
+        /// Creates a shallow copy of the source CreateTableOperation and the associated
+        /// AddPrimaryKeyOperation but renames the table and the primary key in order
+        /// to avoid name conflicts with existing objects.
         /// </summary>
         private static CreateTableOperation ResolveNameConflicts(CreateTableOperation source)
         {

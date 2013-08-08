@@ -17,7 +17,7 @@ namespace System.Data.Entity.Migrations.Design
     using Microsoft.CSharp;
 
     /// <summary>
-    ///     Generates C# code for a code-based migration.
+    /// Generates C# code for a code-based migration.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class CSharpMigrationCodeGenerator : MigrationCodeGenerator
@@ -73,7 +73,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates the primary code file that the user can view and edit.
+        /// Generates the primary code file that the user can view and edit.
         /// </summary>
         /// <param name="operations"> Operations to be performed by the migration. </param>
         /// <param name="namespace"> Namespace that code should be generated in. </param>
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates the code behind file with migration metadata.
+        /// Generates the code behind file with migration metadata.
         /// </summary>
         /// <param name="migrationId"> Unique identifier of the migration. </param>
         /// <param name="sourceModel"> Source model to be stored in the migration metadata. </param>
@@ -193,7 +193,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates a property to return the source or target model in the code behind file.
+        /// Generates a property to return the source or target model in the code behind file.
         /// </summary>
         /// <param name="name"> Name of the property. </param>
         /// <param name="value"> Value to be returned. </param>
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates a namespace, using statements and class definition.
+        /// Generates a namespace, using statements and class definition.
         /// </summary>
         /// <param name="namespace"> Namespace that code should be generated in. </param>
         /// <param name="className"> Name of the class that should be generated. </param>
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates the closing code for a class that was started with WriteClassStart.
+        /// Generates the closing code for a class that was started with WriteClassStart.
         /// </summary>
         /// <param name="namespace"> </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AddColumnOperation" />.
+        /// Generates code to perform an <see cref="AddColumnOperation" />.
         /// </summary>
         /// <param name="addColumnOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -310,7 +310,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="DropColumnOperation" />.
+        /// Generates code to perform a <see cref="DropColumnOperation" />.
         /// </summary>
         /// <param name="dropColumnOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -327,7 +327,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AlterColumnOperation" />.
+        /// Generates code to perform an <see cref="AlterColumnOperation" />.
         /// </summary>
         /// <param name="alterColumnOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -516,7 +516,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="CreateTableOperation" />.
+        /// Generates code to perform a <see cref="CreateTableOperation" />.
         /// </summary>
         /// <param name="createTableOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -566,7 +566,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AddPrimaryKeyOperation" /> as part of a <see cref="CreateTableOperation" />.
+        /// Generates code to perform an <see cref="AddPrimaryKeyOperation" /> as part of a <see cref="CreateTableOperation" />.
         /// </summary>
         /// <param name="addPrimaryKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -592,7 +592,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AddForeignKeyOperation" /> as part of a <see cref="CreateTableOperation" />.
+        /// Generates code to perform an <see cref="AddForeignKeyOperation" /> as part of a <see cref="CreateTableOperation" />.
         /// </summary>
         /// <param name="addForeignKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -614,7 +614,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="CreateIndexOperation" /> as part of a <see cref="CreateTableOperation" />.
+        /// Generates code to perform a <see cref="CreateIndexOperation" /> as part of a <see cref="CreateTableOperation" />.
         /// </summary>
         /// <param name="createIndexOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -630,7 +630,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify a set of column names using a lambda expression.
+        /// Generates code to specify a set of column names using a lambda expression.
         /// </summary>
         /// <param name="columns"> The columns to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -652,7 +652,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AddPrimaryKeyOperation" />.
+        /// Generates code to perform an <see cref="AddPrimaryKeyOperation" />.
         /// </summary>
         /// <param name="addPrimaryKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -689,7 +689,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="DropPrimaryKeyOperation" />.
+        /// Generates code to perform a <see cref="DropPrimaryKeyOperation" />.
         /// </summary>
         /// <param name="dropPrimaryKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -711,7 +711,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform an <see cref="AddForeignKeyOperation" />.
+        /// Generates code to perform an <see cref="AddForeignKeyOperation" />.
         /// </summary>
         /// <param name="addForeignKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -773,7 +773,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="DropForeignKeyOperation" />.
+        /// Generates code to perform a <see cref="DropForeignKeyOperation" />.
         /// </summary>
         /// <param name="dropForeignKeyOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -814,7 +814,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="CreateIndexOperation" />.
+        /// Generates code to perform a <see cref="CreateIndexOperation" />.
         /// </summary>
         /// <param name="createIndexOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -856,7 +856,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="DropIndexOperation" />.
+        /// Generates code to perform a <see cref="DropIndexOperation" />.
         /// </summary>
         /// <param name="dropIndexOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -884,7 +884,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the definition for a <see cref="ColumnModel" />.
+        /// Generates code to specify the definition for a <see cref="ColumnModel" />.
         /// </summary>
         /// <param name="column"> The column definition to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -967,7 +967,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="T:byte[]" /> column.
+        /// Generates code to specify the default value for a <see cref="T:byte[]" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -977,7 +977,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="DateTime" /> column.
+        /// Generates code to specify the default value for a <see cref="DateTime" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -988,7 +988,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="DateTimeOffset" /> column.
+        /// Generates code to specify the default value for a <see cref="DateTimeOffset" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -999,7 +999,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="decimal" /> column.
+        /// Generates code to specify the default value for a <see cref="decimal" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1009,7 +1009,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="Guid" /> column.
+        /// Generates code to specify the default value for a <see cref="Guid" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1019,7 +1019,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="long" /> column.
+        /// Generates code to specify the default value for a <see cref="long" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1029,7 +1029,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="float" /> column.
+        /// Generates code to specify the default value for a <see cref="float" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1039,7 +1039,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="string" /> column.
+        /// Generates code to specify the default value for a <see cref="string" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1049,7 +1049,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="TimeSpan" /> column.
+        /// Generates code to specify the default value for a <see cref="TimeSpan" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1059,7 +1059,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="DbGeography" /> column.
+        /// Generates code to specify the default value for a <see cref="DbGeography" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1069,7 +1069,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a <see cref="DbGeometry" /> column.
+        /// Generates code to specify the default value for a <see cref="DbGeometry" /> column.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1079,7 +1079,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to specify the default value for a column of unknown data type.
+        /// Generates code to specify the default value for a column of unknown data type.
         /// </summary>
         /// <param name="defaultValue"> The value to be used as the default. </param>
         /// <returns> Code representing the default value. </returns>
@@ -1090,7 +1090,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="DropTableOperation" />.
+        /// Generates code to perform a <see cref="DropTableOperation" />.
         /// </summary>
         /// <param name="dropTableOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -1105,7 +1105,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="MoveTableOperation" />.
+        /// Generates code to perform a <see cref="MoveTableOperation" />.
         /// </summary>
         /// <param name="moveTableOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -1137,7 +1137,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="RenameTableOperation" />.
+        /// Generates code to perform a <see cref="RenameTableOperation" />.
         /// </summary>
         /// <param name="renameTableOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -1167,7 +1167,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="RenameColumnOperation" />.
+        /// Generates code to perform a <see cref="RenameColumnOperation" />.
         /// </summary>
         /// <param name="renameColumnOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -1186,7 +1186,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Generates code to perform a <see cref="SqlOperation" />.
+        /// Generates code to perform a <see cref="SqlOperation" />.
         /// </summary>
         /// <param name="sqlOperation"> The operation to generate code for. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
@@ -1207,7 +1207,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Removes any invalid characters from the name of an database artifact.
+        /// Removes any invalid characters from the name of an database artifact.
         /// </summary>
         /// <param name="name"> The name to be scrubbed. </param>
         /// <returns> The scrubbed name. </returns>
@@ -1234,7 +1234,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets the type name to use for a column of the given data type.
+        /// Gets the type name to use for a column of the given data type.
         /// </summary>
         /// <param name="primitiveTypeKind"> The data type to translate. </param>
         /// <returns> The type name to use in the generated migration. </returns>
@@ -1254,7 +1254,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Quotes an identifier using appropriate escaping to allow it to be stored in a string.
+        /// Quotes an identifier using appropriate escaping to allow it to be stored in a string.
         /// </summary>
         /// <param name="identifier"> The identifier to be quoted. </param>
         /// <returns> The quoted identifier. </returns>

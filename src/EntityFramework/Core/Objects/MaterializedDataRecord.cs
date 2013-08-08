@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Globalization;
 
     /// <summary>
-    ///     Instances of this class would be returned to user via <see cref="ObjectQuery{T}"/>.
+    /// Instances of this class would be returned to user via <see cref="ObjectQuery{T}"/>.
     /// </summary>
     internal sealed class MaterializedDataRecord : DbDataRecord, IExtendedDataRecord, ICustomTypeDescriptor
     {
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Used to return a nested result
+        /// Used to return a nested result
         /// </summary>
         public DbDataReader GetDataReader(int i)
         {
@@ -441,8 +441,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Initialize the property descriptors for each PrimitiveType attribute.
-        ///     See similar functionality in DataRecordObjectView's ITypedList implementation.
+        /// Initialize the property descriptors for each PrimitiveType attribute.
+        /// See similar functionality in DataRecordObjectView's ITypedList implementation.
         /// </summary>
         private PropertyDescriptorCollection InitializePropertyDescriptors()
         {
@@ -464,8 +464,8 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Creates a PropertyDescriptorCollection based on a StructuralType definition
-        ///     Currently this includes a PropertyDescriptor for each primitive type property in the StructuralType
+        /// Creates a PropertyDescriptorCollection based on a StructuralType definition
+        /// Currently this includes a PropertyDescriptor for each primitive type property in the StructuralType
         /// </summary>
         /// <param name="structuralType"> The structural type definition </param>
         /// <param name="componentType"> The type to use as the component type </param>

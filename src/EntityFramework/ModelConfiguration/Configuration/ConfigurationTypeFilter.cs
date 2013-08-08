@@ -7,7 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     internal class ConfigurationTypeFilter
     {
         /// <summary>
-        ///     Check if specified type is a EntityTypeConfiguration instance.
+        /// Check if specified type is a EntityTypeConfiguration instance.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>True if type is a EntityTypeConfiguration, else false.</returns>
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Check if specified type is a ComplexTypeConfiguration instance.
+        /// Check if specified type is a ComplexTypeConfiguration instance.
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>True if type is a ComplexTypeConfiguration, else false.</returns>

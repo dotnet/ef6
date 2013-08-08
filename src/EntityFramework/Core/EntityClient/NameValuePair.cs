@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     Copied from System.Data.dll
+    /// Copied from System.Data.dll
     /// </summary>
     internal sealed class NameValuePair
     {

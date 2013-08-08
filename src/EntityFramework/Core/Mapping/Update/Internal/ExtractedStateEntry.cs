@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents the data contained in a StateEntry using internal data structures
-    ///     of the UpdatePipeline.
+    /// Represents the data contained in a StateEntry using internal data structures
+    /// of the UpdatePipeline.
     /// </summary>
     internal struct ExtractedStateEntry
     {

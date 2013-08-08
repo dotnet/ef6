@@ -14,9 +14,9 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    ///     Base class for Productivity API tests that sets up a simple model and some data.
-    ///     Call ClassInitializeBase from the ClassInitialize method of your test class to ensure
-    ///     that the test data is configured.
+    /// Base class for Productivity API tests that sets up a simple model and some data.
+    /// Call ClassInitializeBase from the ClassInitialize method of your test class to ensure
+    /// that the test data is configured.
     /// </summary>
     public class FunctionalTestBase : TestBase
     {
@@ -38,9 +38,9 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Ensures the database for the context is created and seeded.  This is typically used
-        ///     when a test is going to use a transaction to ensure that the DDL happens outside of
-        ///     the transaction.
+        /// Ensures the database for the context is created and seeded.  This is typically used
+        /// when a test is going to use a transaction to ensure that the DDL happens outside of
+        /// the transaction.
         /// </summary>
         /// <param name="createContext"> A func to create the context. </param>
         protected static void EnsureDatabaseInitialized(Func<DbContext> createContext)
@@ -52,7 +52,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Drops the database that would be used for the context. Usually used to avoid errors during initialization.
+        /// Drops the database that would be used for the context. Usually used to avoid errors during initialization.
         /// </summary>
         /// <param name="createContext"> A func to create the context. </param>
         protected static void DropDatabase(Func<DbContext> createContext)
@@ -64,7 +64,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Drops and then initializes the database that will be used for the context.
+        /// Drops and then initializes the database that will be used for the context.
         /// </summary>
         /// <param name="createContext"> A func to create the context. </param>
         protected static void ResetDatabase(Func<DbContext> createContext)
@@ -74,7 +74,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Initializes the metadata files and creates databases for existing CSDL/EDMX files.
+        /// Initializes the metadata files and creates databases for existing CSDL/EDMX files.
         /// </summary>
         protected static void InitializeModelFirstDatabases(bool runInitializers = true)
         {
@@ -109,7 +109,7 @@ namespace System.Data.Entity
         private static bool _metadataForSimpleModelCreated;
 
         /// <summary>
-        ///     Creates the metadata files (CSDL/SSDL/MSL) for the SimpleModelContext.
+        /// Creates the metadata files (CSDL/SSDL/MSL) for the SimpleModelContext.
         /// </summary>
         protected static void CreateMetadataFilesForSimpleModel()
         {
@@ -130,7 +130,7 @@ namespace System.Data.Entity
         private static string _simpleModelEntityConnectionString;
 
         /// <summary>
-        ///     An entity connection string for the SimpleModelContext.
+        /// An entity connection string for the SimpleModelContext.
         /// </summary>
         protected static string SimpleModelEntityConnectionString
         {

@@ -7,21 +7,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The Predicate class represents a condition (predicate) in CNF.
-    ///     A predicate consists of a number of "simple" parts, and the parts are considered to be
-    ///     ANDed together
-    ///     This class provides a number of useful functions related to
-    ///     - Single Table predicates
-    ///     - Join predicates
-    ///     - Key preservation
-    ///     - Null preservation
-    ///     etc.
-    ///     Note: This class doesn't really convert node trees into CNF form. It looks for
-    ///     basic CNF patterns, and reasons about them. For example,
-    ///     (a AND b) OR c
-    ///     can technically be translated into (a OR c) AND (b OR c),
-    ///     but we don't bother.
-    ///     At some future point of time, it might be appropriate to consider this
+    /// The Predicate class represents a condition (predicate) in CNF.
+    /// A predicate consists of a number of "simple" parts, and the parts are considered to be
+    /// ANDed together
+    /// This class provides a number of useful functions related to
+    /// - Single Table predicates
+    /// - Join predicates
+    /// - Key preservation
+    /// - Null preservation
+    /// etc.
+    /// Note: This class doesn't really convert node trees into CNF form. It looks for
+    /// basic CNF patterns, and reasons about them. For example,
+    /// (a AND b) OR c
+    /// can technically be translated into (a OR c) AND (b OR c),
+    /// but we don't bother.
+    /// At some future point of time, it might be appropriate to consider this
     /// </summary>
     internal class Predicate
     {
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region constructors
 
         /// <summary>
-        ///     Create an empty predicate
+        /// Create an empty predicate
         /// </summary>
         internal Predicate(Command command)
         {
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a predicate from a node tree
+        /// Create a predicate from a node tree
         /// </summary>
         /// <param name="command"> current iqt command </param>
         /// <param name="andTree"> the node tree </param>
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region construction APIs
 
         /// <summary>
-        ///     Add a new "part" (simple predicate) to the current list of predicate parts
+        /// Add a new "part" (simple predicate) to the current list of predicate parts
         /// </summary>
         /// <param name="n"> simple predicate </param>
         internal void AddPart(Node n)
@@ -77,11 +77,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Reconstruction (of node tree)
 
         /// <summary>
-        ///     Build up an AND tree based on the current parts.
-        ///     Specifically, if I have parts (p1, p2, ..., pn), we build up a tree that looks like
-        ///     p1 AND p2 AND ... AND pn
-        ///     If we have no parts, we return a null reference
-        ///     If we have only one part, then we return just that part
+        /// Build up an AND tree based on the current parts.
+        /// Specifically, if I have parts (p1, p2, ..., pn), we build up a tree that looks like
+        /// p1 AND p2 AND ... AND pn
+        /// If we have no parts, we return a null reference
+        /// If we have only one part, then we return just that part
         /// </summary>
         /// <returns> the and subtree </returns>
         internal Node BuildAndTree()
@@ -108,8 +108,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region SingleTable (Filter) Predicates
 
         /// <summary>
-        ///     Partition the current predicate into predicates that only apply
-        ///     to the specified table (single-table-predicates), and others
+        /// Partition the current predicate into predicates that only apply
+        /// to the specified table (single-table-predicates), and others
         /// </summary>
         /// <param name="tableDefinitions"> current columns defined by the table </param>
         /// <param name="otherPredicates"> non-single-table predicates </param>
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region EquiJoins
 
         /// <summary>
-        ///     Get the set of equi-join columns from this predicate
+        /// Get the set of equi-join columns from this predicate
         /// </summary>
         internal void GetEquiJoinPredicates(
             VarVec leftTableDefinitions, VarVec rightTableDefinitions,
@@ -186,7 +186,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Keys
 
         /// <summary>
-        ///     Is the current predicate a "key-satisfying" predicate?
+        /// Is the current predicate a "key-satisfying" predicate?
         /// </summary>
         /// <param name="keyVars"> list of keyVars </param>
         /// <param name="definitions"> current table definitions </param>
@@ -224,9 +224,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Nulls
 
         /// <summary>
-        ///     Does this predicate preserve nulls for the table columns?
-        ///     If the ansiNullSemantics parameter is set, then we simply return true
-        ///     always - this shuts off most optimizations
+        /// Does this predicate preserve nulls for the table columns?
+        /// If the ansiNullSemantics parameter is set, then we simply return true
+        /// always - this shuts off most optimizations
         /// </summary>
         /// <param name="tableColumns"> list of columns to consider </param>
         /// <param name="ansiNullSemantics"> use ansi null semantics </param>
@@ -320,9 +320,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region EquiJoins
 
         /// <summary>
-        ///     Is this "simple" predicate an equi-join predicate?
-        ///     (ie) is it of the form "var1 = var2"
-        ///     Return "var1" and "var2"
+        /// Is this "simple" predicate an equi-join predicate?
+        /// (ie) is it of the form "var1 = var2"
+        /// Return "var1" and "var2"
         /// </summary>
         /// <param name="simplePredicateNode"> the simple predicate </param>
         /// <param name="leftVar"> var on the left-side </param>
@@ -355,10 +355,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Is this an equi-join predicate involving columns from the specified tables?
-        ///     On output, if this was indeed an equijoin predicate, "leftVar" is the
-        ///     column of the left table, while "rightVar" is the column of the right table
-        ///     and the predicate itself is of the form "leftVar = rightVar"
+        /// Is this an equi-join predicate involving columns from the specified tables?
+        /// On output, if this was indeed an equijoin predicate, "leftVar" is the
+        /// column of the left table, while "rightVar" is the column of the right table
+        /// and the predicate itself is of the form "leftVar = rightVar"
         /// </summary>
         /// <param name="simplePredicateNode"> the simple predicate node </param>
         /// <param name="leftTableDefinitions"> interesting columns of the left table </param>
@@ -408,9 +408,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Nulls
 
         /// <summary>
-        ///     Does this predicate preserve nulls on the specified columns of the table?
-        ///     If any of the columns participates in a comparison predicate, or in a
-        ///     not-null predicate, then, nulls are not preserved
+        /// Does this predicate preserve nulls on the specified columns of the table?
+        /// If any of the columns participates in a comparison predicate, or in a
+        /// not-null predicate, then, nulls are not preserved
         /// </summary>
         /// <param name="simplePredNode"> the "simple" predicate node </param>
         /// <param name="tableColumns"> list of table columns </param>

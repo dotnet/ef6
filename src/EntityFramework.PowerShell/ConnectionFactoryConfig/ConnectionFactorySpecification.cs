@@ -7,7 +7,7 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.Linq;
 
     /// <summary>
-    ///     Represents a specification for the default connection factory to be set into a config file.
+    /// Represents a specification for the default connection factory to be set into a config file.
     /// </summary>
     internal class ConnectionFactorySpecification
     {

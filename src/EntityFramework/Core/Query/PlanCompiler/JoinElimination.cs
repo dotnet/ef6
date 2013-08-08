@@ -6,14 +6,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     The JoinElimination module is intended to do just that - eliminate unnecessary joins.
-    ///     This module deals with the following kinds of joins
-    ///     * Self-joins: The join can be eliminated, and either of the table instances can be
-    ///     used instead
-    ///     * Implied self-joins: Same as above
-    ///     * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no
-    ///     column of the PK table is used (other than the join condition)
-    ///     * PK-PK joins: Eliminate the right side table, if we have a left-outer join
+    /// The JoinElimination module is intended to do just that - eliminate unnecessary joins.
+    /// This module deals with the following kinds of joins
+    /// * Self-joins: The join can be eliminated, and either of the table instances can be
+    /// used instead
+    /// * Implied self-joins: Same as above
+    /// * PK-FK joins: (More generally, UniqueKey-FK joins): Eliminate the join, and use just the FK table, if no
+    /// column of the PK table is used (other than the join condition)
+    /// * PK-PK joins: Eliminate the right side table, if we have a left-outer join
     /// </summary>
     internal class JoinElimination : BasicOpVisitorOfNode
     {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region private methods
 
         /// <summary>
-        ///     Invokes the visitor
+        /// Invokes the visitor
         /// </summary>
         private void Process()
         {
@@ -75,8 +75,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Building JoinGraphs
 
         /// <summary>
-        ///     Do we need to build a join graph for this node - returns false, if we've already
-        ///     processed this
+        /// Do we need to build a join graph for this node - returns false, if we've already
+        /// processed this
         /// </summary>
         private bool NeedsJoinGraph(Node joinNode)
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Do the real processing of the join graph.
+        /// Do the real processing of the join graph.
         /// </summary>
         /// <param name="joinNode"> current join node </param>
         /// <returns> modified join node </returns>
@@ -113,8 +113,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Default handler for a node. Simply visits the children, then handles any var
-        ///     remapping, and then recomputes the node info
+        /// Default handler for a node. Simply visits the children, then handles any var
+        /// remapping, and then recomputes the node info
         /// </summary>
         private Node VisitDefaultForAllNodes(Node n)
         {
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor overrides
 
         /// <summary>
-        ///     Invokes default handling for a node and adds the child-parent tracking info to the VarRefManager.
+        /// Invokes default handling for a node and adds the child-parent tracking info to the VarRefManager.
         /// </summary>
         protected override Node VisitDefault(Node n)
         {
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region JoinOps
 
         /// <summary>
-        ///     Build a join graph for this node for this node if necessary, and process it
+        /// Build a join graph for this node for this node if necessary, and process it
         /// </summary>
         /// <param name="op"> current join op </param>
         /// <param name="joinNode"> current join node </param>

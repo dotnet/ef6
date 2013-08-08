@@ -14,25 +14,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Text;
 
     /// <summary>
-    ///     requires: for structural types, member values are ordinally aligned with the members of the
-    ///     structural type.
-    ///     Stores a 'row' (or element within a row) being propagated through the update pipeline, including
-    ///     markup information and metadata. Internally, we maintain several different classes so that we only
-    ///     store the necessary state.
-    ///     - StructuralValue (complex types, entities, and association end keys): type and member values,
-    ///     one version for modified structural values and one version for unmodified structural values
-    ///     (a structural type is modified if its _type_ is changed, not its values
-    ///     - SimpleValue (scalar value): flags to describe the state of the value (is it a concurrency value,
-    ///     is it modified) and the value itself
-    ///     - ServerGenSimpleValue: adds back-prop information to the above (record and position in record
-    ///     so that we can set the value on back-prop)
-    ///     - KeyValue: the originating IEntityStateEntry also travels with keys. These entries are used purely for
-    ///     error reporting. We send them with keys so that every row containing an entity (which must also
-    ///     contain the key) has enough context to recover the state entry.
+    /// requires: for structural types, member values are ordinally aligned with the members of the
+    /// structural type.
+    /// Stores a 'row' (or element within a row) being propagated through the update pipeline, including
+    /// markup information and metadata. Internally, we maintain several different classes so that we only
+    /// store the necessary state.
+    /// - StructuralValue (complex types, entities, and association end keys): type and member values,
+    /// one version for modified structural values and one version for unmodified structural values
+    /// (a structural type is modified if its _type_ is changed, not its values
+    /// - SimpleValue (scalar value): flags to describe the state of the value (is it a concurrency value,
+    /// is it modified) and the value itself
+    /// - ServerGenSimpleValue: adds back-prop information to the above (record and position in record
+    /// so that we can set the value on back-prop)
+    /// - KeyValue: the originating IEntityStateEntry also travels with keys. These entries are used purely for
+    /// error reporting. We send them with keys so that every row containing an entity (which must also
+    /// contain the key) has enough context to recover the state entry.
     /// </summary>
     /// <remarks>
-    ///     Not all memebers of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
-    ///     is available only on simple types
+    /// Not all memebers of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
+    /// is available only on simple types
     /// </remarks>
     internal abstract class PropagatorResult
     {
@@ -52,18 +52,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Properties
 
         /// <summary>
-        ///     Gets a value indicating whether this result is null.
+        /// Gets a value indicating whether this result is null.
         /// </summary>
         internal abstract bool IsNull { get; }
 
         /// <summary>
-        ///     Gets a value indicating whether this is a simple (scalar) or complex
-        ///     structural) result.
+        /// Gets a value indicating whether this is a simple (scalar) or complex
+        /// structural) result.
         /// </summary>
         internal abstract bool IsSimple { get; }
 
         /// <summary>
-        ///     Gets flags describing the behaviors for this element.
+        /// Gets flags describing the behaviors for this element.
         /// </summary>
         internal virtual PropagatorFlags PropagatorFlags
         {
@@ -71,8 +71,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets all state entries from which this result originated. Only set for key
-        ///     values (to ensure every row knows all of its source entries)
+        /// Gets all state entries from which this result originated. Only set for key
+        /// values (to ensure every row knows all of its source entries)
         /// </summary>
         internal virtual IEntityStateEntry StateEntry
         {
@@ -80,8 +80,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets record from which this result originated. Only set for server generated
-        ///     results (where the record needs to be synchronized).
+        /// Gets record from which this result originated. Only set for server generated
+        /// results (where the record needs to be synchronized).
         /// </summary>
         internal virtual CurrentValueRecord Record
         {
@@ -89,8 +89,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets structural type for non simple results. Only available for entity and complex type
-        ///     results.
+        /// Gets structural type for non simple results. Only available for entity and complex type
+        /// results.
         /// </summary>
         internal virtual StructuralType StructuralType
         {
@@ -98,8 +98,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets the ordinal within the originating record for this result. Only set
-        ///     for server generated results (otherwise, returns -1)
+        /// Gets the ordinal within the originating record for this result. Only set
+        /// for server generated results (otherwise, returns -1)
         /// </summary>
         internal virtual int RecordOrdinal
         {
@@ -107,8 +107,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Gets the identifier for this entry if it is a server-gen key value (otherwise
-        ///     returns -1)
+        /// Gets the identifier for this entry if it is a server-gen key value (otherwise
+        /// returns -1)
         /// </summary>
         internal virtual int Identifier
         {
@@ -116,8 +116,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Where a single result corresponds to multiple key inputs, they are chained using this linked list.
-        ///     By convention, the first entry in the chain is the 'dominant' entry (the principal key).
+        /// Where a single result corresponds to multiple key inputs, they are chained using this linked list.
+        /// By convention, the first entry in the chain is the 'dominant' entry (the principal key).
         /// </summary>
         internal virtual PropagatorResult Next
         {
@@ -129,8 +129,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         #region Methods
 
         /// <summary>
-        ///     Returns simple value stored in this result. Only valid when <see cref="IsSimple" /> is
-        ///     true.
+        /// Returns simple value stored in this result. Only valid when <see cref="IsSimple" /> is
+        /// true.
         /// </summary>
         /// <returns> Concrete value. </returns>
         internal virtual object GetSimpleValue()
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Returns nested value. Only valid when <see cref="IsSimple" /> is false.
+        /// Returns nested value. Only valid when <see cref="IsSimple" /> is false.
         /// </summary>
         /// <param name="ordinal"> Ordinal of value to return (ordinal based on type definition) </param>
         /// <returns> Nested result. </returns>
@@ -151,7 +151,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Returns nested value. Only valid when <see cref="IsSimple" /> is false.
+        /// Returns nested value. Only valid when <see cref="IsSimple" /> is false.
         /// </summary>
         /// <param name="member"> Member for which to return a value </param>
         /// <returns> Nested result. </returns>
@@ -162,7 +162,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Returns all structural values. Only valid when <see cref="IsSimple" /> is false.
+        /// Returns all structural values. Only valid when <see cref="IsSimple" /> is false.
         /// </summary>
         /// <returns> Values of all structural members. </returns>
         internal virtual PropagatorResult[] GetMemberValues()
@@ -172,14 +172,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Produces a replica of this propagator result with different flags.
+        /// Produces a replica of this propagator result with different flags.
         /// </summary>
         /// <param name="flags"> New flags for the result. </param>
         /// <returns> This result with the given flags. </returns>
         internal abstract PropagatorResult ReplicateResultWithNewFlags(PropagatorFlags flags);
 
         /// <summary>
-        ///     Copies this result replacing its value. Used for cast. Requires a simple result.
+        /// Copies this result replacing its value. Used for cast. Requires a simple result.
         /// </summary>
         /// <param name="value"> New value for result </param>
         /// <returns> Copy of this result with new value. </returns>
@@ -190,20 +190,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Replaces parts of the structured result.
+        /// Replaces parts of the structured result.
         /// </summary>
         /// <param name="map"> A replace-with map applied to simple (i.e. not structural) values. </param>
         /// <returns> Result with requested elements replaced. </returns>
         internal abstract PropagatorResult Replace(Func<PropagatorResult, PropagatorResult> map);
 
         /// <summary>
-        ///     A result is merged with another when it is merged as part of an equi-join.
+        /// A result is merged with another when it is merged as part of an equi-join.
         /// </summary>
         /// <remarks>
-        ///     In theory, this should only ever be called on two keys (since we only join on
-        ///     keys). We throw in the base implementation, and override in KeyResult. By convention
-        ///     the principal key is always the first result in the chain (in case of an RIC). In
-        ///     addition, entity entries always appear before relationship entries.
+        /// In theory, this should only ever be called on two keys (since we only join on
+        /// keys). We throw in the base implementation, and override in KeyResult. By convention
+        /// the principal key is always the first result in the chain (in case of an RIC). In
+        /// addition, entity entries always appear before relationship entries.
         /// </remarks>
         /// <param name="keyManager"> </param>
         /// <param name="other"> Result to merge with. </param>
@@ -231,7 +231,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Aligns a value returned from the store with the expected type for the member.
+        /// Aligns a value returned from the store with the expected type for the member.
         /// </summary>
         /// <param name="value"> Value to convert. </param>
         /// <param name="member"> Metadata for the member being set. </param>

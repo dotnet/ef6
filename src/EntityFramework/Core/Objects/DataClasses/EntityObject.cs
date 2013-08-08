@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Xml.Serialization;
 
     /// <summary>
-    ///     This is the class is the basis for all perscribed EntityObject classes.
+    /// This is the class is the basis for all perscribed EntityObject classes.
     /// </summary>
     [DataContract(IsReference = true)]
     [Serializable]
@@ -33,8 +33,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private static readonly DetachedEntityChangeTracker _detachedEntityChangeTracker = new DetachedEntityChangeTracker();
 
         /// <summary>
-        ///     Helper class used when we are not currently attached to a change tracker.
-        ///     Simplifies the code so we don't always have to check for null before using the change tracker
+        /// Helper class used when we are not currently attached to a change tracker.
+        /// Simplifies the code so we don't always have to check for null before using the change tracker
         /// </summary>
         private class DetachedEntityChangeTracker : IEntityChangeTracker
         {
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets the entity state of the object.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.EntityState" /> of this object.
+        /// The <see cref="T:System.Data.Entity.EntityState" /> of this object.
         /// </returns>
         [Browsable(false)]
         [XmlIgnore]
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Gets or sets the key for this object.</summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.EntityKey" /> for this object.
+        /// The <see cref="T:System.Data.Entity.Core.EntityKey" /> for this object.
         /// </returns>
         [Browsable(false)]
         [DataMember]
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region IEntityWithChangeTracker
 
         /// <summary>
-        ///     Used by the ObjectStateManager to attach or detach this EntityObject to the cache.
+        /// Used by the ObjectStateManager to attach or detach this EntityObject to the cache.
         /// </summary>
         /// <param name="changeTracker"> Reference to the ObjectStateEntry that contains this entity </param>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -157,8 +157,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         #region IEntityWithRelationships
 
         /// <summary>
-        ///     Returns the container for the lazily created relationship
-        ///     navigation property objects, collections and refs.
+        /// Returns the container for the lazily created relationship
+        /// navigation property objects, collections and refs.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         RelationshipManager IEntityWithRelationships.RelationshipManager
@@ -223,9 +223,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity
-        ///     whenever a change is about to be made to a property of the
-        ///     ComplexObject so that the change can be forwarded to the change tracker.
+        /// This method is called by a ComplexObject contained in this Entity
+        /// whenever a change is about to be made to a property of the
+        /// ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
         /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
@@ -240,9 +240,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called by a ComplexObject contained in this Entity
-        ///     whenever a change has been made to a property of the
-        ///     ComplexObject so that the change can be forwarded to the change tracker.
+        /// This method is called by a ComplexObject contained in this Entity
+        /// whenever a change has been made to a property of the
+        /// ComplexObject so that the change can be forwarded to the change tracker.
         /// </summary>
         /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
         /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>

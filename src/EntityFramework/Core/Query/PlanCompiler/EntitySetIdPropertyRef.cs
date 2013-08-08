@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     /// <summary>
-    ///     An EntitySetId propertyref represents the EntitySetId property for
-    ///     an entity type or a ref type.
-    ///     As with TypeId, this class is a singleton instance
+    /// An EntitySetId propertyref represents the EntitySetId property for
+    /// an entity type or a ref type.
+    /// As with TypeId, this class is a singleton instance
     /// </summary>
     internal class EntitySetIdPropertyRef : PropertyRef
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Gets the singleton instance
+        /// Gets the singleton instance
         /// </summary>
         internal static EntitySetIdPropertyRef Instance = new EntitySetIdPropertyRef();
 

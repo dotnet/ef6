@@ -5,7 +5,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Transformation Rules for DistinctOp
+    /// Transformation Rules for DistinctOp
     /// </summary>
     internal static class DistinctOpRules
     {
@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly SimpleRule Rule_DistinctOpOfKeys = new SimpleRule(OpType.Distinct, ProcessDistinctOpOfKeys);
 
         /// <summary>
-        ///     If the DistinctOp includes all all the keys of the input, than it is unnecessary.
-        ///     Distinct (X, distinct_keys) -> Project( X, distinct_keys) where distinct_keys includes all keys of X.
+        /// If the DistinctOp includes all all the keys of the input, than it is unnecessary.
+        /// Distinct (X, distinct_keys) -> Project( X, distinct_keys) where distinct_keys includes all keys of X.
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> current subtree </param>

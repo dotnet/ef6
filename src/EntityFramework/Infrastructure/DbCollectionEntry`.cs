@@ -11,9 +11,9 @@ namespace System.Data.Entity.Infrastructure
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Instances of this class are returned from the Collection method of
-    ///     <see cref="DbEntityEntry{T}" /> and allow operations such as loading to
-    ///     be performed on the an entity's collection navigation properties.
+    /// Instances of this class are returned from the Collection method of
+    /// <see cref="DbEntityEntry{T}" /> and allow operations such as loading to
+    /// be performed on the an entity's collection navigation properties.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity to which this property belongs. </typeparam>
     /// <typeparam name="TElement"> The type of the element in the collection of entities. </typeparam>
@@ -25,12 +25,12 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalCollectionEntry _internalCollectionEntry;
 
         /// <summary>
-        ///     Creates a <see cref="DbCollectionEntry{TEntity,TElement}" /> from information in the given
-        ///     <see
-        ///         cref="InternalCollectionEntry" />
-        ///     .
-        ///     Use this method in preference to the constructor since it may potentially create a subclass depending on
-        ///     the type of member represented by the InternalCollectionEntry instance.
+        /// Creates a <see cref="DbCollectionEntry{TEntity,TElement}" /> from information in the given
+        /// <see
+        ///     cref="InternalCollectionEntry" />
+        /// .
+        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
+        /// the type of member represented by the InternalCollectionEntry instance.
         /// </summary>
         /// <param name="internalCollectionEntry"> The internal collection entry. </param>
         /// <returns> The new entry. </returns>
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbCollectionEntry{TEntity, TProperty}" /> class.
+        /// Initializes a new instance of the <see cref="DbCollectionEntry{TEntity, TProperty}" /> class.
         /// </summary>
         /// <param name="internalCollectionEntry"> The internal entry. </param>
         internal DbCollectionEntry(InternalCollectionEntry internalCollectionEntry)
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Infrastructure
         #region Name
 
         /// <summary>
-        ///     Gets the property name.
+        /// Gets the property name.
         /// </summary>
         /// <value> The property name. </value>
         public override string Name
@@ -74,8 +74,8 @@ namespace System.Data.Entity.Infrastructure
         #region Current values
 
         /// <summary>
-        ///     Gets or sets the current value of the navigation property.  The current value is
-        ///     the entity that the navigation property references.
+        /// Gets or sets the current value of the navigation property.  The current value is
+        /// the entity that the navigation property references.
         /// </summary>
         /// <value> The current value. </value>
         [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -90,8 +90,8 @@ namespace System.Data.Entity.Infrastructure
         #region Loading
 
         /// <summary>
-        ///     Loads the collection of entities from the database.
-        ///     Note that entities that already exist in the context are not overwritten with values from the database.
+        /// Loads the collection of entities from the database.
+        /// Note that entities that already exist in the context are not overwritten with values from the database.
         /// </summary>
         public void Load()
         {
@@ -101,15 +101,15 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously loads the collection of entities from the database.
-        ///     Note that entities that already exist in the context are not overwritten with values from the database.
+        /// Asynchronously loads the collection of entities from the database.
+        /// Note that entities that already exist in the context are not overwritten with values from the database.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         public Task LoadAsync()
         {
@@ -117,18 +117,18 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Asynchronously loads the collection of entities from the database.
-        ///     Note that entities that already exist in the context are not overwritten with values from the database.
+        /// Asynchronously loads the collection of entities from the database.
+        /// Note that entities that already exist in the context are not overwritten with values from the database.
         /// </summary>
         /// <remarks>
-        ///     Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
-        ///     that any asynchronous operations have completed before calling another method on this context.
+        /// Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+        /// that any asynchronous operations have completed before calling another method on this context.
         /// </remarks>
         /// <param name="cancellationToken">
-        ///     A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
+        /// A <see cref="CancellationToken" /> to observe while waiting for the task to complete.
         /// </param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
+        /// A task that represents the asynchronous operation.
         /// </returns>
         public Task LoadAsync(CancellationToken cancellationToken)
         {
@@ -138,21 +138,21 @@ namespace System.Data.Entity.Infrastructure
 #endif
 
         /// <summary>
-        ///     Gets or sets a value indicating whether all entities of this collection have been loaded from the database.
+        /// Gets or sets a value indicating whether all entities of this collection have been loaded from the database.
         /// </summary>
         /// <remarks>
-        ///     Loading the related entities from the database either using lazy-loading, as part of a query, or explicitly
-        ///     with one of the Load methods will set the IsLoaded flag to true.
-        ///     IsLoaded can be explicitly set to true to prevent the related entities of this collection from being lazy-loaded.
-        ///     This can be useful if the application has caused a subset of related entities to be loaded into this collection
-        ///     and wants to prevent any other entities from being loaded automatically.
-        ///     Note that explict loading using one of the Load methods will load all related entities from the database
-        ///     regardless of whether or not IsLoaded is true.
-        ///     When any related entity in the collection is detached the IsLoaded flag is reset to false indicating that the
-        ///     not all related entities are now loaded.
+        /// Loading the related entities from the database either using lazy-loading, as part of a query, or explicitly
+        /// with one of the Load methods will set the IsLoaded flag to true.
+        /// IsLoaded can be explicitly set to true to prevent the related entities of this collection from being lazy-loaded.
+        /// This can be useful if the application has caused a subset of related entities to be loaded into this collection
+        /// and wants to prevent any other entities from being loaded automatically.
+        /// Note that explict loading using one of the Load methods will load all related entities from the database
+        /// regardless of whether or not IsLoaded is true.
+        /// When any related entity in the collection is detached the IsLoaded flag is reset to false indicating that the
+        /// not all related entities are now loaded.
         /// </remarks>
         /// <value>
-        ///     <c>true</c> if all the related entities are loaded or the IsLoaded has been explicitly set to true; otherwise, <c>false</c>.
+        /// <c>true</c> if all the related entities are loaded or the IsLoaded has been explicitly set to true; otherwise, <c>false</c>.
         /// </value>
         public bool IsLoaded
         {
@@ -161,9 +161,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns the query that would be used to load this collection from the database.
-        ///     The returned query can be modified using LINQ to perform filtering or operations in the database, such
-        ///     as counting the number of entities in the collection in the database without actually loading them.
+        /// Returns the query that would be used to load this collection from the database.
+        /// The returned query can be modified using LINQ to perform filtering or operations in the database, such
+        /// as counting the number of entities in the collection in the database without actually loading them.
         /// </summary>
         /// <returns> A query for the collection. </returns>
         public IQueryable<TElement> Query()
@@ -176,8 +176,8 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbCollectionEntry" /> class for
-        ///     the navigation property represented by this object.
+        /// Returns a new instance of the non-generic <see cref="DbCollectionEntry" /> class for
+        /// the navigation property represented by this object.
         /// </summary>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
@@ -192,7 +192,7 @@ namespace System.Data.Entity.Infrastructure
         #region Internal entry access
 
         /// <summary>
-        ///     Gets the underlying <see cref="InternalCollectionEntry" /> as an <see cref="InternalMemberEntry" />.
+        /// Gets the underlying <see cref="InternalCollectionEntry" /> as an <see cref="InternalMemberEntry" />.
         /// </summary>
         /// <value> The internal member entry. </value>
         internal override InternalMemberEntry InternalMemberEntry
@@ -205,7 +205,7 @@ namespace System.Data.Entity.Infrastructure
         #region Back references
 
         /// <summary>
-        ///     The <see cref="DbEntityEntry{TEntity}" /> to which this navigation property belongs.
+        /// The <see cref="DbEntityEntry{TEntity}" /> to which this navigation property belongs.
         /// </summary>
         /// <value> An entry for the entity that owns this navigation property. </value>
         public override DbEntityEntry<TEntity> EntityEntry

@@ -20,8 +20,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    ///     Functional tests for concurrency exceptions.
-    ///     Unit tests also exist in the unit tests project.
+    /// Functional tests for concurrency exceptions.
+    /// Unit tests also exist in the unit tests project.
     /// </summary>
     public class ConcurrencyTests : FunctionalTestBase
     {
@@ -1231,12 +1231,12 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Runs the same action twice inside a transaction scope but with two different contexts and calling
-        ///     SaveChanges such that first time it will succeed and then the second time it will result in a
-        ///     concurrency exception.
-        ///     After the exception is caught the resolver action is called, after which SaveChanges is called
-        ///     again.  Finally, a new context is created and the validator is called so that the state of
-        ///     the database at the end of the process can be validated.
+        /// Runs the same action twice inside a transaction scope but with two different contexts and calling
+        /// SaveChanges such that first time it will succeed and then the second time it will result in a
+        /// concurrency exception.
+        /// After the exception is caught the resolver action is called, after which SaveChanges is called
+        /// again.  Finally, a new context is created and the validator is called so that the state of
+        /// the database at the end of the process can be validated.
         /// </summary>
         private void ConcurrencyTest(
             Action<F1Context> change, Action<F1Context, DbUpdateException> resolver,
@@ -1246,12 +1246,12 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Runs the two actions inside a transaction scope but with two different contexts and calling
-        ///     SaveChanges such that storeChange will succeed and the store will reflect this change, and
-        ///     then clientChange will result in a concurrency exception.
-        ///     After the exception is caught the resolver action is called, after which SaveChanges is called
-        ///     again.  Finally, a new context is created and the validator is called so that the state of
-        ///     the database at the end of the process can be validated.
+        /// Runs the two actions inside a transaction scope but with two different contexts and calling
+        /// SaveChanges such that storeChange will succeed and the store will reflect this change, and
+        /// then clientChange will result in a concurrency exception.
+        /// After the exception is caught the resolver action is called, after which SaveChanges is called
+        /// again.  Finally, a new context is created and the validator is called so that the state of
+        /// the database at the end of the process can be validated.
         /// </summary>
         private void ConcurrencyTest(
             Action<F1Context> storeChange, Action<F1Context> clientChange,

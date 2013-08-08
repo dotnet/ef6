@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Globalization;
 
     /// <summary>
-    ///     Represents a parameter to be passed to a method
+    /// Represents a parameter to be passed to a method
     /// </summary>
     internal class ParameterElement : ConfigurationElement
     {

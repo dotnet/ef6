@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
 #pragma warning disable 1711 // compiler bug: reports TDerived and TBase as type parameters for non-existing IsReadOnly property
     /// <summary>
-    ///     Class to filter stuff out from a metadata collection
+    /// Class to filter stuff out from a metadata collection
     /// </summary>
     /* UNDONE to avoid build errors like "XML comment has a typeparam tag for 'TDerived', but there is no type parameter by that name" 
     /// <typeparam name="TDerived">The type of items which you want to expose from this filtered collection</typeparam>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         where TBase : MetadataItem
     {
         /// <summary>
-        ///     The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
+        /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
         /// </summary>
         /// <param name="collection"> The metadata collection to wrap </param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly Predicate<TBase> _predicate;
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <returns> An item from the collection </returns>
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if this collection contains an item of the given identity
+        /// Determines if this collection contains an item of the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to check for </param>
         /// <returns> True if the collection contains the item with the given identity </returns>
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets an item from the collection with the given identity
+        /// Gets an item from the collection with the given identity
         /// </summary>
         /// <param name="identity"> The identity of the item to search for </param>
         /// <param name="ignoreCase"> Whether case is ignore in the search </param>
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get index of the element passed as the argument
+        /// Get index of the element passed as the argument
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods")]
         public override int IndexOf(TDerived value)
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Get index of the element passed as the argument
+        /// Get index of the element passed as the argument
         /// </summary>
         int IBaseList<TBase>.IndexOf(TBase item)
         {

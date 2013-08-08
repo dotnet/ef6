@@ -11,20 +11,20 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Exception thrown by <see cref="DbModelBuilder" /> during model creation when an invalid model is generated.
+    /// Exception thrown by <see cref="DbModelBuilder" /> during model creation when an invalid model is generated.
     /// </summary>
     [Serializable]
     public class ModelValidationException : Exception
     {
         /// <summary>
-        ///     Initializes a new instance of ModelValidationException
+        /// Initializes a new instance of ModelValidationException
         /// </summary>
         public ModelValidationException()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of ModelValidationException
+        /// Initializes a new instance of ModelValidationException
         /// </summary>
         /// <param name="message"> The exception message. </param>
         public ModelValidationException(string message)
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         /// <summary>
-        ///     Initializes a new instance of ModelValidationException
+        /// Initializes a new instance of ModelValidationException
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="innerException"> The inner exception. </param>

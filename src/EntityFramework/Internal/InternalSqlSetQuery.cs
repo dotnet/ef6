@@ -9,7 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a raw SQL query against the context for entities in an entity set.
+    /// Represents a raw SQL query against the context for entities in an entity set.
     /// </summary>
     internal class InternalSqlSetQuery : InternalSqlQuery
     {
@@ -19,12 +19,12 @@ namespace System.Data.Entity.Internal
         private readonly bool _isNoTracking;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="InternalSqlSetQuery" /> class.
+        /// Initializes a new instance of the <see cref="InternalSqlSetQuery" /> class.
         /// </summary>
         /// <param name="set"> The set. </param>
         /// <param name="sql"> The SQL. </param>
         /// <param name="isNoTracking">
-        ///     If set to <c>true</c> then the entities will not be tracked.
+        /// If set to <c>true</c> then the entities will not be tracked.
         /// </param>
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
@@ -50,10 +50,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this instance is set to track entities or not.
+        /// Gets a value indicating whether this instance is set to track entities or not.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is no-tracking; otherwise, <c>false</c> .
+        /// <c>true</c> if this instance is no-tracking; otherwise, <c>false</c> .
         /// </value>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
@@ -79,8 +79,8 @@ namespace System.Data.Entity.Internal
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database
-        ///     materializing entities into the entity set that backs this set.
+        /// Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the database
+        /// materializing entities into the entity set that backs this set.
         /// </summary>
         /// <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
@@ -95,8 +95,8 @@ namespace System.Data.Entity.Internal
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database
-        ///     materializing entities into the entity set that backs this set.
+        /// Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the database
+        /// materializing entities into the entity set that backs this set.
         /// </summary>
         /// <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()

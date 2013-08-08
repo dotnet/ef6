@@ -12,26 +12,26 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
 
     /// <summary>
-    ///     Manages a binding list constructed from query results.
+    /// Manages a binding list constructed from query results.
     /// </summary>
     /// <typeparam name="TElement"> Type of the elements in the binding list. </typeparam>
     /// <remarks>
-    ///     The binding list is initialized from query results.
-    ///     If the binding list can be modified,
-    ///     objects are added or removed from the ObjectStateManager (via the ObjectContext).
+    /// The binding list is initialized from query results.
+    /// If the binding list can be modified,
+    /// objects are added or removed from the ObjectStateManager (via the ObjectContext).
     /// </remarks>
     internal sealed class ObjectViewQueryResultData<TElement> : IObjectViewData<TElement>
     {
         private readonly List<TElement> _bindingList;
 
         /// <summary>
-        ///     ObjectContext used to add or delete objects when the list can be modified.
+        /// ObjectContext used to add or delete objects when the list can be modified.
         /// </summary>
         private readonly ObjectContext _objectContext;
 
         /// <summary>
-        ///     If the TElement type is an Entity type of some kind,
-        ///     this field specifies the entity set to add entity objects.
+        /// If the TElement type is an Entity type of some kind,
+        /// this field specifies the entity set to add entity objects.
         /// </summary>
         private readonly EntitySet _entitySet;
 
@@ -39,12 +39,12 @@ namespace System.Data.Entity.Core.Objects
         private readonly bool _canModifyList;
 
         /// <summary>
-        ///     Construct a new instance of the ObjectViewQueryResultData class using the supplied query results.
+        /// Construct a new instance of the ObjectViewQueryResultData class using the supplied query results.
         /// </summary>
         /// <param name="queryResults"> Result of object query execution used to populate the binding list. </param>
         /// <param name="objectContext"> ObjectContext used to add or remove items. If the binding list can be modified, this parameter should not be null. </param>
         /// <param name="forceReadOnlyList">
-        ///     <b>True</b> if items should not be allowed to be added or removed from the binding list. Note that other conditions may prevent the binding list from being modified, so a value of <b>false</b> supplied for this parameter doesn't necessarily mean that the list will be writable.
+        /// <b>True</b> if items should not be allowed to be added or removed from the binding list. Note that other conditions may prevent the binding list from being modified, so a value of <b>false</b> supplied for this parameter doesn't necessarily mean that the list will be writable.
         /// </param>
         /// <param name="entitySet"> If the TElement type is an Entity type of some kind, this field specifies the entity set to add entity objects. </param>
         internal ObjectViewQueryResultData(
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Cannot be a DbDataRecord or a derivative of DbDataRecord
+        /// Cannot be a DbDataRecord or a derivative of DbDataRecord
         /// </summary>
         private static bool IsEditable(Type elementType)
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Throw an exception is an entity set was not specified for this instance.
+        /// Throw an exception is an entity set was not specified for this instance.
         /// </summary>
         private void EnsureEntitySet()
         {

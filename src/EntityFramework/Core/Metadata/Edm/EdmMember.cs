@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Represents the edm member class
+    /// Represents the edm member class
     /// </summary>
     public abstract class EdmMember : MetadataItem, INamedDataModelItem
     {
@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of EdmMember class
+        /// Initializes a new instance of EdmMember class
         /// </summary>
         /// <param name="name"> name of the member </param>
         /// <param name="memberTypeUsage"> type information containing info about member's type and its facet </param>
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the identity of the member
+        /// Returns the identity of the member
         /// </summary>
         internal override string Identity
         {
@@ -50,9 +50,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets or sets the name of the property. Setting this from a store-space model-convention will change the name of the database 
-        ///     column for this property. In the conceptual model, this should align with the corresponding property from the entity class 
-        ///     and should not be changed.
+        /// Gets or sets the name of the property. Setting this from a store-space model-convention will change the name of the database 
+        /// column for this property. In the conceptual model, this should align with the corresponding property from the entity class 
+        /// and should not be changed.
         /// </summary>
         /// <returns>The name of this member.</returns>
         [MetadataProperty(PrimitiveTypeKind.String, false)]
@@ -88,7 +88,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the type on which this member is declared.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the type on which this member is declared.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.StructuralType" /> object that represents the type on which this member is declared.
         /// </returns>
         public virtual StructuralType DeclaringType
         {
@@ -96,10 +96,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains both the type of the member and facets for the type.
+        /// Gets the instance of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> class that contains both the type of the member and facets for the type.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object that contains both the type of the member and facets for the type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.TypeUsage" /> object that contains both the type of the member and facets for the type.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.TypeUsage, false)]
         public virtual TypeUsage TypeUsage
@@ -122,8 +122,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Sets the member to read only mode. Once this is done, there are no changes
-        ///     that can be done to this class
+        /// Sets the member to read only mode. Once this is done, there are no changes
+        /// that can be done to this class
         /// </summary>
         internal override void SetReadOnly()
         {
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Change the declaring type without doing fixup in the member collection
+        /// Change the declaring type without doing fixup in the member collection
         /// </summary>
         internal void ChangeDeclaringTypeWithoutCollectionFixup(StructuralType newDeclaringType)
         {
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Tells whether this member is marked as a Computed member in the EDM definition
+        /// Tells whether this member is marked as a Computed member in the EDM definition
         /// </summary>
         public bool IsStoreGeneratedComputed
         {
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Tells whether this member's Store generated pattern is marked as Identity in the EDM definition
+        /// Tells whether this member's Store generated pattern is marked as Identity in the EDM definition
         /// </summary>
         public bool IsStoreGeneratedIdentity
         {

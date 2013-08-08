@@ -46,8 +46,8 @@ namespace System.Data.Entity.SqlServer
         }
 
         /// <summary>
-        ///     Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
-        ///     located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
+        /// Returns the highest available version of the Microsoft.SqlServer.Types assembly that could be
+        /// located using Assembly.Load; may return <c>null</c> if no version of the assembly could be found.
         /// </summary>
         public virtual SqlTypesAssembly TryGetSqlTypesAssembly()
         {

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     /// <summary>
-    ///     Defines all the string constrcuts defined in OC MSL specification
+    /// Defines all the string constrcuts defined in OC MSL specification
     /// </summary>
     internal static class ObjectMslConstructs
     {

@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public event EventHandler<DataModelErrorEventArgs> OnError;
 
         /// <summary>
-        ///     Serialize the <see cref="EdmModel" /> to the <see cref="XmlWriter" />
+        /// Serialize the <see cref="EdmModel" /> to the <see cref="XmlWriter" />
         /// </summary>
         /// <param name="dbDatabase"> The EdmModel to serialize </param>
         /// <param name="provider"> Provider information on the Schema element </param>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Serialize the <see cref="EdmModel" /> to the <see cref="XmlWriter" />
+        /// Serialize the <see cref="EdmModel" /> to the <see cref="XmlWriter" />
         /// </summary>
         /// <param name="dbDatabase"> The EdmModel to serialize </param>
         /// <param name="namespaceName"> Namespace name on the Schema element </param>

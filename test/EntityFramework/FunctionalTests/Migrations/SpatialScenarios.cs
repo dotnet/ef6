@@ -7,7 +7,7 @@ namespace System.Data.Entity.Migrations
     using Xunit;
 
     /// <summary>
-    ///     Note that AutoAndGenerateScenarios.cs also has some spatial tests.
+    /// Note that AutoAndGenerateScenarios.cs also has some spatial tests.
     /// </summary>
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]

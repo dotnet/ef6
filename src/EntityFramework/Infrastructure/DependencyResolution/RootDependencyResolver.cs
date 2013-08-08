@@ -16,9 +16,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Linq;
 
     /// <summary>
-    ///     This resolver is always the last resolver in the internal resolver chain and is
-    ///     responsible for providing the default service for each dependency or throwing an
-    ///     exception if there is no reasonable default service.
+    /// This resolver is always the last resolver in the internal resolver chain and is
+    /// responsible for providing the default service for each dependency or throwing an
+    /// exception if there is no reasonable default service.
     /// </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {

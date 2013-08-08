@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the Edm Row Type
+    /// Represents the Edm Row Type
     /// </summary>
     public class RowType : StructuralType
     {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a new instance of RowType class with the given list of members
+        /// Initializes a new instance of RowType class with the given list of members
         /// </summary>
         /// <param name="properties"> properties for this row type </param>
         /// <exception cref="System.ArgumentException">Thrown if any individual property in the passed in properties argument is null</exception>
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes a RowType with the given members and initializer metadata
+        /// Initializes a RowType with the given members and initializer metadata
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RowType(IEnumerable<EdmProperty> properties, InitializerMetadata initializerMetadata)
@@ -60,8 +60,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets LINQ initializer Metadata for this row type. If there is no associated
-        ///     initializer type, value is null.
+        /// Gets LINQ initializer Metadata for this row type. If there is no associated
+        /// initializer type, value is null.
         /// </summary>
         internal InitializerMetadata InitializerMetadata
         {
@@ -69,13 +69,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -83,13 +83,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the list of properties on this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />.
+        /// Gets the list of properties on this <see cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties on this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties on this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.RowType" />
+        /// .
         /// </returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds a property
+        /// Adds a property
         /// </summary>
         /// <param name="property"> The property to add </param>
         private void AddProperty(EdmProperty property)
@@ -127,9 +127,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's
-        ///     Members collection. If this method returns without throwing, it is assumed
-        ///     the member is valid.
+        /// Validates a EdmMember object to determine if it can be added to this type's
+        /// Members collection. If this method returns without throwing, it is assumed
+        /// the member is valid.
         /// </summary>
         /// <param name="member"> The member to validate </param>
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
@@ -139,8 +139,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Calculates the row type identity that would result from
-        ///     a given set of properties.
+        /// Calculates the row type identity that would result from
+        /// a given set of properties.
         /// </summary>
         /// <param name="properties"> The properties that determine the row type's structure </param>
         /// <param name="initializerMetadata"> Metadata describing materialization of this row type </param>
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     EdmEquals override verifying the equivalence of all members and their type usages.
+        /// EdmEquals override verifying the equivalence of all members and their type usages.
         /// </summary>
         internal override bool EdmEquals(MetadataItem item)
         {
@@ -248,12 +248,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The factory method for constructing the <see cref="RowType" /> object.
+        /// The factory method for constructing the <see cref="RowType" /> object.
         /// </summary>
         /// <param name="properties">Properties of the row type object.</param>
         /// <param name="metadataProperties">Metadata properties that will be added to the function. Can be null.</param>
         /// <returns>
-        ///     A new, read-only instance of the <see cref="RowType" /> object.
+        /// A new, read-only instance of the <see cref="RowType" /> object.
         /// </returns>
         public static RowType Create(IEnumerable<EdmProperty> properties, IEnumerable<MetadataProperty> metadataProperties)
         {

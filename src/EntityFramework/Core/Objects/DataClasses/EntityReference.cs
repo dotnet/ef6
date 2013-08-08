@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Models a relationship end with multiplicity 1.
+    /// Models a relationship end with multiplicity 1.
     /// </summary>
     [DataContract]
     [Serializable]
@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // ------------
 
         /// <summary>
-        ///     The default constructor is required for some serialization scenarios. It should not be used to
-        ///     create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
-        ///     class instead.
+        /// The default constructor is required for some serialization scenarios. It should not be used to
+        /// create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
+        /// class instead.
         /// </summary>
         internal EntityReference()
         {
@@ -57,24 +57,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         /// <summary>Returns the key for the related object. </summary>
         /// <remarks>
-        ///     Returns the EntityKey of the target entity associated with this EntityReference.
-        ///     Is non-null in the following scenarios:
-        ///     (a) Entities are tracked by a context and an Unchanged or Added client-side relationships exists for this EntityReference's owner with the
-        ///     same RelationshipName and source role. This relationship could have been created explicitly by the user (e.g. by setting
-        ///     the EntityReference.Value, setting this property directly, or by calling EntityCollection.Add) or automatically through span queries.
-        ///     (b) If the EntityKey was non-null before detaching an entity from the context, it will still be non-null after detaching, until any operation
-        ///     occurs that would set it to null, as described below.
-        ///     (c) Entities are detached and the EntityKey is explicitly set to non-null by the user.
-        ///     (d) Entity graph was created using a NoTracking query with full span
-        ///     Is null in the following scenarios:
-        ///     (a) Entities are tracked by a context but there is no Unchanged or Added client-side relationship for this EntityReference's owner with the
-        ///     same RelationshipName and source role.
-        ///     (b) Entities are tracked by a context and a relationship exists, but the target entity has a temporary key (i.e. it is Added) or the key
-        ///     is one of the special keys
-        ///     (c) Entities are detached and the relationship was explicitly created by the user.
+        /// Returns the EntityKey of the target entity associated with this EntityReference.
+        /// Is non-null in the following scenarios:
+        /// (a) Entities are tracked by a context and an Unchanged or Added client-side relationships exists for this EntityReference's owner with the
+        /// same RelationshipName and source role. This relationship could have been created explicitly by the user (e.g. by setting
+        /// the EntityReference.Value, setting this property directly, or by calling EntityCollection.Add) or automatically through span queries.
+        /// (b) If the EntityKey was non-null before detaching an entity from the context, it will still be non-null after detaching, until any operation
+        /// occurs that would set it to null, as described below.
+        /// (c) Entities are detached and the EntityKey is explicitly set to non-null by the user.
+        /// (d) Entity graph was created using a NoTracking query with full span
+        /// Is null in the following scenarios:
+        /// (a) Entities are tracked by a context but there is no Unchanged or Added client-side relationship for this EntityReference's owner with the
+        /// same RelationshipName and source role.
+        /// (b) Entities are tracked by a context and a relationship exists, but the target entity has a temporary key (i.e. it is Added) or the key
+        /// is one of the special keys
+        /// (c) Entities are detached and the relationship was explicitly created by the user.
         /// </remarks>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.EntityKey" /> that is the key of the related object.
+        /// An <see cref="T:System.Data.Entity.Core.EntityKey" /> that is the key of the related object.
         /// </returns>
         [DataMember]
         public EntityKey EntityKey
@@ -300,9 +300,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     This method is called when either the EntityKey or the Value property is set to null when it is
-        ///     already null. For an FK association of a tracked entity the method will attempt to null FKs
-        ///     thereby deleting the relationship. This may result in conceptual nulls being set.
+        /// This method is called when either the EntityKey or the Value property is set to null when it is
+        /// already null. For an FK association of a tracked entity the method will attempt to null FKs
+        /// thereby deleting the relationship. This may result in conceptual nulls being set.
         /// </summary>
         internal bool AttemptToNullFKsOnRefOrKeySetToNull()
         {
@@ -445,7 +445,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     EntityReferences can only deferred load if they are empty
+        /// EntityReferences can only deferred load if they are empty
         /// </summary>
         internal override bool CanDeferredLoad
         {
@@ -453,10 +453,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Takes key values from the given principal entity and transfers them to the foreign key properties
-        ///     of the dependant entry.  This method requires a context, but does not require that either
-        ///     entity is in the context.  This allows it to work in NoTracking cases where we have the context
-        ///     but we're not tracked by that context.
+        /// Takes key values from the given principal entity and transfers them to the foreign key properties
+        /// of the dependant entry.  This method requires a context, but does not require that either
+        /// entity is in the context.  This allows it to work in NoTracking cases where we have the context
+        /// but we're not tracked by that context.
         /// </summary>
         /// <param name="dependentEntity"> The entity into which foreign key values will be written </param>
         /// <param name="principalEntity"> The entity from which key values will be obtained </param>
@@ -568,10 +568,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Takes key values from the given principal key and transfers them to the foreign key properties
-        ///     of the dependant entry.  This method requires a context, but does not require that either
-        ///     entity or key is in the context.  This allows it to work in NoTracking cases where we have the context
-        ///     but we're not tracked by that context.
+        /// Takes key values from the given principal key and transfers them to the foreign key properties
+        /// of the dependant entry.  This method requires a context, but does not require that either
+        /// entity or key is in the context.  This allows it to work in NoTracking cases where we have the context
+        /// but we're not tracked by that context.
         /// </summary>
         /// <param name="dependentEntity"> The entity into which foreign key values will be written </param>
         /// <param name="principalKey"> The key from which key values will be obtained </param>
@@ -684,8 +684,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Returns whether the foreign key is conceptually null. 
-        ///     This occurs when a relationship is set to null but the foreign key property is a non-nullable CLR type and therefore can't be set to null.
+        /// Returns whether the foreign key is conceptually null. 
+        /// This occurs when a relationship is set to null but the foreign key property is a non-nullable CLR type and therefore can't be set to null.
         /// </summary>
         /// <returns>true if the foreign key is conceptually null; otherwise, false.</returns>
         internal override bool CachedForeignKeyIsConceptualNull()
@@ -709,7 +709,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Ensures the detached entity key is valid (not temporary etc.) 
+        /// Ensures the detached entity key is valid (not temporary etc.) 
         /// </summary>
         internal override void ValidateDetachedEntityKey()
         {
@@ -874,8 +874,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         }
 
         /// <summary>
-        ///     Attempts to null all FKs associated with the dependent end of this relationship on this entity.
-        ///     This may result in setting conceptual nulls if the FK is not nullable.
+        /// Attempts to null all FKs associated with the dependent end of this relationship on this entity.
+        /// This may result in setting conceptual nulls if the FK is not nullable.
         /// </summary>
         internal void NullAllForeignKeys()
         {

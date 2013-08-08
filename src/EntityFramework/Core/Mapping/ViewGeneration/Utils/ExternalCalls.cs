@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
     using System.Linq;
 
     /// <summary>
-    ///     This class encapsulates "external" calls from view/MDF generation to other System.Data.Entity features.
+    /// This class encapsulates "external" calls from view/MDF generation to other System.Data.Entity features.
     /// </summary>
     internal static class ExternalCalls
     {
@@ -67,9 +67,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
         }
 
         /// <summary>
-        ///     Compiles eSQL <paramref name="functionDefinition" /> and returns <see cref="DbLambda" />.
-        ///     Guarantees type match of lambda variables and <paramref name="functionParameters" />.
-        ///     Passes thru all excepions coming from <see cref="CqlQuery" />.
+        /// Compiles eSQL <paramref name="functionDefinition" /> and returns <see cref="DbLambda" />.
+        /// Guarantees type match of lambda variables and <paramref name="functionParameters" />.
+        /// Passes thru all excepions coming from <see cref="CqlQuery" />.
         /// </summary>
         internal static DbLambda CompileFunctionDefinition(
             string functionDefinition,

@@ -9,10 +9,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Allows the application of a lambda function to arguments represented by
-    ///     <see
-    ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
-    ///     objects.
+    /// Allows the application of a lambda function to arguments represented by
+    /// <see
+    ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+    /// objects.
     /// </summary>
     public sealed class DbLambdaExpression : DbExpression
     {
@@ -33,10 +33,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> representing the Lambda function applied by this expression.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> representing the Lambda function applied by this expression.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> representing the Lambda function applied by this expression.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> representing the Lambda function applied by this expression.
         /// </returns>
         public DbLambda Lambda
         {
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides the arguments to which the Lambda function should be applied.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list that provides the arguments to which the Lambda function should be applied.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> list.
         /// </returns>
         public IList<DbExpression> Arguments
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
 
         /// <summary>The visitor pattern method for expression visitors that do not produce a result value.</summary>
         /// <param name="visitor">
-        ///     An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
+        /// An instance of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" />.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null</exception>
         public override void Accept(DbExpressionVisitor visitor)
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <summary>The visitor pattern method for expression visitors that produce a result value of a specific type.</summary>
         /// <returns>The type of the result produced by the expression visitor.</returns>
         /// <param name="visitor">
-        ///     An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of type TResultType.
+        /// An instance of a typed <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionVisitor" /> that produces a result value of type TResultType.
         /// </param>
         /// <typeparam name="TResultType">The type of the result produced by  visitor </typeparam>
         /// <exception cref="T:System.ArgumentNullException"> visitor  is null</exception>

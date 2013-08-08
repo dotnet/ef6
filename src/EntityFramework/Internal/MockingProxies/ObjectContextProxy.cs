@@ -11,9 +11,9 @@ namespace System.Data.Entity.Internal.MockingProxies
     using System.Reflection;
 
     /// <summary>
-    ///     Acts as a proxy for <see cref="ObjectContext" /> that for the most part just passes calls
-    ///     through to the real object but uses virtual methods/properties such that uses of the object
-    ///     can be mocked.
+    /// Acts as a proxy for <see cref="ObjectContext" /> that for the most part just passes calls
+    /// through to the real object but uses virtual methods/properties such that uses of the object
+    /// can be mocked.
     /// </summary>
     internal class ObjectContextProxy : IDisposable
     {

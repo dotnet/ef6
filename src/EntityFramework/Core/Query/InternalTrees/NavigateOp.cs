@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Navigate a relationship, and get the reference(s) of the target end
+    /// Navigate a relationship, and get the reference(s) of the target end
     /// </summary>
     internal sealed class NavigateOp : ScalarOp
     {
@@ -34,12 +34,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     Pattern for transformation rules
+        /// Pattern for transformation rules
         /// </summary>
         internal static readonly NavigateOp Pattern = new NavigateOp();
 
         /// <summary>
-        ///     1 child - entity instance
+        /// 1 child - entity instance
         /// </summary>
         internal override int Arity
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The rel property that describes this nvaigation
+        /// The rel property that describes this nvaigation
         /// </summary>
         internal RelProperty RelProperty
         {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The relationship we're traversing
+        /// The relationship we're traversing
         /// </summary>
         internal RelationshipType Relationship
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The starting point of the traversal
+        /// The starting point of the traversal
         /// </summary>
         internal RelationshipEndMember FromEnd
         {
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The end-point of the traversal
+        /// The end-point of the traversal
         /// </summary>
         internal RelationshipEndMember ToEnd
         {
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

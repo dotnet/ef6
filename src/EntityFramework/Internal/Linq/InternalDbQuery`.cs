@@ -8,9 +8,9 @@ namespace System.Data.Entity.Internal.Linq
     using System.Linq;
 
     /// <summary>
-    ///     An instance of this internal class is created whenever an instance of the public <see cref="DbQuery" />
-    ///     class is needed. This allows the public surface to be non-generic, while the runtime type created
-    ///     still implements <see cref="IQueryable{T}" />.
+    /// An instance of this internal class is created whenever an instance of the public <see cref="DbQuery" />
+    /// class is needed. This allows the public surface to be non-generic, while the runtime type created
+    /// still implements <see cref="IQueryable{T}" />.
     /// </summary>
     /// <typeparam name="TElement"> The type of the element. </typeparam>
     internal class InternalDbQuery<TElement> : DbQuery, IOrderedQueryable<TElement>
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Internal.Linq
         private readonly IInternalQuery<TElement> _internalQuery;
 
         /// <summary>
-        ///     Creates a new query that will be backed by the given internal query object.
+        /// Creates a new query that will be backed by the given internal query object.
         /// </summary>
         /// <param name="internalQuery"> The backing query. </param>
         public InternalDbQuery(IInternalQuery<TElement> internalQuery)
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Internal.Linq
         #region IEnumerable implementation
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> An enumerator for the query </returns>
         public IEnumerator<TElement> GetEnumerator()
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Internal.Linq
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> An enumerator for the query </returns>
         public IDbAsyncEnumerator<TElement> GetAsyncEnumerator()

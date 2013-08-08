@@ -12,9 +12,9 @@ namespace System.Data.Entity.Internal.Linq
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     An instance of this internal class is created whenever an instance of the public <see cref="DbSet{TEntity}" />
-    ///     class is needed. This allows the public surface to be non-generic, while the runtime type created
-    ///     still implements <see cref="IQueryable{T}" />.
+    /// An instance of this internal class is created whenever an instance of the public <see cref="DbSet{TEntity}" />
+    /// class is needed. This allows the public surface to be non-generic, while the runtime type created
+    /// still implements <see cref="IQueryable{T}" />.
     /// </summary>
     /// <typeparam name="TEntity"> The type of the entity. </typeparam>
     internal class InternalDbSet<TEntity> : DbSet, IQueryable<TEntity>
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Internal.Linq
         private readonly IInternalSet<TEntity> _internalSet;
 
         /// <summary>
-        ///     Creates a new set that will be backed by the given internal set.
+        /// Creates a new set that will be backed by the given internal set.
         /// </summary>
         /// <param name="internalSet"> The internal set. </param>
         public InternalDbSet(IInternalSet<TEntity> internalSet)
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Creates an instance of this class.  This method is used with CreateDelegate to cache a delegate
-        ///     that can create a generic instance without calling MakeGenericType every time.
+        /// Creates an instance of this class.  This method is used with CreateDelegate to cache a delegate
+        /// that can create a generic instance without calling MakeGenericType every time.
         /// </summary>
         /// <param name="internalContext"> </param>
         /// <param name="internalSet"> The internal set to wrap, or null if a new internal set should be created. </param>
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Internal.Linq
         #region GetEnumerator
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
+        /// Returns an <see cref="IEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         public IEnumerator<TEntity> GetEnumerator()
@@ -157,7 +157,7 @@ namespace System.Data.Entity.Internal.Linq
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator{TEntity}" /> which when enumerated will execute the backing query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         public IDbAsyncEnumerator<TEntity> GetAsyncEnumerator()

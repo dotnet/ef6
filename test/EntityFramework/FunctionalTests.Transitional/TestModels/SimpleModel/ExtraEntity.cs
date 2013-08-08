@@ -3,7 +3,7 @@
 namespace SimpleModel
 {
     /// <summary>
-    ///     Stand-alone entity type that is not part of any other models
+    /// Stand-alone entity type that is not part of any other models
     /// </summary>
     public class ExtraEntity
     {

@@ -7,57 +7,57 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents an ELinq-based ObjectQuery Cache key context
+    /// Represents an ELinq-based ObjectQuery Cache key context
     /// </summary>
     internal sealed class LinqQueryCacheKey : QueryCacheKey
     {
         /// <summary>
-        ///     Aggregate hashcode based the hashcode of the properties of this cache key
+        /// Aggregate hashcode based the hashcode of the properties of this cache key
         /// </summary>
         private readonly int _hashCode;
 
         /// <summary>
-        ///     DbExpression key
+        /// DbExpression key
         /// </summary>
         private readonly string _expressionKey;
 
         /// <summary>
-        ///     Parameter collection token
+        /// Parameter collection token
         /// </summary>
         private readonly string _parametersToken;
 
         /// <summary>
-        ///     Number of parameters
+        /// Number of parameters
         /// </summary>
         private readonly int _parameterCount;
 
         /// <summary>
-        ///     Concatenated representation of the Include span paths
+        /// Concatenated representation of the Include span paths
         /// </summary>
         private readonly string _includePathsToken;
 
         /// <summary>
-        ///     The merge option in effect
+        /// The merge option in effect
         /// </summary>
         private readonly MergeOption _mergeOption;
 
         /// <summary>
-        ///     Result type affects assembly plan.
+        /// Result type affects assembly plan.
         /// </summary>
         private readonly Type _resultType;
 
         /// <summary>
-        ///     Whether the query is streaming or buffering
+        /// Whether the query is streaming or buffering
         /// </summary>
         private readonly bool _streaming;
 
         /// <summary>
-        ///     Flag indicating if the C# behavior should be used for null comparisons
+        /// Flag indicating if the C# behavior should be used for null comparisons
         /// </summary>
         private readonly bool _useCSharpNullComparisonBehavior;
 
         /// <summary>
-        ///     Creates a new instance of LinqQueryCacheKey.
+        /// Creates a new instance of LinqQueryCacheKey.
         /// </summary>
         /// <param name="expressionKey"> The DbExpression key of the linq query </param>
         /// <param name="parameterCount"> The number of parameters to the query </param>
@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Determines equality of two cache keys based on cache context values
+        /// Determines equality of two cache keys based on cache context values
         /// </summary>
         public override bool Equals(object otherObject)
         {
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Returns the hashcode for this cache key
+        /// Returns the hashcode for this cache key
         /// </summary>
         public override int GetHashCode()
         {
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Core.Common.QueryCache
         }
 
         /// <summary>
-        ///     Returns a string representation of the state of this cache key
+        /// Returns a string representation of the state of this cache key
         /// </summary>
         public override string ToString()
         {

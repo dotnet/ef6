@@ -9,9 +9,9 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     A wrapper around EntityKey that allows key/values pairs that have null values to
-    ///     be used.  This allows Added entities with null key values to be searched for in
-    ///     the ObjectStateManager.
+    /// A wrapper around EntityKey that allows key/values pairs that have null values to
+    /// be used.  This allows Added entities with null key values to be searched for in
+    /// the ObjectStateManager.
     /// </summary>
     internal class WrappedEntityKey
     {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Internal
         private readonly EntityKey _key;
 
         /// <summary>
-        ///     Creates a new WrappedEntityKey instance.
+        /// Creates a new WrappedEntityKey instance.
         /// </summary>
         /// <param name="entitySet"> The entity set that the key belongs to. </param>
         /// <param name="entitySetName"> The fully qualified name of the given entity set. </param>
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Internal
         #region Key and key values access
 
         /// <summary>
-        ///     True if any of the key values are null, which means that the EntityKey will also be null.
+        /// True if any of the key values are null, which means that the EntityKey will also be null.
         /// </summary>
         public bool HasNullValues
         {
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     An actual EntityKey, or null if any of the key values are null.
+        /// An actual EntityKey, or null if any of the key values are null.
         /// </summary>
         public EntityKey EntityKey
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     The key name/key value pairs of the key, in which some of the key values may be null.
+        /// The key name/key value pairs of the key, in which some of the key values may be null.
         /// </summary>
         public IEnumerable<KeyValuePair<string, object>> KeyValuePairs
         {

@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Mapping
 {
     /// <summary>
-    ///     Represents a simple value condition of the form (value IS NULL), (value IS NOT NULL)
-    ///     or (value EQ X). Supports IEquatable(Of ValueCondition) so that equivalent conditions
-    ///     can be identified.
+    /// Represents a simple value condition of the form (value IS NULL), (value IS NOT NULL)
+    /// or (value EQ X). Supports IEquatable(Of ValueCondition) so that equivalent conditions
+    /// can be identified.
     /// </summary>
     internal class ValueCondition : IEquatable<ValueCondition>
     {

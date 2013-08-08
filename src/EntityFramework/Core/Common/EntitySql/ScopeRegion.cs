@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     First scope of the region.
+        /// First scope of the region.
         /// </summary>
         internal int FirstScopeIndex
         {
@@ -28,8 +28,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly int _firstScopeIndex;
 
         /// <summary>
-        ///     Index of the scope region.
-        ///     Outer scope regions have smaller index value than inner scope regions.
+        /// Index of the scope region.
+        /// Outer scope regions have smaller index value than inner scope regions.
         /// </summary>
         internal int ScopeRegionIndex
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly int _scopeRegionIndex;
 
         /// <summary>
-        ///     True if given scope is in the current scope region.
+        /// True if given scope is in the current scope region.
         /// </summary>
         internal bool ContainsScope(int scopeIndex)
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Marks current scope region as performing group/folding operation.
+        /// Marks current scope region as performing group/folding operation.
         /// </summary>
         internal void EnterGroupOperation(DbExpressionBinding groupAggregateBinding)
         {
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Clears the <see cref="IsAggregating" /> flag on the group scope.
+        /// Clears the <see cref="IsAggregating" /> flag on the group scope.
         /// </summary>
         internal void RollbackGroupOperation()
         {
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     True when the scope region performs group/folding operation.
+        /// True when the scope region performs group/folding operation.
         /// </summary>
         internal bool IsAggregating
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private DbExpressionBinding _groupAggregateBinding;
 
         /// <summary>
-        ///     Returns list of group aggregates evaluated on the scope region.
+        /// Returns list of group aggregates evaluated on the scope region.
         /// </summary>
         internal List<GroupAggregateInfo> GroupAggregateInfos
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly List<GroupAggregateInfo> _groupAggregateInfos = new List<GroupAggregateInfo>();
 
         /// <summary>
-        ///     Adds group aggregate name to the scope region.
+        /// Adds group aggregate name to the scope region.
         /// </summary>
         internal void RegisterGroupAggregateName(string groupAggregateName)
         {
@@ -110,12 +110,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly HashSet<string> _groupAggregateNames = new HashSet<string>();
 
         /// <summary>
-        ///     True if a recent expression resolution was correlated.
+        /// True if a recent expression resolution was correlated.
         /// </summary>
         internal bool WasResolutionCorrelated { get; set; }
 
         /// <summary>
-        ///     Applies <paramref name="action" /> to all scope entries in the current scope region.
+        /// Applies <paramref name="action" /> to all scope entries in the current scope region.
         /// </summary>
         internal void ApplyToScopeEntries(Action<ScopeEntry> action)
         {
@@ -131,7 +131,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Applies <paramref name="action" /> to all scope entries in the current scope region.
+        /// Applies <paramref name="action" /> to all scope entries in the current scope region.
         /// </summary>
         internal void ApplyToScopeEntries(Func<ScopeEntry, ScopeEntry> action)
         {

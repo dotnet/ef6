@@ -17,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq;
 
     /// <summary>
-    ///     Configures a discriminator column used to differentiate between types in an inheritance hierarchy.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Configures a discriminator column used to differentiate between types in an inheritance hierarchy.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     [DebuggerDisplay("{Discriminator}")]
     public class ValueConditionConfiguration
@@ -81,8 +81,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being
-        ///     configured from other types in the inheritance hierarchy.
+        /// Configures the discriminator value used to identify the entity type being
+        /// configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <typeparam name="T"> Type of the discriminator value. </typeparam>
         /// <param name="value"> The value to be used to identify the entity type. </param>
@@ -99,8 +99,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being
-        ///     configured from other types in the inheritance hierarchy.
+        /// Configures the discriminator value used to identify the entity type being
+        /// configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <typeparam name="T"> Type of the discriminator value. </typeparam>
         /// <param name="value"> The value to be used to identify the entity type. </param>
@@ -117,8 +117,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the discriminator value used to identify the entity type being
-        ///     configured from other types in the inheritance hierarchy.
+        /// Configures the discriminator value used to identify the entity type being
+        /// configured from other types in the inheritance hierarchy.
         /// </summary>
         /// <param name="value"> The value to be used to identify the entity type. </param>
         /// <returns> A configuration object to configure the column used to store discriminator values. </returns>

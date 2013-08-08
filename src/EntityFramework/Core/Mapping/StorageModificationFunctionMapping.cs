@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Describes modification function binding for change processing of entities or associations.
+    /// Describes modification function binding for change processing of entities or associations.
     /// </summary>
     internal sealed class StorageModificationFunctionMapping
     {
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets output parameter producing number of rows affected. May be null.
+        /// Gets output parameter producing number of rows affected. May be null.
         /// </summary>
         public FunctionParameter RowsAffectedParameter
         {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets Metadata of function to which we should bind.
+        /// Gets Metadata of function to which we should bind.
         /// </summary>
         public EdmFunction Function
         {
@@ -84,17 +84,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets bindings for function parameters.
+        /// Gets bindings for function parameters.
         /// </summary>
         internal readonly ReadOnlyCollection<StorageModificationFunctionParameterBinding> ParameterBindings;
 
         /// <summary>
-        ///     Gets all association set ends collocated in this mapping.
+        /// Gets all association set ends collocated in this mapping.
         /// </summary>
         internal readonly ReadOnlyCollection<AssociationSetEnd> CollocatedAssociationSetEnds;
 
         /// <summary>
-        ///     Gets bindings for the results of function evaluation.
+        /// Gets bindings for the results of function evaluation.
         /// </summary>
         internal readonly ReadOnlyCollection<StorageModificationFunctionResultBinding> ResultBindings;
 

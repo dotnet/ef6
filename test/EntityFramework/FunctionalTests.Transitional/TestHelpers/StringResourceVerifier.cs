@@ -8,14 +8,14 @@ namespace System.Data.Entity
     using Xunit;
 
     /// <summary>
-    ///     Helpers for verifying strings that are pulled from a localized resources
+    /// Helpers for verifying strings that are pulled from a localized resources
     /// </summary>
     public class StringResourceVerifier
     {
         private readonly AssemblyResourceLookup _lookup;
 
         /// <summary>
-        ///     Initializes a new instance of the StringResourceVerifier class.
+        /// Initializes a new instance of the StringResourceVerifier class.
         /// </summary>
         /// <param name="lookup"> Lookup to be used for locating string resources </param>
         public StringResourceVerifier(AssemblyResourceLookup lookup)
@@ -24,7 +24,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Determines if the supplied string is an instance of the string defined in localized resources
+        /// Determines if the supplied string is an instance of the string defined in localized resources
         /// </summary>
         /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
         /// <param name="actualMessage"> String value to be verified </param>
@@ -36,7 +36,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Determines if the supplied string is an instance of the string defined in localized resources
+        /// Determines if the supplied string is an instance of the string defined in localized resources
         /// </summary>
         /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
         /// <param name="actualMessage"> String value to be verified </param>
@@ -50,7 +50,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Verified the supplied string is an instance of the string defined in resources
+        /// Verified the supplied string is an instance of the string defined in resources
         /// </summary>
         /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
         /// <param name="actualMessage"> String value to be verified </param>
@@ -61,8 +61,8 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Determines if the supplied string is an instance of the string defined in localized resources
-        ///     If the string in the resource file contains string.Format place holders then the actual message can contain any values for these
+        /// Determines if the supplied string is an instance of the string defined in localized resources
+        /// If the string in the resource file contains string.Format place holders then the actual message can contain any values for these
         /// </summary>
         /// <param name="expectedResourceKey"> The key of the resource string to match against </param>
         /// <param name="actualMessage"> String value to be verified </param>
@@ -220,17 +220,17 @@ Actual:'{1}'",
         }
 
         /// <summary>
-        ///     Represents a section of a string
+        /// Represents a section of a string
         /// </summary>
         private class StringSection
         {
             /// <summary>
-            ///     Gets or sets the index the section starts at
+            /// Gets or sets the index the section starts at
             /// </summary>
             public int StartIndex { get; set; }
 
             /// <summary>
-            ///     Gets or sets the index the section ends at
+            /// Gets or sets the index the section ends at
             /// </summary>
             public int EndIndex { get; set; }
         }

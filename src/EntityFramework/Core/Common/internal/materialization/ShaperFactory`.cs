@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Typed ShaperFactory
+    /// Typed ShaperFactory
     /// </summary>
     internal class ShaperFactory<T> : ShaperFactory
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         /// <summary>
-        ///     Factory method to create the Shaper for Object Layer queries.
+        /// Factory method to create the Shaper for Object Layer queries.
         /// </summary>
         internal Shaper<T> Create(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,

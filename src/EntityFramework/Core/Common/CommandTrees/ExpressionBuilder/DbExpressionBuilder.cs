@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
     using System.Runtime.CompilerServices;
 
     /// <summary>
-    ///     Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s and allows that API to be accessed as extension methods on the expression type itself.
+    /// Provides an API to construct <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s and allows that API to be accessed as extension methods on the expression type itself.
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Db")]
@@ -112,7 +112,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Bindings - Expression and Group
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses a generated variable name to bind the given expression.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses a generated variable name to bind the given expression.
         /// </summary>
         /// <returns>A new expression binding with the specified expression and a generated variable name.</returns>
         /// <param name="input">The expression to bind.</param>
@@ -126,7 +126,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses the specified variable name to bind the given expression
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that uses the specified variable name to bind the given expression
         /// </summary>
         /// <returns>A new expression binding with the specified expression and variable name.</returns>
         /// <param name="input">The expression to bind.</param>
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that uses the specified variable name and group variable names to bind the given expression.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that uses the specified variable name and group variable names to bind the given expression.
         /// </summary>
         /// <returns>A new group expression binding with the specified expression, variable name and group variable name.</returns>
         /// <param name="input">The expression to bind.</param>
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Aggregates and SortClauses are required only for Binding-based method support - replaced by OrderBy[Descending]/ThenBy[Descending] and Aggregate[Distinct] methods in new API
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" />.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" />.
         /// </summary>
         /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value false.</returns>
         /// <param name="function">The function that defines the aggregate operation.</param>
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" /> that is applied in a distinct fashion.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionAggregate" /> that is applied in a distinct fashion.
         /// </summary>
         /// <returns>A new function aggregate with a reference to the given function and argument. The function aggregate's Distinct property will have the value true.</returns>
         /// <param name="function">The function that defines the aggregate operation.</param>
@@ -240,13 +240,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbGroupAggregate" /> over the specified argument
+        /// Creates a new <see cref="DbGroupAggregate" /> over the specified argument
         /// </summary>
         /// <param name="argument"> The argument over which to perform the nest operation </param>
         /// <returns> A new group aggregate representing the elements of the group referenced by the given argument. </returns>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
+        /// <paramref name="argument" />
+        /// is null
         /// </exception>
         public static DbGroupAggregate GroupAggregate(DbExpression argument)
         {
@@ -259,12 +259,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
         /// <returns>A new expression that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="body">An expression that defines the logic of the Lambda function.</param>
         /// <param name="variables">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">variables is null or contains null, or body is null.</exception>
         /// <exception cref="T:System.ArgumentException">variables contains more than one element with the same variable name.</exception>
@@ -277,12 +277,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> with the specified inline Lambda function implementation and formal parameters.
         /// </summary>
         /// <returns>A new expression that describes an inline Lambda function with the specified body and formal parameters.</returns>
         /// <param name="body">An expression that defines the logic of the Lambda function.</param>
         /// <param name="variables">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> collection that represents the formal parameters to the Lambda function. These variables are valid for use in the body expression.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">variables is null or contains null, or body is null.</exception>
         /// <exception cref="T:System.ArgumentException">variables contains more than one element with the same variable name.</exception>
@@ -301,7 +301,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and default collation.
         /// </summary>
         /// <returns>A new sort clause with the given sort key and ascending sort order.</returns>
         /// <param name="key">The expression that defines the sort key.</param>
@@ -316,7 +316,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and default collation.
         /// </summary>
         /// <returns>A new sort clause with the given sort key and descending sort order.</returns>
         /// <param name="key">The expression that defines the sort key.</param>
@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with an ascending sort order and the specified collation.
         /// </summary>
         /// <returns>A new sort clause with the given sort key and collation, and ascending sort order.</returns>
         /// <param name="key">The expression that defines the sort key.</param>
@@ -349,7 +349,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortClause" /> with a descending sort order and the specified collation.
         /// </summary>
         /// <returns>A new sort clause with the given sort key and collation, and descending sort order.</returns>
         /// <param name="key">The expression that defines the sort key.</param>
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Binding-based methods: All, Any, Cross|OuterApply, Cross|FullOuter|Inner|LeftOuterJoin, Filter, GroupBy, Project, Skip, Sort
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
         /// </summary>
         /// <returns>A new DbQuantifierExpression that represents the All operation.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -388,7 +388,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
         /// </summary>
         /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -405,19 +405,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
         /// </summary>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of CrossApply.
+        /// An new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of CrossApply.
         /// </returns>
         /// <param name="input">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </param>
         /// <param name="apply">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">input or apply is null.</exception>
         public static DbApplyExpression CrossApply(this DbExpressionBinding input, DbExpressionBinding apply)
@@ -431,19 +431,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
         /// </summary>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of OuterApply.
+        /// An new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of OuterApply.
         /// </returns>
         /// <param name="input">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the input set.
         /// </param>
         /// <param name="apply">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies logic to evaluate once for each member of the input set.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">input or apply is null.</exception>
         public static DbApplyExpression OuterApply(this DbExpressionBinding input, DbExpressionBinding apply)
@@ -475,10 +475,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCrossJoinExpression" /> that unconditionally joins the sets specified by the list of input expression bindings.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCrossJoinExpression" /> that unconditionally joins the sets specified by the list of input expression bindings.
         /// </summary>
         /// <returns>
-        ///     A new DbCrossJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of CrossJoin, that represents the unconditional join of the input sets.
+        /// A new DbCrossJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of CrossJoin, that represents the unconditional join of the input sets.
         /// </returns>
         /// <param name="inputs">A list of expression bindings that specifies the input sets.</param>
         /// <exception cref="T:System.ArgumentNullException">inputs is null or contains null element.</exception>
@@ -493,19 +493,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using InnerJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using InnerJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right     input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right     input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -521,19 +521,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using LeftOuterJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using LeftOuterJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right     input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right     input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -549,19 +549,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using FullOuterJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expression bindings, on the specified join condition, using FullOuterJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right     input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right     input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition">An expression that specifies the condition on which to join.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -577,7 +577,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
         /// </summary>
         /// <returns>A new DbFilterExpression that produces the filtered set.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -594,11 +594,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupByExpression" /> that groups the elements of the input set according to the specified group keys and applies the given aggregates.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupByExpression" /> that groups the elements of the input set according to the specified group keys and applies the given aggregates.
         /// </summary>
         /// <returns>A new DbGroupByExpression with the specified input set, grouping keys and aggregates.</returns>
         /// <param name="input">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbGroupExpressionBinding" /> that specifies the input set.
         /// </param>
         /// <param name="keys">A list of string-expression pairs that define the grouping columns.</param>
         /// <param name="aggregates">A list of expressions that specify aggregates to apply.</param>
@@ -620,7 +620,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified expression over the given input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified expression over the given input set.
         /// </summary>
         /// <returns>A new DbProjectExpression that represents the projection operation.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -636,7 +636,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that sorts the given input set by the given sort specifications before skipping the specified number of elements.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that sorts the given input set by the given sort specifications before skipping the specified number of elements.
         /// </summary>
         /// <returns>A new DbSkipExpression that represents the skip operation.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -644,10 +644,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <param name="count">An expression the specifies how many elements of the ordered set to skip.</param>
         /// <exception cref="T:System.ArgumentNullException">input, sortOrder or count is null, or sortOrder contains null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     sortOrder is empty, or count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
-        ///     or has a result type that is not equal or promotable to a 64-bit integer type.
+        /// sortOrder is empty, or count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        /// or has a result type that is not equal or promotable to a 64-bit integer type.
         /// </exception>
         public static DbSkipExpression Skip(this DbExpressionBinding input, IEnumerable<DbSortClause> sortOrder, DbExpression count)
         {
@@ -681,7 +681,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort specifications.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort specifications.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the sort operation.</returns>
         /// <param name="input">An expression binding that specifies the input set.</param>
@@ -734,7 +734,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 #endif
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNullExpression" />, which represents a typed null value.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNullExpression" />, which represents a typed null value.
         /// </summary>
         /// <returns>An instance of DbNullExpression.</returns>
         /// <param name="nullType">The type of the null value.</param>
@@ -749,10 +749,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value true.
         /// </returns>
         public static DbConstantExpression True
         {
@@ -760,10 +760,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
+        /// Gets a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the Boolean value false.
         /// </returns>
         public static DbConstantExpression False
         {
@@ -771,7 +771,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the given constant value.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> with the given constant value.
         /// </summary>
         /// <returns>A new DbConstantExpression with the given value.</returns>
         /// <param name="value">The constant value to represent.</param>
@@ -786,7 +786,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> of the specified primitive type with the given constant value.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> of the specified primitive type with the given constant value.
         /// </summary>
         /// <returns>A new DbConstantExpression with the given value and a result type of constantType.</returns>
         /// <param name="constantType">The type of the constant value.</param>
@@ -803,7 +803,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" /> that references a parameter with the specified name and type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" /> that references a parameter with the specified name and type.
         /// </summary>
         /// <returns>A DbParameterReferenceExpression that represents a reference to a parameter with the specified name and type. The result type of the expression will be the same as type.</returns>
         /// <param name="type">The type of the referenced parameter.</param>
@@ -823,7 +823,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references a variable with the specified name and type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbVariableReferenceExpression" /> that references a variable with the specified name and type.
         /// </summary>
         /// <returns>A DbVariableReferenceExpression that represents a reference to a variable with the specified name and type. The result type of the expression will be the same as type. </returns>
         /// <param name="type">The type of the referenced variable.</param>
@@ -840,7 +840,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbScanExpression" /> that references the specified entity or relationship set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbScanExpression" /> that references the specified entity or relationship set.
         /// </summary>
         /// <returns>A new DbScanExpression based on the specified entity or relationship set.</returns>
         /// <param name="targetSet">Metadata for the entity or relationship set to reference.</param>
@@ -859,7 +859,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Boolean Operators - And, Or, Not
 
         /// <summary>
-        ///     Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAndExpression" /> that performs the logical And of the left and right arguments.
+        /// Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAndExpression" /> that performs the logical And of the left and right arguments.
         /// </summary>
         /// <returns>A new DbAndExpression with the specified arguments.</returns>
         /// <param name="left">A Boolean expression that specifies the left argument.</param>
@@ -882,7 +882,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOrExpression" /> that performs the logical Or of the left and right arguments.
+        /// Creates an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOrExpression" /> that performs the logical Or of the left and right arguments.
         /// </summary>
         /// <returns>A new DbOrExpression with the specified arguments.</returns>
         /// <param name="left">A Boolean expression that specifies the left argument.</param>
@@ -905,25 +905,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbInExpression" /> that matches the result of the specified
-        ///     expression with the results of the constant expressions in the specified list.
+        /// Creates a <see cref="DbInExpression" /> that matches the result of the specified
+        /// expression with the results of the constant expressions in the specified list.
         /// </summary>
         /// <param name="expression"> A DbExpression to be matched. </param>
         /// <param name="list"> A list of DbConstantExpression to test for a match. </param>
         /// <returns>
-        ///     A new DbInExpression with the specified arguments.
+        /// A new DbInExpression with the specified arguments.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="expression" />
-        ///     or
-        ///     <paramref name="list" />
-        ///     is null.
+        /// <paramref name="expression" />
+        /// or
+        /// <paramref name="list" />
+        /// is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     The result type of
-        ///     <paramref name="expression" />
-        ///     is different than the result type of an expression from
-        ///     <paramref name="list" />.
+        /// The result type of
+        /// <paramref name="expression" />
+        /// is different than the result type of an expression from
+        /// <paramref name="list" />.
         /// </exception>
         public static DbInExpression In(this DbExpression expression, IList<DbConstantExpression> list)
         {
@@ -952,7 +952,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> that performs the logical negation of the given argument.
+        /// Creates a <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> that performs the logical negation of the given argument.
         /// </summary>
         /// <returns>A new DbNotExpression with the specified argument.</returns>
         /// <param name="argument">A Boolean expression that specifies the argument.</param>
@@ -989,7 +989,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that divides the left argument by the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that divides the left argument by the right argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the division operation.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1005,7 +1005,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that subtracts the right argument from the left argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that subtracts the right argument from the left argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the subtraction operation.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1021,7 +1021,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that computes the remainder of the left argument divided by the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that computes the remainder of the left argument divided by the right argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the modulo operation.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1037,7 +1037,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that multiplies the left argument by the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that multiplies the left argument by the right argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the multiplication operation.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1053,7 +1053,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that adds the left argument to the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that adds the left argument to the right argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the addition operation.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1069,7 +1069,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the negation operation.</returns>
         /// <param name="argument">An expression that specifies the argument.</param>
@@ -1100,7 +1100,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbArithmeticExpression" /> that negates the value of the argument.
         /// </summary>
         /// <returns>A new DbArithmeticExpression representing the negation operation.</returns>
         /// <param name="argument">An expression that specifies the argument.</param>
@@ -1146,7 +1146,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for equality.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for equality.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the equality comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1162,7 +1162,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for inequality.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that compares the left and right arguments for inequality.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the inequality comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1178,7 +1178,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than the right argument.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the greater-than comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1194,7 +1194,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than the right argument.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the less-than comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1210,7 +1210,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than or equal to the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is greater than or equal to the right argument.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the greater-than-or-equal-to comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1226,7 +1226,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than or equal to the right argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbComparisonExpression" /> that determines whether the left argument is less than or equal to the right argument.
         /// </summary>
         /// <returns>A new DbComparisonExpression representing the less-than-or-equal-to comparison.</returns>
         /// <param name="left">An expression that specifies the left argument.</param>
@@ -1242,7 +1242,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsNullExpression" /> that determines whether the specified argument is null.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsNullExpression" /> that determines whether the specified argument is null.
         /// </summary>
         /// <returns>A new DbIsNullExpression with the specified argument.</returns>
         /// <param name="argument">An expression that specifies the argument.</param>
@@ -1278,7 +1278,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern.
         /// </summary>
         /// <returns>A new DbLikeExpression with the specified input, pattern and a null escape.</returns>
         /// <param name="argument">An expression that specifies the input string.</param>
@@ -1296,7 +1296,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern using the optional escape.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLikeExpression" /> that compares the specified input string to the given pattern using the optional escape.
         /// </summary>
         /// <returns>A new DbLikeExpression with the specified input, pattern and escape.</returns>
         /// <param name="argument">An expression that specifies the input string.</param>
@@ -1332,7 +1332,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Type Operators - Cast, Treat, OfType, OfTypeOnly, IsOf, IsOfOnly
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCastExpression" /> that applies a cast operation to a polymorphic argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCastExpression" /> that applies a cast operation to a polymorphic argument.
         /// </summary>
         /// <returns>A new DbCastExpression with the specified argument and target type.</returns>
         /// <param name="argument">The argument to which the cast should be applied.</param>
@@ -1354,7 +1354,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbTreatExpression" />.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbTreatExpression" />.
         /// </summary>
         /// <returns>A new DbTreatExpression with the specified argument and type.</returns>
         /// <param name="argument">An expression that specifies the instance.</param>
@@ -1377,16 +1377,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of the specified type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of the specified type.
         /// </summary>
         /// <returns>
-        ///     A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfType" />
-        ///     .
+        /// A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
+        /// <see
+        ///     cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfType" />
+        /// .
         /// </returns>
         /// <param name="argument">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="type">Type metadata for the type that elements of the input set must have to be included in the resulting set.</param>
         /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
@@ -1402,16 +1402,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of exactly the specified type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbOfTypeExpression" /> that produces a set consisting of the elements of the given input set that are of exactly the specified type.
         /// </summary>
         /// <returns>
-        ///     A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
-        ///     <see
-        ///         cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfTypeOnly" />
-        ///     .
+        /// A new DbOfTypeExpression with the specified set argument and type, and an ExpressionKind of
+        /// <see
+        ///     cref="F:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind.OfTypeOnly" />
+        /// .
         /// </returns>
         /// <param name="argument">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="type">Type metadata for the type that elements of the input set must match exactly to be included in the resulting set.</param>
         /// <exception cref="T:System.ArgumentNullException">argument or type is null.</exception>
@@ -1427,7 +1427,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> that determines whether the given argument is of the specified type or a subtype.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> that determines whether the given argument is of the specified type or a subtype.
         /// </summary>
         /// <returns>A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOf.</returns>
         /// <param name="argument">An expression that specifies the instance.</param>
@@ -1444,7 +1444,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> expression that determines whether the given argument is of the specified type, and only that type (not a subtype).
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsOfExpression" /> expression that determines whether the given argument is of the specified type, and only that type (not a subtype).
         /// </summary>
         /// <returns>A new DbIsOfExpression with the specified instance and type and DbExpressionKind IsOfOnly.</returns>
         /// <param name="argument">An expression that specifies the instance.</param>
@@ -1500,11 +1500,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Ref Operators - Deref, EntityRef, Ref, RefKey, RelationshipNavigation
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDerefExpression" /> that retrieves a specific Entity given a reference expression.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDerefExpression" /> that retrieves a specific Entity given a reference expression.
         /// </summary>
         /// <returns>A new DbDerefExpression that retrieves the specified Entity.</returns>
         /// <param name="argument">
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the reference. This expression must have a reference Type.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that provides the reference. This expression must have a reference Type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
         /// <exception cref="T:System.ArgumentException">argument does not have a reference result type.</exception>
@@ -1525,7 +1525,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbEntityRefExpression" /> that retrieves the ref of the specifed entity in structural form.
         /// </summary>
         /// <returns>A new DbEntityRefExpression that retrieves a reference to the specified entity.</returns>
         /// <param name="argument">The expression that provides the entity. This expression must have an entity result type.</param>
@@ -1546,12 +1546,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
         /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        /// A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">entitySet is null, or keyValues is null or contains null.</exception>
         /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
@@ -1564,12 +1564,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
         /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        /// A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">entitySet is null, or keyValues is null or contains null.</exception>
         /// <exception cref="T:System.ArgumentException">The count of keyValues does not match the count of key members declared by the entitySet’s element type, or keyValues contains an expression with a result type that is not compatible with the type of the corresponding key member.</exception>
@@ -1582,13 +1582,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
         /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="entityType">The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        /// A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">entitySet or entityType is null, or keyValues is null or contains null.</exception>
         /// <exception cref="T:System.ArgumentException">entityType is not from the same type hierarchy (a subtype, supertype, or the same type) as entitySet's element type.</exception>
@@ -1603,13 +1603,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific entity of a given type based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given entity set.</returns>
         /// <param name="entitySet">The entity set in which the referenced element resides.</param>
         /// <param name="entityType">The specific type of the referenced entity. This must be an entity type from the same hierarchy as the entity set's element type.</param>
         /// <param name="keyValues">
-        ///     A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
+        /// A collection of <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />s that provide the key values. These expressions must match (in number, type, and order) the key properties of the referenced entity type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">entitySet or entityType is null, or keyValues is null or contains null.</exception>
         /// <exception cref="T:System.ArgumentException">entityType is not from the same type hierarchy (a subtype, supertype, or the same type) as entitySet's element type.</exception>
@@ -1641,12 +1641,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given Entity set.</returns>
         /// <param name="entitySet">The Entity set in which the referenced element resides.</param>
         /// <param name="keyRow">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
         /// </param>
         /// <exception cref="T:System.ArgumentNullException">entitySet or keyRow is null.</exception>
         /// <exception cref="T:System.ArgumentException">keyRow does not have a record result type that matches the key properties of the referenced entity set's entity type.</exception>
@@ -1660,12 +1660,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefExpression" /> that encodes a reference to a specific Entity based on key values.
         /// </summary>
         /// <returns>A new DbRefExpression that references the element with the specified key values in the given Entity set.</returns>
         /// <param name="entitySet">The Entity set in which the referenced element resides.</param>
         /// <param name="keyRow">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that constructs a record with columns that match (in number, type, and order) the Key properties of the referenced Entity type.
         /// </param>
         /// <param name="entityType">The type of the Entity that the reference should refer to.</param>
         /// <exception cref="T:System.ArgumentNullException">entitySet, keyRow or entityType is null.</exception>
@@ -1681,7 +1681,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRefKeyExpression" /> that retrieves the key values of the specifed reference in structural form.
         /// </summary>
         /// <returns>A new DbRefKeyExpression that retrieves the key values of the specified reference.</returns>
         /// <param name="argument">The expression that provides the reference. This expression must have a reference Type with an Entity element type.</param>
@@ -1705,7 +1705,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
         /// </summary>
         /// <returns>A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance.</returns>
         /// <param name="navigateFrom">An expression that specifies the instance from which navigation should occur.</param>
@@ -1727,7 +1727,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbRelationshipNavigationExpression" /> representing the navigation of a composition or association relationship.
         /// </summary>
         /// <returns>A new DbRelationshipNavigationExpression representing the navigation of the specified from and to relation ends of the specified relation type from the specified navigation source instance.</returns>
         /// <param name="type">Metadata for the relation type that represents the relationship.</param>
@@ -1755,7 +1755,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region Unary and Binary Set Operators - Distinct, Element, IsEmpty, Except, Intersect, UnionAll, Limit
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that removes duplicates from the given set argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbDistinctExpression" /> that removes duplicates from the given set argument.
         /// </summary>
         /// <returns>A new DbDistinctExpression that represents the distinct operation applied to the specified set argument.</returns>
         /// <param name="argument">An expression that defines the set over which to perfom the distinct operation.</param>
@@ -1776,7 +1776,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbElementExpression" /> that converts a set into a singleton.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbElementExpression" /> that converts a set into a singleton.
         /// </summary>
         /// <returns>A DbElementExpression that represents the conversion of the set argument to a singleton.</returns>
         /// <param name="argument">An expression that specifies the input set.</param>
@@ -1791,7 +1791,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" /> that determines whether the specified set argument is an empty set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" /> that determines whether the specified set argument is an empty set.
         /// </summary>
         /// <returns>A new DbIsEmptyExpression with the specified argument.</returns>
         /// <param name="argument">An expression that specifies the input set.</param>
@@ -1806,7 +1806,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExceptExpression" /> that computes the subtraction of the right set argument from the left set argument.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExceptExpression" /> that computes the subtraction of the right set argument from the left set argument.
         /// </summary>
         /// <returns>A new DbExceptExpression that represents the difference of the left argument from the right argument.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
@@ -1824,7 +1824,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIntersectExpression" /> that computes the intersection of the left and right set arguments.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIntersectExpression" /> that computes the intersection of the left and right set arguments.
         /// </summary>
         /// <returns>A new DbIntersectExpression that represents the intersection of the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
@@ -1841,7 +1841,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbUnionAllExpression" /> that computes the union of the left and right set arguments and does not remove duplicates.
         /// </summary>
         /// <returns>A new DbUnionAllExpression that union, including duplicates, of the the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
@@ -1859,7 +1859,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
         /// </summary>
         /// <returns>A new DbLimitExpression with the specified argument and count limit values that does not include tied results.</returns>
         /// <param name="argument">An expression that specifies the input collection.</param>
@@ -1903,7 +1903,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         #region General Operators - Case, Function, NewInstance, Property
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCaseExpression" />.
         /// </summary>
         /// <returns>A new DbCaseExpression with the specified cases and default result.</returns>
         /// <param name="whenExpressions">A list of expressions that provide the conditional for of each case.</param>
@@ -1926,7 +1926,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression representing the function invocation.</returns>
         /// <param name="function">Metadata for the function to invoke.</param>
@@ -1941,7 +1941,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFunctionExpression" /> representing the invocation of the specified function with the given arguments.
         /// </summary>
         /// <returns>A new DbFunctionExpression representing the function invocation.</returns>
         /// <param name="function">Metadata for the function to invoke.</param>
@@ -1963,11 +1963,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
         /// </summary>
         /// <returns>A new Expression representing the Lambda function application.</returns>
         /// <param name="lambda">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
         /// </param>
         /// <param name="arguments">A list of expressions that provide the arguments.</param>
         /// <exception cref="T:System.ArgumentNullException">lambda or arguments is null.</exception>
@@ -1981,11 +1981,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambdaExpression" /> representing the application of the specified Lambda function to the given arguments.
         /// </summary>
         /// <returns>A new expression representing the Lambda function application.</returns>
         /// <param name="lambda">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLambda" /> instance representing the Lambda function to apply.
         /// </param>
         /// <param name="arguments">Expressions that provide the arguments.</param>
         /// <exception cref="T:System.ArgumentNullException">lambda or arguments is null.</exception>
@@ -2006,7 +2006,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression with the specified type and arguments.</returns>
         /// <param name="instanceType">The type of the new instance.</param>
@@ -2021,7 +2021,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" />. If the type argument is a collection type, the arguments specify the elements of the collection. Otherwise the arguments are used as property or column values in the new instance.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression with the specified type and arguments.</returns>
         /// <param name="instanceType">The type of the new instance.</param>
@@ -2043,7 +2043,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression with the specified collection type and arguments.</returns>
         /// <param name="elements">A list of expressions that provide the elements of the collection.</param>
@@ -2055,7 +2055,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs a collection containing the specified elements. The type of the collection is based on the common type of the elements. If no common element type exists an exception is thrown.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression with the specified collection type and arguments.</returns>
         /// <param name="elements">A list of expressions that provide the elements of the collection.</param>
@@ -2101,7 +2101,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs an empty collection of the specified collection type.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that constructs an empty collection of the specified collection type.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression with the specified collection type and an empty Arguments list.</returns>
         /// <param name="collectionType">The type metadata for the collection to create</param>
@@ -2117,7 +2117,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that produces a row with the specified named columns and the given values, specified as expressions.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNewInstanceExpression" /> that produces a row with the specified named columns and the given values, specified as expressions.
         /// </summary>
         /// <returns>A new DbNewInstanceExpression that represents the construction of the row.</returns>
         /// <param name="columnValues">A list of string-DbExpression key-value pairs that defines the structure and values of the row.</param>
@@ -2134,7 +2134,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified property.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified property.
         /// </summary>
         /// <returns>A new DbPropertyExpression representing the property retrieval.</returns>
         /// <param name="instance">The instance from which to retrieve the property. May be null if the property is static.</param>
@@ -2150,7 +2150,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified navigation property.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified navigation property.
         /// </summary>
         /// <returns>A new DbPropertyExpression representing the navigation property retrieval.</returns>
         /// <param name="instance">The instance from which to retrieve the navigation property.</param>
@@ -2166,7 +2166,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified relationship end member.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the specified relationship end member.
         /// </summary>
         /// <returns>A new DbPropertyExpression representing the relationship end member retrieval.</returns>
         /// <param name="instance">The instance from which to retrieve the relationship end member.</param>
@@ -2182,7 +2182,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the instance property with the specified name from the given instance.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbPropertyExpression" /> representing the retrieval of the instance property with the specified name from the given instance.
         /// </summary>
         /// <returns>A new DbPropertyExpression that represents the property retrieval.</returns>
         /// <param name="instance">The instance from which to retrieve the property.</param>
@@ -2401,7 +2401,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for all elements of the input set.
         /// </summary>
         /// <returns>A new DbQuantifierExpression that represents the All operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2421,13 +2421,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
-        ///     with the specified argument.
+        /// A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
+        /// with the specified argument.
         /// </returns>
         /// <param name="source">An expression that specifies the input set.</param>
         /// <exception cref="T:System.ArgumentNullException">source is null.</exception>
@@ -2438,13 +2438,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that determines whether the specified set argument is non-empty.
         /// </summary>
         /// <returns>
-        ///     A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
-        ///     with the specified argument.
+        /// A new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbNotExpression" /> applied to a new
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbIsEmptyExpression" />
+        /// with the specified argument.
         /// </returns>
         /// <param name="argument">An expression that specifies the input set.</param>
         /// <exception cref="T:System.ArgumentNullException">argument is null.</exception>
@@ -2455,7 +2455,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbQuantifierExpression" /> that determines whether the given predicate holds for any element of the input set.
         /// </summary>
         /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2475,16 +2475,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included.
         /// </summary>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of CrossApply.
+        /// An new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of CrossApply.
         /// </returns>
         /// <param name="source">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="apply">A method that specifies the logic to evaluate once for each member of the input set. </param>
         /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
@@ -2501,16 +2501,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set have an apply column value of null.
         /// </summary>
         /// <returns>
-        ///     An new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of OuterApply.
+        /// An new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of OuterApply.
         /// </returns>
         /// <param name="source">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="apply">A method that specifies the logic to evaluate once for each member of the input set.</param>
         /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
@@ -2527,19 +2527,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using FullOuterJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using FullOuterJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of FullOuterJoin, that represents the full outer join operation applied to the left and right input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition"> A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -2559,19 +2559,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using InnerJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using InnerJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition">A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -2591,19 +2591,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using LeftOuterJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the left and right expressions, on the specified join condition, using LeftOuterJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right input sets under the given join condition.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of LeftOuterJoin, that represents the left outer join operation applied to the left and right input sets under the given join condition.
         /// </returns>
         /// <param name="left">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the left set argument.
         /// </param>
         /// <param name="right">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the right set argument.
         /// </param>
         /// <param name="joinCondition">A method representing the condition on which to join. This method must produce an expression with a Boolean result type that provides the logic of the join condition.</param>
         /// <exception cref="T:System.ArgumentNullException">left, right or joinCondition is null.</exception>
@@ -2623,19 +2623,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the outer and inner expressions, on an equality condition between the specified outer and inner keys, using InnerJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbJoinExpression" /> that joins the sets specified by the outer and inner expressions, on an equality condition between the specified outer and inner keys, using InnerJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
+        /// A new DbJoinExpression, with an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" /> of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
         /// </returns>
         /// <param name="outer">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
         /// </param>
         /// <param name="inner">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
         /// </param>
         /// <param name="outerKey">A method that specifies how the outer key value should be derived from an element of the outer set.</param>
         /// <param name="innerKey">A method that specifies how the inner key value should be derived from an element of the inner set.</param>
@@ -2664,30 +2664,30 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified selector over the sets specified by the outer and inner expressions, joined on an equality condition between the specified outer and inner keys, using InnerJoin as the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     .
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that projects the specified selector over the sets specified by the outer and inner expressions, joined on an equality condition between the specified outer and inner keys, using InnerJoin as the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A new DbProjectExpression with the specified selector as its projection, and a new DbJoinExpression as its input. The input DbJoinExpression is created with an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
+        /// A new DbProjectExpression with the specified selector as its projection, and a new DbJoinExpression as its input. The input DbJoinExpression is created with an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of InnerJoin, that represents the inner join operation applied to the left and right input sets under a join condition that compares the outer and inner key values for equality.
         /// </returns>
         /// <param name="outer">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the outer set argument.
         /// </param>
         /// <param name="inner">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the inner set argument.
         /// </param>
         /// <param name="outerKey">A method that specifies how the outer key value should be derived from an element of the outer set.</param>
         /// <param name="innerKey">A method that specifies how the inner key value should be derived from an element of the inner set.</param>
         /// <param name="selector">
-        ///     A method that specifies how an element of the result set should be derived from elements of the inner and outer sets. This method must produce an instance of a type that is compatible with Join and can be resolved into a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
-        ///     . Compatibility requirements for  TSelector  are described in remarks.
+        /// A method that specifies how an element of the result set should be derived from elements of the inner and outer sets. This method must produce an instance of a type that is compatible with Join and can be resolved into a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        /// . Compatibility requirements for  TSelector  are described in remarks.
         /// </param>
         /// <typeparam name="TSelector">The type of the  selector .</typeparam>
         /// <exception cref="T:System.ArgumentNullException">outer, inner, outerKey, innerKey or selector is null.</exception>
@@ -2717,7 +2717,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and default collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2738,7 +2738,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with ascending sort order and the specified collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2761,7 +2761,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and default collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2782,7 +2782,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that sorts the given input set by the specified sort key, with descending sort order and the specified collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the order-by operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -2806,15 +2806,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that selects the specified expression over the given input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" /> that selects the specified expression over the given input set.
         /// </summary>
         /// <returns>A new DbProjectExpression that represents the select operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
         /// <param name="projection">
-        ///     A method that specifies how to derive the projected expression given a member of the input set. This method must produce an instance of a type that is compatible with Select and can be resolved into a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
-        ///     . Compatibility requirements for  TProjection  are described in remarks.
+        /// A method that specifies how to derive the projected expression given a member of the input set. This method must produce an instance of a type that is compatible with Select and can be resolved into a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        /// . Compatibility requirements for  TProjection  are described in remarks.
         /// </param>
         /// <typeparam name="TProjection">The method result type of projection.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">source or projection is null.</exception>
@@ -2831,19 +2831,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
-        ///     is then created that selects the apply column from each row, producing the overall collection of apply results.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        /// is then created that selects the apply column from each row, producing the overall collection of apply results.
         /// </summary>
         /// <returns>
-        ///     An new DbProjectExpression that selects the apply column from a new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of CrossApply.
+        /// An new DbProjectExpression that selects the apply column from a new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of CrossApply.
         /// </returns>
         /// <param name="source">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="apply">A method that represents the logic to evaluate once for each member of the input set.</param>
         /// <exception cref="T:System.ArgumentNullException">source or apply is null.</exception>
@@ -2866,26 +2866,26 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
-        ///     is then created that selects the specified selector over each row, producing the overall collection of results.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbApplyExpression" /> that evaluates the given apply expression once for each element of a given input set, producing a collection of rows with corresponding input and apply columns. Rows for which apply evaluates to an empty set are not included. A
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbProjectExpression" />
+        /// is then created that selects the specified selector over each row, producing the overall collection of results.
         /// </summary>
         /// <returns>
-        ///     An new DbProjectExpression that selects the result of the given selector from a new DbApplyExpression with the specified input and apply bindings and an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
-        ///     of CrossApply.
+        /// An new DbProjectExpression that selects the result of the given selector from a new DbApplyExpression with the specified input and apply bindings and an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionKind" />
+        /// of CrossApply.
         /// </returns>
         /// <param name="source">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the input set.
         /// </param>
         /// <param name="apply">A method that represents the logic to evaluate once for each member of the input set. </param>
         /// <param name="selector">
-        ///     A method that specifies how an element of the result set should be derived given an element of the input and apply sets. This method must produce an instance of a type that is compatible with SelectMany and can be resolved into a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
-        ///     . Compatibility requirements for  TSelector  are described in remarks.
+        /// A method that specifies how an element of the result set should be derived given an element of the input and apply sets. This method must produce an instance of a type that is compatible with SelectMany and can be resolved into a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" />
+        /// . Compatibility requirements for  TSelector  are described in remarks.
         /// </param>
         /// <typeparam name="TSelector">The method result type of selector.</typeparam>
         /// <exception cref="T:System.ArgumentNullException">source, apply or selector is null.</exception>
@@ -2915,19 +2915,19 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that skips the specified number of elements from the given sorted input set.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSkipExpression" /> that skips the specified number of elements from the given sorted input set.
         /// </summary>
         /// <returns>A new DbSkipExpression that represents the skip operation.</returns>
         /// <param name="argument">
-        ///     A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that specifies the sorted input set.
+        /// A <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that specifies the sorted input set.
         /// </param>
         /// <param name="count">An expression the specifies how many elements of the ordered set to skip.</param>
         /// <exception cref="T:System.ArgumentNullException">argument or count is null.</exception>
         /// <exception cref="T:System.ArgumentException">
-        ///     count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
-        ///     or has a result type that is not equal or promotable to a 64-bit integer type.
+        /// count is not <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbConstantExpression" /> or
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbParameterReferenceExpression" />
+        /// or has a result type that is not equal or promotable to a 64-bit integer type.
         /// </exception>
         public static DbSkipExpression Skip(this DbSortExpression argument, DbExpression count)
         {
@@ -2937,7 +2937,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbLimitExpression" /> that restricts the number of elements in the Argument collection to the specified count Limit value. Tied results are not included in the output.
         /// </summary>
         /// <returns>A new DbLimitExpression with the specified argument and count limit values that does not include tied results.</returns>
         /// <param name="argument">An expression that specifies the input collection.</param>
@@ -2974,7 +2974,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with default collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
         /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
@@ -2992,7 +2992,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in ascending sort order and  with the specified collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
         /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
@@ -3012,7 +3012,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with default collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with default collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
         /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
@@ -3030,7 +3030,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with the specified collation.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbSortExpression" /> that with a sort order that includes the sort order of the given order input set together with the specified sort key in descending sort order and  with the specified collation.
         /// </summary>
         /// <returns>A new DbSortExpression that represents the new overall order-by operation.</returns>
         /// <param name="source">A DbSortExpression that specifies the ordered input set.</param>
@@ -3051,7 +3051,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbFilterExpression" /> that filters the elements in the given input set using the specified predicate.
         /// </summary>
         /// <returns>A new DbQuantifierExpression that represents the Any operation.</returns>
         /// <param name="source">An expression that specifies the input set.</param>
@@ -3070,7 +3070,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
+        /// Creates a new <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that computes the union of the left and right set arguments with duplicates removed.
         /// </summary>
         /// <returns>A new DbExpression that computes the union, without duplicates, of the the left and right arguments.</returns>
         /// <param name="left">An expression that defines the left set argument.</param>
@@ -3198,7 +3198,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Used only by span rewriter, when a row could be specified as an argument
+        /// Used only by span rewriter, when a row could be specified as an argument
         /// </summary>
         internal static DbIsNullExpression CreateIsNullExpressionAllowingRowTypeArgument(DbExpression argument)
         {
@@ -3207,23 +3207,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbElementExpression" /> that converts a single-member set with a single property
-        ///     into a singleton.  The result type of the created <see cref="DbElementExpression" /> equals the result type
-        ///     of the single property of the element of the argument.
-        ///     This method should only be used when the argument is of a collection type with
-        ///     element of structured type with only one property.
+        /// Creates a new <see cref="DbElementExpression" /> that converts a single-member set with a single property
+        /// into a singleton.  The result type of the created <see cref="DbElementExpression" /> equals the result type
+        /// of the single property of the element of the argument.
+        /// This method should only be used when the argument is of a collection type with
+        /// element of structured type with only one property.
         /// </summary>
         /// <param name="argument"> An expression that specifies the input set. </param>
         /// <returns> A DbElementExpression that represents the conversion of the single-member set argument to a singleton. </returns>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="argument" />
-        ///     is null
+        /// <paramref name="argument" />
+        /// is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     <paramref name="argument" />
-        ///     is associated with a different command tree,
-        ///     or does not have a collection result type, or its element type is not a structured type
-        ///     with only one property
+        /// <paramref name="argument" />
+        /// is associated with a different command tree,
+        /// or does not have a collection result type, or its element type is not a structured type
+        /// with only one property
         /// </exception>
         internal static DbElementExpression CreateElementExpressionUnwrapSingleProperty(DbExpression argument)
         {
@@ -3242,15 +3242,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
-        ///     navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
-        ///     must be declared by the same relationship type.
-        ///     DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
-        ///     to construct Entity instances that are capable of resolving relationship navigation operations based on
-        ///     the provided DbRelatedEntityRefs without the need for additional navigation operations.
-        ///     Note also that this factory method is not intended to be part of the public Command Tree API
-        ///     since its intent is to support Entity constructors in view definitions that express information about
-        ///     related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
+        /// Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
+        /// navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
+        /// must be declared by the same relationship type.
+        /// DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
+        /// to construct Entity instances that are capable of resolving relationship navigation operations based on
+        /// the provided DbRelatedEntityRefs without the need for additional navigation operations.
+        /// Note also that this factory method is not intended to be part of the public Command Tree API
+        /// since its intent is to support Entity constructors in view definitions that express information about
+        /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         /// </summary>
         /// <param name="sourceEnd"> The relationship end from which navigation takes place </param>
         /// <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
@@ -3262,23 +3262,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Creates a new <see cref="DbNewInstanceExpression" /> that constructs an instance of an Entity type
-        ///     together with the specified information about Entities related to the newly constructed Entity by
-        ///     relationship navigations where the target end has multiplicity of at most one.
-        ///     Note that this factory method is not intended to be part of the public Command Tree API since its
-        ///     intent is to support Entity constructors in view definitions that express information about
-        ///     related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
+        /// Creates a new <see cref="DbNewInstanceExpression" /> that constructs an instance of an Entity type
+        /// together with the specified information about Entities related to the newly constructed Entity by
+        /// relationship navigations where the target end has multiplicity of at most one.
+        /// Note that this factory method is not intended to be part of the public Command Tree API since its
+        /// intent is to support Entity constructors in view definitions that express information about
+        /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
         /// </summary>
         /// <param name="entityType"> The type of the Entity instance that is being constructed </param>
         /// <param name="attributeValues"> Values for each (non-relationship) property of the Entity </param>
         /// <param name="relationships">
-        ///     A (possibly empty) list of <see cref="DbRelatedEntityRef" /> s that describe Entities that are related to the constructed Entity by various relationship types.
+        /// A (possibly empty) list of <see cref="DbRelatedEntityRef" /> s that describe Entities that are related to the constructed Entity by various relationship types.
         /// </param>
         /// <returns>
-        ///     A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see
-        ///     <see
-        ///         cref="DbNewInstanceExpression.RelatedEntityReferences" />
-        ///     collection.
+        /// A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see
+        /// <see
+        ///     cref="DbNewInstanceExpression.RelatedEntityReferences" />
+        /// collection.
         /// </returns>
         internal static DbNewInstanceExpression CreateNewEntityWithRelationshipsExpression(
             EntityType entityType, IList<DbExpression> attributeValues, IList<DbRelatedEntityRef> relationships)
@@ -3291,11 +3291,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Same as <see cref="Navigate(DbExpression, RelationshipEndMember, RelationshipEndMember)" /> only allows the property type of
-        ///     <paramref
-        ///         name="fromEnd" />
-        ///     to be any type in the same type hierarchy as the result type of <paramref name="navigateFrom" />.
-        ///     Only used by relationship span.
+        /// Same as <see cref="Navigate(DbExpression, RelationshipEndMember, RelationshipEndMember)" /> only allows the property type of
+        /// <paramref
+        ///     name="fromEnd" />
+        /// to be any type in the same type hierarchy as the result type of <paramref name="navigateFrom" />.
+        /// Only used by relationship span.
         /// </summary>
         internal static DbRelationshipNavigationExpression NavigateAllowingAllRelationshipsInSameTypeHierarchy(
             this DbExpression navigateFrom, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
@@ -3328,9 +3328,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         }
 
         /// <summary>
-        ///     Requires: non-null expression
-        ///     Determines whether the expression is a constant negative integer value. Always returns
-        ///     false for non-constant, non-integer expression instances.
+        /// Requires: non-null expression
+        /// Determines whether the expression is a constant negative integer value. Always returns
+        /// false for non-constant, non-integer expression instances.
         /// </summary>
         private static bool IsConstantNegativeInteger(DbExpression expression)
         {

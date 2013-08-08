@@ -27,15 +27,15 @@ namespace System.Data.Entity.Migrations
     using DatabaseCreator = System.Data.Entity.Migrations.Utilities.DatabaseCreator;
 
     /// <summary>
-    ///     DbMigrator is used to apply existing migrations to a database.
-    ///     DbMigrator can be used to upgrade and downgrade to any given migration.
-    ///     To scaffold migrations based on changes to your model use <see cref="Design.MigrationScaffolder" />
+    /// DbMigrator is used to apply existing migrations to a database.
+    /// DbMigrator can be used to upgrade and downgrade to any given migration.
+    /// To scaffold migrations based on changes to your model use <see cref="Design.MigrationScaffolder" />
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     public class DbMigrator : MigratorBase
     {
         /// <summary>
-        ///     Migration Id representing the state of the database before any migrations are applied.
+        /// Migration Id representing the state of the database before any migrations are applied.
         /// </summary>
         public const string InitialDatabase = "0";
 
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Migrations
         private bool _emptyMigrationNeeded;
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         internal DbMigrator(DbContext usersContext = null, DbProviderFactory providerFactory = null)
             : base(null)
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Initializes a new instance of the DbMigrator class.
+        /// Initializes a new instance of the DbMigrator class.
         /// </summary>
         /// <param name="configuration"> Configuration to be used for the migration process. </param>
         public DbMigrator(DbMigrationsConfiguration configuration)
@@ -223,7 +223,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets the configuration that is being used for the migration process.
+        /// Gets the configuration that is being used for the migration process.
         /// </summary>
         public override DbMigrationsConfiguration Configuration
         {
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets all migrations that are defined in the configured migrations assembly.
+        /// Gets all migrations that are defined in the configured migrations assembly.
         /// </summary>
         public override IEnumerable<string> GetLocalMigrations()
         {
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets all migrations that have been applied to the target database.
+        /// Gets all migrations that have been applied to the target database.
         /// </summary>
         public override IEnumerable<string> GetDatabaseMigrations()
         {
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Gets all migrations that are defined in the assembly but haven't been applied to the target database.
+        /// Gets all migrations that are defined in the assembly but haven't been applied to the target database.
         /// </summary>
         public override IEnumerable<string> GetPendingMigrations()
         {
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Updates the target database to a given migration.
+        /// Updates the target database to a given migration.
         /// </summary>
         /// <param name="targetMigration"> The migration to upgrade/downgrade to. </param>
         public override void Update(string targetMigration)
@@ -1044,12 +1044,12 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        ///     Ensures that the database exists by creating an empty database if one does not
-        ///     already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
-        ///     throws an exception, then an attempt is made to clean up (delete) the new empty database.
-        ///     This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
-        ///     which can then cause problems for database initializers that check whether or not a database
-        ///     exists.
+        /// Ensures that the database exists by creating an empty database if one does not
+        /// already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
+        /// throws an exception, then an attempt is made to clean up (delete) the new empty database.
+        /// This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
+        /// which can then cause problems for database initializers that check whether or not a database
+        /// exists.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)

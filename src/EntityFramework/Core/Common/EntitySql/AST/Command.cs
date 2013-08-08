@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents eSQL command as node.
+    /// Represents eSQL command as node.
     /// </summary>
     internal sealed class Command : Node
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Statement _statement;
 
         /// <summary>
-        ///     Initializes eSQL command.
+        /// Initializes eSQL command.
         /// </summary>
         /// <param name="nsImportList"> optional namespace imports </param>
         /// <param name="statement"> command statement </param>
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional namespace imports. May be null.
+        /// Returns optional namespace imports. May be null.
         /// </summary>
         internal NodeList<NamespaceImport> NamespaceImportList
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns command statement.
+        /// Returns command statement.
         /// </summary>
         internal Statement Statement
         {

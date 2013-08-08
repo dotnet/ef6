@@ -9,7 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Creates a convention that configures stored procedures to be used to update entities in the database.
+    /// Creates a convention that configures stored procedures to be used to update entities in the database.
     /// </summary>
     public class ConventionUpdateModificationStoredProcedureConfiguration : ConventionModificationStoredProcedureConfiguration
     {
@@ -115,8 +115,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyName"> The name of the property to configure the result for. </param>
@@ -132,8 +132,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyInfo"> The property to configure the result for. </param>

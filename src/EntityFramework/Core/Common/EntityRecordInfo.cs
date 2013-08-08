@@ -10,26 +10,26 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     EntityRecordInfo class providing a simple way to access both the type information and the column information.
+    /// EntityRecordInfo class providing a simple way to access both the type information and the column information.
     /// </summary>
     public class EntityRecordInfo : DataRecordInfo
     {
         private readonly EntityKey _entityKey;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" /> class of a specific entity type with an enumerable collection of data fields and with specific key and entity set information.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" /> class of a specific entity type with an enumerable collection of data fields and with specific key and entity set information.
         /// </summary>
         /// <param name="metadata">
-        ///     The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> of the entity represented by the
-        ///     <see
-        ///         cref="T:System.Data.Common.DbDataRecord" />
-        ///     described by this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" />
-        ///     object.
+        /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" /> of the entity represented by the
+        /// <see
+        ///     cref="T:System.Data.Common.DbDataRecord" />
+        /// described by this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.EntityRecordInfo" />
+        /// object.
         /// </param>
         /// <param name="memberInfo">
-        ///     An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
+        /// An enumerable collection of <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmMember" /> objects that represent column information.
         /// </param>
         /// <param name="entityKey">The key for the entity.</param>
         /// <param name="entitySet">The entity set to which the entity belongs.</param>
@@ -65,8 +65,8 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        ///     but with a different EntityKey instance.
+        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        /// but with a different EntityKey instance.
         /// </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(DataRecordInfo info, EntityKey entityKey, EntitySet entitySet)
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Common
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.EntityKey" /> for the entity.
+        /// Gets the <see cref="T:System.Data.Entity.Core.EntityKey" /> for the entity.
         /// </summary>
         /// <returns>The key for the entity.</returns>
         public EntityKey EntityKey

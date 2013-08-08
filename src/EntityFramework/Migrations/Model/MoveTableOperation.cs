@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents moving a table from one schema to another.
+    /// Represents moving a table from one schema to another.
     /// </summary>
     public class MoveTableOperation : MigrationOperation
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
         private readonly string _newSchema;
 
         /// <summary>
-        ///     Initializes a new instance of the MoveTableOperation class.
+        /// Initializes a new instance of the MoveTableOperation class.
         /// </summary>
         /// <param name="name"> Name of the table to be moved. </param>
         /// <param name="newSchema"> Name of the schema to move the table to. </param>
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table to be moved.
+        /// Gets the name of the table to be moved.
         /// </summary>
         public virtual string Name
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the schema to move the table to.
+        /// Gets the name of the schema to move the table to.
         /// </summary>
         public virtual string NewSchema
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that moves the table back to its original schema.
+        /// Gets an operation that moves the table back to its original schema.
         /// </summary>
         public override MigrationOperation Inverse
         {
@@ -70,26 +70,26 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Used when altering the migrations history table so that data can be moved to the new table.
+        /// Used when altering the migrations history table so that data can be moved to the new table.
         /// </summary>
         /// <value>
-        ///     The context key for the model.
+        /// The context key for the model.
         /// </value>
         public string ContextKey { get; internal set; }
 
         /// <summary>
-        ///     Gets a value that indicates whether this is a system table.
+        /// Gets a value that indicates whether this is a system table.
         /// </summary>
         /// <returns>
-        ///     true if the table is a system table; otherwise, false.
+        /// true if the table is a system table; otherwise, false.
         /// </returns>
         public bool IsSystem { get; internal set; }
 
         /// <summary>
-        ///     Used when altering the migrations history table so that the table can be rebuilt rather than just dropping and adding the primary key.
+        /// Used when altering the migrations history table so that the table can be rebuilt rather than just dropping and adding the primary key.
         /// </summary>
         /// <value>
-        ///     The create table operation for the migrations history table.
+        /// The create table operation for the migrations history table.
         /// </value>
         public CreateTableOperation CreateTableOperation { get; internal set; }
     }

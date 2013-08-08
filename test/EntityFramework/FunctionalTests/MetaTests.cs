@@ -8,7 +8,7 @@ namespace System.Data.Entity.Meta
     using System.Reflection;
 
     /// <summary>
-    ///     Meta tests. These tests check the test suite for common issues.
+    /// Meta tests. These tests check the test suite for common issues.
     /// </summary>
     public class MetaTests : TestBase
     {
@@ -29,8 +29,8 @@ namespace System.Data.Entity.Meta
 
         #region Helper methods
         /// <summary>
-        ///     Checks the type for any test methods. 
-        ///     Assumes any method attribute with an Xunit namespace indicates a test method.
+        /// Checks the type for any test methods. 
+        /// Assumes any method attribute with an Xunit namespace indicates a test method.
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
         /// <returns> True if the type is a test class, false otherwise. </returns>
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Meta
         }
 
         /// <summary>
-        ///     Checks base types of the given types for TestBase
+        /// Checks base types of the given types for TestBase
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
         /// <returns> True if the type implements TestBase, false otherwise. </returns>

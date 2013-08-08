@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Globalization;
 
     /// <summary>
-    ///     Class representing a parameter used in EntityCommand
+    /// Class representing a parameter used in EntityCommand
     /// </summary>
     public class EntityParameter : DbParameter, IDbDataParameter
     {
@@ -37,18 +37,18 @@ namespace System.Data.Entity.Core.EntityClient
         private bool? _isNullable;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the default values.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the default values.
         /// </summary>
         public EntityParameter()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name and data type.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name and data type.
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public EntityParameter(string parameterName, DbType dbType)
@@ -58,11 +58,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name, data type and size.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified parameter name, data type and size.
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         /// <param name="size">The size of the parameter.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -74,11 +74,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         /// <param name="size">The size of the parameter.</param>
         /// <param name="sourceColumn">The name of the source column.</param>
@@ -92,22 +92,22 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" /> class using the specified properties.
         /// </summary>
         /// <param name="parameterName">The name of the parameter.</param>
         /// <param name="dbType">
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </param>
         /// <param name="size">The size of the parameter.</param>
         /// <param name="direction">
-        ///     One of the <see cref="T:System.Data.ParameterDirection" /> values.
+        /// One of the <see cref="T:System.Data.ParameterDirection" /> values.
         /// </param>
         /// <param name="isNullable">true to indicate that the parameter accepts null values; otherwise, false.</param>
         /// <param name="precision">The number of digits used to represent the value.</param>
         /// <param name="scale">The number of decimal places to which value is resolved.</param>
         /// <param name="sourceColumn">The name of the source column.</param>
         /// <param name="sourceVersion">
-        ///     One of the <see cref="T:System.Data.DataRowVersion" /> values.
+        /// One of the <see cref="T:System.Data.DataRowVersion" /> values.
         /// </param>
         /// <param name="value">The value of the parameter.</param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -158,10 +158,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Helper method to validate the parameter name; Ideally we'd only call this once, but
-        ///     we have to put an argumentName on the Argument exception, and the property setter would
-        ///     need "value" which confuses folks when they call the constructor that takes the value
-        ///     of the parameter.  c'est la vie.
+        /// Helper method to validate the parameter name; Ideally we'd only call this once, but
+        /// we have to put an argumentName on the Argument exception, and the property setter would
+        /// need "value" which confuses folks when they call the constructor that takes the value
+        /// of the parameter.  c'est la vie.
         /// </summary>
         private void SetParameterNameWithValidation(string parameterName, string argumentName)
         {
@@ -176,10 +176,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.DbType" /> of the parameter.
+        /// Gets or sets the <see cref="T:System.Data.DbType" /> of the parameter.
         /// </summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.DbType" /> values.
+        /// One of the <see cref="T:System.Data.DbType" /> values.
         /// </returns>
         public override DbType DbType
         {
@@ -243,10 +243,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets or sets the number of digits used to represent the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
-        ///     property.
+        /// Gets or sets the number of digits used to represent the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        /// property.
         /// </summary>
         /// <returns>The number of digits used to represent the value.</returns>
         public virtual byte Precision
@@ -264,10 +264,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets or sets the number of decimal places to which
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
-        ///     is resolved.
+        /// Gets or sets the number of decimal places to which
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        /// is resolved.
         /// </summary>
         /// <returns>The number of decimal places to which value is resolved.</returns>
         public virtual byte Scale
@@ -323,7 +323,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets whether this collection has been changes since the last reset
+        /// Gets whether this collection has been changes since the last reset
         /// </summary>
         internal virtual bool IsDirty
         {
@@ -331,7 +331,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the DbType property has been set by the user;
+        /// Indicates whether the DbType property has been set by the user;
         /// </summary>
         internal virtual bool IsDbTypeSpecified
         {
@@ -339,7 +339,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the Direction property has been set by the user;
+        /// Indicates whether the Direction property has been set by the user;
         /// </summary>
         internal virtual bool IsDirectionSpecified
         {
@@ -347,7 +347,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the IsNullable property has been set by the user;
+        /// Indicates whether the IsNullable property has been set by the user;
         /// </summary>
         internal virtual bool IsIsNullableSpecified
         {
@@ -355,7 +355,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the Precision property has been set by the user;
+        /// Indicates whether the Precision property has been set by the user;
         /// </summary>
         internal virtual bool IsPrecisionSpecified
         {
@@ -363,7 +363,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the Scale property has been set by the user;
+        /// Indicates whether the Scale property has been set by the user;
         /// </summary>
         internal virtual bool IsScaleSpecified
         {
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Indicates whether the Size property has been set by the user;
+        /// Indicates whether the Size property has been set by the user;
         /// </summary>
         internal virtual bool IsSizeSpecified
         {
@@ -380,7 +380,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         /// <summary>Gets or sets the direction of the parameter.</summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.ParameterDirection" /> values.
+        /// One of the <see cref="T:System.Data.ParameterDirection" /> values.
         /// </returns>
         [RefreshProperties(RefreshProperties.All)]
         [EntityResCategory(EntityRes.DataCategory_Data)]
@@ -467,10 +467,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets or sets the name of the source column mapped to the <see cref="T:System.Data.DataSet" /> and used for loading or returning the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
-        ///     .
+        /// Gets or sets the name of the source column mapped to the <see cref="T:System.Data.DataSet" /> and used for loading or returning the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.EntityClient.EntityParameter.Value" />
+        /// .
         /// </summary>
         /// <returns>The name of the source column mapped to the dataset and used for loading or returning the value.</returns>
         [EntityResCategory(EntityRes.DataCategory_Update)]
@@ -494,10 +494,10 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Gets or sets the <see cref="T:System.Data.DataRowVersion" /> to use when loading the value.
+        /// Gets or sets the <see cref="T:System.Data.DataRowVersion" /> to use when loading the value.
         /// </summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.DataRowVersion" /> values.
+        /// One of the <see cref="T:System.Data.DataRowVersion" /> values.
         /// </returns>
         [EntityResCategory(EntityRes.DataCategory_Update)]
         [EntityResDescription(EntityRes.DbParameter_SourceVersion)]
@@ -528,7 +528,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Resets the type associated with the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
+        /// Resets the type associated with the <see cref="T:System.Data.Entity.Core.EntityClient.EntityParameter" />.
         /// </summary>
         public override void ResetDbType()
         {
@@ -543,7 +543,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Marks that this parameter has been changed
+        /// Marks that this parameter has been changed
         /// </summary>
         private void PropertyChanging()
         {
@@ -551,7 +551,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Determines the size of the given object
+        /// Determines the size of the given object
         /// </summary>
         private static int ValueSize(object value)
         {
@@ -559,7 +559,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Clones this parameter object
+        /// Clones this parameter object
         /// </summary>
         /// <returns> The new cloned object </returns>
         internal virtual EntityParameter Clone()
@@ -568,7 +568,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Clones this parameter object
+        /// Clones this parameter object
         /// </summary>
         private void CloneHelper(EntityParameter destination)
         {
@@ -590,11 +590,11 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Get the type usage for this parameter in model terms.
+        /// Get the type usage for this parameter in model terms.
         /// </summary>
         /// <returns> The type usage for this parameter </returns>
         /// <remarks>
-        ///     Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
+        /// Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
         /// </remarks>
         internal virtual TypeUsage GetTypeUsage()
         {
@@ -632,7 +632,7 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        ///     Reset the dirty flag on the collection
+        /// Reset the dirty flag on the collection
         /// </summary>
         internal virtual void ResetIsDirty()
         {

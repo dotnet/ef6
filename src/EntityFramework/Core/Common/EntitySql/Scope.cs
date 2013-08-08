@@ -7,14 +7,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a scope of key-value pairs.
+    /// Represents a scope of key-value pairs.
     /// </summary>
     internal sealed class Scope : IEnumerable<KeyValuePair<string, ScopeEntry>>
     {
         private readonly Dictionary<string, ScopeEntry> _scopeEntries;
 
         /// <summary>
-        ///     Initialize using a given key comparer.
+        /// Initialize using a given key comparer.
         /// </summary>
         internal Scope(IEqualityComparer<string> keyComparer)
         {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Add new key to the scope. If key already exists - throw.
+        /// Add new key to the scope. If key already exists - throw.
         /// </summary>
         internal Scope Add(string key, ScopeEntry value)
         {
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Remove an entry from the scope.
+        /// Remove an entry from the scope.
         /// </summary>
         internal void Remove(string key)
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns true if the key belongs to the scope.
+        /// Returns true if the key belongs to the scope.
         /// </summary>
         internal bool Contains(string key)
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Search item by key. Returns true in case of success and false otherwise.
+        /// Search item by key. Returns true in case of success and false otherwise.
         /// </summary>
         internal bool TryLookup(string key, out ScopeEntry value)
         {

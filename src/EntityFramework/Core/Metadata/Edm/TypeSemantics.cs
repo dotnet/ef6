@@ -15,15 +15,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Provides type semantics service, type operations and type predicates for the EDM type system.
+    /// Provides type semantics service, type operations and type predicates for the EDM type system.
     /// </summary>
     /// <remarks>
-    ///     For detailed functional specification, see "The EDP Type System.docx" and "edm.spec.doc".
-    ///     Notes:
-    ///     1) The notion of 'type' for the sake of type operation semantics is based on TypeUsage, i.e., EdmType *plus* facets.
-    ///     2) EDM built-in primitive types are defined by the EDM Provider Manifest.
-    ///     3) SubType and Promotable are similar notions however subtyping is stricter than promotability. Subtyping is used for mapping
-    ///     validation while Promotability is used in query, update expression static type validation.
+    /// For detailed functional specification, see "The EDP Type System.docx" and "edm.spec.doc".
+    /// Notes:
+    /// 1) The notion of 'type' for the sake of type operation semantics is based on TypeUsage, i.e., EdmType *plus* facets.
+    /// 2) EDM built-in primitive types are defined by the EDM Provider Manifest.
+    /// 3) SubType and Promotable are similar notions however subtyping is stricter than promotability. Subtyping is used for mapping
+    /// validation while Promotability is used in query, update expression static type validation.
     /// </remarks>
     internal static class TypeSemantics
     {
@@ -38,13 +38,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         //
 
         /// <summary>
-        ///     Determines whether two types are exactly equal.
-        ///     For row types, this INCLUDES property names as well as property types.
+        /// Determines whether two types are exactly equal.
+        /// For row types, this INCLUDES property names as well as property types.
         /// </summary>
         /// <param name="type1"> The first type to compare. </param>
         /// <param name="type2"> The second type to compare. </param>
         /// <returns>
-        ///     If the two types are structurally equal, <c>true</c> ; otherwise <c>false</c> .
+        /// If the two types are structurally equal, <c>true</c> ; otherwise <c>false</c> .
         /// </returns>
         internal static bool IsEqual(TypeUsage type1, TypeUsage type2)
         {
@@ -52,11 +52,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if the two types are structurally equivalent.
+        /// Determines if the two types are structurally equivalent.
         /// </summary>
         /// <remarks>
-        ///     Equivalence for nomimal types is based on lexical identity and structural equivalence for structural types.
-        ///     Structural equivalence for row types is based only on equivalence of property types, property names are ignored.
+        /// Equivalence for nomimal types is based on lexical identity and structural equivalence for structural types.
+        /// Structural equivalence for row types is based only on equivalence of property types, property names are ignored.
         /// </remarks>
         /// <returns> true if equivalent, false otherwise </returns>
         internal static bool IsStructurallyEqual(TypeUsage fromType, TypeUsage toType)
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if two types are equivalent or if fromType is promotable to toType
+        /// determines if two types are equivalent or if fromType is promotable to toType
         /// </summary>
         /// <returns> true if fromType equivalent or promotable to toType, false otherwise </returns>
         internal static bool IsStructurallyEqualOrPromotableTo(TypeUsage fromType, TypeUsage toType)
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if two types are equivalent or if fromType is promotable to toType
+        /// determines if two types are equivalent or if fromType is promotable to toType
         /// </summary>
         /// <returns> true if fromType equivalent or promotable to toType, false otherwise </returns>
         internal static bool IsStructurallyEqualOrPromotableTo(EdmType fromType, EdmType toType)
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if subType is equal to or a sub-type of superType.
+        /// determines if subType is equal to or a sub-type of superType.
         /// </summary>
         /// <returns> true if subType is equal to or a sub-type of superType, false otherwise </returns>
         internal static bool IsSubTypeOf(TypeUsage subType, TypeUsage superType)
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if subType EdmType is a sub-type of superType EdmType.
+        /// determines if subType EdmType is a sub-type of superType EdmType.
         /// </summary>
         /// <returns> true if subType is a sub-type of superType, false otherwise </returns>
         internal static bool IsSubTypeOf(EdmType subEdmType, EdmType superEdmType)
@@ -116,7 +116,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if fromType is promotable to toType.
+        /// Determines if fromType is promotable to toType.
         /// </summary>
         /// <returns> true if fromType is promotable to toType, false otherwise </returns>
         internal static bool IsPromotableTo(TypeUsage fromType, TypeUsage toType)
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Flattens composite transient type down to nominal type leafs.
+        /// Flattens composite transient type down to nominal type leafs.
         /// </summary>
         internal static IEnumerable<TypeUsage> FlattenType(TypeUsage type)
         {
@@ -196,19 +196,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if fromType can be casted to toType.
+        /// determines if fromType can be casted to toType.
         /// </summary>
         /// <param name="fromType"> Type to cast from. </param>
         /// <param name="toType"> Type to cast to. </param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="fromType" /> can be casted to <paramref name="toType" /> ; <c>false</c> otherwise.
+        /// <c>true</c> if <paramref name="fromType" /> can be casted to <paramref name="toType" /> ; <c>false</c> otherwise.
         /// </returns>
         /// <remarks>
-        ///     Cast rules:
-        ///     - primitive types can be casted to other primitive types
-        ///     - primitive types can be casted to enum types
-        ///     - enum types can be casted to primitive types
-        ///     - enum types cannot be casted to other enum types except for casting to the same type
+        /// Cast rules:
+        /// - primitive types can be casted to other primitive types
+        /// - primitive types can be casted to enum types
+        /// - enum types can be casted to primitive types
+        /// - enum types cannot be casted to other enum types except for casting to the same type
         /// </remarks>
         internal static bool IsCastAllowed(TypeUsage fromType, TypeUsage toType)
         {
@@ -223,7 +223,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if a common super type (LUB) exists between type1 and type2.
+        /// Determines if a common super type (LUB) exists between type1 and type2.
         /// </summary>
         /// <returns> true if a common super type between type1 and type2 exists and out commonType represents the common super type. false otherwise along with commonType as null </returns>
         internal static bool TryGetCommonType(TypeUsage type1, TypeUsage type2, out TypeUsage commonType)
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets a Common super-type of type1 and type2 if one exists. null otherwise.
+        /// Gets a Common super-type of type1 and type2 if one exists. null otherwise.
         /// </summary>
         internal static TypeUsage GetCommonType(TypeUsage type1, TypeUsage type2)
         {
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if an EdmFunction is an aggregate function
+        /// determines if an EdmFunction is an aggregate function
         /// </summary>
         internal static bool IsAggregateFunction(EdmFunction function)
         {
@@ -278,8 +278,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if fromType can be cast to toType. this operation is valid only
-        ///     if fromtype and totype are polimorphic types.
+        /// determines if fromType can be cast to toType. this operation is valid only
+        /// if fromtype and totype are polimorphic types.
         /// </summary>
         internal static bool IsValidPolymorphicCast(TypeUsage fromType, TypeUsage toType)
         {
@@ -292,8 +292,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if fromEdmType can be cast to toEdmType. this operation is valid only
-        ///     if fromtype and totype are polimorphic types.
+        /// determines if fromEdmType can be cast to toEdmType. this operation is valid only
+        /// if fromtype and totype are polimorphic types.
         /// </summary>
         internal static bool IsValidPolymorphicCast(EdmType fromEdmType, EdmType toEdmType)
         {
@@ -301,15 +301,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if the
-        ///     <param ref="type" />
-        ///     is a structural nominal type, i.e., EntityType or ComplexType
+        /// Determines if the
+        /// <param ref="type" />
+        /// is a structural nominal type, i.e., EntityType or ComplexType
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
         /// <returns>
-        ///     <c>true</c> if the
-        ///     <paramref name="type"/>
-        ///     is a nominal type. <c>false</c> otherwise.
+        /// <c>true</c> if the
+        /// <paramref name="type"/>
+        /// is a nominal type. <c>false</c> otherwise.
         /// </returns>
         internal static bool IsNominalType(TypeUsage type)
         {
@@ -319,7 +319,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a collection type.
+        /// determines if type is a collection type.
         /// </summary>
         internal static bool IsCollectionType(TypeUsage type)
         {
@@ -327,7 +327,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a complex type.
+        /// determines if type is a complex type.
         /// </summary>
         internal static bool IsComplexType(TypeUsage type)
         {
@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is an EntityType
+        /// determines if type is an EntityType
         /// </summary>
         internal static bool IsEntityType(TypeUsage type)
         {
@@ -343,7 +343,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a Relationship Type.
+        /// determines if type is a Relationship Type.
         /// </summary>
         internal static bool IsRelationshipType(TypeUsage type)
         {
@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is of EnumerationType.
+        /// determines if type is of EnumerationType.
         /// </summary>
         internal static bool IsEnumerationType(TypeUsage type)
         {
@@ -361,11 +361,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if <paramref name="type" /> is primitive or enumeration type
+        /// determines if <paramref name="type" /> is primitive or enumeration type
         /// </summary>
         /// <param name="type"> Type to verify. </param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
+        /// <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
         /// </returns>
         internal static bool IsScalarType(TypeUsage type)
         {
@@ -373,11 +373,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if <paramref name="type" /> is primitive or enumeration type
+        /// determines if <paramref name="type" /> is primitive or enumeration type
         /// </summary>
         /// <param name="type"> Type to verify. </param>
         /// <returns>
-        ///     <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
+        /// <c>true</c> if <paramref name="type" /> is primitive or enumeration type. <c>false</c> otherwise.
         /// </returns>
         internal static bool IsScalarType(EdmType type)
         {
@@ -387,8 +387,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type is a numeric type, i.e., is one of:
-        ///     Byte, Int16, Int32, Int64, Decimal, Single or Double
+        /// Determines if type is a numeric type, i.e., is one of:
+        /// Byte, Int16, Int32, Int64, Decimal, Single or Double
         /// </summary>
         internal static bool IsNumericType(TypeUsage type)
         {
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type is an integer numeric type, i.e., is one of: Byte, Int16, Int32, Int64
+        /// Determines if type is an integer numeric type, i.e., is one of: Byte, Int16, Int32, Int64
         /// </summary>
         internal static bool IsIntegerNumericType(TypeUsage type)
         {
@@ -420,7 +420,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type is an fixed point numeric type, i.e., is one of: Decimal
+        /// Determines if type is an fixed point numeric type, i.e., is one of: Decimal
         /// </summary>
         internal static bool IsFixedPointNumericType(TypeUsage type)
         {
@@ -434,7 +434,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type is an float point numeric type, i.e., is one of: Single or Double.
+        /// Determines if type is an float point numeric type, i.e., is one of: Single or Double.
         /// </summary>
         internal static bool IsFloatPointNumericType(TypeUsage type)
         {
@@ -447,7 +447,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type is an unsigned integer numeric type, i.e., is Byte
+        /// Determines if type is an unsigned integer numeric type, i.e., is Byte
         /// </summary>
         internal static bool IsUnsignedNumericType(TypeUsage type)
         {
@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a polimorphic type, ie, EntityType or ComplexType.
+        /// determines if type is a polimorphic type, ie, EntityType or ComplexType.
         /// </summary>
         internal static bool IsPolymorphicType(TypeUsage type)
         {
@@ -475,7 +475,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is of Boolean Kind
+        /// determines if type is of Boolean Kind
         /// </summary>
         internal static bool IsBooleanType(TypeUsage type)
         {
@@ -483,7 +483,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a primitive/scalar type.
+        /// determines if type is a primitive/scalar type.
         /// </summary>
         internal static bool IsPrimitiveType(TypeUsage type)
         {
@@ -491,7 +491,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a primitive type of given primitiveTypeKind
+        /// determines if type is a primitive type of given primitiveTypeKind
         /// </summary>
         internal static bool IsPrimitiveType(TypeUsage type, PrimitiveTypeKind primitiveTypeKind)
         {
@@ -504,7 +504,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a RowType
+        /// determines if type is a RowType
         /// </summary>
         internal static bool IsRowType(TypeUsage type)
         {
@@ -512,7 +512,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a ReferenceType
+        /// determines if type is a ReferenceType
         /// </summary>
         internal static bool IsReferenceType(TypeUsage type)
         {
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a spatial type
+        /// determines if type is a spatial type
         /// </summary>
         internal static bool IsSpatialType(TypeUsage type)
         {
@@ -528,7 +528,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a strong spatial type (i.e., a spatial type, but not one of the two spatial union types)
+        /// determines if type is a strong spatial type (i.e., a spatial type, but not one of the two spatial union types)
         /// </summary>
         internal static bool IsStrongSpatialType(TypeUsage type)
         {
@@ -536,7 +536,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is a structural type, ie, EntityType, ComplexType, RowType or ReferenceType.
+        /// determines if type is a structural type, ie, EntityType, ComplexType, RowType or ReferenceType.
         /// </summary>
         internal static bool IsStructuralType(TypeUsage type)
         {
@@ -544,7 +544,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if edmMember is part of the key of it's defining type.
+        /// determines if edmMember is part of the key of it's defining type.
         /// </summary>
         internal static bool IsPartOfKey(EdmMember edmMember)
         {
@@ -567,7 +567,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if type is Nullable.
+        /// determines if type is Nullable.
         /// </summary>
         internal static bool IsNullable(TypeUsage type)
         {
@@ -580,7 +580,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if edmMember is Nullable.
+        /// determines if edmMember is Nullable.
         /// </summary>
         internal static bool IsNullable(EdmMember edmMember)
         {
@@ -588,7 +588,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     determines if given type is equal-comparable.
+        /// determines if given type is equal-comparable.
         /// </summary>
         /// <returns> true if equal-comparable, false otherwise </returns>
         internal static bool IsEqualComparable(TypeUsage type)
@@ -597,14 +597,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if type1 is equal-comparable to type2.
-        ///     in order for type1 and type2 to be equal-comparable, they must be
-        ///     individualy equal-comparable and have a common super-type.
+        /// Determines if type1 is equal-comparable to type2.
+        /// in order for type1 and type2 to be equal-comparable, they must be
+        /// individualy equal-comparable and have a common super-type.
         /// </summary>
         /// <param name="type1"> an instance of a TypeUsage </param>
         /// <param name="type2"> an instance of a TypeUsage </param>
         /// <returns>
-        ///     <c>true</c> if type1 and type2 are equal-comparable, <c>false</c> otherwise
+        /// <c>true</c> if type1 and type2 are equal-comparable, <c>false</c> otherwise
         /// </returns>
         internal static bool IsEqualComparableTo(TypeUsage type1, TypeUsage type2)
         {
@@ -617,7 +617,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if given type is order-comparable
+        /// Determines if given type is order-comparable
         /// </summary>
         internal static bool IsOrderComparable(TypeUsage type)
         {
@@ -633,7 +633,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="type1"> an instance of a TypeUsage </param>
         /// <param name="type2"> an instance of a TypeUsage </param>
         /// <returns>
-        ///     <c>true</c> if type1 and type2 are order-comparable, <c>false</c> otherwise
+        /// <c>true</c> if type1 and type2 are order-comparable, <c>false</c> otherwise
         /// </returns>
         internal static bool IsOrderComparableTo(TypeUsage type1, TypeUsage type2)
         {
@@ -646,7 +646,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Removes facets that are not type constraints.
+        /// Removes facets that are not type constraints.
         /// </summary>
         internal static TypeUsage ForgetConstraints(TypeUsage type)
         {
@@ -944,8 +944,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification",
-        ///     section 7 - Comparison and Dependent Operations for details.
+        /// Determines if the given edmType is equal comparable. Consult "EntitySql Language Specification",
+        /// section 7 - Comparison and Dependent Operations for details.
         /// </summary>
         /// <param name="edmType"> an instance of an EdmType </param>
         /// <returns> true if edmType is equal-comparable, false otherwise </returns>
@@ -1064,9 +1064,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Computes the closure of common super types of the set of predefined edm primitive types
-        ///     This is done only once and cached as opposed to previous implementation that was computing
-        ///     this for every new pair of types.
+        /// Computes the closure of common super types of the set of predefined edm primitive types
+        /// This is done only once and cached as opposed to previous implementation that was computing
+        /// this for every new pair of types.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1814:PreferJaggedArraysOverMultidimensional", MessageId = "Body")]
         private static void ComputeCommonTypeClosure()
@@ -1124,7 +1124,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     returns the intersection of types.
+        /// returns the intersection of types.
         /// </summary>
         private static objectModel.ReadOnlyCollection<PrimitiveType> Intersect(IList<PrimitiveType> types1, IList<PrimitiveType> types2)
         {
@@ -1146,7 +1146,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns the list of common super types of two primitive types.
+        /// Returns the list of common super types of two primitive types.
         /// </summary>
         private static objectModel.ReadOnlyCollection<PrimitiveType> GetPrimitiveCommonSuperTypes(
             PrimitiveType primitiveType1, PrimitiveType primitiveType2)

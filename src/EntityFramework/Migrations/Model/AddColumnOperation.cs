@@ -6,7 +6,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a column being added to a table.
+    /// Represents a column being added to a table.
     /// </summary>
     public class AddColumnOperation : MigrationOperation
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Model
         private readonly ColumnModel _column;
 
         /// <summary>
-        ///     Initializes a new instance of the AddColumnOperation class.
+        /// Initializes a new instance of the AddColumnOperation class.
         /// </summary>
         /// <param name="table"> The name of the table the column should be added to. </param>
         /// <param name="column"> Details of the column being added. </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the name of the table the column should be added to.
+        /// Gets the name of the table the column should be added to.
         /// </summary>
         public string Table
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the details of the column being added.
+        /// Gets the details of the column being added.
         /// </summary>
         public ColumnModel Column
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that represents dropping the added column.
+        /// Gets an operation that represents dropping the added column.
         /// </summary>
         public override MigrationOperation Inverse
         {

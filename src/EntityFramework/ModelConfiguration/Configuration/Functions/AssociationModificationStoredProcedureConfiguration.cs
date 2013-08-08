@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to modify a relationship.
+    /// Allows configuration to be performed for a stored procedure that is used to modify a relationship.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the relationship is being configured from.</typeparam>
     public class AssociationModificationStoredProcedureConfiguration<TEntityType>

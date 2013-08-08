@@ -15,12 +15,12 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
     internal class EdmProviderManifest : DbProviderManifest
     {
         /// <summary>
-        ///     The ConcurrencyMode Facet Name
+        /// The ConcurrencyMode Facet Name
         /// </summary>
         internal const string ConcurrencyModeFacetName = "ConcurrencyMode";
 
         /// <summary>
-        ///     The StoreGeneratedPattern Facet Name
+        /// The StoreGeneratedPattern Facet Name
         /// </summary>
         internal const string StoreGeneratedPatternFacetName = "StoreGeneratedPattern";
 
@@ -35,14 +35,14 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         internal const byte MaximumDateTimePrecision = Byte.MaxValue;
 
         /// <summary>
-        ///     A private constructor to prevent other places from instantiating this class
+        /// A private constructor to prevent other places from instantiating this class
         /// </summary>
         private EdmProviderManifest()
         {
         }
 
         /// <summary>
-        ///     Gets the EDM provider manifest singleton instance
+        /// Gets the EDM provider manifest singleton instance
         /// </summary>
         internal static EdmProviderManifest Instance
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the namespace used by this provider manifest
+        /// Returns the namespace used by this provider manifest
         /// </summary>
         public override string NamespaceName
         {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Store version hint
+        /// Store version hint
         /// </summary>
         internal virtual string Token
         {
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the list of all the canonical functions
+        /// Returns the list of all the canonical functions
         /// </summary>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns all the FacetDescriptions for a particular type
+        /// Returns all the FacetDescriptions for a particular type
         /// </summary>
         /// <param name="type"> the type to return FacetDescriptions for. </param>
         /// <returns> The FacetDescriptions for the type given. </returns>
@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns a primitive type from this manifest having the specified primitive type kind
+        /// Returns a primitive type from this manifest having the specified primitive type kind
         /// </summary>
         /// <param name="primitiveTypeKind"> The value specifying the kind of primitive type to return </param>
         /// <returns> A primitive type having the given primitive type kind </returns>
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Boostrapping all the primitive types for the EDM Provider Manifest
+        /// Boostrapping all the primitive types for the EDM Provider Manifest
         /// </summary>
         private void InitializePrimitiveTypes()
         {
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Initialize all the primitive type with the given primitive type kind and name
+        /// Initialize all the primitive type with the given primitive type kind and name
         /// </summary>
         /// <param name="primitiveType"> The primitive type to initialize </param>
         /// <param name="primitiveTypeKind"> Type of the primitive type which is getting initialized </param>
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Boostrapping all the facet descriptions for the EDM Provider Manifest
+        /// Boostrapping all the facet descriptions for the EDM Provider Manifest
         /// </summary>
         private void InitializeFacetDescriptions()
         {
@@ -541,7 +541,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Boostrapping all the canonical functions for the EDM Provider Manifest
+        /// Boostrapping all the canonical functions for the EDM Provider Manifest
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
@@ -896,7 +896,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns the list of super-types for the given primitiveType
+        /// Returns the list of super-types for the given primitiveType
         /// </summary>
         internal ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
         {
@@ -906,7 +906,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Initializes Promotion Type relation
+        /// Initializes Promotion Type relation
         /// </summary>
         private void InitializePromotableTypes()
         {
@@ -1038,7 +1038,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Initializes Canonical Model Types
+        /// Initializes Canonical Model Types
         /// </summary>
         private void InitializeCanonicalModelTypes()
         {
@@ -1057,7 +1057,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Returns all the primitive types supported by the provider manifest
+        /// Returns all the primitive types supported by the provider manifest
         /// </summary>
         /// <returns> A collection of primitive types </returns>
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
@@ -1095,8 +1095,8 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         }
 
         /// <summary>
-        ///     Providers should override this to return information specific to their provider.
-        ///     This method should never return null.
+        /// Providers should override this to return information specific to their provider.
+        /// This method should never return null.
         /// </summary>
         /// <param name="informationType"> The name of the information to be retrieved. </param>
         /// <returns> An XmlReader at the begining of the information requested. </returns>

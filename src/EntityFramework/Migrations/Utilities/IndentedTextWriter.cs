@@ -8,21 +8,21 @@ namespace System.Data.Entity.Migrations.Utilities
     using System.Text;
 
     /// <summary>
-    ///     The same as <see cref="System.CodeDom.Compiler.IndentedTextWriter" /> but works in partial trust and adds explicit caching of
-    ///     generated indentation string and also recognizes writing a string that contains just \r\n or \n as a write-line to ensure
-    ///     we indent the next line properly.
+    /// The same as <see cref="System.CodeDom.Compiler.IndentedTextWriter" /> but works in partial trust and adds explicit caching of
+    /// generated indentation string and also recognizes writing a string that contains just \r\n or \n as a write-line to ensure
+    /// we indent the next line properly.
     /// </summary>
     public class IndentedTextWriter : TextWriter
     {
         /// <summary>
-        ///     Specifies the default tab string. This field is constant.
+        /// Specifies the default tab string. This field is constant.
         /// </summary>
         public const string DefaultTabString = "    ";
 
         /// <summary>
-        ///     Specifies the culture what will be used by the underlying TextWriter. This static property is read-only.
-        ///     Note that any writer passed to one of the constructors of <see cref="IndentedTextWriter"/> must use this
-        ///     same culture. The culture is <see cref="CultureInfo.InvariantCulture"/>.
+        /// Specifies the culture what will be used by the underlying TextWriter. This static property is read-only.
+        /// Note that any writer passed to one of the constructors of <see cref="IndentedTextWriter"/> must use this
+        /// same culture. The culture is <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "CultureInfo.InvariantCulture is readonly")]
@@ -36,10 +36,10 @@ namespace System.Data.Entity.Migrations.Utilities
         private readonly string[] _cachedIndents = new string[32];
 
         /// <summary>
-        ///     Gets the encoding for the text writer to use.
+        /// Gets the encoding for the text writer to use.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Text.Encoding" /> that indicates the encoding for the text writer to use.
+        /// An <see cref="T:System.Text.Encoding" /> that indicates the encoding for the text writer to use.
         /// </returns>
         public override Encoding Encoding
         {
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Gets or sets the new line character to use.
+        /// Gets or sets the new line character to use.
         /// </summary>
         /// <returns> The new line character to use. </returns>
         public override string NewLine
@@ -57,7 +57,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Gets or sets the number of spaces to indent.
+        /// Gets or sets the number of spaces to indent.
         /// </summary>
         /// <returns> The number of spaces to indent. </returns>
         public int Indent
@@ -74,10 +74,10 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.IO.TextWriter" /> to use.
+        /// Gets the <see cref="T:System.IO.TextWriter" /> to use.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.IO.TextWriter" /> to use.
+        /// The <see cref="T:System.IO.TextWriter" /> to use.
         /// </returns>
         public TextWriter InnerWriter
         {
@@ -85,12 +85,12 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and default tab string.
-        ///     Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
-        ///     <see cref="Culture"/> property.
+        /// Initializes a new instance of the IndentedTextWriter class using the specified text writer and default tab string.
+        /// Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
+        /// <see cref="Culture"/> property.
         /// </summary>
         /// <param name="writer">
-        ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
+        /// The <see cref="T:System.IO.TextWriter" /> to use for output.
         /// </param>
         public IndentedTextWriter(TextWriter writer)
             : this(writer, DefaultTabString)
@@ -98,12 +98,12 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Initializes a new instance of the IndentedTextWriter class using the specified text writer and tab string.
-        ///     Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
-        ///     <see cref="Culture"/> property.
+        /// Initializes a new instance of the IndentedTextWriter class using the specified text writer and tab string.
+        /// Note that the writer passed to this constructor must use the <see cref="CultureInfo"/> specified by the
+        /// <see cref="Culture"/> property.
         /// </summary>
         /// <param name="writer">
-        ///     The <see cref="T:System.IO.TextWriter" /> to use for output.
+        /// The <see cref="T:System.IO.TextWriter" /> to use for output.
         /// </param>
         /// <param name="tabString"> The tab string to use for indentation. </param>
         [SuppressMessage("Microsoft.Naming", "CA1720:IdentifiersShouldNotContainTypeNames", MessageId = "string")]
@@ -117,7 +117,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Closes the document being written to.
+        /// Closes the document being written to.
         /// </summary>
         public override void Close()
         {
@@ -125,7 +125,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Flushes the stream.
+        /// Flushes the stream.
         /// </summary>
         public override void Flush()
         {
@@ -133,10 +133,10 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Outputs the tab string once for each level of indentation according to the
-        ///     <see
-        ///         cref="P:System.CodeDom.Compiler.IndentedTextWriter.Indent" />
-        ///     property.
+        /// Outputs the tab string once for each level of indentation according to the
+        /// <see
+        ///     cref="P:System.CodeDom.Compiler.IndentedTextWriter.Indent" />
+        /// property.
         /// </summary>
         protected virtual void OutputTabs()
         {
@@ -150,11 +150,11 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Builds a string representing the current indentation level for a new line.
+        /// Builds a string representing the current indentation level for a new line.
         /// </summary>
         /// <remarks>
-        ///     Does NOT check if tabs are currently pending, just returns a string that would be
-        ///     useful in replacing embedded <see cref="System.Environment.NewLine">newline characters</see>.
+        /// Does NOT check if tabs are currently pending, just returns a string that would be
+        /// useful in replacing embedded <see cref="System.Environment.NewLine">newline characters</see>.
         /// </remarks>
         /// <returns>An empty string, or a string that contains .Indent level's worth of specified tab-string.</returns>
         public virtual string CurrentIndentation()
@@ -201,7 +201,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the specified string to the text stream.
+        /// Writes the specified string to the text stream.
         /// </summary>
         /// <param name="value"> The string to write. </param>
         public override void Write(string value)
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Boolean value to the text stream.
+        /// Writes the text representation of a Boolean value to the text stream.
         /// </summary>
         /// <param name="value"> The Boolean value to write. </param>
         public override void Write(bool value)
@@ -229,7 +229,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a character to the text stream.
+        /// Writes a character to the text stream.
         /// </summary>
         /// <param name="value"> The character to write. </param>
         public override void Write(char value)
@@ -239,7 +239,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a character array to the text stream.
+        /// Writes a character array to the text stream.
         /// </summary>
         /// <param name="buffer"> The character array to write. </param>
         public override void Write(char[] buffer)
@@ -249,7 +249,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a subarray of characters to the text stream.
+        /// Writes a subarray of characters to the text stream.
         /// </summary>
         /// <param name="buffer"> The character array to write data from. </param>
         /// <param name="index"> Starting index in the buffer. </param>
@@ -261,7 +261,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Double to the text stream.
+        /// Writes the text representation of a Double to the text stream.
         /// </summary>
         /// <param name="value"> The double to write. </param>
         public override void Write(double value)
@@ -271,7 +271,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Single to the text stream.
+        /// Writes the text representation of a Single to the text stream.
         /// </summary>
         /// <param name="value"> The single to write. </param>
         public override void Write(float value)
@@ -281,7 +281,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an integer to the text stream.
+        /// Writes the text representation of an integer to the text stream.
         /// </summary>
         /// <param name="value"> The integer to write. </param>
         public override void Write(int value)
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an 8-byte integer to the text stream.
+        /// Writes the text representation of an 8-byte integer to the text stream.
         /// </summary>
         /// <param name="value"> The 8-byte integer to write. </param>
         public override void Write(long value)
@@ -301,7 +301,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an object to the text stream.
+        /// Writes the text representation of an object to the text stream.
         /// </summary>
         /// <param name="value"> The object to write. </param>
         public override void Write(object value)
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, using the same semantics as specified.
+        /// Writes out a formatted string, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string. </param>
         /// <param name="arg0"> The object to write into the formatted string. </param>
@@ -322,7 +322,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, using the same semantics as specified.
+        /// Writes out a formatted string, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string to use. </param>
         /// <param name="arg0"> The first object to write into the formatted string. </param>
@@ -334,7 +334,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, using the same semantics as specified.
+        /// Writes out a formatted string, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string to use. </param>
         /// <param name="arg"> The argument array to output. </param>
@@ -345,7 +345,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the specified string to a line without tabs.
+        /// Writes the specified string to a line without tabs.
         /// </summary>
         /// <param name="value"> The string to write. </param>
         public void WriteLineNoTabs(string value)
@@ -354,7 +354,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the specified string, followed by a line terminator, to the text stream.
+        /// Writes the specified string, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The string to write. </param>
         public override void WriteLine(string value)
@@ -365,7 +365,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a line terminator.
+        /// Writes a line terminator.
         /// </summary>
         public override void WriteLine()
         {
@@ -375,7 +375,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Boolean, followed by a line terminator, to the text stream.
+        /// Writes the text representation of a Boolean, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The Boolean to write. </param>
         public override void WriteLine(bool value)
@@ -386,7 +386,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a character, followed by a line terminator, to the text stream.
+        /// Writes a character, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The character to write. </param>
         public override void WriteLine(char value)
@@ -397,7 +397,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a character array, followed by a line terminator, to the text stream.
+        /// Writes a character array, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="buffer"> The character array to write. </param>
         public override void WriteLine(char[] buffer)
@@ -408,7 +408,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes a subarray of characters, followed by a line terminator, to the text stream.
+        /// Writes a subarray of characters, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="buffer"> The character array to write data from. </param>
         /// <param name="index"> Starting index in the buffer. </param>
@@ -421,7 +421,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Double, followed by a line terminator, to the text stream.
+        /// Writes the text representation of a Double, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The double to write. </param>
         public override void WriteLine(double value)
@@ -432,7 +432,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a Single, followed by a line terminator, to the text stream.
+        /// Writes the text representation of a Single, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The single to write. </param>
         public override void WriteLine(float value)
@@ -443,7 +443,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an integer, followed by a line terminator, to the text stream.
+        /// Writes the text representation of an integer, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The integer to write. </param>
         public override void WriteLine(int value)
@@ -454,7 +454,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an 8-byte integer, followed by a line terminator, to the text stream.
+        /// Writes the text representation of an 8-byte integer, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The 8-byte integer to write. </param>
         public override void WriteLine(long value)
@@ -465,7 +465,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of an object, followed by a line terminator, to the text stream.
+        /// Writes the text representation of an object, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> The object to write. </param>
         public override void WriteLine(object value)
@@ -476,7 +476,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+        /// Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string. </param>
         /// <param name="arg0"> The object to write into the formatted string. </param>
@@ -488,7 +488,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+        /// Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string to use. </param>
         /// <param name="arg0"> The first object to write into the formatted string. </param>
@@ -501,7 +501,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
+        /// Writes out a formatted string, followed by a line terminator, using the same semantics as specified.
         /// </summary>
         /// <param name="format"> The formatting string to use. </param>
         /// <param name="arg"> The argument array to output. </param>
@@ -513,7 +513,7 @@ namespace System.Data.Entity.Migrations.Utilities
         }
 
         /// <summary>
-        ///     Writes the text representation of a UInt32, followed by a line terminator, to the text stream.
+        /// Writes the text representation of a UInt32, followed by a line terminator, to the text stream.
         /// </summary>
         /// <param name="value"> A UInt32 to output. </param>
         [CLSCompliant(false)]

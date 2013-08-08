@@ -35,7 +35,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         };
 
         /// <summary>
-        ///     Exposed internally for testing.
+        /// Exposed internally for testing.
         /// </summary>
         public class ModelMetadata
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     For testing.
+        /// For testing.
         /// </summary>
         public IEnumerable<MigrationOperation> Diff(
             ModelMetadata source,

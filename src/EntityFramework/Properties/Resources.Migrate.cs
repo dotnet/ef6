@@ -8,13 +8,13 @@ namespace System.Data.Entity.Migrations.Console.Resources
     using System.Threading;
 
     /// <summary>
-    ///     Strongly-typed and parameterized string resources.
+    /// Strongly-typed and parameterized string resources.
     /// </summary>
     [GeneratedCode("Resources.Migrate.tt", "1.0.0.0")]
     internal static class Strings
     {
         /// <summary>
-        ///     A string like "Code First Migrations Command Line Utility"
+        /// A string like "Code First Migrations Command Line Utility"
         /// </summary>
         internal static string MigrateTitle
         {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Applies any pending migrations to the database."
+        /// A string like "Applies any pending migrations to the database."
         /// </summary>
         internal static string MigrateDescription
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "ERROR: {0}"
+        /// A string like "ERROR: {0}"
         /// </summary>
         internal static string ErrorMessage(object p0)
         {
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "WARNING: {0}"
+        /// A string like "WARNING: {0}"
         /// </summary>
         internal static string WarningMessage(object p0)
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "VERBOSE: {0}"
+        /// A string like "VERBOSE: {0}"
         /// </summary>
         internal static string VerboseMessage(object p0)
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Duplicate Command "{0}""
+        /// A string like "Duplicate Command "{0}""
         /// </summary>
         internal static string DuplicateCommand(object p0)
         {
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Duplicate Parameter Index [{0}] on Property "{1}""
+        /// A string like "Duplicate Parameter Index [{0}] on Property "{1}""
         /// </summary>
         internal static string DuplicateParameterIndex(object p0, object p1)
         {
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Out of order parameter "{0}" should have be at parameter index {1} but was found at {2}"
+        /// A string like "Out of order parameter "{0}" should have be at parameter index {1} but was found at {2}"
         /// </summary>
         internal static string ParameterOutOfOrder(object p0, object p1, object p2)
         {
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like ""{0}" is not a valid choice, valid keys are "{1}""
+        /// A string like ""{0}" is not a valid choice, valid keys are "{1}""
         /// </summary>
         internal static string InvalidKey(object p0, object p1)
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Press any key to continue..."
+        /// A string like "Press any key to continue..."
         /// </summary>
         internal static string PressAnyKey
         {
@@ -94,7 +94,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Unsupported property type {0}"
+        /// A string like "Unsupported property type {0}"
         /// </summary>
         internal static string UnsupportedPropertyType(object p0)
         {
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Invalid ParameterIndex value on property "{0}""
+        /// A string like "Invalid ParameterIndex value on property "{0}""
         /// </summary>
         internal static string InvalidPropertyParameterIndexValue(object p0)
         {
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "assembly"
+        /// A string like "assembly"
         /// </summary>
         internal static string AssemblyNameArgument
         {
@@ -118,7 +118,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "contextAssembly"
+        /// A string like "contextAssembly"
         /// </summary>
         internal static string ContextAssemblyNameArgument
         {
@@ -126,7 +126,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "configurationType"
+        /// A string like "configurationType"
         /// </summary>
         internal static string ConfigurationTypeNameArgument
         {
@@ -134,7 +134,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the name of the assembly that contains the migrations configuration type."
+        /// A string like "Specifies the name of the assembly that contains the migrations configuration type."
         /// </summary>
         internal static string AssemblyNameDescription
         {
@@ -142,7 +142,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the name of the assembly that contains the DbContext type if different from the assembly that contains the migrations configuration type."
+        /// A string like "Specifies the name of the assembly that contains the DbContext type if different from the assembly that contains the migrations configuration type."
         /// </summary>
         internal static string ContextAssemblyNameDescription
         {
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the name of the migrations configuration type. If omitted, Code First Migrations will attempt to locate a single migrations configuration type in the specified assembly."
+        /// A string like "Specifies the name of the migrations configuration type. If omitted, Code First Migrations will attempt to locate a single migrations configuration type in the specified assembly."
         /// </summary>
         internal static string ConfigurationTypeNameDescription
         {
@@ -158,7 +158,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the name of a particular migration to update the database to. If omitted, the current model will be used."
+        /// A string like "Specifies the name of a particular migration to update the database to. If omitted, the current model will be used."
         /// </summary>
         internal static string TargetMigrationDescription
         {
@@ -166,7 +166,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the working directory of your application."
+        /// A string like "Specifies the working directory of your application."
         /// </summary>
         internal static string WorkingDirectoryDescription
         {
@@ -174,7 +174,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the Web.config or App.config file of your application."
+        /// A string like "Specifies the Web.config or App.config file of your application."
         /// </summary>
         internal static string ConfigurationFileDescription
         {
@@ -182,7 +182,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the directory to use when resolving connection strings containing the |DataDirectory| substitution string."
+        /// A string like "Specifies the directory to use when resolving connection strings containing the |DataDirectory| substitution string."
         /// </summary>
         internal static string DataDirectoryDescription
         {
@@ -190,7 +190,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the name of the connection string to use from the specified configuration file. If omitted, the context's default connection will be used."
+        /// A string like "Specifies the name of the connection string to use from the specified configuration file. If omitted, the context's default connection will be used."
         /// </summary>
         internal static string ConnectionStringNameDescription
         {
@@ -198,7 +198,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the connection string to use. If omitted, the context's default connection will be used."
+        /// A string like "Specifies the connection string to use. If omitted, the context's default connection will be used."
         /// </summary>
         internal static string ConnectionStringDescription
         {
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Specifies the provider invariant name of the connection string."
+        /// A string like "Specifies the provider invariant name of the connection string."
         /// </summary>
         internal static string ConnectionProviderNameDescription
         {
@@ -214,7 +214,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Indicates that automatic migrations which might incur data loss should be allowed."
+        /// A string like "Indicates that automatic migrations which might incur data loss should be allowed."
         /// </summary>
         internal static string ForceDescription
         {
@@ -222,7 +222,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Indicates that the executing SQL and additional diagnostic information should be output to the console window."
+        /// A string like "Indicates that the executing SQL and additional diagnostic information should be output to the console window."
         /// </summary>
         internal static string VerboseDescription
         {
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Display this help message."
+        /// A string like "Display this help message."
         /// </summary>
         internal static string HelpDescription
         {
@@ -238,7 +238,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Only one of '{0}' and '{1}' can be assigned to."
+        /// A string like "Only one of '{0}' and '{1}' can be assigned to."
         /// </summary>
         internal static string AmbiguousAttributeValues(object p0, object p1)
         {
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Only one of /connectionStringName or /connectionString can be specified."
+        /// A string like "Only one of /connectionStringName or /connectionString can be specified."
         /// </summary>
         internal static string AmbiguousConnectionString
         {
@@ -254,7 +254,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "/connectionString and /connectionProviderName must be specified together."
+        /// A string like "/connectionString and /connectionProviderName must be specified together."
         /// </summary>
         internal static string MissingConnectionInfo
         {
@@ -262,7 +262,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Invalid ParameterIndex value"
+        /// A string like "Invalid ParameterIndex value"
         /// </summary>
         internal static string InvalidParameterIndexValue
         {
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Invalid argument "{0}" at parameter index {1} in command line "{2}""
+        /// A string like "Invalid argument "{0}" at parameter index {1} in command line "{2}""
         /// </summary>
         internal static string InvalidCommandLineArgument(object p0, object p1, object p2)
         {
@@ -278,7 +278,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Invalid command "{0}" at index {1} in command line "{2}""
+        /// A string like "Invalid command "{0}" at index {1} in command line "{2}""
         /// </summary>
         internal static string InvalidCommandLineCommand(object p0, object p1, object p2)
         {
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     A string like "Missing required parameter {0} "{1}" in command line "{2}""
+        /// A string like "Missing required parameter {0} "{1}" in command line "{2}""
         /// </summary>
         internal static string MissingCommandLineParameter(object p0, object p1, object p2)
         {
@@ -295,13 +295,13 @@ namespace System.Data.Entity.Migrations.Console.Resources
     }
 
     /// <summary>
-    ///     Strongly-typed and parameterized exception factory.
+    /// Strongly-typed and parameterized exception factory.
     /// </summary>
     [GeneratedCode("Resources.Migrate.tt", "1.0.0.0")]
     internal static class Error
     {
         /// <summary>
-        ///     InvalidOperationException with message like "Only one of '{0}' and '{1}' can be assigned to."
+        /// InvalidOperationException with message like "Only one of '{0}' and '{1}' can be assigned to."
         /// </summary>
         internal static Exception AmbiguousAttributeValues(object p0, object p1)
         {
@@ -309,7 +309,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     CmdLine.CommandLineException with message like "Only one of /connectionStringName or /connectionString can be specified."
+        /// CmdLine.CommandLineException with message like "Only one of /connectionStringName or /connectionString can be specified."
         /// </summary>
         internal static Exception AmbiguousConnectionString()
         {
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     CmdLine.CommandLineException with message like "/connectionString and /connectionProviderName must be specified together."
+        /// CmdLine.CommandLineException with message like "/connectionString and /connectionProviderName must be specified together."
         /// </summary>
         internal static Exception MissingConnectionInfo()
         {
@@ -325,7 +325,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     CmdLine.CommandLineException with message like "Invalid ParameterIndex value"
+        /// CmdLine.CommandLineException with message like "Invalid ParameterIndex value"
         /// </summary>
         internal static Exception InvalidParameterIndexValue()
         {
@@ -333,7 +333,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+        /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
         {
@@ -341,7 +341,7 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
+        /// The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
         /// </summary>
         internal static Exception NotImplemented()
         {
@@ -349,8 +349,8 @@ namespace System.Data.Entity.Migrations.Console.Resources
         }
 
         /// <summary>
-        ///     The exception that is thrown when an invoked method is not supported, or when there is an attempt to
-        ///     read, seek, or write to a stream that does not support the invoked functionality.
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to
+        /// read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
         internal static Exception NotSupported()
         {
@@ -359,8 +359,8 @@ namespace System.Data.Entity.Migrations.Console.Resources
     }
 
     /// <summary>
-    ///     AutoGenerated resource class. Usage:
-    ///     string s = EntityRes.GetString(EntityRes.MyIdenfitier);
+    /// AutoGenerated resource class. Usage:
+    /// string s = EntityRes.GetString(EntityRes.MyIdenfitier);
     /// </summary>
     [GeneratedCode("Resources.Migrate.tt", "1.0.0.0")]
     internal sealed class EntityRes

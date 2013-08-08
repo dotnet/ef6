@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Globalization;
 
     /// <summary>
-    ///     Common base class for operations affecting indexes.
+    /// Common base class for operations affecting indexes.
     /// </summary>
     public abstract class IndexOperation : MigrationOperation
     {
@@ -17,7 +17,7 @@ namespace System.Data.Entity.Migrations.Model
         private string _name;
 
         /// <summary>
-        ///     Initializes a new instance of the IndexOperation class.
+        /// Initializes a new instance of the IndexOperation class.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the table the index belongs to.
+        /// Gets or sets the table the index belongs to.
         /// </summary>
         public string Table
         {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets the columns that are indexed.
+        /// Gets the columns that are indexed.
         /// </summary>
         public IList<string> Columns
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets a value indicating if a specific name has been supplied for this index.
+        /// Gets a value indicating if a specific name has been supplied for this index.
         /// </summary>
         public bool HasDefaultName
         {
@@ -57,8 +57,8 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets the name of this index.
-        ///     If no name is supplied, a default name will be calculated.
+        /// Gets or sets the name of this index.
+        /// If no name is supplied, a default name will be calculated.
         /// </summary>
         public string Name
         {

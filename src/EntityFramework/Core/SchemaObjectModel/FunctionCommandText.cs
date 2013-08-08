@@ -7,14 +7,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an CommandText element.
+    /// Represents an CommandText element.
     /// </summary>
     internal sealed class FunctionCommandText : SchemaElement
     {
         private string _commandText;
 
         /// <summary>
-        ///     Constructs an FunctionCommandText
+        /// Constructs an FunctionCommandText
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public FunctionCommandText(Function parentElement)

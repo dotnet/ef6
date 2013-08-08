@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Xml;
 
     /// <summary>
-    ///     An implementation of ExpressionDumper that produces an XML string.
+    /// An implementation of ExpressionDumper that produces an XML string.
     /// </summary>
     internal class XmlExpressionDumper : ExpressionDumper
     {

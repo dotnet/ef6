@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a mapping from a model function import to a store composable or non-composable function.
+    /// Represents a mapping from a model function import to a store composable or non-composable function.
     /// </summary>
     internal abstract class FunctionImportMapping
     {
@@ -20,12 +20,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets model function (or source of the mapping)
+        /// Gets model function (or source of the mapping)
         /// </summary>
         public EdmFunction FunctionImport { get; private set; }
 
         /// <summary>
-        ///     Gets store function (or target of the mapping)
+        /// Gets store function (or target of the mapping)
         /// </summary>
         public EdmFunction TargetFunction { get; private set; }
     }

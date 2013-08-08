@@ -8,7 +8,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Handles copying of operators
+    /// Handles copying of operators
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class OpCopier : BasicOpVisitorOfNode
@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Make a copy of the current node. Also return an ordered list of the new
-        ///     Vars corresponding to the vars in "varList"
+        /// Make a copy of the current node. Also return an ordered list of the new
+        /// Vars corresponding to the vars in "varList"
         /// </summary>
         /// <param name="cmd"> current command </param>
         /// <param name="node"> the node to clone </param>
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region Constructors (private)
 
         /// <summary>
-        ///     Constructor. Allows for cloning of nodes within the same command
+        /// Constructor. Allows for cloning of nodes within the same command
         /// </summary>
         /// <param name="cmd"> The command </param>
         protected OpCopier(Command cmd)
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Constructor. Allows for cloning of nodes across commands
+        /// Constructor. Allows for cloning of nodes across commands
         /// </summary>
         /// <param name="destCommand"> The Command to which Nodes to be cloned must belong </param>
         /// <param name="sourceCommand"> The Command to which cloned Nodes will belong </param>
@@ -100,8 +100,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region Private State Management
 
         /// <summary>
-        ///     Get the "cloned" var for a given Var.
-        ///     If no cloned var exists, return the input Var itself
+        /// Get the "cloned" var for a given Var.
+        /// If no cloned var exists, return the input Var itself
         /// </summary>
         /// <param name="v"> The Var for which the cloned Var should be retrieved </param>
         /// <returns> The cloned Var that corresponds to the specified Var if this OpCopier is cloning across two different Commands; otherwise it is safe to return the specified Var itself </returns>
@@ -133,8 +133,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Set the "cloned" var for a given Var
-        ///     WARNING: If a mapping already exists, an exception is raised
+        /// Set the "cloned" var for a given Var
+        /// WARNING: If a mapping already exists, an exception is raised
         /// </summary>
         /// <param name="v"> The original Var </param>
         /// <param name="mappedVar"> The cloned Var </param>
@@ -144,7 +144,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Maps columns of an existing table to those of the cloned table
+        /// Maps columns of an existing table to those of the cloned table
         /// </summary>
         /// <param name="newTable"> The original Table </param>
         /// <param name="oldTable"> The cloned Table </param>
@@ -159,8 +159,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Produce the "mapped" Vars for each Var in the input sequence, while
-        ///     preserving the original order
+        /// Produce the "mapped" Vars for each Var in the input sequence, while
+        /// preserving the original order
         /// </summary>
         /// <param name="vars"> input var sequence </param>
         /// <returns> output mapped vars </returns>
@@ -174,8 +174,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Create a mapped varvec. A new varvec that "maps" all the Vars from
-        ///     the original Varvec
+        /// Create a mapped varvec. A new varvec that "maps" all the Vars from
+        /// the original Varvec
         /// </summary>
         /// <param name="vars"> the varvec to clone </param>
         /// <returns> a mapped varvec </returns>
@@ -186,9 +186,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Create a mapped copy of the input VarList - each var from the input varlist
-        ///     is represented by its mapped var (and in exactly the same order) in the output
-        ///     varlist
+        /// Create a mapped copy of the input VarList - each var from the input varlist
+        /// is represented by its mapped var (and in exactly the same order) in the output
+        /// varlist
         /// </summary>
         /// <param name="varList"> varList to map </param>
         /// <returns> mapped varlist </returns>
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a sortkey
+        /// Copies a sortkey
         /// </summary>
         /// <param name="sortKey"> The SortKey to clone </param>
         /// <returns> A new SortKey that is a clone of sortKey </returns>
@@ -213,7 +213,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a list of Sortkeys
+        /// Copies a list of Sortkeys
         /// </summary>
         /// <param name="sortKeys"> The list of SortKeys </param>
         /// <returns> A new list containing clones of the specified SortKeys </returns>
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region Visitor Helpers
 
         /// <summary>
-        ///     Simple wrapper for all copy operations
+        /// Simple wrapper for all copy operations
         /// </summary>
         /// <param name="n"> The Node to copy </param>
         /// <returns> A new Node that is a copy of the specified Node </returns>
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies all the Child Nodes of the specified Node
+        /// Copies all the Child Nodes of the specified Node
         /// </summary>
         /// <param name="n"> The Node for which the child Nodes should be copied </param>
         /// <returns> A new list containing copies of the specified Node's children </returns>
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Creates a new Node with the specified Op as its Op and the result of visiting the specified Node's children as its children
+        /// Creates a new Node with the specified Op as its Op and the result of visiting the specified Node's children as its children
         /// </summary>
         /// <param name="op"> The Op that the new Node should reference </param>
         /// <param name="original"> The Node for which the children should be visited and the resulting cloned Nodes used as the children of the new Node returned by this method </param>
@@ -272,7 +272,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region IOpVisitor<Node> Members
 
         /// <summary>
-        ///     Default Visitor pattern method for unrecognized Ops
+        /// Default Visitor pattern method for unrecognized Ops
         /// </summary>
         /// <param name="op"> The unrecognized Op </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -286,7 +286,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region ScalarOps
 
         /// <summary>
-        ///     Copies a ConstantOp
+        /// Copies a ConstantOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a NullOp
+        /// Copies a NullOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -309,7 +309,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a ConstantPredicateOp
+        /// Copies a ConstantPredicateOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -320,7 +320,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies an InternalConstantOp
+        /// Copies an InternalConstantOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -332,7 +332,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a NullSentinelOp
+        /// Copies a NullSentinelOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -344,7 +344,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a FunctionOp
+        /// Copies a FunctionOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -355,7 +355,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a PropertyOp
+        /// Copies a PropertyOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -366,7 +366,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a RelPropertyOp
+        /// Copies a RelPropertyOp
         /// </summary>
         /// <param name="op"> the RelPropertyOp to copy </param>
         /// <param name="n"> node tree corresponding to 'op' </param>
@@ -377,7 +377,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a CaseOp
+        /// Copies a CaseOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -388,7 +388,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a ComparisonOp
+        /// Copies a ComparisonOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -399,7 +399,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a like-op
+        /// Copies a like-op
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -410,7 +410,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an aggregateop
+        /// Clone an aggregateop
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -421,7 +421,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a type constructor
+        /// Copies a type constructor
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -432,7 +432,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a NewEntityOp
+        /// Copies a NewEntityOp
         /// </summary>
         /// <param name="op"> the NewEntityOp to copy </param>
         /// <param name="n"> node tree corresponding to the NewEntityOp </param>
@@ -453,7 +453,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a discriminated type constructor
+        /// Copies a discriminated type constructor
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -466,7 +466,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a multiset constructor
+        /// Copies a multiset constructor
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -477,7 +477,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a record constructor
+        /// Copies a record constructor
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -488,7 +488,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a RefOp
+        /// Copies a RefOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -499,7 +499,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a VarRefOp
+        /// Copies a VarRefOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -519,7 +519,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a ConditionalOp
+        /// Copies a ConditionalOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -530,7 +530,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies an ArithmeticOp
+        /// Copies an ArithmeticOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -541,7 +541,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a TreatOp
+        /// Copies a TreatOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -553,7 +553,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a CastOp
+        /// Copies a CastOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -564,7 +564,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a SoftCastOp
+        /// Copies a SoftCastOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -575,7 +575,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a DerefOp
+        /// Copies a DerefOp
         /// </summary>
         /// <param name="op"> the derefOp to copy </param>
         /// <param name="n"> the subtree </param>
@@ -586,7 +586,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a NavigateOp
+        /// Copies a NavigateOp
         /// </summary>
         /// <param name="op"> the NavigateOp </param>
         /// <param name="n"> the subtree </param>
@@ -597,7 +597,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an IsOfOp
+        /// Clone an IsOfOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -615,7 +615,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an ExistsOp
+        /// Clone an ExistsOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -626,7 +626,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an ElementOp
+        /// Clone an ElementOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -637,7 +637,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a GetRefKeyOp
+        /// Copies a GetRefKeyOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -648,7 +648,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a GetEntityRefOp
+        /// Copies a GetEntityRefOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -659,7 +659,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a CollectOp
+        /// Copies a CollectOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -674,7 +674,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region RelOps
 
         /// <summary>
-        ///     Copies a ScanTableOp
+        /// Copies a ScanTableOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -692,7 +692,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a ScanViewOp
+        /// Copies a ScanViewOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -711,7 +711,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an UnnestOp
+        /// Clone an UnnestOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -736,7 +736,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a ProjectOp
+        /// Copies a ProjectOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -757,7 +757,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a filterOp
+        /// Copies a filterOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -768,7 +768,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a sort node
+        /// Copies a sort node
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -789,7 +789,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a constrained sort node
+        /// Copies a constrained sort node
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -810,7 +810,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a group-by node
+        /// Copies a group-by node
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -828,7 +828,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a group by into node
+        /// Copies a group by into node
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -846,7 +846,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a CrossJoinOp
+        /// Copies a CrossJoinOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies an InnerJoinOp
+        /// Copies an InnerJoinOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -868,7 +868,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a LeftOuterJoinOp
+        /// Copies a LeftOuterJoinOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -879,7 +879,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a FullOuterJoinOp
+        /// Copies a FullOuterJoinOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -890,7 +890,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a crossApplyOp
+        /// Copies a crossApplyOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Clone an OuterApplyOp
+        /// Clone an OuterApplyOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -912,7 +912,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Common copy path for all SetOps
+        /// Common copy path for all SetOps
         /// </summary>
         /// <param name="op"> The SetOp to Copy (must be one of ExceptOp, IntersectOp, UnionAllOp) </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -975,7 +975,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a UnionAllOp
+        /// Copies a UnionAllOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -986,7 +986,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies an IntersectOp
+        /// Copies an IntersectOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -997,7 +997,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies an ExceptOp
+        /// Copies an ExceptOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -1008,7 +1008,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a DistinctOp
+        /// Copies a DistinctOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -1043,7 +1043,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region AncillaryOps
 
         /// <summary>
-        ///     Copies a VarDefOp
+        /// Copies a VarDefOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -1059,7 +1059,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a VarDefListOp
+        /// Copies a VarDefListOp
         /// </summary>
         /// <param name="op"> The Op to Copy </param>
         /// <param name="n"> The Node that references the Op </param>
@@ -1083,7 +1083,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a PhysicalProjectOp
+        /// Copies a PhysicalProjectOp
         /// </summary>
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
@@ -1153,7 +1153,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a singleStreamNestOp
+        /// Copies a singleStreamNestOp
         /// </summary>
         public override Node Visit(SingleStreamNestOp op, Node n)
         {
@@ -1161,7 +1161,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Copies a multiStreamNestOp
+        /// Copies a multiStreamNestOp
         /// </summary>
         public override Node Visit(MultiStreamNestOp op, Node n)
         {

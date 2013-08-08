@@ -12,14 +12,14 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     Contains utility methods for construction of DB commands through generic
-    ///     provider interfaces.
+    /// Contains utility methods for construction of DB commands through generic
+    /// provider interfaces.
     /// </summary>
     internal static class CommandHelper
     {
         /// <summary>
-        ///     Consumes all rows and result sets from the reader. This allows client to retrieve
-        ///     parameter values and intercept any store exceptions.
+        /// Consumes all rows and result sets from the reader. This allows client to retrieve
+        /// parameter values and intercept any store exceptions.
         /// </summary>
         /// <param name="reader"> Reader to consume. </param>
         internal static void ConsumeReader(DbDataReader reader)
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Core.Common.Utils
 #if !NET40
 
         /// <summary>
-        ///     Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
-        ///     parameter values and intercept any store exceptions.
+        /// Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
+        /// parameter values and intercept any store exceptions.
         /// </summary>
         internal static async Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
         {
@@ -59,8 +59,8 @@ namespace System.Data.Entity.Core.Common.Utils
 #endif
 
         /// <summary>
-        ///     requires: commandText must not be null
-        ///     The command text must be in the form Container.FunctionImportName.
+        /// requires: commandText must not be null
+        /// The command text must be in the form Container.FunctionImportName.
         /// </summary>
         internal static void ParseFunctionImportCommandText(
             string commandText, string defaultContainerName, out string containerName, out string functionImportName)
@@ -90,8 +90,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Given an entity command and entity transaction, passes through relevant state to store provider
-        ///     command.
+        /// Given an entity command and entity transaction, passes through relevant state to store provider
+        /// command.
         /// </summary>
         /// <param name="entityCommand"> Entity command. Must not be null. </param>
         /// <param name="entityTransaction"> Entity transaction. Must not be null. </param>
@@ -109,8 +109,8 @@ namespace System.Data.Entity.Core.Common.Utils
         }
 
         /// <summary>
-        ///     Given an entity command, store provider command and a connection, sets all output parameter values on the entity command.
-        ///     The connection is used to determine how to map spatial values.
+        /// Given an entity command, store provider command and a connection, sets all output parameter values on the entity command.
+        /// The connection is used to determine how to map spatial values.
         /// </summary>
         /// <param name="entityCommand"> Entity command on which to set parameter values. Must not be null. </param>
         /// <param name="storeProviderCommand"> Store provider command from which to retrieve parameter values. Must not be null. </param>

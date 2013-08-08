@@ -12,8 +12,8 @@ namespace System.Data.Entity.Infrastructure.Pluralization
     using System.Text.RegularExpressions;
 
     /// <summary>
-    ///     Default pluralization service implementation to be used by Entity Framework. This pluralization
-    ///     service is based on English locale.
+    /// Default pluralization service implementation to be used by Entity Framework. This pluralization
+    /// service is based on English locale.
     /// </summary>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Pluralization")]
     public sealed class EnglishPluralizationService : IPluralizationService
@@ -520,8 +520,8 @@ namespace System.Data.Entity.Infrastructure.Pluralization
                 };
 
         /// <summary>
-        ///     Constructs a new  instance  of default pluralization service
-        ///     used in Entity Framework.
+        /// Constructs a new  instance  of default pluralization service
+        /// used in Entity Framework.
         /// </summary>
         public EnglishPluralizationService()
         {
@@ -558,12 +558,12 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         }
 
         /// <summary>
-        ///     Constructs a new  instance  of default pluralization service
-        ///     used in Entity Framework.
-        ///     <param name="userDictionaryEntries">
-        ///         A collection of user dictionary entries to be used by this service.These inputs
-        ///         can  customize the service according the user needs.
-        ///     </param>
+        /// Constructs a new  instance  of default pluralization service
+        /// used in Entity Framework.
+        /// <param name="userDictionaryEntries">
+        ///     A collection of user dictionary entries to be used by this service.These inputs
+        ///     can  customize the service according the user needs.
+        /// </param>
         /// </summary>
         public EnglishPluralizationService(IEnumerable<CustomPluralizationEntry> userDictionaryEntries)
             : this()
@@ -1256,8 +1256,8 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         #region Utils
 
         /// <summary>
-        ///     captalize the return word if the parameter is capitalized
-        ///     if word is "Table", then return "Tables"
+        /// captalize the return word if the parameter is capitalized
+        /// if word is "Table", then return "Tables"
         /// </summary>
         private static string Capitalize(string word, Func<string, string> action)
         {
@@ -1283,7 +1283,7 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         }
 
         /// <summary>
-        ///     separate one combine word in to two parts, prefix word and the last word(suffix word)
+        /// separate one combine word in to two parts, prefix word and the last word(suffix word)
         /// </summary>
         private static string GetSuffixWord(string word, out string prefixWord)
         {
@@ -1335,8 +1335,8 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         }
 
         /// <summary>
-        ///     return true when the word is "[\s]*" or leading or tailing with spaces
-        ///     or contains non alphabetical characters
+        /// return true when the word is "[\s]*" or leading or tailing with spaces
+        /// or contains non alphabetical characters
         /// </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsNoOpWord(string word)

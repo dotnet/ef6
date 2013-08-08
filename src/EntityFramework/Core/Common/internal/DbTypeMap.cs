@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Common.Internal
     using System.Data.Entity.Core.Metadata.Edm.Provider;
 
     /// <summary>
-    ///     Provides singleton model TypeUsages for each DbType that can be expressed using a supported EDM type and appropriate facet values.
-    ///     Used by EntityParameter.GetTypeUsage - if you add additional TypeUsage fields here, review the impact on that method.
+    /// Provides singleton model TypeUsages for each DbType that can be expressed using a supported EDM type and appropriate facet values.
+    /// Used by EntityParameter.GetTypeUsage - if you add additional TypeUsage fields here, review the impact on that method.
     /// </summary>
     internal static class DbTypeMap
     {

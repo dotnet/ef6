@@ -11,8 +11,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Reflection;
 
     /// <summary>
-    ///     A LINQ expression visitor that finds <see cref="DbQuery" /> uses with equivalent
-    ///     <see cref="ObjectQuery" /> instances.
+    /// A LINQ expression visitor that finds <see cref="DbQuery" /> uses with equivalent
+    /// <see cref="ObjectQuery" /> instances.
     /// </summary>
     internal class DbQueryVisitor : ExpressionVisitor
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Internal.Linq
         #region Overriden visitors
 
         /// <summary>
-        ///     Replaces calls to DbContext.Set() with an expression for the equivalent <see cref="ObjectQuery" />.
+        /// Replaces calls to DbContext.Set() with an expression for the equivalent <see cref="ObjectQuery" />.
         /// </summary>
         /// <param name="node"> The node to replace. </param>
         /// <returns> A new node, which may have had the replacement made. </returns>
@@ -67,8 +67,8 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Replaces a <see cref="DbQuery" /> or <see cref="DbQuery{T}" /> property with a constant expression
-        ///     for the underlying <see cref="ObjectQuery" />.
+        /// Replaces a <see cref="DbQuery" /> or <see cref="DbQuery{T}" /> property with a constant expression
+        /// for the underlying <see cref="ObjectQuery" />.
         /// </summary>
         /// <param name="node"> The node to replace. </param>
         /// <returns> A new node, which may have had the replacement made. </returns>
@@ -104,8 +104,8 @@ namespace System.Data.Entity.Internal.Linq
         #region Helpers
 
         /// <summary>
-        ///     Gets a <see cref="DbContext" /> value from the given member, or returns null
-        ///     if the member doesn't contain a DbContext instance.
+        /// Gets a <see cref="DbContext" /> value from the given member, or returns null
+        /// if the member doesn't contain a DbContext instance.
         /// </summary>
         /// <param name="expression"> The expression for the object for the member, which may be null for a static member. </param>
         /// <param name="member"> The member. </param>
@@ -133,8 +133,8 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Gets the <see cref="DbContext" /> instance from the given instance or static member, returning null
-        ///     if the member does not contain a DbContext instance.
+        /// Gets the <see cref="DbContext" /> instance from the given instance or static member, returning null
+        /// if the member does not contain a DbContext instance.
         /// </summary>
         /// <param name="member"> The member. </param>
         /// <param name="value"> The value of the object to get the instance from, or null if the member is static. </param>
@@ -157,8 +157,8 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Takes a <see cref="DbQuery{T}" /> or <see cref="DbQuery" /> and creates an expression
-        ///     for the underlying <see cref="ObjectQuery{T}" />.
+        /// Takes a <see cref="DbQuery{T}" /> or <see cref="DbQuery" /> and creates an expression
+        /// for the underlying <see cref="ObjectQuery{T}" />.
         /// </summary>
         private static Expression CreateObjectQueryConstant(object dbQuery)
         {
@@ -191,7 +191,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <summary>
-        ///     Takes a <see cref="DbQuery{T}" /> or <see cref="DbQuery" /> and extracts the underlying <see cref="ObjectQuery{T}" />.
+        /// Takes a <see cref="DbQuery{T}" /> or <see cref="DbQuery" /> and extracts the underlying <see cref="ObjectQuery{T}" />.
         /// </summary>
         private static ObjectQuery ExtractObjectQuery(object dbQuery)
         {

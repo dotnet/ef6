@@ -18,11 +18,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                 <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
 
     /// <summary>
-    ///     Satisfiability test optimization.
-    ///     This class extends FragmentQueryKB by adding the so-called chase functionality:
-    ///     given an expression, the chase incorporates in this expression all the consequences derivable
-    ///     from the knowledge base. The knowledge base is not needed for the satisfiability test after such a procedure.
-    ///     This leads to better performance in many cases.
+    /// Satisfiability test optimization.
+    /// This class extends FragmentQueryKB by adding the so-called chase functionality:
+    /// given an expression, the chase incorporates in this expression all the consequences derivable
+    /// from the knowledge base. The knowledge base is not needed for the satisfiability test after such a procedure.
+    /// This leads to better performance in many cases.
     /// </summary>
     internal class FragmentQueryKBChaseSupport : FragmentQueryKB
     {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         /// <summary>
-        ///     Returns KB rules which cannot be used for chasing.
+        /// Returns KB rules which cannot be used for chasing.
         /// </summary>
         internal DomainBoolExpr Residue
         {
@@ -99,10 +99,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         /// <summary>
-        ///     Retrieves all implications directly derivable from the atomic expression.
+        /// Retrieves all implications directly derivable from the atomic expression.
         /// </summary>
         /// <param name="expression">
-        ///     Atomic expression to be extended with facts derivable from the knowledge base.
+        /// Atomic expression to be extended with facts derivable from the knowledge base.
         /// </param>
         internal DomainBoolExpr Chase(DomainTermExpr expression)
         {
@@ -113,7 +113,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         /// <summary>
-        ///     Checks if the given expression is satisfiable in conjunction with this knowledge base.
+        /// Checks if the given expression is satisfiable in conjunction with this knowledge base.
         /// </summary>
         /// <param name="expression">Expression to be tested for satisfiability.</param>
         internal bool IsSatisfiable(DomainBoolExpr expression)
@@ -152,10 +152,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         /// <summary>
-        ///     Retrieves all implications directly derivable from the expression.
+        /// Retrieves all implications directly derivable from the expression.
         /// </summary>
         /// <param name="expression">
-        ///     Expression to be extended with facts derivable from the knowledge base.
+        /// Expression to be extended with facts derivable from the knowledge base.
         /// </param>
         internal DomainBoolExpr Chase(DomainBoolExpr expression)
         {
@@ -163,8 +163,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         }
 
         /// <summary>
-        ///     Maintains a list of all implications derivable from the condition.
-        ///     Implications are stored in the _implications dictionary
+        /// Maintains a list of all implications derivable from the condition.
+        /// Implications are stored in the _implications dictionary
         /// </summary>
         /// <param name="condition"> Condition </param>
         /// <param name="implies"> Entailed expression </param>

@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     /// <summary>
-    ///     Specifies the kinds of item attributes in the conceptual model. 
+    /// Specifies the kinds of item attributes in the conceptual model. 
     /// </summary>
     public enum PropertyKind
     {

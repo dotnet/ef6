@@ -11,11 +11,11 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Reflection;
 
     /// <summary>
-    ///     Base class for conventions that process CLR attributes found on properties of types in the model.
+    /// Base class for conventions that process CLR attributes found on properties of types in the model.
     /// </summary>
     /// <remarks>
-    ///     Note that the derived convention will be applied for any non-static property on the mapped type that has
-    ///     the specified attribute, even if it wasn't included in the model.
+    /// Note that the derived convention will be applied for any non-static property on the mapped type that has
+    /// the specified attribute, even if it wasn't included in the model.
     /// </remarks>
     /// <typeparam name="TAttribute"> The type of the attribute to look for. </typeparam>
     public abstract class PropertyAttributeConfigurationConvention<TAttribute>

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Text;
 
     /// <summary>
-    ///     Prints a command tree
+    /// Prints a command tree
     /// </summary>
     internal class ExpressionPrinter : TreePrinter
     {

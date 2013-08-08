@@ -7,7 +7,7 @@ namespace System.Linq.Expressions
     using System.Linq.Expressions.Internal;
 
     /// <summary>
-    ///     Visitor for LINQ expression trees.
+    /// Visitor for LINQ expression trees.
     /// </summary>
     internal abstract class EntityExpressionVisitor
     {

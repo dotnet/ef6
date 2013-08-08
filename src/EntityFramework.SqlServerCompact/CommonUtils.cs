@@ -39,8 +39,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Method to add a closing square brace escape for all
-        ///     embedded closing square braces in a string
+        /// Method to add a closing square brace escape for all
+        /// embedded closing square braces in a string
         /// </summary>
         public static string EscapeSquareBraceNames(string name)
         {
@@ -48,8 +48,8 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Routine to replace an interesting character with itself
-        ///     (to escape the interesting character)
+        /// Routine to replace an interesting character with itself
+        /// (to escape the interesting character)
         /// </summary>
         public static string EscapeNames(string name, char quote)
         {
@@ -64,7 +64,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Delete the database that the fileName points to.
+        /// Delete the database that the fileName points to.
         /// </summary>
         /// <param name="fileName"> Database file path. </param>
         public static void DeleteDatabase(string fileName)
@@ -79,7 +79,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         }
 
         /// <summary>
-        ///     Check whether the database pointed to by the file name exists or not.
+        /// Check whether the database pointed to by the file name exists or not.
         /// </summary>
         /// <param name="fileName"> Database file path </param>
         public static bool DatabaseExists(string fileName)

@@ -5,7 +5,7 @@ namespace System.Data.Entity.Internal
     using Moq;
 
     /// <summary>
-    ///     This class uses a real DbContext so that GetType on it doesn't return the mock type.
+    /// This class uses a real DbContext so that GetType on it doesn't return the mock type.
     /// </summary>
     /// <typeparam name="TContext"> The type of the context. </typeparam>
     internal abstract class InternalContextForMockWithRealContext<TContext>

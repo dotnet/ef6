@@ -3,9 +3,9 @@
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     /// <summary>
-    ///     Abstract visitor class. All Boolean expression nodes know how to
-    ///     'accept' a visitor, and delegate to the appropriate visitor method.
-    ///     For instance, AndExpr invokes Visitor.VisitAnd.
+    /// Abstract visitor class. All Boolean expression nodes know how to
+    /// 'accept' a visitor, and delegate to the appropriate visitor method.
+    /// For instance, AndExpr invokes Visitor.VisitAnd.
     /// </summary>
     /// <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
     /// <typeparam name="T_Return"> Return type for visit methods. </typeparam>

@@ -28,10 +28,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the data manipulation language (DML) operation.
+        /// Gets the <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the data manipulation language (DML) operation.
         /// </summary>
         /// <returns>
-        ///     The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the DML operation.
+        /// The <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpressionBinding" /> that specifies the target table for the DML operation.
         /// </returns>
         public DbExpressionBinding Target
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Returns true if this modification command returns a reader (for instance, to return server generated values)
+        /// Returns true if this modification command returns a reader (for instance, to return server generated values)
         /// </summary>
         internal abstract bool HasReader { get; }
 

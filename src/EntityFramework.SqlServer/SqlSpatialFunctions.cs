@@ -7,7 +7,7 @@ namespace System.Data.Entity.SqlServer
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Contains function stubs that expose SqlServer methods in Linq to Entities.
+    /// Contains function stubs that expose SqlServer methods in Linq to Entities.
     /// </summary>
     public static class SqlSpatialFunctions
     {
@@ -109,7 +109,7 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>Returns an approximation of the given geography instance produced by running the Douglas-Peucker algorithm on the instance with the given tolerance.</summary>
         /// <returns>
-        ///     Returns <see cref="T:System.Data.Entity.Spatial.DbGeography" />.
+        /// Returns <see cref="T:System.Data.Entity.Spatial.DbGeography" />.
         /// </returns>
         /// <param name="geographyValue">The geography value.</param>
         /// <param name="tolerance">The tolerance to input to the Douglas-Peucker algorithm. tolerance must be a positive number.</param>
@@ -213,7 +213,7 @@ namespace System.Data.Entity.SqlServer
 
         /// <summary>Returns an approximation of the given geography instance produced by running the Douglas-Peucker algorithm on the instance with the given tolerance.</summary>
         /// <returns>
-        ///     Returns <see cref="T:System.Data.Entity.Spatial.DbGeometry" />.
+        /// Returns <see cref="T:System.Data.Entity.Spatial.DbGeometry" />.
         /// </returns>
         /// <param name="geometryValue">The geometry value.</param>
         /// <param name="tolerance">The tolerance to input to the Douglas-Peucker algorithm. tolerance must be a positive number.</param>

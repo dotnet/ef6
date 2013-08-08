@@ -5,17 +5,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Resources;
 
     /// <summary>
-    ///     Represents an ast node for a query parameter.
+    /// Represents an ast node for a query parameter.
     /// </summary>
     internal sealed class QueryParameter : Node
     {
         private readonly string _name;
 
         /// <summary>
-        ///     Initializes parameter
+        /// Initializes parameter
         /// </summary>
         /// <remarks>
-        ///     <exception cref="System.Data.Entity.Core.EntityException">Thrown if the parameter name does not conform to the expected format</exception>
+        /// <exception cref="System.Data.Entity.Core.EntityException">Thrown if the parameter name does not conform to the expected format</exception>
         /// </remarks>
         internal QueryParameter(string parameterName, string query, int inputPos)
             : base(query, inputPos)
@@ -35,7 +35,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns parameter parameterName (without @ sign).
+        /// Returns parameter parameterName (without @ sign).
         /// </summary>
         internal string Name
         {

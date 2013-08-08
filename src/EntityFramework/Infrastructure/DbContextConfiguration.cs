@@ -8,8 +8,8 @@ namespace System.Data.Entity.Infrastructure
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Returned by the Configuration method of <see cref="DbContext" /> to provide access to configuration
-    ///     options for the context.
+    /// Returned by the Configuration method of <see cref="DbContext" /> to provide access to configuration
+    /// options for the context.
     /// </summary>
     public class DbContextConfiguration
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly InternalContext _internalContext;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="DbContextConfiguration" /> class.
+        /// Initializes a new instance of the <see cref="DbContextConfiguration" /> class.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
         internal DbContextConfiguration(InternalContext internalContext)
@@ -69,11 +69,11 @@ namespace System.Data.Entity.Infrastructure
         #region Configuration options
 
         /// <summary>
-        ///     Gets or sets a value indicating whether lazy loading of relationships exposed as
-        ///     navigation properties is enabled.  Lazy loading is enabled by default.
+        /// Gets or sets a value indicating whether lazy loading of relationships exposed as
+        /// navigation properties is enabled.  Lazy loading is enabled by default.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if lazy loading is enabled; otherwise, <c>false</c> .
+        /// <c>true</c> if lazy loading is enabled; otherwise, <c>false</c> .
         /// </value>
         public bool LazyLoadingEnabled
         {
@@ -82,14 +82,14 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether or not the framework will create instances of
-        ///     dynamically generated proxy classes whenever it creates an instance of an entity type.
-        ///     Note that even if proxy creation is enabled with this flag, proxy instances will only
-        ///     be created for entity types that meet the requirements for being proxied.
-        ///     Proxy creation is enabled by default.
+        /// Gets or sets a value indicating whether or not the framework will create instances of
+        /// dynamically generated proxy classes whenever it creates an instance of an entity type.
+        /// Note that even if proxy creation is enabled with this flag, proxy instances will only
+        /// be created for entity types that meet the requirements for being proxied.
+        /// Proxy creation is enabled by default.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if proxy creation is enabled; otherwise, <c>false</c> .
+        /// <c>true</c> if proxy creation is enabled; otherwise, <c>false</c> .
         /// </value>
         public bool ProxyCreationEnabled
         {
@@ -98,21 +98,21 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether database null semantics are exhibited when comparing
-        ///     two operands, both of which are potentially nullable. The default value is false.
-        ///     
-        ///     For example (operand1 == operand2) will be translated as:
-        ///     
-        ///     (operand1 = operand2)
-        ///     
-        ///     if UseDatabaseNullSemantics is true, respectively
-        ///     
-        ///     (((operand1 = operand2) AND (NOT (operand1 IS NULL OR operand2 IS NULL))) OR ((operand1 IS NULL) AND (operand2 IS NULL)))
-        ///     
-        ///     if UseDatabaseNullSemantics is false.
+        /// Gets or sets a value indicating whether database null semantics are exhibited when comparing
+        /// two operands, both of which are potentially nullable. The default value is false.
+        /// 
+        /// For example (operand1 == operand2) will be translated as:
+        /// 
+        /// (operand1 = operand2)
+        /// 
+        /// if UseDatabaseNullSemantics is true, respectively
+        /// 
+        /// (((operand1 = operand2) AND (NOT (operand1 IS NULL OR operand2 IS NULL))) OR ((operand1 IS NULL) AND (operand2 IS NULL)))
+        /// 
+        /// if UseDatabaseNullSemantics is false.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if database null comparison behavior is enabled, otherwise <c>false</c> .
+        /// <c>true</c> if database null comparison behavior is enabled, otherwise <c>false</c> .
         /// </value>
         public bool UseDatabaseNullSemantics
         {
@@ -121,12 +121,12 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the <see cref="DbChangeTracker.DetectChanges()" />
-        ///     method is called automatically by methods of <see cref="DbContext" /> and related classes.
-        ///     The default value is true.
+        /// Gets or sets a value indicating whether the <see cref="DbChangeTracker.DetectChanges()" />
+        /// method is called automatically by methods of <see cref="DbContext" /> and related classes.
+        /// The default value is true.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if should be called automatically; otherwise, <c>false</c>.
+        /// <c>true</c> if should be called automatically; otherwise, <c>false</c>.
         /// </value>
         public bool AutoDetectChangesEnabled
         {
@@ -135,9 +135,9 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether tracked entities should be validated automatically when
-        ///     <see cref="DbContext.SaveChanges()" /> is invoked.
-        ///     The default value is true.
+        /// Gets or sets a value indicating whether tracked entities should be validated automatically when
+        /// <see cref="DbContext.SaveChanges()" /> is invoked.
+        /// The default value is true.
         /// </summary>
         public bool ValidateOnSaveEnabled
         {

@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Removes all sort nodes from the given command except for the top most one
-    ///     (the child of the root PhysicalProjectOp node) if any
+    /// Removes all sort nodes from the given command except for the top most one
+    /// (the child of the root PhysicalProjectOp node) if any
     /// </summary>
     internal class SortRemover : BasicOpVisitorOfNode
     {
@@ -16,12 +16,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         private readonly Command m_command;
 
         /// <summary>
-        ///     The only sort node that should not be removed, if any
+        /// The only sort node that should not be removed, if any
         /// </summary>
         private readonly Node m_topMostSort;
 
         /// <summary>
-        ///     Keeps track of changed nodes to allow to only recompute node info when needed.
+        /// Keeps track of changed nodes to allow to only recompute node info when needed.
         /// </summary>
         private readonly HashSet<Node> changedNodes = new HashSet<Node>();
 
@@ -60,11 +60,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitor Helpers
 
         /// <summary>
-        ///     Iterates over all children.
-        ///     If any of the children changes, update the node info.
-        ///     This is safe to do because the only way a child can change is
-        ///     if it is a sort node that needs to be removed. The nodes whose children have
-        ///     chagnged also get tracked.
+        /// Iterates over all children.
+        /// If any of the children changes, update the node info.
+        /// This is safe to do because the only way a child can change is
+        /// if it is a sort node that needs to be removed. The nodes whose children have
+        /// chagnged also get tracked.
         /// </summary>
         /// <param name="n"> The current node </param>
         protected override void VisitChildren(Node n)
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         #region Visitors
 
         /// <summary>
-        ///     If the given node is not the top most SortOp node remove it.
+        /// If the given node is not the top most SortOp node remove it.
         /// </summary>
         public override Node Visit(SortOp op, Node n)
         {

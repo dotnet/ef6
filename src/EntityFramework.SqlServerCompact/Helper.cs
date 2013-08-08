@@ -8,7 +8,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     internal static class Helper
     {
         /// <summary>
-        ///     Searches for Facet Description with the name specified.
+        /// Searches for Facet Description with the name specified.
         /// </summary>
         /// <param name="facetCollection"> Collection of facet description </param>
         /// <param name="facetName"> name of the facet </param>

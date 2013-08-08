@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents a property access
+    /// Represents a property access
     /// </summary>
     internal sealed class PropertyOp : ScalarOp
     {
@@ -37,12 +37,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public methods
 
         /// <summary>
-        ///     Used for patterns in transformation rules
+        /// Used for patterns in transformation rules
         /// </summary>
         internal static readonly PropertyOp Pattern = new PropertyOp();
 
         /// <summary>
-        ///     1 child - the instance
+        /// 1 child - the instance
         /// </summary>
         internal override int Arity
         {
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The property metadata
+        /// The property metadata
         /// </summary>
         internal EdmMember PropertyInfo
         {
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

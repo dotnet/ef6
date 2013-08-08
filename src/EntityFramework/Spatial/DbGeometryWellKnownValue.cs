@@ -6,7 +6,7 @@ namespace System.Data.Entity.Spatial
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     A data contract serializable representation of a <see cref="DbGeometry" /> value.
+    /// A data contract serializable representation of a <see cref="DbGeometry" /> value.
     /// </summary>
     [DataContract]
     public sealed class DbGeometryWellKnownValue

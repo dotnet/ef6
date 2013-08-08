@@ -8,10 +8,10 @@ namespace System.Data.Entity.Infrastructure.MappingViews
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Defines a custom attribute that specifies the mapping view cache type (subclass of <see cref="DbMappingViewCache" />)
-    ///     associated with a context type (subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />).
-    ///     The cache type is instantiated at runtime and used to retrieve pre-generated views in the
-    ///     corresponding context.
+    /// Defines a custom attribute that specifies the mapping view cache type (subclass of <see cref="DbMappingViewCache" />)
+    /// associated with a context type (subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />).
+    /// The cache type is instantiated at runtime and used to retrieve pre-generated views in the
+    /// corresponding context.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments")]
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
@@ -21,14 +21,14 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         private readonly Type _cacheType;
 
         /// <summary>
-        ///     Creates a <see cref="DbMappingViewCacheTypeAttribute" />  instance that associates a context type
-        ///     with a mapping view cache type.
+        /// Creates a <see cref="DbMappingViewCacheTypeAttribute" />  instance that associates a context type
+        /// with a mapping view cache type.
         /// </summary>
         /// <param name="contextType">
-        ///     A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
+        /// A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
         /// </param>
         /// <param name="cacheType">
-        ///     A subclass of <see cref="DbMappingViewCache" />.
+        /// A subclass of <see cref="DbMappingViewCache" />.
         /// </param>
         public DbMappingViewCacheTypeAttribute(Type contextType, Type cacheType)
         {
@@ -55,11 +55,11 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         }
 
         /// <summary>
-        ///     Creates a <see cref="DbMappingViewCacheTypeAttribute" /> instance that associates a context type
-        ///     with a mapping view cache type.
+        /// Creates a <see cref="DbMappingViewCacheTypeAttribute" /> instance that associates a context type
+        /// with a mapping view cache type.
         /// </summary>
         /// <param name="contextType">
-        ///     A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
+        /// A subclass of <see cref="ObjectContext" /> or <see cref="DbContext" />.
         /// </param>
         /// <param name="cacheTypeName">The assembly qualified full name of the cache type.</param>
         public DbMappingViewCacheTypeAttribute(Type contextType, string cacheTypeName)
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         }
 
         /// <summary>
-        ///     Gets the context type that is associated with the mapping view cache type.
+        /// Gets the context type that is associated with the mapping view cache type.
         /// </summary>
         internal Type ContextType
         {
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         }
 
         /// <summary>
-        ///     Gets the type that implements the mapping view cache.
+        /// Gets the type that implements the mapping view cache.
         /// </summary>
         internal Type CacheType
         {

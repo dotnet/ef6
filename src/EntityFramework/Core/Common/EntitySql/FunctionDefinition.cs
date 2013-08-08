@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Entity SQL query inline function definition, returned as a part of <see cref="ParseResult" />.
+    /// Entity SQL query inline function definition, returned as a part of <see cref="ParseResult" />.
     /// </summary>
     public sealed class FunctionDefinition
     {

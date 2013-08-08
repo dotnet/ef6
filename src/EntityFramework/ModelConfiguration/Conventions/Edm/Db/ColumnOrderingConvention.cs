@@ -10,10 +10,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Linq;
 
     /// <summary>
-    ///     Convention to apply column ordering specified via
-    ///     <see
-    ///         cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
-    ///     or the <see cref="DbModelBuilder" /> API.
+    /// Convention to apply column ordering specified via
+    /// <see
+    ///     cref="T:System.ComponentModel.DataAnnotations.ColumnAttribute" />
+    /// or the <see cref="DbModelBuilder" /> API.
     /// </summary>
     public class ColumnOrderingConvention : IStoreModelConvention<EntityType>
     {
@@ -45,8 +45,8 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         /// <summary>
-        ///     Validates the ordering configuration supplied for columns.
-        ///     This base implementation is a no-op.
+        /// Validates the ordering configuration supplied for columns.
+        /// This base implementation is a no-op.
         /// </summary>
         /// <param name="table">The name of the table that the columns belong to.</param>
         /// <param name="tableName">The definition of the table.</param>

@@ -9,12 +9,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Linq;
 
     /// <summary>
-    ///     PatternMatchRuleProcessor is a specialization of <see cref="DbExpressionRuleProcessingVisitor" /> that uses a collection of
-    ///     <see
-    ///         cref="PatternMatchRule" />
-    ///     s
-    ///     as its ruleset. The static Create methods can be used to construct a new PatternMatchRuleProcessor that applies the specified PatternMatchRules, which is
-    ///     returned as a Func&lt;DbExpression, DbExpression&gt; that can be invoked directly on an expression to apply the ruleset to it.
+    /// PatternMatchRuleProcessor is a specialization of <see cref="DbExpressionRuleProcessingVisitor" /> that uses a collection of
+    /// <see
+    ///     cref="PatternMatchRule" />
+    /// s
+    /// as its ruleset. The static Create methods can be used to construct a new PatternMatchRuleProcessor that applies the specified PatternMatchRules, which is
+    /// returned as a Func&lt;DbExpression, DbExpression&gt; that can be invoked directly on an expression to apply the ruleset to it.
     /// </summary>
     internal class PatternMatchRuleProcessor : DbExpressionRuleProcessingVisitor
     {

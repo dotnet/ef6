@@ -25,10 +25,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
+        /// Gets the result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
         /// </summary>
         /// <returns>
-        ///     The result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
+        /// The result type of this <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />.
         /// </returns>
         public TypeUsage ResultType
         {
@@ -36,16 +36,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the list of expressions that define the arguments to this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
-        ///     .
+        /// Gets the list of expressions that define the arguments to this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The list of expressions that define the arguments to this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
-        ///     .
+        /// The list of expressions that define the arguments to this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbAggregate" />
+        /// .
         /// </returns>
         public IList<DbExpression> Arguments
         {

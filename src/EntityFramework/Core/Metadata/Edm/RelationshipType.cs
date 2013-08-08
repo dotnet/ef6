@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the Relationship type
+    /// Represents the Relationship type
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public abstract class RelationshipType : EntityTypeBase
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<RelationshipEndMember> _relationshipEndMembers;
 
         /// <summary>
-        ///     Initializes a new instance of relationship type
+        /// Initializes a new instance of relationship type
         /// </summary>
         /// <param name="name"> name of the relationship type </param>
         /// <param name="namespaceName"> namespace of the relationship type </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the list of ends for this relationship type. </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of Ends for this relationship type.
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of Ends for this relationship type.
         /// </returns>
         public ReadOnlyMetadataCollection<RelationshipEndMember> RelationshipEndMembers
         {

@@ -15,7 +15,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Linq;
 
     /// <summary>
-    ///     Class generating SQL for a DML command tree.
+    /// Class generating SQL for a DML command tree.
     /// </summary>
     internal static class DmlSqlGenerator
     {
@@ -303,10 +303,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Determine whether we should use a generated values variable to return server generated values.
-        ///     This is true when we're attempting to insert a row where the primary key is server generated
-        ///     but is not an integer type (and therefore can't be used with scope_identity()). It is also true
-        ///     where there is a compound server generated key.
+        /// Determine whether we should use a generated values variable to return server generated values.
+        /// This is true when we're attempting to insert a row where the primary key is server generated
+        /// but is not an integer type (and therefore can't be used with scope_identity()). It is also true
+        /// where there is a compound server generated key.
         /// </summary>
         internal static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
         {
@@ -354,32 +354,32 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Generates SQL fragment returning server-generated values.
-        ///     Requires: translator knows about member values so that we can figure out
-        ///     how to construct the key predicate.
-        ///     <code>Sample SQL:
-        ///     
-        ///         select IdentityValue
-        ///         from dbo.MyTable
-        ///         where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
+        /// Generates SQL fragment returning server-generated values.
+        /// Requires: translator knows about member values so that we can figure out
+        /// how to construct the key predicate.
+        /// <code>Sample SQL:
         /// 
-        ///         or
+        ///     select IdentityValue
+        ///     from dbo.MyTable
+        ///     where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
         /// 
-        ///         select TimestampValue
-        ///         from dbo.MyTable
-        ///         where @@ROWCOUNT > 0 and Id = 1
+        ///     or
         /// 
-        ///         Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
+        ///     select TimestampValue
+        ///     from dbo.MyTable
+        ///     where @@ROWCOUNT > 0 and Id = 1
         /// 
-        ///         On SQL Server 2005 and up, we have an additional syntax used for non integer return types:
+        ///     Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
         /// 
-        ///         declare @generatedValues table(ID uniqueidentifier)
-        ///         insert dbo.MyTable
-        ///         output ID into @generated_values
-        ///         values (...);
-        ///         select ID
-        ///         from @generatedValues as g join dbo.MyTable as t on g.ID = t.ID
-        ///         where @@ROWCOUNT > 0;</code>
+        ///     On SQL Server 2005 and up, we have an additional syntax used for non integer return types:
+        /// 
+        ///     declare @generatedValues table(ID uniqueidentifier)
+        ///     insert dbo.MyTable
+        ///     output ID into @generated_values
+        ///     values (...);
+        ///     select ID
+        ///     from @generatedValues as g join dbo.MyTable as t on g.ID = t.ID
+        ///     where @@ROWCOUNT > 0;</code>
         /// </summary>
         /// <param name="commandText"> Builder containing command text </param>
         /// <param name="tree"> Modification command tree </param>
@@ -527,8 +527,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         /// <summary>
-        ///     Lightweight expression translator for DML expression trees, which have constrained
-        ///     scope and support.
+        /// Lightweight expression translator for DML expression trees, which have constrained
+        /// scope and support.
         /// </summary>
         internal class ExpressionTranslator : BasicExpressionVisitor
         {
@@ -541,8 +541,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
             private readonly bool _createParameters;
 
             /// <summary>
-            ///     Initialize a new expression translator populating the given string builder
-            ///     with command text. Command text builder and command tree must not be null.
+            /// Initialize a new expression translator populating the given string builder
+            /// with command text. Command text builder and command tree must not be null.
             /// </summary>
             /// <param name="commandText"> Command text with which to populate commands </param>
             /// <param name="commandTree"> Command tree generating SQL </param>
@@ -632,9 +632,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
             }
 
             /// <summary>
-            ///     Call this method to register a property value pair so the translator "remembers"
-            ///     the values for members of the row being modified. These values can then be used
-            ///     to form a predicate for server-generation (based on the key of the row)
+            /// Call this method to register a property value pair so the translator "remembers"
+            /// the values for members of the row being modified. These values can then be used
+            /// to form a predicate for server-generation (based on the key of the row)
             /// </summary>
             /// <param name="propertyExpression"> DbExpression containing the column reference (property expression). </param>
             /// <param name="value"> DbExpression containing the value of the column. </param>

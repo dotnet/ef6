@@ -15,8 +15,8 @@ namespace System.Data.Entity.Spatial
         }
 
         /// <summary>
-        ///     Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
-        ///     fall back on using the SQL provider and if this is not available then the default provider.
+        /// Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
+        /// fall back on using the SQL provider and if this is not available then the default provider.
         /// </summary>
         public virtual DbSpatialServices LoadDefaultServices()
         {

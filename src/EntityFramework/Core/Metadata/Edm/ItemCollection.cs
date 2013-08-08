@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Class for representing a collection of items.
-    ///     Most of the implementation for actual maintenance of the collection is
-    ///     done by MetadataCollection
+    /// Class for representing a collection of items.
+    /// Most of the implementation for actual maintenance of the collection is
+    /// done by MetadataCollection
     /// </summary>
     public abstract class ItemCollection : ReadOnlyMetadataCollection<GlobalItem>
     {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The default constructor for ItemCollection
+        /// The default constructor for ItemCollection
         /// </summary>
         internal ItemCollection(DataSpace dataspace)
             : base(new MetadataCollection<GlobalItem>())
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Return the function lookUpTable
+        /// Return the function lookUpTable
         /// </summary>
         internal Dictionary<string, ReadOnlyCollection<EdmFunction>> FunctionLookUpTable
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds an item to the collection
+        /// Adds an item to the collection
         /// </summary>
         /// <param name="item"> The item to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds a collection of items to the collection
+        /// Adds a collection of items to the collection
         /// </summary>
         /// <param name="items"> The items to add to the list </param>
         /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
@@ -105,7 +105,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity.
+        /// Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity.
         /// </summary>
         /// <returns>The item that is specified by the identity.</returns>
         /// <param name="identity">The identity of the item.</param>
@@ -116,15 +116,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
+        /// Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
         /// </summary>
         /// <returns>true if there is an item that matches the search criteria; otherwise, false.</returns>
         /// <param name="identity">The identity of the item.</param>
         /// <param name="item">
-        ///     When this method returns, the output parameter contains a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
-        ///     object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
+        /// When this method returns, the output parameter contains a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
+        /// object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public bool TryGetItem<T>(string identity, out T item) where T : GlobalItem
@@ -133,16 +133,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
+        /// Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity from this item collection.
         /// </summary>
         /// <returns>true if there is an item that matches the search criteria; otherwise, false.</returns>
         /// <param name="identity">The identity of the item.</param>
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="item">
-        ///     When this method returns, the output parameter contains a
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
-        ///     object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
+        /// When this method returns, the output parameter contains a
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" />
+        /// object. If there is no global item with the specified identity in the item collection, this output parameter contains null.
         /// </param>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public bool TryGetItem<T>(string identity, bool ignoreCase, out T item) where T : GlobalItem
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity with either case-sensitive or case-insensitive search.
+        /// Returns a strongly typed <see cref="T:System.Data.Entity.Core.Metadata.Edm.GlobalItem" /> object by using the specified identity with either case-sensitive or case-insensitive search.
         /// </summary>
         /// <returns>The item that is specified by the identity.</returns>
         /// <param name="identity">The identity of the item.</param>
@@ -172,7 +172,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the items of the specified type from this item collection.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items of the specified type.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the items of the specified type.
         /// </returns>
         /// <typeparam name="T">The type returned by the method.</typeparam>
         public virtual ReadOnlyCollection<T> GetItems<T>() where T : GlobalItem
@@ -221,10 +221,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name in this item collection.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name in this item collection.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
@@ -234,16 +234,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
         /// <param name="type">
-        ///     When this method returns, this output parameter contains an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
+        /// When this method returns, this output parameter contains an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
         /// </param>
         public bool TryGetType(string name, string namespaceName, out EdmType type)
         {
@@ -251,10 +251,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the type that matches the specified type name and the namespace name in this item collection. If there is no matched type, this method returns null.
         /// </returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
@@ -267,17 +267,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object by using the specified type name and the namespace name from this item collection.
         /// </summary>
         /// <returns>true if there is a type that matches the search criteria; otherwise, false. </returns>
         /// <param name="name">The name of the type.</param>
         /// <param name="namespaceName">The namespace of the type.</param>
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="type">
-        ///     When this method returns, this output parameter contains an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
-        ///     object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
+        /// When this method returns, this output parameter contains an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" />
+        /// object. If there is no type with the specified name and namespace name in this item collection, this output parameter contains null.
         /// </param>
         public bool TryGetType(string name, string namespaceName, bool ignoreCase, out EdmType type)
         {
@@ -291,7 +291,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the overloads of the functions by using the specified name from this item collection.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
         /// </returns>
         /// <param name="functionName">The full name of the function.</param>
         public ReadOnlyCollection<EdmFunction> GetFunctions(string functionName)
@@ -301,7 +301,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns all the overloads of the functions by using the specified name from this item collection.</summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
+        /// A collection of type <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> that contains all the functions that have the specified name.
         /// </returns>
         /// <param name="functionName">The full name of the function.</param>
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
@@ -363,8 +363,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the function as specified by the function key.
-        ///     All parameters are assumed to be <see cref="ParameterMode.In" />.
+        /// Gets the function as specified by the function key.
+        /// All parameters are assumed to be <see cref="ParameterMode.In" />.
         /// </summary>
         /// <param name="functionName"> Name of the function </param>
         /// <param name="parameterTypes"> types of the parameters </param>
@@ -390,7 +390,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
         /// </summary>
         /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first one.</returns>
         /// <param name="name">The name of the entity container.</param>
@@ -401,12 +401,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, the output parameter contains null; otherwise, it contains the first entity container.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, the output parameter contains null; otherwise, it contains the first entity container.
         /// </summary>
         /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the entity container.</param>
         /// <param name="entityContainer">
-        ///     When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
+        /// When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
         /// </param>
         public bool TryGetEntityContainer(string name, out EntityContainer entityContainer)
         {
@@ -415,7 +415,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name.
         /// </summary>
         /// <returns>If there is no entity container, this method returns null; otherwise, it returns the first entity container.</returns>
         /// <param name="name">The name of the entity container.</param>
@@ -431,13 +431,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
+        /// Returns an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object by using the specified entity container name. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
         /// </summary>
         /// <returns>true if there is an entity container that matches the search criteria; otherwise, false.</returns>
         /// <param name="name">The name of the entity container.</param>
         /// <param name="ignoreCase">true to perform the case-insensitive search; otherwise, false.</param>
         /// <param name="entityContainer">
-        ///     When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
+        /// When this method returns, it contains an <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityContainer" /> object. If there is no entity container, this output parameter contains null; otherwise, it contains the first entity container.
         /// </param>
         public bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
@@ -454,7 +454,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
         /// </summary>
         /// <param name="primitiveTypeKind"> canonical primitive type </param>
         /// <returns> The mapped scalar type </returns>
@@ -465,10 +465,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Determines whether this item collection is equivalent to another. At present, we look only
-        ///     at object reference equivalence. This is a somewhat reasonable approximation when caching
-        ///     is enabled, because collections are identical when their source resources (including
-        ///     provider) are known to be identical.
+        /// Determines whether this item collection is equivalent to another. At present, we look only
+        /// at object reference equivalence. This is a somewhat reasonable approximation when caching
+        /// is enabled, because collections are identical when their source resources (including
+        /// provider) are known to be identical.
         /// </summary>
         /// <param name="other"> Collection to compare. </param>
         /// <returns> true if the collections are equivalent; false otherwise </returns>

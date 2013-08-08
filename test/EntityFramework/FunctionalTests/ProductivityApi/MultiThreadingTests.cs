@@ -17,10 +17,10 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests that do various things with a <see cref="DbContext" /> using multiple threads
-    ///     such that we have at least some chance of finding issues in this code. As with any test of this
-    ///     type just because these tests pass does not mean that the code is correct. On the other hand,
-    ///     if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
+    /// Functional tests that do various things with a <see cref="DbContext" /> using multiple threads
+    /// such that we have at least some chance of finding issues in this code. As with any test of this
+    /// type just because these tests pass does not mean that the code is correct. On the other hand,
+    /// if any test ever fails (EVEN ONCE) then we know there is a problem to be investigated.
     /// </summary>
     public class MultiThreadingTests : FunctionalTestBase
     {

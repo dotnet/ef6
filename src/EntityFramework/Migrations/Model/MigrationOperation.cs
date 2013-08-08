@@ -7,7 +7,7 @@ namespace System.Data.Entity.Migrations.Model
     using System.Linq;
 
     /// <summary>
-    ///     Represents an operation to modify a database schema.
+    /// Represents an operation to modify a database schema.
     /// </summary>
     public abstract class MigrationOperation
     {
@@ -15,11 +15,11 @@ namespace System.Data.Entity.Migrations.Model
             = new Dictionary<string, object>();
 
         /// <summary>
-        ///     Initializes a new instance of the MigrationOperation class.
+        /// Initializes a new instance of the MigrationOperation class.
         /// </summary>
         /// <param name="anonymousArguments">
-        ///     Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue"
-        ///     }'.
+        /// Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue"
+        /// }'.
         /// </param>
         protected MigrationOperation(object anonymousArguments)
         {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets additional arguments that may be processed by providers.
+        /// Gets additional arguments that may be processed by providers.
         /// </summary>
         public IDictionary<string, object> AnonymousArguments
         {
@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation that will revert this operation.
+        /// Gets an operation that will revert this operation.
         /// </summary>
         public virtual MigrationOperation Inverse
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets a value indicating if this operation may result in data loss.
+        /// Gets a value indicating if this operation may result in data loss.
         /// </summary>
         public abstract bool IsDestructiveChange { get; }
     }

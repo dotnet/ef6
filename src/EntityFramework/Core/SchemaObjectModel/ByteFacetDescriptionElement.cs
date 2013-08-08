@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // Attribute Handlers
 
         /// <summary>
-        ///     Handler for the Default attribute
+        /// Handler for the Default attribute
         /// </summary>
         /// <param name="reader"> xml reader currently positioned at Default attribute </param>
         protected override void HandleDefaultAttribute(XmlReader reader)

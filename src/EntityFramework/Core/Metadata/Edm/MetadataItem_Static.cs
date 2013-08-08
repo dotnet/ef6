@@ -8,12 +8,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents the base item class for all the metadata
+    /// Represents the base item class for all the metadata
     /// </summary>
     public abstract partial class MetadataItem
     {
         /// <summary>
-        ///     Static Constructor which initializes all the built in types and primitive types
+        /// Static Constructor which initializes all the built in types and primitive types
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static MetadataItem()
@@ -562,16 +562,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a conceptual model built-in type that matches one of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" />
-        ///     values.
+        /// Returns a conceptual model built-in type that matches one of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" />
+        /// values.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the built-in type in the EDM.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmType" /> object that represents the built-in type in the EDM.
         /// </returns>
         /// <param name="builtInTypeKind">
-        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> values.
+        /// One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> values.
         /// </param>
         public static EdmType GetBuiltInType(BuiltInTypeKind builtInTypeKind)
         {
@@ -580,7 +580,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Returns the list of the general facet descriptions for a specified type.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the list of the general facet descriptions for a specified type.
+        /// A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> object that represents the list of the general facet descriptions for a specified type.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public static ReadOnlyCollection<FacetDescription> GetGeneralFacetDescriptions()
@@ -589,7 +589,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initialize all the build in type with the given type attributes and properties
+        /// Initialize all the build in type with the given type attributes and properties
         /// </summary>
         /// <param name="builtInType"> The built In type which is getting initialized </param>
         /// <param name="name"> name of the built in type </param>
@@ -606,7 +606,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Add properties for all the build in complex type
+        /// Add properties for all the build in complex type
         /// </summary>
         /// <param name="builtInTypeKind"> The type of the built In type whose properties are being added </param>
         /// <param name="properties"> properties of the built in type </param>
@@ -623,7 +623,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Initializes the enum type
+        /// Initializes the enum type
         /// </summary>
         /// <param name="builtInTypeKind"> The built-in type kind enum value of this enum type </param>
         /// <param name="name"> The name of this enum type </param>

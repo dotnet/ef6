@@ -18,7 +18,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Tests that run various things in a partial trust sandbox.
+    /// Tests that run various things in a partial trust sandbox.
     /// </summary>
     [PartialTrustFixture]
     public class PartialTrustTests : FunctionalTestBase

@@ -259,7 +259,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Used because Moq cannot mock Assembly.
+        /// Used because Moq cannot mock Assembly.
         /// </summary>
         public class FakeAssembly : Assembly
         {

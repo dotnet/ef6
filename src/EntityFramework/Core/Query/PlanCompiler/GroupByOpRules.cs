@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
 
     /// <summary>
-    ///     Transformation Rules for GroupByOps
+    /// Transformation Rules for GroupByOps
     /// </summary>
     internal static class GroupByOpRules
     {
@@ -16,12 +16,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             OpType.GroupBy, ProcessGroupByWithSimpleVarRedefinitions);
 
         /// <summary>
-        ///     If the GroupByOp defines some computedVars as part of its keys, but those computedVars are simply
-        ///     redefinitions of other Vars, then eliminate the computedVars.
-        ///     GroupBy(X, VarDefList(VarDef(cv1, VarRef(v1)), ...), VarDefList(...))
-        ///     can be transformed into
-        ///     GroupBy(X, VarDefList(...))
-        ///     where cv1 has now been replaced by v1
+        /// If the GroupByOp defines some computedVars as part of its keys, but those computedVars are simply
+        /// redefinitions of other Vars, then eliminate the computedVars.
+        /// GroupBy(X, VarDefList(VarDef(cv1, VarRef(v1)), ...), VarDefList(...))
+        /// can be transformed into
+        /// GroupBy(X, VarDefList(...))
+        /// where cv1 has now been replaced by v1
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> current subtree </param>
@@ -118,12 +118,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessGroupByOverProject);
 
         /// <summary>
-        ///     Converts a GroupBy(Project(X, c1,..ck), agg1, agg2, .. aggm) =>
-        ///     GroupBy(X, agg1', agg2', .. aggm')
-        ///     where agg1', agg2', .. aggm'  are the "mapped" versions
-        ///     of agg1, agg2, .. aggm, such that the references to c1, ... ck are
-        ///     replaced by their definitions.
-        ///     We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
+        /// Converts a GroupBy(Project(X, c1,..ck), agg1, agg2, .. aggm) =>
+        /// GroupBy(X, agg1', agg2', .. aggm')
+        /// where agg1', agg2', .. aggm'  are the "mapped" versions
+        /// of agg1, agg2, .. aggm, such that the references to c1, ... ck are
+        /// replaced by their definitions.
+        /// We only do this if each c1, ..ck is refereneced (in aggregates) at most once or it is a constant.
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> Current ProjectOp node </param>
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Replaces each occurance of the given vars with their definitions.
+        /// Replaces each occurance of the given vars with their definitions.
         /// </summary>
         internal class VarRefReplacer : BasicOpVisitorOfNode
         {
@@ -213,9 +213,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     "Public" entry point. In the subtree rooted at the given root,
-            ///     replace each occurance of the given vars with their definitions,
-            ///     where each key-value pair in the dictionary is a var-definition pair.
+            /// "Public" entry point. In the subtree rooted at the given root,
+            /// replace each occurance of the given vars with their definitions,
+            /// where each key-value pair in the dictionary is a var-definition pair.
             /// </summary>
             internal static Node Replace(Dictionary<Var, Node> varReplacementTable, Node root, Command command)
             {
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     Recomputes node info post regular processing.
+            /// Recomputes node info post regular processing.
             /// </summary>
             protected override Node VisitDefault(Node n)
             {
@@ -248,8 +248,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Used to determine whether any of the given vars occurs more than once
-        ///     in a given subtree.
+        /// Used to determine whether any of the given vars occurs more than once
+        /// in a given subtree.
         /// </summary>
         internal class VarRefUsageFinder : BasicOpVisitor
         {
@@ -264,8 +264,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
 
             /// <summary>
-            ///     Public entry point. Returns true if at least one of the given vars occurs more than
-            ///     once in the subree rooted at the given root.
+            /// Public entry point. Returns true if at least one of the given vars occurs more than
+            /// once in the subree rooted at the given root.
             /// </summary>
             internal static bool AnyVarUsedMoreThanOnce(VarVec varVec, Node root, Command command)
             {
@@ -315,11 +315,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 ProcessGroupByOpWithNoAggregates);
 
         /// <summary>
-        ///     If the GroupByOp has no aggregates:
-        ///     (1) and if it includes all all the keys of the input, than it is unnecessary
-        ///     GroupBy (X, keys) -> Project(X, keys) where keys includes all keys of X.
-        ///     (2) else it can be turned into a Distinct:
-        ///     GroupBy (X, keys) -> Distinct(X, keys)
+        /// If the GroupByOp has no aggregates:
+        /// (1) and if it includes all all the keys of the input, than it is unnecessary
+        /// GroupBy (X, keys) -> Project(X, keys) where keys includes all keys of X.
+        /// (2) else it can be turned into a Distinct:
+        /// GroupBy (X, keys) -> Distinct(X, keys)
         /// </summary>
         /// <param name="context"> Rule processing context </param>
         /// <param name="n"> current subtree </param>

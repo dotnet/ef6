@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Initializes a new command tree with a given metadata workspace.
+        /// Initializes a new command tree with a given metadata workspace.
         /// </summary>
         /// <param name="metadata"> The metadata workspace against which the command tree should operate. </param>
         /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
@@ -42,16 +42,16 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the name and corresponding type of each parameter that can be referenced within this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
-        ///     .
+        /// Gets the name and corresponding type of each parameter that can be referenced within this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     The name and corresponding type of each parameter that can be referenced within this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
-        ///     .
+        /// The name and corresponding type of each parameter that can be referenced within this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DbCommandTree" />
+        /// .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public IEnumerable<KeyValuePair<string, TypeUsage>> Parameters
@@ -62,17 +62,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         #region Internal Implementation
 
         /// <summary>
-        ///     Gets the kind of this command tree.
+        /// Gets the kind of this command tree.
         /// </summary>
         public abstract DbCommandTreeKind CommandTreeKind { get; }
 
         /// <summary>
-        ///     Gets the name and type of each parameter declared on the command tree.
+        /// Gets the name and type of each parameter declared on the command tree.
         /// </summary>
         internal abstract IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters();
 
         /// <summary>
-        ///     Gets the metadata workspace used by this command tree.
+        /// Gets the metadata workspace used by this command tree.
         /// </summary>
         public virtual MetadataWorkspace MetadataWorkspace
         {
@@ -80,7 +80,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets the data space in which metadata used by this command tree must reside.
+        /// Gets the data space in which metadata used by this command tree must reside.
         /// </summary>
         public virtual DataSpace DataSpace
         {

@@ -9,12 +9,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents a end of a Association Type
+    /// Represents a end of a Association Type
     /// </summary>
     public sealed class AssociationEndMember : RelationshipEndMember
     {
         /// <summary>
-        ///     Initializes a new instance of AssociationEndMember
+        /// Initializes a new instance of AssociationEndMember
         /// </summary>
         /// <param name="name"> name of the association end member </param>
         /// <param name="endRefType"> Ref type that this end refers to </param>
@@ -33,13 +33,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.AssociationEndMember" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private Func<RelationshipManager, RelatedEnd, RelatedEnd> _getRelatedEndMethod;
 
         /// <summary>
-        ///     cached dynamic method to set a CLR property value on a CLR instance
+        /// cached dynamic method to set a CLR property value on a CLR instance
         /// </summary>
         internal Func<RelationshipManager, RelatedEnd, RelatedEnd> GetRelatedEnd
         {
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Creates a read-only AssociationEndMember instance.
+        /// Creates a read-only AssociationEndMember instance.
         /// </summary>
         /// <param name="name">The name of the association end member.</param>
         /// <param name="endRefType">The reference type for the end.</param>

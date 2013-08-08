@@ -7,24 +7,24 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Abstract implementation of node visitor that allows the specification of visit methods
-    ///     for different node types (VisitPre virtual methods) and evaluation of nodes with respect
-    ///     to the typed (TReturn) return values of their children.
+    /// Abstract implementation of node visitor that allows the specification of visit methods
+    /// for different node types (VisitPre virtual methods) and evaluation of nodes with respect
+    /// to the typed (TReturn) return values of their children.
     /// </summary>
     /// <remarks>
-    ///     This is not a general purpose class. It is tailored to the needs of the update pipeline.
-    ///     All virtual methods throw NotSupportedException (must be explicitly overridden by each visitor).
+    /// This is not a general purpose class. It is tailored to the needs of the update pipeline.
+    /// All virtual methods throw NotSupportedException (must be explicitly overridden by each visitor).
     /// </remarks>
     /// <typeparam name="TReturn"> Return type for the visitor </typeparam>
     internal abstract class UpdateExpressionVisitor<TReturn> : DbExpressionVisitor<TReturn>
     {
         /// <summary>
-        ///     Gets the name of this visitor for debugging and tracing purposes.
+        /// Gets the name of this visitor for debugging and tracing purposes.
         /// </summary>
         protected abstract string VisitorName { get; }
 
         /// <summary>
-        ///     Utility method to generate an exception when unsupported node types are encountered.
+        /// Utility method to generate an exception when unsupported node types are encountered.
         /// </summary>
         /// <param name="node"> Unsupported node </param>
         /// <returns> Not supported exception </returns>

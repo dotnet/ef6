@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents setting the database initializer for a specific context type
+    /// Represents setting the database initializer for a specific context type
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DatabaseInitializerElement : ConfigurationElement

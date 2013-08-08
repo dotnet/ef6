@@ -6,7 +6,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents setting the default connection factory
+    /// Represents setting the default connection factory
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class DefaultConnectionFactoryElement : ConfigurationElement

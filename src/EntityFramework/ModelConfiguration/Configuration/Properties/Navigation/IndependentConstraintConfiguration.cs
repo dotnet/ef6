@@ -8,7 +8,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Used to configure an independent constraint on a navigation property.
+    /// Used to configure an independent constraint on a navigation property.
     /// </summary>
     internal class IndependentConstraintConfiguration : ConstraintConfiguration
     {
@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         /// <summary>
-        ///     Gets the Singleton instance of the IndependentConstraintConfiguration class.
+        /// Gets the Singleton instance of the IndependentConstraintConfiguration class.
         /// </summary>
         public static ConstraintConfiguration Instance
         {

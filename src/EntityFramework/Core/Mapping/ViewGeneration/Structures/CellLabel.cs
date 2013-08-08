@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     internal class CellLabel
     {
         /// <summary>
-        ///     Copy Constructor
+        /// Copy Constructor
         /// </summary>
         internal CellLabel(CellLabel source)
         {

@@ -17,8 +17,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for an entity type in a model.
-    ///     This configuration functionality is available via lightweight conventions.
+    /// Allows configuration to be performed for an entity type in a model.
+    /// This configuration functionality is available via lightweight conventions.
     /// </summary>
     public class ConventionTypeConfiguration
     {
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Gets the <see cref="Type" /> of this entity type.
+        /// Gets the <see cref="Type" /> of this entity type.
         /// </summary>
         public Type ClrType
         {
@@ -77,15 +77,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the entity set name to be used for this entity type.
-        ///     The entity set name can only be configured for the base type in each set.
+        /// Configures the entity set name to be used for this entity type.
+        /// The entity set name can only be configured for the base type in each set.
         /// </summary>
         /// <param name="entitySetName"> The name of the entity set. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration HasEntitySetName(string entitySetName)
         {
@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes this entity type from the model so that it will not be mapped to the database.
+        /// Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
         public ConventionTypeConfiguration Ignore()
         {
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Changes this entity type to a complex type.
+        /// Changes this entity type to a complex type.
         /// </summary>
         public ConventionTypeConfiguration IsComplexType()
         {
@@ -134,11 +134,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyName"> The name of the property to be configured. </param>
         /// <remarks>
-        ///     Calling this will have no effect if the property does not exist.
+        /// Calling this will have no effect if the property does not exist.
         /// </remarks>
         public ConventionTypeConfiguration Ignore(string propertyName)
         {
@@ -156,11 +156,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Excludes a property from the model so that it will not be mapped to the database.
+        /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyInfo"> The property to be configured. </param>
         /// <remarks>
-        ///     Calling this will have no effect if the property does not exist.
+        /// Calling this will have no effect if the property does not exist.
         /// </remarks>
         public ConventionTypeConfiguration Ignore(PropertyInfo propertyInfo)
         {
@@ -183,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type.
+        /// Configures a property that is defined on this type.
         /// </summary>
         /// <param name="propertyName"> The name of the property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -202,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type.
+        /// Configures a property that is defined on this type.
         /// </summary>
         /// <param name="propertyInfo"> The property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -236,7 +236,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type as a navigation property.
+        /// Configures a property that is defined on this type as a navigation property.
         /// </summary>
         /// <param name="propertyName"> The name of the property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -254,7 +254,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a property that is defined on this type as a navigation property.
+        /// Configures a property that is defined on this type as a navigation property.
         /// </summary>
         /// <param name="propertyInfo"> The property being configured. </param>
         /// <returns> A configuration object that can be used to configure the property. </returns>
@@ -286,11 +286,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the primary key property for this entity type.
+        /// Configures the primary key property for this entity type.
         /// </summary>
         /// <param name="propertyName"> The name of the property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public ConventionTypeConfiguration HasKey(string propertyName)
         {
@@ -306,11 +306,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the primary key property for this entity type.
+        /// Configures the primary key property for this entity type.
         /// </summary>
         /// <param name="propertyInfo"> The property to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public ConventionTypeConfiguration HasKey(PropertyInfo propertyInfo)
         {
@@ -328,11 +328,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the primary key property(s) for this entity type.
+        /// Configures the primary key property(s) for this entity type.
         /// </summary>
         /// <param name="propertyNames"> The names of the properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public ConventionTypeConfiguration HasKey(IEnumerable<string> propertyNames)
         {
@@ -355,15 +355,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the primary key property(s) for this entity type.
+        /// Configures the primary key property(s) for this entity type.
         /// </summary>
         /// <param name="keyProperties"> The properties to be used as the primary key. </param>
         /// <returns>
-        ///     The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured or if any
-        ///     property does not exist.
+        /// Calling this will have no effect once it has been configured or if any
+        /// property does not exist.
         /// </remarks>
         public ConventionTypeConfiguration HasKey(IEnumerable<PropertyInfo> keyProperties)
         {
@@ -385,11 +385,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name that this entity type is mapped to.
+        /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration ToTable(string tableName)
         {
@@ -408,12 +408,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the table name that this entity type is mapped to.
+        /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <param name="schemaName"> The database schema of the table. </param>
         /// <remarks>
-        ///     Calling this will have no effect once it has been configured.
+        /// Calling this will have no effect once it has been configured.
         /// </remarks>
         public ConventionTypeConfiguration ToTable(string tableName, string schemaName)
         {
@@ -450,7 +450,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Configures this type to use stored procedures for insert, update and delete.
         /// </summary>
         /// <param name="modificationStoredProceduresConfigurationAction">
-        ///     Configuration to override the default conventions for procedure and parameter names.
+        /// Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         public ConventionTypeConfiguration MapToStoredProcedures(

@@ -7,44 +7,44 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
 
     /// <summary>
-    ///     Mapping metadata for Conditional property mapping on a type.
-    ///     Condition Property Mapping specifies a Condition either on the C side property or S side property.
+    /// Mapping metadata for Conditional property mapping on a type.
+    /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
     /// </summary>
     /// <example>
-    ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping
-    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///     --EntitySetMapping
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ConditionProperyMap ( constant value-->SMemberMetadata )
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityKey
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ComplexPropertyMap
-    ///     --ComplexTypeMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ConditionProperyMap ( constant value-->SMemberMetadata )
-    ///     --AssociationSetMapping
-    ///     --AssociationTypeMapping
-    ///     --MappingFragment
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     --EndPropertyMap
-    ///     --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
-    ///     This class represents the metadata for all the condition property map elements in the
-    ///     above example.
+    /// For Example if conceptually you could represent the CS MSL file as following
+    /// --Mapping
+    /// --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    /// --EntitySetMapping
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ConditionProperyMap ( constant value-->SMemberMetadata )
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityKey
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ComplexPropertyMap
+    /// --ComplexTypeMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ConditionProperyMap ( constant value-->SMemberMetadata )
+    /// --AssociationSetMapping
+    /// --AssociationTypeMapping
+    /// --MappingFragment
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --ScalarProperyMap ( CMemberMetadata-->SMemberMetadata )
+    /// --EndPropertyMap
+    /// --ScalarPropertyMap ( CMemberMetadata-->SMemberMetadata )
+    /// This class represents the metadata for all the condition property map elements in the
+    /// above example.
     /// </example>
     internal class StorageConditionPropertyMapping : StoragePropertyMapping
     {
         /// <summary>
-        ///     Construct a new condition Property mapping object
+        /// Construct a new condition Property mapping object
         /// </summary>
         public StorageConditionPropertyMapping(
             EdmProperty edmProperty, EdmProperty columnMember
@@ -63,19 +63,19 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Column EdmMember for which the condition is specified.
+        /// Column EdmMember for which the condition is specified.
         /// </summary>
         private EdmProperty m_columnMember;
 
         /// <summary>
-        ///     Value for the condition thats being mapped.
+        /// Value for the condition thats being mapped.
         /// </summary>
         private readonly object m_value;
 
         private readonly bool? m_isNull;
 
         /// <summary>
-        ///     Value for the condition
+        /// Value for the condition
         /// </summary>
         public object Value
         {
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Whether the property is being mapped to Null or NotNull
+        /// Whether the property is being mapped to Null or NotNull
         /// </summary>
         public bool? IsNull
         {
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     ColumnMember for which the Condition Map is being specified
+        /// ColumnMember for which the Condition Map is being specified
         /// </summary>
         public EdmProperty ColumnProperty
         {

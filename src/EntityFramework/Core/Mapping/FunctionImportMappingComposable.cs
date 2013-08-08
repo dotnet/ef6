@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Represents a mapping from a model function import to a store composable function.
+    /// Represents a mapping from a model function import to a store composable function.
     /// </summary>
     internal class FunctionImportMappingComposable : FunctionImportMapping
     {
@@ -99,24 +99,24 @@ namespace System.Data.Entity.Core.Mapping
         private readonly StorageMappingItemCollection m_mappingItemCollection;
 
         /// <summary>
-        ///     Command parameter refs created from m_edmFunction parameters.
-        ///     Used as arguments to target (s-space) function calls in the generated command tree.
+        /// Command parameter refs created from m_edmFunction parameters.
+        /// Used as arguments to target (s-space) function calls in the generated command tree.
         /// </summary>
         private readonly DbParameterReferenceExpression[] m_commandParameters;
 
         /// <summary>
-        ///     Result mapping as entity type hierarchy.
+        /// Result mapping as entity type hierarchy.
         /// </summary>
         private readonly List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
             m_structuralTypeMappings;
 
         /// <summary>
-        ///     Keys inside the result set of the target function. Inferred based on the mapping (using c-space entity type keys).
+        /// Keys inside the result set of the target function. Inferred based on the mapping (using c-space entity type keys).
         /// </summary>
         private readonly EdmProperty[] m_targetFunctionKeys;
 
         /// <summary>
-        ///     ITree template. Requires function argument substitution during function view expansion.
+        /// ITree template. Requires function argument substitution during function view expansion.
         /// </summary>
         private Node m_internalTreeNode;
 

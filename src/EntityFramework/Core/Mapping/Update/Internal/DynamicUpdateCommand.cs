@@ -98,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     See comments in <see cref="UpdateCommand" />.
+        /// See comments in <see cref="UpdateCommand" />.
         /// </summary>
         internal override long Execute(
             Dictionary<int, object> identifierValues,
@@ -181,7 +181,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 #if !NET40
 
         /// <summary>
-        ///     See comments in <see cref="UpdateCommand" />.
+        /// See comments in <see cref="UpdateCommand" />.
         /// </summary>
         internal override async Task<long> ExecuteAsync(
             Dictionary<int, object> identifierValues,
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 #endif
 
         /// <summary>
-        ///     Gets DB command definition encapsulating store logic for this command.
+        /// Gets DB command definition encapsulating store logic for this command.
         /// </summary>
         protected virtual DbCommand CreateCommand(Dictionary<int, object> identifierValues)
         {
@@ -338,7 +338,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         /// <summary>
-        ///     Creates a new list of modification clauses with the specified remapped clauses replaced.
+        /// Creates a new list of modification clauses with the specified remapped clauses replaced.
         /// </summary>
         private static List<DbModificationClause> ReplaceClauses(
             IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)

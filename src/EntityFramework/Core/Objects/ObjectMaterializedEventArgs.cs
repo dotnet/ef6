@@ -5,17 +5,17 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     EventArgs for the ObjectMaterialized event.
+    /// EventArgs for the ObjectMaterialized event.
     /// </summary>
     public class ObjectMaterializedEventArgs : EventArgs
     {
         /// <summary>
-        ///     The object that was materialized.
+        /// The object that was materialized.
         /// </summary>
         private readonly object _entity;
 
         /// <summary>
-        ///     Constructs new arguments for the ObjectMaterialized event.
+        /// Constructs new arguments for the ObjectMaterialized event.
         /// </summary>
         /// <param name="entity"> The object that has been materialized. </param>
         internal ObjectMaterializedEventArgs(object entity)
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Objects
     }
 
     /// <summary>
-    ///     Delegate for the ObjectMaterialized event.
+    /// Delegate for the ObjectMaterialized event.
     /// </summary>
     /// <param name="sender"> The ObjectContext responsable for materializing the object. </param>
     /// <param name="e"> EventArgs containing a reference to the materialized object. </param>

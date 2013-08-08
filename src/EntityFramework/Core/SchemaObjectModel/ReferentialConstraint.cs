@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an referential constraint on a relationship
+    /// Represents an referential constraint on a relationship
     /// </summary>
     internal sealed class ReferentialConstraint : SchemaElement
     {
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private ReferentialConstraintRoleElement _dependentRole;
 
         /// <summary>
-        ///     construct a Referential constraint
+        /// construct a Referential constraint
         /// </summary>
         public ReferentialConstraint(Relationship relationship)
             : base(relationship)
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Validate this referential constraint
+        /// Validate this referential constraint
         /// </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
@@ -259,8 +259,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Resolves the given property names to the property in the item
-        ///     Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
+        /// Resolves the given property names to the property in the item
+        /// Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
         /// </summary>
         private static void IsKeyProperty(
             ReferentialConstraintRoleElement roleElement, SchemaEntityType itemType,
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     The parent element as an IRelationship
+        /// The parent element as an IRelationship
         /// </summary>
         internal new IRelationship ParentElement
         {

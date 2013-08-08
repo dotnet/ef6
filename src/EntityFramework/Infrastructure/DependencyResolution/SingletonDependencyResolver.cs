@@ -6,12 +6,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
-    ///     the same instance.
+    /// Implements <see cref="IDbDependencyResolver" /> to resolve a dependency such that it always returns
+    /// the same instance.
     /// </summary>
     /// <typeparam name="T"> The type that defines the contract for the dependency that will be resolved. </typeparam>
     /// <remarks>
-    ///     This class is immutable such that instances can be accessed by multiple threads at the same time.
+    /// This class is immutable such that instances can be accessed by multiple threads at the same time.
     /// </remarks>
     public class SingletonDependencyResolver<T> : IDbDependencyResolver
         where T : class
@@ -20,8 +20,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         private readonly Func<object, bool> _keyPredicate;
 
         /// <summary>
-        ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     regardless of the key passed to the Get method.
+        /// Constructs a new resolver that will return the given instance for the contract type
+        /// regardless of the key passed to the Get method.
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         public SingletonDependencyResolver(T singletonInstance)
@@ -30,8 +30,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     if the given key matches exactly the key passed to the Get method.
+        /// Constructs a new resolver that will return the given instance for the contract type
+        /// if the given key matches exactly the key passed to the Get method.
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         /// <param name="key"> Optionally, the key of the dependency to be resolved. This may be null for dependencies that are not differentiated by key. </param>
@@ -44,8 +44,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         }
 
         /// <summary>
-        ///     Constructs a new resolver that will return the given instance for the contract type
-        ///     if the given key matches the key passed to the Get method based on the given predicate.
+        /// Constructs a new resolver that will return the given instance for the contract type
+        /// if the given key matches the key passed to the Get method based on the given predicate.
         /// </summary>
         /// <param name="singletonInstance"> The instance to return. </param>
         /// <param name="keyPredicate"> A predicate that takes the key object and returns true if and only if it matches. </param>

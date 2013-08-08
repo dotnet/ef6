@@ -8,7 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Contains metadata for a property of a complex object or entity.
+    /// Contains metadata for a property of a complex object or entity.
     /// </summary>
     internal class PropertyEntryMetadata : MemberEntryMetadata
     {
@@ -18,16 +18,16 @@ namespace System.Data.Entity.Internal
         private readonly bool _isComplex;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="PropertyEntryMetadata" /> class.
+        /// Initializes a new instance of the <see cref="PropertyEntryMetadata" /> class.
         /// </summary>
         /// <param name="declaringType"> The type that the property is declared on. </param>
         /// <param name="propertyType"> Type of the property. </param>
         /// <param name="propertyName"> The property name. </param>
         /// <param name="isMapped">
-        ///     if set to <c>true</c> the property is mapped in the EDM.
+        /// if set to <c>true</c> the property is mapped in the EDM.
         /// </param>
         /// <param name="isComplex">
-        ///     if set to <c>true</c> the property is a complex property.
+        /// if set to <c>true</c> the property is a complex property.
         /// </param>
         public PropertyEntryMetadata(
             Type declaringType, Type propertyType, string propertyName, bool isMapped, bool isComplex)
@@ -38,9 +38,9 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Validates that the given name is a property of the declaring type (either on the CLR type or in the EDM)
-        ///     and that it is a complex or scalar property rather than a nav property and then returns metadata about
-        ///     the property.
+        /// Validates that the given name is a property of the declaring type (either on the CLR type or in the EDM)
+        /// and that it is a complex or scalar property rather than a nav property and then returns metadata about
+        /// the property.
         /// </summary>
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="declaringType"> The type that the property is declared on. </param>
@@ -123,8 +123,8 @@ namespace System.Data.Entity.Internal
         #region Entry factory methods
 
         /// <summary>
-        ///     Creates a new <see cref="InternalMemberEntry" /> the runtime type of which will be
-        ///     determined by the metadata.
+        /// Creates a new <see cref="InternalMemberEntry" /> the runtime type of which will be
+        /// determined by the metadata.
         /// </summary>
         /// <param name="internalEntityEntry"> The entity entry to which the member belongs. </param>
         /// <param name="parentPropertyEntry"> The parent property entry if the new entry is nested, otherwise null. </param>
@@ -142,12 +142,12 @@ namespace System.Data.Entity.Internal
         #region Metadata access
 
         /// <summary>
-        ///     Gets a value indicating whether this is a complex property.
-        ///     That is, not whether or not this is a property on a complex object, but rather if the
-        ///     property itself is a complex property.
+        /// Gets a value indicating whether this is a complex property.
+        /// That is, not whether or not this is a property on a complex object, but rather if the
+        /// property itself is a complex property.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is complex; otherwise, <c>false</c> .
+        /// <c>true</c> if this instance is complex; otherwise, <c>false</c> .
         /// </value>
         public bool IsComplex
         {
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the type of the member for which this is metadata.
+        /// Gets the type of the member for which this is metadata.
         /// </summary>
         /// <value> The type of the member entry. </value>
         public override MemberEntryType MemberEntryType
@@ -164,10 +164,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this instance is mapped in the EDM.
+        /// Gets a value indicating whether this instance is mapped in the EDM.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is mapped; otherwise, <c>false</c> .
+        /// <c>true</c> if this instance is mapped; otherwise, <c>false</c> .
         /// </value>
         public bool IsMapped
         {
@@ -175,8 +175,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the type of the member, which for collection properties is the type
-        ///     of the collection rather than the type in the collection.
+        /// Gets the type of the member, which for collection properties is the type
+        /// of the collection rather than the type in the collection.
         /// </summary>
         /// <value> The type of the member. </value>
         public override Type MemberType

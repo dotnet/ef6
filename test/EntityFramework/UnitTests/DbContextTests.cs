@@ -76,7 +76,7 @@ namespace ProductivityApiUnitTests
     #endregion
 
     /// <summary>
-    ///     Unit tests for DbContext.
+    /// Unit tests for DbContext.
     /// </summary>
     public class DbContextTests : TestBase
     {

@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    ///     Class representing a metadata property on an item. Supports
-    ///     redirection from MetadataProperty instance to item property value.
+    /// Class representing a metadata property on an item. Supports
+    /// redirection from MetadataProperty instance to item property value.
     /// </summary>
     internal sealed class MetadataPropertyValue
     {

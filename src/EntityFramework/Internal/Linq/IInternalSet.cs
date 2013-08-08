@@ -6,8 +6,8 @@ namespace System.Data.Entity.Internal.Linq
     using System.Data.Entity.Infrastructure;
 
     /// <summary>
-    ///     A non-generic interface implemented by <see cref="InternalSet{TEntity}" /> that allows operations on
-    ///     any set object without knowing the type to which it applies.
+    /// A non-generic interface implemented by <see cref="InternalSet{TEntity}" /> that allows operations on
+    /// any set object without knowing the type to which it applies.
     /// </summary>
     internal interface IInternalSet : IInternalQuery
     {

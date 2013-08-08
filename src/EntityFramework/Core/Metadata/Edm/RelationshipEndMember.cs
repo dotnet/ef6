@@ -5,12 +5,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Initializes a new instance of the RelationshipEndMember class
+    /// Initializes a new instance of the RelationshipEndMember class
     /// </summary>
     public abstract class RelationshipEndMember : EdmMember
     {
         /// <summary>
-        ///     Initializes a new instance of RelationshipEndMember
+        /// Initializes a new instance of RelationshipEndMember
         /// </summary>
         /// <param name="name"> name of the relationship end member </param>
         /// <param name="endRefType"> Ref type that this end refers to </param>
@@ -37,10 +37,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the operational behavior of this relationship end member.</summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.OperationAction" /> values. The default is
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Metadata.Edm.OperationAction.None" />
-        ///     .
+        /// One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.OperationAction" /> values. The default is
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Metadata.Edm.OperationAction.None" />
+        /// .
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.OperationAction, true)]
         public OperationAction DeleteBehavior
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the multiplicity of this relationship end member.</summary>
         /// <returns>
-        ///     One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> values.
+        /// One of the <see cref="T:System.Data.Entity.Core.Metadata.Edm.RelationshipMultiplicity" /> values.
         /// </returns>
         [MetadataProperty(BuiltInTypeKind.RelationshipMultiplicity, false)]
         public RelationshipMultiplicity RelationshipMultiplicity

@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Globalization;
 
     /// <summary>
-    ///     Represents the Cql Parser engine. Also, implements helpers and util routines.
+    /// Represents the Cql Parser engine. Also, implements helpers and util routines.
     /// </summary>
     internal sealed partial class CqlParser
     {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private const string _internalYaccSyntaxErrorMessage = "syntax error";
 
         /// <summary>
-        ///     Contains inclusive count of method expressions.
+        /// Contains inclusive count of method expressions.
         /// </summary>
         private uint _methodExprCounter;
 
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Main entry point for parsing cql.
+        /// Main entry point for parsing cql.
         /// </summary>
         /// <param name="query"> query text </param>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic rules are violated and the query cannot be accepted</exception>
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Returns query string
+        /// Returns query string
         /// </summary>
         internal string Query
         {
@@ -75,10 +75,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
 #endif
 
         /// <summary>
-        ///     Returns ParserOptions used
+        /// Returns ParserOptions used
         /// </summary>
         /// <remarks>
-        ///     Once parse has been invoked, ParserOptions are frozen and cannot be changed. otherwise a EntityException exception will be thrown
+        /// Once parse has been invoked, ParserOptions are frozen and cannot be changed. otherwise a EntityException exception will be thrown
         /// </remarks>
         internal ParserOptions ParserOptions
         {
@@ -86,7 +86,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Internal entry point
+        /// Internal entry point
         /// </summary>
         private void internalParseEntryPoint()
         {

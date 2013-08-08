@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
 
     /// <summary>
-    ///     Generic implementation of a ConversionContext
+    /// Generic implementation of a ConversionContext
     /// </summary>
     internal sealed class GenericConversionContext<T_Identifier> : ConversionContext<T_Identifier>
     {

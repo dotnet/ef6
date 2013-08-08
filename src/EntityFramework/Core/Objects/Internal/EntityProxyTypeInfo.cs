@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection.Emit;
 
     /// <summary>
-    ///     Contains the Type of a proxy class, along with any behaviors associated with that proxy Type.
+    /// Contains the Type of a proxy class, along with any behaviors associated with that proxy Type.
     /// </summary>
     internal sealed class EntityProxyTypeInfo
     {
@@ -208,8 +208,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         #region Wrapper on the Proxy
 
         /// <summary>
-        ///     Set the proxy object's private entity wrapper field value to the specified entity wrapper object.
-        ///     The proxy object (representing the wrapped entity) is retrieved from the wrapper itself.
+        /// Set the proxy object's private entity wrapper field value to the specified entity wrapper object.
+        /// The proxy object (representing the wrapped entity) is retrieved from the wrapper itself.
         /// </summary>
         /// <param name="wrapper"> Wrapper object to be referenced by the proxy. </param>
         /// <returns> The supplied entity wrapper. This is done so that this method can be more easily composed within lambda expressions (such as in the materializer). </returns>
@@ -221,7 +221,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Gets the proxy object's entity wrapper field value
+        /// Gets the proxy object's entity wrapper field value
         /// </summary>
         internal IEntityWrapper GetEntityWrapper(object entity)
         {

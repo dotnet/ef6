@@ -19,23 +19,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         private ReadOnlyCollection<DbParameterReferenceExpression> _parameters;
 
         /// <summary>
-        ///     Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
+        /// Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
         /// </summary>
         /// <param name="metadata"> The metadata workspace that the command tree should use. </param>
         /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
         /// <param name="query">
-        ///     A <see cref="DbExpression" /> that defines the logic of the query.
+        /// A <see cref="DbExpression" /> that defines the logic of the query.
         /// </param>
         /// <param name="validate"> When set to false the validation of the tree is turned off. </param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="metadata" />
-        ///     or
-        ///     <paramref name="query" />
-        ///     is null
+        /// <paramref name="metadata" />
+        /// or
+        /// <paramref name="query" />
+        /// is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     <paramref name="dataSpace" />
-        ///     does not represent a valid data space
+        /// <paramref name="dataSpace" />
+        /// does not represent a valid data space
         /// </exception>
         public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query, bool validate)
             : base(metadata, dataSpace)
@@ -55,22 +55,22 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
+        /// Constructs a new DbQueryCommandTree that uses the specified metadata workspace.
         /// </summary>
         /// <param name="metadata"> The metadata workspace that the command tree should use. </param>
         /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
         /// <param name="query">
-        ///     A <see cref="DbExpression" /> that defines the logic of the query.
+        /// A <see cref="DbExpression" /> that defines the logic of the query.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     <paramref name="metadata" />
-        ///     or
-        ///     <paramref name="query" />
-        ///     is null
+        /// <paramref name="metadata" />
+        /// or
+        /// <paramref name="query" />
+        /// is null
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     <paramref name="dataSpace" />
-        ///     does not represent a valid data space
+        /// <paramref name="dataSpace" />
+        /// does not represent a valid data space
         /// </exception>
         public DbQueryCommandTree(MetadataWorkspace metadata, DataSpace dataSpace, DbExpression query)
             : this(metadata, dataSpace, query, true)
@@ -78,10 +78,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
+        /// Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that defines the logic of the query operation.
         /// </returns>
         /// <exception cref="T:System.ArgumentNullException">The expression is null.</exception>
         /// <exception cref="T:System.ArgumentException">The expression is associated with a different command tree.</exception>

@@ -3,22 +3,22 @@
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
     /// <summary>
-    ///     Enum describing row counts
+    /// Enum describing row counts
     /// </summary>
     internal enum RowCount : byte
     {
         /// <summary>
-        ///     Zero rows
+        /// Zero rows
         /// </summary>
         Zero = 0,
 
         /// <summary>
-        ///     One row
+        /// One row
         /// </summary>
         One = 1,
 
         /// <summary>
-        ///     Unbounded (unknown number of rows)
+        /// Unbounded (unknown number of rows)
         /// </summary>
         Unbounded = 2,
     }

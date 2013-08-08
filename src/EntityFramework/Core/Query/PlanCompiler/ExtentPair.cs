@@ -5,14 +5,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Metadata.Edm;
 
     /// <summary>
-    ///     A simple class that represents a pair of extents
+    /// A simple class that represents a pair of extents
     /// </summary>
     internal class ExtentPair
     {
         #region public surface
 
         /// <summary>
-        ///     Return the left component of the pair
+        /// Return the left component of the pair
         /// </summary>
         internal EntitySetBase Left
         {
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Return the right component of the pair
+        /// Return the right component of the pair
         /// </summary>
         internal EntitySetBase Right
         {
@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Equals
+        /// Equals
         /// </summary>
         public override bool Equals(object obj)
         {
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Hashcode
+        /// Hashcode
         /// </summary>
         public override int GetHashCode()
         {

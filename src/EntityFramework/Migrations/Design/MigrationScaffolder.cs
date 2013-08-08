@@ -5,7 +5,7 @@ namespace System.Data.Entity.Migrations.Design
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Scaffolds code-based migrations to apply pending model changes to the database.
+    /// Scaffolds code-based migrations to apply pending model changes to the database.
     /// </summary>
     public class MigrationScaffolder
     {
@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Design
         private bool _namespaceSpecified;
 
         /// <summary>
-        ///     Initializes a new instance of the MigrationScaffolder class.
+        /// Initializes a new instance of the MigrationScaffolder class.
         /// </summary>
         /// <param name="migrationsConfiguration"> Configuration to be used for scaffolding. </param>
         public MigrationScaffolder(DbMigrationsConfiguration migrationsConfiguration)
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Gets or sets the namespace used in the migration's generated code.
-        ///     By default, this is the same as MigrationsNamespace on the migrations
-        ///     configuration object passed into the constructor. For VB.NET projects, this
-        ///     will need to be updated to take into account the project's root namespace.
+        /// Gets or sets the namespace used in the migration's generated code.
+        /// By default, this is the same as MigrationsNamespace on the migrations
+        /// configuration object passed into the constructor. For VB.NET projects, this
+        /// will need to be updated to take into account the project's root namespace.
         /// </summary>
         public string Namespace
         {
@@ -46,7 +46,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Scaffolds a code based migration to apply any pending model changes to the database.
+        /// Scaffolds a code based migration to apply any pending model changes to the database.
         /// </summary>
         /// <param name="migrationName"> The name to use for the scaffolded migration. </param>
         /// <returns> The scaffolded migration. </returns>
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Scaffolds a code based migration to apply any pending model changes to the database.
+        /// Scaffolds a code based migration to apply any pending model changes to the database.
         /// </summary>
         /// <param name="migrationName"> The name to use for the scaffolded migration. </param>
         /// <param name="ignoreChanges"> Whether or not to include model changes. </param>
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Migrations.Design
         }
 
         /// <summary>
-        ///     Scaffolds the initial code-based migration corresponding to a previously run database initializer.
+        /// Scaffolds the initial code-based migration corresponding to a previously run database initializer.
         /// </summary>
         /// <returns> The scaffolded migration. </returns>
         public virtual ScaffoldedMigration ScaffoldInitialCreate()

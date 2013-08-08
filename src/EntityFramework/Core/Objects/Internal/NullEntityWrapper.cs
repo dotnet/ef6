@@ -7,10 +7,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Defines an entity wrapper that wraps an entity with a null value.
-    ///     This is a singleton class for which the same instance is always returned
-    ///     any time a wrapper around a null entity is requested.  Objects of this
-    ///     type are immutable and mutable to allow this behavior to work correctly.
+    /// Defines an entity wrapper that wraps an entity with a null value.
+    /// This is a singleton class for which the same instance is always returned
+    /// any time a wrapper around a null entity is requested.  Objects of this
+    /// type are immutable and mutable to allow this behavior to work correctly.
     /// </summary>
     internal class NullEntityWrapper : IEntityWrapper
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     The single instance of this class.
+        /// The single instance of this class.
         /// </summary>
         internal static IEntityWrapper NullWrapper
         {

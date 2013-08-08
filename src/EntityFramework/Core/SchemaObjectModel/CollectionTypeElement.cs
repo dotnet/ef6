@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     class representing the Schema element in the schema
+    /// class representing the Schema element in the schema
     /// </summary>
     internal class CollectionTypeElement : ModelFunctionTypeElement
     {

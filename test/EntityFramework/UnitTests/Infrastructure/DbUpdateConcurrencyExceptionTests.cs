@@ -6,9 +6,9 @@ namespace System.Data.Entity.Infrastructure
     using Xunit;
 
     /// <summary>
-    ///     General unit tests for concurrency exceptions.  Note that most of
-    ///     the actual functionality is contained in core EF and is tested through
-    ///     functional tests.
+    /// General unit tests for concurrency exceptions.  Note that most of
+    /// the actual functionality is contained in core EF and is tested through
+    /// functional tests.
     /// </summary>
     public class DbUpdateConcurrencyExceptionTests : TestBase
     {

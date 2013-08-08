@@ -5,14 +5,14 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Represents a paren expression ast node.
+    /// Represents a paren expression ast node.
     /// </summary>
     internal sealed class ParenExpr : Node
     {
         private readonly Node _expr;
 
         /// <summary>
-        ///     Initializes paren expression.
+        /// Initializes paren expression.
         /// </summary>
         internal ParenExpr(Node expr)
         {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns the parenthesized expression.
+        /// Returns the parenthesized expression.
         /// </summary>
         internal Node Expr
         {

@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    ///     Helps map one variable to the next.
+    /// Helps map one variable to the next.
     /// </summary>
     internal class VarMap : Dictionary<Var, Var>
     {

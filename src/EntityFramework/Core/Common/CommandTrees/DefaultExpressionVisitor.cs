@@ -19,10 +19,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             new Dictionary<DbVariableReferenceExpression, DbVariableReferenceExpression>();
 
         /// <summary>
-        ///     Initializes a new instance of the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Common.CommandTrees.DefaultExpressionVisitor" />
-        ///     class.
+        /// Initializes a new instance of the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Common.CommandTrees.DefaultExpressionVisitor" />
+        /// class.
         /// </summary>
         protected DefaultExpressionVisitor()
         {

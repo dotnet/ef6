@@ -10,7 +10,7 @@ namespace System.ComponentModel.DataAnnotations
     using System.Globalization;
 
     /// <summary>
-    ///     Specifies the maximum length of array/string data allowed in a property.
+    /// Specifies the maximum length of array/string data allowed in a property.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
     [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes",
@@ -20,12 +20,12 @@ namespace System.ComponentModel.DataAnnotations
         private const int MaxAllowableLength = -1;
 
         /// <summary>
-        ///     Gets the maximum allowable length of the array/string data.
+        /// Gets the maximum allowable length of the array/string data.
         /// </summary>
         public int Length { get; private set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MaxLengthAttribute" /> class.
+        /// Initializes a new instance of the <see cref="MaxLengthAttribute" /> class.
         /// </summary>
         /// <param name="length"> The maximum allowable length of array/string data. Value must be greater than zero. </param>
         public MaxLengthAttribute(int length)
@@ -35,8 +35,8 @@ namespace System.ComponentModel.DataAnnotations
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="MaxLengthAttribute" /> class.
-        ///     The maximum allowable length supported by the database will be used.
+        /// Initializes a new instance of the <see cref="MaxLengthAttribute" /> class.
+        /// The maximum allowable length supported by the database will be used.
         /// </summary>
         public MaxLengthAttribute()
             : base(() => DefaultErrorMessageString)
@@ -50,11 +50,11 @@ namespace System.ComponentModel.DataAnnotations
         }
 
         /// <summary>
-        ///     Determines whether a specified object is valid. (Overrides <see cref="ValidationAttribute.IsValid(object)" />)
+        /// Determines whether a specified object is valid. (Overrides <see cref="ValidationAttribute.IsValid(object)" />)
         /// </summary>
         /// <remarks>
-        ///     This method returns <c>true</c> if the <paramref name="value" /> is null.  
-        ///     It is assumed the <see cref="RequiredAttribute" /> is used if the value may not be null.
+        /// This method returns <c>true</c> if the <paramref name="value" /> is null.  
+        /// It is assumed the <see cref="RequiredAttribute" /> is used if the value may not be null.
         /// </remarks>
         /// <param name="value"> The object to validate. </param>
         /// <returns> <c>true</c> if the value is null or less than or equal to the specified maximum length, otherwise <c>false</c> </returns>
@@ -78,7 +78,7 @@ namespace System.ComponentModel.DataAnnotations
         }
 
         /// <summary>
-        ///     Applies formatting to a specified error message. (Overrides <see cref="ValidationAttribute.FormatErrorMessage" />)
+        /// Applies formatting to a specified error message. (Overrides <see cref="ValidationAttribute.FormatErrorMessage" />)
         /// </summary>
         /// <param name="name"> The name to include in the formatted string. </param>
         /// <returns> A localized string to describe the maximum acceptable length. </returns>
@@ -89,7 +89,7 @@ namespace System.ComponentModel.DataAnnotations
         }
 
         /// <summary>
-        ///     Checks that Length has a legal value.  Throws InvalidOperationException if not.
+        /// Checks that Length has a legal value.  Throws InvalidOperationException if not.
         /// </summary>
         private void EnsureLegalLengths()
         {

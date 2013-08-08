@@ -20,10 +20,10 @@ namespace System.Data.Entity.Core.Objects
         #region Internal Constructors
 
         /// <summary>
-        ///     Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
-        ///     all of the entities in the specified EntitySet.
-        ///     Sets the query's command text to the fully-qualified, quoted, EntitySet name, i.e. [EntityContainerName].[EntitySetName]
-        ///     Explicitly set MergeOption to AppendOnly in order to mirror CreateQuery behavior
+        /// Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
+        /// all of the entities in the specified EntitySet.
+        /// Sets the query's command text to the fully-qualified, quoted, EntitySet name, i.e. [EntityContainerName].[EntitySetName]
+        /// Explicitly set MergeOption to AppendOnly in order to mirror CreateQuery behavior
         /// </summary>
         /// <param name="entitySet"> Metadata EntitySet on which to base the ObjectSet. </param>
         /// <param name="context"> ObjectContext to be used for the query and data modification operations. </param>
@@ -40,10 +40,10 @@ namespace System.Data.Entity.Core.Objects
         #region Public Properties
 
         /// <summary>
-        ///     Gets the metadata of the entity set represented by this <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
+        /// Gets the metadata of the entity set represented by this <see cref="T:System.Data.Entity.Core.Objects.ObjectSet`1" /> instance.
         /// </summary>
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> object.
+        /// An <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> object.
         /// </returns>
         public EntitySet EntitySet
         {
@@ -72,10 +72,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Marks an object for deletion. </summary>
         /// <param name="entity">
-        ///     An object that represents the entity to delete. The object can be in any state except
-        ///     <see
-        ///         cref="F:System.Data.Entity.EntityState.Detached" />
-        ///     .
+        /// An object that represents the entity to delete. The object can be in any state except
+        /// <see
+        ///     cref="F:System.Data.Entity.EntityState.Detached" />
+        /// .
         /// </param>
         public void DeleteObject(TEntity entity)
         {
@@ -87,10 +87,10 @@ namespace System.Data.Entity.Core.Objects
 
         /// <summary>Removes the object from the object context.</summary>
         /// <param name="entity">
-        ///     Object to be detached. Only the  entity  is removed; if there are any related objects that are being tracked by the same
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
-        ///     , those will not be detached automatically.
+        /// Object to be detached. Only the  entity  is removed; if there are any related objects that are being tracked by the same
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
+        /// , those will not be detached automatically.
         /// </param>
         public void Detach(TEntity entity)
         {
@@ -101,20 +101,20 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Copies the scalar values from the supplied object into the object in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     that has the same key.
+        /// Copies the scalar values from the supplied object into the object in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// that has the same key.
         /// </summary>
         /// <returns>The updated object.</returns>
         /// <param name="currentEntity">
-        ///     The detached object that has property updates to apply to the original object. The entity key of  currentEntity  must match the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
-        ///     property of an entry in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The detached object that has property updates to apply to the original object. The entity key of  currentEntity  must match the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        /// property of an entry in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         public TEntity ApplyCurrentValues(TEntity currentEntity)
         {
@@ -123,20 +123,20 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>
-        ///     Sets the <see cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.OriginalValues" /> property of an
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        ///     to match the property values of a supplied object.
+        /// Sets the <see cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.OriginalValues" /> property of an
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        /// to match the property values of a supplied object.
         /// </summary>
         /// <returns>The updated object.</returns>
         /// <param name="originalEntity">
-        ///     The detached object that has property updates to apply to the original object. The entity key of  originalEntity  must match the
-        ///     <see
-        ///         cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
-        ///     property of an entry in the
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
-        ///     .
+        /// The detached object that has property updates to apply to the original object. The entity key of  originalEntity  must match the
+        /// <see
+        ///     cref="P:System.Data.Entity.Core.Objects.ObjectStateEntry.EntityKey" />
+        /// property of an entry in the
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Objects.ObjectContext" />
+        /// .
         /// </param>
         public TEntity ApplyOriginalValues(TEntity originalEntity)
         {

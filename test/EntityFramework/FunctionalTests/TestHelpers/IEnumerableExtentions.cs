@@ -8,7 +8,7 @@ namespace System.Data.Entity
     public static class IEnumerableExtentions
     {
         /// <summary>
-        ///     Creates a <see cref="List{T}" /> from the <see cref="IEnumerable" />.
+        /// Creates a <see cref="List{T}" /> from the <see cref="IEnumerable" />.
         /// </summary>
         /// <typeparam name="T"> The type that the elements will be cast to. </typeparam>
         /// <returns> A <see cref="List{T}" /> that contains elements from the input sequence. </returns>

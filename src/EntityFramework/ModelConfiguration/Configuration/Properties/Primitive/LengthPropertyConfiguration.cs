@@ -6,37 +6,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Utilities;
 
     /// <summary>
-    ///     Used to configure a property with length facets for an entity type or
-    ///     complex type.
+    /// Used to configure a property with length facets for an entity type or
+    /// complex type.
     /// </summary>
     internal abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
         /// <summary>
-        ///     Gets or sets a value indicating whether the property is fixed length.
+        /// Gets or sets a value indicating whether the property is fixed length.
         /// </summary>
         public bool? IsFixedLength { get; set; }
 
         /// <summary>
-        ///     Gets or sets the maximum length of the property.
+        /// Gets or sets the maximum length of the property.
         /// </summary>
         public int? MaxLength { get; set; }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the property allows the maximum
-        ///     length supported by the database provider.
+        /// Gets or sets a value indicating whether the property allows the maximum
+        /// length supported by the database provider.
         /// </summary>
         public bool? IsMaxLength { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the LengthPropertyConfiguration class.
+        /// Initializes a new instance of the LengthPropertyConfiguration class.
         /// </summary>
         protected LengthPropertyConfiguration()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration" /> 
-        ///     class with the same settings as another configuration.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration" /> 
+        /// class with the same settings as another configuration.
         /// </summary>
         /// <param name="source">The configuration to copy settings from.</param>
         protected LengthPropertyConfiguration(LengthPropertyConfiguration source)

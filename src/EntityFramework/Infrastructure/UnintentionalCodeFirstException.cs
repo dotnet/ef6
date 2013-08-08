@@ -6,14 +6,14 @@ namespace System.Data.Entity.Infrastructure
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Thrown when a context is generated from the <see cref="DbContext" /> templates in Database First or Model
-    ///     First mode and is then used in Code First mode.
+    /// Thrown when a context is generated from the <see cref="DbContext" /> templates in Database First or Model
+    /// First mode and is then used in Code First mode.
     /// </summary>
     /// <remarks>
-    ///     Code generated using the T4 templates provided for Database First and Model First use may not work
-    ///     correctly if used in Code First mode. To use these classes with Code First please add any additional
-    ///     configuration using attributes or the DbModelBuilder API and then remove the code that throws this
-    ///     exception.
+    /// Code generated using the T4 templates provided for Database First and Model First use may not work
+    /// correctly if used in Code First mode. To use these classes with Code First please add any additional
+    /// configuration using attributes or the DbModelBuilder API and then remove the code that throws this
+    /// exception.
     /// </remarks>
     [Serializable]
     public class UnintentionalCodeFirstException : InvalidOperationException
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Infrastructure
         #region Constructors and fields
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
+        /// Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
         public UnintentionalCodeFirstException()
             : base(Strings.UnintentionalCodeFirstException_Message)
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
+        /// Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
         /// <param name="info"> The object that holds the serialized object data. </param>
         /// <param name="context"> The contextual information about the source or destination. </param>
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
+        /// Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
         /// <param name="message"> The message. </param>
         public UnintentionalCodeFirstException(string message)
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
+        /// Initializes a new instance of the <see cref="UnintentionalCodeFirstException" /> class.
         /// </summary>
         /// <param name="message"> The message. </param>
         /// <param name="innerException"> The inner exception. </param>

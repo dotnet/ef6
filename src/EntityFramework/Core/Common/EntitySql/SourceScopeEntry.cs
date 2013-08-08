@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents simple source var scope entry.
+    /// Represents simple source var scope entry.
     /// </summary>
     internal sealed class SourceScopeEntry : ScopeEntry, IGroupExpressionExtendedInfo, IGetAlternativeName
     {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Prepend <paramref name="parentVarRef" /> to the property chain.
+        /// Prepend <paramref name="parentVarRef" /> to the property chain.
         /// </summary>
         internal SourceScopeEntry AddParentVar(DbVariableReferenceExpression parentVarRef)
         {
@@ -82,7 +82,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Replace existing var at the head of the property chain with the new <paramref name="parentVarRef" />.
+        /// Replace existing var at the head of the property chain with the new <paramref name="parentVarRef" />.
         /// </summary>
         internal void ReplaceParentVar(DbVariableReferenceExpression parentVarRef)
         {
@@ -106,11 +106,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Rebuild the current scope entry expression as the property chain off the <paramref name="parentVarRef" /> expression.
-        ///     Also build
-        ///     - <see cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" /> off the <paramref name="parentGroupVarRef" /> expression;
-        ///     - <see cref="IGroupExpressionExtendedInfo.GroupAggBasedExpression" /> off the <paramref name="groupAggRef" /> expression.
-        ///     This adjustment is reversable by <see cref="RollbackAdjustmentToGroupVar" />(...).
+        /// Rebuild the current scope entry expression as the property chain off the <paramref name="parentVarRef" /> expression.
+        /// Also build
+        /// - <see cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" /> off the <paramref name="parentGroupVarRef" /> expression;
+        /// - <see cref="IGroupExpressionExtendedInfo.GroupAggBasedExpression" /> off the <paramref name="groupAggRef" /> expression.
+        /// This adjustment is reversable by <see cref="RollbackAdjustmentToGroupVar" />(...).
         /// </summary>
         internal void AdjustToGroupVar(
             DbVariableReferenceExpression parentVarRef, DbVariableReferenceExpression parentGroupVarRef,
@@ -171,10 +171,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Rolls back the <see cref="AdjustToGroupVar" />(...) adjustment, clears the
-        ///     <see
-        ///         cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" />
-        ///     .
+        /// Rolls back the <see cref="AdjustToGroupVar" />(...) adjustment, clears the
+        /// <see
+        ///     cref="IGroupExpressionExtendedInfo.GroupVarBasedExpression" />
+        /// .
         /// </summary>
         internal void RollbackAdjustmentToGroupVar(DbVariableReferenceExpression pregroupParentVarRef)
         {

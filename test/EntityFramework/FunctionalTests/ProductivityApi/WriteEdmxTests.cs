@@ -15,7 +15,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for WriteEdmx methods.
+    /// Functional tests for WriteEdmx methods.
     /// </summary>
     public class WriteEdmxTests : FunctionalTestBase
     {
@@ -95,9 +95,9 @@ namespace ProductivityApiTests
         }
 
         /// <summary>
-        ///     Not really testing that the EDMX is correct, just that a sanity check
-        ///     that the string has something in it. Testing that the EDMX is correct
-        ///     should be done at the EdmLib/EdmxSerializer level.
+        /// Not really testing that the EDMX is correct, just that a sanity check
+        /// that the string has something in it. Testing that the EDMX is correct
+        /// should be done at the EdmLib/EdmxSerializer level.
         /// </summary>
         private void SanityCheckEdmx(StringBuilder edmxBuilder)
         {

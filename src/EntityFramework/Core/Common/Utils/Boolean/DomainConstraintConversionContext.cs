@@ -6,13 +6,13 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
 
     /// <summary>
-    ///     Specialization of ConversionContext for DomainConstraint BoolExpr
+    /// Specialization of ConversionContext for DomainConstraint BoolExpr
     /// </summary>
     internal sealed class DomainConstraintConversionContext<T_Variable, T_Element> :
         ConversionContext<DomainConstraint<T_Variable, T_Element>>
     {
         /// <summary>
-        ///     A map from domain variables to decision diagram variables.
+        /// A map from domain variables to decision diagram variables.
         /// </summary>
         private readonly Dictionary<DomainVariable<T_Variable, T_Element>, int> _domainVariableToRobddVariableMap =
             new Dictionary<DomainVariable<T_Variable, T_Element>, int>();
@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private Dictionary<int, DomainVariable<T_Variable, T_Element>> _inverseMap;
 
         /// <summary>
-        ///     Translates a domain constraint term to an N-ary DD vertex.
+        /// Translates a domain constraint term to an N-ary DD vertex.
         /// </summary>
         internal override Vertex TranslateTermToVertex(TermExpr<DomainConstraint<T_Variable, T_Element>> term)
         {

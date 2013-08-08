@@ -7,7 +7,7 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents the configuration for a series of contexts
+    /// Represents the configuration for a series of contexts
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ContextCollection : ConfigurationElementCollection

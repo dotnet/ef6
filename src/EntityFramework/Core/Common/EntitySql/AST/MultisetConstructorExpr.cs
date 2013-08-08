@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents multiset constructor expression.
+    /// Represents multiset constructor expression.
     /// </summary>
     internal sealed class MultisetConstructorExpr : Node
     {
@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns list of elements as alias expressions.
+        /// Returns list of elements as alias expressions.
         /// </summary>
         internal NodeList<Node> ExprList
         {

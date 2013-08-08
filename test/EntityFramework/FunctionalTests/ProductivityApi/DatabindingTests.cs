@@ -14,7 +14,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for data binding and DbSet.Local.  Unit tests also exist in the unit tests project.
+    /// Functional tests for data binding and DbSet.Local.  Unit tests also exist in the unit tests project.
     /// </summary>
     public class DatabindingTests : FunctionalTestBase
     {

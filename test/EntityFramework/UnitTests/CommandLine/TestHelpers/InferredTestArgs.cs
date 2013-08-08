@@ -5,7 +5,7 @@ namespace CmdLine.Tests
     using System;
 
     /// <summary>
-    ///     An argument class that uses inferred attributes
+    /// An argument class that uses inferred attributes
     /// </summary>
     public class InferredTestArgs
     {

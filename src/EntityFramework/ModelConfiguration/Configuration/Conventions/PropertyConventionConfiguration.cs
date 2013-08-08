@@ -11,8 +11,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Reflection;
 
     /// <summary>
-    ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the properties in a model.
+    /// Allows configuration to be performed for a lightweight convention based on
+    /// the properties in a model.
     /// </summary>
     public class PropertyConventionConfiguration
     {
@@ -47,11 +47,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Filters the properties that this convention applies to based on a predicate.
+        /// Filters the properties that this convention applies to based on a predicate.
         /// </summary>
         /// <param name="predicate"> A function to test each property for a condition. </param>
         /// <returns>
-        ///     A <see cref="PropertyConventionConfiguration" /> instance so that multiple calls can be chained.
+        /// A <see cref="PropertyConventionConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public PropertyConventionConfiguration Where(Func<PropertyInfo, bool> predicate)
         {
@@ -61,16 +61,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Filters the properties that this convention applies to based on a predicate
-        ///     while capturing a value to use later during configuration.
+        /// Filters the properties that this convention applies to based on a predicate
+        /// while capturing a value to use later during configuration.
         /// </summary>
         /// <typeparam name="T"> Type of the captured value. </typeparam>
         /// <param name="capturingPredicate">
-        ///     A function to capture a value for each property. If the value is null, the
-        ///     property will be filtered out.
+        /// A function to capture a value for each property. If the value is null, the
+        /// property will be filtered out.
         /// </param>
         /// <returns>
-        ///     A <see cref="PropertyConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// A <see cref="PropertyConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         public PropertyConventionWithHavingConfiguration<T> Having<T>(
             Func<PropertyInfo, T> capturingPredicate)
@@ -85,13 +85,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Allows configuration of the properties that this convention applies to.
+        /// Allows configuration of the properties that this convention applies to.
         /// </summary>
         /// <param name="propertyConfigurationAction">
-        ///     An action that performs configuration against a
-        ///     <see
-        ///         cref="ConventionPrimitivePropertyConfiguration" />
-        ///     .
+        /// An action that performs configuration against a
+        /// <see
+        ///     cref="ConventionPrimitivePropertyConfiguration" />
+        /// .
         /// </param>
         public void Configure(Action<ConventionPrimitivePropertyConfiguration> propertyConfigurationAction)
         {

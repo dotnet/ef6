@@ -5,10 +5,10 @@ namespace System.Data.Entity.Core
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Represents a failure while trying to prepare or execute a CommandExecution
-    ///     This exception is intended to provide a common exception that people can catch to
-    ///     hold provider exceptions (SqlException, OracleException) when using the EntityCommand
-    ///     to execute statements.
+    /// Represents a failure while trying to prepare or execute a CommandExecution
+    /// This exception is intended to provide a common exception that people can catch to
+    /// hold provider exceptions (SqlException, OracleException) when using the EntityCommand
+    /// to execute statements.
     /// </summary>
     [Serializable]
     public sealed class EntityCommandExecutionException : EntityException
@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core
         #region Constructors
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
+        /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
         /// </summary>
         public EntityCommandExecutionException()
         {
@@ -26,7 +26,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
+        /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
         /// </summary>
         /// <param name="message">The message that describes the error.</param>
         public EntityCommandExecutionException(string message)
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
+        /// Initializes a new instance of <see cref="T:System.Data.Entity.Core.EntityCommandExecutionException" />.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="innerException">The exception that caused the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core
         }
 
         /// <summary>
-        ///     initializes a new instance EntityCommandExecutionException with a given SerializationInfo and StreamingContext
+        /// initializes a new instance EntityCommandExecutionException with a given SerializationInfo and StreamingContext
         /// </summary>
         private EntityCommandExecutionException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)

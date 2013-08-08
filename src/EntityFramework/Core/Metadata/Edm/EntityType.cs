@@ -10,8 +10,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Threading;
 
     /// <summary>
-    ///     Represents the structure of an <see cref="EntitySet"/>. In the conceptual-model this represents the shape and structure 
-    ///     of an entity. In the store model this represents the structure of a table. To change the Schema and Table name use EntitySet.  
+    /// Represents the structure of an <see cref="EntitySet"/>. In the conceptual-model this represents the shape and structure 
+    /// of an entity. In the store model this represents the structure of a table. To change the Schema and Table name use EntitySet.  
     /// </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1501:AvoidExcessiveInheritance")]
     public class EntityType : EntityTypeBase
@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<EdmProperty> _properties;
 
         /// <summary>
-        ///     Initializes a new instance of Entity Type
+        /// Initializes a new instance of Entity Type
         /// </summary>
         /// <param name="name"> name of the entity type </param>
         /// <param name="namespaceName"> namespace of the entity type </param>
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     cached dynamic method to construct a CLR instance
+        /// cached dynamic method to construct a CLR instance
         /// </summary>
         private RefType _referenceType;
 
@@ -92,13 +92,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
+        /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// .
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {
@@ -106,9 +106,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Validates a EdmMember object to determine if it can be added to this type's
-        ///     Members collection. If this method returns without throwing, it is assumed
-        ///     the member is valid.
+        /// Validates a EdmMember object to determine if it can be added to this type's
+        /// Members collection. If this method returns without throwing, it is assumed
+        /// the member is valid.
         /// </summary>
         /// <param name="member"> The member to validate </param>
         /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
@@ -127,13 +127,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the navigation properties of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
+        /// Gets the navigation properties of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of navigation properties on this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of navigation properties on this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// .
         /// </returns>
         public ReadOnlyMetadataCollection<NavigationProperty> NavigationProperties
         {
@@ -159,13 +159,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Gets the list of properties for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
+        /// Gets the list of properties for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />.
         /// </summary>
         /// <returns>
-        ///     A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     .
+        /// A collection of type <see cref="T:System.Data.Entity.Core.Metadata.Edm.ReadOnlyMetadataCollection`1" /> that contains the list of properties for this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// .
         /// </returns>
         public virtual ReadOnlyMetadataCollection<EdmProperty> Properties
         {
@@ -189,16 +189,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     .
+        /// Returns a <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// .
         /// </summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
-        ///     <see
-        ///         cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
-        ///     .
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.RefType" /> object that references this
+        /// <see
+        ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntityType" />
+        /// .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
         public RefType GetReferenceType()
@@ -222,9 +222,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Attempts to get the property name for the assoication between the two given end
-        ///     names.  Note that this property may not exist if a navigation property is defined
-        ///     in one direction but not in the other.
+        /// Attempts to get the property name for the assoication between the two given end
+        /// names.  Note that this property may not exist if a navigation property is defined
+        /// in one direction but not in the other.
         /// </summary>
         /// <param name="relationshipType"> the relationship for which a nav property is required </param>
         /// <param name="fromName"> the 'from' end of the association </param>
@@ -254,7 +254,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     The factory method for constructing the EntityType object.
+        /// The factory method for constructing the EntityType object.
         /// </summary>
         /// <param name="name">The name of the entity type.</param>
         /// <param name="namespaceName">The namespace of the entity type.</param>
@@ -287,8 +287,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Adds the specified navigation property to the members of this type.
-        ///     The navigation property is added regardless of the read-only flag.
+        /// Adds the specified navigation property to the members of this type.
+        /// The navigation property is added regardless of the read-only flag.
         /// </summary>
         /// <param name="property">The navigation property to be added.</param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]

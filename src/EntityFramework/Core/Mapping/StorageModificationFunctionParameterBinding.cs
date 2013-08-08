@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Globalization;
 
     /// <summary>
-    ///     Binds a modification function parameter to a member of the entity or association being modified.
+    /// Binds a modification function parameter to a member of the entity or association being modified.
     /// </summary>
     internal sealed class StorageModificationFunctionParameterBinding
     {
@@ -23,18 +23,18 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets the parameter taking the value.
+        /// Gets the parameter taking the value.
         /// </summary>
         internal readonly FunctionParameter Parameter;
 
         /// <summary>
-        ///     Gets the path to the entity or association member defining the value.
+        /// Gets the path to the entity or association member defining the value.
         /// </summary>
         internal readonly StorageModificationFunctionMemberPath MemberPath;
 
         /// <summary>
-        ///     Gets a value indicating whether the current or original
-        ///     member value is being bound.
+        /// Gets a value indicating whether the current or original
+        /// member value is being bound.
         /// </summary>
         internal readonly bool IsCurrent;
 

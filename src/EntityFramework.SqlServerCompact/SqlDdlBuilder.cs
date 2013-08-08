@@ -10,7 +10,7 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Text;
 
     /// <summary>
-    ///     Class for generating scripts to create schema objects.
+    /// Class for generating scripts to create schema objects.
     /// </summary>
     internal sealed class SqlDdlBuilder
     {
@@ -29,7 +29,7 @@ namespace System.Data.Entity.SqlServerCompact
         private readonly List<EntitySet> ignoredEntitySets = new List<EntitySet>();
 
         /// <summary>
-        ///     Helper function for generating the scripts for tables &amp; constraints.
+        /// Helper function for generating the scripts for tables &amp; constraints.
         /// </summary>
         internal static List<string> CreateObjectsScript(StoreItemCollection itemCollection, bool returnWarnings)
         {
@@ -66,7 +66,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Function that returns final command text by appending Constraints to ObjectBuilder.
+        /// Function that returns final command text by appending Constraints to ObjectBuilder.
         /// </summary>
         internal List<string> GetCommandText(bool returnWarnings)
         {
@@ -84,7 +84,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Function for generating foreign key constraints.
+        /// Function for generating foreign key constraints.
         /// </summary>
         private void AppendCreateForeignKeys(AssociationSet associationSet)
         {
@@ -135,7 +135,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Function for generating create table statements.
+        /// Function for generating create table statements.
         /// </summary>
         private void AppendCreateTable(EntitySet entitySet)
         {
@@ -316,7 +316,7 @@ namespace System.Data.Entity.SqlServerCompact
         }
 
         /// <summary>
-        ///     Append raw SQL into the string builder with formatting options and invariant culture formatting.
+        /// Append raw SQL into the string builder with formatting options and invariant culture formatting.
         /// </summary>
         /// <param name="builder"> </param>
         /// <param name="format"> A composite format string. </param>

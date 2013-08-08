@@ -10,8 +10,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq;
 
     /// <summary>
-    ///     Allows configuration to be performed for a lightweight convention based on
-    ///     the entity types in a model.
+    /// Allows configuration to be performed for a lightweight convention based on
+    /// the entity types in a model.
     /// </summary>
     public class TypeConventionConfiguration
     {
@@ -44,12 +44,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Filters the entity types that this convention applies to based on a
-        ///     predicate.
+        /// Filters the entity types that this convention applies to based on a
+        /// predicate.
         /// </summary>
         /// <param name="predicate"> A function to test each entity type for a condition. </param>
         /// <returns>
-        ///     An <see cref="TypeConventionConfiguration" /> instance so that multiple calls can be chained.
+        /// An <see cref="TypeConventionConfiguration" /> instance so that multiple calls can be chained.
         /// </returns>
         public TypeConventionConfiguration Where(Func<Type, bool> predicate)
         {
@@ -59,16 +59,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Filters the entity types that this convention applies to based on a predicate
-        ///     while capturing a value to use later during configuration.
+        /// Filters the entity types that this convention applies to based on a predicate
+        /// while capturing a value to use later during configuration.
         /// </summary>
         /// <typeparam name="T"> Type of the captured value. </typeparam>
         /// <param name="capturingPredicate">
-        ///     A function to capture a value for each entity type. If the value is null, the
-        ///     entity type will be filtered out.
+        /// A function to capture a value for each entity type. If the value is null, the
+        /// entity type will be filtered out.
         /// </param>
         /// <returns>
-        ///     An <see cref="TypeConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// An <see cref="TypeConventionWithHavingConfiguration{T}" /> instance so that multiple calls can be chained.
         /// </returns>
         public TypeConventionWithHavingConfiguration<T> Having<T>(Func<Type, T> capturingPredicate)
             where T : class
@@ -82,13 +82,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Allows configuration of the entity types that this convention applies to.
+        /// Allows configuration of the entity types that this convention applies to.
         /// </summary>
         /// <param name="entityConfigurationAction">
-        ///     An action that performs configuration against a
-        ///     <see
-        ///         cref="ConventionTypeConfiguration" />
-        ///     .
+        /// An action that performs configuration against a
+        /// <see
+        ///     cref="ConventionTypeConfiguration" />
+        /// .
         /// </param>
         public void Configure(Action<ConventionTypeConfiguration> entityConfigurationAction)
         {

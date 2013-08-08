@@ -15,8 +15,8 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for property values.
-    ///     Unit tests also exist in the unit tests project.
+    /// Functional tests for property values.
+    /// Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbPropertyValuesTests : FunctionalTestBase
     {

@@ -6,8 +6,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Represents an internally generated constant that is used to serve as a null sentinel,
-    ///     i.e. to be checked whether it is null.
+    /// Represents an internally generated constant that is used to serve as a null sentinel,
+    /// i.e. to be checked whether it is null.
     /// </summary>
     internal sealed class NullSentinelOp : ConstantBaseOp
     {
@@ -28,12 +28,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #region public apis
 
         /// <summary>
-        ///     Pattern for transformation rules
+        /// Pattern for transformation rules
         /// </summary>
         internal static readonly NullSentinelOp Pattern = new NullSentinelOp();
 
         /// <summary>
-        ///     Visitor pattern method
+        /// Visitor pattern method
         /// </summary>
         /// <param name="v"> The BasicOpVisitor that is visiting this Op </param>
         /// <param name="n"> The Node that references this Op </param>
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Visitor pattern method for visitors with a return value
+        /// Visitor pattern method for visitors with a return value
         /// </summary>
         /// <param name="v"> The visitor </param>
         /// <param name="n"> The node in question </param>

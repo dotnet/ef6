@@ -401,7 +401,7 @@ namespace System.Data.Entity.Internal
     }
 
     /// <summary>
-    ///     Only use this for LegacyDatabaseInitializerConfig tests.
+    /// Only use this for LegacyDatabaseInitializerConfig tests.
     /// </summary>
     public class FakeForLegacyAppConfig : DbContextUsingMockInternalContext
     {

@@ -9,15 +9,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     The VarInfo map maintains a mapping from Vars to their corresponding VarInfo
-    ///     It is logically a Dictionary
+    /// The VarInfo map maintains a mapping from Vars to their corresponding VarInfo
+    /// It is logically a Dictionary
     /// </summary>
     internal class VarInfoMap
     {
         private readonly Dictionary<Var, VarInfo> m_map;
 
         /// <summary>
-        ///     Default constructor
+        /// Default constructor
         /// </summary>
         internal VarInfoMap()
         {
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a new VarInfo for a structured type Var
+        /// Create a new VarInfo for a structured type Var
         /// </summary>
         /// <param name="v"> The structured type Var </param>
         /// <param name="newType"> "Mapped" type for v </param>
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a new VarInfo for a structured type Var where the newVars cannot include a null sentinel
+        /// Create a new VarInfo for a structured type Var where the newVars cannot include a null sentinel
         /// </summary>
         /// <param name="v"> The structured type Var </param>
         /// <param name="newType"> "Mapped" type for v </param>
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Create a VarInfo for a collection typed Var
+        /// Create a VarInfo for a collection typed Var
         /// </summary>
         /// <param name="v"> The collection-typed Var </param>
         /// <param name="newVar"> the new Var </param>
@@ -67,14 +67,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Creates a var info for var variables of primitive or enum type.
+        /// Creates a var info for var variables of primitive or enum type.
         /// </summary>
         /// <param name="v"> Current variable of primitive or enum type. </param>
         /// <param name="newVar">
-        ///     The new variable replacing <paramref name="v" /> .
+        /// The new variable replacing <paramref name="v" /> .
         /// </param>
         /// <returns>
-        ///     <see cref="PrimitiveTypeVarInfo" /> for <paramref name="v" /> .
+        /// <see cref="PrimitiveTypeVarInfo" /> for <paramref name="v" /> .
         /// </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         }
 
         /// <summary>
-        ///     Return the VarInfo for the specified var (if one exists, of course)
+        /// Return the VarInfo for the specified var (if one exists, of course)
         /// </summary>
         /// <param name="v"> The Var </param>
         /// <param name="varInfo"> the corresponding VarInfo </param>

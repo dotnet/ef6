@@ -11,9 +11,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Text;
 
     /// <summary>
-    ///     Decorator to produce a SQL script instead of applying changes to the database.
-    ///     Using this decorator to wrap <see cref="DbMigrator" /> will prevent <see cref="DbMigrator" />
-    ///     from applying any changes to the target database.
+    /// Decorator to produce a SQL script instead of applying changes to the database.
+    /// Using this decorator to wrap <see cref="DbMigrator" /> will prevent <see cref="DbMigrator" />
+    /// from applying any changes to the target database.
     /// </summary>
     public class MigratorScriptingDecorator : MigratorBase
     {
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private UpdateDatabaseOperation _updateDatabaseOperation;
 
         /// <summary>
-        ///     Initializes a new instance of the  MigratorScriptingDecorator class.
+        /// Initializes a new instance of the  MigratorScriptingDecorator class.
         /// </summary>
         /// <param name="innerMigrator"> The migrator that this decorator is wrapping. </param>
         public MigratorScriptingDecorator(MigratorBase innerMigrator)
@@ -32,15 +32,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         /// <summary>
-        ///     Produces a script to update the database.
+        /// Produces a script to update the database.
         /// </summary>
         /// <param name="sourceMigration">
-        ///     The migration to update from. If null is supplied, a script to update the
-        ///     current database will be produced.
+        /// The migration to update from. If null is supplied, a script to update the
+        /// current database will be produced.
         /// </param>
         /// <param name="targetMigration">
-        ///     The migration to update to. If null is supplied,
-        ///     a script to update to the latest migration will be produced.
+        /// The migration to update to. If null is supplied,
+        /// a script to update to the latest migration will be produced.
         /// </param>
         /// <returns> The generated SQL script. </returns>
         public string ScriptUpdate(string sourceMigration, string targetMigration)

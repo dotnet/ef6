@@ -8,8 +8,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Configures a many:many relationship.
-    ///     This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
+    /// Configures a many:many relationship.
+    /// This configuration functionality is available via the Code First Fluent API, see <see cref="DbModelBuilder" />.
     /// </summary>
     public class ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType>
         where TEntityType : class
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures the foreign key column(s) and table used to store the relationship.
+        /// Configures the foreign key column(s) and table used to store the relationship.
         /// </summary>
         /// <param name="configurationAction"> Action that configures the foreign key column(s) and table. </param>
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> Map(
@@ -44,8 +44,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures stored procedures to be used for modifying this relationship.
-        ///     The default conventions for procedure and parameter names will be used.
+        /// Configures stored procedures to be used for modifying this relationship.
+        /// The default conventions for procedure and parameter names will be used.
         /// </summary>
         /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         public ManyToManyNavigationPropertyConfiguration<TEntityType, TTargetEntityType> MapToStoredProcedures()
@@ -60,10 +60,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary> 
-        ///     Configures stored procedures to be used for modifying this relationship. 
+        /// Configures stored procedures to be used for modifying this relationship. 
         /// </summary>
         /// <param name="modificationStoredProcedureMappingConfigurationAction">
-        ///     Configuration to override the default conventions for procedure and parameter names.
+        /// Configuration to override the default conventions for procedure and parameter names.
         /// </param>
         /// <returns>The same <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.ManyToManyNavigationPropertyConfiguration`2" /> instance so that multiple calls can be chained.</returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

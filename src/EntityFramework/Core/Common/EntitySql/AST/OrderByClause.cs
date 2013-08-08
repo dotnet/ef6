@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents order by clause.
+    /// Represents order by clause.
     /// </summary>
     internal sealed class OrderByClause : Node
     {
@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly uint _methodCallCount;
 
         /// <summary>
-        ///     Initializes order by clause.
+        /// Initializes order by clause.
         /// </summary>
         internal OrderByClause(NodeList<OrderByClauseItem> orderByClauseItem, Node skipExpr, Node limitExpr, uint methodCallCount)
         {
@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns order by clause items.
+        /// Returns order by clause items.
         /// </summary>
         internal NodeList<OrderByClauseItem> OrderByClauseItem
         {
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns skip sub clause ast node.
+        /// Returns skip sub clause ast node.
         /// </summary>
         internal Node SkipSubClause
         {
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns limit sub-clause ast node.
+        /// Returns limit sub-clause ast node.
         /// </summary>
         internal Node LimitSubClause
         {
@@ -48,7 +48,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     True if order by has method calls.
+        /// True if order by has method calls.
         /// </summary>
         internal bool HasMethodCall
         {

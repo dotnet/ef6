@@ -8,7 +8,7 @@ namespace System.Data.Entity
     using System.Security.Permissions;
 
     /// <summary>
-    ///     Represents a partial trust sandbox
+    /// Represents a partial trust sandbox
     /// </summary>
     public class PartialTrustSandbox : IDisposable
     {
@@ -16,12 +16,12 @@ namespace System.Data.Entity
         private AppDomain _domain;
 
         /// <summary>
-        ///     Constructs a new partial trust sandbox
+        /// Constructs a new partial trust sandbox
         /// </summary>
         /// <param name="grantReflectionPermission"> Specify true to grant unrestricted reflection permission </param>
         /// <param name="configurationFile"> Specify an alternate configuration file for the AppDoman. By default, the calling domain's will be used </param>
         /// <remarks>
-        ///     If you do not need any special configuration, use the <see cref="Default" /> instance.
+        /// If you do not need any special configuration, use the <see cref="Default" /> instance.
         /// </remarks>
         public PartialTrustSandbox(bool grantReflectionPermission = false, string configurationFile = null)
             : this("Partial Trust Sandbox " + Guid.NewGuid(), grantReflectionPermission, configurationFile)
@@ -78,7 +78,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a new instance of the specified type in the partial trust sandbox and returns a proxy to it.
+        /// Creates a new instance of the specified type in the partial trust sandbox and returns a proxy to it.
         /// </summary>
         /// <typeparam name="T"> The type of object to create </typeparam>
         /// <returns> A proxy to the instance created in the partial trust sandbox </returns>
@@ -88,7 +88,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Creates a new instance of the specified type in the partial trust sandbox and returns a proxy to it.
+        /// Creates a new instance of the specified type in the partial trust sandbox and returns a proxy to it.
         /// </summary>
         /// <param name="type"> The type of object to create </param>
         /// <returns> A proxy to the instance created in the partial trust sandbox </returns>

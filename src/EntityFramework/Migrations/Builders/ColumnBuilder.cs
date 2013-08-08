@@ -9,12 +9,12 @@ namespace System.Data.Entity.Migrations.Builders
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Helper class that is used to configure a column.
+    /// Helper class that is used to configure a column.
     /// </summary>
     public class ColumnBuilder
     {
         /// <summary>
-        ///     Creates a new column definition to store Binary data.
+        /// Creates a new column definition to store Binary data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="maxLength"> The maximum allowable length of the array data. </param>
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Boolean data.
+        /// Creates a new column definition to store Boolean data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Byte data.
+        /// Creates a new column definition to store Byte data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store DateTime data.
+        /// Creates a new column definition to store DateTime data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Decimal data.
+        /// Creates a new column definition to store Decimal data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The numeric precision of the column. </param>
@@ -173,7 +173,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Double data.
+        /// Creates a new column definition to store Double data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -200,7 +200,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store GUID data.
+        /// Creates a new column definition to store GUID data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Single data.
+        /// Creates a new column definition to store Single data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -257,7 +257,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Short data.
+        /// Creates a new column definition to store Short data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -287,7 +287,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Integer data.
+        /// Creates a new column definition to store Integer data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Long data.
+        /// Creates a new column definition to store Long data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="identity"> Value indicating whether or not the database will generate values for this column during insert. </param>
@@ -347,7 +347,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store String data.
+        /// Creates a new column definition to store String data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="maxLength"> The maximum allowable length of the string data. </param>
@@ -383,7 +383,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store Time data.
+        /// Creates a new column definition to store Time data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -413,7 +413,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store DateTimeOffset data.
+        /// Creates a new column definition to store DateTimeOffset data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="precision"> The precision of the column. </param>
@@ -443,7 +443,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store geography data.
+        /// Creates a new column definition to store geography data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>
@@ -470,7 +470,7 @@ namespace System.Data.Entity.Migrations.Builders
         }
 
         /// <summary>
-        ///     Creates a new column definition to store geometry data.
+        /// Creates a new column definition to store geometry data.
         /// </summary>
         /// <param name="nullable"> Value indicating whether or not the column allows null values. </param>
         /// <param name="defaultValue"> Constant value to use as the default value for this column. </param>

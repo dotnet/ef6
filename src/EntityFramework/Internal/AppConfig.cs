@@ -13,7 +13,7 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     A simple representation of an app.config or web.config file.
+    /// A simple representation of an app.config or web.config file.
     /// </summary>
     internal class AppConfig
     {
@@ -33,7 +33,7 @@ namespace System.Data.Entity.Internal
         private readonly Lazy<IList<NamedDbProviderService>> _providerServices;
 
         /// <summary>
-        ///     Initializes a new instance of AppConfig based on supplied configuration
+        /// Initializes a new instance of AppConfig based on supplied configuration
         /// </summary>
         /// <param name="configuration"> Configuration to load settings from </param>
         public AppConfig(Configuration configuration)
@@ -46,8 +46,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Initializes a new instance of AppConfig based on supplied connection strings
-        ///     The default configuration for database initializers and default connection factory will be used
+        /// Initializes a new instance of AppConfig based on supplied connection strings
+        /// The default configuration for database initializers and default connection factory will be used
         /// </summary>
         /// <param name="connectionStrings"> Connection strings to be used </param>
         public AppConfig(ConnectionStringSettingsCollection connectionStrings)
@@ -57,10 +57,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Initializes a new instance of AppConfig based on the <see cref="ConfigurationManager" /> for the AppDomain
+        /// Initializes a new instance of AppConfig based on the <see cref="ConfigurationManager" /> for the AppDomain
         /// </summary>
         /// <remarks>
-        ///     Use AppConfig.DefaultInstance instead of this constructor
+        /// Use AppConfig.DefaultInstance instead of this constructor
         /// </remarks>
         private AppConfig()
             : this(
@@ -120,7 +120,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the default connection factory based on the configuration
+        /// Gets the default connection factory based on the configuration
         /// </summary>
         public virtual IDbConnectionFactory TryGetDefaultConnectionFactory()
         {
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the specified connection string from the configuration
+        /// Gets the specified connection string from the configuration
         /// </summary>
         /// <param name="name"> Name of the connection string to get </param>
         /// <returns> The connection string, or null if there is no connection string with the specified name </returns>
@@ -140,7 +140,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets a singleton instance of configuration based on the <see cref="ConfigurationManager" /> for the AppDomain
+        /// Gets a singleton instance of configuration based on the <see cref="ConfigurationManager" /> for the AppDomain
         /// </summary>
         public static AppConfig DefaultInstance
         {

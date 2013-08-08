@@ -11,7 +11,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     Functional tests for implementations of IDbConnectionFactory.
+    /// Functional tests for implementations of IDbConnectionFactory.
     /// </summary>
     public class DbConnectionFactoryTests : FunctionalTestBase
     {

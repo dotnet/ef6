@@ -28,7 +28,7 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    ///     Tests for the primary methods on DbContext.
+    /// Tests for the primary methods on DbContext.
     /// </summary>
     public class DbContextTests : FunctionalTestBase
     {

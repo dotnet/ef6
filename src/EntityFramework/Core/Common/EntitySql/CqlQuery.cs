@@ -11,55 +11,55 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
 
     /// <summary>
-    ///     Provides eSQL text Parsing and Compilation services.
+    /// Provides eSQL text Parsing and Compilation services.
     /// </summary>
     /// <remarks>
-    ///     This class exposes services that perform syntactic and semantic analysis of eSQL commands.
-    ///     The syntactic validation ensures the given command conforms to eSQL formal grammar. The semantic analysis will
-    ///     perform (list not exhaustive): type resolution and validation, ensure semantic and scoping rules, etc.
-    ///     The services exposed by this class are:
-    ///     <list>
-    ///         <item>
-    ///             Translation from eSQL text commands to valid
-    ///             <see cref="DbCommandTree" />
-    ///             s
-    ///         </item>
-    ///         <item>
-    ///             Translation from eSQL text commands to valid
-    ///             <see cref="DbExpression" />
-    ///             s
-    ///         </item>
-    ///     </list>
-    ///     Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the especific typespace or
-    ///     metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and
-    ///     metadata was properly initialized.
-    ///     Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid
-    ///     <see
-    ///         cref="DbCommandTree" />
-    ///     or
-    ///     <see cref="DbExpression" /> otherwise EntityException will be thrown indicating the reason(s) why the given command cannot be accepted.
-    ///     It is also possible that MetadataException and MappingException be thrown if mapping or metadata related problems are encountered during compilation.
-    /// </remarks>
+    /// This class exposes services that perform syntactic and semantic analysis of eSQL commands.
+    /// The syntactic validation ensures the given command conforms to eSQL formal grammar. The semantic analysis will
+    /// perform (list not exhaustive): type resolution and validation, ensure semantic and scoping rules, etc.
+    /// The services exposed by this class are:
     /// <list>
     ///     <item>
-    ///         <seealso cref="ParserOptions" />
+    ///         Translation from eSQL text commands to valid
+    ///         <see cref="DbCommandTree" />
+    ///         s
     ///     </item>
     ///     <item>
-    ///         <seealso cref="DbCommandTree" />
+    ///         Translation from eSQL text commands to valid
+    ///         <see cref="DbExpression" />
+    ///         s
     ///     </item>
-    ///     <item>
-    ///         <seealso cref="DbExpression" />
-    ///     </item>
+    /// </list>
+    /// Queries can be formulated in O-Space, C-Space and S-Space and the services exposed by this class are agnostic of the especific typespace or
+    /// metadata instance passed as required parameter in the semantic analysis by the perspective parameter. It is assumed that the perspective and
+    /// metadata was properly initialized.
+    /// Provided that the command is syntacticaly correct and meaningful within the given typespace, the result will be a valid
+    /// <see
+    ///     cref="DbCommandTree" />
+    /// or
+    /// <see cref="DbExpression" /> otherwise EntityException will be thrown indicating the reason(s) why the given command cannot be accepted.
+    /// It is also possible that MetadataException and MappingException be thrown if mapping or metadata related problems are encountered during compilation.
+    /// </remarks>
+    /// <list>
+    /// <item>
+    ///     <seealso cref="ParserOptions" />
+    /// </item>
+    /// <item>
+    ///     <seealso cref="DbCommandTree" />
+    /// </item>
+    /// <item>
+    ///     <seealso cref="DbExpression" />
+    /// </item>
     /// </list>
     internal static class CqlQuery
     {
         /// <summary>
-        ///     Compiles an eSQL command producing a validated <see cref="DbCommandTree" />.
+        /// Compiles an eSQL command producing a validated <see cref="DbCommandTree" />.
         /// </summary>
         /// <param name="commandText"> eSQL command text </param>
         /// <param name="perspective"> perspective </param>
         /// <param name="parserOptions">
-        ///     parser options <seealso cref="ParserOptions" />
+        /// parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <param name="parameters"> ordinary parameters </param>
         /// <returns> A parse result with the command tree produced by parsing the given command. </returns>
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         /// <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         /// <remarks>
-        ///     This method is not thread safe.
+        /// This method is not thread safe.
         /// </remarks>
         /// <seealso cref="ParserOptions" />
         /// <seealso cref="DbCommandTree" />
@@ -96,12 +96,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Compiles an eSQL query command producing a validated <see cref="DbLambda" />.
+        /// Compiles an eSQL query command producing a validated <see cref="DbLambda" />.
         /// </summary>
         /// <param name="queryCommandText"> eSQL query command text </param>
         /// <param name="perspective"> perspective </param>
         /// <param name="parserOptions">
-        ///     parser options <seealso cref="ParserOptions" />
+        /// parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <param name="variables"> command free variables </param>
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
         /// <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
         /// <remarks>
-        ///     This method is not thread safe.
+        /// This method is not thread safe.
         /// </remarks>
         /// <seealso cref="ParserOptions" />
         /// <seealso cref="DbExpression" />
@@ -142,16 +142,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
         #region Private
 
         /// <summary>
-        ///     Parse eSQL command string into an AST
+        /// Parse eSQL command string into an AST
         /// </summary>
         /// <param name="commandText"> eSQL command </param>
         /// <param name="parserOptions">
-        ///     parser options <seealso cref="ParserOptions" />
+        /// parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <returns> Ast </returns>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
         /// <remarks>
-        ///     This method is not thread safe.
+        /// This method is not thread safe.
         /// </remarks>
         /// <seealso cref="ParserOptions" />
         private static Node Parse(string commandText, ParserOptions parserOptions)
@@ -199,23 +199,23 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Performs semantic conversion, validation on a command AST and creates a <see cref="DbCommandTree" />
+        /// Performs semantic conversion, validation on a command AST and creates a <see cref="DbCommandTree" />
         /// </summary>
         /// <param name="astExpr"> Abstract Syntax Tree of the command </param>
         /// <param name="perspective"> perspective </param>
         /// <param name="parserOptions">
-        ///     parser options <seealso cref="ParserOptions" />
+        /// parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <returns> a parse result with a valid command tree </returns>
         /// <remarks>
-        ///     Parameters name/types must be bound before invoking this method
+        /// Parameters name/types must be bound before invoking this method
         /// </remarks>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted.</exception>
         /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown as inner exception of a EntityException when metadata related service requests fail.</exception>
         /// <exception cref="System.Data.Entity.Core.MappingException">Thrown as inner exception of a EntityException when mapping related service requests fail.</exception>
         /// <remarks>
-        ///     This method is not thread safe.
+        /// This method is not thread safe.
         /// </remarks>
         /// <seealso cref="ParserOptions" />
         /// <seealso cref="DbCommandTree" />
@@ -242,23 +242,23 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 
         /// <summary>
-        ///     Performs semantic conversion, validation on a query command AST and creates a <see cref="DbLambda" />
+        /// Performs semantic conversion, validation on a query command AST and creates a <see cref="DbLambda" />
         /// </summary>
         /// <param name="astQueryCommand"> Abstract Syntax Tree of the query command </param>
         /// <param name="perspective"> perspective </param>
         /// <param name="parserOptions">
-        ///     parser options <seealso cref="ParserOptions" />
+        /// parser options <seealso cref="ParserOptions" />
         /// </param>
         /// <param name="parameters"> ordinary command parameters </param>
         /// <param name="variables"> command free variables </param>
         /// <remarks>
-        ///     Parameters name/types must be bound before invoking this method
+        /// Parameters name/types must be bound before invoking this method
         /// </remarks>
         /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted.</exception>
         /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown as inner exception of a EntityException when metadata related service requests fail.</exception>
         /// <exception cref="System.Data.Entity.Core.MappingException">Thrown as inner exception of a EntityException when mapping related service requests fail.</exception>
         /// <remarks>
-        ///     This method is not thread safe.
+        /// This method is not thread safe.
         /// </remarks>
         /// <seealso cref="ParserOptions" />
         /// <seealso cref="DbExpression" />

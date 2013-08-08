@@ -667,7 +667,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        ///     Sets the field up to match the Instance singleton pattern required by ADO.NET.
+        /// Sets the field up to match the Instance singleton pattern required by ADO.NET.
         /// </summary>
         public DynamicField IsInstance()
         {

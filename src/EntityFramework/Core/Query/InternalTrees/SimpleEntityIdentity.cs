@@ -7,19 +7,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Text;
 
     /// <summary>
-    ///     This class is a "simple" representation of the entity identity, where the
-    ///     entityset containing the entity is known a priori. This may be because
-    ///     there is exactly one entityset for the entity; or because it is inferrable
-    ///     from the query that only one entityset is relevant here
+    /// This class is a "simple" representation of the entity identity, where the
+    /// entityset containing the entity is known a priori. This may be because
+    /// there is exactly one entityset for the entity; or because it is inferrable
+    /// from the query that only one entityset is relevant here
     /// </summary>
     internal class SimpleEntityIdentity : EntityIdentity
     {
         private readonly EntitySet m_entitySet; // the entity set
 
         /// <summary>
-        ///     Basic constructor.
-        ///     Note: the entitySet may be null - in which case, we are referring to
-        ///     a transient entity
+        /// Basic constructor.
+        /// Note: the entitySet may be null - in which case, we are referring to
+        /// a transient entity
         /// </summary>
         /// <param name="entitySet"> The entityset </param>
         /// <param name="keyColumns"> key columns of the entity </param>
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     The entityset containing the entity
+        /// The entityset containing the entity
         /// </summary>
         internal EntitySet EntitySet
         {
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         }
 
         /// <summary>
-        ///     Debugging support
+        /// Debugging support
         /// </summary>
         public override string ToString()
         {

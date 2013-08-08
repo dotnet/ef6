@@ -14,7 +14,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    ///     DbContext Construction tests for SqlCe
+    /// DbContext Construction tests for SqlCe
     /// </summary>
     public class DbContextTestsForSqlCe : FunctionalTestBase, IDisposable
     {

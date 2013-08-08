@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics;
 
     /// <summary>
-    ///     Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships,
-    ///     and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those interfaces.
-    ///     This improves the speed and memory utilization for the standard code-gen cases in materialization.
+    /// Implementation of IEntityWrapper for any entity that implements IEntityWithChangeTracker, IEntityWithRelationships,
+    /// and IEntityWithKey and is not a proxy.  This is a lightweight wrapper that delegates functionality to those interfaces.
+    /// This improves the speed and memory utilization for the standard code-gen cases in materialization.
     /// </summary>
     /// <typeparam name="TEntity"> The type of entity wrapped </typeparam>
     internal sealed class LightweightEntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
@@ -18,8 +18,8 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly TEntity _entity;
 
         /// <summary>
-        ///     Constructs a wrapper for the given entity.
-        ///     Note: use EntityWrapperFactory instead of calling this constructor directly.
+        /// Constructs a wrapper for the given entity.
+        /// Note: use EntityWrapperFactory instead of calling this constructor directly.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         internal LightweightEntityWrapper(TEntity entity, bool overridesEquals)
@@ -39,11 +39,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         /// <summary>
-        ///     Constructs a wrapper as part of the materialization process.  This constructor is only used
-        ///     during materialization where it is known that the entity being wrapped is newly constructed.
-        ///     This means that some checks are not performed that might be needed when thw wrapper is
-        ///     created at other times, and information such as the identity type is passed in because
-        ///     it is readily available in the materializer.
+        /// Constructs a wrapper as part of the materialization process.  This constructor is only used
+        /// during materialization where it is known that the entity being wrapped is newly constructed.
+        /// This means that some checks are not performed that might be needed when thw wrapper is
+        /// created at other times, and information such as the identity type is passed in because
+        /// it is readily available in the materializer.
         /// </summary>
         /// <param name="entity"> The entity to wrap </param>
         /// <param name="key"> The key for the entity </param>

@@ -6,21 +6,21 @@ namespace System.Data.Entity.Validation
     using System.Runtime.Serialization;
 
     /// <summary>
-    ///     Exception thrown from <see cref="DbContext.GetValidationErrors()" /> when an exception is thrown from the validation
-    ///     code.
+    /// Exception thrown from <see cref="DbContext.GetValidationErrors()" /> when an exception is thrown from the validation
+    /// code.
     /// </summary>
     [Serializable]
     public class DbUnexpectedValidationException : DataException
     {
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException.
+        /// Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         public DbUnexpectedValidationException()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException.
+        /// Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         public DbUnexpectedValidationException(string message)
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException.
+        /// Initializes a new instance of DbUnexpectedValidationException.
         /// </summary>
         /// <param name="message"> The exception message. </param>
         /// <param name="innerException"> The inner exception. </param>
@@ -39,8 +39,8 @@ namespace System.Data.Entity.Validation
         }
 
         /// <summary>
-        ///     Initializes a new instance of DbUnexpectedValidationException with the specified serialization info and
-        ///     context.
+        /// Initializes a new instance of DbUnexpectedValidationException with the specified serialization info and
+        /// context.
         /// </summary>
         /// <param name="info"> The serialization info. </param>
         /// <param name="context"> The streaming context. </param>

@@ -10,8 +10,8 @@ namespace System.Data.Entity.Internal
     using System.Xml.Linq;
 
     /// <summary>
-    ///     An extended BindingList implementation that implements sorting.
-    ///     This class was adapted from the LINQ to SQL class of the same name.
+    /// An extended BindingList implementation that implements sorting.
+    /// This class was adapted from the LINQ to SQL class of the same name.
     /// </summary>
     /// <typeparam name="T"> The element type. </typeparam>
     internal class SortableBindingList<T> : BindingList<T>
@@ -23,9 +23,9 @@ namespace System.Data.Entity.Internal
         private PropertyDescriptor _sortProperty;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SortableBindingList{T}" /> class with the
-        ///     the given underlying list.  Note that sorting is dependent on having an actual <see cref="List{T}" />
-        ///     rather than some other ICollection implementation.
+        /// Initializes a new instance of the <see cref="SortableBindingList{T}" /> class with the
+        /// the given underlying list.  Note that sorting is dependent on having an actual <see cref="List{T}" />
+        /// rather than some other ICollection implementation.
         /// </summary>
         /// <param name="list"> The list. </param>
         public SortableBindingList(List<T> list)
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Internal
         #region BindingList overrides
 
         /// <summary>
-        ///     Applies sorting to the list.
+        /// Applies sorting to the list.
         /// </summary>
         /// <param name="prop"> The property to sort by. </param>
         /// <param name="direction"> The sort direction. </param>
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Stops sorting.
+        /// Stops sorting.
         /// </summary>
         protected override void RemoveSortCore()
         {
@@ -65,10 +65,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets a value indicating whether this list is sorted.
+        /// Gets a value indicating whether this list is sorted.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is sorted; otherwise, <c>false</c> .
+        /// <c>true</c> if this instance is sorted; otherwise, <c>false</c> .
         /// </value>
         protected override bool IsSortedCore
         {
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the sort direction.
+        /// Gets the sort direction.
         /// </summary>
         /// <value> The sort direction. </value>
         protected override ListSortDirection SortDirectionCore
@@ -85,7 +85,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the sort property being used to sort.
+        /// Gets the sort property being used to sort.
         /// </summary>
         /// <value> The sort property. </value>
         protected override PropertyDescriptor SortPropertyCore
@@ -94,10 +94,10 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns <c>true</c> indicating that this list supports sorting.
+        /// Returns <c>true</c> indicating that this list supports sorting.
         /// </summary>
         /// <value>
-        ///     <c>true</c> .
+        /// <c>true</c> .
         /// </value>
         protected override bool SupportsSortingCore
         {
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Internal
         #region Comparer implementation
 
         /// <summary>
-        ///     Implements comparing for the <see cref="SortableBindingList{T}" /> implementation.
+        /// Implements comparing for the <see cref="SortableBindingList{T}" /> implementation.
         /// </summary>
         internal class PropertyComparer : Comparer<T>
         {
@@ -119,8 +119,8 @@ namespace System.Data.Entity.Internal
             private readonly bool _useToString;
 
             /// <summary>
-            ///     Initializes a new instance of the <see cref="SortableBindingList{T}.PropertyComparer" /> class
-            ///     for sorting the list.
+            /// Initializes a new instance of the <see cref="SortableBindingList{T}.PropertyComparer" /> class
+            /// for sorting the list.
             /// </summary>
             /// <param name="prop"> The property to sort by. </param>
             /// <param name="direction"> The sort direction. </param>
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Internal
             }
 
             /// <summary>
-            ///     Compares two instances of items in the list.
+            /// Compares two instances of items in the list.
             /// </summary>
             /// <param name="left"> The left item to compare. </param>
             /// <param name="right"> The right item to compare. </param>
@@ -176,11 +176,11 @@ namespace System.Data.Entity.Internal
             }
 
             /// <summary>
-            ///     Determines whether this instance can sort for the specified type.
+            /// Determines whether this instance can sort for the specified type.
             /// </summary>
             /// <param name="type"> The type. </param>
             /// <returns>
-            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
             /// </returns>
             public static bool CanSort(Type type)
             {
@@ -188,11 +188,11 @@ namespace System.Data.Entity.Internal
             }
 
             /// <summary>
-            ///     Determines whether this instance can sort for the specified type using IComparable.
+            /// Determines whether this instance can sort for the specified type using IComparable.
             /// </summary>
             /// <param name="type"> The type. </param>
             /// <returns>
-            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
             /// </returns>
             private static bool CanSortWithIComparable(Type type)
             {
@@ -201,11 +201,11 @@ namespace System.Data.Entity.Internal
             }
 
             /// <summary>
-            ///     Determines whether this instance can sort for the specified type using ToString.
+            /// Determines whether this instance can sort for the specified type using ToString.
             /// </summary>
             /// <param name="type"> The type. </param>
             /// <returns>
-            ///     <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
+            /// <c>true</c> if this instance can sort for the specified type; otherwise, <c>false</c> .
             /// </returns>
             private static bool CanSortWithToString(Type type)
             {

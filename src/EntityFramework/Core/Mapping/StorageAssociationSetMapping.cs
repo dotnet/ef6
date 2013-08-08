@@ -10,30 +10,30 @@ namespace System.Data.Entity.Core.Mapping
     using System.Linq;
 
     /// <summary>
-    ///     Represents the Mapping metadata for an AssociationSet in CS space.
+    /// Represents the Mapping metadata for an AssociationSet in CS space.
     /// </summary>
     /// <example>
-    ///     For Example if conceptually you could represent the CS MSL file as following
-    ///     --Mapping
-    ///     --EntityContainerMapping ( CNorthwind-->SNorthwind )
-    ///     --EntitySetMapping
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --EntityTypeMapping
-    ///     --MappingFragment
-    ///     --AssociationSetMapping
-    ///     --AssociationTypeMapping
-    ///     --MappingFragment
-    ///     This class represents the metadata for the AssociationSetMapping elements in the
-    ///     above example. And it is possible to access the AssociationTypeMap underneath it.
-    ///     There will be only one TypeMap under AssociationSetMap.
+    /// For Example if conceptually you could represent the CS MSL file as following
+    /// --Mapping
+    /// --EntityContainerMapping ( CNorthwind-->SNorthwind )
+    /// --EntitySetMapping
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --EntityTypeMapping
+    /// --MappingFragment
+    /// --AssociationSetMapping
+    /// --AssociationTypeMapping
+    /// --MappingFragment
+    /// This class represents the metadata for the AssociationSetMapping elements in the
+    /// above example. And it is possible to access the AssociationTypeMap underneath it.
+    /// There will be only one TypeMap under AssociationSetMap.
     /// </example>
     internal class StorageAssociationSetMapping : StorageSetMapping
     {
         private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
 
         /// <summary>
-        ///     Construct a new AssociationSetMapping object
+        /// Construct a new AssociationSetMapping object
         /// </summary>
         /// <param name="extent"> Represents the Association Set Metadata object. Will change this to Extent instead of MemberMetadata. </param>
         /// <param name="entityContainerMapping"> The entityContainerMapping mapping that contains this Set mapping </param>
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        ///     Gets or sets function mapping information for this association set. May be null.
+        /// Gets or sets function mapping information for this association set. May be null.
         /// </summary>
         internal StorageAssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 

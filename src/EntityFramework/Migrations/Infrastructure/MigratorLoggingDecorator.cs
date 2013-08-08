@@ -13,7 +13,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Xml.Linq;
 
     /// <summary>
-    ///     Decorator to provide logging during migrations operations..
+    /// Decorator to provide logging during migrations operations..
     /// </summary>
     public class MigratorLoggingDecorator : MigratorBase
     {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private string _lastInfoMessage;
 
         /// <summary>
-        ///     Initializes a new instance of the MigratorLoggingDecorator class.
+        /// Initializes a new instance of the MigratorLoggingDecorator class.
         /// </summary>
         /// <param name="innerMigrator"> The migrator that this decorator is wrapping. </param>
         /// <param name="logger"> The logger to write messages to. </param>

@@ -7,15 +7,15 @@ namespace System.Data.Entity.Migrations.Model
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
-    ///     Represents a foreign key constraint being added to a table.
+    /// Represents a foreign key constraint being added to a table.
     /// </summary>
     public class AddForeignKeyOperation : ForeignKeyOperation
     {
         private readonly List<string> _principalColumns = new List<string>();
 
         /// <summary>
-        ///     Initializes a new instance of the AddForeignKeyOperation class.
-        ///     The PrincipalTable, PrincipalColumns, DependentTable and DependentColumns properties should also be populated.
+        /// Initializes a new instance of the AddForeignKeyOperation class.
+        /// The PrincipalTable, PrincipalColumns, DependentTable and DependentColumns properties should also be populated.
         /// </summary>
         /// <param name="anonymousArguments"> Additional arguments that may be processed by providers. Use anonymous type syntax to specify arguments e.g. 'new { SampleArgument = "MyValue" }'. </param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     The names of the column(s) that the foreign key constraint should target.
+        /// The names of the column(s) that the foreign key constraint should target.
         /// </summary>
         public IList<string> PrincipalColumns
         {
@@ -33,12 +33,12 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating if cascade delete should be configured on the foreign key constraint.
+        /// Gets or sets a value indicating if cascade delete should be configured on the foreign key constraint.
         /// </summary>
         public bool CascadeDelete { get; set; }
 
         /// <summary>
-        ///     Gets an operation to create an index on the foreign key column(s).
+        /// Gets an operation to create an index on the foreign key column(s).
         /// </summary>
         /// <returns> An operation to add the index. </returns>
         public virtual CreateIndexOperation CreateCreateIndexOperation()
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations.Model
         }
 
         /// <summary>
-        ///     Gets an operation to drop the foreign key constraint.
+        /// Gets an operation to drop the foreign key constraint.
         /// </summary>
         public override MigrationOperation Inverse
         {

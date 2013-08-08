@@ -6,7 +6,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
 
     /// <summary>
-    ///     Base type for SortOp and ConstrainedSortOp
+    /// Base type for SortOp and ConstrainedSortOp
     /// </summary>
     internal abstract class SortBaseOp : RelOp
     {
@@ -34,7 +34,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         #endregion
 
         /// <summary>
-        ///     Sort keys
+        /// Sort keys
         /// </summary>
         internal List<SortKey> Keys
         {

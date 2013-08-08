@@ -18,12 +18,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Used to configure a primitive property of an entity type or complex type.
+    /// Used to configure a primitive property of an entity type or complex type.
     /// </summary>
     internal class PrimitivePropertyConfiguration : PropertyConfiguration
     {
         /// <summary>
-        ///     Initializes a new instance of the PrimitivePropertyConfiguration class.
+        /// Initializes a new instance of the PrimitivePropertyConfiguration class.
         /// </summary>
         public PrimitivePropertyConfiguration()
         {
@@ -32,8 +32,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration" /> 
-        ///     class with the same settings as another configuration.
+        /// Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration" /> 
+        /// class with the same settings as another configuration.
         /// </summary>
         /// <param name="source">The configuration to copy settings from.</param>
         protected PrimitivePropertyConfiguration(PrimitivePropertyConfiguration source)
@@ -57,28 +57,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the property is optional.
+        /// Gets a value indicating whether the property is optional.
         /// </summary>
         public bool? IsNullable { get; set; }
 
         /// <summary>
-        ///     Gets or sets the concurrency mode to use for the property.
+        /// Gets or sets the concurrency mode to use for the property.
         /// </summary>
         public ConcurrencyMode? ConcurrencyMode { get; set; }
 
         /// <summary>
-        ///     Gets or sets the pattern used to generate values in the database for the
-        ///     property.
+        /// Gets or sets the pattern used to generate values in the database for the
+        /// property.
         /// </summary>
         public DatabaseGeneratedOption? DatabaseGeneratedOption { get; set; }
 
         /// <summary>
-        ///     Gets or sets the type of the database column used to store the property.
+        /// Gets or sets the type of the database column used to store the property.
         /// </summary>
         public string ColumnType { get; set; }
 
         /// <summary>
-        ///     Gets or sets the name of the database column used to store the property.
+        /// Gets or sets the name of the database column used to store the property.
         /// </summary>
         public string ColumnName { get; set; }
 
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         public string ParameterName { get; set; }
 
         /// <summary>
-        ///     Gets or sets the order of the database column used to store the property.
+        /// Gets or sets the order of the database column used to store the property.
         /// </summary>
         public int? ColumnOrder { get; set; }
 

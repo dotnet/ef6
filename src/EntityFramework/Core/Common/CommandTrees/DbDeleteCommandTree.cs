@@ -31,23 +31,23 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         }
 
         /// <summary>
-        ///     Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
+        /// Gets an <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
         /// </summary>
         /// <remarks>
-        ///     The predicate can include only the following elements:
-        ///     <list>
-        ///         <item>Equality expression</item>
-        ///         <item>Constant expression</item>
-        ///         <item>IsNull expression</item>
-        ///         <item>Property expression</item>
-        ///         <item>Reference expression to the target</item>
-        ///         <item>And expression</item>
-        ///         <item>Or expression</item>
-        ///         <item>Not expression</item>
-        ///     </list>
+        /// The predicate can include only the following elements:
+        /// <list>
+        ///     <item>Equality expression</item>
+        ///     <item>Constant expression</item>
+        ///     <item>IsNull expression</item>
+        ///     <item>Property expression</item>
+        ///     <item>Reference expression to the target</item>
+        ///     <item>And expression</item>
+        ///     <item>Or expression</item>
+        ///     <item>Not expression</item>
+        /// </list>
         /// </remarks>        
         /// <returns>
-        ///     An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
+        /// An <see cref="T:System.Data.Entity.Core.Common.CommandTrees.DbExpression" /> that specifies the predicate used to determine which members of the target collection should be deleted.
         /// </returns>
         public DbExpression Predicate
         {

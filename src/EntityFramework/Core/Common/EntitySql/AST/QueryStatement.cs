@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     /// <summary>
-    ///     Represents query statement AST.
+    /// Represents query statement AST.
     /// </summary>
     internal sealed class QueryStatement : Statement
     {
@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Node _expr;
 
         /// <summary>
-        ///     Initializes query statement.
+        /// Initializes query statement.
         /// </summary>
         /// <param name="functionDefList"> optional function definitions </param>
         /// <param name="expr"> query top level expression </param>
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns optional function defintions. May be null.
+        /// Returns optional function defintions. May be null.
         /// </summary>
         internal NodeList<FunctionDefinition> FunctionDefList
         {
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
 
         /// <summary>
-        ///     Returns query top-level expression.
+        /// Returns query top-level expression.
         /// </summary>
         internal Node Expr
         {

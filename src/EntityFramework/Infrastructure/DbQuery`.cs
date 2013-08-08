@@ -13,7 +13,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Represents a LINQ to Entities query against a DbContext.
+    /// Represents a LINQ to Entities query against a DbContext.
     /// </summary>
     /// <typeparam name="TResult"> The type of entity to query for. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure
         private IQueryProvider _provider;
 
         /// <summary>
-        ///     Creates a new query that will be backed by the given internal query object.
+        /// Creates a new query that will be backed by the given internal query object.
         /// </summary>
         /// <param name="internalQuery"> The backing query. </param>
         internal DbQuery(IInternalQuery<TResult> internalQuery)
@@ -43,18 +43,18 @@ namespace System.Data.Entity.Infrastructure
         #region Include
 
         /// <summary>
-        ///     Specifies the related objects to include in the query results.
+        /// Specifies the related objects to include in the query results.
         /// </summary>
         /// <remarks>
-        ///     Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
-        ///     OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
-        ///     the returned instance of the DbQuery&lt;T&gt;. Other instances of DbQuery&lt;T&gt; and the object context itself are not affected.
-        ///     Because the Include method returns the query object, you can call this method multiple times on an DbQuery&lt;T&gt; to
-        ///     specify multiple paths for the query.
+        /// Paths are all-inclusive. For example, if an include call indicates Include("Orders.OrderLines"), not only will
+        /// OrderLines be included, but also Orders.  When you call the Include method, the query path is only valid on
+        /// the returned instance of the DbQuery&lt;T&gt;. Other instances of DbQuery&lt;T&gt; and the object context itself are not affected.
+        /// Because the Include method returns the query object, you can call this method multiple times on an DbQuery&lt;T&gt; to
+        /// specify multiple paths for the query.
         /// </remarks>
         /// <param name="path"> The dot-separated list of related objects to return in the query results. </param>
         /// <returns>
-        ///     A new <see cref="DbQuery{T}" /> with the defined query path.
+        /// A new <see cref="DbQuery{T}" /> with the defined query path.
         /// </returns>
         public virtual DbQuery<TResult> Include(string path)
         {
@@ -68,7 +68,7 @@ namespace System.Data.Entity.Infrastructure
         #region AsNoTracking
 
         /// <summary>
-        ///     Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
+        /// Returns a new query where the entities returned will not be cached in the <see cref="DbContext" />.
         /// </summary>
         /// <returns> A new query with NoTracking applied. </returns>
         public virtual DbQuery<TResult> AsNoTracking()
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Infrastructure
         #region AsStreaming
 
         /// <summary>
-        ///     Returns a new query that will stream the results instead of buffering.
+        /// Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
         public virtual DbQuery<TResult> AsStreaming()
@@ -94,10 +94,10 @@ namespace System.Data.Entity.Infrastructure
         #region Data binding
 
         /// <summary>
-        ///     Returns <c>false</c>.
+        /// Returns <c>false</c>.
         /// </summary>
         /// <returns>
-        ///     <c>false</c> .
+        /// <c>false</c> .
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         bool IListSource.ContainsListCollection
@@ -106,10 +106,10 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Throws an exception indicating that binding directly to a store query is not supported.
-        ///     Instead populate a DbSet with data, for example by using the Load extension method, and
-        ///     then bind to local data.  For WPF bind to DbSet.Local.  For Windows Forms bind to
-        ///     DbSet.Local.ToBindingList().
+        /// Throws an exception indicating that binding directly to a store query is not supported.
+        /// Instead populate a DbSet with data, for example by using the Load extension method, and
+        /// then bind to local data.  For WPF bind to DbSet.Local.  For Windows Forms bind to
+        /// DbSet.Local.ToBindingList().
         /// </summary>
         /// <returns> Never returns; always throws. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Infrastructure
         #region IEnumerable
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IEnumerator{TElement}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Infrastructure
 #if !NET40
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -159,7 +159,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     Returns an <see cref="IDbAsyncEnumerator{TResult}" /> which when enumerated will execute the query against the database.
+        /// Returns an <see cref="IDbAsyncEnumerator{TResult}" /> which when enumerated will execute the query against the database.
         /// </summary>
         /// <returns> The query results. </returns>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Infrastructure
         #region IQueryable
 
         /// <summary>
-        ///     The IQueryable element type.
+        /// The IQueryable element type.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Type IQueryable.ElementType
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The IQueryable LINQ Expression.
+        /// The IQueryable LINQ Expression.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         Expression IQueryable.Expression
@@ -193,7 +193,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The IQueryable provider.
+        /// The IQueryable provider.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         IQueryProvider IQueryable.Provider
@@ -211,7 +211,7 @@ namespace System.Data.Entity.Infrastructure
         #region Internal query
 
         /// <summary>
-        ///     The internal query object that is backing this DbQuery
+        /// The internal query object that is backing this DbQuery
         /// </summary>
         IInternalQuery IInternalQueryAdapter.InternalQuery
         {
@@ -219,7 +219,7 @@ namespace System.Data.Entity.Infrastructure
         }
 
         /// <summary>
-        ///     The internal query object that is backing this DbQuery
+        /// The internal query object that is backing this DbQuery
         /// </summary>
         internal IInternalQuery<TResult> InternalQuery
         {
@@ -241,7 +241,7 @@ namespace System.Data.Entity.Infrastructure
         #region ToString
 
         /// <summary>
-        ///     Returns a <see cref="System.String" /> representation of the underlying query.
+        /// Returns a <see cref="System.String" /> representation of the underlying query.
         /// </summary>
         /// <returns> The query string. </returns>
         public override string ToString()
@@ -254,7 +254,7 @@ namespace System.Data.Entity.Infrastructure
         #region Conversion to non-generic
 
         /// <summary>
-        ///     Returns a new instance of the non-generic <see cref="DbQuery" /> class for this query.
+        /// Returns a new instance of the non-generic <see cref="DbQuery" /> class for this query.
         /// </summary>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]

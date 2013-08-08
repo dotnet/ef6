@@ -12,7 +12,7 @@ namespace PlanCompilerTests
     using System.Data.Entity.Query;
 
     /// <summary>
-    ///     Tests for DbLimitExpression nodes in the CQT tree generation process.
+    /// Tests for DbLimitExpression nodes in the CQT tree generation process.
     /// </summary>
     public class LimitExpressionTests : FunctionalTestBase
     {

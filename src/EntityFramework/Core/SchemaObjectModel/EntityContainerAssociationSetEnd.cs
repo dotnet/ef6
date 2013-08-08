@@ -9,14 +9,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
 
     /// <summary>
-    ///     Represents an  element.
+    /// Represents an  element.
     /// </summary>
     internal sealed class EntityContainerAssociationSetEnd : EntityContainerRelationshipSetEnd
     {
         private string _unresolvedRelationshipEndRole;
 
         /// <summary>
-        ///     Constructs an EntityContainerAssociationSetEnd
+        /// Constructs an EntityContainerAssociationSetEnd
         /// </summary>
         /// <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerAssociationSetEnd(EntityContainerAssociationSet parentElement)
@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     This is the method that is called when an Role Attribute is encountered.
+        /// This is the method that is called when an Role Attribute is encountered.
         /// </summary>
         /// <param name="reader"> The XmlRead positned at the extent attribute. </param>
         private void HandleRoleAttribute(XmlReader reader)
@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     Used during the resolve phase to resolve the type name to the object that represents that type
+        /// Used during the resolve phase to resolve the type name to the object that represents that type
         /// </summary>
         internal override void ResolveTopLevelNames()
         {
@@ -108,8 +108,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         }
 
         /// <summary>
-        ///     If the role name is missing but an entity set is given, figure out what the
-        ///     relationship end should be
+        /// If the role name is missing but an entity set is given, figure out what the
+        /// relationship end should be
         /// </summary>
         /// <param name="set"> The given EntitySet </param>
         /// <returns> The appropriate relationship end </returns>

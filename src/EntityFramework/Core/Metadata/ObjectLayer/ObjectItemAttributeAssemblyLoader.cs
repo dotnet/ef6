@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
 
     /// <summary>
-    ///     Class for representing a collection of items for the object layer.
-    ///     Most of the implementation for actual maintenance of the collection is
-    ///     done by ItemCollection
+    /// Class for representing a collection of items for the object layer.
+    /// Most of the implementation for actual maintenance of the collection is
+    /// done by ItemCollection
     /// </summary>
     internal sealed class ObjectItemAttributeAssemblyLoader : ObjectItemAssemblyLoader
     {
@@ -52,8 +52,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
-        ///     then it loads from the cache
+        /// Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
+        /// then it loads from the cache
         /// </summary>
         internal override void Load()
         {
@@ -73,8 +73,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Check to see if the type is already loaded - either in the typesInLoading, or ObjectItemCollection or
-        ///     in the global cache
+        /// Check to see if the type is already loaded - either in the typesInLoading, or ObjectItemCollection or
+        /// in the global cache
         /// </summary>
         private bool TryGetLoadedType(Type clrType, out EdmType edmType)
         {
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Loads the set of types from the given assembly and adds it to the given list of types
+        /// Loads the set of types from the given assembly and adds it to the given list of types
         /// </summary>
         protected override void LoadTypesFromAssembly()
         {
@@ -197,7 +197,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     This method loads all the relationship type that this entity takes part in
+        /// This method loads all the relationship type that this entity takes part in
         /// </summary>
         private void LoadRelationshipTypes()
         {
@@ -271,8 +271,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load metadata of the given type - when you call this method, you should check and make sure that the type has
-        ///     edm attribute. If it doesn't,we won't load the type and it will be returned as null
+        /// Load metadata of the given type - when you call this method, you should check and make sure that the type has
+        /// edm attribute. If it doesn't,we won't load the type and it will be returned as null
         /// </summary>
         private void LoadType(Type clrType)
         {
@@ -464,7 +464,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load all the property metadata of the given type
+        /// Load all the property metadata of the given type
         /// </summary>
         /// <param name="structuralType"> The type where properties are loaded </param>
         private void LoadPropertiesFromType(StructuralType structuralType)
@@ -642,9 +642,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Load the property with scalar property attribute.
-        ///     Note that we pass the CLR type in because in the case where the property is declared on a generic
-        ///     base class the DeclaringType of propert won't work for us and we need the real entity type instead.
+        /// Load the property with scalar property attribute.
+        /// Note that we pass the CLR type in because in the case where the property is declared on a generic
+        /// base class the DeclaringType of propert won't work for us and we need the real entity type instead.
         /// </summary>
         /// <param name="clrType"> The CLR type of the entity </param>
         /// <param name="property"> Metadata representing the property </param>
@@ -691,7 +691,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        ///     Resolves enum type property.
+        /// Resolves enum type property.
         /// </summary>
         /// <param name="declaringType"> The type to add the declared property to. </param>
         /// <param name="clrProperty"> Property to resolve. </param>

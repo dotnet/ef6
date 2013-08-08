@@ -16,8 +16,8 @@ namespace System.Data.Entity.Internal
     using System.Linq;
 
     /// <summary>
-    ///     A LazyInternalConnection object manages information that can be used to create a DbConnection object and
-    ///     is responsible for creating that object and disposing it.
+    /// A LazyInternalConnection object manages information that can be used to create a DbConnection object and
+    /// is responsible for creating that object and disposing it.
     /// </summary>
     internal class LazyInternalConnection : InternalConnection
     {
@@ -31,8 +31,8 @@ namespace System.Data.Entity.Internal
         private bool? _hasModel;
 
         /// <summary>
-        ///     Creates a new LazyInternalConnection using convention to calculate the connection.
-        ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
+        /// Creates a new LazyInternalConnection using convention to calculate the connection.
+        /// The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -45,8 +45,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates a new LazyInternalConnection targeting a specific database.
-        ///     The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
+        /// Creates a new LazyInternalConnection targeting a specific database.
+        /// The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         /// </summary>
         /// <param name="connectionInfo"> The connection to target. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Internal
         #region Connection
 
         /// <summary>
-        ///     Returns the underlying DbConnection, creating it first if it does not already exist.
+        /// Returns the underlying DbConnection, creating it first if it does not already exist.
         /// </summary>
         public override DbConnection Connection
         {
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns the origin of the underlying connection string.
+        /// Returns the origin of the underlying connection string.
         /// </summary>
         public override DbConnectionStringOrigin ConnectionStringOrigin
         {
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Gets the name of the underlying connection string.
+        /// Gets the name of the underlying connection string.
         /// </summary>
         public override string ConnectionStringName
         {
@@ -99,8 +99,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Returns a key consisting of the connection type and connection string.
-        ///     If this is an EntityConnection then the metadata path is included in the key returned.
+        /// Returns a key consisting of the connection type and connection string.
+        /// If this is an EntityConnection then the metadata path is included in the key returned.
         /// </summary>
         public override string ConnectionKey
         {
@@ -127,12 +127,12 @@ namespace System.Data.Entity.Internal
         #region EF connection string handling
 
         /// <summary>
-        ///     Gets a value indicating whether the connection is an EF connection which therefore contains
-        ///     metadata specifying the model, or instead is a store connection, in which case it contains no
-        ///     model info.
+        /// Gets a value indicating whether the connection is an EF connection which therefore contains
+        /// metadata specifying the model, or instead is a store connection, in which case it contains no
+        /// model info.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if connection contain model info; otherwise, <c>false</c> .
+        /// <c>true</c> if connection contain model info; otherwise, <c>false</c> .
         /// </value>
         public override bool ConnectionHasModel
         {
@@ -179,8 +179,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
-        ///     only be called if ConnectionHasModel returns true.
+        /// Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
+        /// only be called if ConnectionHasModel returns true.
         /// </summary>
         /// <returns> The newly created context. </returns>
         public override ObjectContext CreateObjectContextFromConnectionModel()
@@ -194,9 +194,9 @@ namespace System.Data.Entity.Internal
         #region Dispose
 
         /// <summary>
-        ///     Disposes the underlying DbConnection.
-        ///     Note that dispose actually puts the LazyInternalConnection back to its initial state such that
-        ///     it can be used again.
+        /// Disposes the underlying DbConnection.
+        /// Note that dispose actually puts the LazyInternalConnection back to its initial state such that
+        /// it can be used again.
         /// </summary>
         public override void Dispose()
         {
@@ -212,7 +212,7 @@ namespace System.Data.Entity.Internal
         #region Initialization
 
         /// <summary>
-        ///     Gets a value indicating if the lazy connection has been initialized.
+        /// Gets a value indicating if the lazy connection has been initialized.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal bool IsInitialized
@@ -221,8 +221,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Creates the underlying <see cref="DbConnection" /> (which may actually be an <see cref="EntityConnection" />)
-        ///     if it does not already exist.
+        /// Creates the underlying <see cref="DbConnection" /> (which may actually be an <see cref="EntityConnection" />)
+        /// if it does not already exist.
         /// </summary>
         private void Initialize()
         {
@@ -295,8 +295,8 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Searches the app.config/web.config file for a connection that matches the given name.
-        ///     The connection might be a store connection or an EF connection.
+        /// Searches the app.config/web.config file for a connection that matches the given name.
+        /// The connection might be a store connection or an EF connection.
         /// </summary>
         /// <param name="name"> The connection name. </param>
         /// <param name="config"> </param>
@@ -320,7 +320,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Attempts to locate a connection entry in the configuration based on the supplied context name.
+        /// Attempts to locate a connection entry in the configuration based on the supplied context name.
         /// </summary>
         /// <param name="name"> The name to search for. </param>
         /// <param name="config"> The configuration to search in. </param>
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Internal
         }
 
         /// <summary>
-        ///     Initializes the connection based on a connection string.
+        /// Initializes the connection based on a connection string.
         /// </summary>
         /// <param name="appConfigConnection"> The settings to initialize from. </param>
         private void InitializeFromConnectionStringSetting(ConnectionStringSettings appConfigConnection)

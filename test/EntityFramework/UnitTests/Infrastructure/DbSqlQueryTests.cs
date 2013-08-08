@@ -6,7 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using Xunit;
 
     /// <summary>
-    ///     Unit tests for <see cref="DbSqlQuery" /> and <see cref="DbSqlQuery{TEntity}" />.
+    /// Unit tests for <see cref="DbSqlQuery" /> and <see cref="DbSqlQuery{TEntity}" />.
     /// </summary>
     public class DbSqlQueryTests : TestBase
     {

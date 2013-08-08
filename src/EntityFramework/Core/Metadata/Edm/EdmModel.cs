@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
 
     /// <summary>
-    ///     Represents a conceptual or store model. This class can be used to access information about the shape of the model 
-    ///     and the way the that it has been configured. 
+    /// Represents a conceptual or store model. This class can be used to access information about the shape of the model 
+    /// and the way the that it has been configured. 
     /// </summary>
     public class EdmModel : MetadataItem
     {
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>Gets the built-in type kind for this type.</summary>
         /// <returns>
-        ///     A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
+        /// A <see cref="T:System.Data.Entity.Core.Metadata.Edm.BuiltInTypeKind" /> object that represents the built-in type kind for this type.
         /// </returns>
         public override BuiltInTypeKind BuiltInTypeKind
         {

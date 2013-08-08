@@ -9,9 +9,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.Xml.Linq;
 
     /// <summary>
-    ///     Manipulates the XML of .config files to add Entity Framework "defaultConnectionFactory" entries
-    ///     and to ensure that the "entityFramework" section is up-to-date with the current EF assembly
-    ///     version.
+    /// Manipulates the XML of .config files to add Entity Framework "defaultConnectionFactory" entries
+    /// and to ensure that the "entityFramework" section is up-to-date with the current EF assembly
+    /// version.
     /// </summary>
     internal class ConfigFileManipulator
     {
@@ -26,9 +26,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         public const string ProviderElementName = "provider";
 
         /// <summary>
-        ///     Checks whether or not the given XML document representing a .config file contains
-        ///     an EntityFramework "defaultConnectionFactory" entry or not. If no entry is found then one
-        ///     is added for the given connection factory specification.
+        /// Checks whether or not the given XML document representing a .config file contains
+        /// an EntityFramework "defaultConnectionFactory" entry or not. If no entry is found then one
+        /// is added for the given connection factory specification.
         /// </summary>
         /// <param name="config"> An XML document representing the config file. </param>
         /// <param name="specification"> Specifies the connection factory and constructor arguments to use. </param>
@@ -58,10 +58,10 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        ///     Sets the EntityFramework "defaultConnectionFactory" in the given XML document representing a
-        ///     .config file to use th given specification. This method differs from AddConnectionFactoryToConfig
-        ///     in that it always sets the entry to use the given specification even if it was already present
-        ///     and set to something else.
+        /// Sets the EntityFramework "defaultConnectionFactory" in the given XML document representing a
+        /// .config file to use th given specification. This method differs from AddConnectionFactoryToConfig
+        /// in that it always sets the entry to use the given specification even if it was already present
+        /// and set to something else.
         /// </summary>
         /// <param name="config"> An XML document representing the config file. </param>
         /// <param name="specification"> Specifies the connection factory and constructor arguments to use. </param>
@@ -163,8 +163,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         }
 
         /// <summary>
-        ///     Ensures that the config file has a defined "entityFramework" section and that it references
-        ///     the current version of the EntityFramework.dll assembly.
+        /// Ensures that the config file has a defined "entityFramework" section and that it references
+        /// the current version of the EntityFramework.dll assembly.
         /// </summary>
         /// <param name="config"> An XML document representing the config file. </param>
         /// <param name="entityFrameworkVersion"> The version of EntityFramework.dll to use. </param>

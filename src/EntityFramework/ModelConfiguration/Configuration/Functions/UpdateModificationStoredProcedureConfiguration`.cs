@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq.Expressions;
 
     /// <summary>
-    ///     Allows configuration to be performed for a stored procedure that is used to update entities.
+    /// Allows configuration to be performed for a stored procedure that is used to update entities.
     /// </summary>
     /// <typeparam name="TEntityType">The type of the entity that the stored procedure can be used to update.</typeparam>
     public class UpdateModificationStoredProcedureConfiguration<TEntityType> : ModificationStoredProcedureConfigurationBase
@@ -265,8 +265,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -285,8 +285,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -305,8 +305,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -324,8 +324,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -343,8 +343,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
@@ -362,8 +362,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
-        ///     Configures a column of the result for this stored procedure to map to a property.
-        ///     This is used for database generated columns.
+        /// Configures a column of the result for this stored procedure to map to a property.
+        /// This is used for database generated columns.
         /// </summary>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the result for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
