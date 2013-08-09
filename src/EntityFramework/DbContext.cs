@@ -140,12 +140,12 @@ namespace System.Data.Entity
         /// and initializes it from the given model.
         /// The connection will not be disposed when the context is disposed if <paramref name="contextOwnsConnection" />
         /// is <c>false</c>.
+        /// </summary>
         /// <param name="existingConnection"> An existing connection to use for the new context. </param>
         /// <param name="model"> The model that will back this context. </param>
         /// <param name="contextOwnsConnection">
         ///     If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
         /// </param>
-        /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public DbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
         {
@@ -157,11 +157,11 @@ namespace System.Data.Entity
 
         /// <summary>
         /// Constructs a new context instance around an existing ObjectContext.
+        /// </summary>
         /// <param name="objectContext"> An existing ObjectContext to wrap with the new context. </param>
         /// <param name="dbContextOwnsObjectContext">
         ///     If set to <c>true</c> the ObjectContext is disposed when the DbContext is disposed, otherwise the caller must dispose the connection.
         /// </param>
-        /// </summary>
         public DbContext(ObjectContext objectContext, bool dbContextOwnsObjectContext)
         {
             Check.NotNull(objectContext, "objectContext");

@@ -37,8 +37,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         /// <summary>
         /// Debugging support
         /// provide a string representation for debugging.
-        /// <returns> </returns>
         /// </summary>
+        /// <returns> </returns>
         public override string ToString()
         {
             var sb = new StringBuilder();

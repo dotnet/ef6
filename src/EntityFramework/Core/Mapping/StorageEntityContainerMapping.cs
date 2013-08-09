@@ -17,6 +17,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Represents the Mapping metadata for the EntityContainer map in CS space.
     /// Only one EntityContainerMapping element is allowed in the MSL file for CS mapping.
+    /// </summary>
     /// <example>
     ///     For Example if conceptually you could represent the CS MSL file as following
     ///     ---Mapping
@@ -31,7 +32,6 @@ namespace System.Data.Entity.Core.Mapping
     ///     We currently assume that an Entity Container on the C side
     ///     is mapped to a single Entity Container in the S - space.
     /// </remarks>
-    /// </summary>
     internal class StorageEntityContainerMapping : Map
     {
         /// <summary>

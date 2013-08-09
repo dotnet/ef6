@@ -283,9 +283,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         /// Handle any relevant processing for entity sets
+        /// </summary>
         /// <param name="referencedEntitySets"> referenced entitysets </param>
         /// <param name="freeFloatingEntityConstructorTypes"> free-floating entity constructor types </param>
-        /// </summary>
         private void ProcessEntitySets(
             HashSet<md.EntitySet> referencedEntitySets, HashSet<md.EntityType> freeFloatingEntityConstructorTypes)
         {
@@ -343,8 +343,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         /// <summary>
         /// Assign ids to each entityset in the query
-        /// <param name="referencedEntitySets"> referenced entitysets </param>
         /// </summary>
+        /// <param name="referencedEntitySets"> referenced entitysets </param>
         private void AssignEntitySetIds(HashSet<md.EntitySet> referencedEntitySets)
         {
             m_entitySetIdToEntitySetMap = new md.EntitySet[referencedEntitySets.Count];
