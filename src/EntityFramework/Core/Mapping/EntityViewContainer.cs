@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Mapping
     /// Base class for the type created at design time to store the generated views.
     /// </summary>
     [Obsolete("The mechanism to provide pre-generated views has changed. Implement a class that derives from " +
-        "System.Data.Entity.Infrastructure.DbMappingViewCache and has a parameterless constructor, " +
+        "System.Data.Entity.Infrastructure.MappingViews.DbMappingViewCache and has a parameterless constructor, " +
         "then associate it with a type that derives from DbContext or ObjectContext " +
-        "by using System.Data.Entity.Infrastructure.DbGeneratedViewCacheTypeAttribute.",
+        "by using System.Data.Entity.Infrastructure.MappingViews.DbMappingViewCacheTypeAttribute.",
         error: true)]
     public abstract class EntityViewContainer
     {

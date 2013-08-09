@@ -394,6 +394,17 @@ namespace System.Data.Entity.Core.Mapping
                     return;
                 }
 
+                var mappingHashValue = MetadataMappingHasherVisitor.GetMappingClosureHash(
+                    containerMapping.StorageMappingItemCollection.MappingVersion, 
+                    containerMapping);
+
+                if (mappingHashValue != mappingViewCache.MappingHashValue)
+                {
+                    throw new MappingException(
+                        Strings.ViewGen_HashOnMappingClosure_Not_Matching(
+                            mappingViewCache.GetType().Name));
+                }
+
                 foreach (var extent in containerMapping.StorageEntityContainer.BaseEntitySets.Union(
                                        containerMapping.EdmEntityContainer.BaseEntitySets))
                 {
@@ -404,7 +415,7 @@ namespace System.Data.Entity.Core.Mapping
                     }
 
                     var mappingView = mappingViewCache.GetView(extent);
-                    if (string.IsNullOrWhiteSpace(mappingView.EntitySql))
+                    if (mappingView == null)
                     {
                         continue;
                     }

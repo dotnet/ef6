@@ -168,6 +168,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Compile Include="CodeFirst\AdvancedMappingScenarioTests.cs" />
     <Compile Include="CodeFirst\AssociationScenarioTests.cs" />
