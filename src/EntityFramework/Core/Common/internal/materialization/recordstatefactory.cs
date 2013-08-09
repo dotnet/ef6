@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             ColumnNames = new ReadOnlyCollection<string>(propertyNames);
             TypeUsages = new ReadOnlyCollection<TypeUsage>(typeUsages);
 
-            FieldNameLookup = new FieldNameLookup(ColumnNames, -1);
+            FieldNameLookup = new FieldNameLookup(ColumnNames);
 
             // pre-compute the nested objects from typeUsage, for performance
             if (isColumnNested == null)

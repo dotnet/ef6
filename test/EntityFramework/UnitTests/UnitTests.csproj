@@ -153,6 +153,7 @@
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
+    <Compile Include="Core\FieldNameLookupTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingTests.cs" />

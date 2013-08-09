@@ -347,7 +347,7 @@ namespace System.Data.Entity.Core.Objects
         {
             if (null == _fieldNameLookup)
             {
-                _fieldNameLookup = new FieldNameLookup(this, -1);
+                _fieldNameLookup = new FieldNameLookup(this);
             }
             return _fieldNameLookup.GetOrdinal(name);
         }

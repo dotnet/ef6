@@ -2,7 +2,7 @@
 
 namespace System.Data.Entity.Core
 {
-    using System.Collections;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -11,54 +11,50 @@ namespace System.Data.Entity.Core
 
     internal sealed class FieldNameLookup
     {
-        // hashtable stores the index into the _fieldNames, match via case-sensitive
-        private Hashtable _fieldNameLookup;
+        private readonly Dictionary<string, int> _fieldNameLookup = new Dictionary<string, int>();
 
-        // original names for linear searches when exact matches fail
+        // Original names for linear searches when exact matches fail
         private readonly string[] _fieldNames;
 
-        // if _defaultLocaleID is -1 then _compareInfo is initialized with InvariantCulture CompareInfo
-        // otherwise it is specified by the server? for the correct compare info
-        private CompareInfo _compareInfo;
-        private readonly int _defaultLocaleID;
-
-        public FieldNameLookup(ReadOnlyCollection<string> columnNames, int defaultLocaleID)
+        public FieldNameLookup(ReadOnlyCollection<string> columnNames)
         {
+            DebugCheck.NotNull(columnNames);
+
             var length = columnNames.Count;
-            var fieldNames = new string[length];
+            _fieldNames = new string[length];
+
             for (var i = 0; i < length; ++i)
             {
-                fieldNames[i] = columnNames[i];
-                Debug.Assert(null != fieldNames[i]);
+                _fieldNames[i] = columnNames[i];
+                Debug.Assert(_fieldNames[i] != null);
             }
-            _fieldNames = fieldNames;
-            _defaultLocaleID = defaultLocaleID;
+
             GenerateLookup();
         }
 
-        public FieldNameLookup(IDataRecord reader, int defaultLocaleID)
+        public FieldNameLookup(IDataRecord reader)
         {
-            // V1.2.3300
+            DebugCheck.NotNull(reader);
 
             var length = reader.FieldCount;
-            var fieldNames = new string[length];
+            _fieldNames = new string[length];
+
             for (var i = 0; i < length; ++i)
             {
-                fieldNames[i] = reader.GetName(i);
-                Debug.Assert(null != fieldNames[i]);
+                _fieldNames[i] = reader.GetName(i);
+                Debug.Assert(_fieldNames[i] != null);
             }
-            _fieldNames = fieldNames;
-            _defaultLocaleID = defaultLocaleID;
+
+            GenerateLookup();
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         public int GetOrdinal(string fieldName)
         {
-            // V1.2.3300
             Check.NotNull(fieldName, "fieldName");
 
             var index = IndexOf(fieldName);
-            if (-1 == index)
+            if (index == -1)
             {
                 throw new IndexOutOfRangeException(fieldName);
             }
@@ -66,73 +62,45 @@ namespace System.Data.Entity.Core
             return index;
         }
 
-        public int IndexOf(string fieldName)
+        private int IndexOf(string fieldName)
         {
-            // V1.2.3300
-            if (null == _fieldNameLookup)
-            {
-                GenerateLookup();
-            }
             int index;
-            var value = _fieldNameLookup[fieldName];
-            if (null != value)
+            if (!_fieldNameLookup.TryGetValue(fieldName, out index))
             {
-                // via case sensitive search, first match with lowest ordinal matches
-                index = (int)value;
-            }
-            else
-            {
-                // via case insensitive search, first match with lowest ordinal matches
+                // Via case insensitive search, first match with lowest ordinal matches
                 index = LinearIndexOf(fieldName, CompareOptions.IgnoreCase);
-                if (-1 == index)
+
+                if (index == -1)
                 {
-                    // do the slow search now (kana, width insensitive comparison)
+                    // Do the slow search now (kana, width insensitive comparison)
                     index = LinearIndexOf(fieldName, EntityUtil.StringCompareOptions);
                 }
             }
+
             return index;
         }
 
         private int LinearIndexOf(string fieldName, CompareOptions compareOptions)
         {
-            var compareInfo = _compareInfo;
-            if (null == compareInfo)
+            // Tried Array.FindIndex and various other options here; none seemed to be faster than this
+            for (var i = 0; i < _fieldNames.Length; ++i)
             {
-                if (-1 != _defaultLocaleID)
+                if (CultureInfo.InvariantCulture.CompareInfo.Compare(fieldName, _fieldNames[i], compareOptions) == 0)
                 {
-                    compareInfo = CompareInfo.GetCompareInfo(_defaultLocaleID);
-                }
-                if (null == compareInfo)
-                {
-                    compareInfo = CultureInfo.InvariantCulture.CompareInfo;
-                }
-                _compareInfo = compareInfo;
-            }
-            var length = _fieldNames.Length;
-            for (var i = 0; i < length; ++i)
-            {
-                if (0 == compareInfo.Compare(fieldName, _fieldNames[i], compareOptions))
-                {
-                    _fieldNameLookup[fieldName] = i; // add an exact match for the future
+                    _fieldNameLookup[fieldName] = i; // Add an exact match for the future
                     return i;
                 }
             }
             return -1;
         }
 
-        // RTM common code for generating Hashtable from array of column names
         private void GenerateLookup()
         {
-            var length = _fieldNames.Length;
-            var hash = new Hashtable(length);
-
-            // via case sensitive search, first match with lowest ordinal matches
-            for (var i = length - 1; 0 <= i; --i)
+            // Via case sensitive search, first match with lowest ordinal matches
+            for (var i = _fieldNames.Length - 1; 0 <= i; --i)
             {
-                var fieldName = _fieldNames[i];
-                hash[fieldName] = i;
+                _fieldNameLookup[_fieldNames[i]] = i;
             }
-            _fieldNameLookup = hash;
         }
     }
 }
