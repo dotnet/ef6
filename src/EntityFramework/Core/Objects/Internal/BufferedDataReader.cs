@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal class BufferedDataReader : DbDataReader
     {
         private DbDataReader _underlyingReader;
-        private List<BufferedDataRecord> _bufferedDataRecords = new List<BufferedDataRecord>();
-        private BufferedDataRecord _currentResultSet;
+        private List<BufferedDataRecordBase> _bufferedDataRecords = new List<BufferedDataRecordBase>();
+        private BufferedDataRecordBase _currentResultSet;
         private int _currentResultSetNumber;
         private int _recordsAffected;
         private bool _disposed;
@@ -135,7 +135,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "nullableColumns")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "columnTypes")]
         internal void Initialize(
-            string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns)
+            string providerManifestToken, DbProviderServices providerServices, Type[] columnTypes, bool[] nullableColumns)
         {
             var reader = _underlyingReader;
             if (reader == null)
@@ -146,11 +146,20 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             try
             {
-                do
+                if (columnTypes != null && reader.GetType().Name != "SqlDataReader")
                 {
-                    _bufferedDataRecords.Add(BufferedDataRecord.Initialize(providerManifestToken, providerSerivces, reader));
+                    _bufferedDataRecords.Add(
+                        ShapedBufferedDataRecord.Initialize(providerManifestToken, providerServices, reader, columnTypes, nullableColumns));
                 }
-                while (reader.NextResult());
+                else
+                {
+                    _bufferedDataRecords.Add(ShapelessBufferedDataRecord.Initialize(providerManifestToken, providerServices, reader));
+                }
+
+                while (reader.NextResult())
+                {
+                    _bufferedDataRecords.Add(ShapelessBufferedDataRecord.Initialize(providerManifestToken, providerServices, reader));
+                }
 
                 _recordsAffected = reader.RecordsAffected;
                 _currentResultSet = _bufferedDataRecords[_currentResultSetNumber];
@@ -178,13 +187,26 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             try
             {
-                do
+                if (columnTypes != null && reader.GetType().Name != "SqlDataReader")
                 {
-                    _bufferedDataRecords.Add(
-                        await BufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
-                                  .ConfigureAwait(continueOnCapturedContext: false));
+                    _bufferedDataRecords.Add(await
+                        ShapedBufferedDataRecord.InitializeAsync(
+                            providerManifestToken, providerSerivces, reader, columnTypes, nullableColumns, cancellationToken)
+                            .ConfigureAwait(continueOnCapturedContext: false));
                 }
-                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false));
+                else
+                {
+                    _bufferedDataRecords.Add(await
+                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
+                            .ConfigureAwait(continueOnCapturedContext: false));
+                }
+
+                while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                {
+                    _bufferedDataRecords.Add(await
+                        ShapelessBufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
+                            .ConfigureAwait(continueOnCapturedContext: false));
+                }
 
                 _recordsAffected = reader.RecordsAffected;
                 _currentResultSet = _bufferedDataRecords[_currentResultSetNumber];

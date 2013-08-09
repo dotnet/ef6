@@ -3617,7 +3617,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
-
+                    
                     shaperFactory = _translator.TranslateColumnMap<TElement>(
                         commandDefinition.CreateColumnMap(storeReader, 0),
                         MetadataWorkspace, null, executionOptions.MergeOption, false, valueLayer: false);

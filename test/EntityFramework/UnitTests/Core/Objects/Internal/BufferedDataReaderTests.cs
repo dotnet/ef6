@@ -10,12 +10,13 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Moq;
     using Moq.Protected;
     using Xunit;
 #if !NET40
-    using System.Threading;
-    using System.Threading.Tasks;
+
 #endif
 
     public class BufferedDataReaderTests : TestBase
@@ -23,18 +24,32 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Metadata_methods_return_expected_results_sync()
         {
-            Metadata_methods_return_expected_results(false);
+            Metadata_methods_return_expected_results(false, false);
         }
 
 #if !NET40
         [Fact]
         public void Metadata_methods_return_expected_results_async()
         {
-            Metadata_methods_return_expected_results(true);
+            Metadata_methods_return_expected_results(true, false);
         }
 #endif
 
-        private void Metadata_methods_return_expected_results(bool async)
+        [Fact]
+        public void Metadata_methods_return_expected_results_with_shape_sync()
+        {
+            Metadata_methods_return_expected_results(false, true);
+        }
+
+#if !NET40
+        [Fact]
+        public void Metadata_methods_return_expected_results_with_shape_async()
+        {
+            Metadata_methods_return_expected_results(true, true);
+        }
+#endif
+
+        private void Metadata_methods_return_expected_results(bool async, bool shaped)
         {
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
             var readerMock = Mock.Get(reader);
@@ -44,16 +59,33 @@ namespace System.Data.Entity.Core.Objects.Internal
             readerMock.Setup(m => m.GetFieldType(It.IsAny<int>())).Returns(typeof(DBNull));
             readerMock.Setup(m => m.GetName(It.IsAny<int>())).Returns("columnName");
 
+            var columnTypes = new[] { typeof(object) };
+            var nullableColumns = new[] { true };
             var bufferedDataReader = new BufferedDataReader(reader);
             if (async)
             {
 #if !NET40
-                bufferedDataReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
+                if (shaped)
+                {
+                    bufferedDataReader.InitializeAsync(
+                        "2008", FakeSqlProviderServices.Instance, columnTypes, nullableColumns, CancellationToken.None).Wait();
+                }
+                else
+                {
+                    bufferedDataReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
+                }
 #endif
             }
             else
             {
-                bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
+                if (shaped)
+                {
+                    bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance, columnTypes, nullableColumns);
+                }
+                else
+                {
+                    bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
+                }
             }
 
             Assert.Equal(1, bufferedDataReader.FieldCount);
@@ -97,54 +129,84 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Manipulation_methods_perform_expected_actions_sync()
         {
-            Manipulation_methods_perform_expected_actions(spatial: false, async: false);
+            Manipulation_methods_perform_expected_actions(spatial: false, async: false, shaped: false);
         }
+
         [Fact]
         public void Manipulation_methods_perform_expected_actions_with_spatial_sync()
         {
-            Manipulation_methods_perform_expected_actions(spatial: true, async: false);
+            Manipulation_methods_perform_expected_actions(spatial: true, async: false, shaped: false);
+        }
+
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_shape_sync()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: false, async: false, shaped: true);
+        }
+
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_shape_and_spatial_sync()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: true, async: false, shaped: true);
         }
 
 #if !NET40
         [Fact]
         public void Manipulation_methods_perform_expected_actions_async()
         {
-            Manipulation_methods_perform_expected_actions(spatial: false, async: true);
+            Manipulation_methods_perform_expected_actions(spatial: false, async: true, shaped: false);
         }
 
         [Fact]
         public void Manipulation_methods_perform_expected_actions_with_spatial_async()
         {
-            Manipulation_methods_perform_expected_actions(spatial: true, async: true);
+            Manipulation_methods_perform_expected_actions(spatial: true, async: true, shaped: false);
+        }
+
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_shape_async()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: false, async: true, shaped: true);
+        }
+
+        [Fact]
+        public void Manipulation_methods_perform_expected_actions_with_shape_and_spatial_async()
+        {
+            Manipulation_methods_perform_expected_actions(spatial: true, async: true, shaped: true);
         }
 #endif
 
-        private void Manipulation_methods_perform_expected_actions(bool spatial, bool async)
+        private void Manipulation_methods_perform_expected_actions(bool spatial, bool async, bool shaped)
         {
-                var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
-                    new[] { new object[] { 1, "a" } }, new object[0][]);
+            var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(
+                new[] { new object[] { 1, "a" } }, new object[0][]);
 
             var bufferedDataReader = new BufferedDataReader(reader);
 
+            var columnTypes = new[] { typeof(int), typeof(object) };
+            var nullableColumns = new[] { false, true };
 
             var spatialDataReaderMock = new Mock<DbSpatialDataReader>();
             var providerServicesMock = new Mock<DbProviderServices>();
             if (spatial)
             {
+                columnTypes = new[] { typeof(DbGeography), typeof(DbGeometry) };
+                nullableColumns = new[] { true, true };
+
                 spatialDataReaderMock.Setup(m => m.IsGeographyColumn(0)).Returns(true);
                 spatialDataReaderMock.Setup(m => m.IsGeometryColumn(1)).Returns(true);
 #if !NET40
                 if (async)
                 {
                     spatialDataReaderMock.Setup(m => m.GetGeographyAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                                         .Returns(() => Task.FromResult((DbGeography)null));
+                        .Returns(() => Task.FromResult((DbGeography)null));
                     spatialDataReaderMock.Setup(m => m.GetGeometryAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                                         .Returns(() => Task.FromResult((DbGeometry)null));
+                        .Returns(() => Task.FromResult((DbGeometry)null));
                 }
 #endif
                 providerServicesMock.Protected()
-                                    .Setup<DbSpatialDataReader>("GetDbSpatialDataReader", reader, "2008")
-                                    .Returns(spatialDataReaderMock.Object);
+                    .Setup<DbSpatialDataReader>("GetDbSpatialDataReader", reader, "2008")
+                    .Returns(spatialDataReaderMock.Object);
             }
             try
             {
@@ -152,12 +214,27 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (async)
                 {
 #if !NET40
-                    bufferedDataReader.InitializeAsync("2008", providerServicesMock.Object, null, null, CancellationToken.None).Wait();
+                    if (shaped)
+                    {
+                        bufferedDataReader.InitializeAsync(
+                            "2008", providerServicesMock.Object, columnTypes, nullableColumns, CancellationToken.None).Wait();
+                    }
+                    else
+                    {
+                        bufferedDataReader.InitializeAsync("2008", providerServicesMock.Object, null, null, CancellationToken.None).Wait();
+                    }
 #endif
                 }
                 else
                 {
-                    bufferedDataReader.Initialize("2008", providerServicesMock.Object, null, null);
+                    if (shaped)
+                    {
+                        bufferedDataReader.Initialize("2008", providerServicesMock.Object, columnTypes, nullableColumns);
+                    }
+                    else
+                    {
+                        bufferedDataReader.Initialize("2008", providerServicesMock.Object, null, null);
+                    }
                 }
                 Assert.False(bufferedDataReader.IsClosed);
             }
@@ -298,78 +375,107 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Data_methods_return_expected_results_sync()
         {
-            Data_methods_return_expected_results(false);
+            Data_methods_return_expected_results(async: false, shaped: false);
         }
-        
+
+        [Fact]
+        public void Data_methods_return_expected_results_with_shape_sync()
+        {
+            Data_methods_return_expected_results(async: false, shaped: true);
+        }
+
 #if !NET40
         [Fact]
         public void Data_methods_return_expected_results_async()
         {
-            Data_methods_return_expected_results(true);
+            Data_methods_return_expected_results(async: true, shaped: false);
+        }
+
+        [Fact]
+        public void Data_methods_return_expected_results_with_shape__async()
+        {
+            Data_methods_return_expected_results(async: true, shaped: true);
         }
 #endif
 
-        private void Data_methods_return_expected_results(bool async)
+        private void Data_methods_return_expected_results(bool async, bool shaped)
         {
-            Verify_get_method_returns_supplied_value(true, async);
-            Verify_get_method_returns_supplied_value((byte)1, async);
-            Verify_get_method_returns_supplied_value((short)1, async);
-            Verify_get_method_returns_supplied_value(1, async);
-            Verify_get_method_returns_supplied_value(1L, async);
-            Verify_get_method_returns_supplied_value(1F, async);
-            Verify_get_method_returns_supplied_value(1D, async);
-            Verify_get_method_returns_supplied_value(1M, async);
-            Verify_get_method_returns_supplied_value('a', async);
-            Verify_get_method_returns_supplied_value("a", async);
-            Verify_get_method_returns_supplied_value(DateTime.Now, async);
-            Verify_get_method_returns_supplied_value(Guid.NewGuid(), async);
+            Verify_get_method_returns_supplied_value(true, async, shaped);
+            Verify_get_method_returns_supplied_value((byte)1, async, shaped);
+            Verify_get_method_returns_supplied_value((short)1, async, shaped);
+            Verify_get_method_returns_supplied_value(1, async, shaped);
+            Verify_get_method_returns_supplied_value(1L, async, shaped);
+            Verify_get_method_returns_supplied_value(1F, async, shaped);
+            Verify_get_method_returns_supplied_value(1D, async, shaped);
+            Verify_get_method_returns_supplied_value(1M, async, shaped);
+            Verify_get_method_returns_supplied_value('a', async, shaped);
+            Verify_get_method_returns_supplied_value("a", async, shaped);
+            Verify_get_method_returns_supplied_value(DateTime.Now, async, shaped);
+            Verify_get_method_returns_supplied_value(Guid.NewGuid(), async, shaped);
             var obj = new object();
-            Verify_method_result(r => r.GetValue(0), async, obj, new[] { new[] { obj } });
+            Verify_method_result(r => r.GetValue(0), async, shaped, obj, new[] { new[] { obj } });
 #if !NET40
-            Verify_method_result(r => r.GetFieldValue<object>(0), async, obj, new[] { new[] { obj } });
-            Verify_method_result(r => r.GetFieldValueAsync<object>(0).Result, async, obj, new[] { new[] { obj } });
+            Verify_method_result(r => r.GetFieldValue<object>(0), async, shaped, obj, new[] { new[] { obj } });
+            Verify_method_result(r => r.GetFieldValueAsync<object>(0).Result, async, shaped, obj, new[] { new[] { obj } });
 #endif
-            Verify_method_result(r => r.IsDBNull(0), async, true, new[] { new object[] { DBNull.Value } });
-            Verify_method_result(r => r.IsDBNull(0), async, false, new[] { new[] { new object() } });
+            Verify_method_result(r => r.IsDBNull(0), async, shaped, true, new[] { new object[] { DBNull.Value } });
+            Verify_method_result(r => r.IsDBNull(0), async, shaped, false, new[] { new object[] { true } });
 #if !NET40
-            Verify_method_result(r => r.IsDBNullAsync(0).Result, async, true, new[] { new object[] { DBNull.Value } });
-            Verify_method_result(r => r.IsDBNullAsync(0).Result, async, false, new[] { new[] { new object() } });
+            Verify_method_result(r => r.IsDBNullAsync(0).Result, async, shaped, true, new[] { new object[] { DBNull.Value } });
+            Verify_method_result(r => r.IsDBNullAsync(0).Result, async, shaped, false, new[] { new object[] { true } });
 #endif
             Assert.Throws<NotSupportedException>(
                 () =>
-                Verify_method_result(r => r.GetBytes(0, 0, new byte[0], 0, 0), async, 0, new[] { new[] { obj } }));
+                Verify_method_result(r => r.GetBytes(0, 0, new byte[0], 0, 0), async, shaped, 0, new[] { new object[] { 1L } }));
             Assert.Throws<NotSupportedException>(
                 () =>
-                Verify_method_result(r => r.GetChars(0, 0, new char[0], 0, 0), async, 0, new[] { new[] { obj } }));
+                Verify_method_result(r => r.GetChars(0, 0, new char[0], 0, 0), async, shaped, 0, new[] { new object[] { 1L } }));
         }
 
         private void Verify_method_result<T>(
-            Func<BufferedDataReader, T> method, bool async, T expectedResult, params IEnumerable<object[]>[] dataReaderContents)
+            Func<BufferedDataReader, T> method, bool async, bool shaped, T expectedResult, params IEnumerable<object[]>[] dataReaderContents)
         {
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(dataReaderContents);
 
+            var columnTypes = new[] { typeof(T) };
+            var nullableColumns = new[] { true };
             var bufferedReader = new BufferedDataReader(reader);
             if (async)
             {
 #if !NET40
-                bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
+                if (shaped)
+                {
+                    bufferedReader.InitializeAsync(
+                        "2008", FakeSqlProviderServices.Instance, columnTypes, nullableColumns, CancellationToken.None).Wait();
+                }
+                else
+                {
+                    bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
+                }
                 Assert.True(bufferedReader.ReadAsync().Result);
 #endif
             }
             else
             {
-                bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
+                if (shaped)
+                {
+                    bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, columnTypes, nullableColumns);
+                }
+                else
+                {
+                    bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
+                }
                 Assert.True(bufferedReader.Read());
             }
 
             Assert.Equal(expectedResult, method(bufferedReader));
         }
 
-        private void Verify_get_method_returns_supplied_value<T>(T value, bool async)
+        private void Verify_get_method_returns_supplied_value<T>(T value, bool async, bool shaped)
         {
             // use the specific reader.GetXXX method
             var readerMethod = GetReaderMethod(typeof(T));
-            Verify_method_result(r => (T)readerMethod.Invoke(r, new object[] { 0 }), async, value, new[] { new object[] { value } });
+            Verify_method_result(r => (T)readerMethod.Invoke(r, new object[] { 0 }), async, shaped, value, new[] { new object[] { value } });
         }
 
         private static MethodInfo GetReaderMethod(Type type)

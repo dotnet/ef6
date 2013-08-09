@@ -117,7 +117,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             dbDataReaderMock
                 .Setup(m => m.IsDBNull(It.IsAny<int>()))
-                .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal] == null);
+                .Returns((int ordinal) => underlyingEnumerators[currentResultSet].Current[ordinal] == null
+                    || underlyingEnumerators[currentResultSet].Current[ordinal] == DBNull.Value);
 
 #if !NET40
 
@@ -129,9 +130,76 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             dbDataReaderMock
                 .Setup(m => m.IsDBNullAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .Returns((int ordinal, CancellationToken ct) => Task.FromResult(underlyingEnumerators[currentResultSet].Current[ordinal] == null));
+                .Returns((int ordinal, CancellationToken ct) => Task.FromResult(underlyingEnumerators[currentResultSet].Current[ordinal] == null
+                    || underlyingEnumerators[currentResultSet].Current[ordinal] == DBNull.Value));
 
 #endif
+
+            dbDataReaderMock
+                .Setup(m => m.GetBoolean(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (bool)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetByte(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (byte)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetChar(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (char)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetDateTime(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (DateTime)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetDecimal(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (decimal)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetDouble(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (double)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetFloat(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (float)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetGuid(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (Guid)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetInt16(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (short)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetInt32(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (int)underlyingEnumerators[currentResultSet].Current[ordinal]);
+
+            dbDataReaderMock
+                .Setup(m => m.GetInt64(It.IsAny<int>()))
+                .Returns(
+                    (int ordinal) =>
+                    (long)underlyingEnumerators[currentResultSet].Current[ordinal]);
 
             dbDataReaderMock
                 .Setup(m => m.FieldCount)

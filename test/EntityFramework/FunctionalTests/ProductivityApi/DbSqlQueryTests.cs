@@ -400,20 +400,20 @@ namespace ProductivityApiTests
             }
         }
 
-        private void ValidateBovril(List<Product> products)
+        private static void ValidateBovril(List<Product> products)
         {
             Assert.Equal(1, products.Count);
             ValidateBovril(products.Single());
         }
 
-        private void ValidateBovril(dynamic bovril)
+        private static void ValidateBovril(dynamic bovril)
         {
             Assert.Equal(2, bovril.Id);
             Assert.Equal("Bovril", bovril.Name);
             Assert.Equal("Beverages", bovril.CategoryId);
         }
 
-        private void ValidateCadillac(Product cadillac)
+        private static void ValidateCadillac(Product cadillac)
         {
             Assert.IsType<FeaturedProduct>(cadillac);
             var asFeaturedProduct = (FeaturedProduct)cadillac;
@@ -424,7 +424,7 @@ namespace ProductivityApiTests
             Assert.Equal("Ed Wood", asFeaturedProduct.PromotionalCode);
         }
 
-        private void CadillacIsNotFeaturedProduct(Product cadillac)
+        private static void CadillacIsNotFeaturedProduct(Product cadillac)
         {
             Assert.IsNotType<FeaturedProduct>(cadillac);
 
@@ -551,6 +551,19 @@ namespace ProductivityApiTests
             }
         }
 
+        [Fact]
+        public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories").AsStreaming();
+
+                Assert.Throws<InvalidOperationException>(() => query.ToList()).ValidateMessage(
+                    "Materializer_InvalidCastReference", "System.String",
+                    "System.Int32");
+            }
+        }
+
 #if !NET40
 
         [Fact]
@@ -559,6 +572,22 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories");
+
+                Assert.Throws<InvalidOperationException>(
+                    () => ExceptionHelpers.UnwrapAggregateExceptions(
+                        () =>
+                        query.ToListAsync().Result)).ValidateMessage(
+                            "Materializer_InvalidCastReference", "System.String",
+                            "System.Int32");
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming_async()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var query = context.Database.SqlQuery<UnMappedProduct>("select * from Categories").AsStreaming();
 
                 Assert.Throws<InvalidOperationException>(
                     () => ExceptionHelpers.UnwrapAggregateExceptions(

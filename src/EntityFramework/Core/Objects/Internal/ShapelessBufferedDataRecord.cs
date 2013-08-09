@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    internal class BufferedDataRecord : BufferedDataRecordBase
+    internal class ShapelessBufferedDataRecord : BufferedDataRecordBase
     {
         private object[] _currentRow;
         private List<object[]> _resultSet;
@@ -21,14 +21,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         private bool[] _geographyColumns;
         private bool[] _geometryColumns;
 
-        protected BufferedDataRecord()
+        protected ShapelessBufferedDataRecord()
         {
         }
 
-        internal static BufferedDataRecord Initialize(
+        internal static ShapelessBufferedDataRecord Initialize(
             string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader)
         {
-            var record = new BufferedDataRecord();
+            var record = new ShapelessBufferedDataRecord();
             record.ReadMetadata(providerManifestToken, providerSerivces, reader);
 
             var fieldCount = record.FieldCount;
@@ -77,10 +77,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #if !NET40
 
-        internal static async Task<BufferedDataRecord> InitializeAsync(
+        internal static async Task<ShapelessBufferedDataRecord> InitializeAsync(
             string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader, CancellationToken cancellationToken)
         {
-            var record = new BufferedDataRecord();
+            var record = new ShapelessBufferedDataRecord();
             record.ReadMetadata(providerManifestToken, providerSerivces, reader);
 
             var fieldCount = record.FieldCount;
