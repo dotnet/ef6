@@ -48,12 +48,12 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (async)
             {
 #if !NET40
-                bufferedDataReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, CancellationToken.None).Wait();
+                bufferedDataReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
 #endif
             }
             else
             {
-                bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance);
+                bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
             }
 
             Assert.Equal(1, bufferedDataReader.FieldCount);
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
 
             var bufferedDataReader = new BufferedDataReader(reader);
-            bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance);
+            bufferedDataReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
 
             bufferedDataReader.Close();
             Assert.Equal(
@@ -152,12 +152,12 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (async)
                 {
 #if !NET40
-                    bufferedDataReader.InitializeAsync("2008", providerServicesMock.Object, CancellationToken.None).Wait();
+                    bufferedDataReader.InitializeAsync("2008", providerServicesMock.Object, null, null, CancellationToken.None).Wait();
 #endif
                 }
                 else
                 {
-                    bufferedDataReader.Initialize("2008", providerServicesMock.Object);
+                    bufferedDataReader.Initialize("2008", providerServicesMock.Object, null, null);
                 }
                 Assert.False(bufferedDataReader.IsClosed);
             }
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 new[] { new object[] { 3, "c" } });
 
             var bufferedReader = new BufferedDataReader(reader);
-            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
 
             var enumerator = bufferedReader.GetEnumerator();
 
@@ -276,9 +276,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
 
             Assert.False(reader.IsClosed);
-            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
             Assert.True(reader.IsClosed);
-            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
         }
 
 #if !NET40
@@ -289,9 +289,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             var bufferedReader = new BufferedDataReader(reader);
 
             Assert.False(reader.IsClosed);
-            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
+            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
             Assert.True(reader.IsClosed);
-            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
+            bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
         }
 #endif
 
@@ -354,13 +354,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             if (async)
             {
 #if !NET40
-                bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance,CancellationToken.None).Wait();
+                bufferedReader.InitializeAsync("2008", FakeSqlProviderServices.Instance, null, null, CancellationToken.None).Wait();
                 Assert.True(bufferedReader.ReadAsync().Result);
 #endif
             }
             else
             {
-                bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
+                bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
                 Assert.True(bufferedReader.Read());
             }
 
@@ -422,7 +422,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var reader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(dataReaderContents);
 
             var bufferedReader = new BufferedDataReader(reader);
-            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance);
+            bufferedReader.Initialize("2008", FakeSqlProviderServices.Instance, null, null);
 
             Assert.Equal(
                 Strings.ADP_NoData,

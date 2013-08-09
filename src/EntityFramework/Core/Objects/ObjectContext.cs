@@ -3609,6 +3609,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
+            ShaperFactory<TElement> shaperFactory = null;
             if (!executionOptions.Streaming)
             {
                 BufferedDataReader bufferedReader = null;
@@ -3617,8 +3618,13 @@ namespace System.Data.Entity.Core.Objects
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
+                    shaperFactory = _translator.TranslateColumnMap<TElement>(
+                        commandDefinition.CreateColumnMap(storeReader, 0),
+                        MetadataWorkspace, null, executionOptions.MergeOption, false, valueLayer: false);
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
+                    bufferedReader.Initialize(
+                        storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes,
+                        shaperFactory.NullableColumns);
                     storeReader = bufferedReader;
                 }
                 catch (Exception)
@@ -3633,7 +3639,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return MaterializedDataRecord<TElement>(
-                entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, executionOptions.Streaming);
+                entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.Streaming);
         }
 
         /// <summary>
@@ -3641,7 +3647,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
             EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyCollection<EntitySet> entitySets,
-            EdmType[] edmTypes, MergeOption mergeOption, bool streaming)
+            EdmType[] edmTypes, ShaperFactory<TElement> shaperFactory, MergeOption mergeOption, bool streaming)
         {
             DebugCheck.NotNull(entityCommand);
             DebugCheck.NotNull(storeReader);
@@ -3658,8 +3664,12 @@ namespace System.Data.Entity.Core.Objects
                 var entitySet = entitySets.Count > resultSetIndex ? entitySets[resultSetIndex] : null;
 
                 // create the shaper
-                var shaperFactory = _translator.TranslateColumnMap<TElement>(commandDefinition.CreateColumnMap(storeReader, resultSetIndex),
-                    MetadataWorkspace, null, mergeOption, streaming, valueLayer: false);
+                if (shaperFactory == null)
+                {
+                    shaperFactory = _translator.TranslateColumnMap<TElement>(
+                        commandDefinition.CreateColumnMap(storeReader, resultSetIndex),
+                        MetadataWorkspace, null, mergeOption, streaming, valueLayer: false);
+                }
 
                 var shaper = shaperFactory.Create(
                     storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, streaming);
@@ -4280,7 +4290,7 @@ namespace System.Data.Entity.Core.Objects
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(reader);
-                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
+                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns);
                     reader = bufferedReader;
                 }
                 catch
@@ -4600,7 +4610,7 @@ namespace System.Data.Entity.Core.Objects
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(reader);
-                    await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
+                    await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns, cancellationToken)
                         .ConfigureAwait(continueOnCapturedContext: false);
                     reader = bufferedReader;
                 }

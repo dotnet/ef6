@@ -7,15 +7,12 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Resources;
-    using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
 #endif
 
     /// <summary>
@@ -138,7 +135,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        internal void Initialize(string providerManifestToken, DbProviderServices providerSerivces)
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "nullableColumns")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "columnTypes")]
+        internal void Initialize(
+            string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns)
         {
             var reader = _underlyingReader;
             if (reader == null)
@@ -151,48 +151,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 do
                 {
-                    var metadata = ReadMetadata(providerManifestToken, providerSerivces, reader);
-
-                    var resultSet = new List<object[]>();
-                    if (metadata.HasSpatialColumns)
-                    {
-                        while (reader.Read())
-                        {
-                            var row = new object[metadata.FieldCount];
-                            for (var i = 0; i < metadata.FieldCount; i++)
-                            {
-                                if (reader.IsDBNull(i))
-                                {
-                                    row[i] = DBNull.Value;
-                                }
-                                else if (metadata.GeographyColumns[i])
-                                {
-                                    row[i] = metadata.SpatialDataReader.GetGeography(i);
-                                }
-                                else if (metadata.GeometryColumns[i])
-                                {
-                                    row[i] = metadata.SpatialDataReader.GetGeometry(i);
-                                }
-                                else
-                                {
-                                    row[i] = reader.GetValue(i);
-                                }
-                            }
-                            resultSet.Add(row);
-                        }
-                    }
-                    else
-                    {
-                        while (reader.Read())
-                        {
-                            var row = new object[metadata.FieldCount];
-                            reader.GetValues(row);
-                            resultSet.Add(row);
-                        }
-                    }
-
-                    _bufferedDataRecords.Add(
-                        new BufferedDataRecord(resultSet, metadata.DataTypeNames, metadata.ColumnTypes, metadata.ColumnNames));
+                    _bufferedDataRecords.Add(BufferedDataRecord.Initialize(providerManifestToken, providerSerivces, reader));
                 }
                 while (reader.NextResult());
 
@@ -207,8 +166,11 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #if !NET40
 
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "nullableColumns")]
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "columnTypes")]
         internal async Task InitializeAsync(
-            string providerManifestToken, DbProviderServices providerSerivces, CancellationToken cancellationToken)
+            string providerManifestToken, DbProviderServices providerSerivces, Type[] columnTypes, bool[] nullableColumns,
+            CancellationToken cancellationToken)
         {
             var reader = _underlyingReader;
             if (reader == null)
@@ -221,41 +183,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 do
                 {
-                    var metadata = ReadMetadata(providerManifestToken, providerSerivces, reader);
-
-                    var resultSet = new List<object[]>();
-                    while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
-                    {
-                        var row = new object[metadata.FieldCount];
-                        for (var i = 0; i < metadata.FieldCount; i++)
-                        {
-                            if (await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
-                            {
-                                row[i] = DBNull.Value;
-                            }
-                            else if (metadata.HasSpatialColumns
-                                     && metadata.GeographyColumns[i])
-                            {
-                                row[i] = await metadata.SpatialDataReader.GetGeographyAsync(i, cancellationToken)
-                                                       .ConfigureAwait(continueOnCapturedContext: false);
-                            }
-                            else if (metadata.HasSpatialColumns
-                                     && metadata.GeometryColumns[i])
-                            {
-                                row[i] = await metadata.SpatialDataReader.GetGeometryAsync(i, cancellationToken)
-                                                       .ConfigureAwait(continueOnCapturedContext: false);
-                            }
-                            else
-                            {
-                                row[i] = await reader.GetFieldValueAsync<object>(i, cancellationToken)
-                                                     .ConfigureAwait(continueOnCapturedContext: false);
-                            }
-                        }
-                        resultSet.Add(row);
-                    }
-
                     _bufferedDataRecords.Add(
-                        new BufferedDataRecord(resultSet, metadata.DataTypeNames, metadata.ColumnTypes, metadata.ColumnNames));
+                        await BufferedDataRecord.InitializeAsync(providerManifestToken, providerSerivces, reader, cancellationToken)
+                                  .ConfigureAwait(continueOnCapturedContext: false));
                 }
                 while (await reader.NextResultAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false));
 
@@ -269,45 +199,6 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
-        private static ReaderMetadata ReadMetadata(string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
-        {
-            var fieldCount = reader.FieldCount;
-            var hasSpatialColumns = false;
-            DbSpatialDataReader spatialDataReader = null;
-            if (fieldCount > 0)
-            {
-                // fieldCount == 0 indicates NullDataReader
-                spatialDataReader = providerServices.GetSpatialDataReader(reader, providerManifestToken);
-            }
-            bool[] geographyColumns = null;
-            bool[] geometryColumns = null;
-            if (spatialDataReader != null)
-            {
-                geographyColumns = new bool[fieldCount];
-                geometryColumns = new bool[fieldCount];
-            }
-
-            var dataTypeNames = new string[fieldCount];
-            var columnTypes = new Type[fieldCount];
-            var columnNames = new string[fieldCount];
-            for (var i = 0; i < fieldCount; i++)
-            {
-                dataTypeNames[i] = reader.GetDataTypeName(i);
-                columnTypes[i] = reader.GetFieldType(i);
-                columnNames[i] = reader.GetName(i);
-                if (spatialDataReader != null)
-                {
-                    geographyColumns[i] = spatialDataReader.IsGeographyColumn(i);
-                    geometryColumns[i] = spatialDataReader.IsGeometryColumn(i);
-                    hasSpatialColumns = hasSpatialColumns || geographyColumns[i] || geometryColumns[i];
-                    Debug.Assert(!geographyColumns[i] || !geometryColumns[i]);
-                }
-            }
-
-            return new ReaderMetadata(
-                fieldCount, dataTypeNames, columnTypes, columnNames, hasSpatialColumns, spatialDataReader, geographyColumns, geometryColumns);
-        }
 
         public override void Close()
         {
@@ -540,31 +431,5 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
 #endif
-
-        private class ReaderMetadata
-        {
-            public readonly int FieldCount;
-            public readonly Type[] ColumnTypes;
-            public readonly string[] ColumnNames;
-            public readonly string[] DataTypeNames;
-            public readonly bool HasSpatialColumns;
-            public readonly bool[] GeographyColumns;
-            public readonly bool[] GeometryColumns;
-            public readonly DbSpatialDataReader SpatialDataReader;
-
-            public ReaderMetadata(
-                int fieldCount, string[] dataTypeNames, Type[] types, string[] columnNames, bool hasSpatialColumn,
-                DbSpatialDataReader spatialDataReader, bool[] geographyColumns, bool[] geometryColumns)
-            {
-                FieldCount = fieldCount;
-                DataTypeNames = dataTypeNames;
-                ColumnTypes = types;
-                ColumnNames = columnNames;
-                HasSpatialColumns = hasSpatialColumn;
-                SpatialDataReader = spatialDataReader;
-                GeographyColumns = geographyColumns;
-                GeometryColumns = geometryColumns;
-            }
-        }
     }
 }

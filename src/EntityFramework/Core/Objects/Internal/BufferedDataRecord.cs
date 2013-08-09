@@ -4,14 +4,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Data.Entity.Utilities;
+    using System.Data.Common;
+    using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Spatial;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
-
-#if !NET40
-
 #endif
 
     internal class BufferedDataRecord
@@ -19,29 +19,159 @@ namespace System.Data.Entity.Core.Objects.Internal
         private int _currentRowNumber = -1;
         private object[] _currentRow;
 
-        private readonly List<object[]> _resultSet;
-        private readonly int _resultSetCount;
-        private readonly string[] _dataTypeNames;
-        private readonly Type[] _fieldTypes;
-        private readonly string[] _columnNames;
-        private readonly Lazy<FieldNameLookup> _fieldNameLookup;
+        private List<object[]> _resultSet;
+        private DbSpatialDataReader _spatialDataReader;
+        private bool[] _geographyColumns;
+        private bool[] _geometryColumns;
+        private int _rowCount;
+        private string[] _dataTypeNames;
+        private Type[] _fieldTypes;
+        private string[] _columnNames;
+        private Lazy<FieldNameLookup> _fieldNameLookup;
 
-        public BufferedDataRecord(List<object[]> resultSet, string[] dataTypeNames, Type[] fieldTypes, string[] columnNames)
+        protected BufferedDataRecord()
         {
-            DebugCheck.NotNull(resultSet);
-            DebugCheck.NotNull(dataTypeNames);
-            DebugCheck.NotNull(fieldTypes);
-            DebugCheck.NotNull(columnNames);
-            Debug.Assert(dataTypeNames.Length == fieldTypes.Length);
-            Debug.Assert(fieldTypes.Length == columnNames.Length);
+        }
 
-            _resultSet = resultSet;
-            _resultSetCount = _resultSet.Count;
+        internal static BufferedDataRecord Initialize(
+            string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader)
+        {
+            var record = new BufferedDataRecord();
+            record.ReadMetadata(providerManifestToken, providerSerivces, reader);
+
+            var fieldCount = record.FieldCount;
+            var resultSet = new List<object[]>();
+            if (record._spatialDataReader != null)
+            {
+                while (reader.Read())
+                {
+                    var row = new object[fieldCount];
+                    for (var i = 0; i < fieldCount; i++)
+                    {
+                        if (reader.IsDBNull(i))
+                        {
+                            row[i] = DBNull.Value;
+                        }
+                        else if (record._geographyColumns[i])
+                        {
+                            row[i] = record._spatialDataReader.GetGeography(i);
+                        }
+                        else if (record._geometryColumns[i])
+                        {
+                            row[i] = record._spatialDataReader.GetGeometry(i);
+                        }
+                        else
+                        {
+                            row[i] = reader.GetValue(i);
+                        }
+                    }
+                    resultSet.Add(row);
+                }
+            }
+            else
+            {
+                while (reader.Read())
+                {
+                    var row = new object[fieldCount];
+                    reader.GetValues(row);
+                    resultSet.Add(row);
+                }
+            }
+
+            record._rowCount = resultSet.Count;
+            record._resultSet = resultSet;
+            return record;
+        }
+
+#if !NET40
+
+        internal static async Task<BufferedDataRecord> InitializeAsync(
+            string providerManifestToken, DbProviderServices providerSerivces, DbDataReader reader, CancellationToken cancellationToken)
+        {
+            var record = new BufferedDataRecord();
+            record.ReadMetadata(providerManifestToken, providerSerivces, reader);
+
+            var fieldCount = record.FieldCount;
+            var resultSet = new List<object[]>();
+            while (await reader.ReadAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+            {
+                var row = new object[fieldCount];
+                for (var i = 0; i < fieldCount; i++)
+                {
+                    if (await reader.IsDBNullAsync(i, cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
+                    {
+                        row[i] = DBNull.Value;
+                    }
+                    else if (record._spatialDataReader != null
+                             && record._geographyColumns[i])
+                    {
+                        row[i] = await record._spatialDataReader.GetGeographyAsync(i, cancellationToken)
+                                           .ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                    else if (record._spatialDataReader != null
+                             && record._geometryColumns[i])
+                    {
+                        row[i] = await record._spatialDataReader.GetGeometryAsync(i, cancellationToken)
+                                           .ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                    else
+                    {
+                        row[i] = await reader.GetFieldValueAsync<object>(i, cancellationToken)
+                                           .ConfigureAwait(continueOnCapturedContext: false);
+                    }
+                }
+                resultSet.Add(row);
+            }
+
+            record._rowCount = resultSet.Count;
+            record._resultSet = resultSet;
+            return record;
+        }
+
+#endif
+
+        protected void ReadMetadata(string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
+        {
+            var fieldCount = reader.FieldCount;
+            var dataTypeNames = new string[fieldCount];
+            var columnTypes = new Type[fieldCount];
+            var columnNames = new string[fieldCount];
+            for (var i = 0; i < fieldCount; i++)
+            {
+                dataTypeNames[i] = reader.GetDataTypeName(i);
+                columnTypes[i] = reader.GetFieldType(i);
+                columnNames[i] = reader.GetName(i);
+            }
+
             _dataTypeNames = dataTypeNames;
-            _fieldTypes = fieldTypes;
+            _fieldTypes = columnTypes;
             _columnNames = columnNames;
             _fieldNameLookup = new Lazy<FieldNameLookup>(
                 () => new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1), isThreadSafe: false);
+        
+            var hasSpatialColumns = false;
+            DbSpatialDataReader spatialDataReader = null;
+            if (fieldCount > 0)
+            {
+                // FieldCount == 0 indicates NullDataReader
+                spatialDataReader = providerServices.GetSpatialDataReader(reader, providerManifestToken);
+            }
+
+            if (spatialDataReader != null)
+            {
+                _geographyColumns = new bool[fieldCount];
+                _geometryColumns = new bool[fieldCount];
+
+                for (var i = 0; i < fieldCount; i++)
+                {
+                    _geographyColumns[i] = spatialDataReader.IsGeographyColumn(i);
+                    _geometryColumns[i] = spatialDataReader.IsGeometryColumn(i);
+                    hasSpatialColumns = hasSpatialColumns || _geographyColumns[i] || _geometryColumns[i];
+                    Debug.Assert(!_geographyColumns[i] || !_geometryColumns[i]);
+                }
+            }
+
+            _spatialDataReader = hasSpatialColumns ? spatialDataReader : null;
         }
 
         public object this[string name]
@@ -58,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public bool HasRows
         {
-            get { return _resultSetCount > 0; }
+            get { return _rowCount > 0; }
         }
 
         public int FieldCount
@@ -199,7 +329,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         public bool Read()
         {
-            if (++_currentRowNumber < _resultSetCount)
+            if (++_currentRowNumber < _rowCount)
             {
                 _currentRow = _resultSet[_currentRowNumber];
                 IsDataReady = true;
