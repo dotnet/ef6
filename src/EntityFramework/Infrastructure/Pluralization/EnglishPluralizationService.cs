@@ -560,11 +560,11 @@ namespace System.Data.Entity.Infrastructure.Pluralization
         /// <summary>
         /// Constructs a new  instance  of default pluralization service
         /// used in Entity Framework.
+        /// </summary>
         /// <param name="userDictionaryEntries">
         ///     A collection of user dictionary entries to be used by this service.These inputs
         ///     can  customize the service according the user needs.
         /// </param>
-        /// </summary>
         public EnglishPluralizationService(IEnumerable<CustomPluralizationEntry> userDictionaryEntries)
             : this()
         {

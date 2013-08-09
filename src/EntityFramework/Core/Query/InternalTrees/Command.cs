@@ -1361,8 +1361,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         /// <summary>
         /// Creates a new DistinctOp
-        /// <param name="keyVars"> list of key vars </param>
         /// </summary>
+        /// <param name="keyVars"> list of key vars </param>
         /// <returns> A new DistinctOp </returns>
         internal virtual DistinctOp CreateDistinctOp(VarVec keyVars)
         {

@@ -302,7 +302,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         /// <summary>
         /// Determines if the
-        /// <param ref="type" />
+        /// <paramref ref="type" />
         /// is a structural nominal type, i.e., EntityType or ComplexType
         /// </summary>
         /// <param name="type"> Type to be checked. </param>
