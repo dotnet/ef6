@@ -19,7 +19,8 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         /// Gets a view corresponding to the specified extent.
         /// </summary>
         /// <param name="extent">An <see cref="EntitySetBase"/> that specifies the extent.</param>
-        /// <returns>A <see cref="DbMappingView"/> that specifies the mapping view.</returns>
+        /// <returns>A <see cref="DbMappingView"/> that specifies the mapping view, 
+        /// or null if the extent is not associated with a mapping view.</returns>
         public abstract DbMappingView GetView(EntitySetBase extent);
     }
 }

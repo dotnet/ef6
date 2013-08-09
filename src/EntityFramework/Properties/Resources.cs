@@ -3726,7 +3726,7 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "The mapping and metadata information for EntityContainer '{0}' no longer matches the information used to create the pre-generated views."
+        /// A string like "The current model no longer matches the model used to pre-generate the mapping views, as indicated by the {0}.MappingHashValue property. Pre-generated mapping views must be either regenerated using the current model or removed if mapping views generated at runtime should be used instead. See http://go.microsoft.com/fwlink/?LinkId=318050 for more information on Entity Framework mapping views."
         /// </summary>
         internal static string ViewGen_HashOnMappingClosure_Not_Matching(object p0)
         {

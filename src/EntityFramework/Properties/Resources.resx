@@ -1658,7 +1658,7 @@
     <value>An Entity with Key ({0}) will not round-trip when:</value>
   </data>
   <data name="ViewGen_HashOnMappingClosure_Not_Matching" xml:space="preserve">
-    <value>The mapping and metadata information for EntityContainer '{0}' no longer matches the information used to create the pre-generated views.</value>
+    <value>The current model no longer matches the model used to pre-generate the mapping views, as indicated by the {0}.MappingHashValue property. Pre-generated mapping views must be either regenerated using the current model or removed if mapping views generated at runtime should be used instead. See http://go.microsoft.com/fwlink/?LinkId=318050 for more information on Entity Framework mapping views.</value>
   </data>
   <data name="Viewgen_RightSideNotDisjoint" xml:space="preserve">
     <value>Ensure that mapping fragments for EntitySet {0} do not map entities with the same primary key to different rows of the same table.</value>
