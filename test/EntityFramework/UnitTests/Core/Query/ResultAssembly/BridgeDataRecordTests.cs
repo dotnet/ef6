@@ -86,8 +86,7 @@ namespace System.Data.Entity.Core.Query
                 /*stateCount*/ 1,
                 coordinatorFactory,
                 /*readerOwned*/ false,
-                /*useSpatialReader*/ false,
-                /*shouldReleaseConnection*/ true)
+                /*streaming*/ false)
                                  {
                                      CallBase = true
                                  };

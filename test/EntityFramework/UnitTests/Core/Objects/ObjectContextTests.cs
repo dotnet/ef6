@@ -783,11 +783,17 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                objectContext.ExecuteStoreQuery<object>("{0} Foo", parameterMock.Object);
+                var result = objectContext.ExecuteStoreQuery<object>("{0} Foo", parameterMock.Object);
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
                 Assert.True(correctParameters);
+
+                result.Dispose();
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]
@@ -822,11 +828,17 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                objectContext.ExecuteStoreQuery<object>("{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true), parameterMock.Object);
+                var result = objectContext.ExecuteStoreQuery<object>("{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true), parameterMock.Object);
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Never());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
                 Assert.True(correctParameters);
+
+                result.Dispose();
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]
@@ -2411,12 +2423,18 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Wait();
+                var result =objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Result;
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify(
                     "ExecuteDbDataReaderAsync", Times.Once(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
                 Assert.True(correctParameters);
+
+                result.Dispose();
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]
@@ -2452,14 +2470,20 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                objectContext.ExecuteStoreQueryAsync<object>(
+                var result =objectContext.ExecuteStoreQueryAsync<object>(
                     "{0} Foo", new ExecutionOptions(MergeOption.AppendOnly, true),
-                    CancellationToken.None, parameterMock.Object).Wait();
+                    CancellationToken.None, parameterMock.Object).Result;
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Never());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify(
                     "ExecuteDbDataReaderAsync", Times.Once(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
                 Assert.True(correctParameters);
+
+                result.Dispose();
+
+                Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
             }
 
             [Fact]

@@ -3608,13 +3608,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            if (executionOptions.Streaming)
-            {
-                return MaterializedDataRecord<TElement>(
-                    entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: true,
-                    shouldReleaseConnection: true);
-            }
-            else
+            if (!executionOptions.Streaming)
             {
                 BufferedDataReader bufferedReader = null;
                 try
@@ -3624,26 +3618,21 @@ namespace System.Data.Entity.Core.Objects
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
+                    storeReader = bufferedReader;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     if (bufferedReader != null)
                     {
                         bufferedReader.Dispose();
                     }
 
-                    if (e.IsCatchableEntityExceptionType())
-                    {
-                        throw new EntityCommandExecutionException(Strings.EntityClient_CommandExecutionFailed, e);
-                    }
-
                     throw;
                 }
-
-                return MaterializedDataRecord<TElement>(
-                    entityCommand, bufferedReader, 0, entitySets, edmTypes, executionOptions.MergeOption, useSpatialReader: false,
-                    shouldReleaseConnection: false);
             }
+
+            return MaterializedDataRecord<TElement>(
+                entityCommand, storeReader, 0, entitySets, edmTypes, executionOptions.MergeOption, executionOptions.Streaming);
         }
 
         /// <summary>
@@ -3651,7 +3640,7 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
             EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyMetadataCollection<EntitySet> entitySets,
-            EdmType[] edmTypes, MergeOption mergeOption, bool useSpatialReader, bool shouldReleaseConnection)
+            EdmType[] edmTypes, MergeOption mergeOption, bool streaming)
         {
             DebugCheck.NotNull(entityCommand);
             DebugCheck.NotNull(storeReader);
@@ -3668,10 +3657,11 @@ namespace System.Data.Entity.Core.Objects
                 var entitySet = entitySets.Count > resultSetIndex ? entitySets[resultSetIndex] : null;
 
                 // create the shaper
-                var shaperFactory = _translator.TranslateColumnMap<TElement>(commandDefinition.CreateColumnMap(storeReader, resultSetIndex), MetadataWorkspace, null, mergeOption,
-                    false);
+                var shaperFactory = _translator.TranslateColumnMap<TElement>(commandDefinition.CreateColumnMap(storeReader, resultSetIndex),
+                    MetadataWorkspace, null, mergeOption, streaming, valueLayer: false);
+
                 var shaper = shaperFactory.Create(
-                    storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, useSpatialReader, shouldReleaseConnection);
+                    storeReader, this, MetadataWorkspace, mergeOption, shaperOwnsReader, streaming);
 
                 NextResultGenerator nextResultGenerator;
 
@@ -3702,13 +3692,13 @@ namespace System.Data.Entity.Core.Objects
                 else
                 {
                     nextResultGenerator = new NextResultGenerator(
-                        this, entityCommand, edmTypes, entitySets, mergeOption, useSpatialReader, resultSetIndex + 1);
+                        this, entityCommand, edmTypes, entitySets, mergeOption, streaming, resultSetIndex + 1);
                 }
 
                 // We want the ObjectResult to close the reader in its Dispose method, even if it is not the last result set.
                 // This is to allow users to cancel reading results without the unnecessary iteration thru all the result sets.
                 return new ObjectResult<TElement>(
-                    shaper, entitySet, TypeUsage.Create(edmTypes[resultSetIndex]), true, shouldReleaseConnection, nextResultGenerator,
+                    shaper, entitySet, TypeUsage.Create(edmTypes[resultSetIndex]), true, streaming, nextResultGenerator,
                     onReaderDispose);
             }
             catch
@@ -4255,6 +4245,9 @@ namespace System.Data.Entity.Core.Objects
             string commandText, string entitySetName, ExecutionOptions executionOptions, params object[] parameters)
         {
             DbDataReader reader = null;
+            EntitySet entitySet;
+            TypeUsage edmType;
+            ShaperFactory<TElement> shaperFactory;
             try
             {
                 using (var command = CreateStoreCommand(commandText, parameters))
@@ -4262,12 +4255,8 @@ namespace System.Data.Entity.Core.Objects
                     reader = command.ExecuteReader();
                 }
 
-                if (executionOptions.Streaming)
-                {
-                    return InternalTranslate<TElement>(
-                        reader, entitySetName, executionOptions.MergeOption, readerOwned: true,
-                        shouldReleaseConnection: executionOptions.Streaming);
-                }
+                shaperFactory = InternalTranslate<TElement>(
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.Streaming, out entitySet, out edmType);
             }
             catch
             {
@@ -4281,27 +4270,30 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            BufferedDataReader bufferedReader = null;
-            try
+            if (!executionOptions.Streaming)
             {
-                var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
-
-                bufferedReader = new BufferedDataReader(reader);
-                bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
-                return InternalTranslate<TElement>(
-                    bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
-                    shouldReleaseConnection: !executionOptions.Streaming);
-            }
-            catch
-            {
-                if (bufferedReader != null)
+                BufferedDataReader bufferedReader = null;
+                try
                 {
-                    bufferedReader.Dispose();
-                }
+                    var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
-                throw;
+                    bufferedReader = new BufferedDataReader(reader);
+                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
+                    reader = bufferedReader;
+                }
+                catch
+                {
+                    if (bufferedReader != null)
+                    {
+                        bufferedReader.Dispose();
+                    }
+
+                    throw;
+                }
             }
+
+            return ShapeResult(reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.Streaming, shaperFactory, entitySet, edmType);
         }
 
 #if !NET40
@@ -4573,18 +4565,18 @@ namespace System.Data.Entity.Core.Objects
             CancellationToken cancellationToken, params object[] parameters)
         {
             DbDataReader reader = null;
+            EntitySet entitySet;
+            TypeUsage edmType;
+            ShaperFactory<TElement> shaperFactory;
             try
             {
                 using (var command = CreateStoreCommand(commandText, parameters))
                 {
                     reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
-                if (executionOptions.Streaming)
-                {
-                    return InternalTranslate<TElement>(
-                        reader, entitySetName, executionOptions.MergeOption, readerOwned: true,
-                        shouldReleaseConnection: executionOptions.Streaming);
-                }
+
+                shaperFactory = InternalTranslate<TElement>(
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.Streaming, out entitySet, out edmType);
             }
             catch
             {
@@ -4598,28 +4590,32 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            BufferedDataReader bufferedReader = null;
-            try
+            if (!executionOptions.Streaming)
             {
-                var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
-
-                bufferedReader = new BufferedDataReader(reader);
-                await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
-                                    .ConfigureAwait(continueOnCapturedContext: false);
-                return InternalTranslate<TElement>(
-                    bufferedReader, entitySetName, executionOptions.MergeOption, readerOwned: true,
-                    shouldReleaseConnection: !executionOptions.Streaming);
-            }
-            catch
-            {
-                if (bufferedReader != null)
+                BufferedDataReader bufferedReader = null;
+                try
                 {
-                    bufferedReader.Dispose();
-                }
+                    var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+                    var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
-                throw;
+                    bufferedReader = new BufferedDataReader(reader);
+                    await bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
+                        .ConfigureAwait(continueOnCapturedContext: false);
+                    reader = bufferedReader;
+                }
+                catch
+                {
+                    if (bufferedReader != null)
+                    {
+                        bufferedReader.Dispose();
+                    }
+
+                    throw;
+                }
             }
+
+            return ShapeResult(
+                reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.Streaming, shaperFactory, entitySet, edmType);
         }
 
 #endif
@@ -4644,8 +4640,12 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TElement>(
-                reader, null /*entitySetName*/, MergeOption.AppendOnly, readerOwned: false, shouldReleaseConnection: false);
+            EntitySet entitySet;
+            TypeUsage edmType;
+            var shaperFactory = InternalTranslate<TElement>(
+                reader, /*entitySetName:*/ null, MergeOption.AppendOnly, /*streaming:*/ false, out entitySet, out edmType);
+            return ShapeResult(
+                reader, MergeOption.AppendOnly, /*readerOwned:*/ false, /*streaming:*/ false, shaperFactory, entitySet, edmType);
         }
 
         /// <summary>
@@ -4683,16 +4683,20 @@ namespace System.Data.Entity.Core.Objects
             // the assembly of the method that invoked the currently executing method.
             MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TEntity), Assembly.GetCallingAssembly());
 
-            return InternalTranslate<TEntity>(reader, entitySetName, mergeOption, readerOwned: false, shouldReleaseConnection: false);
+            EntitySet entitySet;
+            TypeUsage edmType;
+            var shaperFactory = InternalTranslate<TEntity>(
+                reader, entitySetName, mergeOption, /*streaming:*/ false, out entitySet, out edmType);
+            return ShapeResult(
+                reader, mergeOption, /*readerOwned:*/ false, /*streaming:*/ false, shaperFactory, entitySet, edmType);
         }
 
-        private ObjectResult<TElement> InternalTranslate<TElement>(
-            DbDataReader reader, string entitySetName,
-            MergeOption mergeOption, bool readerOwned, bool shouldReleaseConnection)
+        private ShaperFactory<TElement> InternalTranslate<TElement>(
+            DbDataReader reader, string entitySetName, MergeOption mergeOption, bool streaming, out EntitySet entitySet, out TypeUsage edmType)
         {
             DebugCheck.NotNull(reader);
             EntityUtil.CheckArgumentMergeOption(mergeOption);
-            EntitySet entitySet = null;
+            entitySet = null;
             if (!string.IsNullOrEmpty(entitySetName))
             {
                 entitySet = GetEntitySetFromName(entitySetName);
@@ -4723,12 +4727,20 @@ namespace System.Data.Entity.Core.Objects
                 columnMap = _columnMapFactory.CreateColumnMapFromReaderAndClrType(reader, typeof(TElement), MetadataWorkspace);
             }
 
+            edmType = columnMap.Type;
+
             // build a shaper for the column map to produce typed results
-            var shaperFactory = _translator.TranslateColumnMap<TElement>(columnMap, MetadataWorkspace, null, mergeOption, false);
+            return _translator.TranslateColumnMap<TElement>(columnMap, MetadataWorkspace, null, mergeOption, streaming, valueLayer: false);
+        }
+
+        private ObjectResult<TElement> ShapeResult<TElement>(
+            DbDataReader reader, MergeOption mergeOption, bool readerOwned, bool streaming, ShaperFactory<TElement> shaperFactory, EntitySet entitySet,
+            TypeUsage edmType)
+        {
             var shaper = shaperFactory.Create(
-                reader, this, MetadataWorkspace, mergeOption, readerOwned, /*useSpatialReader:*/ true, shouldReleaseConnection);
+                reader, this, MetadataWorkspace, mergeOption, readerOwned, streaming);
             return new ObjectResult<TElement>(
-                shaper, entitySet, MetadataHelper.GetElementType(columnMap.Type), readerOwned, shouldReleaseConnection);
+                shaper, entitySet, MetadataHelper.GetElementType(edmType), readerOwned, streaming);
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]

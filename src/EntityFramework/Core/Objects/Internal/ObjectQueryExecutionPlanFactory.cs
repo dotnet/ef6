@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             var shaperFactory = Translator.TranslateColumnMap(
                 _translator, elementType, entityDefinition.CreateColumnMap(null),
-                context.MetadataWorkspace, spanInfo, mergeOption, false);
+                context.MetadataWorkspace, spanInfo, mergeOption, streaming, false);
 
             // attempt to determine entity information for this query (e.g. which entity type and which entity set)
 

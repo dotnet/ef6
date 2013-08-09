@@ -166,7 +166,7 @@ namespace System.Data.Entity.Core.Objects
 
         internal override ObjectResult<TElement> GetNextResultInternal<TElement>()
         {
-            return null != _nextResultGenerator ? _nextResultGenerator.GetNextResult<TElement>(_reader, _shouldReleaseConnection) : null;
+            return null != _nextResultGenerator ? _nextResultGenerator.GetNextResult<TElement>(_reader) : null;
         }
 
         /// <summary>

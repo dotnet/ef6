@@ -26,17 +26,17 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             translatorMock.Setup(
                 m => m.TranslateColumnMap<object>(
                     It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
-                    It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>())).Returns(expectedShaperFactory);
+                    It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>(), It.IsAny<bool>())).Returns(expectedShaperFactory);
 
             var actualShaperFactory = Translator.TranslateColumnMap(
                 translatorMock.Object, typeof(object), 
                 new ScalarColumnMap(typeUsageMock.Object, null, 0, 0), new MetadataWorkspace(),
-                new SpanIndex(), MergeOption.AppendOnly, valueLayer: true);
+                new SpanIndex(), MergeOption.AppendOnly, streaming: false, valueLayer: true);
 
             translatorMock.Verify(
                 m => m.TranslateColumnMap<object>(
                     It.IsAny<ColumnMap>(), It.IsAny<MetadataWorkspace>(),
-                    It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), It.IsAny<bool>()), Times.Once());
+                    It.IsAny<SpanIndex>(), It.IsAny<MergeOption>(), false, true), Times.Once());
             Assert.Same(expectedShaperFactory, actualShaperFactory);
         }
 
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             Assert.NotNull(
                 new Translator().TranslateColumnMap<object>(
-                    collection, metadataWorkspaceMock.Object, new SpanIndex(), MergeOption.NoTracking, valueLayer: false));
+                    collection, metadataWorkspaceMock.Object, new SpanIndex(), MergeOption.NoTracking, streaming: true, valueLayer: false));
         }
     }
 }

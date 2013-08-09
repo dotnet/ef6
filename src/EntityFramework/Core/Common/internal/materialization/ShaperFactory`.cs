@@ -33,13 +33,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         /// </summary>
         internal Shaper<T> Create(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
-            bool readerOwned, bool useSpatialReader, bool shouldReleaseConnection)
+            bool readerOwned, bool streaming)
         {
             Debug.Assert(
                 mergeOption == _mergeOption, "executing a query with a different mergeOption than was used to compile the delegate");
             return new Shaper<T>(
-                reader, context, workspace, mergeOption, _stateCount, _rootCoordinatorFactory, readerOwned, useSpatialReader,
-                shouldReleaseConnection);
+                reader, context, workspace, mergeOption, _stateCount, _rootCoordinatorFactory, readerOwned, streaming);
         }
     }
 }
