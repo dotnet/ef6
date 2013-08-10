@@ -132,6 +132,7 @@
     <Compile Include="Core\Metadata\Edm\MslXmlSchemaWriter.cs" />
     <Compile Include="Core\Metadata\Edm\SsdlSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\XmlSchemaWriter.cs" />
+    <Compile Include="Core\Objects\Internal\BufferedDataRecordBase.cs" />
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbConfigurationTypeAttribute.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />

@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Spatial;
@@ -14,20 +13,13 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    internal class BufferedDataRecord
+    internal class BufferedDataRecord : BufferedDataRecordBase
     {
-        private int _currentRowNumber = -1;
         private object[] _currentRow;
-
         private List<object[]> _resultSet;
         private DbSpatialDataReader _spatialDataReader;
         private bool[] _geographyColumns;
         private bool[] _geometryColumns;
-        private int _rowCount;
-        private string[] _dataTypeNames;
-        private Type[] _fieldTypes;
-        private string[] _columnNames;
-        private Lazy<FieldNameLookup> _fieldNameLookup;
 
         protected BufferedDataRecord()
         {
@@ -130,25 +122,11 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #endif
 
-        protected void ReadMetadata(string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
+        protected override void ReadMetadata(string providerManifestToken, DbProviderServices providerServices, DbDataReader reader)
         {
-            var fieldCount = reader.FieldCount;
-            var dataTypeNames = new string[fieldCount];
-            var columnTypes = new Type[fieldCount];
-            var columnNames = new string[fieldCount];
-            for (var i = 0; i < fieldCount; i++)
-            {
-                dataTypeNames[i] = reader.GetDataTypeName(i);
-                columnTypes[i] = reader.GetFieldType(i);
-                columnNames[i] = reader.GetName(i);
-            }
+            base.ReadMetadata(providerManifestToken, providerServices, reader);
 
-            _dataTypeNames = dataTypeNames;
-            _fieldTypes = columnTypes;
-            _columnNames = columnNames;
-            _fieldNameLookup = new Lazy<FieldNameLookup>(
-                () => new FieldNameLookup(new ReadOnlyCollection<string>(columnNames), -1), isThreadSafe: false);
-        
+            var fieldCount = FieldCount;
             var hasSpatialColumns = false;
             DbSpatialDataReader spatialDataReader = null;
             if (fieldCount > 0)
@@ -174,89 +152,67 @@ namespace System.Data.Entity.Core.Objects.Internal
             _spatialDataReader = hasSpatialColumns ? spatialDataReader : null;
         }
 
-        public object this[string name]
-        {
-            get { return GetValue(GetOrdinal(name)); }
-        }
-
-        public object this[int ordinal]
-        {
-            get { return GetValue(ordinal); }
-        }
-
-        public bool IsDataReady { get; private set; }
-
-        public bool HasRows
-        {
-            get { return _rowCount > 0; }
-        }
-
-        public int FieldCount
-        {
-            get { return _dataTypeNames.Length; }
-        }
-
-        public bool GetBoolean(int ordinal)
+        public override bool GetBoolean(int ordinal)
         {
             return GetFieldValue<bool>(ordinal);
         }
 
-        public byte GetByte(int ordinal)
+        public override byte GetByte(int ordinal)
         {
             return GetFieldValue<byte>(ordinal);
         }
 
-        public char GetChar(int ordinal)
+        public override char GetChar(int ordinal)
         {
             return GetFieldValue<char>(ordinal);
         }
 
-        public DateTime GetDateTime(int ordinal)
+        public override DateTime GetDateTime(int ordinal)
         {
             return GetFieldValue<DateTime>(ordinal);
         }
 
-        public decimal GetDecimal(int ordinal)
+        public override decimal GetDecimal(int ordinal)
         {
             return GetFieldValue<decimal>(ordinal);
         }
 
-        public double GetDouble(int ordinal)
+        public override double GetDouble(int ordinal)
         {
             return GetFieldValue<double>(ordinal);
         }
 
-        public float GetFloat(int ordinal)
+        public override float GetFloat(int ordinal)
         {
             return GetFieldValue<float>(ordinal);
         }
 
-        public Guid GetGuid(int ordinal)
+        public override Guid GetGuid(int ordinal)
         {
             return GetFieldValue<Guid>(ordinal);
         }
 
-        public short GetInt16(int ordinal)
+        public override short GetInt16(int ordinal)
         {
             return GetFieldValue<short>(ordinal);
         }
 
-        public int GetInt32(int ordinal)
+        public override int GetInt32(int ordinal)
         {
             return GetFieldValue<int>(ordinal);
         }
 
-        public long GetInt64(int ordinal)
+        public override long GetInt64(int ordinal)
         {
             return GetFieldValue<long>(ordinal);
         }
 
-        public string GetString(int ordinal)
+        public override string GetString(int ordinal)
         {
             return GetFieldValue<string>(ordinal);
         }
 
-        public T GetFieldValue<T>(int ordinal)
+        public override T GetFieldValue<T>(int ordinal)
         {
             return (T)_currentRow[ordinal];
         }
@@ -264,19 +220,19 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
 
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        public Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
+        public override Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
             return Task.FromResult((T)_currentRow[ordinal]);
         }
 
 #endif
 
-        public object GetValue(int ordinal)
+        public override object GetValue(int ordinal)
         {
             return GetFieldValue<object>(ordinal);
         }
 
-        public int GetValues(object[] values)
+        public override int GetValues(object[] values)
         {
             var count = Math.Min(values.Length, FieldCount);
             for (var i = 0; i < count; ++i)
@@ -286,7 +242,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             return count;
         }
 
-        public bool IsDBNull(int ordinal)
+        public override bool IsDBNull(int ordinal)
         {
             if (_currentRow.Length == 0)
             {
@@ -300,34 +256,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
 
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        public Task<bool> IsDBNullAsync(int ordinal, CancellationToken cancellationToken)
+        public override Task<bool> IsDBNullAsync(int ordinal, CancellationToken cancellationToken)
         {
             return Task.FromResult(IsDBNull(ordinal));
         }
 
 #endif
 
-        public string GetDataTypeName(int ordinal)
-        {
-            return _dataTypeNames[ordinal];
-        }
-
-        public Type GetFieldType(int ordinal)
-        {
-            return _fieldTypes[ordinal];
-        }
-
-        public string GetName(int ordinal)
-        {
-            return _columnNames[ordinal];
-        }
-
-        public int GetOrdinal(string name)
-        {
-            return _fieldNameLookup.Value.GetOrdinal(name);
-        }
-
-        public bool Read()
+        public override bool Read()
         {
             if (++_currentRowNumber < _rowCount)
             {
@@ -346,7 +282,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
 
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "cancellationToken")]
-        public Task<bool> ReadAsync(CancellationToken cancellationToken)
+        public override Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             return Task.FromResult(Read());
         }

@@ -45,9 +45,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
-                Check.NotNull(name, "name");
-                AssertReaderIsOpenWithData();
-                return _currentResultSet[name];
+                throw new NotSupportedException();
             }
         }
 
@@ -55,8 +53,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
-                AssertFieldIsReady(ordinal);
-                return _currentResultSet[ordinal];
+                throw new NotSupportedException();
             }
         }
 

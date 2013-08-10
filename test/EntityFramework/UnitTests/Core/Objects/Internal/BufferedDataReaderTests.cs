@@ -324,8 +324,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             Verify_get_method_returns_supplied_value(DateTime.Now, async);
             Verify_get_method_returns_supplied_value(Guid.NewGuid(), async);
             var obj = new object();
-            Verify_method_result(r => r[0], async, obj, new[] { new[] { obj } });
-            Verify_method_result(r => r["column0"], async, obj, new[] { new[] { obj } });
             Verify_method_result(r => r.GetValue(0), async, obj, new[] { new[] { obj } });
 #if !NET40
             Verify_method_result(r => r.GetFieldValue<object>(0), async, obj, new[] { new[] { obj } });
@@ -401,8 +399,6 @@ namespace System.Data.Entity.Core.Objects.Internal
             Verify_method_throws_when_no_data(r => r.GetGuid(0), new[] { new object[] { Guid.NewGuid() } });
 
             var obj = new object();
-            Verify_method_throws_when_no_data(r => r[0], new[] { new[] { obj } });
-            Verify_method_throws_when_no_data(r => r["column0"], new[] { new[] { obj } });
             Verify_method_throws_when_no_data(r => r.GetValue(0), new[] { new[] { obj } });
 #if !NET40
             Verify_method_throws_when_no_data(r => r.GetFieldValue<object>(0), new[] { new[] { obj } });
