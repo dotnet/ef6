@@ -151,6 +151,7 @@
     <Compile Include="Core\Common\Internal\Materialization\ShaperTests.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\Common\Internal\Materialization\TranslatorTests.cs" />
+    <Compile Include="Core\EntityClient\Internal\DbConnectionOptionsTests.cs" />
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />

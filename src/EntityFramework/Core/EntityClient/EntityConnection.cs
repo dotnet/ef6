@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.EntityClient
         private const string ReaderPrefix = "reader://";
 
         private readonly object _connectionStringLock = new object();
-        private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, null);
+        private static readonly DbConnectionOptions _emptyConnectionOptions = new DbConnectionOptions(String.Empty, new string[0]);
 
         // The connection options object having the connection settings needed by this connection
         private DbConnectionOptions _userConnectionOptions;
@@ -1041,7 +1041,7 @@ namespace System.Data.Entity.Core.EntityClient
             var userConnectionOptions = _emptyConnectionOptions;
             if (!String.IsNullOrEmpty(newConnectionString))
             {
-                userConnectionOptions = new DbConnectionOptions(newConnectionString, EntityConnectionStringBuilder.Synonyms);
+                userConnectionOptions = new DbConnectionOptions(newConnectionString, EntityConnectionStringBuilder.ValidKeywords);
             }
 
             DbProviderFactory factory = null;
@@ -1068,7 +1068,7 @@ namespace System.Data.Entity.Core.EntityClient
                         throw new ArgumentException(Strings.EntityClient_InvalidNamedConnection);
                     }
 
-                    effectiveConnectionOptions = new DbConnectionOptions(setting.ConnectionString, EntityConnectionStringBuilder.Synonyms);
+                    effectiveConnectionOptions = new DbConnectionOptions(setting.ConnectionString, EntityConnectionStringBuilder.ValidKeywords);
 
                     // Check for a nested Name keyword
                     var nestedNamedConnection = effectiveConnectionOptions[EntityConnectionStringBuilder.NameParameterName];
