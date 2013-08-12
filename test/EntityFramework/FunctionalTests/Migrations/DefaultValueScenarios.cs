@@ -122,7 +122,7 @@ namespace System.Data.Entity.Migrations
 
             var table = Info.Tables.Single(t => t.Name == "DefaultValues");
             Assert.True(table.Columns.Any(c => c.Name == "Binary" && c.Default.Contains("0x")));
-            Assert.True(table.Columns.Any(c => c.Name == "Boolean" && c.Default.Contains('1')));
+            Assert.True(table.Columns.Any(c => c.Name == "Boolean" && c.Default.Contains("1")));
             Assert.True(table.Columns.Any(c => c.Name == "Byte" && c.Default.Contains("42")));
             Assert.True(table.Columns.Any(c => c.Name == "DateTime" && c.Default.Contains("'0001-01-01T00:00:00.000'")));
             Assert.True(table.Columns.Any(c => c.Name == "Decimal" && c.Default.Contains("42.23")));
