@@ -285,97 +285,97 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             // String facets
             var list = GetInitialFacetDescriptions(PrimitiveTypeKind.String);
             var applicableType = _primitiveTypes[(int)PrimitiveTypeKind.String];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // Binary facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.Binary);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Binary];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // DateTime facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.DateTime);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.DateTime];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // Time facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.Time);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Time];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // DateTimeOffset facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.DateTimeOffset);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.DateTimeOffset];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // Decimal facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.Decimal);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Decimal];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // Spatial facets
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.Geography);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Geography];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyPoint];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyLineString];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyPolygon];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPoint];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiLineString];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyMultiPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyMultiPolygon];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeographyCollection);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeographyCollection];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.Geometry);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.Geometry];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryPoint];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryLineString];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryPolygon];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPoint);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPoint];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiLineString);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiLineString];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryMultiPolygon);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryMultiPolygon];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             list = GetInitialFacetDescriptions(PrimitiveTypeKind.GeometryCollection);
             applicableType = _primitiveTypes[(int)PrimitiveTypeKind.GeometryCollection];
-            facetDescriptions.Add(applicableType, Array.AsReadOnly(list));
+            facetDescriptions.Add(applicableType, new ReadOnlyCollection<FacetDescription>(list));
 
             // Set the result to _facetDescriptions at the end
             Interlocked.CompareExchange(

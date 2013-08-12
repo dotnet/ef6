@@ -74,8 +74,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     joinCondition.Accept(visitor);
 
                     // Retrieve properties discovered visiting predicate leaf nodes.
-                    leftKeySelectors = visitor.m_leftKeySelectors.AsReadOnly();
-                    rightKeySelectors = visitor.m_rightKeySelectors.AsReadOnly();
+                    leftKeySelectors = new ReadOnlyCollection<DbExpression>(visitor.m_leftKeySelectors);
+                    rightKeySelectors = new ReadOnlyCollection<DbExpression>(visitor.m_rightKeySelectors);
 
                     Debug.Assert(
                         leftKeySelectors.Count == rightKeySelectors.Count,

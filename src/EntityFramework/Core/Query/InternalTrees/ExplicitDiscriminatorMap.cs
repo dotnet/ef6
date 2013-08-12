@@ -26,8 +26,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
             m_typeMap = template.TypeMap;
             m_discriminatorProperty = template.Discriminator.Property;
-            m_properties = template.PropertyMap.Select(propertyValuePair => propertyValuePair.Key)
-                                   .ToList().AsReadOnly();
+            m_properties = new ReadOnlyCollection<EdmProperty>(template.PropertyMap.Select(propertyValuePair => propertyValuePair.Key)
+                                   .ToList());
         }
 
         /// <summary>

@@ -164,7 +164,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public ReadOnlyCollection<StorageSetMapping> EntitySetMaps
         {
-            get { return new List<StorageSetMapping>(m_entitySetMappings.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageSetMapping>(new List<StorageSetMapping>(m_entitySetMappings.Values)); }
         }
 
         public virtual IEnumerable<StorageEntitySetMapping> EntitySetMappings
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping
 
         public ReadOnlyCollection<FunctionImportMapping> FunctionImportMappings
         {
-            get { return m_functionImportMappings.Values.ToList().AsReadOnly(); }
+            get { return new ReadOnlyCollection<FunctionImportMapping>(m_functionImportMappings.Values.ToList()); }
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </remarks>
         public ReadOnlyCollection<StorageSetMapping> RelationshipSetMaps
         {
-            get { return new List<StorageSetMapping>(m_associationSetMappings.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageSetMapping>(new List<StorageSetMapping>(m_associationSetMappings.Values)); }
         }
 
         /// <summary>

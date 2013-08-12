@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             DebugCheck.NotNull(functionDefs);
 
             _commandTree = commandTree;
-            _functionDefs = functionDefs.AsReadOnly();
+            _functionDefs = new ReadOnlyCollection<FunctionDefinition>(functionDefs);
         }
 
         /// <summary> A command tree produced during parsing. </summary>

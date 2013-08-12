@@ -329,7 +329,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 null,
                 null);
             generalFacetDescriptions[1] = (_defaultValueFacetDescription);
-            _generalFacetDescriptions = Array.AsReadOnly(generalFacetDescriptions);
+            _generalFacetDescriptions = new ReadOnlyCollection<FacetDescription>(generalFacetDescriptions);
 
             _collectionKindFacetDescription = new FacetDescription(
                 EdmConstants.CollectionKind,

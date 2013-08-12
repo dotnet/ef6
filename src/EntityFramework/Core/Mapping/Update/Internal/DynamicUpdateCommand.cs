@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
@@ -323,14 +324,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var insertTree = (DbInsertCommandTree)originalTree;
                 result = new DbInsertCommandTree(
                     insertTree.MetadataWorkspace, insertTree.DataSpace,
-                    insertTree.Target, ReplaceClauses(insertTree.SetClauses, clauseMappings).AsReadOnly(), insertTree.Returning);
+                    insertTree.Target, new ReadOnlyCollection<DbModificationClause>(ReplaceClauses(insertTree.SetClauses, clauseMappings)), insertTree.Returning);
             }
             else
             {
                 var updateTree = (DbUpdateCommandTree)originalTree;
                 result = new DbUpdateCommandTree(
                     updateTree.MetadataWorkspace, updateTree.DataSpace,
-                    updateTree.Target, updateTree.Predicate, ReplaceClauses(updateTree.SetClauses, clauseMappings).AsReadOnly(),
+                    updateTree.Target, updateTree.Predicate, new ReadOnlyCollection<DbModificationClause>(ReplaceClauses(updateTree.SetClauses, clauseMappings)),
                     updateTree.Returning);
             }
 

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -113,7 +114,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     {
                         dependantProperties.Add(rc.ToProperties[rc.FromProperties.IndexOf(((EdmProperty)keyMembers[i]))]);
                     }
-                    return dependantProperties.AsReadOnly();
+                    return new ReadOnlyCollection<EdmProperty>(dependantProperties);
                 }
             }
 

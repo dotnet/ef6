@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     list.Add(stronglyTypedItem);
                 }
             }
-            return list.AsReadOnly();
+            return new ReadOnlyCollection<TItem>(list);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (caseSensitiveFunctionOverloads.Count
                 != functionOverloads.Count)
             {
-                functionOverloads = caseSensitiveFunctionOverloads.AsReadOnly();
+                functionOverloads = new ReadOnlyCollection<EdmFunction>(caseSensitiveFunctionOverloads);
             }
             return functionOverloads;
         }

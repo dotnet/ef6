@@ -51,18 +51,16 @@ namespace System.Data.Entity.Core.Mapping
                 var normalizedEntityTypeMappings = new List<FunctionImportNormalizedEntityTypeMapping>();
 
                 // Collect all mapped entity types.
-                MappedEntityTypes = entityTypeMappings
+                MappedEntityTypes = new ReadOnlyCollection<EntityType>(entityTypeMappings
                     .SelectMany(mapping => mapping.GetMappedEntityTypes(m_itemCollection))
                     .Distinct()
-                    .ToList()
-                    .AsReadOnly();
+                    .ToList());
 
                 // Collect all discriminator columns.
-                DiscriminatorColumns = entityTypeMappings
+                DiscriminatorColumns = new ReadOnlyCollection<string>(entityTypeMappings
                     .SelectMany(mapping => mapping.GetDiscriminatorColumns())
                     .Distinct()
-                    .ToList()
-                    .AsReadOnly();
+                    .ToList());
 
                 m_entityTypeLineInfos = new KeyToListMap<EntityType, LineInfo>(EqualityComparer<EntityType>.Default);
                 m_isTypeOfLineInfos = new KeyToListMap<EntityType, LineInfo>(EqualityComparer<EntityType>.Default);

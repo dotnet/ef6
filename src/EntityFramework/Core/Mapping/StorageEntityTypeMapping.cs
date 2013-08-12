@@ -78,7 +78,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public override ReadOnlyCollection<EdmType> Types
         {
-            get { return new List<EdmType>(m_entityTypes.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>(m_entityTypes.Values)); }
         }
 
         public EntityType EntityType
@@ -101,7 +101,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public override ReadOnlyCollection<EdmType> IsOfTypes
         {
-            get { return new List<EdmType>(m_isOfEntityTypes.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>(m_isOfEntityTypes.Values)); }
         }
 
         /// <summary>

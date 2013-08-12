@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.QueryCache;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -217,7 +218,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             var lambda = (LambdaExpression)base.Expression;
             var funcletizer = Funcletizer.CreateCompiledQueryEvaluationFuncletizer(
-                ObjectContext, lambda.Parameters.First(), lambda.Parameters.Skip(1).ToList().AsReadOnly());
+                ObjectContext, lambda.Parameters.First(), new ReadOnlyCollection<ParameterExpression>(lambda.Parameters.Skip(1).ToList()));
             // Return a new expression converter that uses the initialized command tree and binding context.
             return new ExpressionConverter(funcletizer, lambda.Body);
         }

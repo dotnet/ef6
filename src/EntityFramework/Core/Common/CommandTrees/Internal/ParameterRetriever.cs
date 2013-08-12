@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
             var retriever = new ParameterRetriever();
             retriever.VisitCommandTree(tree);
-            return retriever.paramMappings.Values.ToList().AsReadOnly();
+            return new ReadOnlyCollection<DbParameterReferenceExpression>(retriever.paramMappings.Values.ToList());
         }
 
         public override void Visit(DbParameterReferenceExpression expression)

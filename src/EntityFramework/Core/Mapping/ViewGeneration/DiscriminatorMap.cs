@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             EntitySet entitySet)
         {
             Discriminator = discriminator;
-            TypeMap = typeMap.AsReadOnly();
-            PropertyMap = propertyMap.ToList().AsReadOnly();
-            RelPropertyMap = relPropertyMap.ToList().AsReadOnly();
+            TypeMap = new ReadOnlyCollection<KeyValuePair<object, EntityType>>(typeMap);
+            PropertyMap = new ReadOnlyCollection<KeyValuePair<EdmProperty, DbExpression>>(propertyMap.ToList());
+            RelPropertyMap = new ReadOnlyCollection<KeyValuePair<RelProperty, DbExpression>>(relPropertyMap.ToList());
             EntitySet = entitySet;
         }
 

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -50,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public IList<StorageEntityTypeModificationFunctionMapping> ModificationFunctionMappings
         {
-            get { return m_modificationFunctionMappings.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageEntityTypeModificationFunctionMapping>(m_modificationFunctionMappings); }
         }
 
         public void ClearModificationFunctionMappings()
@@ -63,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
         {
-            get { return m_implicitlyMappedAssociationSetEnds.AsReadOnly(); }
+            get { return new ReadOnlyCollection<AssociationSetEnd>(m_implicitlyMappedAssociationSetEnds); }
         }
 
         public IEnumerable<StorageEntityTypeMapping> EntityTypeMappings

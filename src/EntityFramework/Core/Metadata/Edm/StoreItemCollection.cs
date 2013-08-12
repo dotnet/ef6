@@ -378,7 +378,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 cTypeFunctions.Add(ConvertToCTypeFunction(sTypeFunction));
             }
-            return cTypeFunctions.AsReadOnly();
+            return new ReadOnlyCollection<EdmFunction>(cTypeFunctions);
         }
 
         internal EdmFunction ConvertToCTypeFunction(EdmFunction sTypeFunction)

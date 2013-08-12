@@ -53,7 +53,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal ReadOnlyCollection<ComplexType> Types
         {
-            get { return new List<ComplexType>(m_types.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<ComplexType>(new List<ComplexType>(m_types.Values)); }
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal ReadOnlyCollection<ComplexType> IsOfTypes
         {
-            get { return new List<ComplexType>(m_isOfTypes.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<ComplexType>(new List<ComplexType>(m_isOfTypes.Values)); }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public override ReadOnlyCollection<StoragePropertyMapping> Properties
         {
-            get { return new List<StoragePropertyMapping>(m_properties.Values).AsReadOnly(); }
+            get { return new ReadOnlyCollection<StoragePropertyMapping>(new List<StoragePropertyMapping>(m_properties.Values)); }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping
                 var properties = new List<StoragePropertyMapping>();
                 properties.AddRange(m_properties.Values);
                 properties.AddRange(m_conditionProperties.Values);
-                return properties.AsReadOnly();
+                return new ReadOnlyCollection<StoragePropertyMapping>(properties);
             }
         }
 

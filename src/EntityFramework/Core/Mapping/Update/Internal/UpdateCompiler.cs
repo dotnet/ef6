@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Common.Utils;
@@ -117,7 +118,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Initialize DML command tree
             var commandTree =
                 new DbUpdateCommandTree(
-                    m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate, setClauses.AsReadOnly(), returning);
+                    m_translator.MetadataWorkspace, DataSpace.SSpace, target, predicate, new ReadOnlyCollection<DbModificationClause>(setClauses), returning);
 
             // Create command
             UpdateCommand command = new DynamicUpdateCommand(
@@ -151,7 +152,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
             // Initialize DML command tree
             var commandTree =
-                new DbInsertCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, setClauses.AsReadOnly(), returning);
+                new DbInsertCommandTree(m_translator.MetadataWorkspace, DataSpace.SSpace, target, new ReadOnlyCollection<DbModificationClause>(setClauses), returning);
 
             // Create command
             UpdateCommand command = new DynamicUpdateCommand(

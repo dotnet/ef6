@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal ReadOnlyCollection<StorageComplexTypeMapping> TypeMappings
         {
-            get { return m_typeMappings.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageComplexTypeMapping>(m_typeMappings); }
         }
 
         /// <summary>

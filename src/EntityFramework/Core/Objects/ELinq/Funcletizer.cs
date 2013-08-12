@@ -364,7 +364,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // assign list to local variable to avoid including the entire Funcletizer
                 // class in the closure environment
-                var recompileRequiredDelegates = _recompileRequiredDelegates.AsReadOnly();
+                var recompileRequiredDelegates = new ReadOnlyCollection<Func<bool>>(_recompileRequiredDelegates);
                 return () => recompileRequiredDelegates.Any(d => d());
             }
 

@@ -124,7 +124,14 @@ namespace System.Data.Entity.Core.Mapping
         public ReadOnlyCollection<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
             StructuralTypeMappings
         {
-            get { return m_structuralTypeMappings == null ? null : m_structuralTypeMappings.AsReadOnly(); }
+            get
+            {
+                return m_structuralTypeMappings == null
+                           ? null
+                           : new ReadOnlyCollection
+                                 <Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>(
+                                 m_structuralTypeMappings);
+            }
         }
 
         internal EdmProperty[] TvfKeys

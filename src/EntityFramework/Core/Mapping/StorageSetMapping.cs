@@ -81,7 +81,7 @@ namespace System.Data.Entity.Core.Mapping
         ///// </summary>
         public ReadOnlyCollection<StorageTypeMapping> TypeMappings
         {
-            get { return m_typeMappings.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageTypeMapping>(m_typeMappings); }
         }
 
         public StorageEntityContainerMapping EntityContainerMapping

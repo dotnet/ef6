@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
 
         internal ReadOnlyCollection<EdmFunction> ToFunctionCollection()
         {
-            return functions.AsReadOnly();
+            return new ReadOnlyCollection<EdmFunction>(functions);
         }
 
         internal static void ForAllBasePrimitiveTypes(Action<PrimitiveTypeKind> forEachType)

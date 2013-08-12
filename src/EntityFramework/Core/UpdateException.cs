@@ -59,7 +59,7 @@ namespace System.Data.Entity.Core
             : base(message, innerException)
         {
             var list = new List<ObjectStateEntry>(stateEntries);
-            _stateEntries = list.AsReadOnly();
+            _stateEntries = new ReadOnlyCollection<ObjectStateEntry>(list);
         }
 
         /// <summary>

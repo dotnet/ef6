@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public ReadOnlyCollection<StoragePropertyMapping> Properties
         {
-            get { return m_properties.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StoragePropertyMapping>(m_properties); }
         }
 
         public IEnumerable<StorageScalarPropertyMapping> PropertyMappings

@@ -217,7 +217,7 @@ namespace System.Data.Entity.SqlServer
                             }
                             );
                     }
-                    _primitiveTypes = primitiveTypes.AsReadOnly();
+                    _primitiveTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
                 }
             }
 
@@ -243,7 +243,7 @@ namespace System.Data.Entity.SqlServer
                         // SQLBUDT 550998: Remove unsupported overloads from Provider Manifest on SQL 8.0
                         functions = functions.Where(f => !IsYukonOrNewer(f));
                     }
-                    _functions = functions.ToList().AsReadOnly();
+                    _functions = new ReadOnlyCollection<EdmFunction>(functions.ToList());
                 }
             }
 

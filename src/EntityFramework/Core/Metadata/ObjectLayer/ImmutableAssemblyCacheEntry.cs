@@ -15,8 +15,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal ImmutableAssemblyCacheEntry(MutableAssemblyCacheEntry mutableEntry)
         {
-            _typesInAssembly = new List<EdmType>(mutableEntry.TypesInAssembly).AsReadOnly();
-            _closureAssemblies = new List<Assembly>(mutableEntry.ClosureAssemblies).AsReadOnly();
+            _typesInAssembly = new ReadOnlyCollection<EdmType>(new List<EdmType>(mutableEntry.TypesInAssembly));
+            _closureAssemblies = new ReadOnlyCollection<Assembly>(new List<Assembly>(mutableEntry.ClosureAssemblies));
         }
 
         internal override IList<EdmType> TypesInAssembly

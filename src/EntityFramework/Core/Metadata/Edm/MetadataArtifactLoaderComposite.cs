@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         public MetadataArtifactLoaderComposite(List<MetadataArtifactLoader> children)
         {
             DebugCheck.NotNull(children);
-            _children = new List<MetadataArtifactLoader>(children).AsReadOnly();
+            _children = new ReadOnlyCollection<MetadataArtifactLoader>(new List<MetadataArtifactLoader>(children));
         }
 
         public override string Path

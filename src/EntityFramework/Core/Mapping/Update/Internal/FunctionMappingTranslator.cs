@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
@@ -113,7 +114,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
                 else
                 {
-                    command = new FunctionUpdateCommand(functionMapping, translator, stateEntries.ToList().AsReadOnly(), stateEntry);
+                    command = new FunctionUpdateCommand(functionMapping, translator, new ReadOnlyCollection<IEntityStateEntry>(stateEntries.ToList()), stateEntry);
 
                     // bind all function parameters
                     BindFunctionParameters(translator, stateEntry, functionMapping, command, currentReferenceEnds, originalReferenceEnds);
@@ -329,7 +330,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 // initialize a new command
                 var functionMapping = isInsert ? m_mapping.InsertFunctionMapping : m_mapping.DeleteFunctionMapping;
                 var command = new FunctionUpdateCommand(
-                    functionMapping, translator, new[] { stateEntry.Source }.ToList().AsReadOnly(), stateEntry);
+                    functionMapping, translator, new ReadOnlyCollection<IEntityStateEntry>(new[] { stateEntry.Source }.ToList()), stateEntry);
 
                 // extract the relationship values from the state entry
                 PropagatorResult recordResult;

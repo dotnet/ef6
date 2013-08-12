@@ -189,7 +189,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     primitiveTypes.AddRange(types);
                 }
             }
-            return primitiveTypes.AsReadOnly();
+            return new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
         }
     }
 }

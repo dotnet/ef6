@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public override ReadOnlyCollection<EdmType> IsOfTypes
         {
-            get { return new List<EdmType>().AsReadOnly(); }
+            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>()); }
         }
     }
 }

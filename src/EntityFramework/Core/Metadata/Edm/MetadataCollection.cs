@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         public virtual ReadOnlyCollection<T> AsReadOnly
         {
-            get { return _collectionData.OrderedList.AsReadOnly(); }
+            get { return new ReadOnlyCollection<T>(_collectionData.OrderedList); }
         }
 
         /// <summary>

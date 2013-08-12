@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal ReadOnlyCollection<StorageEntityContainerMapping> EntityContainerMappings
         {
-            get { return _entityContainerMappings.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageEntityContainerMapping>(_entityContainerMappings); }
         }
 
         internal void AddEntityContainerMapping(StorageEntityContainerMapping entityContainerMapping)

@@ -49,7 +49,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 var validator = new DbExpressionValidator(metadata, dataSpace);
                 validator.ValidateExpression(query, "query");
 
-                _parameters = validator.Parameters.Select(paramInfo => paramInfo.Value).ToList().AsReadOnly();
+                _parameters = new ReadOnlyCollection<DbParameterReferenceExpression>(
+                    validator.Parameters.Select(paramInfo => paramInfo.Value).ToList());
             }
             _query = query;
         }

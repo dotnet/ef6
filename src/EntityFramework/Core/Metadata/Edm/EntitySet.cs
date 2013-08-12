@@ -168,8 +168,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _hasForeignKeyRelationships = foundFkRelationship;
             _hasIndependentRelationships = foundIndependentRelationship;
 
-            var readOnlyDependents = dependents.AsReadOnly();
-            var readOnlyPrincipals = principals.AsReadOnly();
+            var readOnlyDependents = new ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>>(dependents);
+            var readOnlyPrincipals = new ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>>(principals);
 
             Interlocked.CompareExchange(ref _foreignKeyDependents, readOnlyDependents, null);
             Interlocked.CompareExchange(ref _foreignKeyPrincipals, readOnlyPrincipals, null);

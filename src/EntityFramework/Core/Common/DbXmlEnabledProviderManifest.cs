@@ -138,7 +138,7 @@ namespace System.Data.Entity.Core.Common
                     }
                 }
             }
-            _primitiveTypes = Array.AsReadOnly(listOfPrimitiveTypes.ToArray());
+            _primitiveTypes = new ReadOnlyCollection<PrimitiveType>(listOfPrimitiveTypes.ToArray());
 
             // load the functions
             ItemCollection collection = new EmptyItemCollection();
@@ -183,7 +183,7 @@ namespace System.Data.Entity.Core.Common
 
             if (list.Count != 0)
             {
-                collection = list.AsReadOnly();
+                collection = new ReadOnlyCollection<Target>(list);
                 return true;
             }
 

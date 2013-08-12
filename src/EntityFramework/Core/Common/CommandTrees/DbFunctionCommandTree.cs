@@ -55,8 +55,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees
                 }
             }
 
-            _parameterNames = paramNames.AsReadOnly();
-            _parameterTypes = paramTypes.AsReadOnly();
+            _parameterNames = new ReadOnlyCollection<string>(paramNames);
+            _parameterTypes = new ReadOnlyCollection<TypeUsage>(paramTypes);
         }
 
         /// <summary>

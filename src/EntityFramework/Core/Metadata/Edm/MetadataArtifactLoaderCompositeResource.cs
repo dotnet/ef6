@@ -45,7 +45,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(resolver);
 
             _originalPath = originalPath;
-            _children = LoadResources(assemblyName, resourceName, uriRegistry, resolver).AsReadOnly();
+            _children = new ReadOnlyCollection<MetadataArtifactLoaderResource>(LoadResources(assemblyName, resourceName, uriRegistry, resolver));
         }
 
         public override string Path

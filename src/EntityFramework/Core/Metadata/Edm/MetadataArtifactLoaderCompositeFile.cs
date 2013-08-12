@@ -85,17 +85,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (_csdlChildren == null)
             {
-                var csdlChildren = GetArtifactsInDirectory(_path, XmlConstants.CSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var csdlChildren = new ReadOnlyCollection<MetadataArtifactLoaderFile>(GetArtifactsInDirectory(_path, XmlConstants.CSpaceSchemaExtension, _uriRegistry));
                 Interlocked.CompareExchange(ref _csdlChildren, csdlChildren, null);
             }
             if (_ssdlChildren == null)
             {
-                var ssdlChildren = GetArtifactsInDirectory(_path, XmlConstants.SSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var ssdlChildren = new ReadOnlyCollection<MetadataArtifactLoaderFile>(GetArtifactsInDirectory(_path, XmlConstants.SSpaceSchemaExtension, _uriRegistry));
                 Interlocked.CompareExchange(ref _ssdlChildren, ssdlChildren, null);
             }
             if (_mslChildren == null)
             {
-                var mslChildren = GetArtifactsInDirectory(_path, XmlConstants.CSSpaceSchemaExtension, _uriRegistry).AsReadOnly();
+                var mslChildren = new ReadOnlyCollection<MetadataArtifactLoaderFile>(GetArtifactsInDirectory(_path, XmlConstants.CSSpaceSchemaExtension, _uriRegistry));
                 Interlocked.CompareExchange(ref _mslChildren, mslChildren, null);
             }
         }

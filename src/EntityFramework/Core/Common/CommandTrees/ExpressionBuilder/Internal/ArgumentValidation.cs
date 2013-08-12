@@ -389,7 +389,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
             resultType = CreateCollectionOfRowResultType(columns);
 
             // Initialize state
-            return inputList.AsReadOnly();
+            return new ReadOnlyCollection<DbExpressionBinding>(inputList);
         }
 
         internal static TypeUsage ValidateJoin(DbExpressionBinding left, DbExpressionBinding right, DbExpression joinCondition)
@@ -942,7 +942,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
 
                     relatedRefs.Add(relatedRef);
                 }
-                validRelatedRefs = relatedRefs.AsReadOnly();
+                validRelatedRefs = new ReadOnlyCollection<DbRelatedEntityRef>(relatedRefs);
             }
             else
             {

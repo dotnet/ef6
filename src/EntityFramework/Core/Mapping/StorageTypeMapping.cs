@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public ReadOnlyCollection<StorageMappingFragment> MappingFragments
         {
-            get { return m_fragments.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StorageMappingFragment>(m_fragments); }
         }
 
         public StorageSetMapping SetMapping

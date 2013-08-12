@@ -33,7 +33,7 @@ namespace System.Data.Entity.Core.Mapping
             _function = function;
             _rowsAffectedParameter = rowsAffectedParameter;
 
-            ParameterBindings = parameterBindings.ToList().AsReadOnly();
+            ParameterBindings = new ReadOnlyCollection<StorageModificationFunctionParameterBinding>(parameterBindings.ToList());
 
             if (null != resultBindings)
             {
@@ -41,14 +41,14 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (0 < bindings.Count)
                 {
-                    ResultBindings = bindings.AsReadOnly();
+                    ResultBindings = new ReadOnlyCollection<StorageModificationFunctionResultBinding>(bindings);
                 }
             }
 
             CollocatedAssociationSetEnds =
-                GetReferencedAssociationSetEnds(entitySet as EntitySet, entityType as EntityType, parameterBindings)
-                    .ToList()
-                    .AsReadOnly();
+                new ReadOnlyCollection<AssociationSetEnd>(
+                    GetReferencedAssociationSetEnds(entitySet as EntitySet, entityType as EntityType, parameterBindings)
+                        .ToList());
         }
 
         /// <summary>

@@ -259,7 +259,7 @@ namespace System.Data.Entity.Core.Mapping
                 var properties = new List<StoragePropertyMapping>();
                 properties.AddRange(m_properties);
                 properties.AddRange(m_conditionProperties.Values);
-                return properties.AsReadOnly();
+                return new ReadOnlyCollection<StoragePropertyMapping>(properties);
             }
         }
 
@@ -269,7 +269,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public override ReadOnlyCollection<StoragePropertyMapping> Properties
         {
-            get { return m_properties.AsReadOnly(); }
+            get { return new ReadOnlyCollection<StoragePropertyMapping>(m_properties); }
         }
 
         public IEnumerable<ColumnMappingBuilder> FlattenedProperties

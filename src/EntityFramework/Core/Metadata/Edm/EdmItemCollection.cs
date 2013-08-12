@@ -385,7 +385,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 || edmVersion == XmlConstants.EdmVersionForV1_1
                 || edmVersion == XmlConstants.EdmVersionForV2)
             {
-                return _primitiveTypeMaps.GetTypes().Where(type => !Helper.IsSpatialType(type)).ToList().AsReadOnly();
+                return new ReadOnlyCollection<PrimitiveType>(_primitiveTypeMaps.GetTypes().Where(type => !Helper.IsSpatialType(type)).ToList());
             }
 
             if (edmVersion == XmlConstants.EdmVersionForV3)
