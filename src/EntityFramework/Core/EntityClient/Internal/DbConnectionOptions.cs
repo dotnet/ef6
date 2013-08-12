@@ -3,58 +3,20 @@
 namespace System.Data.Entity.Core.EntityClient.Internal
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// Copied from System.Data.dll
-    /// </summary>
     internal class DbConnectionOptions
     {
         // instances of this class are intended to be immutable, i.e readonly
         // used by pooling classes so it is much easier to verify correctness
         // when not worried about the class being modified during execution
-
-#if DEBUG
-        private const string ConnectionStringPattern = // may not contain embedded null except trailing last value
-            "([\\s;]*" // leading whitespace and extra semicolons
-            + "(?![\\s;])" // key does not start with space or semicolon
-            + "(?<key>([^=\\s\\p{Cc}]|\\s+[^=\\s\\p{Cc}]|\\s+==|==)+)"
-            // allow any visible character for keyname except '=' which must quoted as '=='
-            + "\\s*=(?!=)\\s*" // the equal sign divides the key and value parts
-            + "(?<value>"
-            + "(\"([^\"\u0000]|\"\")*\")" // double quoted string, " must be quoted as ""
-            + "|"
-            + "('([^'\u0000]|'')*')" // single quoted string, ' must be quoted as ''
-            + "|"
-            + "((?![\"'\\s])" // unquoted value must not start with " or ' or space, would also like = but too late to change
-            + "([^;\\s\\p{Cc}]|\\s+[^;\\s\\p{Cc}])*" // control characters must be quoted
-            + "(?<![\"']))" // unquoted value must not stop with " or '
-            + ")(\\s*)(;|\u0000|$)" // whitespace after value up to semicolon or end-of-line
-            + ")*" // repeat the key-value pair
-            + "[\\s;\u0000]*" // traling whitespace/semicolons and embedded nulls (DataSourceLocator)
-                             ;
-
-        private static readonly Regex _connectionStringRegex = new Regex(
-            ConnectionStringPattern, RegexOptions.ExplicitCapture | RegexOptions.Compiled);
-#endif
         internal const string DataDirectory = "|datadirectory|";
-
-#if DEBUG
-        private const string ConnectionStringValidKeyPattern = "^(?![;\\s])[^\\p{Cc}]+(?<!\\s)$";
-        // key not allowed to start with semi-colon or space or contain non-visible characters or end with space
-
-        private const string ConnectionStringValidValuePattern = "^[^\u0000]*$"; // value not allowed to contain embedded null   
-        private static readonly Regex _connectionStringValidKeyRegex = new Regex(ConnectionStringValidKeyPattern, RegexOptions.Compiled);
-        private static readonly Regex _connectionStringValidValueRegex = new Regex(ConnectionStringValidValuePattern, RegexOptions.Compiled);
-#endif
-
         private readonly string _usersConnectionString;
-        private readonly Hashtable _parsetable;
+        private readonly Dictionary<string, string> _parsetable = new Dictionary<string, string>();
         internal readonly NameValuePair KeyChain;
 
         /// <summary>
@@ -64,17 +26,16 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         {
         }
 
-        // synonyms hashtable is meant to be read-only translation of parsed string
-        // keywords/synonyms to a known keyword string
-        internal DbConnectionOptions(string connectionString, Hashtable synonyms)
+        internal DbConnectionOptions(string connectionString, IList<string> validKeywords)
         {
-            _parsetable = new Hashtable();
-            _usersConnectionString = ((null != connectionString) ? connectionString : "");
+            DebugCheck.NotNull(validKeywords);
+
+            _usersConnectionString = connectionString ?? "";
 
             // first pass on parsing, initial syntax check
             if (0 < _usersConnectionString.Length)
             {
-                KeyChain = ParseInternal(_parsetable, _usersConnectionString, synonyms);
+                KeyChain = ParseInternal(_parsetable, _usersConnectionString, validKeywords);
             }
         }
 
@@ -88,14 +49,19 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             get { return (null == KeyChain); }
         }
 
-        internal Hashtable Parsetable
+        internal Dictionary<string, string> Parsetable
         {
             get { return _parsetable; }
         }
 
         internal virtual string this[string keyword]
         {
-            get { return (string)_parsetable[keyword]; }
+            get
+            {
+                string value;
+                _parsetable.TryGetValue(keyword, out value);
+                return value;
+            }
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
@@ -400,141 +366,13 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return currentPosition;
         }
 
-#if DEBUG
-        private static bool IsValueValidInternal(string keyvalue)
-        {
-            if (null != keyvalue)
-            {
-                var compValue = _connectionStringValidValueRegex.IsMatch(keyvalue);
-                Debug.Assert((-1 == keyvalue.IndexOf('\u0000')) == compValue, "IsValueValid mismatch with regex");
-                return (-1 == keyvalue.IndexOf('\u0000'));
-            }
-            return true;
-        }
-#endif
-
-        private static bool IsKeyNameValid(string keyname)
-        {
-            if (null != keyname)
-            {
-#if DEBUG
-                var compValue = _connectionStringValidKeyRegex.IsMatch(keyname);
-                Debug.Assert(
-                    ((0 < keyname.Length) && (';' != keyname[0]) && !Char.IsWhiteSpace(keyname[0]) && (-1 == keyname.IndexOf('\u0000')))
-                    == compValue, "IsValueValid mismatch with regex");
-#endif
-                return ((0 < keyname.Length) && (';' != keyname[0]) && !Char.IsWhiteSpace(keyname[0]) && (-1 == keyname.IndexOf('\u0000')));
-            }
-            return false;
-        }
-
-#if DEBUG
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
-        private static Hashtable SplitConnectionString(string connectionString, Hashtable synonyms)
-        {
-            var parsetable = new Hashtable();
-            var parser = _connectionStringRegex;
-
-            const int KeyIndex = 1, ValueIndex = 2;
-            Debug.Assert(KeyIndex == parser.GroupNumberFromName("key"), "wrong key index");
-            Debug.Assert(ValueIndex == parser.GroupNumberFromName("value"), "wrong value index");
-
-            if (null != connectionString)
-            {
-                var match = parser.Match(connectionString);
-                if (!match.Success
-                    || (match.Length != connectionString.Length))
-                {
-                    throw new ArgumentException(Strings.ADP_ConnectionStringSyntax(match.Length));
-                }
-                var indexValue = 0;
-                var keyvalues = match.Groups[ValueIndex].Captures;
-                foreach (Capture keypair in match.Groups[KeyIndex].Captures)
-                {
-                    var keyname = keypair.Value.Replace("==", "=").ToLowerInvariant();
-                    var keyvalue = keyvalues[indexValue++].Value;
-                    if (0 < keyvalue.Length)
-                    {
-                        switch (keyvalue[0])
-                        {
-                            case '\"':
-                                keyvalue = keyvalue.Substring(1, keyvalue.Length - 2).Replace("\"\"", "\"");
-                                break;
-                            case '\'':
-                                keyvalue = keyvalue.Substring(1, keyvalue.Length - 2).Replace("\'\'", "\'");
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        keyvalue = null;
-                    }
-
-                    var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
-                    if (!IsKeyNameValid(realkeyname))
-                    {
-                        throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
-                    }
-                    parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
-                }
-            }
-            return parsetable;
-        }
-
-        private static void ParseComparision(Hashtable parsetable, string connectionString, Hashtable synonyms, Exception e)
-        {
-            try
-            {
-                var parsedvalues = SplitConnectionString(connectionString, synonyms);
-                foreach (DictionaryEntry entry in parsedvalues)
-                {
-                    var keyname = (string)entry.Key;
-                    var value1 = (string)entry.Value;
-                    var value2 = (string)parsetable[keyname];
-                    Debug.Assert(parsetable.Contains(keyname), "ParseInternal code vs. regex mismatch keyname <" + keyname + ">");
-                    Debug.Assert(value1 == value2, "ParseInternal code vs. regex mismatch keyvalue <" + value1 + "> <" + value2 + ">");
-                }
-            }
-            catch (ArgumentException f)
-            {
-                if (null != e)
-                {
-                    var msg1 = e.Message;
-                    var msg2 = f.Message;
-                    if (msg1.StartsWith("Keyword not supported:", StringComparison.Ordinal)
-                        && msg2.StartsWith("Format of the initialization string", StringComparison.Ordinal))
-                    {
-                    }
-                    else
-                    {
-                        // Does not always hold.
-                        Debug.Assert(msg1 == msg2, "ParseInternal code vs regex message mismatch: <" + msg1 + "> <" + msg2 + ">");
-                    }
-                }
-                else
-                {
-                    Debug.Assert(false, "ParseInternal code vs regex throw mismatch " + f.Message);
-                }
-                e = null;
-            }
-            if (null != e)
-            {
-                Debug.Assert(false, "ParseInternal code threw exception vs regex mismatch");
-            }
-        }
-#endif
-
-        private static NameValuePair ParseInternal(Hashtable parsetable, string connectionString, Hashtable synonyms)
+        private static NameValuePair ParseInternal(IDictionary<string, string> parsetable, string connectionString, IList<string> validKeywords)
         {
             DebugCheck.NotNull(connectionString);
+            DebugCheck.NotNull(validKeywords);
+
             var buffer = new StringBuilder();
             NameValuePair localKeychain = null, keychain = null;
-#if DEBUG
-            try
-            {
-#endif
             var nextStartPosition = 0;
             var endPosition = connectionString.Length;
             while (nextStartPosition < endPosition)
@@ -545,20 +383,14 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 nextStartPosition = GetKeyValuePair(connectionString, startPosition, buffer, out keyname, out keyvalue);
                 if (string.IsNullOrEmpty(keyname))
                 {
-                    // if (nextStartPosition != endPosition) { throw; }
                     break;
                 }
 
-#if DEBUG
-                    Debug.Assert(IsKeyNameValid(keyname), "ParseFailure, invalid keyname");
-                    Debug.Assert(IsValueValidInternal(keyvalue), "parse failure, invalid keyvalue");
-#endif
-                var realkeyname = ((null != synonyms) ? (string)synonyms[keyname] : keyname);
-                if (!IsKeyNameValid(realkeyname))
+                if (!validKeywords.Contains(keyname))
                 {
                     throw new ArgumentException(Strings.ADP_KeywordNotSupported(keyname));
                 }
-                parsetable[realkeyname] = keyvalue; // last key-value pair wins (or first)
+                parsetable[keyname] = keyvalue; // last key-value pair wins (or first)
 
                 if (null != localKeychain)
                 {
@@ -570,15 +402,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                     keychain = localKeychain = new NameValuePair();
                 }
             }
-#if DEBUG
-            }
-            catch (ArgumentException e)
-            {
-                ParseComparision(parsetable, connectionString, synonyms, e);
-                throw;
-            }
-            ParseComparision(parsetable, connectionString, synonyms, null);
-#endif
+
             return keychain;
         }
     }

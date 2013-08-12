@@ -26,15 +26,13 @@ namespace System.Data.Entity.Core.EntityClient
         internal const string ProviderConnectionStringParameterName = "provider connection string";
 
         // An array to hold the keywords
-        private static readonly string[] _validKeywords = new[]
+        internal static readonly string[] ValidKeywords = new[]
             {
                 NameParameterName,
                 MetadataParameterName,
                 ProviderParameterName,
                 ProviderConnectionStringParameterName
             };
-
-        private static Hashtable _synonyms;
 
         // Information and data used by the connection
         private string _namedConnectionName;
@@ -154,29 +152,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         public override ICollection Keys
         {
-            get { return new ReadOnlyCollection<string>(_validKeywords); }
-        }
-
-        /// <summary>
-        /// Returns a hash table object containing all the valid keywords. This is really the same as the Keys
-        /// property, it's just that the returned object is a hash table.
-        /// </summary>
-        internal static Hashtable Synonyms
-        {
-            get
-            {
-                // Build the synonyms table if we don't have one
-                if (_synonyms == null)
-                {
-                    var table = new Hashtable(_validKeywords.Length);
-                    foreach (var keyword in _validKeywords)
-                    {
-                        table.Add(keyword, keyword);
-                    }
-                    _synonyms = table;
-                }
-                return _synonyms;
-            }
+            get { return new ReadOnlyCollection<string>(ValidKeywords); }
         }
 
         /// <summary>Gets or sets the value associated with the specified key. In C#, this property is the indexer.</summary>
@@ -280,7 +256,7 @@ namespace System.Data.Entity.Core.EntityClient
         {
             Check.NotNull(keyword, "keyword");
 
-            foreach (var validKeyword in _validKeywords)
+            foreach (var validKeyword in ValidKeywords)
             {
                 if (validKeyword.Equals(keyword, StringComparison.OrdinalIgnoreCase))
                 {
