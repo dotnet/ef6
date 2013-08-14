@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Query
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
@@ -112,6 +113,97 @@ WHERE 1 = [Extent1].[Id]";
                 var query = from p in context.Posts where p.Id == 1 select new { p.Id, p.Text, p.ParentPost.Blog.Name };
 
                 QueryTestHelpers.VerifyQuery(query, expectedSql);
+            }
+        }
+
+        public partial class Codeplex199Context : DbContext
+        {
+            public DbSet<Product> Products { get; set; }
+            public DbSet<ProductModel> ProductModels { get; set; }
+            public DbSet<String> Strings { get; set; }
+            public DbSet<StringInstrument> StringInstruments { get; set; }
+
+            public partial class Product
+            {
+                public int ProductID { get; set; }
+                public string Name { get; set; }
+                public Nullable<int> ProductModelID { get; set; }
+                public virtual ProductModel ProductModel { get; set; }
+            }
+
+            public partial class ProductModel
+            {
+                public ProductModel()
+                {
+                    this.Products = new List<Product>();
+                }
+
+                public int ProductModelID { get; set; }
+                public DateTime ModifiedDate { get; set; }
+                public virtual ICollection<Product> Products { get; set; }
+            }
+
+            public partial class String
+            {
+                public int StringId { get; set; }
+                public string Name { get; set; }
+                public int StringInstrumentId { get; set; }
+                public virtual StringInstrument StringInstrument { get; set; }
+            }
+
+            public partial class StringInstrument
+            {
+                public StringInstrument()
+                {
+                    this.Strings = new List<String>();
+                }
+
+                public int StringInstrumentId { get; set; }
+                public DateTime ProductionDate { get; set; }
+                public virtual ICollection<String> Strings { get; set; }
+            }
+        }
+
+        [Fact]
+        public static void Making_use_of_variable_multiple_times_doesnt_cause_redundant_joins()
+        {
+            const string expectedSqlProducts =
+@"SELECT
+    [Extent1].[Name] AS [Name]
+    FROM   [dbo].[Products] AS [Extent1]
+    LEFT OUTER JOIN [dbo].[ProductModels] AS [Extent2] ON [Extent1].[ProductModelID] = [Extent2].[ProductModelID]
+    WHERE ([Extent2].[ModifiedDate] >= @p__linq__0) AND ([Extent2].[ModifiedDate] <= @p__linq__1)";
+
+            const string expectedSqlStrings = 
+@"SELECT
+    [Extent1].[Name] AS [Name]
+    FROM  [dbo].[Strings] AS [Extent1]
+    INNER JOIN [dbo].[StringInstruments] AS [Extent2] ON [Extent1].[StringInstrumentId] = [Extent2].[StringInstrumentId]
+    WHERE ([Extent2].[ProductionDate] >= @p__linq__0) AND ([Extent2].[ProductionDate] <= @p__linq__1)";
+
+            Database.SetInitializer<Codeplex199Context>(null);
+
+            using (var context = new Codeplex199Context())
+            {
+                context.Configuration.UseDatabaseNullSemantics = true;
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var MinDate = new DateTime(2011, 02, 03);
+                var MaxDate = new DateTime(2011, 03, 04);
+
+                var query = context.Products
+                                   .Where(p => p.ProductModel.ModifiedDate >= MinDate
+                                               && p.ProductModel.ModifiedDate <= MaxDate)
+                                   .Select(p => p.Name);
+
+                QueryTestHelpers.VerifyQuery(query, expectedSqlProducts);
+
+                query = context.Strings
+                               .Where(s => s.StringInstrument.ProductionDate >= MinDate
+                                           && s.StringInstrument.ProductionDate <= MaxDate)
+                               .Select(s => s.Name);
+
+                QueryTestHelpers.VerifyQuery(query, expectedSqlStrings);
             }
         }
     }

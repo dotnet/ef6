@@ -511,23 +511,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             var command = trc.Command;
             var needsTransformation = false;
 
-            //
-            // If we're dealing with an outer-join, first check to see if the current 
-            // predicate preserves nulls for the right table. 
-            // If it doesn't then we can convert the outer join into an inner join,
-            // and then continue with the rest of our processing here
-            // 
             var rightTableNodeInfo = command.GetExtendedNodeInfo(rightInputNode);
             var predicate = new Predicate(command, filterNode.Child1);
-            if (joinOp.OpType
-                == OpType.LeftOuterJoin)
-            {
-                if (!predicate.PreservesNulls(rightTableNodeInfo.Definitions, true))
-                {
-                    joinOp = command.CreateInnerJoinOp();
-                    needsTransformation = true;
-                }
-            }
             var leftTableInfo = command.GetExtendedNodeInfo(leftInputNode);
 
             //
