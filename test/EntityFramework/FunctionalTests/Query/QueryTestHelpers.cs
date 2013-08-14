@@ -15,6 +15,7 @@ namespace System.Data.Entity.Query
     using System.Text.RegularExpressions;
     using System.Xml;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     public static class QueryTestHelpers
@@ -26,14 +27,15 @@ namespace System.Data.Entity.Query
             var storageMappingItemCollection = new StorageMappingItemCollection(
                 edmItemCollection, storeItemCollection, new[] { XmlReader.Create(new StringReader(msl)) });
 
-            var metadataWorkspaceMock = new Mock<MetadataWorkspace>
-                                            {
-                                                CallBase = true
-                                            };
-            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSpace, It.IsAny<bool>())).Returns(edmItemCollection);
-            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.SSpace, It.IsAny<bool>())).Returns(storeItemCollection);
-            metadataWorkspaceMock.Setup(m => m.GetItemCollection(DataSpace.CSSpace, It.IsAny<bool>())).Returns(storageMappingItemCollection);
-            metadataWorkspaceMock.Setup(m => m.GetQueryCacheManager()).Returns(storeItemCollection.QueryCacheManager);
+            var metadataWorkspaceMock = new Mock<MetadataWorkspace> { CallBase = true };
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSpace, true).Returns(edmItemCollection);
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSpace, false).Returns(edmItemCollection);
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.SSpace, true).Returns(storeItemCollection);
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.SSpace, false).Returns(storeItemCollection);
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSSpace, true).Returns(storageMappingItemCollection);
+            metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSSpace, false).Returns(storageMappingItemCollection);
+            var queryCacheManager = typeof(StoreItemCollection).GetProperty("QueryCacheManager", Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Instance).GetValue(storeItemCollection, null);
+            metadataWorkspaceMock.Protected().Setup<object>("GetQueryCacheManager").Returns(queryCacheManager);
 
             return metadataWorkspaceMock.Object;
         }
@@ -123,10 +125,10 @@ namespace System.Data.Entity.Query
 
         public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string resourceKey, params string[] exceptionMessageParameters)
         {
-            VerifyThrows<TException>(query, workspace, resourceKey, s => s, exceptionMessageParameters);
+            VerifyThrows<TException>(query, workspace, resourceKey, true, exceptionMessageParameters);
         }
         
-        public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string resourceKey, Func<string, string> messageModificationFunction, params string[] exceptionMessageParameters)
+        public static void VerifyThrows<TException>(string query, MetadataWorkspace workspace, string resourceKey, bool isExactMatch, params string[] exceptionMessageParameters)
         {
             var exceptionThrown = false;
             try
@@ -144,7 +146,7 @@ namespace System.Data.Entity.Query
                 exceptionThrown = true;
                 var innermostException = GetInnerMostException(e);
                 Assert.IsType<TException>(innermostException);
-                innermostException.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, messageModificationFunction, exceptionMessageParameters);
+                innermostException.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, isExactMatch, exceptionMessageParameters);
             }
 
             Assert.True(exceptionThrown, "No excepion has been thrown.");

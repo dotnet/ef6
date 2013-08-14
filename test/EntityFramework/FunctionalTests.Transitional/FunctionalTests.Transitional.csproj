@@ -107,9 +107,6 @@
     <None Include="..\FinalPublicKey.snk">
       <Link>Properties\FinalPublicKey.snk</Link>
     </None>
-    <EmbeddedResource Include="Metadata\MetadataCachingModel.csdl" />
-    <EmbeddedResource Include="Metadata\MetadataCachingModel.msl" />
-    <EmbeddedResource Include="Metadata\MetadataCachingModel.ssdl" />
     <EmbeddedResource Include="MetadataMapping\Enum.csdl" />
     <EmbeddedResource Include="MetadataMapping\Enum.msl" />
     <EmbeddedResource Include="MetadataMapping\Enum.ssdl" />
@@ -168,7 +165,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ViewGeneration\PregeneratedViewsTests.cs" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Compile Include="CodeFirst\AdvancedMappingScenarioTests.cs" />
     <Compile Include="CodeFirst\AssociationScenarioTests.cs" />
@@ -184,18 +180,12 @@
     <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="Design\BasicDesignTimeScenarios.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
-    <Compile Include="Metadata\MetadataCollectionTests.cs" />
-    <Compile Include="Metadata\MetadataEnumTests.cs" />
-    <Compile Include="Metadata\MetadataCachingTests.cs" />
-    <Compile Include="Metadata\MetadataFunctionsTests.cs" />
-    <Compile Include="Metadata\MetadataSpatialTests.cs" />
     <Compile Include="Migrations\BasicMigrationScenarios.cs" />
     <Compile Include="Migrations\CustomHistoryScenarios.cs" />
     <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
-    <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />

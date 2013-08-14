@@ -12,12 +12,18 @@ namespace System.Data.Entity
         public static void ValidateMessage(
             this Exception exception,
             string expectedResourceKey,
+            bool isExactMatch,
             params object[] parameters)
         {
-            Debug.Assert(exception != null);
-            Debug.Assert(expectedResourceKey != null);
+            ValidateMessage(exception, TestBase.EntityFrameworkAssembly, expectedResourceKey, null, isExactMatch, parameters);
+        }
 
-            ValidateMessage(exception, TestBase.EntityFrameworkAssembly, expectedResourceKey, null, parameters);
+        public static void ValidateMessage(
+            this Exception exception,
+            string expectedResourceKey,
+            params object[] parameters)
+        {
+            ValidateMessage(exception, TestBase.EntityFrameworkAssembly, expectedResourceKey, null, true, parameters);
         }
 
         public static void ValidateMessage(
@@ -27,7 +33,7 @@ namespace System.Data.Entity
             string resourceTable,
             params object[] parameters)
         {
-            ValidateMessage(exception, resourceAssembly, expectedResourceKey, null, s => s, parameters);
+            ValidateMessage(exception, resourceAssembly, expectedResourceKey, null, true, parameters);
         }
 
         public static void ValidateMessage(
@@ -35,7 +41,7 @@ namespace System.Data.Entity
             Assembly resourceAssembly,
             string expectedResourceKey,
             string resourceTable,
-            Func<string, string> messageModificationFunction,
+            bool isExactMatch,
             params object[] parameters)
         {
             Debug.Assert(exception != null);
@@ -48,14 +54,14 @@ namespace System.Data.Entity
                 resourceTable = "System.Data.Entity.Properties.Resources";
             }
 
-            var actualMessage = messageModificationFunction(exception.Message);
+            var message = exception.Message;
             var argException = exception as ArgumentException;
             if (argException != null)
             {
                 var paramPartIndex = argException.Message.LastIndexOf("\r\n");
                 if (paramPartIndex != -1)
                 {
-                    actualMessage = argException.Message.Substring(0, paramPartIndex);
+                    message = argException.Message.Substring(0, paramPartIndex);
                     Assert.True(parameters.Length >= 1, "Expected first parameter to be param for ArgumentException.");
                     Assert.Equal(parameters[0], argException.ParamName);
                     parameters = parameters.Skip(1).ToArray();
@@ -67,7 +73,7 @@ namespace System.Data.Entity
                       : new AssemblyResourceLookup(resourceAssembly, resourceTable);
 
             new StringResourceVerifier(assemblyResourceLookup)
-                .VerifyMatch(expectedResourceKey, actualMessage, parameters);
+                .VerifyMatch(expectedResourceKey, message, isExactMatch, parameters);
         }
     }
 }

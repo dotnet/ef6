@@ -29,7 +29,6 @@ namespace System.Data.Entity.Metadata
         }
 
         // Model with more than 25 entities
-
         public class MyEntity_01
         {
             public int Id { get; set; }
@@ -196,7 +195,6 @@ namespace System.Data.Entity.Metadata
         }
 
         // Model with an entity with more than 25 properties
-
         public class MyBigEntity
         {
             public int Id { get; set; }

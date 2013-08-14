@@ -27,10 +27,12 @@ namespace System.Data.Entity.Metadata
   </Function>
 </Schema>";
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new StoreItemCollection(new[] { XmlReader.Create(new StringReader(ssdl)) })).Message;
-
-            Assert.True(
-                exceptionMessage.Contains(Strings.DuplicatedFunctionoverloads("Dbo.MyFunc", "(In Edm.String(Nullable=True,DefaultValue=,MaxLength=,Unicode=,FixedLength=))")));
+            var exception = Assert.Throws<MetadataException>(() => new StoreItemCollection(new[] { XmlReader.Create(new StringReader(ssdl)) }));
+            exception.ValidateMessage(
+                "DuplicatedFunctionoverloads",
+                false,
+                "Dbo.MyFunc",
+                "(In Edm.String(Nullable=True,DefaultValue=,MaxLength=,Unicode=,FixedLength=))");
         }
 
         [Fact]
@@ -65,8 +67,8 @@ namespace System.Data.Entity.Metadata
   </Function>";
 
             MetadataFunctionHelper(
-                functionDefinition, 
-                e => Assert.True(e.Contains(Strings.AmbiguousFunctionAndType("Entities.Person", "Conceptual"))));
+                functionDefinition,
+                e => e.ValidateMessage("AmbiguousFunctionAndType", false, "Entities.Person", "Conceptual"));
         }
 
         [Fact]
@@ -80,7 +82,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.FacetsOnNonScalarType("Entities.Person"))));
+                e => e.ValidateMessage("FacetsOnNonScalarType", false, "Entities.Person"));
         }
 
         [Fact]
@@ -94,7 +96,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.FacetsOnNonScalarType("Entities.Person"))));
+                e => e.ValidateMessage("FacetsOnNonScalarType", false, "Entities.Person"));
         }
 
         [Fact]
@@ -110,8 +112,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition, 
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.ComposableFunctionOrFunctionImportMustDeclareReturnType));
-                    Assert.True(e.Contains(Strings.FacetDeclarationRequiresTypeAttribute));
+                    e.ValidateMessage("ComposableFunctionOrFunctionImportMustDeclareReturnType", false);
+                    e.ValidateMessage("FacetDeclarationRequiresTypeAttribute", false);
                 });
         }
 
@@ -128,8 +130,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition, 
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.TypeMustBeDeclared));
-                    Assert.True(e.Contains(Strings.FacetDeclarationRequiresTypeAttribute));
+                    e.ValidateMessage("TypeMustBeDeclared", false);
+                    e.ValidateMessage("FacetDeclarationRequiresTypeAttribute", false);
                 });
         }
 
@@ -147,8 +149,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition,
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.TypeMustBeDeclared));
-                    Assert.True(e.Contains(Strings.FacetDeclarationRequiresTypeAttribute));
+                    e.ValidateMessage("TypeMustBeDeclared", false);
+                    e.ValidateMessage("FacetDeclarationRequiresTypeAttribute", false);
                 });
         }
 
@@ -165,7 +167,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.FacetsOnNonScalarType("Entities.Person"))));
+                e => e.ValidateMessage("FacetsOnNonScalarType", false, "Entities.Person"));
         }
 
         [Fact]
@@ -183,8 +185,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition,
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.TypeMustBeDeclared));
-                    Assert.True(e.Contains(Strings.FacetDeclarationRequiresTypeAttribute));
+                    e.ValidateMessage("TypeMustBeDeclared", false);
+                    e.ValidateMessage("FacetDeclarationRequiresTypeAttribute", false);
                 });
         }
 
@@ -204,8 +206,8 @@ namespace System.Data.Entity.Metadata
   </Function>";
 
             MetadataFunctionHelper(
-                functionDefinition, 
-                e => Assert.True(e.Contains(Strings.FacetsOnNonScalarType("Entities.Person"))));
+                functionDefinition,
+                e => e.ValidateMessage("FacetsOnNonScalarType", false, "Entities.Person"));
         }
 
         [Fact]
@@ -227,8 +229,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition,
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.TypeMustBeDeclared));
-                    Assert.True(e.Contains(Strings.FacetDeclarationRequiresTypeAttribute));
+                    e.ValidateMessage("TypeMustBeDeclared", false);
+                    e.ValidateMessage("FacetDeclarationRequiresTypeAttribute", false);
                 });
         }
 
@@ -245,7 +247,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.TypeDeclaredAsAttributeAndElement)));
+                e => e.ValidateMessage("TypeDeclaredAsAttributeAndElement", false));
         }
 
         [Fact]
@@ -261,7 +263,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.RowTypeWithoutProperty)));
+                e => e.ValidateMessage("RowTypeWithoutProperty", false));
         }
 
         [Fact]
@@ -277,7 +279,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.ReferenceToNonEntityType("Edm.Int32"))));
+                e => e.ValidateMessage("ReferenceToNonEntityType", false, "Edm.Int32"));
         }
 
         [Fact]
@@ -295,7 +297,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.ReferenceToNonEntityType("Edm.Int32"))));
+                e => e.ValidateMessage("ReferenceToNonEntityType", false, "Edm.Int32"));
         }
 
         [Fact]
@@ -327,7 +329,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.AmbiguousFunctionOverload("Entities.MyFunction", "Conceptual"))));
+                e => e.ValidateMessage("AmbiguousFunctionOverload", false, "Entities.MyFunction", "Conceptual"));
         }
 
         [Fact]
@@ -342,7 +344,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.ParameterNameAlreadyDefinedDuplicate("Param1"))));
+                e => e.ValidateMessage("ParameterNameAlreadyDefinedDuplicate", false, "Param1"));
         }
 
         [Fact]
@@ -361,7 +363,7 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("AProperty"))));
+                e => e.ValidateMessage("EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName", false, "AProperty"));
         }
 
         [Fact]
@@ -377,8 +379,8 @@ namespace System.Data.Entity.Metadata
                 functionDefinition,
                 e =>
                 {
-                    Assert.True(e.Contains(Strings.NotInNamespaceAlias("Undefined", "Entities", "Self")));
-                    Assert.True(e.Contains(Strings.NotInNamespaceNoAlias("Undefined", "Edm")));
+                    e.ValidateMessage("NotInNamespaceAlias", false, "Undefined", "Entities", "Self");
+                    e.ValidateMessage("NotInNamespaceNoAlias", false, "Undefined", "Edm");
                 });
         }
 
@@ -399,10 +401,10 @@ namespace System.Data.Entity.Metadata
 
             MetadataFunctionHelper(
                 functionDefinition, 
-                e => Assert.True(e.Contains(Strings.NotInNamespaceAlias("Undefined", "Entities", "Self"))));
+                e => e.ValidateMessage("NotInNamespaceAlias", false, "Undefined", "Entities", "Self"));
         }
 
-        private void MetadataFunctionHelper(string functionDefinition, Action<string> verificationAction)
+        private void MetadataFunctionHelper(string functionDefinition, Action<Exception> verificationAction)
         {
             var csdl = string.Format(
                 CultureInfo.InvariantCulture, 
@@ -417,8 +419,8 @@ namespace System.Data.Entity.Metadata
   {0}
 </Schema>", functionDefinition);
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) })).Message;
-            verificationAction(exceptionMessage);
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
+            verificationAction(exception);
         }
     }
 }

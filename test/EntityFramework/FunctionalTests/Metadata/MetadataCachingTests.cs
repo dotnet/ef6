@@ -4,13 +4,12 @@ namespace System.Data.Entity.Metadata
 {
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Reflection;
     using Xunit;
 
     public class MetadataCachingTests : FunctionalTestBase
     {
         private static readonly string connectionString = string.Format(
-            @"metadata=res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+            @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
             ModelHelpers.SimpleConnectionString("tempdb"));
 
         [Fact]
@@ -27,8 +26,7 @@ namespace System.Data.Entity.Metadata
         }
 
         [Fact]
-        public void
-            Verify_that_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_equivalent_connection_strings()
+        public void Verify_that_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_equivalent_connection_strings()
         {
             var connection1 = new EntityConnection(connectionString);
             var connection2 = new EntityConnection(connectionString + ";;");
@@ -42,12 +40,10 @@ namespace System.Data.Entity.Metadata
         }
 
         [Fact]
-        public void
-            Verify_that_conceptual_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_reordered_metadata_in_connection_strings
-            ()
+        public void Verify_that_conceptual_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_reordered_metadata_in_connection_strings()
         {
             var connectionString2 = string.Format(
-                 @"metadata=res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.msl|res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests.Transitional/System.Data.Entity.Metadata.MetadataCachingModel.csdl;provider=System.Data.SqlClient;provider connection string=""{0}""",
+                 @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl;provider=System.Data.SqlClient;provider connection string=""{0}""",
                 ModelHelpers.SimpleConnectionString("tempdb"));
 
             var connection1 = new EntityConnection(connectionString);
@@ -72,10 +68,10 @@ namespace System.Data.Entity.Metadata
         public void Metadata_does_not_get_garbage_collected_if_references_are_alive()
         {
             Action garbageCollection = () =>
-                                           {
-                                               GC.Collect();
-                                               GC.WaitForPendingFinalizers();
-                                           };
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+            };
 
             MetadataCachingWithGarbageCollectionTemplate(garbageCollection);
         }

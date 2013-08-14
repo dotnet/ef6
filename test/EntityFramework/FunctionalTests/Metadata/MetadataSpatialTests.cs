@@ -4,7 +4,6 @@ namespace System.Data.Entity.Metadata
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Globalization;
     using System.IO;
     using System.Xml;
@@ -31,17 +30,15 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Error_on_Geography_entity_property_in_csdl_version1()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV1, PrimitiveTypeKind.Geography)).Message.Contains(Strings.NotNamespaceQualified("Geography")));
+            var exception = Assert.Throws<MetadataException>(() => SpatialEntityPropertyTest(EdmNamespaceV1, PrimitiveTypeKind.Geography));
+            exception.ValidateMessage("NotNamespaceQualified", /*isExactMatch*/ false, "Geography");
         }
 
         [Fact]
         public void Error_on_Geography_entity_property_in_csdl_version2()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV2, PrimitiveTypeKind.Geography)).Message.Contains(Strings.NotNamespaceQualified("Geography")));
+            var exception = Assert.Throws<MetadataException>(() => SpatialEntityPropertyTest(EdmNamespaceV2, PrimitiveTypeKind.Geography));
+            exception.ValidateMessage("NotNamespaceQualified", /*isExactMatch*/ false, "Geography");
         }
 
 
@@ -54,27 +51,28 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Error_on_Geography_EntityKey_property_in_csdl_version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "Location", UseStrongSpatialAnnotation)).Message.
-                Contains(Strings.EntityKeyTypeCurrentlyNotSupported("Location", "SpatialEntityPropertyTest.EntityWithSpatialProperty", "Geography")));
+            var exception = Assert.Throws<MetadataException>(
+                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "Location", UseStrongSpatialAnnotation));
+
+            exception.ValidateMessage("EntityKeyTypeCurrentlyNotSupported", /*isExactMatch*/ false, "Location", "SpatialEntityPropertyTest.EntityWithSpatialProperty", "Geography");
         }
 
         [Fact]
         public void Error_on_Geography_without_StrongTypes_in_csdl_version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "ID", "")).Message.Contains(Strings.SpatialWithUseStrongSpatialTypesFalse));
+            var exception = Assert.Throws<MetadataException>(
+                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "ID", ""));
+
+            exception.ValidateMessage("SpatialWithUseStrongSpatialTypesFalse", /*isExactMatch*/ false);
         }
 
         [Fact]
         public void Error_on_Geography_with_TrueStrongTypes_in_csdl_version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "ID", @"annotation:UseStrongSpatialTypes=""true""")).Message.
-                Contains(Strings.SpatialWithUseStrongSpatialTypesFalse));
+            var exception = Assert.Throws<MetadataException>(() =>
+                SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "ID", @"annotation:UseStrongSpatialTypes=""true"""));
+
+            exception.ValidateMessage("SpatialWithUseStrongSpatialTypesFalse", /*isExactMatch*/ false);
         }
 
         [Fact]
@@ -82,7 +80,7 @@ namespace System.Data.Entity.Metadata
         {
             var exceptionMessage = Assert.Throws<MetadataException>(
                 () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geography, "ID", @"annotation:UseStrongSpatialTypes=""Invalid""")).Message;
-            
+
             Assert.True(exceptionMessage.Contains("http://schemas.microsoft.com/ado/2009/02/edm/annotation:UseStrongSpatialTypes"));
             Assert.True(exceptionMessage.Contains("Invalid"));
             Assert.True(exceptionMessage.Contains("http://www.w3.org/2001/XMLSchema:boolean"));
@@ -91,17 +89,15 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Error_on_Geometry_entity_property_in_csdl_version1()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV1, PrimitiveTypeKind.Geometry)).Message.Contains(Strings.NotNamespaceQualified("Geometry")));
+            var exception = Assert.Throws<MetadataException>(() => SpatialEntityPropertyTest(EdmNamespaceV1, PrimitiveTypeKind.Geometry));
+            exception.ValidateMessage("NotNamespaceQualified", /*isExactMatch*/ false, "Geometry");
         }
 
         [Fact]
         public void Error_on_Geometry_entity_property_in_csdl_version2()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV2, PrimitiveTypeKind.Geometry)).Message.Contains(Strings.NotNamespaceQualified("Geometry")));
+            var exception = Assert.Throws<MetadataException>(() => SpatialEntityPropertyTest(EdmNamespaceV2, PrimitiveTypeKind.Geometry));
+            exception.ValidateMessage("NotNamespaceQualified", /*isExactMatch*/ false, "Geometry");
         }
 
         [Fact]
@@ -113,23 +109,25 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Error_on_Geometry_without_StrongTypes_in_csdl_version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "ID", "")).Message.Contains(Strings.SpatialWithUseStrongSpatialTypesFalse));
+            var exception = Assert.Throws<MetadataException>(
+                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "ID", ""));
+
+            exception.ValidateMessage("SpatialWithUseStrongSpatialTypesFalse", /*isExactMatch*/ false);
         }
 
         [Fact]
         public void Error_on_Geometry_with_TrueStrongTypes_in_csdl_version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "ID", @"annotation:UseStrongSpatialTypes=""true""")).Message.
-                Contains(Strings.SpatialWithUseStrongSpatialTypesFalse));
+            var exception = Assert.Throws<MetadataException>(() =>
+                SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "ID", @"annotation:UseStrongSpatialTypes=""true"""));
+
+            exception.ValidateMessage("SpatialWithUseStrongSpatialTypesFalse", /*isExactMatch*/ false);
         }
 
         [Fact]
         public void Error_on_Geometry_with_invalid_StrongTypes_in_csdl_version3()
         {
+
             Assert.True(
                 Assert.Throws<MetadataException>(
                 () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "ID", @"annotation:UseStrongSpatialTypes=""Invalid""")).Message.
@@ -139,10 +137,15 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Error_on_Geometry_EntityKey_property_in_csdl__version3()
         {
-            Assert.True(
-                Assert.Throws<MetadataException>(
-                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "Location", UseStrongSpatialAnnotation)).Message.
-                Contains(Strings.EntityKeyTypeCurrentlyNotSupported("Location","SpatialEntityPropertyTest.EntityWithSpatialProperty","Geometry")));
+            var exception = Assert.Throws<MetadataException>(
+                () => SpatialEntityPropertyTest(EdmNamespaceV3, PrimitiveTypeKind.Geometry, "Location", UseStrongSpatialAnnotation));
+
+            exception.ValidateMessage(
+                "EntityKeyTypeCurrentlyNotSupported", 
+                /*isExactMatch*/ false, 
+                "Location", 
+                "SpatialEntityPropertyTest.EntityWithSpatialProperty", 
+                "Geometry");
         }
 
         [Fact]
@@ -164,10 +167,10 @@ namespace System.Data.Entity.Metadata
             string csdlContent = string.Format(CultureInfo.InvariantCulture, invalidCsdl, EdmNamespaceV3, UseStrongSpatialAnnotation);
             XmlReader csdlReader = XmlReader.Create(new StringReader(csdlContent));
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { csdlReader })).Message;
-            
-            Assert.True(exceptionMessage.Contains(Strings.FacetNotAllowed("ConcurrencyMode", "Edm.Geography")));
-            Assert.True(exceptionMessage.Contains(Strings.FacetNotAllowed("ConcurrencyMode", "Edm.Geometry")));
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { csdlReader }));
+
+            exception.ValidateMessage("FacetNotAllowed", false, "ConcurrencyMode", "Edm.Geography");
+            exception.ValidateMessage("FacetNotAllowed", false, "ConcurrencyMode", "Edm.Geometry");
         }
 
         private EdmItemCollection SpatialEntityPropertyTest(string namespaceVersion, PrimitiveTypeKind spatialType)

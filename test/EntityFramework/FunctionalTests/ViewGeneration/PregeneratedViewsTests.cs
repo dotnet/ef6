@@ -8,15 +8,19 @@ using System.Data.Entity.ViewGeneration;
 [assembly: DbMappingViewCacheType(typeof(PregenContextEdmx), typeof(PregenContextEdmxViews))]
 [assembly: DbMappingViewCacheType(typeof(PregenObjectContext), typeof(PregenObjectContextViews))]
 
+[assembly: DbMappingViewCacheType(typeof(ContextWithHashMissmatch), typeof(ViewCacheWithHashMissmatch))]
+[assembly: DbMappingViewCacheType(typeof(ContextWithInvalidView), typeof(ViewCacheWithInvalidView))]
+[assembly: DbMappingViewCacheType(typeof(ContextWithNullView), typeof(ViewCacheWithNullView))]
+
 namespace System.Data.Entity.ViewGeneration
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;    
     using System.Data.SqlClient;
-    using System.Linq;
     using System.Xml.Linq;
     using Xunit;
 
@@ -27,7 +31,8 @@ namespace System.Data.Entity.ViewGeneration
         {
             using (var context = new PregenContext())
             {
-                var _ = context.Blogs.ToString(); // Trigger view loading
+                // Trigger view loading
+                var _ = context.Blogs.ToString(); 
 
                 Assert.True(PregenContextViews.View0Accessed);
                 Assert.True(PregenContextViews.View1Accessed);
@@ -55,7 +60,8 @@ namespace System.Data.Entity.ViewGeneration
 
             using (var context = new PregenContextEdmx(workspace))
             {
-                var _ = context.Blogs.ToString(); // Trigger view loading
+                // Trigger view loading
+                var _ = context.Blogs.ToString(); 
 
                 Assert.True(PregenContextEdmxViews.View0Accessed);
                 Assert.True(PregenContextEdmxViews.View1Accessed);
@@ -72,10 +78,53 @@ namespace System.Data.Entity.ViewGeneration
 
             using (var context = compiledModel.CreateObjectContext<PregenObjectContext>(connection))
             {
-                var _ = context.Blogs.ToTraceString(); // Trigger view loading
+                // Trigger view loading
+                var _ = context.Blogs.ToTraceString(); 
 
                 Assert.True(PregenObjectContextViews.View0Accessed);
                 Assert.True(PregenObjectContextViews.View1Accessed);
+            }
+        }
+
+        [Fact]
+        public void Exception_is_thrown_if_pregenerated_view_cache_mapping_hash_does_not_match()
+        {
+            using (var context = new ContextWithHashMissmatch())
+            {
+                var exception =
+                    Assert.Throws<EntityCommandCompilationException>(
+                        () => context.Blogs.ToString());
+
+                Assert.NotNull(exception.InnerException);
+                exception.InnerException.ValidateMessage("ViewGen_HashOnMappingClosure_Not_Matching", "ViewCacheWithHashMissmatch");
+            }
+        }
+
+        [Fact]
+        public void Exception_is_thrown_if_pregenerated_view_cache_returns_view_with_invalid_esql()
+        {
+            using (var context = new ContextWithInvalidView())
+            {
+                var exception =
+                    Assert.Throws<EntityCommandCompilationException>(
+                        () => context.Blogs.ToString());
+
+                Assert.NotNull(exception.InnerException);
+                exception.InnerException.ValidateMessage("CouldNotResolveIdentifier", false, "Invalid");
+            }
+        }
+
+        [Fact]
+        public void Exception_is_thrown_if_pregenerated_view_cache_returns_null_view_for_EntitySetBase_that_requires_esql()
+        {
+            using (var context = new ContextWithNullView())
+            {
+                var exception =
+                    Assert.Throws<EntityCommandCompilationException>(
+                        () => context.Blogs.ToString());
+
+                Assert.NotNull(exception.InnerException);
+                exception.InnerException.ValidateMessage("Mapping_Views_For_Extent_Not_Generated", "EntitySet", "Blogs");
             }
         }
     }
@@ -167,8 +216,90 @@ namespace System.Data.Entity.ViewGeneration
         {
             get
             {
-                return this.CreateObjectSet<PregenBlog>();
+                return CreateObjectSet<PregenBlog>();
             }
+        }
+    }
+
+    public class ContextWithHashMissmatch : DbContext
+    {
+        static ContextWithHashMissmatch()
+        {
+            Database.SetInitializer<ContextWithHashMissmatch>(null);
+        }
+
+        public DbSet<PregenBlog> Blogs { get; set; }
+    }
+
+    public class ViewCacheWithHashMissmatch : DbMappingViewCache
+    {
+        public override string MappingHashValue
+        {
+            get { return "Missmatch"; }
+        }
+
+        public override DbMappingView GetView(EntitySetBase extent)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ContextWithInvalidView : DbContext
+    {
+        static ContextWithInvalidView()
+        {
+            Database.SetInitializer<ContextWithInvalidView>(null);
+        }
+
+        public DbSet<PregenBlog> Blogs { get; set; }
+    }
+
+    public class ViewCacheWithInvalidView : DbMappingViewCache
+    {
+        public override string MappingHashValue
+        {
+            get { return "15d7c7e9868caaf4966b8ef383979b6dbbeccffe1a12e3c1427de366f557cbe1"; }
+        }
+
+        public override DbMappingView GetView(EntitySetBase extent)
+        {
+            return new DbMappingView("Invalid");
+        }
+    }
+
+    public class ContextWithNullView : DbContext
+    {
+        static ContextWithNullView()
+        {
+            Database.SetInitializer<ContextWithNullView>(null);
+        }
+
+        public DbSet<PregenBlog> Blogs { get; set; }
+    }
+
+    public class ViewCacheWithNullView : DbMappingViewCache
+    {
+        public override string MappingHashValue
+        {
+            get { return "073bf2d4f3ff4b869adf2adf400785826ba08e02a178374c013f35992856df6a"; }
+        }
+
+        public override DbMappingView GetView(EntitySetBase extent)
+        {
+            if (extent.Name == "PregenBlog")
+            {
+                return new DbMappingView(@"
+SELECT VALUE -- Constructing PregenBlog
+    [CodeFirstDatabaseSchema.PregenBlog](T1.PregenBlog_Id)
+FROM (
+    SELECT 
+        T.Id AS PregenBlog_Id, 
+        True AS _from0
+    FROM ContextWithNullView.Blogs AS T
+) AS T1");
+            }
+
+            return null;
         }
     }
 }

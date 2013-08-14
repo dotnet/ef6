@@ -421,7 +421,7 @@ namespace System.Data.Entity.Metadata
         [Fact]
         public void Using_invalid_facets_on_FunctionImport_enum_parameter_throws()
         {
-            string[,] funcImportInvalidEnumParamFacets = new string[8, 2];
+            var funcImportInvalidEnumParamFacets = new string[8, 2];
             Array.Copy(invalidEnumPropertyFacets, funcImportInvalidEnumParamFacets, invalidEnumPropertyFacets.Length);
 
             funcImportInvalidEnumParamFacets[6, 0] = "Nullable";
@@ -673,48 +673,50 @@ namespace System.Data.Entity.Metadata
   </EnumType>
 </Schema>";
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) })).Message;
-            Assert.True(exceptionMessage.Contains(Strings.DuplicateEnumMember));
+            var exception = Assert.Throws<MetadataException>(
+                () => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
+
+            exception.ValidateMessage(typeof(DbContext).Assembly, "DuplicateEnumMember", null);
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_incorrect_UnderlyingType_String()
         {
-            IncorrectUnderlyingType("String", Strings.InvalidEnumUnderlyingType);
+            IncorrectUnderlyingType("String", "InvalidEnumUnderlyingType");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_incorrect_UnderlyingType_ModelType()
         {
-            IncorrectUnderlyingType("EnumTestModel.EnumTestEntity", Strings.InvalidEnumUnderlyingType);
+            IncorrectUnderlyingType("EnumTestModel.EnumTestEntity", "InvalidEnumUnderlyingType");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_incorrect_UnderlyingType_SameEnumType()
         {
-            IncorrectUnderlyingType("EnumTestModel.Color", Strings.InvalidEnumUnderlyingType);
+            IncorrectUnderlyingType("EnumTestModel.Color", "InvalidEnumUnderlyingType");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_incorrect_UnderlyingType_NonExistingType()
         {
-            IncorrectUnderlyingType("EnumTestModel.NonExistingType", Strings.NotInNamespaceNoAlias("NonExistingType", "EnumTestModel"));
+            IncorrectUnderlyingType("EnumTestModel.NonExistingType", "NotInNamespaceNoAlias", "NonExistingType", "EnumTestModel");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_incorrect_UnderlyingType_InvalidEdmType()
         {
-            IncorrectUnderlyingType("Edm.MyType", Strings.NotInNamespaceNoAlias("MyType", "Edm"));
+            IncorrectUnderlyingType("Edm.MyType", "NotInNamespaceNoAlias", "MyType", "Edm");
         }
 
-        private void IncorrectUnderlyingType(string typeName, string expectedException)
+        private void IncorrectUnderlyingType(string typeName, string resourceKey, params object[] exceptionParameters)
         {
             var csdlDocument = XDocument.Parse(enumCsdl);
             var enumType = csdlDocument.Descendants(XName.Get("EnumType", edmNamespace)).Single();
             enumType.SetAttributeValue("UnderlyingType", typeName);
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { csdlDocument.CreateReader() })).Message;
-            Assert.True(exceptionMessage.Contains(expectedException));
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { csdlDocument.CreateReader() }));
+            exception.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
         }
 
         [Fact]
@@ -728,64 +730,77 @@ namespace System.Data.Entity.Metadata
     </EnumType>
 </Schema>";
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) })).Message;
-            Assert.True(exceptionMessage.Contains(Strings.CalculatedEnumValueOutOfRange));
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
+            exception.ValidateMessage(typeof(DbContext).Assembly, "CalculatedEnumValueOutOfRange", null);
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_too_large_to_fit_in_Byte()
         {
             var value = (((long)Byte.MaxValue) + 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Byte", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Byte"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Byte", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Byte");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_cannot_be_converted_to_Byte()
         {
             var value = (((long)Byte.MinValue) - 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Byte", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Byte"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Byte", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Byte");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_too_large_to_fit_in_SByte()
         {
             var value = (((long)SByte.MaxValue) + 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("SByte", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "SByte"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("SByte", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "SByte");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_cannot_be_converted_to_SByte()
         {
             var value = (((long)SByte.MinValue) - 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("SByte", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "SByte"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("SByte", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "SByte");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_too_large_to_fit_in_Int16()
         {
             var value = (((long)Int16.MaxValue) + 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Int16", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Int16"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Int16", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Int16");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_cannot_be_converted_to_Int16()
         {
             var value = (((long)Int16.MinValue) - 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Int16", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Int16"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Int16", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Int16");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_too_large_to_fit_in_Int32()
         {
             var value = (((long)Int32.MaxValue) + 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Int32", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Int32"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Int32", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Int32");
         }
 
         [Fact]
         public void Validation_fails_for_enums_with_SpecifiedValue_cannot_be_converted_to_Int32()
         {
             var value = (((long)Int32.MinValue) - 1).ToString();
-            RunUnderOverflowTestForExplicitlySpecifiedValues("Int32", value, Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value, "Yellow", "Int32"));
+            RunUnderOverflowTestForExplicitlySpecifiedValues("Int32", value, "EnumMemberValueOutOfItsUnderylingTypeRange", value, "Yellow", "Int32");
+        }
+
+        private static void RunUnderOverflowTestForExplicitlySpecifiedValues(string underlyingTypeName, string value, string resourceKey, params object[] exceptionParameters)
+        {
+            var document = XDocument.Parse(enumCsdl);
+            var enumType = document.Descendants(XName.Get("EnumType", edmNamespace)).Single();
+            enumType.SetAttributeValue("UnderlyingType", underlyingTypeName);
+            document.Descendants(XName.Get("Member", edmNamespace))
+                    .First()
+                    .SetAttributeValue("Value", value);
+
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { document.CreateReader() }));
+            exception.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
         }
 
         [Fact]
@@ -819,10 +834,10 @@ namespace System.Data.Entity.Metadata
         public void Validation_fails_for_enums_with_CalculatedValue_too_large_to_fit_in_Byte()
         {
             var value = (long)Byte.MaxValue;
-            var exceptions = new [] 
+            var exceptions = new List<KeyValuePair<string, object[]>>
             {
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 1, "Green", "Byte"),
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 2, "Blue", "Byte"),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 1, "Green", "Byte" }),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 2, "Blue", "Byte" }),
             };
 
             RunOverflowTestsForCalculatedValues("Byte", value, exceptions);
@@ -832,10 +847,10 @@ namespace System.Data.Entity.Metadata
         public void Validation_fails_for_enums_with_CalculatedValue_too_large_to_fit_in_SByte()
         {
             var value = (long)SByte.MaxValue;
-            var exceptions = new[] 
+            var exceptions = new List<KeyValuePair<string, object[]>>
             {
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 1, "Green", "SByte"),
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 2, "Blue", "SByte"),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 1, "Green", "SByte" }),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 2, "Blue", "SByte" }),
             };
 
             RunOverflowTestsForCalculatedValues("SByte", value, exceptions);
@@ -845,10 +860,10 @@ namespace System.Data.Entity.Metadata
         public void Validation_fails_for_enums_with_CalculatedValue_too_large_to_fit_in_Int16()
         {
             var value = (long)Int16.MaxValue;
-            var exceptions = new[] 
+            var exceptions = new List<KeyValuePair<string, object[]>>
             {
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 1, "Green", "Int16"),
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 2, "Blue", "Int16"),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 1, "Green", "Int16" }),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 2, "Blue", "Int16" }),
             };
 
             RunOverflowTestsForCalculatedValues("Int16", value, exceptions);
@@ -858,16 +873,19 @@ namespace System.Data.Entity.Metadata
         public void Validation_fails_for_enums_with_CalculatedValue_too_large_to_fit_in_Int32()
         {
             var value = (long)Int32.MaxValue;
-            var exceptions = new[] 
+            var exceptions = new List<KeyValuePair<string, object[]>>
             {
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 1, "Green", "Int32"),
-                Strings.EnumMemberValueOutOfItsUnderylingTypeRange(value + 2, "Blue", "Int32"),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 1, "Green", "Int32" }),
+                new KeyValuePair<string, object[]>("EnumMemberValueOutOfItsUnderylingTypeRange", new object[] { value + 2, "Blue", "Int32" }),
             };
 
             RunOverflowTestsForCalculatedValues("Int32", value, exceptions);
         }
 
-        private static void RunOverflowTestsForCalculatedValues(string underlyingTypeName, long lastSpecifiedValue, string[] expectedExceptions)
+        private static void RunOverflowTestsForCalculatedValues(
+            string underlyingTypeName, 
+            long lastSpecifiedValue, 
+            IEnumerable<KeyValuePair<string, object[]>> expectedExceptions)
         {
             var document = XDocument.Parse(enumCsdl);
             var enumType = document.Descendants(XName.Get("EnumType", edmNamespace)).Single();
@@ -881,10 +899,10 @@ namespace System.Data.Entity.Metadata
                     .Attributes("Value")
                     .Remove();
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { document.CreateReader() })).Message;
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { document.CreateReader() }));
             foreach (var expectedException in expectedExceptions)
             {
-                Assert.True(exceptionMessage.Contains(expectedException));
+                exception.ValidateMessage(typeof(DbContext).Assembly, expectedException.Key, null, /*isExactMatch*/ false, expectedException.Value);
             }
         }
 
@@ -904,8 +922,8 @@ namespace System.Data.Entity.Metadata
   </EnumType>
 </Schema>";
 
-            var exceptionMessage = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) })).Message;
-            Assert.True(exceptionMessage.Contains(Strings.DefaultNotAllowed));
+            var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
+            exception.ValidateMessage(typeof(DbContext).Assembly, "DefaultNotAllowed", null);
         }
     }
 
@@ -915,7 +933,7 @@ namespace System.Data.Entity.Metadata
 
         public MetadataEnumFixture()
         {
-            this.CsdlSchemaSet = new XmlSchemaSet();
+            CsdlSchemaSet = new XmlSchemaSet();
 
             foreach (var schemaName in new string[] { 
                     "System.Data.Resources.CSDLSchema_3.xsd",  
@@ -927,7 +945,7 @@ namespace System.Data.Entity.Metadata
                     (o, e) => { throw new InvalidOperationException("The built-in schema is invalid", e.Exception); }));
             }
 
-            this.CsdlSchemaSet.Compile();
+            CsdlSchemaSet.Compile();
         }
     }
 }
