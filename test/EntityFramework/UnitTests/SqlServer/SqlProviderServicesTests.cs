@@ -291,6 +291,9 @@ namespace System.Data.Entity.SqlServer
             [Fact]
             public void DbDatabaseExists_dispatches_commands_to_interceptors_for_connections_with_no_initial_catalog()
             {
+                // See CodePlex 1554 - Handle User Instance flakiness
+                MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                                    SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
                 var interceptor = new TestScalarInterceptor();
                 DbInterception.Add(interceptor);
                 try
@@ -303,6 +306,7 @@ namespace System.Data.Entity.SqlServer
                 }
                 finally
                 {
+                    MutableResolver.ClearResolvers();
                     DbInterception.Remove(interceptor);
                 }
 
@@ -359,23 +363,34 @@ namespace System.Data.Entity.SqlServer
 
                 using (var connection = new SqlConnection(SimpleAttachConnectionString<DdlDatabaseContext>(useInitialCatalog: false)))
                 {
-                    if (!SqlProviderServices.Instance.DatabaseExists(connection, null, storeItemCollection))
-                    {
-                        SqlProviderServices.Instance.CreateDatabase(connection, null, storeItemCollection);
-                    }
-
                     var nonQueryInterceptor = new TestNonQueryInterceptor();
                     var readerInterceptor = new TestReaderInterceptor();
-                    DbInterception.Add(nonQueryInterceptor);
-                    DbInterception.Add(readerInterceptor);
+
+                    // See CodePlex 1554 - Handle User Instance flakiness
+                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                                        SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy())); 
                     try
                     {
-                        SqlProviderServices.Instance.DeleteDatabase(connection, null, storeItemCollection);
+                        if (!SqlProviderServices.Instance.DatabaseExists(connection, null, storeItemCollection))
+                        {
+                            SqlProviderServices.Instance.CreateDatabase(connection, null, storeItemCollection);
+                        }
+
+                        DbInterception.Add(nonQueryInterceptor);
+                        DbInterception.Add(readerInterceptor);
+                        try
+                        {
+                            SqlProviderServices.Instance.DeleteDatabase(connection, null, storeItemCollection);
+                        }
+                        finally
+                        {
+                            DbInterception.Remove(nonQueryInterceptor);
+                            DbInterception.Remove(readerInterceptor);
+                        }
                     }
                     finally
                     {
-                        DbInterception.Remove(nonQueryInterceptor);
-                        DbInterception.Remove(readerInterceptor);
+                        MutableResolver.ClearResolvers();
                     }
 
                     Assert.Equal(2, nonQueryInterceptor.Commands.Count);
