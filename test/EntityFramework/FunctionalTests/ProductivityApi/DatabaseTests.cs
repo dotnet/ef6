@@ -5,10 +5,11 @@ namespace ProductivityApiTests
     using System;
     using System.Data;
     using System.Data.Entity;
-    using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.IO;
-    using System.Text.RegularExpressions;
     using SimpleModel;
     using Xunit;
 
@@ -160,10 +161,20 @@ END";
             AttachableDatabaseTest(
                 (context) =>
                     {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                        // See CodePlex 1554 - Handle User Instance flakiness
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                            SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
+                        try
+                        {
+                            // Ensure database is initialized
+                            context.Database.Initialize(force: true);
 
-                        Assert.True(context.Database.Exists());
+                            Assert.True(context.Database.Exists());
+                        }
+                        finally
+                        {
+                            MutableResolver.ClearResolvers();
+                        }
                     }, useInitialCatalog);
         }
 
@@ -460,6 +471,9 @@ END";
                 context.Database.Initialize(force: true);
             }
 
+            // See CodePlex 1554 - Handle User Instance flakiness
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
             try
             {
                 using (var context = new AttachedContext(
@@ -473,6 +487,8 @@ END";
             }
             finally
             {
+                MutableResolver.ClearResolvers();
+
                 using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
                 {
                     context.Database.Delete();
@@ -614,12 +630,22 @@ END";
             AttachableDatabaseTest(
                 (context) =>
                     {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                        // See CodePlex 1554 - Handle User Instance flakiness
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                            SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
+                        try
+                        {
+                            // Ensure database is initialized
+                            context.Database.Initialize(force: true);
 
-                        Assert.True(context.Database.Delete());
-                        Assert.False(context.Database.Exists());
-                        Assert.False(File.Exists(GetAttachDbFilename(context)));
+                            Assert.True(context.Database.Delete());
+                            Assert.False(context.Database.Exists());
+                            Assert.False(File.Exists(GetAttachDbFilename(context)));
+                        }
+                        finally
+                        {
+                            MutableResolver.ClearResolvers();
+                        }
                     }, useInitialCatalog);
         }
 
@@ -724,8 +750,18 @@ END";
             AttachableDatabaseTest(
                 (context) =>
                 {
-                    // NOTE: Database has not been initialized/created
-                    Assert.False(context.Database.Delete());
+                    // See CodePlex 1554 - Handle User Instance flakiness
+                    MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                        SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
+                    try
+                    {
+                        // NOTE: Database has not been initialized/created
+                        Assert.False(context.Database.Delete());
+                    }
+                    finally
+                    {
+                        MutableResolver.ClearResolvers();
+                    }
                 }, useInitialCatalog: false);
         }
 
@@ -832,7 +868,7 @@ END";
         [Fact]
         public void Can_create_attached_database_without_InitialCatalog_using_Database_obtained_from_context()
         {
-            Can_create_attached_database_using_Database_obtained_from_context(true);
+            Can_create_attached_database_using_Database_obtained_from_context(false);
         }
 
         private void Can_create_attached_database_using_Database_obtained_from_context(bool useInitialCatalog)
@@ -840,10 +876,20 @@ END";
             AttachableDatabaseTest(
                 (context) =>
                     {
-                        // Ensure database is initialized
-                        context.Database.Initialize(force: true);
+                        // See CodePlex 1554 - Handle User Instance flakiness
+                        MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(new ExecutionStrategyResolver<IDbExecutionStrategy>(
+                            SqlProviderServices.ProviderInvariantName, null, () => new SqlAzureExecutionStrategy()));
+                        try
+                        {
+                            // Ensure database is initialized
+                            context.Database.Initialize(force: true);
 
-                        Can_create_database(context.Database);
+                            Can_create_database(context.Database);
+                        }
+                        finally
+                        {
+                            MutableResolver.ClearResolvers();
+                        }
                     }, useInitialCatalog);
         }
 
