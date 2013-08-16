@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Resources;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Reflection;
     using Moq;
     using Moq.Protected;
@@ -12,6 +14,37 @@ namespace System.Data.Entity.Core.Objects
     [PartialTrustFixture]
     public class DelegateFactoryTests
     {
+        public class GetNewExpressionForCollectionType
+        {
+            [Fact] // CodePlex 1566
+            public void GetNewExpressionForCollectionType_creates_valid_delegates_for_custom_and_standard_collection_types()
+            {
+                Assert.IsType<List<string>>(
+                    Expression.Lambda<Func<object>>(
+                        DelegateFactory.GetNewExpressionForCollectionType(typeof(List<string>))).Compile()());
+
+                Assert.IsType<HashSet<string>>(
+                    Expression.Lambda<Func<object>>(
+                        DelegateFactory.GetNewExpressionForCollectionType(typeof(HashSet<string>))).Compile()());
+
+                Assert.IsType<CustomCollection<string>>(
+                    Expression.Lambda<Func<object>>(
+                        DelegateFactory.GetNewExpressionForCollectionType(typeof(CustomCollection<string>))).Compile()());
+
+                Assert.IsType<CustomCollection>(
+                    Expression.Lambda<Func<object>>(
+                        DelegateFactory.GetNewExpressionForCollectionType(typeof(CustomCollection))).Compile()());
+            }
+
+            public class CustomCollection<TElement> : List<TElement>
+            {
+            }
+
+            public class CustomCollection : CustomCollection<string>
+            {
+            }
+        }
+
         public class CreateConstructor
         {
             [Fact]

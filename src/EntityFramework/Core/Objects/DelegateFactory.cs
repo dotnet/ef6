@@ -171,17 +171,14 @@ namespace System.Data.Entity.Core.Objects
         /// <returns> Parameterless constructor for the specified type. </returns>
         internal static NewExpression GetNewExpressionForCollectionType(Type type)
         {
-            if (type.GetGenericTypeDefinition() == typeof(HashSet<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(HashSet<>))
             {
                 var constructor = type.GetConstructor(
                     BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
                     new[] { typeof(IEqualityComparer<>).MakeGenericType(type.GetGenericArguments()) }, null);
                 return Expression.New(constructor, Expression.New(typeof(ObjectReferenceEqualityComparer)));
             }
-            else
-            {
-                return Expression.New(GetConstructorForType(type));
-            }
+            return Expression.New(GetConstructorForType(type));
         }
 
         /// <summary>
