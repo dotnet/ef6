@@ -785,13 +785,17 @@ namespace System.Data.Entity
         #endregion
 
         [Fact]
-        public void Initializer_never_run_for_history_contexts()
+        public void Initializer_never_run_automatically_for_any_history_contexts()
         {
-            var mockInitializer = new Mock<IDatabaseInitializer<HistoryContext>>();
+            var mockInitializer = new Mock<IDatabaseInitializer<MyHistoryContext>>();
             Database.SetInitializer(mockInitializer.Object);
 
-            new HistoryContext().Database.Initialize(force: true);
-            mockInitializer.Verify(i => i.InitializeDatabase(It.IsAny<HistoryContext>()), Times.Never());
+            new MyHistoryContext().Database.Initialize(force: false);
+            mockInitializer.Verify(i => i.InitializeDatabase(It.IsAny<MyHistoryContext>()), Times.Never());
+        }
+
+        public class MyHistoryContext : HistoryContext 
+        {
         }
     }
 }

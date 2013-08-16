@@ -116,17 +116,20 @@ namespace System.Data.Entity.Migrations
         {
             var modelCompressor = new ModelCompressor();
 
-            var generatedMigration
-                = CodeGenerator
-                    .Generate(
-                        UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migration.GetType().Name,
-                        migration.GetOperations(),
-                        Convert.ToBase64String(modelCompressor.Compress(CreateContext<TContext>().GetModel())),
-                        Convert.ToBase64String(modelCompressor.Compress(CreateContext<TContext>().GetModel())),
-                        "System.Data.Entity.Migrations",
-                        migration.GetType().Name);
+            using (var context = CreateContext<TContext>())
+            {
+                var generatedMigration
+                    = CodeGenerator
+                        .Generate(
+                            UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migration.GetType().Name,
+                            migration.GetOperations(),
+                            Convert.ToBase64String(modelCompressor.Compress(context.GetModel())),
+                            Convert.ToBase64String(modelCompressor.Compress(context.GetModel())),
+                            "System.Data.Entity.Migrations",
+                            migration.GetType().Name);
 
-            return new DbMigrator(CreateMigrationsConfiguration<TContext>(scaffoldedMigrations: generatedMigration));
+                return new DbMigrator(CreateMigrationsConfiguration<TContext>(scaffoldedMigrations: generatedMigration));
+            }
         }
 
         public DbMigrator CreateMigrator<TContext>(

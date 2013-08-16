@@ -30,9 +30,10 @@ namespace ProductivityApiTests
                 typeof(AdvancedPatternsMasterContext),
                 ProviderRegistry.Sql2008_ProviderInfo);
 
-            var context = contextInfo.CreateInstance();
-
-            Assert.NotNull(context);
+            using (var context = contextInfo.CreateInstance())
+            {
+                Assert.NotNull(context);
+            }
         }
 
         [Fact]

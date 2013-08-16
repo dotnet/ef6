@@ -263,7 +263,6 @@
     <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
-    <Compile Include="Infrastructure\DatabaseInitializerSuppressorTests.cs" />
     <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContextTests.cs" />
     <Compile Include="Infrastructure\DatabaseLogFormatterTests.cs" />

@@ -191,15 +191,18 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        GetCreateHistoryTableOperation(),
-                        historyRepository.CreateInsertOperation("Migration1", model),
-                        historyRepository.CreateInsertOperation("Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            GetCreateHistoryTableOperation(),
+                            historyRepository.CreateInsertOperation("Migration1", model),
+                            historyRepository.CreateInsertOperation("Migration2", model)
+                        });
+            }
 
             var migrations = historyRepository.GetMigrationsSince(DbMigrator.InitialDatabase);
 
@@ -215,14 +218,17 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        GetCreateHistoryTableOperation(),
-                        historyRepository.CreateInsertOperation("Migration1", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            GetCreateHistoryTableOperation(),
+                            historyRepository.CreateInsertOperation("Migration1", model)
+                        });
+            }
 
             Assert.True(historyRepository.HasMigrations());
         }
@@ -240,13 +246,16 @@ namespace System.Data.Entity.Migrations.History
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository2.CreateInsertOperation("Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository2.CreateInsertOperation("Migration2", model)
+                        });
+            }
 
             Assert.False(historyRepository1.HasMigrations());
         }
@@ -259,15 +268,18 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository
                 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        GetCreateHistoryTableOperation(),
-                        historyRepository.CreateInsertOperation("201109192032331_Migration1", model),
-                        historyRepository.CreateInsertOperation("201109192032332_Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            GetCreateHistoryTableOperation(),
+                            historyRepository.CreateInsertOperation("201109192032331_Migration1", model),
+                            historyRepository.CreateInsertOperation("201109192032332_Migration2", model)
+                        });
+            }
 
             var migrationId = historyRepository.GetMigrationId("Migration1");
 
@@ -289,17 +301,20 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository2
                 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        GetCreateHistoryTableOperation(),
-                        historyRepository1.CreateInsertOperation("201109192032331_Migration1", model),
-                        historyRepository1.CreateInsertOperation("201109192032332_Migration2", model),
-                        historyRepository2.CreateInsertOperation("201109192032331_Migration1", model),
-                        historyRepository2.CreateInsertOperation("201109192032332_Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            GetCreateHistoryTableOperation(),
+                            historyRepository1.CreateInsertOperation("201109192032331_Migration1", model),
+                            historyRepository1.CreateInsertOperation("201109192032332_Migration2", model),
+                            historyRepository2.CreateInsertOperation("201109192032331_Migration1", model),
+                            historyRepository2.CreateInsertOperation("201109192032332_Migration2", model)
+                        });
+            }
 
             var migrationId = historyRepository1.GetMigrationId("Migration1");
 
@@ -320,14 +335,17 @@ namespace System.Data.Entity.Migrations.History
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository.CreateInsertOperation("201109192032331_Migration", model),
-                        historyRepository.CreateInsertOperation("201109192032332_Migration", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository.CreateInsertOperation("201109192032331_Migration", model),
+                            historyRepository.CreateInsertOperation("201109192032332_Migration", model)
+                        });
+            }
 
             Assert.Equal(
                 Strings.AmbiguousMigrationName("Migration"),
@@ -358,14 +376,17 @@ namespace System.Data.Entity.Migrations.History
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository.CreateInsertOperation("Migration1", model),
-                        historyRepository.CreateInsertOperation("Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository.CreateInsertOperation("Migration1", model),
+                            historyRepository.CreateInsertOperation("Migration2", model)
+                        });
+            }
 
             var migrations = historyRepository.GetMigrationsSince("Migration1");
 
@@ -386,16 +407,19 @@ namespace System.Data.Entity.Migrations.History
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository1.CreateInsertOperation("Migration1", model),
-                        historyRepository1.CreateInsertOperation("Migration2", model),
-                        historyRepository2.CreateInsertOperation("Migration1", model),
-                        historyRepository2.CreateInsertOperation("Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository1.CreateInsertOperation("Migration1", model),
+                            historyRepository1.CreateInsertOperation("Migration2", model),
+                            historyRepository2.CreateInsertOperation("Migration1", model),
+                            historyRepository2.CreateInsertOperation("Migration2", model)
+                        });
+            }
 
             var migrations = historyRepository1.GetMigrationsSince("Migration1");
 
@@ -413,14 +437,17 @@ namespace System.Data.Entity.Migrations.History
 
             ExecuteOperations(GetCreateHistoryTableOperation());
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository.CreateInsertOperation("Migration1", model),
-                        historyRepository.CreateInsertOperation("Migration2", model)
-                    });
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository.CreateInsertOperation("Migration1", model),
+                            historyRepository.CreateInsertOperation("Migration2", model)
+                        });
+            }
 
             var migrations = historyRepository.GetMigrationsSince("Migration2");
 
@@ -465,13 +492,16 @@ namespace System.Data.Entity.Migrations.History
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository.CreateInsertOperation("Migration 1", model),
-                historyRepository.CreateInsertOperation("Migration 3", model),
-                historyRepository.CreateInsertOperation("Migration 5", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository.CreateInsertOperation("Migration 1", model),
+                    historyRepository.CreateInsertOperation("Migration 3", model),
+                    historyRepository.CreateInsertOperation("Migration 5", model));
+            }
 
             var pendingMigrations =
                 historyRepository.GetPendingMigrations(
@@ -489,14 +519,17 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository1 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey1", null, HistoryContext.DefaultFactory);
             var historyRepository2 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey2", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository1.CreateInsertOperation("Migration 1", model),
-                historyRepository2.CreateInsertOperation("Migration 1", model),
-                historyRepository1.CreateInsertOperation("Migration 3", model),
-                historyRepository1.CreateInsertOperation("Migration 5", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository1.CreateInsertOperation("Migration 1", model),
+                    historyRepository2.CreateInsertOperation("Migration 1", model),
+                    historyRepository1.CreateInsertOperation("Migration 3", model),
+                    historyRepository1.CreateInsertOperation("Migration 5", model));
+            }
 
             var pendingMigrations =
                 historyRepository1.GetPendingMigrations(
@@ -513,11 +546,14 @@ namespace System.Data.Entity.Migrations.History
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository.CreateInsertOperation("000000000000001_InitialCreate", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository.CreateInsertOperation("000000000000001_InitialCreate", model));
+            }
 
             var pendingMigrations = historyRepository.GetPendingMigrations(
                 new[] { "000000000000002_InitialCreate", "Migration 1" });
@@ -573,21 +609,24 @@ namespace System.Data.Entity.Migrations.History
 
             var historyRepository = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
-            var model1 = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model1 = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository.CreateInsertOperation("Migration 1", model1));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository.CreateInsertOperation("Migration 1", model1));
 
-            ExecuteOperations(
-                new[] { historyRepository.CreateInsertOperation("Migration 2", model1) });
+                ExecuteOperations(
+                    new[] { historyRepository.CreateInsertOperation("Migration 2", model1) });
 
-            string migrationId;
-            var model2 = historyRepository.GetLastModel(out migrationId);
+                string migrationId;
+                var model2 = historyRepository.GetLastModel(out migrationId);
 
-            Assert.NotNull(model2);
-            Assert.True(XNode.DeepEquals(model1, model2));
-            Assert.Equal("Migration 2", migrationId);
+                Assert.NotNull(model2);
+                Assert.True(XNode.DeepEquals(model1, model2));
+                Assert.Equal("Migration 2", migrationId);
+            }
         }
 
         [MigrationsTheory]
@@ -598,28 +637,31 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository1
                 = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository1.CreateInsertOperation("Migration 1", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository1.CreateInsertOperation("Migration 1", model));
 
-            var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
+                var historyRepository2
+                    = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
-            ExecuteOperations(
-                new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                ExecuteOperations(
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
 
-            string migrationId;
-            model = historyRepository1.GetLastModel(out migrationId);
+                string migrationId;
+                model = historyRepository1.GetLastModel(out migrationId);
 
-            Assert.NotNull(model);
-            Assert.Equal("Migration 1", migrationId);
+                Assert.NotNull(model);
+                Assert.Equal("Migration 1", migrationId);
 
-            model = historyRepository2.GetLastModel(out migrationId);
+                model = historyRepository2.GetLastModel(out migrationId);
 
-            Assert.NotNull(model);
-            Assert.Equal("Migration 2", migrationId);
+                Assert.NotNull(model);
+                Assert.Equal("Migration 2", migrationId);
+            }
         }
 
         [MigrationsTheory]
@@ -630,23 +672,26 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository1
                 = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository1.CreateInsertOperation("Migration 1", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository1.CreateInsertOperation("Migration 1", model));
 
-            var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
+                var historyRepository2
+                    = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
-            ExecuteOperations(
-                new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                ExecuteOperations(
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
 
-            string migrationId;
-            model = historyRepository1.GetLastModel(out migrationId, "Key2");
+                string migrationId;
+                model = historyRepository1.GetLastModel(out migrationId, "Key2");
 
-            Assert.NotNull(model);
-            Assert.Equal("Migration 2", migrationId);
+                Assert.NotNull(model);
+                Assert.Equal("Migration 2", migrationId);
+            }
         }
 
         [MigrationsTheory]
@@ -660,26 +705,29 @@ namespace System.Data.Entity.Migrations.History
                           CurrentSchema = "foo"
                       };
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(historyRepository.CurrentSchema),
-                historyRepository.CreateInsertOperation("Migration", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(historyRepository.CurrentSchema),
+                    historyRepository.CreateInsertOperation("Migration", model));
 
-            historyRepository
-                = new HistoryRepository(
-                    ConnectionString, 
-                    ProviderFactory, 
-                    "NewKey", 
-                    null, 
-                    HistoryContext.DefaultFactory,
-                    schemas: new[] { "foo" });
+                historyRepository
+                    = new HistoryRepository(
+                        ConnectionString,
+                        ProviderFactory,
+                        "NewKey",
+                        null,
+                        HistoryContext.DefaultFactory,
+                        schemas: new[] { "foo" });
 
-            string migrationId;
-            model = historyRepository.GetLastModel(out migrationId, "LegacyKey");
+                string migrationId;
+                model = historyRepository.GetLastModel(out migrationId, "LegacyKey");
 
-            Assert.NotNull(model);
-            Assert.Equal("Migration", migrationId);
+                Assert.NotNull(model);
+                Assert.Equal("Migration", migrationId);
+            }
         }
 
         [MigrationsTheory]
@@ -690,25 +738,28 @@ namespace System.Data.Entity.Migrations.History
             var historyRepository1
                 = new HistoryRepository(ConnectionString, ProviderFactory, "Key1", null, HistoryContext.DefaultFactory);
 
-            var model = CreateContext<ShopContext_v1>().GetModel();
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                var model = context.GetModel();
 
-            ExecuteOperations(
-                GetCreateHistoryTableOperation(),
-                historyRepository1.CreateInsertOperation("Migration 1", model));
+                ExecuteOperations(
+                    GetCreateHistoryTableOperation(),
+                    historyRepository1.CreateInsertOperation("Migration 1", model));
 
-            var historyRepository2
-                = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
+                var historyRepository2
+                    = new HistoryRepository(ConnectionString, ProviderFactory, "Key2", null, HistoryContext.DefaultFactory);
 
-            ExecuteOperations(
-                new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
+                ExecuteOperations(
+                    new[] { historyRepository2.CreateInsertOperation("Migration 2", model) });
 
-            model = historyRepository1.GetModel("Migration 1");
+                model = historyRepository1.GetModel("Migration 1");
 
-            Assert.NotNull(model);
+                Assert.NotNull(model);
 
-            model = historyRepository2.GetModel("Migration 2");
+                model = historyRepository2.GetModel("Migration 2");
 
-            Assert.NotNull(model);
+                Assert.NotNull(model);
+            }
         }
 
         [MigrationsTheory]
