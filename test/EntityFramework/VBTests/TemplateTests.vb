@@ -8,6 +8,7 @@ Imports System.Transactions
 Imports AdvancedPatternsVB
 Imports Another.Place
 Imports Xunit.Extensions
+Imports ProductivityApiTests
 
 ''' <summary>
 ''' Visual Basic tests that use T4 models generated in Visual Basic.
@@ -21,7 +22,8 @@ Public Class TemplateTests
 
     Shared Sub New()
         DbConfiguration.SetConfiguration(New FunctionalTestsConfiguration())
-        InitializeModelFirstDatabases(False)
+
+        TemplateTestsDatabaseInitializer.InitializeModelFirstDatabases(False)
 
         Using context = New AdvancedPatternsModelFirstContext
             Database.SetInitializer(New AdvancedPatternsModelFirstInitializer())

@@ -10,7 +10,6 @@ namespace FunctionalTests
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Edm;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
@@ -327,13 +326,10 @@ namespace FunctionalTests
         public void Single_abstract_type_with_associations_throws_not_mappable_exception()
         {
             var modelBuilder = new DbModelBuilder();
-
             modelBuilder.Entity<SingleAbstract>();
 
-            Assert.Equal(
-                Strings.UnmappedAbstractType(typeof(SingleAbstract)),
-                Assert.Throws<InvalidOperationException>(
-                    () => BuildMapping(modelBuilder)).Message);
+            var exception = Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
+            exception.ValidateMessage("UnmappedAbstractType", typeof(SingleAbstract));
         }
 
         [Fact]
@@ -384,29 +380,19 @@ namespace FunctionalTests
         public void Throw_when_mapping_properties_expression_contains_assignments()
         {
             var modelBuilder = new DbModelBuilder();
+            Expression<Func<StockOrder, object>> propertiesExpression = so => new { Foo = so.LocationId };
 
-            Expression<Func<StockOrder, object>> propertiesExpression = so => new
-                                                                                  {
-                                                                                      Foo = so.LocationId
-                                                                                  };
+            var exception = Assert.Throws<InvalidOperationException>(
+                () => modelBuilder.Entity<StockOrder>().Map(emc => emc.Properties(propertiesExpression)));
 
-            Assert.Equal(
-                Strings.InvalidComplexPropertiesExpression(propertiesExpression),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    modelBuilder
-                        .Entity<StockOrder>()
-                        .Map(emc => emc.Properties(propertiesExpression)))
-                    .Message);
+            exception.ValidateMessage("InvalidComplexPropertiesExpression", propertiesExpression);
         }
 
         [Fact]
         public void Circular_delete_cascade_path_can_be_generated()
         {
             var modelBuilder = new DbModelBuilder();
-
             modelBuilder.Entity<StockOrder>();
-
             var databaseMapping = BuildMapping(modelBuilder);
 
             Assert.Equal(
@@ -450,31 +436,31 @@ namespace FunctionalTests
             modelBuilder.Entity<Vendor>()
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                v1 => new
-                                          {
-                                              v1.VendorID,
-                                              v1.Name,
-                                              v1.PreferredVendorStatus,
-                                              v1.AccountNumber,
-                                              v1.ActiveFlag,
-                                              v1.CreditRating
-                                          });
-                            m.ToTable("Vendor", "vendors");
-                        })
+                    {
+                        m.Properties(
+                            v1 => new
+                                      {
+                                          v1.VendorID,
+                                          v1.Name,
+                                          v1.PreferredVendorStatus,
+                                          v1.AccountNumber,
+                                          v1.ActiveFlag,
+                                          v1.CreditRating
+                                      });
+                        m.ToTable("Vendor", "vendors");
+                    })
                 .Map(
                     m =>
-                        {
-                            m.Properties(
-                                v2 => new
-                                          {
-                                              v2.VendorID,
-                                              v2.ModifiedDate,
-                                              v2.PurchasingWebServiceURL
-                                          });
-                            m.ToTable("VendorDetails", "details");
-                        });
+                    {
+                        m.Properties(
+                            v2 => new
+                                      {
+                                          v2.VendorID,
+                                          v2.ModifiedDate,
+                                          v2.PurchasingWebServiceURL
+                                      });
+                        m.ToTable("VendorDetails", "details");
+                    });
 
             var databaseMapping = BuildMapping(modelBuilder);
 

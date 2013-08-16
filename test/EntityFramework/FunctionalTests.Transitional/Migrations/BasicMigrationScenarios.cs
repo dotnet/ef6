@@ -6,9 +6,6 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Utilities;
-    using System.IO;
-    using System.Linq;
-    using System.Text.RegularExpressions;
     using Xunit;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
@@ -16,20 +13,6 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class BasicMigrationScenarios : DbTestCase
     {
-        [MigrationsTheory]
-        public void GetHistory_should_return_migrations_list()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            Assert.True(!migrator.GetDatabaseMigrations().Any());
-
-            migrator.Update();
-
-            Assert.Equal(1, migrator.GetDatabaseMigrations().Count());
-        }
-
         [MigrationsTheory]
         public void ScaffoldInitialCreate_should_return_null_when_db_not_initialized()
         {
@@ -66,8 +49,7 @@ namespace System.Data.Entity.Migrations
             Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
 
             WhenNotSqlCe(
-                () =>
-                    Assert.Contains("INSERT [dbo].[MigrationsCustomers]([CustomerNumber],", initialCreate.UserCode));
+                () => Assert.Contains("INSERT [dbo].[MigrationsCustomers]([CustomerNumber],", initialCreate.UserCode));
         }
 
         [MigrationsTheory]
@@ -90,91 +72,6 @@ namespace System.Data.Entity.Migrations
             Assert.NotNull(scaffoldedMigration);
             Assert.NotSame(initialCreate, scaffoldedMigration);
             Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
-        }
-
-        [MigrationsTheory]
-        public void Generate_should_create_custom_migration_step()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            Assert.NotNull(generatedMigration);
-            Assert.True(generatedMigration.MigrationId.Contains("Migration"));
-        }
-
-        [MigrationsTheory]
-        public void Generate_should_emit_null_source_when_last_migration_was_explicit()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
-
-            migrator = CreateMigrator<ShopContext_v1>(scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            migrator = CreateMigrator<ShopContext_v2>();
-
-            generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
-
-            Assert.True(
-                generatedMigration.DesignerCode.Contains("return null")
-                || generatedMigration.DesignerCode.Contains("Return Nothing"));
-        }
-
-        [MigrationsTheory]
-        public void Generate_should_emit_source_when_last_migration_was_automatic()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            migrator.Update();
-
-            migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
-
-            Assert.True(
-                generatedMigration.DesignerCode
-                                  .Contains("Resources.GetString(\"Source\")"));
-        }
-
-        [MigrationsTheory]
-        public void Update_should_execute_pending_custom_scripts()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsCustomers"));
-        }
-
-        [MigrationsTheory]
-        public void Generate_when_model_up_to_date_should_create_stub_migration()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            migrator.Update();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            Assert.True(generatedMigration.UserCode.Length > 300);
         }
 
         [MigrationsTheory]
@@ -212,137 +109,6 @@ namespace System.Data.Entity.Migrations
 
             Assert.Throws<AutomaticDataLossException>(() => migrator.Update())
                   .ValidateMessage("AutomaticDataLoss");
-        }
-
-        [MigrationsTheory]
-        public void Update_down_when_target_migration_id_valid_should_migrate_to_target_version_without_timestamp_part()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
-
-            migrator = CreateMigrator<ShopContext_v2>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration1);
-
-            migrator.Update();
-
-            migrator = CreateMigrator<ShopContext_v3>();
-
-            var generatedMigration2 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
-
-            migrator = CreateMigrator<ShopContext_v3>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2 });
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsStores"));
-
-            migrator.Update("Migration1");
-
-            Assert.True(TableExists("crm.tbl_customers"));
-        }
-
-        [MigrationsTheory]
-        public void Can_specify_target_up_migration_without_timestamp_part()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration);
-
-            migrator.Update("Migration");
-
-            Assert.True(TableExists("MigrationsCustomers"));
-        }
-
-        [MigrationsTheory]
-        public void Update_when_target_migration_id_invalid_should_throw()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.Throws<MigrationsException>(() => migrator.Update("balony"))
-                  .ValidateMessage("MigrationNotFound", "balony");
-        }
-
-        [MigrationsTheory]
-        public void Update_when_target_migration_id_valid_should_migrate_to_target_version()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
-
-            migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration2 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
-
-            migrator = CreateMigrator<ShopContext_v2>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2 });
-
-            migrator.Update(generatedMigration1.MigrationId);
-
-            Assert.True(TableExists("MigrationsCustomers"));
-        }
-
-        [MigrationsTheory]
-        public void Update_down_when_target_migration_id_valid_should_migrate_to_target_version()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration1 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
-
-            migrator = CreateMigrator<ShopContext_v2>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration1);
-
-            migrator.Update();
-
-            migrator = CreateMigrator<ShopContext_v3>();
-
-            var generatedMigration2 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration2");
-
-            migrator = CreateMigrator<ShopContext_v3>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration2);
-
-            migrator.Update();
-
-            var generatedMigration3 = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration3");
-
-            migrator = CreateMigrator<ShopContext_v3>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: new[] { generatedMigration1, generatedMigration2, generatedMigration3 });
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsStores"));
-
-            migrator.Update(generatedMigration1.MigrationId);
-
-            Assert.True(TableExists("crm.tbl_customers"));
         }
 
         [MigrationsTheory]
@@ -431,30 +197,6 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
-        public void Update_down_when_initial_version_and_no_database_should_be_noop()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
-
-            migrator = CreateMigrator<ShopContext_v1>(
-                automaticMigrationsEnabled: false,
-                scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsCustomers"));
-
-            DropDatabase();
-
-            migrator.Update(DbMigrator.InitialDatabase);
-
-            Assert.False(migrator.GetDatabaseMigrations().Any());
-        }
-
-        [MigrationsTheory]
         public void Update_down_when_explicit_and_automatic_should_migrate_to_target_version()
         {
             ResetDatabase();
@@ -484,194 +226,6 @@ namespace System.Data.Entity.Migrations
             Assert.False(TableExists("MigrationsStores"));
             Assert.False(TableExists("tbl_customers"));
             Assert.Null(historyRepository.GetLastModel());
-        }
-
-        [MigrationsTheory]
-        public void Generate_when_empty_source_database_should_diff_against_empty_model()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            Assert.Equal(4, Regex.Matches(generatedMigration.UserCode, "CreateTable").Count);
-        }
-
-        [MigrationsTheory]
-        public void Can_generate_and_update_against_empty_source_model()
-        {
-            ResetDatabase();
-
-            var migrator = CreateMigrator<ShopContext_v1>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v1");
-
-            migrator = CreateMigrator<ShopContext_v1>(false, scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("MigrationsProducts"));
-        }
-
-        [MigrationsTheory]
-        public void Can_generate_against_existing_model()
-        {
-            Can_generate_and_update_against_empty_source_model();
-
-            var migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v2");
-
-            Assert.Equal(2, Regex.Matches(generatedMigration.UserCode, "RenameTable").Count);
-        }
-
-        [MigrationsTheory]
-        public void Can_generate_migration_with_store_side_renames()
-        {
-            ResetDatabase();
-
-            CreateMigrator<ShopContext_v1>().Update();
-
-            var migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            Assert.True(generatedMigration.UserCode.Contains("RenameTable"));
-            WhenNotSqlCe(() => Assert.True(generatedMigration.UserCode.Contains("RenameColumn")));
-        }
-
-        [MigrationsTheory]
-        public void Can_update_generate_update_when_empty_target_database()
-        {
-            ResetDatabase();
-
-            CreateMigrator<ShopContext_v1>().Update();
-
-            Assert.True(TableExists("MigrationsProducts"));
-
-            var migrator = CreateMigrator<ShopContext_v2>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            migrator = CreateMigrator<ShopContext_v2>(false, scaffoldedMigrations: generatedMigration);
-
-            migrator.Update();
-
-            Assert.True(TableExists("crm.tbl_customers"));
-        }
-
-        [MigrationsTheory]
-        public void Can_auto_update_v1_when_target_database_does_not_exist()
-        {
-            var migrator = CreateMigrator<ShopContext_v1>(targetDatabase: Path.GetRandomFileName());
-
-            try
-            {
-                migrator.Update();
-
-                Assert.True(TableExists("MigrationsProducts"));
-            }
-            finally
-            {
-                DropDatabase();
-            }
-        }
-
-        [MigrationsTheory]
-        public void Update_throws_on_automatic_data_loss()
-        {
-            ResetDatabase();
-
-            CreateMigrator<NonEmptyModel>().Update();
-
-            var migrator = CreateMigrator<EmptyModel>();
-
-            Assert.Equal(
-                new AutomaticDataLossException("Automatic migration was not applied because it would result in data loss.").Message,
-                Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
-        }
-
-        [MigrationsTheory]
-        public void Update_can_process_automatic_data_loss()
-        {
-            ResetDatabase();
-
-            CreateMigrator<NonEmptyModel>().Update();
-
-            var migrator = CreateMigrator<EmptyModel>(automaticDataLossEnabled: true);
-
-            migrator.Update();
-
-            Assert.False(TableExists("MigrationsBlogs"));
-        }
-
-        [MigrationsTheory]
-        public void Can_update_multiple_migrations_having_a_trailing_automatic_migration()
-        {
-            ResetDatabase();
-
-            CreateMigrator<ShopContext_v2>().Update();
-
-            var migrator = CreateMigrator<ShopContext_v3>();
-
-            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Version 2");
-
-            ResetDatabase();
-
-            CreateMigrator<ShopContext_v4>(
-                automaticDataLossEnabled: true,
-                scaffoldedMigrations: generatedMigration).Update();
-
-            Assert.True(TableExists("MigrationsStores"));
-        }
-
-        [MigrationsTheory]
-        public void Can_downgrade_with_leading_automatic_when_database_empty()
-        {
-            ResetDatabase();
-
-            CreateMigrator<ShopContext_v2>().Update();
-
-            var migrator = CreateMigrator<ShopContext_v3>();
-
-            var scaffoldedMigration
-                = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
-
-            migrator
-                = CreateMigrator<ShopContext_v3>(
-                    scaffoldedMigrations: scaffoldedMigration,
-                    automaticDataLossEnabled: true);
-
-            ResetDatabase();
-
-            migrator.Update();
-
-            Assert.True(TableExists("OrderLines"));
-
-            migrator.Update("0");
-
-            Assert.False(TableExists("OrderLines"));
-        }
-
-        [MigrationsTheory]
-        public void Update_when_new_earlier_migration_should_throw_auto_disabled_exception()
-        {
-            ResetDatabase();
-
-            var migratorA = CreateMigrator<MultiUserContextA>();
-            var m1 = new MigrationScaffolder(migratorA.Configuration).Scaffold("M1");
-
-            var migratorB = CreateMigrator<MultiUserContextB>();
-            var m2 = new MigrationScaffolder(migratorB.Configuration).Scaffold("M2");
-
-            CreateMigrator<MultiUserContextB>(scaffoldedMigrations: m2).Update();
-
-            Assert.Throws<AutomaticMigrationsDisabledException>(
-                () => CreateMigrator<MultiUserContextAB>(
-                    scaffoldedMigrations: new[] { m1, m2 },
-                    automaticMigrationsEnabled: false)
-                          .Update());
         }
 
         public class MultiUserContextA : DbContext

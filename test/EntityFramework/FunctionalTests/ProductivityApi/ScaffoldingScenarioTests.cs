@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace FunctionalTests.ProductivityApi
+namespace ProductivityApiTests
 {
     using System.Configuration;
     using System.Data.Entity;
@@ -13,7 +13,7 @@ namespace FunctionalTests.ProductivityApi
     {
         static ScaffoldingScenarioTests()
         {
-            InitializeModelFirstDatabases();
+            TemplateTestsDatabaseInitializer.InitializeModelFirstDatabases();
         }
 
         internal class DatabaseFirstContext : AdvancedPatternsModelFirstContext

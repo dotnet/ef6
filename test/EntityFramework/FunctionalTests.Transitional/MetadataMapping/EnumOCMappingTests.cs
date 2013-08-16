@@ -5,7 +5,6 @@ namespace System.Data.Entity.MetadataMapping
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
@@ -56,26 +55,18 @@ namespace System.Data.Entity.MetadataMapping
         [Fact]
         public void Cannot_map_OSpace_enum_type_with_unsupported_underlying_type_POCO()
         {
-            var exception =
-                Assert.Throws<MetadataException>(
+            var exception = Assert.Throws<MetadataException>(
                     () => Cannot_map_OSpace_enum_type_with_unsupported_underlying_type(true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Validator_UnsupportedEnumUnderlyingType("System.UInt32"),
-                exception.Message);
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.MessageType");
+            exception.ValidateMessage("Validator_UnsupportedEnumUnderlyingType", false, "System.UInt32");
         }
 
         [Fact]
         public void Cannot_map_enum_types_if_names_are_different_POCO()
         {
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.PaymentMethod"),
-                Assert.Throws<MetadataException>(
-                    () => Cannot_map_enum_types_if_names_are_different(true)).Message);
+            var exception = Assert.Throws<MetadataException>(() => Cannot_map_enum_types_if_names_are_different(true));
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.PaymentMethod");
         }
 
         [Fact]
@@ -84,13 +75,8 @@ namespace System.Data.Entity.MetadataMapping
             var exception = Assert.Throws<MetadataException>(
                 () => Cannot_map_enum_types_if_underlying_types_dont_match(true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_NonMatchingUnderlyingTypes,
-                exception.Message);
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.MessageType");
+            exception.ValidateMessage("Validator_OSpace_Convention_NonMatchingUnderlyingTypes", false);
         }
 
         [Fact]
@@ -99,29 +85,18 @@ namespace System.Data.Entity.MetadataMapping
             var exception = Assert.Throws<MetadataException>(
                 () => Cannot_map_OSpace_enum_type_with_fewer_members_than_CSpace_enum_type(true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                exception.Message);
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.MessageType");
+            exception.ValidateMessage("Mapping_Enum_OCMapping_MemberMismatch", false, "MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType");
         }
 
         [Fact]
         public void Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name_POCO()
         {
             var exception = Assert.Throws<MetadataException>(
-                () =>
-                Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(true));
+                () => Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                exception.Message);
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.MessageType");
+            exception.ValidateMessage("Mapping_Enum_OCMapping_MemberMismatch", false, "MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType");
         }
 
         [Fact]
@@ -140,34 +115,28 @@ namespace System.Data.Entity.MetadataMapping
         public void Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value_POCO()
         {
             var exception = Assert.Throws<MetadataException>(
-                () =>
-                Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(true));
+                () => Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_MissingOSpaceType("MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                exception.Message);
+            exception.ValidateMessage("Validator_OSpace_Convention_MissingOSpaceType", false, "MessageModel.MessageType");
+            exception.ValidateMessage("Mapping_Enum_OCMapping_MemberMismatch", false, "MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType");
         }
 
         [Fact]
         public void Verify_OSpace_enum_type_is_not_mapped_to_CSpace_entity_type_with_same_name_POCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Object_InvalidType("Model.MessageType"),
-                Assert.Throws<InvalidOperationException>(
-                    () => OSpace_enum_type_and_CSpace_entity_type_have_the_same_name(true)).Message);
+            var exception = Assert.Throws<InvalidOperationException>(
+                () => OSpace_enum_type_and_CSpace_entity_type_have_the_same_name(true));
+
+            exception.ValidateMessage("Mapping_Object_InvalidType", "Model.MessageType");
         }
 
         [Fact]
         public void Verify_OSpace_entity_type_is_not_mapped_to_CSpace_enum_type_with_same_name_POCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Object_InvalidType("Model.MessageType"),
-                Assert.Throws<InvalidOperationException>(
-                    () => OSpace_entity_type_and_CSpace_enum_type_have_the_same_name(true)).Message);
+            var exception = Assert.Throws<InvalidOperationException>(
+                () => OSpace_entity_type_and_CSpace_enum_type_have_the_same_name(true));
+
+            exception.ValidateMessage("Mapping_Object_InvalidType", "Model.MessageType");
         }
 
         // POCO specific cases
@@ -209,13 +178,15 @@ namespace System.Data.Entity.MetadataMapping
 </Schema>");
 
             var assembly = BuildAssembly(true, EnumCsdl(), additionalMatchingEnumType);
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_AmbiguousClrType(
-                    "MessageType",
-                    "MessageModel.MessageType",
-                    "MessageModel1.MessageType"),
-                Assert.Throws<MetadataException>(
-                    () => CreateMetadataWorkspace(EnumCsdl(), assembly, true)).Message);
+            var exception = Assert.Throws<MetadataException>(
+                () => CreateMetadataWorkspace(EnumCsdl(), assembly, true));
+
+            exception.ValidateMessage(
+                "Validator_OSpace_Convention_AmbiguousClrType",
+                false,
+                "MessageType",
+                "MessageModel.MessageType",
+                "MessageModel1.MessageType");
         }
 
         [Fact]
@@ -228,14 +199,15 @@ namespace System.Data.Entity.MetadataMapping
                 .SetAttributeValue("{MappingTestExtension}SuppressGetter", true);
 
             var assembly = BuildAssembly(true, oSpaceCsdl);
+            var exception = Assert.Throws<MetadataException>(
+                () => CreateMetadataWorkspace(EnumCsdl(), assembly, true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
-                    "MessageType",
-                    "MessageModel.Message",
-                    assembly.FullName),
-                Assert.Throws<MetadataException>(
-                    () => CreateMetadataWorkspace(EnumCsdl(), assembly, true)).Message);
+            exception.ValidateMessage(
+                "Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter",
+                false,
+                "MessageType",
+                "MessageModel.Message",
+                assembly.FullName);
         }
 
         [Fact]
@@ -248,14 +220,15 @@ namespace System.Data.Entity.MetadataMapping
                 .SetAttributeValue("{MappingTestExtension}SuppressSetter", true);
 
             var assembly = BuildAssembly(true, oSpaceCsdl);
+            var exception = Assert.Throws<MetadataException>(
+                () => CreateMetadataWorkspace(EnumCsdl(), assembly, true));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
-                    "MessageType",
-                    "MessageModel.Message",
-                    assembly.FullName),
-                Assert.Throws<MetadataException>(
-                    () => CreateMetadataWorkspace(EnumCsdl(), assembly, true)).Message);
+            exception.ValidateMessage(
+                "Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter",
+                false,
+                "MessageType",
+                "MessageModel.Message",
+                assembly.FullName);
         }
 
         [Fact]
@@ -348,59 +321,69 @@ namespace System.Data.Entity.MetadataMapping
         [Fact]
         public void Cannot_map_OSpace_enum_type_with_unsupported_underlying_NonPOCO()
         {
-            var exception =
-                Assert.Throws<MetadataException>(
+            var exception = Assert.Throws<MetadataException>(
                     () => Cannot_map_OSpace_enum_type_with_unsupported_underlying_type(false));
 
-            Assert.Contains(
-                Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
-                    "TypeOfMessage",
-                    "MessageModel.MessageTypeLookUp",
-                    "MessageModel.MessageType"),
-                exception.Message);
+            exception.ValidateMessage(
+                "Validator_OSpace_ScalarPropertyNotPrimitive",
+                false,
+                "TypeOfMessage",
+                "MessageModel.MessageTypeLookUp",
+                "MessageModel.MessageType");
 
-            Assert.Contains(
-                Strings.Validator_UnsupportedEnumUnderlyingType("System.UInt32"),
-                exception.Message);
+            exception.ValidateMessage("Validator_UnsupportedEnumUnderlyingType", false, "System.UInt32");
         }
 
         [Fact]
         public void Cannot_map_enum_types_if_names_are_different_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Object_InvalidType("MessageModel.ShippingType"),
-                Assert.Throws<InvalidOperationException>(
-                    () => Cannot_map_enum_types_if_names_are_different(false)).Message);
+            var exception = Assert.Throws<InvalidOperationException>(
+                () => Cannot_map_enum_types_if_names_are_different(false));
+
+            exception.ValidateMessage("Mapping_Object_InvalidType", "MessageModel.ShippingType");
         }
 
         [Fact]
         public void OSpaceEnumUnderlyingTypeDoesNotMatchCSpaceEnumUnderlyingTypeName_NonPOCO()
         {
-            Assert.Contains(
-                Strings.Mapping_Enum_OCMapping_UnderlyingTypesMismatch(
-                    "Int32", "MessageModel.MessageType", "Int64", "MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () => Cannot_map_enum_types_if_underlying_types_dont_match(false)).Message);
+            var exception = Assert.Throws<MappingException>(
+                () => Cannot_map_enum_types_if_underlying_types_dont_match(false));
+
+            exception.ValidateMessage(
+                "Mapping_Enum_OCMapping_UnderlyingTypesMismatch",
+                false,
+                "Int32",
+                "MessageModel.MessageType",
+                "Int64", 
+                "MessageModel.MessageType");
         }
 
         [Fact]
         public void Cannot_map_OSpace_enum_type_with_fewer_members_than_CSpace_enum_type_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () => Cannot_map_OSpace_enum_type_with_fewer_members_than_CSpace_enum_type(false)).Message);
+            var exception = Assert.Throws<MappingException>(
+                () => Cannot_map_OSpace_enum_type_with_fewer_members_than_CSpace_enum_type(false));
+
+            exception.ValidateMessage(
+                "Mapping_Enum_OCMapping_MemberMismatch",
+                "MessageModel.MessageType",
+                "Ground",
+                2,
+                "MessageModel.MessageType");
         }
 
         [Fact]
         public void OSpaceEnumTypeMemberNameDoesNotMatchCSpaceEnumTypeMemberName_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () =>
-                    Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(false))
-                      .Message);
+            var exception = Assert.Throws<MappingException>(
+                () => Cannot_map_OSpace_enum_type_whose_member_name_does_not_match_CSpace_enum_type_member_name(false));
+
+            exception.ValidateMessage(
+                "Mapping_Enum_OCMapping_MemberMismatch", 
+                "MessageModel.MessageType", 
+                "Ground", 
+                2, 
+                "MessageModel.MessageType");
         }
 
         [Fact]
@@ -418,29 +401,33 @@ namespace System.Data.Entity.MetadataMapping
         [Fact]
         public void Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch("MessageModel.MessageType", "Ground", 2, "MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () =>
-                    Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(false)).Message);
+            var exeception = Assert.Throws<MappingException>(
+                () => Cannot_map_if_OSpace_enum_type_member_value_does_not_match_CSpace_enum_type_member_value(false));
+
+            exeception.ValidateMessage(
+                "Mapping_Enum_OCMapping_MemberMismatch",
+                "MessageModel.MessageType",
+                "Ground",
+                2,
+                "MessageModel.MessageType");
         }
 
         [Fact]
         public void Cannot_map_OSpace_enum_type_to_CSpace_entity_type_with_the_same_name_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_EnumTypeMappingToNonEnumType("Model.MessageType", "Model.MessageType"),
-                Assert.Throws<MappingException>(
-                    () => OSpace_enum_type_and_CSpace_entity_type_have_the_same_name(false)).Message);
+            var exception = Assert.Throws<MappingException>(
+                () => OSpace_enum_type_and_CSpace_entity_type_have_the_same_name(false));
+
+            exception.ValidateMessage("Mapping_EnumTypeMappingToNonEnumType", "Model.MessageType", "Model.MessageType");
         }
 
         [Fact]
         public void Cannot_map_OSpace_entity_type_to_CSpace_enum_type_with_the_same_name_NonPOCO()
         {
-            Assert.Equal(
-                Strings.Mapping_EnumTypeMappingToNonEnumType("Model.MessageType", "Model.MessageType"),
-                Assert.Throws<MappingException>(
-                    () => OSpace_entity_type_and_CSpace_enum_type_have_the_same_name(false)).Message);
+            var exception = Assert.Throws<MappingException>(
+                () => OSpace_entity_type_and_CSpace_enum_type_have_the_same_name(false));
+
+            exception.ValidateMessage("Mapping_EnumTypeMappingToNonEnumType", "Model.MessageType", "Model.MessageType");
         }
 
         // non-POCO specific cases
@@ -455,17 +442,16 @@ namespace System.Data.Entity.MetadataMapping
                 .Single(m => (string)m.Attribute("Name") == "Ground" && (string)m.Parent.Attribute("Name") == "MessageType")
                 .SetAttributeValue("Value", "64");
 
-            var workspace = PrepareModel(oSpaceCsdl, EnumCsdl(), false);
+            //var workspace = PrepareModel(oSpaceCsdl, EnumCsdl(), false);
+            var exception = Assert.Throws<MappingException>(
+                    () => GetMappedType(oSpaceCsdl, EnumCsdl(), "MessageModel.Message", false));
 
-            Assert.Equal(
-                Strings.Mapping_Enum_OCMapping_MemberMismatch(
-                    "MessageModel.MessageType",
-                    "Ground",
-                    "2",
-                    "MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () =>
-                    GetMappedType(oSpaceCsdl, EnumCsdl(), "MessageModel.Message", false)).Message);
+            exception.ValidateMessage(
+                "Mapping_Enum_OCMapping_MemberMismatch",
+                "MessageModel.MessageType",
+                "Ground",
+                "2",
+                "MessageModel.MessageType");
         }
 
         [Fact]
@@ -531,22 +517,20 @@ namespace System.Data.Entity.MetadataMapping
                 .Single(p => (string)p.Attribute("Name") == "MessageType")
                 .SetAttributeValue("{MappingTestExtension}SuppressEdmTypeAttribute", true);
 
-            var exception =
-                Assert.Throws<MetadataException>(() => PrepareModel(oSpaceCsdl, EnumCsdl(), false));
+            var exception = Assert.Throws<MetadataException>(() => PrepareModel(oSpaceCsdl, EnumCsdl(), false));
+            exception.ValidateMessage(
+                "Validator_OSpace_ScalarPropertyNotPrimitive",
+                false,
+                "MessageType",
+                "MessageModel.Message",
+                "MessageModel.MessageType");
 
-            Assert.Contains(
-                Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
-                    "MessageType",
-                    "MessageModel.Message",
-                    "MessageModel.MessageType"),
-                exception.Message);
-
-            Assert.Contains(
-                Strings.Validator_OSpace_ScalarPropertyNotPrimitive(
-                    "TypeOfMessage",
-                    "MessageModel.MessageTypeLookUp",
-                    "MessageModel.MessageType"),
-                exception.Message);
+            exception.ValidateMessage(
+                "Validator_OSpace_ScalarPropertyNotPrimitive",
+                false,
+                "TypeOfMessage",
+                "MessageModel.MessageTypeLookUp",
+                "MessageModel.MessageType");
         }
 
         [Fact]
@@ -571,14 +555,13 @@ namespace System.Data.Entity.MetadataMapping
             enumTypeElement.SetAttributeValue("{MappingTestExtension}OSpaceTypeName", "MessageType");
             enumTypeElement.SetAttributeValue("{MappingTestExtension}OSpaceTypeNamespace", "MessageModel");
 
-            Assert.Equal(
-                Strings.Mapping_CannotMapCLRTypeMultipleTimes("MessageModel.MessageType"),
-                Assert.Throws<MappingException>(
-                    () =>
-                    CreateMetadataWorkspace(
-                        EnumCsdl(),
-                        BuildAssembly(false, EnumCsdl(), additionalMatchingEnumType),
-                        false)).Message);
+            var exception = Assert.Throws<MappingException>(
+                () => CreateMetadataWorkspace(
+                    EnumCsdl(),
+                    BuildAssembly(false, EnumCsdl(), additionalMatchingEnumType),
+                    false));
+
+            exception.ValidateMessage("Mapping_CannotMapCLRTypeMultipleTimes", "MessageModel.MessageType");
         }
 
         #endregion

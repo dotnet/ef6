@@ -6,7 +6,6 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
     using System.Linq;
     using FunctionalTests.Model;
@@ -274,16 +273,6 @@ namespace FunctionalTests
                 HasRequired(s => s.ProductCategory)
                     .WithMany(p => p.ProductSubcategories)
                     .HasForeignKey(s => s.ProductCategoryID);
-            }
-        }
-
-        [Fact]
-        public void Can_call_Entity_after_adding_custom_configuration_class_during_OnModelCreating()
-        {
-            Database.SetInitializer<BasicTypeContext>(null);
-            using (var ctx = new BasicTypeContext())
-            {
-                Assert.NotNull(((IObjectContextAdapter)ctx).ObjectContext);
             }
         }
 

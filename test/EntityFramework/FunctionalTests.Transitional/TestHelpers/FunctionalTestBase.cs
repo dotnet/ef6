@@ -5,11 +5,7 @@ namespace System.Data.Entity
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Globalization;
-    using System.IO;
     using System.Text.RegularExpressions;
-    using FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns;
-    using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
-    using ProductivityApiTests;
     using SimpleModel;
     using Xunit;
 
@@ -71,39 +67,6 @@ namespace System.Data.Entity
         {
             DropDatabase(createContext);
             EnsureDatabaseInitialized(createContext);
-        }
-
-        /// <summary>
-        /// Initializes the metadata files and creates databases for existing CSDL/EDMX files.
-        /// </summary>
-        protected static void InitializeModelFirstDatabases(bool runInitializers = true)
-        {
-            const string prefix = "FunctionalTests.ProductivityApi.TemplateModels.Schemas.";
-            ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(
-                typeof(TemplateTests).Assembly,
-                prefix,
-                /*overwrite*/ true,
-                "AdvancedPatterns.edmx",
-                "MonsterModel.csdl",
-                "MonsterModel.msl",
-                "MonsterModel.ssdl");
-
-            // Extract the csdl, msl, and ssdl from the edmx so that they can be referenced in the connection string.
-            ModelHelpers.WriteMetadataFiles(File.ReadAllText(@".\AdvancedPatterns.edmx"), @".\AdvancedPatterns");
-
-            if (runInitializers)
-            {
-                using (var context = new AdvancedPatternsModelFirstContext())
-                {
-                    context.Database.Initialize(force: false);
-                }
-
-                using (var context = new MonsterModel())
-                {
-                    Database.SetInitializer(new DropCreateDatabaseAlways<MonsterModel>());
-                    context.Database.Initialize(force: false);
-                }
-            }
         }
 
         private static bool _metadataForSimpleModelCreated;

@@ -1,5 +1,6 @@
 ﻿namespace ProductivityApiTests
 {
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Pluralization;
     using SimpleModel;
     using System;
@@ -38,7 +39,7 @@
 
         private string GetEntitySetTableName(DbContext dbContext, Type clrType)
         {
-            var objectContext = dbContext.InternalContext.ObjectContext;
+            var objectContext = ((IObjectContextAdapter)dbContext).ObjectContext;
 
             var container = objectContext.MetadataWorkspace
                 .GetItems<EntityContainer>(DataSpace.SSpace)

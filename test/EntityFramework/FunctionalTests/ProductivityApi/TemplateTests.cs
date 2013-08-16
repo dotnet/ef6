@@ -39,7 +39,7 @@ namespace ProductivityApiTests
 
         static TemplateTests()
         {
-            InitializeModelFirstDatabases();
+            TemplateTestsDatabaseInitializer.InitializeModelFirstDatabases();
         }
 
         #endregion
@@ -363,7 +363,7 @@ namespace ProductivityApiTests
                 context.Entry(office).Property("Description").CurrentValue = "Test";
 
                 // Act
-                var offices = context.AllOfficesStoredProc(MergeOption.AppendOnly).ToList();
+                context.AllOfficesStoredProc(MergeOption.AppendOnly).ToList();
 
                 // Verify
                 Assert.True(context.Entry(office).State == EntityState.Modified);
@@ -377,7 +377,7 @@ namespace ProductivityApiTests
             using (var context = new AdvancedPatternsModelFirstContext())
             {
                 // Act
-                var offices = context.AllOfficesStoredProc(MergeOption.NoTracking).ToList();
+                context.AllOfficesStoredProc(MergeOption.NoTracking).ToList();
 
                 // Verify
                 Assert.True(context.ChangeTracker.Entries<OfficeMf>().Count() == 0);
@@ -394,7 +394,7 @@ namespace ProductivityApiTests
                 context.Entry(office).Property("Description").CurrentValue = "Test";
 
                 // Act
-                var offices = context.AllOfficesStoredProc(MergeOption.OverwriteChanges).ToList();
+                context.AllOfficesStoredProc(MergeOption.OverwriteChanges).ToList();
 
                 // Verify
                 Assert.True(context.Entry(office).State == EntityState.Unchanged);
@@ -413,7 +413,7 @@ namespace ProductivityApiTests
                 context.Entry(office2).Property("Description").CurrentValue = "Test";
 
                 // Act
-                var offices = context.AllOfficesStoredProc(MergeOption.PreserveChanges).ToList();
+                context.AllOfficesStoredProc(MergeOption.PreserveChanges).ToList();
 
                 // Verify
                 Assert.True(context.Entry(office1).State == EntityState.Unchanged);
