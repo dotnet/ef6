@@ -324,7 +324,10 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
 
-            Assert.True(CreateContext<ShopContext_v1>().Database.CompatibleWithModel(true));
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                Assert.True(context.Database.CompatibleWithModel(true));
+            }
         }
 
         [MigrationsTheory]

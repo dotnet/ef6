@@ -283,7 +283,6 @@
     <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheFactory.cs" />
     <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheTypeAttribute.cs" />
     <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactory.cs" />
-    <Compile Include="Internal\DatabaseInitializerSuppressor.cs" />
     <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />

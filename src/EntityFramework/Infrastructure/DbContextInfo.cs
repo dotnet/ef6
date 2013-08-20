@@ -2,20 +2,29 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Collections.Concurrent;
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection;
+#if !NET40
+    using System.Runtime.ExceptionServices;
+#endif
 
     /// <summary>
     /// Provides runtime information about a given <see cref="DbContext" /> type.
     /// </summary>
     public class DbContextInfo
     {
+        private static readonly ConcurrentDictionary<Type, DbContextInfo> _infoMapping
+            = new ConcurrentDictionary<Type, DbContextInfo>();
+
         private readonly Type _contextType;
         private readonly DbProviderInfo _modelProviderInfo;
         private readonly DbConnectionInfo _connectionInfo;
@@ -169,6 +178,7 @@ namespace System.Data.Entity.Infrastructure
             _connectionStringOrigin = internalContext.ConnectionStringOrigin;
         }
 
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         private DbContextInfo(
             Type contextType,
             DbProviderInfo modelProviderInfo,
@@ -189,37 +199,20 @@ namespace System.Data.Entity.Infrastructure
 
             if (_activator != null)
             {
-                DatabaseInitializerSuppressor.Instance.Suppress(_contextType);
-
-                var context = _activator();
+                var context = CreateInstance();
 
                 if (context != null)
                 {
-                    context.InternalContext.OnDisposing += (_, __) => DatabaseInitializerSuppressor.Instance.Unsuppress(_contextType);
-
                     _isConstructible = true;
-
-                    PushConfiguration(context);
 
                     using (context)
                     {
-                        ConfigureContext(context);
-
                         _connectionString = context.InternalContext.Connection.ConnectionString;
                         _connectionStringName = context.InternalContext.ConnectionStringName;
                         _connectionProviderName = context.InternalContext.ProviderName;
                         _connectionStringOrigin = context.InternalContext.ConnectionStringOrigin;
                     }
                 }
-            }
-        }
-
-        private void PushConfiguration(DbContext context)
-        {
-            if (DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType))
-            {
-                context.InternalContext.OnDisposing +=
-                    (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
             }
         }
 
@@ -289,25 +282,67 @@ namespace System.Data.Entity.Infrastructure
         /// </returns>
         public virtual DbContext CreateInstance()
         {
-            if (!IsConstructible)
+            var configPushed = DbConfigurationManager.Instance.PushConfiguration(_appConfig, _contextType);
+            MapContextToInfo(_contextType, this);
+
+            DbContext context = null;
+            try
             {
-                return null;
+                try
+                {
+                    context = _activator == null ? null : _activator();
+                }
+                catch (TargetInvocationException ex)
+                {
+                    Debug.Assert(ex.InnerException != null);
+#if !NET40
+                    ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+#endif
+                    throw ex.InnerException;
+                }
+
+                if (context == null)
+                {
+                    return null;
+                }
+
+                context.InternalContext.OnDisposing += (_, __) => ClearInfoForContext(_contextType);
+
+                if (configPushed)
+                {
+                    context.InternalContext.OnDisposing +=
+                        (_, __) => DbConfigurationManager.Instance.PopConfiguration(_appConfig);
+                }
+
+                context.InternalContext.ApplyContextInfo(this);
+
+                return context;
             }
+            catch (Exception)
+            {
+                if (context != null)
+                {
+                    context.Dispose();
+                }
 
-            DatabaseInitializerSuppressor.Instance.Suppress(_contextType);
+                throw;
+            }
+            finally
+            {
+                if (context == null)
+                {
+                    ClearInfoForContext(_contextType);
 
-            var context = _activator();
-
-            context.InternalContext.OnDisposing += (_, __) => DatabaseInitializerSuppressor.Instance.Unsuppress(_contextType);
-
-            PushConfiguration(context);
-            ConfigureContext(context);
-
-            return context;
+                    if (configPushed)
+                    {
+                        DbConfigurationManager.Instance.PopConfiguration(_appConfig);
+                    }
+                }
+            }
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
-        private void ConfigureContext(DbContext context)
+        internal void ConfigureContext(DbContext context)
         {
             DebugCheck.NotNull(context);
 
@@ -364,6 +399,30 @@ namespace System.Data.Entity.Infrastructure
             var factory = (IDbContextFactory<DbContext>)Activator.CreateInstance(factoryType);
 
             return factory.Create;
+        }
+
+        internal static void MapContextToInfo(Type contextType, DbContextInfo info)
+        {
+            DebugCheck.NotNull(contextType);
+            DebugCheck.NotNull(info);
+
+            _infoMapping.AddOrUpdate(contextType, info, (t, i) => info);
+        }
+
+        internal static void ClearInfoForContext(Type contextType)
+        {
+            DebugCheck.NotNull(contextType);
+
+            DbContextInfo _;
+            _infoMapping.TryRemove(contextType, out _);
+        }
+
+        internal static DbContextInfo TryGetInfoForContext(Type contextType)
+        {
+            DebugCheck.NotNull(contextType);
+
+            DbContextInfo info;
+            return _infoMapping.TryGetValue(contextType, out info) ? info : null;
         }
     }
 }

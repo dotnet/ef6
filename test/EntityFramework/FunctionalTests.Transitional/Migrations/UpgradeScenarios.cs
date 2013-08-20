@@ -84,15 +84,18 @@ namespace System.Data.Entity.Migrations
                         GetCreateHistoryTableOperation()
                     });
 
-            var model = CreateContext<Ef5MigrationsContext>().GetModel();
+            using (var context = CreateContext<Ef5MigrationsContext>())
+            {
+                var model = context.GetModel();
 
-            // create v5 history rows
-            ExecuteOperations(
-                new[]
-                    {
-                        historyRepository.CreateInsertOperation("201112202056275_InitialCreate", model),
-                        historyRepository.CreateInsertOperation("201112202056573_AddUrlToBlog", model)
-                    });
+                // create v5 history rows
+                ExecuteOperations(
+                    new[]
+                        {
+                            historyRepository.CreateInsertOperation("201112202056275_InitialCreate", model),
+                            historyRepository.CreateInsertOperation("201112202056573_AddUrlToBlog", model)
+                        });
+            }
 
             migrator.Update("0");
 
@@ -113,16 +116,19 @@ namespace System.Data.Entity.Migrations
                 = new HistoryRepository(ConnectionString, ProviderFactory, "MyKey", null, HistoryContext.DefaultFactory);
 
             // create v5 history rows
-            ExecuteOperations(
-                new[]
-                    {
-                        GetDropHistoryTableOperation(),
-                        GetCreateHistoryTableOperation(),
-                        historyRepository
-                            .CreateInsertOperation(
-                                "201112202056275_NoHistoryModelAutomaticMigration",
-                                CreateContext<ShopContext_v1>().GetModel())
-                    });
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                ExecuteOperations(
+                    new[]
+                        {
+                            GetDropHistoryTableOperation(),
+                            GetCreateHistoryTableOperation(),
+                            historyRepository
+                                .CreateInsertOperation(
+                                    "201112202056275_NoHistoryModelAutomaticMigration",
+                                    context.GetModel())
+                        });
+            }
 
             migrator = CreateMigrator<ShopContext_v2>();
 

@@ -126,6 +126,8 @@ namespace System.Data.Entity.Internal
         private DbMigrationsConfiguration _migrationsConfiguration;
         private bool? _migrationsConfigurationDiscovered;
 
+        private DbContextInfo _contextInfo;
+
         protected InternalContext(DbContext owner, Lazy<DbDispatchers> dispatchers = null)
         {
             DebugCheck.NotNull(owner);
@@ -518,11 +520,6 @@ namespace System.Data.Entity.Internal
         /// </summary>
         public void PerformDatabaseInitialization()
         {
-            if (InitializerDisabled)
-            {
-                return;
-            }
-
             var initializer = DbConfiguration.DependencyResolver
                                              .GetService(typeof(IDatabaseInitializer<>).MakeGenericType(Owner.GetType()))
                               ?? DefaultInitializer
@@ -1419,6 +1416,22 @@ namespace System.Data.Entity.Internal
                     _entitySetMappings[clrType] = new EntitySetTypePair(entitySet, clrBaseType);
                 }
             }
+        }
+
+        public void ApplyContextInfo(DbContextInfo info)
+        {
+            DebugCheck.NotNull(info);
+
+            Debug.Assert(_contextInfo == null || ReferenceEquals(_contextInfo, info));
+
+            if (_contextInfo != null)
+            {
+                return;
+            }
+
+            InitializerDisabled = true;
+            _contextInfo = info;
+            _contextInfo.ConfigureContext(Owner);
         }
 
         #endregion
