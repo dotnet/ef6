@@ -328,6 +328,17 @@
     <Compile Include="TestModels\FantasyModel\FantasyStoredProceduresInitializer.cs" />
     <Compile Include="TestModels\FantasyModel\Spell.cs" />
     <Compile Include="TestModels\FantasyModel\Tower.cs" />
+    <Compile Include="TestModels\SimpleMigrationsModel\201112202056275_InitialCreate.cs" />
+    <Compile Include="TestModels\SimpleMigrationsModel\201112202056275_InitialCreate.designer.cs">
+      <DependentUpon>201112202056275_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestModels\SimpleMigrationsModel\201112202056573_AddUrlToBlog.cs" />
+    <Compile Include="TestModels\SimpleMigrationsModel\201112202056573_AddUrlToBlog.designer.cs">
+      <DependentUpon>201112202056573_AddUrlToBlog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestModels\SimpleMigrationsModel\Blog.cs" />
+    <Compile Include="TestModels\SimpleMigrationsModel\MigrateInitializerConfiguration.cs" />
+    <Compile Include="TestModels\SimpleMigrationsModel\MigrateInitializerContext.cs" />
     <Compile Include="TestModels\TemplateModels\CsAdvancedPatterns\AddressMf.cs">
       <DependentUpon>CsAdvancedPatterns.tt</DependentUpon>
     </Compile>

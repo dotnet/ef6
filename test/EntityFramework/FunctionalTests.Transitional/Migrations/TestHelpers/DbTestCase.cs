@@ -2,8 +2,12 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.History;
@@ -11,8 +15,11 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
-    using System.Data.Entity.Utilities;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
+    using System.Xml;
+    using System.Xml.Linq;
     using Xunit;
 
     public enum DatabaseProvider
@@ -108,7 +115,7 @@ namespace System.Data.Entity.Migrations
 
             migrationsConfiguration.MigrationsAssembly = typeof(TMigration).Assembly;
 
-            return new DbMigrator(migrationsConfiguration, null);
+            return new DbMigrator(migrationsConfiguration);
         }
 
         public DbMigrator CreateMigrator<TContext>(DbMigration migration)
@@ -123,8 +130,8 @@ namespace System.Data.Entity.Migrations
                         .Generate(
                             UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migration.GetType().Name,
                             migration.GetOperations(),
-                            Convert.ToBase64String(modelCompressor.Compress(context.GetModel())),
-                            Convert.ToBase64String(modelCompressor.Compress(context.GetModel())),
+                            Convert.ToBase64String(modelCompressor.Compress(GetModel(context))),
+                            Convert.ToBase64String(modelCompressor.Compress(GetModel(context))),
                             "System.Data.Entity.Migrations",
                             migration.GetType().Name);
 
@@ -323,8 +330,8 @@ namespace System.Data.Entity.Migrations
 
                 return (CreateTableOperation)
                        new EdmModelDiffer().Diff(
-                           new DbModelBuilder().Build(ProviderInfo).GetModel(),
-                           new HistoryContext(connection, defaultSchema).GetModel())
+                           GetModel(new DbModelBuilder().Build(ProviderInfo)),
+                           GetModel(new HistoryContext(connection, defaultSchema)))
                            .Single();
             }
         }
@@ -337,9 +344,120 @@ namespace System.Data.Entity.Migrations
 
                 return (DropTableOperation)
                        new EdmModelDiffer().Diff(
-                           new HistoryContext(connection, defaultSchema: null).GetModel(),
-                           new DbModelBuilder().Build(ProviderInfo).GetModel())
+                           GetModel(new HistoryContext(connection, defaultSchema: null)),
+                           GetModel(new DbModelBuilder().Build(ProviderInfo)))
                            .Single();
+            }
+        }
+
+        protected void AssertHistoryContextEntryExists(string contextKey)
+        {
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+                using (var historyContext = new HistoryContext(connection, "dbo"))
+                {
+                    Assert.True(historyContext.History.Any(h => h.ContextKey == contextKey));
+                }
+            }
+        }
+
+        protected void AssertHistoryContextDoesNotExist()
+        {
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+                using (var historyContext = new HistoryContext(connection, "dbo"))
+                {
+                    Assert.Throws<EntityCommandExecutionException>(() => historyContext.History.Count());
+                }
+            }
+        }
+
+        protected HistoryOperation CreateInsertOperation(string contextKey, string migrationId, XDocument model)
+        {
+            var productVersion = typeof(DbContext).Assembly
+                .GetCustomAttributes(false)
+                .OfType<AssemblyInformationalVersionAttribute>()
+                .Single()
+                .InformationalVersion;
+
+            using (var connection = ProviderFactory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+                using (var historyContext = new HistoryContext(connection, "dbo"))
+                {
+                    historyContext.History.Add(
+                        new HistoryRow
+                        {
+                            MigrationId = migrationId,
+                            ContextKey = contextKey,
+                            Model = new ModelCompressor().Compress(model),
+                            ProductVersion = productVersion,
+                        });
+
+                    var cancellingLogger = new CommandTreeCancellingLogger(historyContext);
+                    DbInterception.Add(cancellingLogger);
+
+                    historyContext.SaveChanges();
+
+                    return new HistoryOperation(
+                        cancellingLogger.Log.OfType<DbModificationCommandTree>().ToList());
+                }
+            }
+        }
+
+        protected XDocument GetModel(DbModel model)
+        {
+            return GetModel(w => EdmxWriter.WriteEdmx(model, w));
+        }
+
+        protected XDocument GetModel(DbContext context)
+        {
+            return GetModel(w => EdmxWriter.WriteEdmx(context, w));
+        }
+
+        private XDocument GetModel(Action<XmlWriter> writeXml)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var xmlWriter = XmlWriter.Create(memoryStream))
+                {
+                    writeXml(xmlWriter);
+                }
+
+                memoryStream.Position = 0;
+
+                return XDocument.Load(memoryStream);
+            }
+        }
+
+        private class CommandTreeCancellingLogger : DbCommandInterceptor, IDbCommandTreeInterceptor
+        {
+            private readonly DbContext _context;
+
+            public CommandTreeCancellingLogger(DbContext context)
+            {
+                _context = context;
+                Log = new List<DbCommandTree>();
+            }
+
+            public IList<DbCommandTree> Log { get; private set; }
+
+            public override void NonQueryExecuting(DbCommand command, DbCommandInterceptionContext<int> interceptionContext)
+            {
+                if (interceptionContext.DbContexts.Contains(_context))
+                {
+                    interceptionContext.Result = 1;
+                }
+            }
+
+            public void TreeCreated(DbCommandTreeInterceptionContext interceptionContext)
+            {
+                if (interceptionContext.DbContexts.Contains(_context))
+                {
+                    Log.Add(interceptionContext.Result);
+                }
             }
         }
     }

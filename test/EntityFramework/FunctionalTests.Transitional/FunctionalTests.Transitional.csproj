@@ -145,9 +145,6 @@
     <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="Design\BasicDesignTimeScenarios.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
-    <Compile Include="Migrations\BasicMigrationScenarios.cs" />
-    <Compile Include="Migrations\CustomHistoryScenarios.cs" />
-    <Compile Include="Migrations\UpgradeScenarios.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />
@@ -276,17 +273,6 @@
     <Compile Include="TestModels\SimpleModel\SimpleModelContextWithNoData.cs" />
     <Compile Include="TestModels\SimpleModel\SimpleModelInitializer.cs" />
     <Compile Include="CodeFirst\PropertyConfigurationScenarioTests.cs" />
-    <Compile Include="TestModels\SimpleMigrationsModel\201112202056275_InitialCreate.cs" />
-    <Compile Include="TestModels\SimpleMigrationsModel\201112202056275_InitialCreate.designer.cs">
-      <DependentUpon>201112202056275_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TestModels\SimpleMigrationsModel\201112202056573_AddUrlToBlog.cs" />
-    <Compile Include="TestModels\SimpleMigrationsModel\201112202056573_AddUrlToBlog.designer.cs">
-      <DependentUpon>201112202056573_AddUrlToBlog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="TestModels\SimpleMigrationsModel\Blog.cs" />
-    <Compile Include="TestModels\SimpleMigrationsModel\MigrateInitializerConfiguration.cs" />
-    <Compile Include="TestModels\SimpleMigrationsModel\MigrateInitializerContext.cs" />
     <Compile Include="CodeFirst\SpatialScenarioTests.cs" />
     <Compile Include="TestHelpers\AssemblyResourceLookup.cs" />
     <Compile Include="TestHelpers\ConnectionEventsTracker.cs" />

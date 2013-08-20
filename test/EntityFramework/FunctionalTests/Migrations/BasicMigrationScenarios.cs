@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Infrastructure;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -454,6 +455,214 @@ namespace System.Data.Entity.Migrations
                     scaffoldedMigrations: new[] { m1, m2 },
                     automaticMigrationsEnabled: false)
                           .Update());
+        }
+
+        [MigrationsTheory]
+        public void ScaffoldInitialCreate_should_return_null_when_db_not_initialized()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            var migrationsScaffolder = new MigrationScaffolder(migrator.Configuration);
+            migrationsScaffolder.Namespace = "Foo";
+            var scaffoldedMigration = migrationsScaffolder.ScaffoldInitialCreate();
+
+            Assert.Null(scaffoldedMigration);
+        }
+
+        [MigrationsTheory]
+        public void ScaffoldInitialCreate_should_return_scaffolded_migration_when_db_initialized()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1b>();
+
+            var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
+
+            migrator = CreateMigrator<ShopContext_v1b>(scaffoldedMigrations: initialCreate, contextKey: typeof(ShopContext_v1b).FullName);
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1b>(contextKey: "NewOne");
+
+            var migrationsScaffolder = new MigrationScaffolder(migrator.Configuration);
+            migrationsScaffolder.Namespace = "Foo";
+            var scaffoldedMigration = migrationsScaffolder.ScaffoldInitialCreate();
+
+            Assert.NotNull(scaffoldedMigration);
+            Assert.NotSame(initialCreate, scaffoldedMigration);
+            Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
+
+            WhenNotSqlCe(
+                () => Assert.Contains("INSERT [dbo].[MigrationsCustomers]([CustomerNumber],", initialCreate.UserCode));
+        }
+
+        [MigrationsTheory]
+        public void ScaffoldInitialCreate_should_return_scaffolded_migration_when_db_initialized_and_schema_specified()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v5>();
+
+            var initialCreate = new MigrationScaffolder(migrator.Configuration).Scaffold("InitialCreate");
+
+            migrator = CreateMigrator<ShopContext_v5>(scaffoldedMigrations: initialCreate, contextKey: typeof(ShopContext_v5).FullName);
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v5>(contextKey: "NewOne");
+
+            var migrationsScaffolder = new MigrationScaffolder(migrator.Configuration);
+            migrationsScaffolder.Namespace = "Foo";
+            var scaffoldedMigration = migrationsScaffolder.ScaffoldInitialCreate();
+
+            Assert.NotNull(scaffoldedMigration);
+            Assert.NotSame(initialCreate, scaffoldedMigration);
+            Assert.Equal(initialCreate.MigrationId, scaffoldedMigration.MigrationId);
+        }
+
+        [MigrationsTheory]
+        public void Update_blocks_automatic_migration_when_explicit_source_model()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            string migrationName = "Migration1";
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold(migrationName);
+
+            ResetDatabase();
+
+            migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            // Fix-up migrationId to come after previous automatic migration
+            var oldMigrationId = generatedMigration.MigrationId;
+            var newMigrationId = DateTime.UtcNow.ToString("yyyyMMddHHmmssf", CultureInfo.InvariantCulture) + "_" + migrationName;
+
+            generatedMigration.MigrationId = newMigrationId;
+            generatedMigration.DesignerCode = generatedMigration.DesignerCode.Replace(oldMigrationId, newMigrationId);
+
+            migrator
+                = CreateMigrator<ShopContext_v2>(
+                    automaticMigrationsEnabled: false,
+                    automaticDataLossEnabled: false,
+                    scaffoldedMigrations: generatedMigration);
+
+            Assert.Throws<AutomaticDataLossException>(() => migrator.Update())
+                  .ValidateMessage("AutomaticDataLoss");
+        }
+
+        [MigrationsTheory]
+        public void Update_down_when_automatic_should_migrate_to_target_version()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>(automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsCustomers"));
+
+            migrator.Update(DbMigrator.InitialDatabase);
+
+            Assert.False(TableExists("MigrationsCustomers"));
+
+            AssertHistoryContextDoesNotExist();
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsCustomers"));
+            AssertHistoryContextEntryExists("System.Data.Entity.Migrations.DbMigrationsConfiguration");
+        }
+
+        [MigrationsTheory]
+        public void Update_down_when_automatic_and_multiple_steps_should_migrate_to_target_version()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v2>(automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            Assert.True(TableExists("crm.tbl_customers"));
+
+            migrator = CreateMigrator<ShopContext_v3>(automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsStores"));
+
+            migrator.Update(DbMigrator.InitialDatabase);
+
+            Assert.False(TableExists("crm.tbl_customers"));
+            Assert.False(TableExists("MigrationsStores"));
+
+            AssertHistoryContextDoesNotExist();
+        }
+
+        [MigrationsTheory]
+        public void Update_down_when_explicit_should_migrate_to_target_version()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration1");
+
+            migrator = CreateMigrator<ShopContext_v1>(
+                automaticMigrationsEnabled: false,
+                scaffoldedMigrations: generatedMigration);
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsCustomers"));
+
+            migrator.Update(DbMigrator.InitialDatabase);
+
+            Assert.False(TableExists("MigrationsCustomers"));
+
+            AssertHistoryContextDoesNotExist();
+        }
+
+        [MigrationsTheory]
+        public void Update_down_when_explicit_and_automatic_should_migrate_to_target_version()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v2>();
+
+            migrator.Update();
+
+            Assert.True(TableExists("crm.tbl_customers"));
+
+            migrator = CreateMigrator<ShopContext_v3>(automaticDataLossEnabled: true);
+
+            var generatedMigration = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
+
+            migrator = CreateMigrator<ShopContext_v3>(
+                automaticDataLossEnabled: true,
+                scaffoldedMigrations: generatedMigration);
+
+            migrator.Update();
+
+            Assert.True(TableExists("crm.tbl_customers"));
+
+            migrator.Update(DbMigrator.InitialDatabase);
+
+            Assert.False(TableExists("MigrationsStores"));
+            Assert.False(TableExists("tbl_customers"));
+            AssertHistoryContextDoesNotExist();
         }
 
         public class MultiUserContextA : DbContext

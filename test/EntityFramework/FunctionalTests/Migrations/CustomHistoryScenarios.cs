@@ -352,5 +352,72 @@ namespace System.Data.Entity.Migrations
 
             Assert.Empty(migrator.GetPendingMigrations());
         }
+
+        [MigrationsTheory]
+        public void Can_use_per_provider_factory()
+        {
+            ResetDatabase();
+
+            try
+            {
+                MutableResolver.AddResolver<Func<DbConnection, string, HistoryContext>>(_ => _testHistoryContextFactoryA);
+
+                var migrator = CreateMigrator<ShopContext_v1>();
+
+                var generatedMigration
+                    = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
+
+                migrator
+                    = CreateMigrator<ShopContext_v1>(
+                        automaticMigrationsEnabled: false,
+                        scaffoldedMigrations: generatedMigration);
+
+                migrator.Update();
+
+                Assert.True(TableExists("MigrationsCustomers"));
+                Assert.True(TableExists("__Migrations"));
+
+                migrator.Update("0");
+
+                Assert.False(TableExists("MigrationsCustomers"));
+                Assert.False(TableExists("__Migrations"));
+
+                AssertHistoryContextDoesNotExist();
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_explicit_update_when_custom_history_factory()
+        {
+            ResetDatabase();
+
+            var migrator
+                = CreateMigrator<ShopContext_v1>(historyContextFactory: _testHistoryContextFactoryA);
+
+            var generatedMigration
+                = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration");
+
+            migrator
+                = CreateMigrator<ShopContext_v1>(
+                    automaticMigrationsEnabled: false,
+                    scaffoldedMigrations: generatedMigration,
+                    historyContextFactory: _testHistoryContextFactoryA);
+
+            migrator.Update();
+
+            Assert.True(TableExists("MigrationsCustomers"));
+            Assert.True(TableExists("__Migrations"));
+
+            migrator.Update("0");
+
+            Assert.False(TableExists("MigrationsCustomers"));
+            Assert.False(TableExists("__Migrations"));
+
+            AssertHistoryContextDoesNotExist();
+        }
     }
 }

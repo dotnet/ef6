@@ -9,8 +9,11 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
+    using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Xml;
+    using System.Xml.Linq;
     using FunctionalTests.SimpleMigrationsModel;
     using Xunit;
 
@@ -146,6 +149,119 @@ namespace System.Data.Entity.Migrations
                 Assert.Equal(2, GetColumnIndex(HistoryContext.DefaultTableName, "Model"));
                 Assert.Equal(3, GetColumnIndex(HistoryContext.DefaultTableName, "ProductVersion"));
             }
+        }
+
+        [MigrationsTheory]
+        public void Can_upgrade_from_5_and_existing_code_migrations_still_work()
+        {
+            ResetDatabase();
+
+            var migrationsConfiguration
+                = new Ef5MigrationsConfiguration
+                      {
+                          TargetDatabase
+                              = new DbConnectionInfo(ConnectionString, TestDatabase.ProviderName)
+                      };
+
+            var migrator = new DbMigrator(migrationsConfiguration);
+
+            migrator.Update();
+
+            Assert.True(TableExists("dbo.Blogs"));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
+
+            migrator.Update("0");
+
+            Assert.False(TableExists("dbo.Blogs"));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
+        }
+
+        [MigrationsTheory]
+        public void Can_upgrade_from_5_and_existing_database_migrations_still_work()
+        {
+            ResetDatabase();
+
+            var migrationsConfiguration
+                = new Ef5MigrationsConfiguration
+                {
+                    TargetDatabase
+                        = new DbConnectionInfo(ConnectionString, TestDatabase.ProviderName)
+                };
+
+            var migrator = new DbMigrator(migrationsConfiguration);
+
+            migrator.Update();
+
+            ExecuteOperations(
+                new MigrationOperation[]
+                    {
+                        GetDropHistoryTableOperation(),
+                        GetCreateHistoryTableOperation()
+                    });
+
+
+            using (var context = CreateContext<Ef5MigrationsContext>())
+            {
+                var model = GetModel(context);
+
+                // create v5 history rows
+                ExecuteOperations(
+                    new[]
+                        {
+                            CreateInsertOperation(migrationsConfiguration.ContextKey, "201112202056275_InitialCreate", model),
+                            CreateInsertOperation(migrationsConfiguration.ContextKey, "201112202056573_AddUrlToBlog", model),
+                        });
+            }
+
+            migrator.Update("0");
+
+            Assert.False(TableExists("dbo.Blogs"));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
+        }
+
+
+        [MigrationsTheory]
+        public void Can_upgrade_from_5_and_existing_code_auto_migrations_still_work()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+            migrator.Update();
+
+            // create v5 history rows
+
+            using (var context = CreateContext<ShopContext_v1>())
+            {
+                ExecuteOperations(
+                    new MigrationOperation[]
+                        {
+                            GetDropHistoryTableOperation(),
+                            GetCreateHistoryTableOperation(),
+                            CreateInsertOperation("MyKey", "201112202056275_NoHistoryModelAutomaticMigration", GetModel(context)),
+                        });
+            }
+
+            migrator = CreateMigrator<ShopContext_v2>();
+
+            var scaffoldedMigration
+                = new MigrationScaffolder(migrator.Configuration).Scaffold("Migration_v2");
+
+            ResetDatabase();
+
+            migrator
+                = CreateMigrator<ShopContext_v2>(
+                    scaffoldedMigrations: scaffoldedMigration,
+                    automaticDataLossEnabled: true);
+
+            migrator.Update();
+
+            Assert.True(TableExists("crm.tbl_customers"));
+            Assert.True(TableExists("dbo." + HistoryContext.DefaultTableName));
+
+            migrator.Update("0");
+
+            Assert.False(TableExists("crm.tbl_customers"));
+            Assert.False(TableExists("dbo." + HistoryContext.DefaultTableName));
         }
 
         private static IEnumerable<MigrationOperation> GetLegacyHistoryCreateTableOperations()

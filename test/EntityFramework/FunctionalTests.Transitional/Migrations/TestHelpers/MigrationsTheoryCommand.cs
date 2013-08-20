@@ -10,7 +10,7 @@ namespace System.Data.Entity.Migrations
         private readonly ProgrammingLanguage _language;
 
         public MigrationsTheoryCommand(IMethodInfo method, DatabaseProvider provider, ProgrammingLanguage language)
-            :base(method)
+            : base(method)
         {
             _provider = provider;
             _language = language;
