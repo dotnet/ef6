@@ -12,11 +12,12 @@ namespace System.Data.Entity.TestHelpers
 
         public string ResolveManifestToken(DbConnection connection)
         {
-            return (!string.IsNullOrWhiteSpace(connection.Database) // Some negative cases require the provider to fail
-                   && connection is SqlConnection)
-                   || connection.GetType().FullName.StartsWith("Castle.Proxies.")
-                       ? "2008"
-                       : _defaultManifestTokenResolver.ResolveManifestToken(connection);
+            if( !string.IsNullOrWhiteSpace(connection.Database) // Some negative cases require the provider to fail
+                   && connection is SqlConnection || connection.GetType().FullName.StartsWith("Castle.Proxies."))
+            {
+                return (AzureTestHelpers.IsSqlAzure(connection.ConnectionString)) ? "2012.Azure" : "2008";
+            }
+            return _defaultManifestTokenResolver.ResolveManifestToken(connection);
         }
     }
 }

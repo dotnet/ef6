@@ -151,6 +151,7 @@
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />
+    <Compile Include="TestHelpers\AzureTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />

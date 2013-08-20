@@ -17,6 +17,16 @@ namespace System.Data.Entity
         {
             get { return DbProviderServices.GetProviderServices(new SqlConnection()).GetProviderManifest("2008"); }
         }
+        
+        public static DbProviderInfo SqlAzure2012_ProviderInfo
+        {
+            get { return new DbProviderInfo("System.Data.SqlClient", "2012.Azure"); }
+        }
+
+        public static DbProviderManifest SqlAzure2012_ProviderManifest
+        {
+            get { return DbProviderServices.GetProviderServices(new SqlConnection()).GetProviderManifest("2012.Azure"); }
+        }      
 
         public static DbProviderInfo SqlCe4_ProviderInfo
         {
