@@ -1074,12 +1074,11 @@ namespace System.Data.Entity.Internal
         /// </summary>
         /// <param name="updateException"> The update exception. </param>
         /// <returns> A new exception wrapping the given exception. </returns>
-        public virtual Exception WrapUpdateException(UpdateException updateException)
+        public virtual DbUpdateException WrapUpdateException(UpdateException updateException)
         {
             DebugCheck.NotNull(updateException);
-            Debug.Assert(updateException.StateEntries != null);
 
-            if (updateException.StateEntries.Any(e => e.Entity == null))
+            if (updateException.StateEntries != null && updateException.StateEntries.Any(e => e.Entity == null))
             {
                 // Exception involves a stub or relationship entry => entry involves an independent association.
                 return new DbUpdateException(this, updateException, involvesIndependentAssociations: true);
