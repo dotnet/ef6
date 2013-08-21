@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -26,7 +27,7 @@ namespace ProductivityApiTests
 
             using (var context = new HaveToDoContext())
             {
-                _isSqlAzure = IsSqlAzure(context.Database.Connection.ConnectionString);
+                _isSqlAzure = AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString);
                 if (!_isSqlAzure)
                 {
                     context.Database.Initialize(force: false);

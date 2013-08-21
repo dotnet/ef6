@@ -18,7 +18,7 @@ namespace System.Data.Entity.Update
         {
             using (var context = new GuidIdentityColumnContext())
             {
-                _isSqlAzure = IsSqlAzure(context.Database.Connection.ConnectionString);
+                _isSqlAzure = AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString);
                 if (!_isSqlAzure)
                 {
                     context.Customers.ToList();

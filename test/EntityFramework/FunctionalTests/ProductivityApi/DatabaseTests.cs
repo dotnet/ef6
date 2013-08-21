@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.IO;
     using SimpleModel;
@@ -36,7 +37,7 @@ namespace ProductivityApiTests
             {
                 connection.Open();
 
-                if (IsSqlAzure(connection.ConnectionString))
+                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
                     CreateLoginForSqlAzure(connection);
                 }
@@ -112,7 +113,7 @@ END";
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>(useInitialCatalog)))
             {
                 // SQL Azure does not support attaching databases
-                if (IsSqlAzure(context.Database.Connection.ConnectionString))
+                if (AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
                 {
                     return;
                 }
@@ -320,7 +321,7 @@ END";
             using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 connection.Open();
-                if (IsSqlAzure(connection.ConnectionString))
+                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
                     // Scenario not supported on SqlAzure, need to be connected to master
                     // in order to view existing users
@@ -461,7 +462,7 @@ END";
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
             {
-                if (IsSqlAzure(context.Database.Connection.ConnectionString))
+                if (AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
                 {
                     // SQL Azure does not suppot attaching databases
                     return;
