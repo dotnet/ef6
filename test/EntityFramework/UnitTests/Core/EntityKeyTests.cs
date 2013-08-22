@@ -316,6 +316,7 @@ namespace System.Data.Entity.Core
                             {
                                 var mockEdmMember1 = new Mock<EdmMember>();
                                 mockEdmMember1.Setup(m => m.Name).Returns(k);
+                                mockEdmMember1.Setup(m => m.Identity).Returns(k);
                                 return mockEdmMember1.Object;
                             }).ToList());
 

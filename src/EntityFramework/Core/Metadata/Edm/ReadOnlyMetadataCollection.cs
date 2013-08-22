@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         where T : MetadataItem
     {
         internal ReadOnlyMetadataCollection()
-            : base(new List<T>())
+            : base(new MetadataCollection<T>())
         {
         }
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="collection"> The metadata collection to wrap </param>
         /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
         internal ReadOnlyMetadataCollection(IList<T> collection)
-            : base(collection)
+            : base((collection as MetadataCollection<T>) ?? new MetadataCollection<T>(collection))
         {
         }
 

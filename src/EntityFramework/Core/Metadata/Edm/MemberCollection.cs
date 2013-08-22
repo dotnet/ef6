@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         internal ReadOnlyMetadataCollection<T> GetDeclaredOnlyMembers<T>() where T : EdmMember
         {
-            var newCollection = new List<T>();
+            var newCollection = new MetadataCollection<T>();
             for (var i = 0; i < base.Count; i++)
             {
                 var member = base[i] as T;

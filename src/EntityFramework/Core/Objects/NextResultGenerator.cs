@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects
 {
+    using System.Collections.ObjectModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient;
@@ -12,7 +13,7 @@ namespace System.Data.Entity.Core.Objects
     internal class NextResultGenerator
     {
         private readonly EntityCommand _entityCommand;
-        private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
+        private readonly ReadOnlyCollection<EntitySet> _entitySets;
         private readonly ObjectContext _context;
         private readonly EdmType[] _edmTypes;
         private readonly int _resultSetIndex;
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly MergeOption _mergeOption;
 
         internal NextResultGenerator(
-            ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyMetadataCollection<EntitySet> entitySets,
+            ObjectContext context, EntityCommand entityCommand, EdmType[] edmTypes, ReadOnlyCollection<EntitySet> entitySets,
             MergeOption mergeOption, bool streaming, int resultSetIndex)
         {
             _context = context;
