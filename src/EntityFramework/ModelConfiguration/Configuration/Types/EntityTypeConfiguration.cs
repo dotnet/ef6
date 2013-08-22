@@ -635,6 +635,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ConfigurePropertyMappings(
             DbDatabaseMapping databaseMapping,
             EntityType entityType,
