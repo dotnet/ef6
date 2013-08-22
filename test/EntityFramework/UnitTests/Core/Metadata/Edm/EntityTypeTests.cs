@@ -160,5 +160,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.NotNull(metadataProperty);
             Assert.Equal("value", metadataProperty.Value);
         }
+
+        [Fact]
+        public void Declared_members_should_be_accessible_by_name()
+        {
+            var entityType =
+                EntityType.Create(
+                    "Blog",
+                    "BlogModel",
+                    DataSpace.CSpace,
+                    new[] { "Id", "Title" },
+                    new[] {
+                        EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
+                        EdmProperty.CreatePrimitive("Title", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))},
+                    null);
+
+            Assert.NotNull(entityType.DeclaredMembers["Id"]);
+            Assert.NotNull(entityType.DeclaredMembers["Title"]);
+        }
     }
 }
