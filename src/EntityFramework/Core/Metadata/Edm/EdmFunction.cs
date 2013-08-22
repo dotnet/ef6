@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     throw new ArgumentException(Strings.NumberOfEntitySetsDoesNotMatchNumberOfReturnParameters);
                 }
 
-                _entitySets = new ReadOnlyMetadataCollection<EntitySet>(payload.EntitySets);
+                _entitySets = new ReadOnlyCollection<EntitySet>(payload.EntitySets);
             }
             else
             {
@@ -107,7 +108,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     throw new ArgumentException(Strings.NullEntitySetsForFunctionReturningMultipleResultSets);
                 }
 
-                _entitySets = new ReadOnlyMetadataCollection<EntitySet>(_returnParameters.Select(p => (EntitySet)null).ToList());
+                _entitySets = new ReadOnlyCollection<EntitySet>(_returnParameters.Select(p => (EntitySet)null).ToList());
             }
 
             if (payload.CommandText != null)
@@ -148,7 +149,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ParameterTypeSemantics _parameterTypeSemantics;
         private readonly string _commandTextAttribute;
         private string _schemaName;
-        private readonly ReadOnlyMetadataCollection<EntitySet> _entitySets;
+        private readonly ReadOnlyCollection<EntitySet> _entitySets;
 
         /// <summary>
         /// Gets the built-in type kind for this <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" />.
@@ -223,7 +224,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// A null element in the collection indicates that the corresponding are not bound to an entity set.
         /// </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, true)]
-        internal ReadOnlyMetadataCollection<EntitySet> EntitySets
+        internal ReadOnlyCollection<EntitySet> EntitySets
         {
             get { return _entitySets; }
         }

@@ -149,6 +149,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\EntitySplittingTests.cs" />
     <Compile Include="CodeFirst\NameUniquificationTests.cs" />
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />

@@ -41,6 +41,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Threading.Tasks;
 #endif
     using System.Transactions;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// ObjectContext is the top-level object that encapsulates a connection between the CLR and the database,
@@ -3584,7 +3585,7 @@ namespace System.Data.Entity.Core.Objects
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope",
             Justification = "Reader disposed by the returned ObjectResult")]
         private ObjectResult<TElement> CreateFunctionObjectResult<TElement>(
-            EntityCommand entityCommand, ReadOnlyMetadataCollection<EntitySet> entitySets, EdmType[] edmTypes,
+            EntityCommand entityCommand, ReadOnlyCollection<EntitySet> entitySets, EdmType[] edmTypes,
             ExecutionOptions executionOptions)
         {
             DebugCheck.NotNull(edmTypes);
@@ -3639,7 +3640,7 @@ namespace System.Data.Entity.Core.Objects
         /// Get the materializer for the resultSetIndexth result set of storeReader.
         /// </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
-            EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyMetadataCollection<EntitySet> entitySets,
+            EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyCollection<EntitySet> entitySets,
             EdmType[] edmTypes, MergeOption mergeOption, bool streaming)
         {
             DebugCheck.NotNull(entityCommand);

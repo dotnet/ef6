@@ -63,7 +63,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             DebugCheck.NotNull(column);
             DebugCheck.NotNull(typeUsage);
 
-            if (IsValidFacet(typeUsage, XmlConstants.FixedLengthElement))
+            if (IsValidFacet(typeUsage, XmlConstants.FixedLengthElement)
+                && property.IsFixedLength != null)
             {
                 column.IsFixedLength = property.IsFixedLength;
             }
@@ -71,20 +72,27 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             if (IsValidFacet(typeUsage, XmlConstants.MaxLengthElement))
             {
                 column.IsMaxLength = property.IsMaxLength;
-                column.MaxLength = property.MaxLength;
+
+                if (!column.IsMaxLength || property.MaxLength != null)
+                {
+                    column.MaxLength = property.MaxLength;
+                }
             }
 
-            if (IsValidFacet(typeUsage, XmlConstants.UnicodeElement))
+            if (IsValidFacet(typeUsage, XmlConstants.UnicodeElement)
+                && property.IsUnicode != null)
             {
                 column.IsUnicode = property.IsUnicode;
             }
 
-            if (IsValidFacet(typeUsage, XmlConstants.PrecisionElement))
+            if (IsValidFacet(typeUsage, XmlConstants.PrecisionElement)
+                && property.Precision != null)
             {
                 column.Precision = property.Precision;
             }
 
-            if (IsValidFacet(typeUsage, XmlConstants.ScaleElement))
+            if (IsValidFacet(typeUsage, XmlConstants.ScaleElement)
+                && property.Scale != null)
             {
                 column.Scale = property.Scale;
             }
