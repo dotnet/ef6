@@ -6,16 +6,18 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Design;
-    using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
+    using System.Globalization;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -121,17 +123,15 @@ namespace System.Data.Entity.Migrations
         public DbMigrator CreateMigrator<TContext>(DbMigration migration)
             where TContext : DbContext
         {
-            var modelCompressor = new ModelCompressor();
-
             using (var context = CreateContext<TContext>())
             {
                 var generatedMigration
                     = CodeGenerator
                         .Generate(
-                            UtcNowGenerator.UtcNowAsMigrationIdTimestamp() + "_" + migration.GetType().Name,
+                            GenerateUniqueMigrationName(migration.GetType().Name),
                             migration.GetOperations(),
-                            Convert.ToBase64String(modelCompressor.Compress(GetModel(context))),
-                            Convert.ToBase64String(modelCompressor.Compress(GetModel(context))),
+                            Convert.ToBase64String(CompressModel(GetModel(context))),
+                            Convert.ToBase64String(CompressModel(GetModel(context))),
                             "System.Data.Entity.Migrations",
                             migration.GetType().Name);
 
@@ -322,32 +322,54 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        public CreateTableOperation GetCreateHistoryTableOperation(string defaultSchema = null)
+        protected CreateTableOperation GetCreateHistoryTableOperation(string schema = "dbo")
         {
-            using (var connection = ProviderFactory.CreateConnection())
-            {
-                connection.ConnectionString = ConnectionString;
+            var createTableOperation = new CreateTableOperation(schema + ".__MigrationHistory");
 
-                return (CreateTableOperation)
-                       new EdmModelDiffer().Diff(
-                           GetModel(new DbModelBuilder().Build(ProviderInfo)),
-                           GetModel(new HistoryContext(connection, defaultSchema)))
-                           .Single();
-            }
+            var migrationId = new ColumnModel(PrimitiveTypeKind.String)
+            {
+                Name = "MigrationId",
+                MaxLength = 150,
+                //StoreType = "nvarchar",
+            };
+
+            var contextKey = new ColumnModel(PrimitiveTypeKind.String)
+            {
+                Name = "ContextKey",
+                MaxLength = 300,
+                //StoreType = "nvarchar"
+            };
+
+            var model = new ColumnModel(PrimitiveTypeKind.Binary)
+            {
+                Name = "Model",
+                //StoreType = "image",
+            };
+
+            var productVersion = new ColumnModel(PrimitiveTypeKind.String)
+            {
+                Name = "ProductVersion",
+                MaxLength = 32,
+                //StoreType = "nvarchar",
+            };
+
+            createTableOperation.Columns.Add(migrationId);
+            createTableOperation.Columns.Add(contextKey);
+            createTableOperation.Columns.Add(model);
+            createTableOperation.Columns.Add(productVersion);
+
+            createTableOperation.PrimaryKey = new AddPrimaryKeyOperation();
+            createTableOperation.PrimaryKey.Columns.Add("MigrationId");
+            createTableOperation.PrimaryKey.Columns.Add("ContextKey");
+
+            return createTableOperation;
         }
 
-        public DropTableOperation GetDropHistoryTableOperation()
+        protected DropTableOperation GetDropHistoryTableOperation(string schema = "dbo")
         {
-            using (var connection = ProviderFactory.CreateConnection())
-            {
-                connection.ConnectionString = ConnectionString;
+            var createHistoryTableOperation = GetCreateHistoryTableOperation(schema);
 
-                return (DropTableOperation)
-                       new EdmModelDiffer().Diff(
-                           GetModel(new HistoryContext(connection, defaultSchema: null)),
-                           GetModel(new DbModelBuilder().Build(ProviderInfo)))
-                           .Single();
-            }
+            return new DropTableOperation(schema + ".__MigrationHistory", createHistoryTableOperation);
         }
 
         protected void AssertHistoryContextEntryExists(string contextKey)
@@ -392,7 +414,7 @@ namespace System.Data.Entity.Migrations
                         {
                             MigrationId = migrationId,
                             ContextKey = contextKey,
-                            Model = new ModelCompressor().Compress(model),
+                            Model = CompressModel(model),
                             ProductVersion = productVersion,
                         });
 
@@ -417,6 +439,11 @@ namespace System.Data.Entity.Migrations
             return GetModel(w => EdmxWriter.WriteEdmx(context, w));
         }
 
+        protected string GenerateUniqueMigrationName(string migrationName)
+        {
+            return DateTime.UtcNow.ToString("yyyyMMddHHmmssf", CultureInfo.InvariantCulture) + "_" + migrationName;
+        }
+
         private XDocument GetModel(Action<XmlWriter> writeXml)
         {
             using (var memoryStream = new MemoryStream())
@@ -429,6 +456,19 @@ namespace System.Data.Entity.Migrations
                 memoryStream.Position = 0;
 
                 return XDocument.Load(memoryStream);
+            }
+        }
+
+        private byte[] CompressModel(XDocument model)
+        {
+            using (var outStream = new MemoryStream())
+            {
+                using (var gzipStream = new GZipStream(outStream, CompressionMode.Compress))
+                {
+                    model.Save(gzipStream);
+                }
+
+                return outStream.ToArray();
             }
         }
 

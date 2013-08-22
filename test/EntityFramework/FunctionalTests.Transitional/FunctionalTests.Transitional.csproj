@@ -282,15 +282,6 @@
     <Compile Include="TestHelpers\ExceptionHelpers.cs" />
     <Compile Include="TestHelpers\HashSetBasedDbSet.cs" />
     <Compile Include="TestHelpers\IOHelpers.cs" />
-    <Compile Include="Migrations\TestHelpers\DatabaseProviderFixture.cs" />
-    <Compile Include="Migrations\TestHelpers\DbMigratorExtensions.cs" />
-    <Compile Include="Migrations\TestHelpers\DbTestCase.cs" />
-    <Compile Include="Migrations\TestHelpers\InfoContext.cs" />
-    <Compile Include="Migrations\TestHelpers\MigrationCompiler.cs" />
-    <Compile Include="Migrations\TestHelpers\MigrationsTheoryAttribute.cs" />
-    <Compile Include="Migrations\TestHelpers\MigrationsTheoryCommand.cs" />
-    <Compile Include="Migrations\TestHelpers\TestDatabase.cs" />
-    <Compile Include="Migrations\TestHelpers\VariantAttribute.cs" />
     <Compile Include="TestHelpers\ModelHelpers.cs" />
     <Compile Include="TestHelpers\ObservableListSource`.cs" />
     <Compile Include="TestHelpers\ProviderRegistry.cs" />

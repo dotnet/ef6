@@ -43,13 +43,19 @@ namespace System.Data.Entity.Migrations
             options.ReferencedAssemblies.Add(typeof(DbGeography).Assembly.Location);
 
             var embededResources = GenerateEmbeddedResources(scaffoldedMigrations, @namespace);
-            embededResources.Each(r => options.EmbeddedResources.Add(r));
+            foreach (var resource in embededResources)
+            {
+                options.EmbeddedResources.Add(resource);
+            }
 
             var sources = scaffoldedMigrations.SelectMany(g => new[] { g.UserCode, g.DesignerCode });
 
             var compilerResults = _codeProvider.CompileAssemblyFromSource(options, sources.ToArray());
 
-            embededResources.Each(File.Delete);
+            foreach (var resource in embededResources)
+            {
+                File.Delete(resource);
+            }
 
             if (compilerResults.Errors.Count > 0)
             {
@@ -85,9 +91,10 @@ namespace System.Data.Entity.Migrations
 
                 using (var writer = new ResourceWriter(embededResource))
                 {
-                    scaffoldedMigration
-                        .Resources
-                        .Each(e => writer.AddResource(e.Key, e.Value));
+                    foreach (var resource in scaffoldedMigration.Resources)
+                    {
+                        writer.AddResource(resource.Key, resource.Value);
+                    }
                 }
 
                 yield return embededResource;

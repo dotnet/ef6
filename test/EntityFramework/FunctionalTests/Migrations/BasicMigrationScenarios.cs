@@ -548,7 +548,7 @@ namespace System.Data.Entity.Migrations
 
             // Fix-up migrationId to come after previous automatic migration
             var oldMigrationId = generatedMigration.MigrationId;
-            var newMigrationId = DateTime.UtcNow.ToString("yyyyMMddHHmmssf", CultureInfo.InvariantCulture) + "_" + migrationName;
+            var newMigrationId = GenerateUniqueMigrationName(migrationName);
 
             generatedMigration.MigrationId = newMigrationId;
             generatedMigration.DesignerCode = generatedMigration.DesignerCode.Replace(oldMigrationId, newMigrationId);

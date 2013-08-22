@@ -70,7 +70,11 @@ namespace System.Data.Entity.Migrations
 
         public SqlTestDatabase(string name)
         {
-            Check.NotEmpty(name, "name");
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("'" + name + "' can not be null or empty.");
+            }
+
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleConnectionString(name);
@@ -177,7 +181,11 @@ namespace System.Data.Entity.Migrations
 
         public SqlCeTestDatabase(string name)
         {
-            Check.NotEmpty(name, "name");
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException("'" + name + "' can not be null or empty.");
+            }
+
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleCeConnectionString(name);
