@@ -6,6 +6,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
@@ -158,10 +159,19 @@ namespace System.Data.Entity.Migrations
         public override void DropDatabase()
         {
             SqlConnection.ClearAllPools();
-            ExecuteNonQuery(
+            if (AzureTestHelpers.IsSqlAzure(ConnectionString))
+            {
+                string azureConnectionString = ConnectionString + ";Database=Master;";
+                ExecuteNonQuery(
+                @"DROP DATABASE [" + _name + "]", azureConnectionString);
+            }
+            else
+            {
+                ExecuteNonQuery(
                 @"ALTER DATABASE [" + _name
                 + "] SET OFFLINE WITH ROLLBACK IMMEDIATE;ALTER DATABASE [" + _name
-                + "] SET ONLINE;DROP DATABASE [" + _name + "]");
+                + "] SET ONLINE;DROP DATABASE [" + _name + "]");   
+            }                       
         }
 
         public override bool Exists()
