@@ -86,7 +86,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Should_be_able_configure_base_properties_via_derived_type()
+        public void Should_throw_when_configuring_base_properties_via_derived_type_conflicting()
         {
             var modelBuilder = new DbModelBuilder();
 
@@ -95,36 +95,24 @@ namespace FunctionalTests
             modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("base_foo");
             modelBuilder.Entity<Derived_195898>().ToTable("Derived");
             modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
+            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");  // conflict as TPT
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            databaseMapping.AssertValid();
-            modelBuilder.Entity<Base_195898>().Property(b => b.Id).HasColumnName("base_c");
-            modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("base_foo");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
-        public void Should_be_able_configure_base_properties_via_derived_type_reverse()
+        public void Should_throw_when_configuring_base_properties_via_derived_type_reverse_conflicting()
         {
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<Derived_195898>().ToTable("Derived");
             modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
+            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo"); // conflict as TPT
             modelBuilder.Entity<Base_195898>().ToTable("Base");
             modelBuilder.Entity<Base_195898>().Property(b => b.Id).HasColumnName("base_c");
             modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("base_foo");
 
-            var databaseMapping = BuildMapping(modelBuilder);
-
-            databaseMapping.AssertValid();
-            modelBuilder.Entity<Base_195898>().Property(b => b.Id).HasColumnName("base_c");
-            modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("base_foo");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
         }
 
         [Fact]
@@ -135,15 +123,14 @@ namespace FunctionalTests
             modelBuilder.Entity<Base_195898>().ToTable("Base");
             modelBuilder.Entity<Derived_195898>().ToTable("Derived");
             modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            modelBuilder.Entity<Base_195898>().Property(b => b.Id).HasColumnName("Id");
-            modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("Foo");
-            modelBuilder.Entity<Derived_195898>().Property(b => b.Id).HasColumnName("derived_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("derived_foo");
+
+            databaseMapping.Assert<Base_195898>(b => b.Id).DbEqual("Id", c => c.Name);
+            databaseMapping.Assert<Complex_195898>(b => b.Foo).DbEqual("Complex_Foo", c => c.Name);
+            databaseMapping.Assert<Derived_195898>(b => b.Id).DbEqual("derived_c", c => c.Name);
         }
 
         [Fact]
@@ -158,10 +145,10 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            modelBuilder.Entity<Base_195898>().Property(b => b.Id).HasColumnName("base_c");
-            modelBuilder.Entity<Base_195898>().Property(b => b.Complex.Foo).HasColumnName("base_foo");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Id).HasColumnName("base_c");
-            modelBuilder.Entity<Derived_195898>().Property(d => d.Complex.Foo).HasColumnName("base_foo");
+
+            databaseMapping.Assert<Base_195898>(b => b.Id).DbEqual("base_c", c => c.Name);
+            databaseMapping.Assert<Complex_195898>(b => b.Foo).DbEqual("Complex_Foo", c => c.Name);
+            databaseMapping.Assert<Derived_195898>(d => d.Id).DbEqual("base_c", c => c.Name);
         }
 
         public class Base_195898

@@ -6,7 +6,6 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
-    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
     using System.Linq;
@@ -15,6 +14,34 @@ namespace FunctionalTests
 
     public class PropertyConfigurationScenarioTests : TestBase
     {
+        public class Entity
+        {
+            public int Id { get; set; }
+            public DateTime DateTimeProperty { get; set; }
+        }
+
+        public class DerivedEntity : Entity
+        {
+        }
+
+        [Fact]
+        public void Can_set_datetime_precision_on_derived_type()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Entity>();
+            modelBuilder.Entity<DerivedEntity>()
+                .Property(e => e.DateTimeProperty)
+                .HasColumnType("datetime2")
+                .HasPrecision(4);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<Entity>(p => p.DateTimeProperty).DbEqual((byte)4, f => f.Precision);
+        }
+
         [Fact]
         public void Binary_fixed_length_properties_get_correct_length_in_store()
         {

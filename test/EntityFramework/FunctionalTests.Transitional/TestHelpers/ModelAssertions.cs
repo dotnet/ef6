@@ -32,7 +32,7 @@ namespace System.Data.Entity
                     .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                         i => i.Annotations.Any(
                             a => a.Name == "ClrPropertyInfo"
-                                 && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)));
+                                 && IsSameAs((PropertyInfo)a.Value, GetPropertyInfo(propertyExpression))));
 
             var columns
                 = databaseMapping.EntityContainerMappings.Single().EntitySetMappings
@@ -43,9 +43,9 @@ namespace System.Data.Entity
                     .Where(pm => pm.PropertyPath.Contains(property))
                     .Select(pm => pm.ColumnProperty);
 
-            return new PropertyAssertions(property, columns.First());
+            return new PropertyAssertions(property, columns);
         }
-
+        
         internal static TypeAssertions Assert<TStructuralType>(this DbDatabaseMapping databaseMapping)
         {
             var structuralType
@@ -173,7 +173,7 @@ namespace System.Data.Entity
                                  .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                                      i => i.Annotations.Any(
                                          a => a.Name == "ClrPropertyInfo"
-                                              && (PropertyInfo)a.Value == GetPropertyInfo(propertyExpression)));
+                                              && IsSameAs((PropertyInfo)a.Value, GetPropertyInfo(propertyExpression))));
 
             var parameterBindings
                 = databaseMapping
@@ -262,12 +262,12 @@ namespace System.Data.Entity
         internal class PropertyAssertions
         {
             private readonly EdmProperty _property;
-            private readonly EdmProperty _column;
+            private readonly IEnumerable<EdmProperty> _columns;
 
-            public PropertyAssertions(EdmProperty property, EdmProperty column)
+            public PropertyAssertions(EdmProperty property, IEnumerable<EdmProperty> columns)
             {
                 _property = property;
-                _column = column;
+                _columns = columns;
             }
 
             public PropertyAssertions IsTrue(Func<TypeUsage, bool?> facet)
@@ -300,14 +300,20 @@ namespace System.Data.Entity
 
             public PropertyAssertions DbEqual(object expected, Func<EdmProperty, object> facet)
             {
-                Xunit.Assert.Equal(expected, facet(_column));
-
+                foreach (var column in _columns)
+                {
+                    Xunit.Assert.Equal(expected, facet(column));
+                }
+                
                 return this;
             }
 
             public PropertyAssertions DbIsFalse(Func<EdmProperty, bool?> column)
             {
-                Xunit.Assert.Equal(false, column(_column));
+                foreach (var c in _columns)
+                {
+                    Xunit.Assert.Equal(false, column(c));
+                }
 
                 return this;
             }
@@ -510,6 +516,17 @@ namespace System.Data.Entity
             }
 
             return expression;
+        }
+
+        private static bool IsSameAs(PropertyInfo propertyInfo, PropertyInfo otherPropertyInfo)
+        {
+            return (propertyInfo == otherPropertyInfo) ||
+                   (propertyInfo.Name == otherPropertyInfo.Name
+                    && (propertyInfo.DeclaringType == otherPropertyInfo.DeclaringType
+                        || propertyInfo.DeclaringType.IsSubclassOf(otherPropertyInfo.DeclaringType)
+                        || otherPropertyInfo.DeclaringType.IsSubclassOf(propertyInfo.DeclaringType)
+                        || propertyInfo.DeclaringType.GetInterfaces().Contains(otherPropertyInfo.DeclaringType)
+                        || otherPropertyInfo.DeclaringType.GetInterfaces().Contains(propertyInfo.DeclaringType)));
         }
     }
 }
