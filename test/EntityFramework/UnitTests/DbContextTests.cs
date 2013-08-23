@@ -24,6 +24,7 @@ namespace ProductivityApiUnitTests
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Data.SqlServerCe;
     using System.Linq;
@@ -87,17 +88,39 @@ namespace ProductivityApiUnitTests
             using (var connection = new SqlConnection(SimpleConnectionString("master")))
             {
                 connection.Open();
-
-                using (var command = connection.CreateCommand())
+                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
-                    command.CommandText
-                        = @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
-BEGIN
-  CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
-  EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
-END";
-                    command.ExecuteNonQuery();
+                    bool loginExists = false;                    
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestUser'";
+                        loginExists = (int)command.ExecuteScalar() == 1;
+                    }
+
+                    if (!loginExists)
+                    {
+                        using (var command = connection.CreateCommand())
+                        {
+                            command.CommandText =
+                                "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1'";                                
+                            command.ExecuteNonQuery();
+                        }
+                    }
                 }
+                else
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText
+                            = 
+@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
+BEGIN
+    CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+    EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
+END";
+                        command.ExecuteNonQuery();
+                    }
+                }                
             }
         }
 
