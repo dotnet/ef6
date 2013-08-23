@@ -19,8 +19,6 @@ namespace System.Data.Entity.CodeFirst
             }
         }
 
-        public class CodePlex1559 : FunctionalTestBase
-        {
             public class E
             {
                 public int Id { get; set; }
@@ -29,7 +27,6 @@ namespace System.Data.Entity.CodeFirst
                 public DateTime P3 { get; set; }
                 public DateTimeOffset P4 { get; set; }
             }
-
 
             [Fact]
             public void Default_precision_facets_are_not_null_within_store_model()
@@ -49,6 +46,5 @@ namespace System.Data.Entity.CodeFirst
                 Assert.Equal(7, (byte)entityType.DeclaredProperties["P3"].TypeUsage.Facets["Precision"].Value);
                 Assert.Equal(7, (byte)entityType.DeclaredProperties["P4"].TypeUsage.Facets["Precision"].Value);
             }
-        }
     }
 }

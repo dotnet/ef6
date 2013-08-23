@@ -21,6 +21,61 @@ namespace FunctionalTests
     {
         public class ConventionTests : TestBase
         {
+            internal abstract class BaseEntity
+            {
+                public int ID { get; set; }
+                public DateTime Created { get; set; }
+                public DateTime LastModified { get; set; }
+            }
+
+            internal class DerivedEntity : BaseEntity
+            {
+                [StringLength(128)]
+                public string Name { get; set; }
+            }
+
+            [Fact]
+            public void Can_override_precision_via_api_base()
+            {
+                var modelBuilder = new AdventureWorksModelBuilder();
+
+                modelBuilder.Properties<DateTime>().Configure(
+                    dateTimeConfig =>
+                        {
+                            dateTimeConfig.HasColumnType("datetime2");
+                            dateTimeConfig.HasPrecision(1);
+                        });
+
+                modelBuilder.Entity<DerivedEntity>().Map(m => m.MapInheritedProperties());
+                modelBuilder.Entity<BaseEntity>().Property(e => e.LastModified).HasPrecision(3);
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+                databaseMapping.Assert<DerivedEntity>(e => e.LastModified).FacetEqual((byte)3, p => p.Precision);
+            }
+
+            [Fact]
+            public void Can_override_precision_via_api_derived()
+            {
+                var modelBuilder = new AdventureWorksModelBuilder();
+
+                modelBuilder.Properties<DateTime>().Configure(
+                    dateTimeConfig =>
+                    {
+                        dateTimeConfig.HasColumnType("datetime2");
+                        dateTimeConfig.HasPrecision(1);
+                    });
+
+                modelBuilder.Entity<DerivedEntity>().Map(m => m.MapInheritedProperties());
+                modelBuilder.Entity<DerivedEntity>().Property(e => e.LastModified).HasPrecision(3);
+                
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+                databaseMapping.Assert<DerivedEntity>(e => e.LastModified).FacetEqual((byte)3, p => p.Precision);
+            }
+
             [Fact]
             public void Add_custom_model_convention()
             {

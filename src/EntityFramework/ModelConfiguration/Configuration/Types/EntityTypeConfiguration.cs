@@ -635,6 +635,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ConfigurePropertyMappings(
             DbDatabaseMapping databaseMapping,
             EntityType entityType,
@@ -645,20 +647,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(providerManifest);
 
-            var entityTypeMappings = databaseMapping.GetEntityTypeMappings(entityType);
+            var entityTypeMappings
+                = databaseMapping.GetEntityTypeMappings(entityType);
 
             var propertyMappings
                 = (from etm in entityTypeMappings
-                   from etmf in etm.MappingFragments
-                   from pm in etmf.ColumnMappings
-                   select Tuple.Create(pm, etmf.Table))
+                    from etmf in etm.MappingFragments
+                    from pm in etmf.ColumnMappings
+                    select Tuple.Create(pm, etmf.Table))
                     .ToList();
 
             ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride);
 
-            _entityMappingConfigurations.Each(
-                c => c.ConfigurePropertyMappings(
-                    propertyMappings, providerManifest, allowOverride));
+            _entityMappingConfigurations
+                .Each(c => c.ConfigurePropertyMappings(propertyMappings, providerManifest, allowOverride));
+
+            // Now, apply to any inherited (IsOfType) mappings
+            var inheritedPropertyMappings
+                = (from esm in databaseMapping.GetEntitySetMappings()
+                    from etm in esm.EntityTypeMappings
+                    where etm.IsHierarchyMapping
+                          && etm.EntityType.IsAncestorOf(entityType)
+                    from etmf in etm.MappingFragments
+                    from pm1 in etmf.ColumnMappings
+                    where !propertyMappings.Any(pm2 => pm2.Item1.PropertyPath.SequenceEqual(pm1.PropertyPath))
+                    select Tuple.Create(pm1, etmf.Table))
+                    .ToList();
+
+            ConfigurePropertyMappings(inheritedPropertyMappings, providerManifest);
+
+            _entityMappingConfigurations
+                .Each(c => c.ConfigurePropertyMappings(inheritedPropertyMappings, providerManifest));
 
             foreach (var derivedEntityType 
                 in databaseMapping.Model.EntityTypes.Where(et => et.BaseType == entityType))

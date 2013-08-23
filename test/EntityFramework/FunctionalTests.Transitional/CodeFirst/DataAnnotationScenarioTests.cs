@@ -22,6 +22,71 @@ namespace FunctionalTests
             DbConfiguration.DependencyResolver.GetService<AttributeProvider>().ClearCache();
         }
 
+        public class Person
+        {
+            public int Id { get; set; }
+
+            [StringLength(5)]
+            public string Name { get; set; }
+        }
+
+        public class Employee : Person
+        {
+        }
+        
+        [Fact]
+        public void Explicit_configuration_on_derived_type_overrides_annotation_on_unmapped_base_type()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<Employee>()
+                .Property(p => p.Name)
+                .HasMaxLength(10);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<Employee>(e => e.Name).FacetEqual(10, p => p.MaxLength);
+        }
+
+        [Fact]
+        public void Explicit_configuration_on_derived_type_overrides_annotation_on_mapped_base_type()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<Person>();
+
+            modelBuilder
+                .Entity<Employee>()
+                .Property(p => p.Name)
+                .HasMaxLength(10);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<Employee>(e => e.Name).FacetEqual(10, p => p.MaxLength);
+        }
+
+        [Fact]
+        public void Explicit_configuration_on_derived_type_throws_when_conflict_with_mapped_base_type()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<Person>()
+                .Property(p => p.Name)
+                .HasMaxLength(5);
+
+            modelBuilder
+                .Entity<Employee>()
+                .Property(p => p.Name)
+                .HasMaxLength(10);
+
+            Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder));
+        }
+        
         [Fact]
         public void Duplicate_column_order_should_not_throw_when_v1_convention_set()
         {

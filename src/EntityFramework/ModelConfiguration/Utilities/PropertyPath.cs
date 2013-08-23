@@ -33,9 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             _components.Add(component);
         }
 
-        private PropertyPath()
-        {
-        }
+        private PropertyPath() {}
 
         public int Count
         {
@@ -96,8 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                 return true;
             }
 
-            if (obj.GetType()
-                != typeof(PropertyPath))
+            if (obj.GetType() != typeof(PropertyPath))
             {
                 return false;
             }
@@ -107,7 +104,12 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
 
         public override int GetHashCode()
         {
-            return _components.Aggregate(0, (t, n) => t + n.GetHashCode());
+            unchecked
+            {
+                return _components.Aggregate(
+                    0,
+                    (t, n) => t ^ (n.DeclaringType.GetHashCode() * n.Name.GetHashCode() * 397));
+            }
         }
 
         public static bool operator ==(PropertyPath left, PropertyPath right)
