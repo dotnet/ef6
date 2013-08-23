@@ -4,6 +4,7 @@ namespace FunctionalTests
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
@@ -15,6 +16,34 @@ namespace FunctionalTests
 
     public class InheritanceScenarioTests : TestBase
     {
+        public class Person1545
+        {
+            public int Id { get; set; }
+
+            [StringLength(5)]
+            public string Name { get; set; }
+        }
+
+        public class Employee1545 : Person1545
+        {
+        }
+
+        [Fact]
+        public void Can_override_annotation_when_tph()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Person1545>();
+            modelBuilder.Entity<Employee1545>()
+                .Property(p => p.Name)
+                .HasMaxLength(10);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<Person1545>(p => p.Name).FacetEqual(10, p => p.MaxLength);
+        }
+
         [Fact]
         public void Orphaned_configured_table_should_throw()
         {
