@@ -4,6 +4,7 @@ namespace FunctionalTests.Model
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Data.Entity.Utilities;
 
     // An System.Collections.ObjectModel.ObservableCollection that raises
     // individual item removal notifications on clear and prevents adding duplicates.
@@ -11,7 +12,7 @@ namespace FunctionalTests.Model
     {
         protected override void ClearItems()
         {
-            new List<T>(this).ForEach(t => Remove(t));
+            new List<T>(this).Each(t => Remove(t));
         }
 
         protected override void InsertItem(int index, T item)

@@ -151,7 +151,11 @@ namespace System.Data.Entity.ProductivityApi
                 context.Skus.Load();
                 Assert.Equal(2, context.Skus.Local.Count());
 
-                context.Skus.Local.ToList().ForEach(s => context.Skus.Remove(s));
+                foreach (var sku in context.Skus.Local.ToList())
+                {
+                    context.Skus.Remove(sku);
+                }
+
                 Assert.Equal(0, context.Skus.Local.Count());
             }
         }

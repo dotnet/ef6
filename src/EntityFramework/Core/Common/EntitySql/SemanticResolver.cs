@@ -859,7 +859,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                         //
                         // Reset aggregate info of AST nodes of aggregates resolved to the CurrentScopeRegion.
                         //
-                        CurrentScopeRegion.GroupAggregateInfos.ForEach(groupAggregateInfo => groupAggregateInfo.DetachFromAstNode());
+                        CurrentScopeRegion.GroupAggregateInfos.Each(groupAggregateInfo => groupAggregateInfo.DetachFromAstNode());
 
                         //
                         // Rollback scopes of the region.

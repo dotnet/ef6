@@ -46,7 +46,7 @@ namespace ProductivityApiTests
                 )"
                 );
 
-            new List<SupplierWithLocation>
+            var suppliers = new List<SupplierWithLocation>
                 {
                     new SupplierWithLocation
                         {
@@ -128,53 +128,63 @@ namespace ProductivityApiTests
                             Name = "Supplier16",
                             Location = DbGeography.FromText("POINT(-122.31249 47.632342)")
                         },
-                }.ForEach(s => context.Suppliers.Add(s));
+                };
 
-            new List<WidgetWithGeometry>
+            foreach (var supplier in suppliers)
+            {
+                context.Suppliers.Add(supplier);
+            }
+
+            var widgets = new List<WidgetWithGeometry>
                 {
                     new WidgetWithGeometry
                         {
                             Name = "Widget1",
                             SomeGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)"),
                             Complex = new ComplexWithGeometry
-                                          {
-                                              NotGeometry = "1",
-                                              SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
-                                          }
+                                {
+                                    NotGeometry = "1",
+                                    SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
+                                }
                         },
                     new WidgetWithGeometry
                         {
                             Name = "Widget2",
                             SomeGeometry = DbGeometry.FromText("POINT(-122.296623 47.640405)"),
                             Complex = new ComplexWithGeometry
-                                          {
-                                              NotGeometry = "1",
-                                              SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
-                                          }
+                                {
+                                    NotGeometry = "1",
+                                    SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
+                                }
                         },
                     new WidgetWithGeometry
                         {
                             Name = "Widget3",
                             SomeGeometry = DbGeometry.FromText("POINT(-122.334571 47.604009)"),
                             Complex = new ComplexWithGeometry
-                                          {
-                                              NotGeometry = "1",
-                                              SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
-                                          }
+                                {
+                                    NotGeometry = "1",
+                                    SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
+                                }
                         },
                     new WidgetWithGeometry
                         {
                             Name = "Widget4",
                             SomeGeometry = DbGeometry.FromText("POINT(-122.336124 47.610267)"),
                             Complex = new ComplexWithGeometry
-                                          {
-                                              NotGeometry = "1",
-                                              SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
-                                          }
+                                {
+                                    NotGeometry = "1",
+                                    SomeMoreGeometry = DbGeometry.FromText("POINT(-122.31946 47.625112)")
+                                }
                         },
-                }.ForEach(w => context.Widgets.Add(w));
+                };
 
-            new List<WidgetWithLineString>
+            foreach (var widget in widgets)
+            {
+                context.Widgets.Add(widget);
+            }
+
+            var widgetWithLineStrings = new List<WidgetWithLineString>
                 {
                     new WidgetWithLineString
                         {
@@ -184,9 +194,14 @@ namespace ProductivityApiTests
                         {
                             AGeometricLineString = DbGeometry.FromText("LINESTRING (100 100, 200 200)")
                         },
-                }.ForEach(w => context.LineStringWidgets.Add(w));
+                };
 
-            new List<WidgetWithPolygon>
+            foreach (var widget in widgetWithLineStrings)
+            {
+                context.LineStringWidgets.Add(widget);
+            }
+
+            var widgetWithPolygons = new List<WidgetWithPolygon>
                 {
                     new WidgetWithPolygon
                         {
@@ -196,7 +211,12 @@ namespace ProductivityApiTests
                         {
                             AGeometricPolygon = DbGeometry.FromText("POLYGON ((150 170, 200 170, 200 120, 150 120, 150 170))")
                         },
-                }.ForEach(w => context.PolygonWidgets.Add(w));
+                };
+
+            foreach (var widget in widgetWithPolygons)
+            {
+                context.PolygonWidgets.Add(widget);
+            }
         }
     }
 }

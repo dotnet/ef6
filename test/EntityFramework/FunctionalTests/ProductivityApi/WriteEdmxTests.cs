@@ -75,7 +75,10 @@ namespace ProductivityApiTests
                 EdmxWriter.WriteEdmx(context, XmlWriter.Create(edmxBuilders[2]));
             }
 
-            edmxBuilders.ToList().ForEach(SanityCheckEdmx);
+            foreach (var builder in edmxBuilders.ToList())
+            {
+                SanityCheckEdmx(builder);
+            }
         }
 
         [Fact]

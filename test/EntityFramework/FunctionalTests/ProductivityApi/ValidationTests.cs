@@ -1422,7 +1422,11 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                 {
                     context.SaveChanges();
 
-                    context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
+                    foreach (var entry in context.ChangeTracker.Entries().ToList())
+                    {
+                        entry.State = EntityState.Detached;
+                    }
+
                     context.Configuration.LazyLoadingEnabled = lazyLoadingEnabled;
 
                     entity = context.Set<EntityWithReferenceNavigationProperty>().Single();

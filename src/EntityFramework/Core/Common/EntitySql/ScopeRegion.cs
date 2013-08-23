@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     internal sealed class ScopeRegion
@@ -156,7 +157,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 }
                 if (updatedEntries != null)
                 {
-                    updatedEntries.ForEach((updatedScopeEntry) => scope.Replace(updatedScopeEntry.Key, updatedScopeEntry.Value));
+                    updatedEntries.Each((updatedScopeEntry) => scope.Replace(updatedScopeEntry.Key, updatedScopeEntry.Value));
                 }
             }
         }

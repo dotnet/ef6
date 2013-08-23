@@ -36,8 +36,17 @@ namespace ProductivityApiTests
         {
             var drivers = context.Drivers;
             drivers.Load();
-            drivers.Local.Where(d => d.TeamId == DeletedTeam).ToList().ForEach(d => drivers.Remove(d));
-            drivers.Local.Where(d => d.TeamId == ModifedTeam).ToList().ForEach(d => d.Races = 5);
+
+            foreach (var driver in drivers.Local.Where(d => d.TeamId == DeletedTeam).ToList())
+            {
+                drivers.Remove(driver);
+            }
+
+            foreach (var driver in drivers.Local.Where(d => d.TeamId == ModifedTeam).ToList())
+            {
+                driver.Races = 5;
+            }
+
             drivers.Add(
                 new Driver
                     {
@@ -194,8 +203,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = getLocal(context);
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    GetObjectContext(context).Detach);
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    GetObjectContext(context).Detach(driver);
+                }
 
                 Assert.Equal(0, local.Cast<Driver>().Count(d => d.TeamId == UnchangedTeam));
             }
@@ -209,8 +220,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = context.Drivers.Local;
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    d => context.Drivers.Remove(d));
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    context.Drivers.Remove(driver);
+                }
 
                 Assert.Equal(0, local.Count(d => d.TeamId == UnchangedTeam));
             }
@@ -224,8 +237,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = context.Drivers.Local;
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    d => GetObjectContext(context).ObjectStateManager.ChangeObjectState(d, EntityState.Deleted));
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    GetObjectContext(context).ObjectStateManager.ChangeObjectState(driver, EntityState.Deleted);
+                }
 
                 Assert.Equal(0, local.Count(d => d.TeamId == UnchangedTeam));
             }
@@ -239,8 +254,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = context.Drivers.Local;
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    d => GetObjectContext(context).ObjectStateManager.ChangeObjectState(d, EntityState.Detached));
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    GetObjectContext(context).ObjectStateManager.ChangeObjectState(driver, EntityState.Detached);
+                }
 
                 Assert.Equal(0, local.Count(d => d.TeamId == UnchangedTeam));
             }
@@ -254,8 +271,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = context.Drivers.Local;
 
-                context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList().ForEach(
-                    d => GetObjectContext(context).ObjectStateManager.ChangeObjectState(d, EntityState.Added));
+                foreach (var driver in context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList())
+                {
+                    GetObjectContext(context).ObjectStateManager.ChangeObjectState(driver, EntityState.Added);
+                }
 
                 Assert.Equal(DeletedCount, local.Count(d => d.TeamId == DeletedTeam));
             }
@@ -269,8 +288,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var local = context.Drivers.Local;
 
-                context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList().ForEach(
-                    d => GetObjectContext(context).ObjectStateManager.ChangeObjectState(d, EntityState.Unchanged));
+                foreach (var driver in context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList())
+                {
+                    GetObjectContext(context).ObjectStateManager.ChangeObjectState(driver, EntityState.Unchanged);
+                }
 
                 Assert.Equal(DeletedCount, local.Count(d => d.TeamId == DeletedTeam));
             }
@@ -383,7 +404,11 @@ namespace ProductivityApiTests
                 var local = context.Drivers.Local;
 
                 var deletedDrivers = context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList();
-                deletedDrivers.ForEach(local.Add);
+
+                foreach (var driver in deletedDrivers)
+                {
+                    local.Add(driver);
+                }
 
                 Assert.True(
                     deletedDrivers.TrueForAll(
@@ -602,8 +627,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var bindingList = context.Drivers.Local.ToBindingList();
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    GetObjectContext(context).Detach);
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    GetObjectContext(context).Detach(driver);
+                }
 
                 Assert.Equal(0, bindingList.Count(d => d.TeamId == UnchangedTeam));
             }
@@ -617,8 +644,10 @@ namespace ProductivityApiTests
                 SetupContext(context);
                 var bindingList = context.Drivers.Local.ToBindingList();
 
-                context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList().ForEach(
-                    d => context.Drivers.Remove(d));
+                foreach (var driver in context.Drivers.Local.Where(d => d.TeamId == UnchangedTeam).ToList())
+                {
+                    context.Drivers.Remove(driver);
+                }
 
                 Assert.Equal(0, bindingList.Count(d => d.TeamId == UnchangedTeam));
             }
@@ -690,7 +719,11 @@ namespace ProductivityApiTests
                 var bindingList = context.Drivers.Local.ToBindingList();
 
                 var deletedDrivers = context.Drivers.Where(d => d.TeamId == DeletedTeam).ToList();
-                deletedDrivers.ForEach(bindingList.Add);
+
+                foreach (var driver in deletedDrivers)
+                {
+                    bindingList.Add(driver);
+                }
 
                 Assert.True(
                     deletedDrivers.TrueForAll(

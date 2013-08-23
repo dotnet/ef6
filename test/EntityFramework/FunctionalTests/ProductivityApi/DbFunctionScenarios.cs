@@ -3136,7 +3136,7 @@ namespace FunctionalTests.ProductivityApi
         protected override void Seed(EntityFunctionContext context)
         {
             var entityWithRelationship = new EntityWithRelationship();
-            new List<EntityWithTypes>
+            var entityWithTypes = new List<EntityWithTypes>
                 {
                     new EntityWithTypes
                         {
@@ -3170,7 +3170,12 @@ namespace FunctionalTests.ProductivityApi
                             TimeSpan = new TimeSpan(4, 3, 1),
                             Relationship = entityWithRelationship
                         }
-                }.ForEach(e => context.WithTypes.Add(e));
+                };
+
+            foreach (var entityWithType in entityWithTypes)
+            {
+                context.WithTypes.Add(entityWithType);
+            }
         }
     }
 }

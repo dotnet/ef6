@@ -18,17 +18,6 @@ namespace ProductivityApiTests
 
     ///<summary>
     ///    Tests for context/entity classes generated from productivity T4 templates.
-    ///
-    ///    The infrastructure for generating code from the T4 templates at build time does not yet work
-    ///    in the DataSvc branch/Productivity project.  We will revisit this later, but for now the
-    ///    process for making changes to the templates is as follows:
-    ///    1.	Change the templates in “ndp\fx\src\DataEntityDesign\Design\T4Templates”
-    ///    2.	Run ProcessTemplates.bat from the command line while in the
-    ///    “src\qa\devdiv\dptest\DataEntity\CheckinTests\CodeFirst\ProductivityFunctionalTests\ProductivityApi\TemplateModels”
-    ///    directory.  This will copy the source templates into the functional test project with appropriate names
-    ///    and will replace the Model.edmx marker in each template with a path to the schema to use.
-    ///    3.	Use Visual Studio to “Transform All Templates”.  For example, click the icon at the top of the Solution
-    ///    Explorer window while something in the FunctionalTests project is selected.
     ///</summary>
     public class TemplateTests : FunctionalTestBase
     {
@@ -237,14 +226,15 @@ namespace ProductivityApiTests
 
                 Assert.Equal(4, offices.Count);
                 Assert.Equal(4, context.Offices.Local.Count);
-                new List<string>
+                var officeNumbers = new List<string>
                     {
-                        "1/1221",
-                        "1/1223",
-                        "2/1458",
-                        "2/1789"
-                    }.ForEach(
-                        n => offices.Where(o => o.Number == n).Single());
+                        "1/1221", "1/1223", "2/1458", "2/1789"
+                    };
+
+                foreach (var officeNumber in officeNumbers)
+                {
+                    offices.Single(o => o.Number == officeNumber);
+                }
             }
         }
 
@@ -257,14 +247,15 @@ namespace ProductivityApiTests
 
                 Assert.Equal(4, offices.Count);
                 Assert.Equal(0, context.Offices.Local.Count);
-                new List<string>
+                var officeNumbers = new List<string>
                     {
-                        "1/1221",
-                        "1/1223",
-                        "2/1458",
-                        "2/1789"
-                    }.ForEach(
-                        n => offices.Where(o => o.Number == n).Single());
+                        "1/1221", "1/1223", "2/1458", "2/1789"
+                    };
+
+                foreach (var officeNumber in officeNumbers)
+                {
+                    offices.Single(o => o.Number == officeNumber);
+                }
             }
         }
 
@@ -278,11 +269,15 @@ namespace ProductivityApiTests
 
                 Assert.Equal(2, offices.Count);
                 Assert.Equal(2, context.Offices.Local.Count);
-                new List<string>
+                var officeNumbers = new List<string>
                     {
-                        "1/1221",
-                        "1/1223"
-                    }.ForEach(n => offices.Where(o => o.Number == n).Single());
+                        "1/1221", "1/1223"
+                    };
+
+                foreach (var officeNumber in officeNumbers)
+                {
+                    offices.Single(o => o.Number == officeNumber);
+                }
             }
         }
 
@@ -298,11 +293,15 @@ namespace ProductivityApiTests
 
                 Assert.Equal(2, offices.Count);
                 Assert.Equal(0, context.Offices.Local.Count);
-                new List<string>
+                var officeNumbers = new List<string>
                     {
-                        "1/1221",
-                        "1/1223"
-                    }.ForEach(n => offices.Where(o => o.Number == n).Single());
+                        "1/1221", "1/1223"
+                    };
+
+                foreach (var officeNumber in officeNumbers)
+                {
+                    offices.Single(o => o.Number == officeNumber);
+                }
             }
         }
 
@@ -314,12 +313,15 @@ namespace ProductivityApiTests
                 var siteInfo = context.AllSiteInfoStoredProc().ToList();
 
                 Assert.Equal(2, siteInfo.Count);
-                new List<string>
+                var officeNumbers = new List<string>
                     {
-                        "Clean",
-                        "Contaminated"
-                    }.ForEach(
-                        n => siteInfo.Where(o => o.Environment == n).Single());
+                        "Clean", "Contaminated"
+                    };
+
+                foreach (var officeNumber in officeNumbers)
+                {
+                    siteInfo.Single(o => o.Environment == officeNumber);
+                }
             }
         }
 

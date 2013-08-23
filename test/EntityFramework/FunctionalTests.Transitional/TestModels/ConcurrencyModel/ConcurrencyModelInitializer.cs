@@ -4,6 +4,7 @@ namespace ConcurrencyModel
 {
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Utilities;
     using System.Linq;
 
     public class ConcurrencyModelInitializer : DropCreateDatabaseIfModelChanges<F1Context>
@@ -28,7 +29,7 @@ namespace ConcurrencyModel
                         {
                             Name = "Cosworth"
                         },
-                }.ForEach(s => context.EngineSuppliers.Add(s));
+                }.Each(s => context.EngineSuppliers.Add(s));
 
             var engineSuppliers = context.EngineSuppliers.Local;
             var mercedesEngine = new Engine
@@ -78,7 +79,7 @@ namespace ConcurrencyModel
                     renaultEngine,
                     ferrariEngine,
                     cosworthEngine
-                }.ForEach(e => context.Engines.Add(e));
+                }.Each(e => context.Engines.Add(e));
 
             new List<Team>
                 {
@@ -310,7 +311,7 @@ namespace ConcurrencyModel
                             Poles = 0,
                             FastestLaps = 0
                         },
-                }.ForEach(t => context.Teams.Add(t));
+                }.Each(t => context.Teams.Add(t));
 
             new List<Driver>
                 {
@@ -818,7 +819,7 @@ namespace ConcurrencyModel
                             Poles = 0,
                             FastestLaps = 0
                         },
-                }.ForEach(d => context.Drivers.Add(d));
+                }.Each(d => context.Drivers.Add(d));
 
             var shell = new Sponsor
                             {
@@ -852,7 +853,7 @@ namespace ConcurrencyModel
                     vodafone,
                     bridgestone,
                     fia
-                }.ForEach(s => context.Sponsors.Add(s));
+                }.Each(s => context.Sponsors.Add(s));
 
             // Intentionally using Local in the initializer to test that it works
             foreach (var team in context.Teams.Local)

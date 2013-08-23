@@ -66,7 +66,11 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                                         Guid.NewGuid(), "Building Two", 1000000m,
                                         new AddressMf("200 Work St", "Redmond", "WA", "98052", 2, "Contaminated")),
                                 };
-            buildings.ForEach(b => context.Buildings.Add(b));
+
+            foreach (var building in buildings)
+            {
+                context.Buildings.Add(building);
+            }
 
             var offices = new List<OfficeMf>
                               {
@@ -91,9 +95,13 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                                           Number = "2/1789"
                                       },
                               };
-            offices.ForEach(o => context.Offices.Add(o));
 
-            new List<EmployeeMf>
+            foreach (var office in offices)
+            {
+                context.Offices.Add(office);
+            }
+
+            var employees = new List<EmployeeMf>
                 {
                     new CurrentEmployeeMf("Rowan", "Miller")
                         {
@@ -112,9 +120,14 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                             EmployeeId = 3,
                             TerminationDate = new DateTime(2006, 1, 23)
                         },
-                }.ForEach(e => context.Employees.Add(e));
+                };
 
-            new List<WhiteboardMf>
+            foreach (var employee in employees)
+            {
+                context.Employees.Add(employee);
+            }
+
+            var whiteboards = new List<WhiteboardMf>
                 {
                     new WhiteboardMf
                         {
@@ -134,7 +147,13 @@ namespace FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns
                             iD = new byte[] { 1, 9, 7, 0 },
                             Office = offices[2]
                         },
-                }.ForEach(w => context.Whiteboards.Add(w));
+                };
+
+            foreach (var whiteboard in whiteboards)
+            {
+                context.Whiteboards.Add(whiteboard);
+            }
+
         }
     }
 }

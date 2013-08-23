@@ -10,7 +10,7 @@ namespace SimpleModel
     {
         protected override void Seed(SimpleModelForLinq context)
         {
-            new List<NumberForLinq>
+            var numbers = new List<NumberForLinq>
                 {
                     new NumberForLinq(5, "Five"),
                     new NumberForLinq(4, "Four"),
@@ -22,9 +22,14 @@ namespace SimpleModel
                     new NumberForLinq(7, "Seven"),
                     new NumberForLinq(2, "Two"),
                     new NumberForLinq(0, "Zero"),
-                }.ForEach(i => context.Numbers.Add(i));
+                };
 
-            new List<ProductForLinq>
+            foreach (var number in numbers)
+            {
+                context.Numbers.Add(number);
+            }
+
+            var products = new List<ProductForLinq>
                 {
                     new ProductForLinq
                         {
@@ -173,7 +178,12 @@ namespace SimpleModel
                             UnitPrice = 10.0000M,
                             UnitsInStock = 3
                         },
-                }.ForEach(i => context.Products.Add(i));
+                };
+
+            foreach (var product in products)
+            {
+                context.Products.Add(product);
+            }
 
             var customers = new List<CustomerForLinq>
                                 {
@@ -198,9 +208,13 @@ namespace SimpleModel
                                             CompanyName = "Microsoft"
                                         },
                                 };
-            customers.ForEach(i => context.Customers.Add(i));
 
-            new List<OrderForLinq>
+            foreach (var customer in customers)
+            {
+                context.Customers.Add(customer);
+            }
+
+            var orders = new List<OrderForLinq>
                 {
                     new OrderForLinq
                         {
@@ -244,7 +258,12 @@ namespace SimpleModel
                             OrderDate = new DateTime(1985, 9, 3),
                             Customer = customers[2]
                         },
-                }.ForEach(i => context.Orders.Add(i));
+                };
+
+            foreach (var order in orders)
+            {
+                context.Orders.Add(order);
+            }
         }
     }
 }

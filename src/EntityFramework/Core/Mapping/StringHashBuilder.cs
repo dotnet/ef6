@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Globalization;
     using System.Security.Cryptography;
@@ -98,7 +99,7 @@ namespace System.Data.Entity.Core.Mapping
         public override string ToString()
         {
             var builder = new StringBuilder();
-            _strings.ForEach(s => builder.Append(s));
+            _strings.Each(s => builder.Append(s));
             return builder.ToString();
         }
 

@@ -9,7 +9,7 @@ namespace SimpleModel
     {
         protected override void Seed(SimpleLocalDbModelContext context)
         {
-            new List<Product>
+            var products = new List<Product>
                 {
                     new Product
                         {
@@ -47,9 +47,14 @@ namespace SimpleModel
                             CategoryId = "Cars",
                             PromotionalCode = "Ed Wood"
                         },
-                }.ForEach(p => context.Products.Add(p));
+                };
 
-            new List<Category>
+            foreach (var product in products)
+            {
+                context.Products.Add(product);
+            }
+
+            var categories = new List<Category>
                 {
                     new Category
                         {
@@ -67,7 +72,12 @@ namespace SimpleModel
                         {
                             Id = "Cars"
                         },
-                }.ForEach(c => context.Categories.Add(c));
+                };
+
+            foreach (var category in categories)
+            {
+                context.Categories.Add(category);
+            }
         }
     }
 }

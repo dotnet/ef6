@@ -4,6 +4,7 @@ namespace SimpleModel
 {
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Utilities;
 
     public class SimpleModelInitializer : DropCreateDatabaseIfModelChanges<SimpleModelContext>
     {
@@ -47,7 +48,7 @@ namespace SimpleModel
                             CategoryId = "Cars",
                             PromotionalCode = "Ed Wood"
                         },
-                }.ForEach(p => context.Products.Add(p));
+                }.Each(p => context.Products.Add(p));
 
             new List<Category>
                 {
@@ -67,7 +68,7 @@ namespace SimpleModel
                         {
                             Id = "Cars"
                         },
-                }.ForEach(c => context.Categories.Add(c));
+                }.Each(c => context.Categories.Add(c));
         }
     }
 }

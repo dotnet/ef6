@@ -185,7 +185,7 @@ namespace System.Data.Entity.Internal
         /// </summary>
         protected override void ClearItems()
         {
-            new List<TEntity>(this).ForEach(t => Remove(t));
+            new List<TEntity>(this).Each(t => Remove(t));
         }
 
         /// <summary>

@@ -498,7 +498,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Add function parameters to the scope.
             //
-            functionInfo.Parameters.ForEach(p => sr.CurrentScope.Add(p.VariableName, new FreeVariableScopeEntry(p)));
+            functionInfo.Parameters.Each(p => sr.CurrentScope.Add(p.VariableName, new FreeVariableScopeEntry(p)));
 
             //
             // Convert function body expression
@@ -3381,7 +3381,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
                     //
                     // Adjust scope entries with the new binding.
                     //
-                    fromClauseEntries.ForEach(scopeEntry => scopeEntry.AddParentVar(fromBinding.Variable));
+                    fromClauseEntries.Each(scopeEntry => scopeEntry.AddParentVar(fromBinding.Variable));
                 }
             }
 
@@ -3532,7 +3532,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //     Select ... From A JOIN B JOIN C ON A.x = C.x  -> valid
             //     Select ... From A JOIN B, C JOIN A.x ...      -> valid
             //
-            leftExprScopeEntries.ForEach(scopeEntry => scopeEntry.IsJoinClauseLeftExpr = true);
+            leftExprScopeEntries.Each(scopeEntry => scopeEntry.IsJoinClauseLeftExpr = true);
 
             //
             // Process right expression
@@ -3543,7 +3543,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             // Unmark scope entries from the left expression to allow their usage.
             //
-            leftExprScopeEntries.ForEach(scopeEntry => scopeEntry.IsJoinClauseLeftExpr = false);
+            leftExprScopeEntries.Each(scopeEntry => scopeEntry.IsJoinClauseLeftExpr = false);
 
             //
             // Switch right outer to left outer.
@@ -3590,7 +3590,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             scopeEntries = leftExprScopeEntries;
             scopeEntries.AddRange(rightExprScopeEntries);
-            scopeEntries.ForEach(scopeEntry => scopeEntry.AddParentVar(joinBinding.Variable));
+            scopeEntries.Each(scopeEntry => scopeEntry.AddParentVar(joinBinding.Variable));
 
             Debug.Assert(joinBinding != null, "joinBinding != null");
 
@@ -3647,7 +3647,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             scopeEntries = leftExprScopeEntries;
             scopeEntries.AddRange(rightExprScopeEntries);
-            scopeEntries.ForEach(scopeEntry => scopeEntry.AddParentVar(applyBinding.Variable));
+            scopeEntries.Each(scopeEntry => scopeEntry.AddParentVar(applyBinding.Variable));
 
             Debug.Assert(applyBinding != null, "applyBinding != null");
 
@@ -4478,6 +4478,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         /// <summary>
         /// Process ORDER BY clause.
         /// </summary>
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static DbExpressionBinding ProcessOrderByClause(
             DbExpressionBinding source, QueryExpr queryExpr, out bool queryProjectionProcessed, SemanticResolver sr)
         {
@@ -4549,7 +4550,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
             //
             var savedScope = sr.CurrentScopeIndex;
             sr.EnterScope();
-            projectionItems.ForEach(
+            projectionItems.Each(
                 projectionItem => sr.CurrentScope.Add(projectionItem.Key, new ProjectionItemDefinitionScopeEntry(projectionItem.Value)));
 
             //

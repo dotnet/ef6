@@ -10,7 +10,7 @@ namespace AllTypeKeysModel
     {
         protected override void Seed(AllTypeKeysContext context)
         {
-            new List<CompositeKeyEntity>
+            var entities = new List<CompositeKeyEntity>
                 {
                     new CompositeKeyEntity
                         {
@@ -33,9 +33,14 @@ namespace AllTypeKeysModel
                             stringKey = "TheOneWithBinaryKeyLength5",
                             Details = "Maybe Details are important!"
                         },
-                }.ForEach(c => context.CompositeKeyEntities.Add(c));
+                };
 
-            new List<CompositeKeyEntityWithOrderingAnnotations>
+            foreach (var entity in entities)
+            {
+                context.CompositeKeyEntities.Add(entity);
+            }
+
+            var withOrdering = new List<CompositeKeyEntityWithOrderingAnnotations>
                 {
                     new CompositeKeyEntityWithOrderingAnnotations
                         {
@@ -55,7 +60,12 @@ namespace AllTypeKeysModel
                             stringKey = "TheOneWithBinaryKeyLength3",
                             binaryKey = new byte[] { 230, 231, 232 }
                         },
-                }.ForEach(c => context.CompositeKeyEntitiesWithOrderingAnnotations.Add(c));
+                };
+
+            foreach (var entity in withOrdering)
+            {
+                context.CompositeKeyEntitiesWithOrderingAnnotations.Add(entity);
+            }
 
             context.Set<BoolKeyEntity>().Add(
                 new BoolKeyEntity

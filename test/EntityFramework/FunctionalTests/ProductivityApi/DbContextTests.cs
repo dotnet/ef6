@@ -2095,7 +2095,10 @@ namespace ProductivityApiTests
             Assert.Equal(lazyLoadingEnabled, context.Configuration.LazyLoadingEnabled);
             Assert.Equal(lazyLoadingEnabled, GetObjectContext(context).ContextOptions.LazyLoadingEnabled);
 
-            context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
+            foreach (var entry in context.ChangeTracker.Entries().ToList())
+            {
+                entry.State = EntityState.Detached;
+            }
 
             var team = context.Drivers.First().Team;
             if (lazyLoadingEnabled)
@@ -2523,7 +2526,10 @@ namespace ProductivityApiTests
             Assert.Equal(proxyCreationEnabled, context.Configuration.ProxyCreationEnabled);
             Assert.Equal(proxyCreationEnabled, GetObjectContext(context).ContextOptions.ProxyCreationEnabled);
 
-            context.ChangeTracker.Entries().ToList().ForEach(e => e.State = EntityState.Detached);
+            foreach (var entry in context.ChangeTracker.Entries().ToList())
+            {
+                entry.State = EntityState.Detached;
+            }
 
             var driver = context.Drivers.First();
             if (proxyCreationEnabled)

@@ -49,8 +49,12 @@ namespace AdvancedPatternsModel
                                                           },
                                         },
                                 };
-            buildings.ForEach(b => context.Buildings.Add(b));
 
+            foreach (var building in buildings)
+            {
+                context.Buildings.Add(building);
+            }
+            
             var offices = new List<Office>
                               {
                                   new Office
@@ -74,9 +78,13 @@ namespace AdvancedPatternsModel
                                           Number = "2/1789"
                                       },
                               };
-            offices.ForEach(o => context.Offices.Add(o));
 
-            new List<Employee>
+            foreach (var office in offices)
+            {
+                context.Offices.Add(office);
+            }
+
+            var employees = new List<Employee>
                 {
                     new CurrentEmployee
                         {
@@ -101,9 +109,14 @@ namespace AdvancedPatternsModel
                             LastName = "Doe",
                             TerminationDate = new DateTime(2006, 1, 23)
                         },
-                }.ForEach(e => context.Employees.Add(e));
+                };
 
-            new List<Whiteboard>
+            foreach (var employee in employees)
+            {
+                context.Employees.Add(employee);
+            }
+
+            var whiteboards = new List<Whiteboard>
                 {
                     new Whiteboard
                         {
@@ -123,7 +136,12 @@ namespace AdvancedPatternsModel
                             iD = new byte[] { 1, 9, 7, 0 },
                             Office = offices[2]
                         },
-                }.ForEach(w => context.Whiteboards.Add(w));
+                };
+
+            foreach (var whiteboard in whiteboards)
+            {
+                context.Whiteboards.Add(whiteboard);
+            }
         }
     }
 }
