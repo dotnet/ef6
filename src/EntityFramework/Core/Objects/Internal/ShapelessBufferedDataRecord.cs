@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    internal class ShapelessBufferedDataRecord : BufferedDataRecordBase
+    internal class ShapelessBufferedDataRecord : BufferedDataRecord
     {
         private object[] _currentRow;
         private List<object[]> _resultSet;

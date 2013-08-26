@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    internal class ShapedBufferedDataRecord : BufferedDataRecordBase
+    internal class ShapedBufferedDataRecord : BufferedDataRecord
     {
         private int _rowCapacity = 1;
 
@@ -56,7 +56,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
         }
 
-        internal static BufferedDataRecordBase Initialize(
+        internal static BufferedDataRecord Initialize(
             string providerManifestToken, DbProviderServices providerServices, DbDataReader reader, Type[] columnTypes,
             bool[] nullableColumns)
         {
@@ -74,7 +74,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
 #if !NET40
 
-        internal static Task<BufferedDataRecordBase> InitializeAsync(
+        internal static Task<BufferedDataRecord> InitializeAsync(
             string providerManifestToken, DbProviderServices providerServices, DbDataReader reader, Type[] columnTypes,
             bool[] nullableColumns, CancellationToken cancellationToken)
         {
@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 #endif
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private BufferedDataRecordBase Initialize(
+        private BufferedDataRecord Initialize(
             DbDataReader reader, DbSpatialDataReader spatialDataReader, Type[] columnTypes, bool[] nullableColumns)
         {
             InitializeFields(columnTypes, nullableColumns);
@@ -328,7 +328,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
 
 
-        private async Task<BufferedDataRecordBase> InitializeAsync(
+        private async Task<BufferedDataRecord> InitializeAsync(
             DbDataReader reader, DbSpatialDataReader spatialDataReader, Type[] columnTypes, bool[] nullableColumns,
             CancellationToken cancellationToken)
         {

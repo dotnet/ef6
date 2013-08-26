@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    internal abstract class BufferedDataRecordBase
+    internal abstract class BufferedDataRecord
     {
         protected int _currentRowNumber = -1;
         protected int _rowCount;

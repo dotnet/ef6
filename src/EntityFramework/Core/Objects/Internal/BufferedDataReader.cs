@@ -22,8 +22,8 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal class BufferedDataReader : DbDataReader
     {
         private DbDataReader _underlyingReader;
-        private List<BufferedDataRecordBase> _bufferedDataRecords = new List<BufferedDataRecordBase>();
-        private BufferedDataRecordBase _currentResultSet;
+        private List<BufferedDataRecord> _bufferedDataRecords = new List<BufferedDataRecord>();
+        private BufferedDataRecord _currentResultSet;
         private int _currentResultSetNumber;
         private int _recordsAffected;
         private bool _disposed;
