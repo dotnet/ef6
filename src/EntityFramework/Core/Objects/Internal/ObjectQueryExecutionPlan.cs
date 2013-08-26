@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
 
                     bufferedReader = new BufferedDataReader(storeReader);
-                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices);
+                    bufferedReader.Initialize(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns);
 
                     shaper = shaperFactory.Create(
                         bufferedReader, context, context.MetadataWorkspace, MergeOption, true, Streaming);
@@ -165,7 +165,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                     bufferedReader = new BufferedDataReader(storeReader);
                     await
-                        bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, cancellationToken)
+                        bufferedReader.InitializeAsync(storeItemCollection.ProviderManifestToken, providerServices, shaperFactory.ColumnTypes, shaperFactory.NullableColumns, cancellationToken)
                                       .ConfigureAwait(continueOnCapturedContext: false);
 
                     shaper = shaperFactory.Create(

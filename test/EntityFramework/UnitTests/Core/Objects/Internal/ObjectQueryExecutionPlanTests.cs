@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(2)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             Assert.Equal(true, reader.IsClosed);
             var readerMock = Mock.Get(reader);
-            readerMock.Verify(m => m.GetValues(It.IsAny<object[]>()), streaming ? Times.Never() : Times.Once());
+            readerMock.Verify(m => m.GetValue(It.IsAny<int>()), streaming ? Times.Never() : Times.Once());
         }
 
 #if !NET40
@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -276,7 +276,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.SimpleType);
@@ -291,9 +291,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                 .Setup(m => m.GetEnumerator())
                 .Returns(((IEnumerable<ObjectParameter>)new[] { new ObjectParameter("Par1", 2) }).GetEnumerator());
 
-            var result = objectQueryExecutionPlan.ExecuteAsync<string>(
+            Assert.NotNull(objectQueryExecutionPlan.ExecuteAsync<string>(
                 objectContextMock.Object,
-                objectParameterCollectionMock.Object, CancellationToken.None).Result;
+                objectParameterCollectionMock.Object, CancellationToken.None).Result);
 
             Assert.Equal(!streaming, reader.IsClosed);
         }
@@ -334,7 +334,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var shaperFactory = new ShaperFactory<string>(
                 1,
                 Objects.MockHelper.CreateCoordinatorFactory(shaper => (string)shaper.Reader.GetValue(0)),
-                MergeOption.AppendOnly);
+                new[] { typeof(string) }, new[] { true }, MergeOption.AppendOnly);
 
             var edmTypeMock = new Mock<EdmType>();
             edmTypeMock.Setup(m => m.BuiltInTypeKind).Returns(BuiltInTypeKind.CollectionType);

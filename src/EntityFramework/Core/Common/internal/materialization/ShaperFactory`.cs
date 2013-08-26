@@ -21,12 +21,17 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         private readonly MergeOption _mergeOption;
 
         internal ShaperFactory(
-            int stateCount, CoordinatorFactory<T> rootCoordinatorFactory, MergeOption mergeOption)
+            int stateCount, CoordinatorFactory<T> rootCoordinatorFactory,  Type[] columnTypes, bool[] nullableColumns, MergeOption mergeOption)
         {
             _stateCount = stateCount;
             _rootCoordinatorFactory = rootCoordinatorFactory;
+            ColumnTypes = columnTypes;
+            NullableColumns = nullableColumns;
             _mergeOption = mergeOption;
         }
+
+        public Type[] ColumnTypes { get; private set; }
+        public bool[] NullableColumns { get; private set; }
 
         /// <summary>
         /// Factory method to create the Shaper for Object Layer queries.

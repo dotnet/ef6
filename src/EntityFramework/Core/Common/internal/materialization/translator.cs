@@ -18,6 +18,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
 
@@ -45,7 +46,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // If the query cache already contains a plan, then we're done
             ShaperFactory<T> result;
             var columnMapKey = ColumnMapKeyBuilder.GetColumnMapKey(columnMap, spanIndex);
-            var cacheKey = new ShaperFactoryQueryCacheKey<T>(columnMapKey, mergeOption, valueLayer);
+            var cacheKey = new ShaperFactoryQueryCacheKey<T>(columnMapKey, mergeOption, streaming, valueLayer);
 
             var queryCacheManager = workspace.GetQueryCacheManager();
             if (queryCacheManager.TryCacheLookup(cacheKey, out result))
@@ -69,11 +70,31 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // delegates for the expressions we generated.
             var coordinatorFactory = (CoordinatorFactory<T>)translatorVisitor.RootCoordinatorScratchpad.Compile();
 
+            Type[] columnTypes = null;
+            bool[] nullableColumns = null;
+            if (!streaming)
+            {
+                var maxColumn = Math.Max(
+                    translatorVisitor.ColumnTypes.Any() ? translatorVisitor.ColumnTypes.Keys.Max() : 0,
+                    translatorVisitor.NullableColumns.Any() ? translatorVisitor.NullableColumns.Max() : 0);
+                columnTypes = new Type[maxColumn + 1];
+                foreach (var columnType in translatorVisitor.ColumnTypes)
+                {
+                    columnTypes[columnType.Key] = columnType.Value;
+                }
+
+                nullableColumns = new bool[maxColumn + 1];
+                foreach (var nullableColumn in translatorVisitor.NullableColumns)
+                {
+                    nullableColumns[nullableColumn] = true;
+                }
+            }
+
             // Finally, take everything we've produced, and create the ShaperFactory to
             // contain it all, then add it to the query cache so we don't need to do this
             // for this query again.
             result = new ShaperFactory<T>(
-                translatorVisitor.StateSlotCount, coordinatorFactory, mergeOption);
+                translatorVisitor.StateSlotCount, coordinatorFactory, columnTypes, nullableColumns, mergeOption);
             var cacheEntry = new QueryCacheEntry(cacheKey, result);
             if (queryCacheManager.TryLookupAndAdd(cacheEntry, out cacheEntry))
             {
@@ -125,7 +146,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// </summary>
             private readonly MergeOption _mergeOption;
 
-            [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             private readonly bool _streaming;
 
             /// <summary>
@@ -145,6 +165,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// </summary>
             private readonly Dictionary<EdmType, ObjectTypeMapping> _objectTypeMappings = new Dictionary<EdmType, ObjectTypeMapping>();
 
+            private bool _inNullableType;
+
             #endregion
 
             private static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper =
@@ -162,6 +184,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 _spanIndex = spanIndex;
                 _mergeOption = mergeOption;
                 _streaming = streaming;
+                ColumnTypes = new Dictionary<int, Type>();
+                NullableColumns = new Set<int>();
                 IsValueLayer = valueLayer;
             }
 
@@ -177,6 +201,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// values during materialization)
             /// </summary>
             public int StateSlotCount { get; private set; }
+
+            // Information for the buffered reader
+            public Dictionary<int, Type> ColumnTypes { get; private set; }
+            public Set<int> NullableColumns { get; private set; }
 
             // utility accept that looks up CLR type
             private static TranslatorResult AcceptWithMappedType(TranslatorVisitor translatorVisitor, ColumnMap columnMap)
@@ -198,9 +226,17 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 Expression result = null;
                 Expression nullSentinelCheck = null;
 
+                var originalInNullableType = _inNullableType;
                 if (null != columnMap.NullSentinel)
                 {
                     nullSentinelCheck = CodeGenEmitter.Emit_Reader_IsDBNull(columnMap.NullSentinel);
+
+                    _inNullableType = true;
+                    var ordinal = ((ScalarColumnMap)columnMap.NullSentinel).ColumnPos;
+                    if (!_streaming && !NullableColumns.Contains(ordinal))
+                    {
+                        NullableColumns.Add(ordinal);
+                    }
                 }
 
                 if (IsValueLayer)
@@ -229,6 +265,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         result = Expression.Condition(nullSentinelCheck, CodeGenEmitter.Emit_NullConstant(result.Type), result);
                     }
                 }
+
+                _inNullableType = originalInNullableType;
                 return new TranslatorResult(result, arg.RequestedType);
             }
 
@@ -354,6 +392,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         constructEntity,
                         CodeGenEmitter.Emit_WrappedNullConstant()
                         );
+                }
+
+                var ordinal = ((ScalarColumnMap)entityIdentity.Keys[0]).ColumnPos;
+                if (!_streaming && !NullableColumns.Contains(ordinal))
+                {
+                    NullableColumns.Add(ordinal);
                 }
 
                 return new TranslatorResult(result, arg.RequestedType);
@@ -495,10 +539,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         discriminatorMatches = CodeGenEmitter.Emit_Equal(discriminatorConstant, discriminatorReader);
                     }
 
+                    var originalInNullableType = _inNullableType;
+                    _inNullableType = true;
                     result = Expression.Condition(
                         discriminatorMatches,
                         typeChoice.Value.Accept(this, arg).Expression,
                         result);
+                    _inNullableType = originalInNullableType;
                 }
                 return new TranslatorResult(result, arg.RequestedType);
             }
@@ -567,9 +614,16 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 Expression result = null;
                 Expression nullSentinelCheck = null;
 
+                var originalInNullableType = _inNullableType;
                 if (null != columnMap.NullSentinel)
                 {
                     nullSentinelCheck = CodeGenEmitter.Emit_Reader_IsDBNull(columnMap.NullSentinel);
+                    _inNullableType = true;
+                    var ordinal = ((ScalarColumnMap)columnMap.NullSentinel).ColumnPos;
+                    if (!_streaming && !NullableColumns.Contains(ordinal))
+                    {
+                        NullableColumns.Add(ordinal);
+                    }
                 }
 
                 if (IsValueLayer)
@@ -614,6 +668,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                         result = Expression.Condition(nullSentinelCheck, nullConstant, result);
                     }
                 }
+                _inNullableType = originalInNullableType;
                 return new TranslatorResult(result, arg.RequestedType);
             }
 
@@ -881,6 +936,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     }
                 }
 
+                var originalInNullableType = _inNullableType;
+                if (discriminatorColumnMap != null)
+                {
+                    _inNullableType = true;
+                }
+
                 // Build the expression that will construct the element of the collection
                 // from the source data reader.
                 // We use UnconvertedExpression here so we can defer doing type checking in case
@@ -912,6 +973,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 if (null != discriminatorColumnMap)
                 {
                     discriminatorReader = AcceptWithMappedType(this, discriminatorColumnMap).Expression;
+                    _inNullableType = originalInNullableType;
                 }
 
                 // get expression retrieving the coordinator
@@ -1108,6 +1170,13 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     Emit_EntityKey_ctor(this, entityIdentity, true, out entitySetReader),
                     Expression.Constant(null, typeof(EntityKey))
                     );
+
+                var ordinal = ((ScalarColumnMap)entityIdentity.Keys[0]).ColumnPos;
+                if (!_streaming && !NullableColumns.Contains(ordinal))
+                {
+                    NullableColumns.Add(ordinal);
+                }
+
                 return new TranslatorResult(result, arg.RequestedType);
             }
 
@@ -1117,6 +1186,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             /// type of the column.  Of course we have to handle nullable/non-nullable
             /// types, and non-value types.
             /// </summary>
+            [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
             internal override TranslatorResult Visit(ScalarColumnMap columnMap, TranslatorArg arg)
             {
                 var type = arg.RequestedType;
@@ -1131,6 +1201,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // 3. Also create a version of the expression with error handling so that we can throw better exception messages when needed
                 //
                 PrimitiveTypeKind typeKind;
+                Type nonNullableType = null;
                 if (Helper.IsSpatialType(columnType, out typeKind))
                 {
                     Debug.Assert(
@@ -1143,6 +1214,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                 ? CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeographyColumnValue(ordinal), type)
                                 : CodeGenEmitter.Emit_EnsureType(CodeGenEmitter.Emit_Shaper_GetGeometryColumnValue(ordinal), type),
                             ordinal, type);
+
+                    if (!_streaming && !NullableColumns.Contains(ordinal))
+                    {
+                        NullableColumns.Add(ordinal);
+                    }
                 }
                 else
                 {
@@ -1154,7 +1230,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // if the requested type is a nullable enum we need to cast it first to the non-nullable enum type to avoid InvalidCastException.
                     // Note that we guard against null values by wrapping the expression with DbNullCheck later. Also we don't actually 
                     // look at the type of the value returned by reader. If the value is not castable to enum we will fail with cast exception.
-                    var nonNullableType = TypeSystem.GetNonNullableType(type);
+                    nonNullableType = TypeSystem.GetNonNullableType(type);
                     if (nonNullableType.IsEnum
                         && nonNullableType != type)
                     {
@@ -1182,6 +1258,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                 Expression.Convert(
                                     Expression.Convert(result, TypeSystem.GetNonNullableType(DetermineClrType(columnType.EdmType))),
                                     typeof(object)));
+
+                            if (!_streaming && !NullableColumns.Contains(ordinal))
+                            {
+                                NullableColumns.Add(ordinal);
+                            }
                         }
                     }
 
@@ -1191,6 +1272,38 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     if (needsNullableCheck)
                     {
                         result = CodeGenEmitter.Emit_Conditional_NotDBNull(result, ordinal, type);
+
+                        if (!_streaming && !NullableColumns.Contains(ordinal))
+                        {
+                            NullableColumns.Add(ordinal);
+                        }
+                    }
+                }
+
+                if (!_streaming)
+                {
+                    var expectedColumnType = nonNullableType ?? type;
+                    expectedColumnType = expectedColumnType.IsEnum ? expectedColumnType.GetEnumUnderlyingType() : expectedColumnType;
+                    Type existingType;
+                    if (ColumnTypes.TryGetValue(ordinal, out existingType))
+                    {
+                        if (existingType == typeof(object) && expectedColumnType != typeof(object))
+                        {
+                            ColumnTypes[ordinal] = expectedColumnType;
+                        }
+                        else
+                        {
+                            Debug.Assert((existingType != typeof(object) && expectedColumnType == typeof(object)) || expectedColumnType == existingType, 
+                                "Different types", "Column {0}, old type '{1}', new type '{2}'", ordinal, existingType, expectedColumnType);
+                        }
+                    }
+                    else
+                    {
+                        ColumnTypes.Add(ordinal, expectedColumnType);
+                        if (_inNullableType && !NullableColumns.Contains(ordinal))
+                        {
+                            NullableColumns.Add(ordinal);
+                        }
                     }
                 }
 
