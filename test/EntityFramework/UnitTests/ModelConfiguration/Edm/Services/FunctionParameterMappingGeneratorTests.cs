@@ -204,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       };
 
             var memberPath
-                = new StorageModificationFunctionMemberPath(
+                = new ModificationFunctionMemberPath(
                     new EdmMember[] { new EdmProperty("P"), associationType.TargetEnd },
                     associationSet);
 

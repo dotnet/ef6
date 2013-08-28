@@ -364,7 +364,7 @@ using System.Data.Entity.Infrastructure;
             var storageMappingItemCollection = 
                 CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl});
 
-            var containerMapping = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().First();
+            var containerMapping = storageMappingItemCollection.GetItems<EntityContainerMapping>().First();
             foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
             {
                 entityTypeMapping.SetMapping.RemoveTypeMapping(entityTypeMapping);

@@ -4,11 +4,11 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.ObjectModel;
 
-    internal abstract class StructuralTypeMapping
+    internal abstract class StructuralTypeMapping : MappingItem
     {
-        public abstract ReadOnlyCollection<StoragePropertyMapping> Properties { get; }
+        public abstract ReadOnlyCollection<PropertyMapping> Properties { get; }
 
-        internal abstract void AddProperty(StoragePropertyMapping propertyMapping);
-        internal abstract void RemoveProperty(StoragePropertyMapping propertyMapping);
+        internal abstract void AddProperty(PropertyMapping propertyMapping);
+        internal abstract void RemoveProperty(PropertyMapping propertyMapping);
     }
 }

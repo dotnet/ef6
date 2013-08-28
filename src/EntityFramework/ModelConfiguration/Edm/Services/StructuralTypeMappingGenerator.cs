@@ -109,7 +109,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                    && !facet.Description.IsConstant;
         }
 
-        protected static StorageEntityTypeMapping GetEntityTypeMappingInHierarchy(
+        protected static EntityTypeMapping GetEntityTypeMappingInHierarchy(
             DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             DebugCheck.NotNull(databaseMapping);

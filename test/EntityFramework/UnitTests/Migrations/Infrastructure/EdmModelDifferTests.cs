@@ -782,8 +782,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                  {
                                      Model = sourceModel,
                                      StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                                     StorageEntityContainerMapping
-                                         = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                     EntityContainerMapping
+                                         = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
                                      ProviderManifest = GetProviderManifest(providerInfo),
                                      ProviderInfo = providerInfo
                                  };
@@ -794,8 +794,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                      // Use the source model here since it doesn't effect the test and the SQL Server provider
                                      // won't load the target model
                                      StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                                     StorageEntityContainerMapping
-                                         = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                                     EntityContainerMapping
+                                         = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
                                      ProviderManifest = GetProviderManifest(providerInfo),
                                      ProviderInfo = providerInfo
                                  };

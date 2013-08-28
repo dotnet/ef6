@@ -34,7 +34,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                           TableName = new DatabaseName("Foo")
                       };
 
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
 
             entityTypeMapping.AddType(new EntityType("E", "N", DataSpace.CSpace));
 
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             var table = databaseMapping.Database.AddTable("foo");
             var entitySet = databaseMapping.Database.GetEntitySet(table);
 
-            entityTypeMapping.AddFragment(new StorageMappingFragment(entitySet, entityTypeMapping, false));
+            entityTypeMapping.AddFragment(new MappingFragment(entitySet, entityTypeMapping, false));
             
             entityMappingConfiguration.Configure(
                 databaseMapping, ProviderRegistry.Sql2008_ProviderManifest, entityTypeMapping.EntityType, ref entityTypeMapping, false, 0, 1);

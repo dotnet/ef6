@@ -46,7 +46,14 @@ namespace System.Data.Entity.Core.Mapping
         internal void AppendObjectStartDump(object o, int objectIndex)
         {
             base.Append(string.Empty.PadLeft(SpacesPerIndent * _indent, ' '));
-            base.Append(o.GetType().ToString());
+
+            var legacyMappingItem = o as ILegacyMappingItem;
+
+            base.Append(
+                legacyMappingItem != null
+                    ? legacyMappingItem.TypeFullName
+                    : o.GetType().ToString());
+
             base.Append(" Instance#");
             base.AppendLine(objectIndex.ToString(CultureInfo.InvariantCulture));
             CompressHash();

@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             modificationFunctionsConfigurationMock
                 .Verify(
                     m => m.Configure(
-                        It.IsAny<StorageEntityTypeModificationFunctionMapping>(), It.IsAny<DbProviderManifest>()),
+                        It.IsAny<EntityTypeModificationFunctionMapping>(), It.IsAny<DbProviderManifest>()),
                     Times.Once());
         }
 

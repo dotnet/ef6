@@ -60,7 +60,7 @@ namespace System.Data.Entity.Core.Mapping
                         {
                             throw new EntityCommandExecutionException(
                                 Strings.Mapping_FunctionImport_ConditionValueTypeMismatch(
-                                    StorageMslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
+                                    MslConstructs.FunctionImportMappingElement, ColumnName, columnValueType.FullName));
                         });
         }
 
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping
             PrimitiveType primitiveType;
             if (!ClrProviderManifest.Instance.TryGetPrimitiveType(columnValueType, out primitiveType)
                 ||
-                !StorageMappingItemLoader.IsTypeSupportedForCondition(primitiveType.PrimitiveTypeKind))
+                !MappingItemLoader.IsTypeSupportedForCondition(primitiveType.PrimitiveTypeKind))
             {
                 handleTypeNotComparable();
                 return null;

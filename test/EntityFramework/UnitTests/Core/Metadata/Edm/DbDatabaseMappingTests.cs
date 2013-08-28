@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             Assert.Empty(mapping.EntityContainerMappings);
 
-            var containerMapping = new StorageEntityContainerMapping(new EntityContainer());
+            var containerMapping = new EntityContainerMapping(new EntityContainer());
             mapping.AddEntityContainerMapping(containerMapping);
 
             Assert.Same(containerMapping, mapping.EntityContainerMappings.Single());

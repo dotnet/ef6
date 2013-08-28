@@ -13,7 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     {
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static object GetConfiguration(this StorageEntityTypeMapping entityTypeMapping)
+        public static object GetConfiguration(this EntityTypeMapping entityTypeMapping)
         {
             DebugCheck.NotNull(entityTypeMapping);
 
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Used by test code.")]
-        public static void SetConfiguration(this StorageEntityTypeMapping entityTypeMapping, object configuration)
+        public static void SetConfiguration(this EntityTypeMapping entityTypeMapping, object configuration)
         {
             DebugCheck.NotNull(entityTypeMapping);
             DebugCheck.NotNull(configuration);
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static ColumnMappingBuilder GetPropertyMapping(
-            this StorageEntityTypeMapping entityTypeMapping, params EdmProperty[] propertyPath)
+            this EntityTypeMapping entityTypeMapping, params EdmProperty[] propertyPath)
         {
             DebugCheck.NotNull(entityTypeMapping);
             DebugCheck.NotNull(propertyPath);
@@ -42,24 +42,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                                     .Single(p => p.PropertyPath.SequenceEqual(propertyPath));
         }
 
-        public static EntityType GetPrimaryTable(this StorageEntityTypeMapping entityTypeMapping)
+        public static EntityType GetPrimaryTable(this EntityTypeMapping entityTypeMapping)
         {
             return entityTypeMapping.MappingFragments.First().Table;
         }
 
-        public static bool UsesOtherTables(this StorageEntityTypeMapping entityTypeMapping, EntityType table)
+        public static bool UsesOtherTables(this EntityTypeMapping entityTypeMapping, EntityType table)
         {
             return entityTypeMapping.MappingFragments.Any(f => f.Table != table);
         }
 
-        public static Type GetClrType(this StorageEntityTypeMapping entityTypeMappping)
+        public static Type GetClrType(this EntityTypeMapping entityTypeMappping)
         {
             DebugCheck.NotNull(entityTypeMappping);
 
             return entityTypeMappping.Annotations.GetClrType();
         }
 
-        public static void SetClrType(this StorageEntityTypeMapping entityTypeMapping, Type type)
+        public static void SetClrType(this EntityTypeMapping entityTypeMapping, Type type)
         {
             DebugCheck.NotNull(entityTypeMapping);
             DebugCheck.NotNull(type);
@@ -67,11 +67,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             entityTypeMapping.Annotations.SetClrType(type);
         }
 
-        public static StorageEntityTypeMapping Clone(this StorageEntityTypeMapping entityTypeMapping)
+        public static EntityTypeMapping Clone(this EntityTypeMapping entityTypeMapping)
         {
             DebugCheck.NotNull(entityTypeMapping);
 
-            var clone = new StorageEntityTypeMapping(null);
+            var clone = new EntityTypeMapping(null);
 
             clone.AddType(entityTypeMapping.EntityType);
 

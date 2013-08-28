@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         // provider information
         private readonly DbProviderServices _providerServices;
-        private Dictionary<StorageModificationFunctionMapping, DbCommandDefinition> _modificationFunctionCommandDefinitions;
+        private Dictionary<ModificationFunctionMapping, DbCommandDefinition> _modificationFunctionCommandDefinitions;
 
         // metadata cache
         private readonly Dictionary<Tuple<EntitySetBase, StructuralType>, ExtractorMetadata> _extractorMetadata;
@@ -669,11 +669,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         // Generates and caches a command definition for the given function
-        internal DbCommandDefinition GenerateCommandDefinition(StorageModificationFunctionMapping functionMapping)
+        internal DbCommandDefinition GenerateCommandDefinition(ModificationFunctionMapping functionMapping)
         {
             if (null == _modificationFunctionCommandDefinitions)
             {
-                _modificationFunctionCommandDefinitions = new Dictionary<StorageModificationFunctionMapping, DbCommandDefinition>();
+                _modificationFunctionCommandDefinitions = new Dictionary<ModificationFunctionMapping, DbCommandDefinition>();
             }
             DbCommandDefinition commandDefinition;
             if (!_modificationFunctionCommandDefinitions.TryGetValue(functionMapping, out commandDefinition))

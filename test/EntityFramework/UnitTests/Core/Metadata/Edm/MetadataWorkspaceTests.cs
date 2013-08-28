@@ -387,7 +387,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             "  </EntityContainerMapping>" +
             "</Mapping>";
 
-        private static readonly string _mslV3 = string.Format(CultureInfo.InvariantCulture, MslTemplate, StorageMslConstructs.NamespaceUriV3);
+        private static readonly string _mslV3 = string.Format(CultureInfo.InvariantCulture, MslTemplate, MslConstructs.NamespaceUriV3);
 
     }
 }

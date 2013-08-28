@@ -192,7 +192,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         }
 
         internal void Configure(
-            StorageAssociationSetMapping associationSetMapping,
+            AssociationSetMapping associationSetMapping,
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest)
         {

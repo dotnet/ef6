@@ -24,7 +24,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             databaseMapping.Model = model;
             databaseMapping.Database = database;
 
-            databaseMapping.AddEntityContainerMapping(new StorageEntityContainerMapping(model.Containers.Single()));
+            databaseMapping.AddEntityContainerMapping(new EntityContainerMapping(model.Containers.Single()));
 
             return databaseMapping;
         }
@@ -74,7 +74,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             }
         }
 
-        public static StorageEntityTypeMapping GetEntityTypeMapping(
+        public static EntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return mappings.SingleOrDefault(m => m.IsHierarchyMapping);
         }
 
-        public static IList<StorageEntityTypeMapping> GetEntityTypeMappings(
+        public static IList<EntityTypeMapping> GetEntityTypeMappings(
             this DbDatabaseMapping databaseMapping, EntityType entityType)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             // please don't convert this section of code to a Linq expression since
             // it is performance sensitive, especially for larger models.
-            var mappings = new List<StorageEntityTypeMapping>();
+            var mappings = new List<EntityTypeMapping>();
             foreach (var esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings)
             {
                 foreach (var etm in esm.EntityTypeMappings)
@@ -113,7 +113,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return mappings;
         }
 
-        public static StorageEntityTypeMapping GetEntityTypeMapping(
+        public static EntityTypeMapping GetEntityTypeMapping(
             this DbDatabaseMapping databaseMapping, Type clrType)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -121,7 +121,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             // please don't convert this section of code to a Linq expression since
             // it is performance sensitive, especially for larger models.
-            var mappings = new List<StorageEntityTypeMapping>();
+            var mappings = new List<EntityTypeMapping>();
             foreach (var esm in databaseMapping.EntityContainerMappings.Single().EntitySetMappings)
             {
                 foreach (var etm in esm.EntityTypeMappings)
@@ -159,7 +159,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    select Tuple.Create(epm, etmf.Table);
         }
 
-        public static IEnumerable<StorageModificationFunctionParameterBinding> GetComplexParameterBindings(
+        public static IEnumerable<ModificationFunctionParameterBinding> GetComplexParameterBindings(
             this DbDatabaseMapping databaseMapping, Type complexType)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -176,7 +176,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    select pb;
         }
 
-        public static StorageEntitySetMapping GetEntitySetMapping(
+        public static EntitySetMapping GetEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -189,7 +189,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .SingleOrDefault(e => e.EntitySet == entitySet);
         }
 
-        public static IEnumerable<StorageEntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
+        public static IEnumerable<EntitySetMapping> GetEntitySetMappings(this DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
 
@@ -199,7 +199,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .EntitySetMappings;
         }
 
-        public static IEnumerable<StorageAssociationSetMapping> GetAssociationSetMappings(
+        public static IEnumerable<AssociationSetMapping> GetAssociationSetMappings(
             this DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -210,13 +210,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .AssociationSetMappings;
         }
 
-        public static StorageEntitySetMapping AddEntitySetMapping(
+        public static EntitySetMapping AddEntitySetMapping(
             this DbDatabaseMapping databaseMapping, EntitySet entitySet)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(entitySet);
 
-            var entitySetMapping = new StorageEntitySetMapping(entitySet, null);
+            var entitySetMapping = new EntitySetMapping(entitySet, null);
 
             databaseMapping
                 .EntityContainerMappings
@@ -226,14 +226,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return entitySetMapping;
         }
 
-        public static StorageAssociationSetMapping AddAssociationSetMapping(
+        public static AssociationSetMapping AddAssociationSetMapping(
             this DbDatabaseMapping databaseMapping, AssociationSet associationSet, EntitySet entitySet)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(associationSet);
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(associationSet, entitySet).Initialize();
+                = new AssociationSetMapping(associationSet, entitySet).Initialize();
 
             databaseMapping
                 .EntityContainerMappings

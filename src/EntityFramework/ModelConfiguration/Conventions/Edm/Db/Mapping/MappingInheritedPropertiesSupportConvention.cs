@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         private static bool RemapsInheritedProperties(
-            DbDatabaseMapping databaseMapping, StorageEntityTypeMapping entityTypeMapping)
+            DbDatabaseMapping databaseMapping, EntityTypeMapping entityTypeMapping)
         {
             var inheritedProperties = entityTypeMapping.EntityType.Properties
                                                        .Except(entityTypeMapping.EntityType.DeclaredProperties)
@@ -66,14 +66,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             return false;
         }
 
-        private static StorageMappingFragment GetFragmentForPropertyMapping(
-            StorageEntityTypeMapping entityTypeMapping, EdmProperty property)
+        private static MappingFragment GetFragmentForPropertyMapping(
+            EntityTypeMapping entityTypeMapping, EdmProperty property)
         {
             return entityTypeMapping.MappingFragments
                                     .SingleOrDefault(tmf => tmf.ColumnMappings.Any(pm => pm.PropertyPath.Last() == property));
         }
 
-        private static bool HasBaseWithIsTypeOf(StorageEntitySetMapping entitySetMapping, EntityType entityType)
+        private static bool HasBaseWithIsTypeOf(EntitySetMapping entitySetMapping, EntityType entityType)
         {
             var baseType = entityType.BaseType;
 

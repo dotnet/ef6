@@ -10,7 +10,7 @@ namespace System.Data.Entity.Core.Mapping
     {
         private EdmProperty _columnProperty;
         private readonly IList<EdmProperty> _propertyPath;
-        private StorageScalarPropertyMapping _scalarPropertyMapping;
+        private ScalarPropertyMapping _scalarPropertyMapping;
 
         public ColumnMappingBuilder(EdmProperty columnProperty, IList<EdmProperty> propertyPath)
         {
@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        internal void SetTarget(StorageScalarPropertyMapping scalarPropertyMapping)
+        internal void SetTarget(ScalarPropertyMapping scalarPropertyMapping)
         {
             _scalarPropertyMapping = scalarPropertyMapping;
         }

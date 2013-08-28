@@ -19,14 +19,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     {
         // effects: Creates a cell creator object for an entity container's
         // mappings (specified in "maps")
-        internal CellCreator(StorageEntityContainerMapping containerMapping)
+        internal CellCreator(EntityContainerMapping containerMapping)
         {
             m_containerMapping = containerMapping;
             m_identifiers = new CqlIdentifiers();
         }
 
         // The mappings from the metadata for different containers
-        private readonly StorageEntityContainerMapping m_containerMapping;
+        private readonly EntityContainerMapping m_containerMapping;
         private int m_currentCellNumber;
         private readonly CqlIdentifiers m_identifiers;
         // Keep track of all the identifiers to prevent clashes with _from0,
@@ -274,10 +274,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 // CPerson, CCustomer, etc in CPerson1
                 foreach (var typeMap in extentMap.TypeMappings)
                 {
-                    var entityTypeMap = typeMap as StorageEntityTypeMapping;
+                    var entityTypeMap = typeMap as EntityTypeMapping;
                     Debug.Assert(
                         entityTypeMap != null ||
-                        typeMap is StorageAssociationTypeMapping, "Invalid typemap");
+                        typeMap is AssociationTypeMapping, "Invalid typemap");
 
                     // A set for all the types in this type mapping
                     var allTypes = new Set<EdmType>();
@@ -317,7 +317,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // represents -- this parameter has something useful only if extent
         // is an entity set
         private void ExtractCellsFromTableFragment(
-            EntitySetBase extent, StorageMappingFragment fragmentMap,
+            EntitySetBase extent, MappingFragment fragmentMap,
             Set<EdmType> allTypes, List<Cell> cells)
         {
             // create C-query components
@@ -364,7 +364,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // properties. Also updates the C-side whereclause corresponding to
         // discriminator properties on the C-side, e.g, isHighPriority
         private void ExtractProperties(
-            IEnumerable<StoragePropertyMapping> properties,
+            IEnumerable<PropertyMapping> properties,
             MemberPath cNode, List<ProjectedSlot> cSlots,
             ref BoolExpression cQueryWhereClause,
             MemberPath sRootExtent,
@@ -374,10 +374,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             // For each property mapping, we add an entry to the C and S cell queries
             foreach (var propMap in properties)
             {
-                var scalarPropMap = propMap as StorageScalarPropertyMapping;
-                var complexPropMap = propMap as StorageComplexPropertyMapping;
-                var associationEndPropertypMap = propMap as StorageEndPropertyMapping;
-                var conditionMap = propMap as StorageConditionPropertyMapping;
+                var scalarPropMap = propMap as ScalarPropertyMapping;
+                var complexPropMap = propMap as ComplexPropertyMapping;
+                var associationEndPropertypMap = propMap as EndPropertyMapping;
+                var conditionMap = propMap as ConditionPropertyMapping;
 
                 Debug.Assert(
                     scalarPropMap != null ||
@@ -470,7 +470,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// Takes in a JoinTreeNode and a Contition Property Map and creates an BoolExpression
         /// for the Condition Map.
         /// </summary>
-        private static BoolExpression GetConditionExpression(MemberPath member, StorageConditionPropertyMapping conditionMap)
+        private static BoolExpression GetConditionExpression(MemberPath member, ConditionPropertyMapping conditionMap)
         {
             //Get the member for which the condition is being specified
             EdmMember conditionMember = (conditionMap.ColumnProperty != null) ? conditionMap.ColumnProperty : conditionMap.EdmProperty;

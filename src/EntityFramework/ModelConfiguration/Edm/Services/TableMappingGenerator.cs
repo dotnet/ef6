@@ -32,10 +32,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       ? entitySetMapping.EntityTypeMappings.First().MappingFragments.First().Table
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
 
             var entityTypeMappingFragment
-                = new StorageMappingFragment(databaseMapping.Database.GetEntitySet(table), entityTypeMapping, false);
+                = new MappingFragment(databaseMapping.Database.GetEntitySet(table), entityTypeMapping, false);
 
             entityTypeMapping.AddType(entityType);
             entityTypeMapping.AddFragment(entityTypeMappingFragment);

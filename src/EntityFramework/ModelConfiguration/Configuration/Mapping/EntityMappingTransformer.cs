@@ -456,10 +456,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
     internal class EntityMappingOperations
     {
-        public static StorageMappingFragment CreateTypeMappingFragment(
-            StorageEntityTypeMapping entityTypeMapping, StorageMappingFragment templateFragment, EntitySet tableSet)
+        public static MappingFragment CreateTypeMappingFragment(
+            EntityTypeMapping entityTypeMapping, MappingFragment templateFragment, EntitySet tableSet)
         {
-            var fragment = new StorageMappingFragment(tableSet, entityTypeMapping, false);
+            var fragment = new MappingFragment(tableSet, entityTypeMapping, false);
 
             entityTypeMapping.AddFragment(fragment);
 
@@ -489,7 +489,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public static void UpdatePropertyMappings(
             EdmModel database,
             EntityType fromTable,
-            StorageMappingFragment fragment,
+            MappingFragment fragment,
             bool useExisting)
         {
             // move the column from the formTable to the table in fragment
@@ -502,8 +502,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         public static void MovePropertyMapping(
             EdmModel database,
-            StorageMappingFragment fromFragment,
-            StorageMappingFragment toFragment,
+            MappingFragment fromFragment,
+            MappingFragment toFragment,
             ColumnMappingBuilder propertyMappingBuilder,
             bool requiresUpdate,
             bool useExisting)
@@ -520,7 +520,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void CopyPropertyMappingToFragment(
-            ColumnMappingBuilder propertyMappingBuilder, StorageMappingFragment fragment, bool useExisting)
+            ColumnMappingBuilder propertyMappingBuilder, MappingFragment fragment, bool useExisting)
         {
             // Ensure column is in the fragment's table
             var column = TablePrimitiveOperations.IncludeColumn(fragment.Table, propertyMappingBuilder.ColumnProperty, useExisting);
@@ -531,7 +531,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void UpdateConditions(
-            EdmModel database, EntityType fromTable, StorageMappingFragment fragment)
+            EdmModel database, EntityType fromTable, MappingFragment fragment)
         {
             // move the condition's column from the formTable to the table in fragment
             if (fromTable != fragment.Table)
@@ -550,8 +550,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     internal class AssociationMappingOperations
     {
         private static void MoveAssociationSetMappingDependents(
-            StorageAssociationSetMapping associationSetMapping,
-            StorageEndPropertyMapping dependentMapping,
+            AssociationSetMapping associationSetMapping,
+            EndPropertyMapping dependentMapping,
             EntitySet toSet,
             bool useExistingColumns)
         {

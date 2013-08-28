@@ -94,7 +94,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Configure(
-            StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
+            AssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(associationSetMapping);
 

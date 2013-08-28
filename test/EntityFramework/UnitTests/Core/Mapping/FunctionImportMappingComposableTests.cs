@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Mapping
                 new[]
                     {
                         null,
-                        new List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>()
+                        new List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>()
                     };
 
             foreach (var structuralTypeMappings in structualTypeMappingTestValues)
@@ -166,9 +166,9 @@ namespace System.Data.Entity.Core.Mapping
                         });
 
             var structuralTypeMapping =
-                new List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+                new List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
                     {
-                        new Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>(
+                        new Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>(
                             complexType, null, null)
                     };
 

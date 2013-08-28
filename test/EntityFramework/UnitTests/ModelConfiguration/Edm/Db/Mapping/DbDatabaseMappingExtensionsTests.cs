@@ -20,9 +20,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                                     Name = "ES"
                                 };
             var entitySetMapping = databaseMapping.AddEntitySetMapping(entitySet);
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
             entitySetMapping.AddTypeMapping(entityTypeMapping);
-            var entityTypeMappingFragment = new StorageMappingFragment(entitySet, entityTypeMapping, false);
+            var entityTypeMappingFragment = new MappingFragment(entitySet, entityTypeMapping, false);
             entityTypeMapping.AddFragment(entityTypeMappingFragment);
             var complexType = new ComplexType("C");
             var propertyMapping1
@@ -73,15 +73,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             complexType2.Annotations.SetClrType(typeof(object));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     entityType,
                     new EdmFunction("F", "N", DataSpace.SSpace),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[]
                                     {
                                         EdmProperty.CreateComplex("C1", complexType1),
@@ -96,7 +96,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                     null);
 
             entitySetMapping.AddModificationFunctionMapping(
-                new StorageEntityTypeModificationFunctionMapping(
+                new EntityTypeModificationFunctionMapping(
                     entityType,
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping,
@@ -164,7 +164,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var databaseMapping = new DbDatabaseMapping()
                 .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
             databaseMapping.AddEntitySetMapping(
                 new EntitySet
@@ -184,7 +184,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var type = typeof(object);
 
             entityType.Annotations.SetClrType(type);
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
             entityTypeMapping.SetClrType(typeof(object));
             databaseMapping.AddEntitySetMapping(

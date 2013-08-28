@@ -177,7 +177,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         internal void Configure(
             DbDatabaseMapping databaseMapping,
-            StorageMappingFragment fragment,
+            MappingFragment fragment,
             EntityType entityType,
             DbProviderManifest providerManifest)
         {

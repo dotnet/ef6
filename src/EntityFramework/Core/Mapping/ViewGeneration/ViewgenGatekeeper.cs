@@ -21,13 +21,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// Entry point for View Generation
         /// </summary>
         /// <returns> Generated Views for EntitySets </returns>
-        internal static ViewGenResults GenerateViewsFromMapping(StorageEntityContainerMapping containerMapping, ConfigViewGenerator config)
+        internal static ViewGenResults GenerateViewsFromMapping(EntityContainerMapping containerMapping, ConfigViewGenerator config)
         {
             DebugCheck.NotNull(containerMapping);
             DebugCheck.NotNull(config);
             Debug.Assert(containerMapping.HasViews, "Precondition Violated: No mapping exists to generate views for!");
 
-            //Create Cells from StorageEntityContainerMapping
+            //Create Cells from EntityContainerMapping
             var cellCreator = new CellCreator(containerMapping);
             var cells = cellCreator.GenerateCells();
             var identifiers = cellCreator.Identifiers;
@@ -39,7 +39,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// Entry point for Type specific generation of Query Views
         /// </summary>
         internal static ViewGenResults GenerateTypeSpecificQueryView(
-            StorageEntityContainerMapping containerMapping,
+            EntityContainerMapping containerMapping,
             ConfigViewGenerator config,
             EntitySetBase entity,
             EntityTypeBase type,
@@ -143,7 +143,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private static ViewGenResults GenerateViewsFromCells(
             List<Cell> cells, ConfigViewGenerator config,
             CqlIdentifiers identifiers,
-            StorageEntityContainerMapping containerMapping)
+            EntityContainerMapping containerMapping)
         {
             DebugCheck.NotNull(cells);
             DebugCheck.NotNull(config);
@@ -203,7 +203,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // sets in container on the C-side have been mapped
         private static ErrorLog EnsureAllCSpaceContainerSetsAreMapped(
             IEnumerable<Cell> cells,
-            StorageEntityContainerMapping containerMapping)
+            EntityContainerMapping containerMapping)
         {
             var mappedExtents = new Set<EntitySetBase>();
             string mslFileLocation = null;

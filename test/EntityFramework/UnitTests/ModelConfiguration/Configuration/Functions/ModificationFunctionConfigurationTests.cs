@@ -215,21 +215,21 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             modificationFunctionConfiguration.Configure(
-                new StorageModificationFunctionMapping(
+                new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     function,
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 functionParameter1,
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[] { property1, associationEndMember2 },
                                 associationSet),
                                 false),
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 functionParameter2,
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new[] { property1, property2 },
                                 null),
                                 false)
@@ -289,15 +289,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             modificationFunctionConfiguration.Configure(
-                new StorageModificationFunctionMapping(
+                new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     function,
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 functionParameter1,
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[] { property1, associationEndMember2 },
                                 associationSet),
                                 false)
@@ -326,11 +326,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 Strings.ModificationFunctionParameterNotFound("P", "F"),
                 Assert.Throws<InvalidOperationException>(
                     () => modificationFunctionConfiguration.Configure(
-                        new StorageModificationFunctionMapping(
+                        new ModificationFunctionMapping(
                               entitySet,
                               new EntityType("E", "N", DataSpace.CSpace),
                               new EdmFunction("F", "N", DataSpace.SSpace),
-                              new StorageModificationFunctionParameterBinding[0],
+                              new ModificationFunctionParameterBinding[0],
                               null,
                               null),
                         ProviderRegistry.Sql2008_ProviderManifest)).Message);
@@ -356,15 +356,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 Strings.ModificationFunctionParameterNotFoundOriginal("P", "F"),
                 Assert.Throws<InvalidOperationException>(
                     () => modificationFunctionConfiguration.Configure(
-                        new StorageModificationFunctionMapping(
+                        new ModificationFunctionMapping(
                               entitySet,
                               new EntityType("E", "N", DataSpace.CSpace),
                               new EdmFunction("F", "N", DataSpace.SSpace),
                               new[]
                                   {
-                                      new StorageModificationFunctionParameterBinding(
+                                      new ModificationFunctionParameterBinding(
                                           new FunctionParameter(),
-                                          new StorageModificationFunctionMemberPath(
+                                          new ModificationFunctionMemberPath(
                                           new[] { property },
                                           null),
                                           true)
@@ -391,11 +391,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
                 Strings.ResultBindingNotFound("P", "F"),
                 Assert.Throws<InvalidOperationException>(
                     () => modificationFunctionConfiguration.Configure(
-                        new StorageModificationFunctionMapping(
+                        new ModificationFunctionMapping(
                               entitySet,
                               new EntityType("E", "N", DataSpace.CSpace),
                               new EdmFunction("F", "N", DataSpace.SSpace),
-                              new StorageModificationFunctionParameterBinding[0],
+                              new ModificationFunctionParameterBinding[0],
                               null,
                               null),
                         ProviderRegistry.Sql2008_ProviderManifest)).Message);
@@ -417,22 +417,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var property = new EdmProperty("P1");
             property.SetClrPropertyInfo(mockPropertyInfo);
 
-            var resultBinding = new StorageModificationFunctionResultBinding("Bar", property);
+            var resultBinding = new ModificationFunctionResultBinding("Bar", property);
 
             modificationFunctionConfiguration.Configure(
-                new StorageModificationFunctionMapping(
+                new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     new EdmFunction("F", "N", DataSpace.SSpace),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(
                                     PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(new[] { property }, null), false)
+                                new ModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     null,
                     new[] { resultBinding }),
@@ -459,19 +459,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var rowsAffectedParameter = new FunctionParameter();
 
             modificationFunctionConfiguration.Configure(
-                new StorageModificationFunctionMapping(
+                new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     new EdmFunction("F", "N", DataSpace.SSpace),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(
                                     PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(new[] { property }, null), false)
+                                new ModificationFunctionMemberPath(new[] { property }, null), false)
                         },
                     rowsAffectedParameter,
                     null),
@@ -491,11 +491,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var storageModificationFunctionMapping 
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet, 
                     new EntityType("E", "N", DataSpace.CSpace),
                     new EdmFunction("F", "N", DataSpace.SSpace), 
-                    new StorageModificationFunctionParameterBinding[0], 
+                    new ModificationFunctionParameterBinding[0], 
                     null, 
                     null);
 

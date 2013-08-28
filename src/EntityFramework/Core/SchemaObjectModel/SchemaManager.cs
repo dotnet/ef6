@@ -219,7 +219,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
             if (!reader.EOF
                 &&
-                (reader.LocalName == XmlConstants.Schema || reader.LocalName == StorageMslConstructs.MappingElement))
+                (reader.LocalName == XmlConstants.Schema || reader.LocalName == MslConstructs.MappingElement))
             {
                 return TryGetSchemaVersion(reader.NamespaceURI, out version, out dataSpace);
             }
@@ -261,16 +261,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     version = XmlConstants.StoreVersionForV3;
                     dataSpace = DataSpace.SSpace;
                     return true;
-                case StorageMslConstructs.NamespaceUriV1:
-                    version = StorageMslConstructs.MappingVersionV1;
+                case MslConstructs.NamespaceUriV1:
+                    version = MslConstructs.MappingVersionV1;
                     dataSpace = DataSpace.CSSpace;
                     return true;
-                case StorageMslConstructs.NamespaceUriV2:
-                    version = StorageMslConstructs.MappingVersionV2;
+                case MslConstructs.NamespaceUriV2:
+                    version = MslConstructs.MappingVersionV2;
                     dataSpace = DataSpace.CSSpace;
                     return true;
-                case StorageMslConstructs.NamespaceUriV3:
-                    version = StorageMslConstructs.MappingVersionV3;
+                case MslConstructs.NamespaceUriV3:
+                    version = MslConstructs.MappingVersionV3;
                     dataSpace = DataSpace.CSSpace;
                     return true;
                 default:

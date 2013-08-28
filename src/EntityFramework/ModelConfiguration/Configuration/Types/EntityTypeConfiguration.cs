@@ -512,7 +512,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal void ConfigureTablesAndConditions(
-            StorageEntityTypeMapping entityTypeMapping,
+            EntityTypeMapping entityTypeMapping,
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest)
         {
@@ -746,7 +746,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         private static void VerifyAllCSpacePropertiesAreMapped(
-            ICollection<StorageEntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
+            ICollection<EntityTypeMapping> entityTypeMappings, IEnumerable<EdmProperty> properties,
             IList<EdmProperty> propertyPath)
         {
             DebugCheck.NotNull(entityTypeMappings);

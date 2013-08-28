@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns> Errors in view definition. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IEnumerable<EdmSchemaError> ValidateQueryView(
-            DbQueryCommandTree view, StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
+            DbQueryCommandTree view, SetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
         {
             var validator = new ViewExpressionValidator(setMapping, elementType, includeSubtypes);
             validator.VisitExpression(view.Query);
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private sealed class ViewExpressionValidator : BasicExpressionVisitor
         {
-            private readonly StorageSetMapping _setMapping;
+            private readonly SetMapping _setMapping;
             private readonly List<EdmSchemaError> _errors;
             private readonly EntityTypeBase _elementType;
             private readonly bool _includeSubtypes;
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Mapping
                 get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.StoreItemCollection; }
             }
 
-            internal ViewExpressionValidator(StorageSetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
+            internal ViewExpressionValidator(SetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
             {
                 DebugCheck.NotNull(setMapping);
                 DebugCheck.NotNull(elementType);
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EdmSchemaError(
                                 Strings.Mapping_UnsupportedExpressionKind_QueryView(
                                     _setMapping.Set.Name, elementString, expressionKind),
-                                (int)StorageMappingErrorCode.MappingUnsupportedExpressionKindQueryView,
+                                (int)MappingErrorCode.MappingUnsupportedExpressionKindQueryView,
                                 EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
                                 _setMapping.StartLinePosition));
                         break;
@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Mapping
                         new EdmSchemaError(
                             Strings.Mapping_UnsupportedPropertyKind_QueryView(
                                 _setMapping.Set.Name, expression.Property.Name, expression.Property.BuiltInTypeKind),
-                            (int)StorageMappingErrorCode.MappingUnsupportedPropertyKindQueryView,
+                            (int)MappingErrorCode.MappingUnsupportedPropertyKindQueryView,
                             EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
                             _setMapping.StartLinePosition));
                 }
@@ -174,7 +174,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EdmSchemaError(
                                 Strings.Mapping_UnsupportedInitialization_QueryView(
                                     _setMapping.Set.Name, type.FullName),
-                                (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
+                                (int)MappingErrorCode.MappingUnsupportedInitializationQueryView,
                                 EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
                                 _setMapping.StartLinePosition));
                     }
@@ -243,7 +243,7 @@ namespace System.Data.Entity.Core.Mapping
                         new EdmSchemaError(
                             Strings.Mapping_UnsupportedFunctionCall_QueryView(
                                 _setMapping.Set.Name, expression.Function.Identity),
-                            (int)StorageMappingErrorCode.UnsupportedFunctionCallInQueryView,
+                            (int)MappingErrorCode.UnsupportedFunctionCallInQueryView,
                             EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
                             _setMapping.StartLinePosition));
                 }
@@ -283,7 +283,7 @@ namespace System.Data.Entity.Core.Mapping
                     _errors.Add(
                         new EdmSchemaError(
                             Strings.Mapping_UnsupportedScanTarget_QueryView(
-                                _setMapping.Set.Name, target.Name), (int)StorageMappingErrorCode.MappingUnsupportedScanTargetQueryView,
+                                _setMapping.Set.Name, target.Name), (int)MappingErrorCode.MappingUnsupportedScanTargetQueryView,
                             EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation, _setMapping.StartLineNumber,
                             _setMapping.StartLinePosition));
                 }
@@ -300,10 +300,10 @@ namespace System.Data.Entity.Core.Mapping
             private readonly Stack<KeyValuePair<string, DbExpressionEntitySetInfo>> variableScopes =
                 new Stack<KeyValuePair<string, DbExpressionEntitySetInfo>>();
 
-            private readonly StorageSetMapping _setMapping;
+            private readonly SetMapping _setMapping;
             private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
 
-            internal AssociationSetViewValidator(StorageSetMapping setMapping)
+            internal AssociationSetViewValidator(SetMapping setMapping)
             {
                 DebugCheck.NotNull(setMapping);
                 _setMapping = setMapping;
@@ -362,7 +362,7 @@ namespace System.Data.Entity.Core.Mapping
                                 new EdmSchemaError(
                                     Strings.Mapping_EntitySetMismatchOnAssociationSetEnd_QueryView(
                                         setInfo.EntitySet.Name, declaredSet.Name, setEnd.Name, _setMapping.Set.Name),
-                                    (int)StorageMappingErrorCode.MappingUnsupportedInitializationQueryView,
+                                    (int)MappingErrorCode.MappingUnsupportedInitializationQueryView,
                                     EdmSchemaErrorSeverity.Error, _setMapping.EntityContainerMapping.SourceLocation,
                                     _setMapping.StartLineNumber,
                                     _setMapping.StartLinePosition));

@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="stateEntries"> State entries handled by this operation. </param>
         /// <param name="stateEntry"> 'Root' state entry being handled by this function. </param>
         internal FunctionUpdateCommand(
-            StorageModificationFunctionMapping functionMapping,
+            ModificationFunctionMapping functionMapping,
             UpdateTranslator translator,
             ReadOnlyCollection<IEntityStateEntry> stateEntries,
             ExtractedStateEntry stateEntry)
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Adds and register a DbParameter to the current command.
         internal void SetParameterValue(
             PropagatorResult result,
-            StorageModificationFunctionParameterBinding parameterBinding, UpdateTranslator translator)
+            ModificationFunctionParameterBinding parameterBinding, UpdateTranslator translator)
         {
             // retrieve DbParameter
             var parameter = _dbCommand.Parameters[parameterBinding.Parameter.Name];

@@ -19,12 +19,12 @@ namespace System.Data.Entity.Core.Mapping
             _sortSequence = sortSequence;
         }
 
-        protected virtual void Visit(StorageEntityContainerMapping storageEntityContainerMapping)
+        protected virtual void Visit(EntityContainerMapping entityContainerMapping)
         {
-            Visit(storageEntityContainerMapping.EdmEntityContainer);
-            Visit(storageEntityContainerMapping.StorageEntityContainer);
+            Visit(entityContainerMapping.EdmEntityContainer);
+            Visit(entityContainerMapping.StorageEntityContainer);
 
-            foreach (var mapping in GetSequence(storageEntityContainerMapping.EntitySetMaps, it => IdentityHelper.GetIdentity(it)))
+            foreach (var mapping in GetSequence(entityContainerMapping.EntitySetMaps, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(mapping);
             }
@@ -51,13 +51,13 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        protected virtual void Visit(StorageSetMapping storageSetMapping)
+        protected virtual void Visit(SetMapping setMapping)
         {
-            foreach (var typeMapping in GetSequence(storageSetMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
+            foreach (var typeMapping in GetSequence(setMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(typeMapping);
             }
-            Visit(storageSetMapping.EntityContainerMapping);
+            Visit(setMapping.EntityContainerMapping);
         }
 
         protected virtual void Visit(EntityContainer entityContainer)
@@ -360,98 +360,98 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        protected virtual void Visit(StorageTypeMapping storageTypeMapping)
+        protected virtual void Visit(TypeMapping typeMapping)
         {
-            foreach (var type in GetSequence(storageTypeMapping.IsOfTypes, it => it.Identity))
+            foreach (var type in GetSequence(typeMapping.IsOfTypes, it => it.Identity))
             {
                 Visit(type);
             }
 
-            foreach (var fragment in GetSequence(storageTypeMapping.MappingFragments, it => IdentityHelper.GetIdentity(it)))
+            foreach (var fragment in GetSequence(typeMapping.MappingFragments, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(fragment);
             }
 
-            Visit(storageTypeMapping.SetMapping);
+            Visit(typeMapping.SetMapping);
 
-            foreach (var type in GetSequence(storageTypeMapping.Types, it => it.Identity))
+            foreach (var type in GetSequence(typeMapping.Types, it => it.Identity))
             {
                 Visit(type);
             }
         }
 
-        protected virtual void Visit(StorageMappingFragment storageMappingFragment)
+        protected virtual void Visit(MappingFragment mappingFragment)
         {
-            foreach (var property in GetSequence(storageMappingFragment.AllProperties, it => IdentityHelper.GetIdentity(it)))
+            foreach (var property in GetSequence(mappingFragment.AllProperties, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(property);
             }
 
-            Visit((EntitySetBase)storageMappingFragment.TableSet);
+            Visit((EntitySetBase)mappingFragment.TableSet);
         }
 
-        protected virtual void Visit(StoragePropertyMapping storagePropertyMapping)
+        protected virtual void Visit(PropertyMapping propertyMapping)
         {
             // this is a switching node, so no object header and footer will be add for this node,
             // also this Visit won't add the object to the seen list
 
-            if (storagePropertyMapping.GetType()
-                == typeof(StorageComplexPropertyMapping))
+            if (propertyMapping.GetType()
+                == typeof(ComplexPropertyMapping))
             {
-                Visit((StorageComplexPropertyMapping)storagePropertyMapping);
+                Visit((ComplexPropertyMapping)propertyMapping);
             }
-            else if (storagePropertyMapping.GetType()
-                     == typeof(StorageConditionPropertyMapping))
+            else if (propertyMapping.GetType()
+                     == typeof(ConditionPropertyMapping))
             {
-                Visit((StorageConditionPropertyMapping)storagePropertyMapping);
+                Visit((ConditionPropertyMapping)propertyMapping);
             }
-            else if (storagePropertyMapping.GetType()
-                     == typeof(StorageScalarPropertyMapping))
+            else if (propertyMapping.GetType()
+                     == typeof(ScalarPropertyMapping))
             {
-                Visit((StorageScalarPropertyMapping)storagePropertyMapping);
+                Visit((ScalarPropertyMapping)propertyMapping);
             }
             else
             {
                 Debug.Fail(
                     String.Format(
-                        CultureInfo.InvariantCulture, "Found type '{0}', did we add a new type?", storagePropertyMapping.GetType()));
+                        CultureInfo.InvariantCulture, "Found type '{0}', did we add a new type?", propertyMapping.GetType()));
             }
         }
 
-        protected virtual void Visit(StorageComplexPropertyMapping storageComplexPropertyMapping)
+        protected virtual void Visit(ComplexPropertyMapping complexPropertyMapping)
         {
-            Visit(storageComplexPropertyMapping.EdmProperty);
-            foreach (var mapping in GetSequence(storageComplexPropertyMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
+            Visit(complexPropertyMapping.EdmProperty);
+            foreach (var mapping in GetSequence(complexPropertyMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(mapping);
             }
         }
 
-        protected virtual void Visit(StorageConditionPropertyMapping storageConditionPropertyMapping)
+        protected virtual void Visit(ConditionPropertyMapping conditionPropertyMapping)
         {
-            Visit(storageConditionPropertyMapping.ColumnProperty);
-            Visit(storageConditionPropertyMapping.EdmProperty);
+            Visit(conditionPropertyMapping.ColumnProperty);
+            Visit(conditionPropertyMapping.EdmProperty);
         }
 
-        protected virtual void Visit(StorageScalarPropertyMapping storageScalarPropertyMapping)
+        protected virtual void Visit(ScalarPropertyMapping scalarPropertyMapping)
         {
-            Visit(storageScalarPropertyMapping.ColumnProperty);
-            Visit(storageScalarPropertyMapping.EdmProperty);
+            Visit(scalarPropertyMapping.ColumnProperty);
+            Visit(scalarPropertyMapping.EdmProperty);
         }
 
-        protected virtual void Visit(StorageComplexTypeMapping storageComplexTypeMapping)
+        protected virtual void Visit(ComplexTypeMapping complexTypeMapping)
         {
-            foreach (var property in GetSequence(storageComplexTypeMapping.AllProperties, it => IdentityHelper.GetIdentity(it)))
+            foreach (var property in GetSequence(complexTypeMapping.AllProperties, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(property);
             }
 
-            foreach (var type in GetSequence(storageComplexTypeMapping.IsOfTypes, it => it.Identity))
+            foreach (var type in GetSequence(complexTypeMapping.IsOfTypes, it => it.Identity))
             {
                 Visit(type);
             }
 
-            foreach (var type in GetSequence(storageComplexTypeMapping.Types, it => it.Identity))
+            foreach (var type in GetSequence(complexTypeMapping.Types, it => it.Identity))
             {
                 Visit(type);
             }
@@ -465,24 +465,24 @@ namespace System.Data.Entity.Core.Mapping
         // Internal for testing
         internal static class IdentityHelper
         {
-            public static string GetIdentity(StorageSetMapping mapping)
+            public static string GetIdentity(SetMapping mapping)
             {
                 return mapping.Set.Identity;
             }
 
-            public static string GetIdentity(StorageTypeMapping mapping)
+            public static string GetIdentity(TypeMapping mapping)
             {
-                var entityTypeMapping = mapping as StorageEntityTypeMapping;
+                var entityTypeMapping = mapping as EntityTypeMapping;
                 if (entityTypeMapping != null)
                 {
                     return GetIdentity(entityTypeMapping);
                 }
 
-                var associationTypeMapping = (StorageAssociationTypeMapping)mapping;
+                var associationTypeMapping = (AssociationTypeMapping)mapping;
                 return GetIdentity(associationTypeMapping);
             }
 
-            public static string GetIdentity(StorageEntityTypeMapping mapping)
+            public static string GetIdentity(EntityTypeMapping mapping)
             {
                 var types = mapping.Types.Select(it => it.Identity)
                     .OrderBy(it => it, StringComparer.Ordinal);
@@ -491,12 +491,12 @@ namespace System.Data.Entity.Core.Mapping
                 return string.Join(",", types.Concat(isOfTypes));
             }
 
-            public static string GetIdentity(StorageAssociationTypeMapping mapping)
+            public static string GetIdentity(AssociationTypeMapping mapping)
             {
                 return mapping.AssociationType.Identity;
             }
 
-            public static string GetIdentity(StorageComplexTypeMapping mapping)
+            public static string GetIdentity(ComplexTypeMapping mapping)
             {
                 var properties = mapping.AllProperties.Select(it => GetIdentity(it))
                     .OrderBy(it => it, StringComparer.Ordinal);
@@ -507,54 +507,54 @@ namespace System.Data.Entity.Core.Mapping
                 return string.Join(",", properties.Concat(types).Concat(isOfTypes));
             }
 
-            public static string GetIdentity(StorageMappingFragment mapping)
+            public static string GetIdentity(MappingFragment mapping)
             {
                 return mapping.TableSet.Identity;
             }
 
-            public static string GetIdentity(StoragePropertyMapping mapping)
+            public static string GetIdentity(PropertyMapping mapping)
             {
-                var scalarPropertyMapping = mapping as StorageScalarPropertyMapping;
+                var scalarPropertyMapping = mapping as ScalarPropertyMapping;
                 if (scalarPropertyMapping != null)
                 {
                     return GetIdentity(scalarPropertyMapping);
                 }
 
-                var complexPropertyMapping = mapping as StorageComplexPropertyMapping;
+                var complexPropertyMapping = mapping as ComplexPropertyMapping;
                 if (complexPropertyMapping != null)
                 {
                     return GetIdentity(complexPropertyMapping);
                 }
 
-                var endPropertyMapping = mapping as StorageEndPropertyMapping;
+                var endPropertyMapping = mapping as EndPropertyMapping;
                 if (endPropertyMapping != null)
                 {
                     return GetIdentity(endPropertyMapping);
                 }
 
-                var conditionPropertyMapping = (StorageConditionPropertyMapping)mapping;
+                var conditionPropertyMapping = (ConditionPropertyMapping)mapping;
                 return GetIdentity(conditionPropertyMapping);
             }
 
-            public static string GetIdentity(StorageScalarPropertyMapping mapping)
+            public static string GetIdentity(ScalarPropertyMapping mapping)
             {
                 return "ScalarProperty(Identity=" + mapping.EdmProperty.Identity
                     + ",ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
             }
 
-            public static string GetIdentity(StorageComplexPropertyMapping mapping)
+            public static string GetIdentity(ComplexPropertyMapping mapping)
             {
                 return "ComplexProperty(Identity=" + mapping.EdmProperty.Identity + ")";
             }
 
-            public static string GetIdentity(StorageConditionPropertyMapping mapping)
+            public static string GetIdentity(ConditionPropertyMapping mapping)
             {
                 return mapping.EdmProperty != null
                     ? "ConditionProperty(Identity=" + mapping.EdmProperty.Identity + ")"
                     : "ConditionProperty(ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
             }
 
-            public static string GetIdentity(StorageEndPropertyMapping mapping)
+            public static string GetIdentity(EndPropertyMapping mapping)
             {
                 return "EndProperty(Identity=" + mapping.EndMember.Identity + ")";
             }

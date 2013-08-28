@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         // Different maps for members
         private readonly MemberMaps m_memberMaps;
         private readonly EdmItemCollection m_edmItemCollection;
-        private readonly StorageEntityContainerMapping m_entityContainerMapping;
+        private readonly EntityContainerMapping m_entityContainerMapping;
 
         // The normalized cells that are created
         private List<LeftCellWrapper> m_cellWrappers;
@@ -44,7 +44,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         internal ViewgenContext(
             ViewTarget viewTarget, EntitySetBase extent, IList<Cell> extentCells,
             CqlIdentifiers identifiers, ConfigViewGenerator config, MemberDomainMap queryDomainMap,
-            MemberDomainMap updateDomainMap, StorageEntityContainerMapping entityContainerMapping)
+            MemberDomainMap updateDomainMap, EntityContainerMapping entityContainerMapping)
         {
             foreach (var cell in extentCells)
             {
@@ -198,7 +198,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             get { return m_cellWrappers; }
         }
 
-        internal StorageEntityContainerMapping EntityContainerMapping
+        internal EntityContainerMapping EntityContainerMapping
         {
             get { return m_entityContainerMapping; }
         }

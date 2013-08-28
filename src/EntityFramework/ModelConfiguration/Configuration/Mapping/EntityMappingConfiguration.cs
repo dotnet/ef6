@@ -201,7 +201,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             DbDatabaseMapping databaseMapping,
             DbProviderManifest providerManifest,
             EntityType entityType,
-            ref StorageEntityTypeMapping entityTypeMapping,
+            ref EntityTypeMapping entityTypeMapping,
             bool isMappingAnyInheritedProperty,
             int configurationIndex,
             int configurationCount)
@@ -393,7 +393,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void ConfigureDefaultDiscriminator(
-            EntityType entityType, StorageMappingFragment fragment)
+            EntityType entityType, MappingFragment fragment)
         {
             if (ValueConditions.Any() || NullabilityConditions.Any())
             {
@@ -407,7 +407,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static void MoveDefaultDiscriminator(
-            StorageMappingFragment fromFragment, StorageMappingFragment toFragment)
+            MappingFragment fromFragment, MappingFragment toFragment)
         {
             var discriminatorColumn = fromFragment.GetDefaultDiscriminator();
             if (discriminatorColumn != null)
@@ -485,7 +485,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             var baseType = (EntityType)entityType.BaseType;
 
-            StorageMappingFragment baseFragment = null;
+            MappingFragment baseFragment = null;
 
             while (baseType != null
                    && baseFragment == null)
@@ -543,7 +543,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private static EntityType FindParentTable(
             DbDatabaseMapping databaseMapping,
             EntityType fromTable,
-            StorageEntityTypeMapping entityTypeMapping,
+            EntityTypeMapping entityTypeMapping,
             EntityType toTable,
             bool isMappingInheritedProperties,
             int configurationIndex,
@@ -586,14 +586,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return parentTable;
         }
 
-        private StorageMappingFragment FindOrCreateTypeMappingFragment(
+        private MappingFragment FindOrCreateTypeMappingFragment(
             DbDatabaseMapping databaseMapping,
-            ref StorageEntityTypeMapping entityTypeMapping,
+            ref EntityTypeMapping entityTypeMapping,
             int configurationIndex,
             EntityType entityType,
             DbProviderManifest providerManifest)
         {
-            StorageMappingFragment fragment = null;
+            MappingFragment fragment = null;
 
             if (entityTypeMapping == null)
             {
@@ -650,7 +650,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private EntityType FindOrCreateTargetTable(
             DbDatabaseMapping databaseMapping,
-            StorageMappingFragment fragment,
+            MappingFragment fragment,
             EntityType entityType,
             EntityType fromTable,
             out bool isTableSharing)
@@ -715,8 +715,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             {
                 var baseMappingsToContain = new HashSet<EdmPropertyPath>();
                 var baseType = (EntityType)entityType.BaseType;
-                StorageEntityTypeMapping baseMapping = null;
-                StorageMappingFragment baseFragment = null;
+                EntityTypeMapping baseMapping = null;
+                MappingFragment baseFragment = null;
                 // if the base is abstract it may have no mapping so look upwards until you find either:
                 //   1. a type with mappings and 
                 //   2. if none can be found (abstract until the root or hit another table), then include all declared properties on that base type
@@ -771,7 +771,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private void ConfigureConditions(
             DbDatabaseMapping databaseMapping,
             EntityType entityType,
-            StorageMappingFragment fragment,
+            MappingFragment fragment,
             DbProviderManifest providerManifest)
         {
             if (ValueConditions.Any()
@@ -904,7 +904,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
         private static bool UpdateColumnNamesForTableSharing(
             DbDatabaseMapping databaseMapping, EntityType entityType, EntityType toTable,
-            StorageMappingFragment fragment)
+            MappingFragment fragment)
         {
             // Validate: this table can be used only if:
             //  1. The table is not used by any other type

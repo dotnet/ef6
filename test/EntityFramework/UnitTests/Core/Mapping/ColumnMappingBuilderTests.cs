@@ -42,7 +42,7 @@ namespace System.Data.Entity.Core.Mapping
             var columnProperty1 = new EdmProperty("C1");
             var property = new EdmProperty("P");
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty1, new[] { property });
-            var scalarPropertyMapping = new StorageScalarPropertyMapping(property, columnProperty1);
+            var scalarPropertyMapping = new ScalarPropertyMapping(property, columnProperty1);
 
             columnMappingBuilder.SetTarget(scalarPropertyMapping);
 

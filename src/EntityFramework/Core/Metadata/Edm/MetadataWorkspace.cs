@@ -1285,7 +1285,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping targetFunctionMapping)
         {
             DebugCheck.NotNull(functionImport);
-            var entityContainerMaps = GetItems<StorageEntityContainerMapping>(DataSpace.CSSpace);
+            var entityContainerMaps = GetItems<EntityContainerMapping>(DataSpace.CSSpace);
             foreach (var containerMapping in entityContainerMaps)
             {
                 if (containerMapping.TryGetFunctionImportMapping(functionImport, out targetFunctionMapping))

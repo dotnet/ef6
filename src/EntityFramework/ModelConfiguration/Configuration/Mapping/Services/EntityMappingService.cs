@@ -58,7 +58,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             foreach (var entitySet in _entityTypes.GetEntitySets())
             {
-                var setRootMappings = new Dictionary<TableMapping, Dictionary<EntityType, StorageEntityTypeMapping>>();
+                var setRootMappings = new Dictionary<TableMapping, Dictionary<EntityType, EntityTypeMapping>>();
 
                 foreach (var entityType in _entityTypes.GetEntityTypes(entitySet))
                 {
@@ -66,10 +66,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         var tableMapping in
                             _tableMappings.Values.Where(tm => tm.EntityTypes.Contains(entitySet, entityType)))
                     {
-                        Dictionary<EntityType, StorageEntityTypeMapping> rootMappings;
+                        Dictionary<EntityType, EntityTypeMapping> rootMappings;
                         if (!setRootMappings.TryGetValue(tableMapping, out rootMappings))
                         {
-                            rootMappings = new Dictionary<EntityType, StorageEntityTypeMapping>();
+                            rootMappings = new Dictionary<EntityType, EntityTypeMapping>();
                             setRootMappings.Add(tableMapping, rootMappings);
                         }
 
@@ -79,8 +79,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         var requiresSplit = false;
 
                         // Find the entity type mapping and fragment for this table / entity type mapping where properties will be mapped
-                        StorageEntityTypeMapping propertiesTypeMapping;
-                        StorageMappingFragment propertiesTypeMappingFragment;
+                        EntityTypeMapping propertiesTypeMapping;
+                        MappingFragment propertiesTypeMappingFragment;
                         if (
                             !FindPropertyEntityTypeMapping(
                                 tableMapping,
@@ -259,15 +259,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         /// </summary>
         private static void ConfigureTypeMappings(
             TableMapping tableMapping,
-            Dictionary<EntityType, StorageEntityTypeMapping> rootMappings,
+            Dictionary<EntityType, EntityTypeMapping> rootMappings,
             EntityType entityType,
-            StorageMappingFragment propertiesTypeMappingFragment,
-            StorageMappingFragment conditionTypeMappingFragment)
+            MappingFragment propertiesTypeMappingFragment,
+            MappingFragment conditionTypeMappingFragment)
         {
             var existingPropertyMappings =
                 new List<ColumnMappingBuilder>(
                     propertiesTypeMappingFragment.ColumnMappings.Where(pm => !pm.ColumnProperty.IsPrimaryKeyColumn));
-            var existingConditions = new List<StorageConditionPropertyMapping>(propertiesTypeMappingFragment.ColumnConditions);
+            var existingConditions = new List<ConditionPropertyMapping>(propertiesTypeMappingFragment.ColumnConditions);
 
             foreach (var columnMapping in from cm in tableMapping.ColumnMappings
                                           from pm in cm.PropertyMappings
@@ -332,8 +332,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private static StorageMappingFragment FindConditionTypeMappingFragment(
-            EntitySet tableSet, StorageMappingFragment propertiesTypeMappingFragment, StorageEntityTypeMapping conditionTypeMapping)
+        private static MappingFragment FindConditionTypeMappingFragment(
+            EntitySet tableSet, MappingFragment propertiesTypeMappingFragment, EntityTypeMapping conditionTypeMapping)
         {
             var table = tableSet.ElementType;
 
@@ -359,8 +359,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return conditionTypeMappingFragment;
         }
 
-        private StorageEntityTypeMapping FindConditionTypeMapping(
-            EntityType entityType, bool requiresSplit, StorageEntityTypeMapping propertiesTypeMapping)
+        private EntityTypeMapping FindConditionTypeMapping(
+            EntityType entityType, bool requiresSplit, EntityTypeMapping propertiesTypeMapping)
         {
             var conditionTypeMapping = propertiesTypeMapping;
 
@@ -415,8 +415,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntitySet entitySet,
             EntityType entityType,
             bool requiresIsTypeOf,
-            out StorageEntityTypeMapping entityTypeMapping,
-            out StorageMappingFragment fragment)
+            out EntityTypeMapping entityTypeMapping,
+            out MappingFragment fragment)
         {
             entityTypeMapping = null;
             fragment = null;
@@ -448,7 +448,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private void RemoveFragment(
-            EntitySet entitySet, StorageEntityTypeMapping entityTypeMapping, StorageMappingFragment fragment)
+            EntitySet entitySet, EntityTypeMapping entityTypeMapping, MappingFragment fragment)
         {
             // Make the default discriminator nullable if this type isn't using it but there is a base type
             var defaultDiscriminator = fragment.GetDefaultDiscriminator();
@@ -510,13 +510,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static bool IsRootTypeMapping(
-            Dictionary<EntityType, StorageEntityTypeMapping> rootMappings, EntityType entityType,
+            Dictionary<EntityType, EntityTypeMapping> rootMappings, EntityType entityType,
             IList<EdmProperty> propertyPath)
         {
             var baseType = (EntityType)entityType.BaseType;
             while (baseType != null)
             {
-                StorageEntityTypeMapping rootMapping;
+                EntityTypeMapping rootMapping;
                 if (rootMappings.TryGetValue(baseType, out rootMapping))
                 {
                     return

@@ -91,19 +91,19 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         internal static void AddMappingSchemaResourceMapEntries(
             Dictionary<string, XmlSchemaResource> schemaResourceMap, double schemaVersion)
         {
-            var msl1 = new XmlSchemaResource(StorageMslConstructs.NamespaceUriV1, StorageMslConstructs.ResourceXsdNameV1);
+            var msl1 = new XmlSchemaResource(MslConstructs.NamespaceUriV1, MslConstructs.ResourceXsdNameV1);
             schemaResourceMap.Add(msl1.NamespaceUri, msl1);
 
             if (schemaVersion >= XmlConstants.EdmVersionForV2)
             {
-                var msl2 = new XmlSchemaResource(StorageMslConstructs.NamespaceUriV2, StorageMslConstructs.ResourceXsdNameV2);
+                var msl2 = new XmlSchemaResource(MslConstructs.NamespaceUriV2, MslConstructs.ResourceXsdNameV2);
                 schemaResourceMap.Add(msl2.NamespaceUri, msl2);
             }
 
             if (schemaVersion >= XmlConstants.EdmVersionForV3)
             {
                 Debug.Assert(XmlConstants.SchemaVersionLatest == XmlConstants.EdmVersionForV3, "Did you add a new schema version");
-                var msl3 = new XmlSchemaResource(StorageMslConstructs.NamespaceUriV3, StorageMslConstructs.ResourceXsdNameV3);
+                var msl3 = new XmlSchemaResource(MslConstructs.NamespaceUriV3, MslConstructs.ResourceXsdNameV3);
                 schemaResourceMap.Add(msl3.NamespaceUri, msl3);
             }
         }

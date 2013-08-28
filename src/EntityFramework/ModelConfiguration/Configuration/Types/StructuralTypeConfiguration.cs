@@ -187,7 +187,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        internal void ConfigureFunctionParameters(IList<StorageModificationFunctionParameterBinding> parameterBindings)
+        internal void ConfigureFunctionParameters(IList<ModificationFunctionParameterBinding> parameterBindings)
         {
             DebugCheck.NotNull(parameterBindings);
 

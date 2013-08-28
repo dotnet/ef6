@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="setMapping"> Entity set mapping. </param>
         /// <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateEntitySetTranslator(
-            StorageEntitySetMapping setMapping)
+            EntitySetMapping setMapping)
         {
             return new EntitySetTranslator(setMapping);
         }
@@ -47,22 +47,22 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <param name="setMapping"> Association set mapping. </param>
         /// <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateAssociationSetTranslator(
-            StorageAssociationSetMapping setMapping)
+            AssociationSetMapping setMapping)
         {
             return new AssociationSetTranslator(setMapping);
         }
 
         private sealed class EntitySetTranslator : ModificationFunctionMappingTranslator
         {
-            private readonly Dictionary<EntityType, StorageEntityTypeModificationFunctionMapping> m_typeMappings;
+            private readonly Dictionary<EntityType, EntityTypeModificationFunctionMapping> m_typeMappings;
 
-            internal EntitySetTranslator(StorageEntitySetMapping setMapping)
+            internal EntitySetTranslator(EntitySetMapping setMapping)
             {
                 DebugCheck.NotNull(setMapping);
                 DebugCheck.NotNull(setMapping.ModificationFunctionMappings);
 
                 Debug.Assert(0 < setMapping.ModificationFunctionMappings.Count, "set mapping must exist and must specify function mappings");
-                m_typeMappings = new Dictionary<EntityType, StorageEntityTypeModificationFunctionMapping>();
+                m_typeMappings = new Dictionary<EntityType, EntityTypeModificationFunctionMapping>();
                 foreach (var typeMapping in setMapping.ModificationFunctionMappings)
                 {
                     m_typeMappings.Add(typeMapping.EntityType, typeMapping);
@@ -186,11 +186,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 }
             }
 
-            private Tuple<StorageEntityTypeModificationFunctionMapping, StorageModificationFunctionMapping> GetFunctionMapping(
+            private Tuple<EntityTypeModificationFunctionMapping, ModificationFunctionMapping> GetFunctionMapping(
                 ExtractedStateEntry stateEntry)
             {
                 // choose mapping based on type and operation
-                StorageModificationFunctionMapping functionMapping;
+                ModificationFunctionMapping functionMapping;
                 EntityType entityType;
                 if (null != stateEntry.Current)
                 {
@@ -230,7 +230,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             // Walks through all parameter bindings in the function mapping and binds the parameters to the
             // requested properties of the given state entry.
             private static void BindFunctionParameters(
-                UpdateTranslator translator, ExtractedStateEntry stateEntry, StorageModificationFunctionMapping functionMapping,
+                UpdateTranslator translator, ExtractedStateEntry stateEntry, ModificationFunctionMapping functionMapping,
                 FunctionUpdateCommand command, Dictionary<AssociationEndMember, IEntityStateEntry> currentReferenceEnds,
                 Dictionary<AssociationEndMember, IEntityStateEntry> originalReferenceEnds)
             {
@@ -301,9 +301,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         {
             // If this value is null, it indicates that the association set is
             // only implicitly mapped as part of an entity set
-            private readonly StorageAssociationSetModificationFunctionMapping m_mapping;
+            private readonly AssociationSetModificationFunctionMapping m_mapping;
 
-            internal AssociationSetTranslator(StorageAssociationSetMapping setMapping)
+            internal AssociationSetTranslator(AssociationSetMapping setMapping)
             {
                 if (null != setMapping)
                 {

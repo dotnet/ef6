@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
         public FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
-            List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings)
+            List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>> structuralTypeMappings)
             : base(functionImport, targetFunction)
         {
             if (!functionImport.IsComposableAttribute)
@@ -64,7 +64,7 @@ namespace System.Data.Entity.Core.Mapping
         internal FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
-            List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>> structuralTypeMappings,
+            List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>> structuralTypeMappings,
             EdmProperty[] targetFunctionKeys,
             StorageMappingItemCollection mappingItemCollection)
             : base(functionImport, targetFunction)
@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Result mapping as entity type hierarchy.
         /// </summary>
-        private readonly List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+        private readonly List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
             m_structuralTypeMappings;
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Mapping
         private Node m_internalTreeNode;
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ReadOnlyCollection<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+        public ReadOnlyCollection<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
             StructuralTypeMappings
         {
             get
@@ -129,7 +129,7 @@ namespace System.Data.Entity.Core.Mapping
                 return m_structuralTypeMappings == null
                            ? null
                            : new ReadOnlyCollection
-                                 <Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>(
+                                 <Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>(
                                  m_structuralTypeMappings);
             }
         }
@@ -388,7 +388,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         private static DbExpression GenerateStructuralTypeMappingView(
-            StructuralType structuralType, List<StoragePropertyMapping> propertyMappings, DbExpression row)
+            StructuralType structuralType, List<PropertyMapping> propertyMappings, DbExpression row)
         {
             // Generate property views.
             var properties = TypeHelpers.GetAllStructuralMembers(structuralType);
@@ -405,7 +405,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         private static DbExpression GenerateStructuralTypeConditionsPredicate(
-            List<StorageConditionPropertyMapping> conditions, DbExpression row)
+            List<ConditionPropertyMapping> conditions, DbExpression row)
         {
             Debug.Assert(conditions.Count > 0, "conditions.Count > 0");
             var predicate = Helpers.BuildBalancedTreeInPlace(
@@ -413,7 +413,7 @@ namespace System.Data.Entity.Core.Mapping
             return predicate;
         }
 
-        private static DbExpression GeneratePredicate(StorageConditionPropertyMapping condition, DbExpression row)
+        private static DbExpression GeneratePredicate(ConditionPropertyMapping condition, DbExpression row)
         {
             Debug.Assert(condition.EdmProperty == null, "C-side conditions are not supported in function mappings.");
             var columnRef = GenerateColumnRef(row, condition.ColumnProperty);
@@ -428,10 +428,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        private static DbExpression GeneratePropertyMappingView(StoragePropertyMapping mapping, DbExpression row)
+        private static DbExpression GeneratePropertyMappingView(PropertyMapping mapping, DbExpression row)
         {
-            Debug.Assert(mapping is StorageScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
-            var scalarPropertyMapping = (StorageScalarPropertyMapping)mapping;
+            Debug.Assert(mapping is ScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
+            var scalarPropertyMapping = (ScalarPropertyMapping)mapping;
             return GenerateScalarPropertyMappingView(scalarPropertyMapping.EdmProperty, scalarPropertyMapping.ColumnProperty, row);
         }
 

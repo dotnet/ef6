@@ -180,7 +180,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         public virtual void Configure(
-            StorageModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
+            ModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
             DebugCheck.NotNull(providerManifest);
@@ -194,7 +194,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             ConfigureResultBindings(modificationStoredProcedureMapping);
         }
 
-        private void ConfigureName(StorageModificationFunctionMapping modificationStoredProcedureMapping)
+        private void ConfigureName(ModificationFunctionMapping modificationStoredProcedureMapping)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
 
@@ -204,7 +204,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private void ConfigureSchema(StorageModificationFunctionMapping modificationStoredProcedureMapping)
+        private void ConfigureSchema(ModificationFunctionMapping modificationStoredProcedureMapping)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
 
@@ -215,7 +215,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         private void ConfigureRowsAffectedParameter(
-            StorageModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
+            ModificationFunctionMapping modificationStoredProcedureMapping, DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
             DebugCheck.NotNull(providerManifest);
@@ -244,7 +244,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        private void ConfigureParameters(StorageModificationFunctionMapping modificationStoredProcedureMapping)
+        private void ConfigureParameters(ModificationFunctionMapping modificationStoredProcedureMapping)
         {
             foreach (var keyValue in _parameterNames)
             {
@@ -343,7 +343,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
         }
 
-        private void ConfigureResultBindings(StorageModificationFunctionMapping modificationStoredProcedureMapping)
+        private void ConfigureResultBindings(ModificationFunctionMapping modificationStoredProcedureMapping)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
 
@@ -354,7 +354,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
                 var resultBinding
                     = (modificationStoredProcedureMapping
-                           .ResultBindings ?? Enumerable.Empty<StorageModificationFunctionResultBinding>())
+                           .ResultBindings ?? Enumerable.Empty<ModificationFunctionResultBinding>())
                         .SingleOrDefault(rb => propertyInfo.IsSameAs(rb.Property.GetClrPropertyInfo()));
 
                 if (resultBinding == null)

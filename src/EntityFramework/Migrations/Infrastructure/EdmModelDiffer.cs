@@ -41,7 +41,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             public XDocument Model { get; set; }
             public StoreItemCollection StoreItemCollection { get; set; }
-            public StorageEntityContainerMapping StorageEntityContainerMapping { get; set; }
+            public EntityContainerMapping EntityContainerMapping { get; set; }
             public DbProviderManifest ProviderManifest { get; set; }
             public DbProviderInfo ProviderInfo { get; set; }
         }
@@ -70,8 +70,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                   {
                       Model = sourceModel,
                       StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                      StorageEntityContainerMapping
-                          = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                      EntityContainerMapping
+                          = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
                       ProviderManifest = GetProviderManifest(providerInfo),
                       ProviderInfo = providerInfo
                   };
@@ -84,8 +84,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                   {
                       Model = targetModel,
                       StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
-                      StorageEntityContainerMapping
-                          = storageMappingItemCollection.GetItems<StorageEntityContainerMapping>().Single(),
+                      EntityContainerMapping
+                          = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
                       ProviderManifest = GetProviderManifest(providerInfo),
                       ProviderInfo = providerInfo
                   };
@@ -298,17 +298,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<MoveProcedureOperation> FindMovedModificationFunctions()
         {
             return
-                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _source.EntityContainerMapping.EntitySetMappings
                     from mfm1 in esm1.ModificationFunctionMappings
-                    from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                    from esm2 in _target.EntityContainerMapping.EntitySetMappings
                     from mfm2 in esm2.ModificationFunctionMappings
                     where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                     from o in DiffModificationFunctionSchemas(mfm1, mfm2)
                     select o)
                     .Concat(
-                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _source.EntityContainerMapping.AssociationSetMappings
                         where asm1.ModificationFunctionMapping != null
-                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm2 in _target.EntityContainerMapping.AssociationSetMappings
                         where asm2.ModificationFunctionMapping != null
                               && asm1.ModificationFunctionMapping.AssociationSet.Identity
                               == asm2.ModificationFunctionMapping.AssociationSet.Identity
@@ -317,8 +317,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
-            StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping)
+            EntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
+            EntityTypeModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
@@ -355,8 +355,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static IEnumerable<MoveProcedureOperation> DiffModificationFunctionSchemas(
-            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
+            AssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            AssociationSetModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
@@ -387,9 +387,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
-                (from esm1 in _target.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _target.EntityContainerMapping.EntitySetMappings
                     from mfm1 in esm1.ModificationFunctionMappings
-                    where !(from esm2 in _source.StorageEntityContainerMapping.EntitySetMappings
+                    where !(from esm2 in _source.EntityContainerMapping.EntitySetMappings
                         from mfm2 in esm2.ModificationFunctionMappings
                         where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                         select mfm2
@@ -397,9 +397,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     from o in BuildCreateProcedureOperations(mfm1, modificationCommandTreeGenerator, migrationSqlGenerator)
                     select o)
                     .Concat(
-                        from asm1 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _target.EntityContainerMapping.AssociationSetMappings
                         where asm1.ModificationFunctionMapping != null
-                        where !(from asm2 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        where !(from asm2 in _source.EntityContainerMapping.AssociationSetMappings
                             where asm2.ModificationFunctionMapping != null
                                   && asm1.ModificationFunctionMapping.AssociationSet.Identity
                                   == asm2.ModificationFunctionMapping.AssociationSet.Identity
@@ -416,17 +416,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<RenameProcedureOperation> FindRenamedModificationFunctions()
         {
             return
-                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _source.EntityContainerMapping.EntitySetMappings
                     from mfm1 in esm1.ModificationFunctionMappings
-                    from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                    from esm2 in _target.EntityContainerMapping.EntitySetMappings
                     from mfm2 in esm2.ModificationFunctionMappings
                     where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                     from o in DiffModificationFunctionNames(mfm1, mfm2)
                     select o)
                     .Concat(
-                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _source.EntityContainerMapping.AssociationSetMappings
                         where asm1.ModificationFunctionMapping != null
-                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm2 in _target.EntityContainerMapping.AssociationSetMappings
                         where asm2.ModificationFunctionMapping != null
                               && asm1.ModificationFunctionMapping.AssociationSet.Identity
                               == asm2.ModificationFunctionMapping.AssociationSet.Identity
@@ -435,8 +435,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
-            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping)
+            AssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            AssociationSetModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
@@ -463,8 +463,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static IEnumerable<RenameProcedureOperation> DiffModificationFunctionNames(
-            StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping)
+            EntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
+            EntityTypeModificationFunctionMapping targetModificationFunctionMapping)
         {
             DebugCheck.NotNull(sourceModificationFunctionMapping);
             DebugCheck.NotNull(targetModificationFunctionMapping);
@@ -505,17 +505,17 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator, MigrationSqlGenerator migrationSqlGenerator)
         {
             return
-                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _source.EntityContainerMapping.EntitySetMappings
                     from mfm1 in esm1.ModificationFunctionMappings
-                    from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                    from esm2 in _target.EntityContainerMapping.EntitySetMappings
                     from mfm2 in esm2.ModificationFunctionMappings
                     where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                     from o in DiffModificationFunctions(mfm1, mfm2, modificationCommandTreeGenerator, migrationSqlGenerator)
                     select o)
                     .Concat(
-                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _source.EntityContainerMapping.AssociationSetMappings
                         where asm1.ModificationFunctionMapping != null
-                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm2 in _target.EntityContainerMapping.AssociationSetMappings
                         where asm2.ModificationFunctionMapping != null
                               && asm1.ModificationFunctionMapping.AssociationSet.Identity
                               == asm2.ModificationFunctionMapping.AssociationSet.Identity
@@ -528,8 +528,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
-            StorageAssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageAssociationSetModificationFunctionMapping targetModificationFunctionMapping,
+            AssociationSetModificationFunctionMapping sourceModificationFunctionMapping,
+            AssociationSetModificationFunctionMapping targetModificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -562,8 +562,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private IEnumerable<AlterProcedureOperation> DiffModificationFunctions(
-            StorageEntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
-            StorageEntityTypeModificationFunctionMapping targetModificationFunctionMapping,
+            EntityTypeModificationFunctionMapping sourceModificationFunctionMapping,
+            EntityTypeModificationFunctionMapping targetModificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -608,7 +608,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateInsertFunctionBody(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            EntityTypeModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -624,7 +624,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateInsertFunctionBody(
-            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            AssociationSetModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -639,7 +639,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateUpdateFunctionBody(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            EntityTypeModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -655,7 +655,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateDeleteFunctionBody(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            EntityTypeModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -671,7 +671,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateDeleteFunctionBody(
-            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            AssociationSetModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -686,7 +686,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateFunctionBody<TCommandTree>(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            EntityTypeModificationFunctionMapping modificationFunctionMapping,
             Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator,
@@ -704,7 +704,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var dynamicToFunctionModificationCommandConverter
                     = new DynamicToFunctionModificationCommandConverter(
                         modificationFunctionMapping,
-                        _target.StorageEntityContainerMapping);
+                        _target.EntityContainerMapping);
 
                 try
                 {
@@ -726,7 +726,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private string GenerateFunctionBody<TCommandTree>(
-            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            AssociationSetModificationFunctionMapping modificationFunctionMapping,
             Func<ModificationCommandTreeGenerator, string, IEnumerable<TCommandTree>> treeGenerator,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator,
@@ -743,7 +743,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 var dynamicToFunctionModificationCommandConverter
                     = new DynamicToFunctionModificationCommandConverter(
                         modificationFunctionMapping,
-                        _target.StorageEntityContainerMapping);
+                        _target.EntityContainerMapping);
 
                 commandTrees
                     = dynamicToFunctionModificationCommandConverter
@@ -775,8 +775,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static bool DiffModificationFunction(
-            StorageModificationFunctionMapping functionMapping1,
-            StorageModificationFunctionMapping functionMapping2)
+            ModificationFunctionMapping functionMapping1,
+            ModificationFunctionMapping functionMapping2)
         {
             DebugCheck.NotNull(functionMapping1);
             DebugCheck.NotNull(functionMapping2);
@@ -795,7 +795,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             }
 
             var nullResultBindings
-                = Enumerable.Empty<StorageModificationFunctionResultBinding>();
+                = Enumerable.Empty<ModificationFunctionResultBinding>();
 
             if (!(functionMapping1.ResultBindings ?? nullResultBindings)
                 .SequenceEqual(
@@ -809,8 +809,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static bool DiffParameterBinding(
-            StorageModificationFunctionParameterBinding parameterBinding1,
-            StorageModificationFunctionParameterBinding parameterBinding2)
+            ModificationFunctionParameterBinding parameterBinding1,
+            ModificationFunctionParameterBinding parameterBinding2)
         {
             DebugCheck.NotNull(parameterBinding1);
             DebugCheck.NotNull(parameterBinding2);
@@ -837,8 +837,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private static bool DiffResultBinding(
-            StorageModificationFunctionResultBinding resultBinding1,
-            StorageModificationFunctionResultBinding resultBinding2)
+            ModificationFunctionResultBinding resultBinding1,
+            ModificationFunctionResultBinding resultBinding2)
         {
             DebugCheck.NotNull(resultBinding1);
             DebugCheck.NotNull(resultBinding2);
@@ -857,7 +857,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private IEnumerable<CreateProcedureOperation> BuildCreateProcedureOperations(
-            StorageEntityTypeModificationFunctionMapping modificationFunctionMapping,
+            EntityTypeModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -877,7 +877,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         private IEnumerable<CreateProcedureOperation> BuildCreateProcedureOperations(
-            StorageAssociationSetModificationFunctionMapping modificationFunctionMapping,
+            AssociationSetModificationFunctionMapping modificationFunctionMapping,
             Lazy<ModificationCommandTreeGenerator> modificationCommandTreeGenerator,
             MigrationSqlGenerator migrationSqlGenerator)
         {
@@ -985,9 +985,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private IEnumerable<DropProcedureOperation> FindRemovedModificationFunctions()
         {
             return
-                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _source.EntityContainerMapping.EntitySetMappings
                     from mfm1 in esm1.ModificationFunctionMappings
-                    where !(from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                    where !(from esm2 in _target.EntityContainerMapping.EntitySetMappings
                         from mfm2 in esm2.ModificationFunctionMappings
                         where mfm1.EntityType.Identity == mfm2.EntityType.Identity
                         select mfm2
@@ -1009,9 +1009,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                               }
                     select o)
                     .Concat(
-                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _source.EntityContainerMapping.AssociationSetMappings
                         where asm1.ModificationFunctionMapping != null
-                        where !(from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        where !(from asm2 in _target.EntityContainerMapping.AssociationSetMappings
                             where asm2.ModificationFunctionMapping != null
                                   && asm1.ModificationFunctionMapping.AssociationSet.Identity
                                   == asm2.ModificationFunctionMapping.AssociationSet.Identity

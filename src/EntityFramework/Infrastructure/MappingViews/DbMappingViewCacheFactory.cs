@@ -30,7 +30,7 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         /// <returns>
         /// A concrete <see cref="DbMappingViewCache" />, or null if a creator was not found.
         /// </returns>
-        internal DbMappingViewCache Create(StorageEntityContainerMapping mapping)
+        internal DbMappingViewCache Create(EntityContainerMapping mapping)
         {
             return Create(mapping.EdmEntityContainer.Name, mapping.StorageEntityContainer.Name);
         }

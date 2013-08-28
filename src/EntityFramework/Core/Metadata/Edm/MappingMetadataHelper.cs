@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal static class MappingMetadataHelper
     {
-        internal static IEnumerable<StorageTypeMapping> GetMappingsForEntitySetAndType(
+        internal static IEnumerable<TypeMapping> GetMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType)
         {
             DebugCheck.NotNull(entityType);
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns all mapping fragments for the given entity set's types and their parent types.
         /// </summary>
-        internal static IEnumerable<StorageTypeMapping> GetMappingsForEntitySetAndSuperTypes(
+        internal static IEnumerable<TypeMapping> GetMappingsForEntitySetAndSuperTypes(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet,
             EntityTypeBase childEntityType)
         {
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
         /// </summary>
-        private static IEnumerable<StorageTypeMapping> GetIsTypeOfMappingsForEntitySetAndType(
+        private static IEnumerable<TypeMapping> GetIsTypeOfMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType,
             EntityTypeBase childEntityType)
         {
@@ -68,13 +68,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal static IEnumerable<StorageEntityTypeModificationFunctionMapping> GetModificationFunctionMappingsForEntitySetAndType(
+        internal static IEnumerable<EntityTypeModificationFunctionMapping> GetModificationFunctionMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType)
         {
             var containerMapping = GetEntityContainerMap(mappingCollection, container);
 
             var extentMap = containerMapping.GetSetMapping(entitySet.Name);
-            var entitySetMapping = extentMap as StorageEntitySetMapping;
+            var entitySetMapping = extentMap as EntitySetMapping;
 
             //The Set may have no mapping
             if (entitySetMapping != null)
@@ -91,11 +91,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        internal static StorageEntityContainerMapping GetEntityContainerMap(
+        internal static EntityContainerMapping GetEntityContainerMap(
             StorageMappingItemCollection mappingCollection, EntityContainer entityContainer)
         {
-            var entityContainerMaps = mappingCollection.GetItems<StorageEntityContainerMapping>();
-            StorageEntityContainerMapping entityContainerMap = null;
+            var entityContainerMaps = mappingCollection.GetItems<EntityContainerMapping>();
+            EntityContainerMapping entityContainerMap = null;
             foreach (var map in entityContainerMaps)
             {
                 if ((entityContainer.Equals(map.EdmEntityContainer))

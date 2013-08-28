@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.Mapping
                 var lines = StringUtil.ToCommaSeparatedString(unreachableEntityType.Value.Select(li => li.LineNumber));
                 var error = new EdmSchemaError(
                     Strings.Mapping_FunctionImport_UnreachableType(unreachableEntityType.Key.FullName, lines),
-                    (int)StorageMappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
+                    (int)MappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
                     EdmSchemaErrorSeverity.Error,
                     sourceLocation,
                     lineInfo.LineNumber,
@@ -237,11 +237,11 @@ namespace System.Data.Entity.Core.Mapping
             {
                 var lineInfo = unreachableIsTypeOf.Value.First();
                 var lines = StringUtil.ToCommaSeparatedString(unreachableIsTypeOf.Value.Select(li => li.LineNumber));
-                var isTypeOfDescription = StorageMslConstructs.IsTypeOf + unreachableIsTypeOf.Key.FullName
-                                          + StorageMslConstructs.IsTypeOfTerminal;
+                var isTypeOfDescription = MslConstructs.IsTypeOf + unreachableIsTypeOf.Key.FullName
+                                          + MslConstructs.IsTypeOfTerminal;
                 var error = new EdmSchemaError(
                     Strings.Mapping_FunctionImport_UnreachableIsTypeOf(isTypeOfDescription, lines),
-                    (int)StorageMappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
+                    (int)MappingErrorCode.MappingFunctionImportAmbiguousTypeConditions,
                     EdmSchemaErrorSeverity.Error,
                     sourceLocation,
                     lineInfo.LineNumber,

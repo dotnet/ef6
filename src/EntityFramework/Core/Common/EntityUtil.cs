@@ -446,7 +446,7 @@ namespace System.Data.Entity.Core
         }
 
         internal static void ValidateNecessaryModificationFunctionMapping(
-            StorageModificationFunctionMapping mapping, string currentState,
+            ModificationFunctionMapping mapping, string currentState,
             IEntityStateEntry stateEntry, string type, string typeName)
         {
             if (null == mapping)

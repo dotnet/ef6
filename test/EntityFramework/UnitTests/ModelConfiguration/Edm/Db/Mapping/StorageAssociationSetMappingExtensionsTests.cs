@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public void Initialize_should_initialize_ends()
         {
             var associationSetMapping 
-                = new StorageAssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet()).Initialize();
+                = new AssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet()).Initialize();
 
             Assert.NotNull(associationSetMapping.SourceEndMapping);
             Assert.NotNull(associationSetMapping.TargetEndMapping);
@@ -22,7 +22,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         public void Can_get_and_set_configuration_annotation()
         {
             var associationSetMapping 
-                = new StorageAssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
+                = new AssociationSetMapping(new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet());
 
             associationSetMapping.SetConfiguration(42);
 

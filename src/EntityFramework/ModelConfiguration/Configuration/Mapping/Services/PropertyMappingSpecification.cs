@@ -11,13 +11,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     {
         private readonly EntityType _entityType;
         private readonly IList<EdmProperty> _propertyPath;
-        private readonly IList<StorageConditionPropertyMapping> _conditions;
+        private readonly IList<ConditionPropertyMapping> _conditions;
         private readonly bool _isDefaultDiscriminatorCondition;
 
         public PropertyMappingSpecification(
             EntityType entityType,
             IList<EdmProperty> propertyPath,
-            IList<StorageConditionPropertyMapping> conditions,
+            IList<ConditionPropertyMapping> conditions,
             bool isDefaultDiscriminatorCondition)
         {
             DebugCheck.NotNull(entityType);
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             get { return _propertyPath; }
         }
 
-        public IList<StorageConditionPropertyMapping> Conditions
+        public IList<ConditionPropertyMapping> Conditions
         {
             get { return _conditions; }
         }

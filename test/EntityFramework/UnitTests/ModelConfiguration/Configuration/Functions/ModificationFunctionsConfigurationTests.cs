@@ -63,16 +63,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     new EdmFunction("F", "N", DataSpace.SSpace),
-                    new StorageModificationFunctionParameterBinding[0],
+                    new ModificationFunctionParameterBinding[0],
                     null,
                     null);
 
             modificationFunctionsConfiguration.Configure(
-                new StorageEntityTypeModificationFunctionMapping(
+                new EntityTypeModificationFunctionMapping(
                     new EntityType("E", "N", DataSpace.CSpace),
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping,
@@ -99,16 +99,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     new EntityType("E", "N", DataSpace.CSpace),
                     new EdmFunction("F", "N", DataSpace.SSpace),
-                    new StorageModificationFunctionParameterBinding[0],
+                    new ModificationFunctionParameterBinding[0],
                     null,
                     null);
 
             modificationFunctionsConfiguration.Configure(
-                new StorageAssociationSetModificationFunctionMapping(
+                new AssociationSetModificationFunctionMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping),

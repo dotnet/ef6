@@ -472,7 +472,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private static void UniquifyFunctionName(
             DbDatabaseMapping databaseMapping,
             ModificationStoredProcedureConfiguration modificationStoredProcedureConfiguration,
-            StorageModificationFunctionMapping functionMapping)
+            ModificationFunctionMapping functionMapping)
         {
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(functionMapping);

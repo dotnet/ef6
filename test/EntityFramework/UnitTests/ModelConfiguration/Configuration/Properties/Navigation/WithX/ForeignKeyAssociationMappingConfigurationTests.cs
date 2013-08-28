@@ -33,9 +33,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             foreignKeyConstraint.DependentColumns = new[] { fkColumn };
             var targetTable = database.AddTable("Split");
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), database.GetEntitySet(sourceTable)).Initialize();
-            associationSetMapping.SourceEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
+            associationSetMapping.SourceEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), fkColumn));
 
             var independentAssociationMappingConfiguration
                 = new ForeignKeyAssociationMappingConfiguration();
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             independentAssociationMappingConfiguration.ToTable("Split");
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();

@@ -1550,7 +1550,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var edmItemCollection = (EdmItemCollection)metadataWorkspace.GetItemCollection(DataSpace.CSpace);
                 var storeItemCollection = (StoreItemCollection)metadataWorkspace.GetItemCollection(DataSpace.SSpace);
-                var containerMappingMock = new Mock<StorageEntityContainerMapping>(entityContainer);
+                var containerMappingMock = new Mock<EntityContainerMapping>(entityContainer);
                 FunctionImportMapping targetFunctionMapping = new FunctionImportMappingNonComposable(
                     functionImport, functionImport, new List<List<FunctionImportStructuralTypeMapping>>(), edmItemCollection);
                 containerMappingMock.Setup(
@@ -1562,10 +1562,10 @@ namespace System.Data.Entity.Core.Objects
                     {
                         CallBase = true
                     };
-                storageMappingItemCollection.Setup(m => m.GetItems<StorageEntityContainerMapping>())
+                storageMappingItemCollection.Setup(m => m.GetItems<EntityContainerMapping>())
                                             .Returns(
-                                                new ReadOnlyCollection<StorageEntityContainerMapping>(
-                                                    new List<StorageEntityContainerMapping>
+                                                new ReadOnlyCollection<EntityContainerMapping>(
+                                                    new List<EntityContainerMapping>
                                                         {
                                                             containerMappingMock.Object
                                                         }));

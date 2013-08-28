@@ -20,8 +20,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         public void Generate(
             EntityType entityType,
             IEnumerable<EdmProperty> properties,
-            StorageEntitySetMapping entitySetMapping,
-            StorageMappingFragment entityTypeMappingFragment,
+            EntitySetMapping entitySetMapping,
+            MappingFragment entityTypeMappingFragment,
             IList<EdmProperty> propertyPath,
             bool createNewColumn)
         {

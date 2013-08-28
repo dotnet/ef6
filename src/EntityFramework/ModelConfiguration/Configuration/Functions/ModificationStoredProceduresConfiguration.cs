@@ -78,7 +78,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         public virtual void Configure(
-            StorageEntityTypeModificationFunctionMapping modificationStoredProcedureMapping, 
+            EntityTypeModificationFunctionMapping modificationStoredProcedureMapping, 
             DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);
@@ -104,7 +104,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         public void Configure(
-            StorageAssociationSetModificationFunctionMapping modificationStoredProcedureMapping, 
+            AssociationSetModificationFunctionMapping modificationStoredProcedureMapping, 
             DbProviderManifest providerManifest)
         {
             DebugCheck.NotNull(modificationStoredProcedureMapping);

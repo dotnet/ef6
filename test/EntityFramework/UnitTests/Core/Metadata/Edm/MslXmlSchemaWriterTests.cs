@@ -23,13 +23,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer.AddEntitySetBase(entitySet);
 
             var storageEntitySetMapping
-                = new StorageEntitySetMapping(
+                = new EntitySetMapping(
                     entitySet,
-                    new StorageEntityContainerMapping(entityContainer));
+                    new EntityContainerMapping(entityContainer));
 
-            StorageTypeMapping typeMapping = new StorageEntityTypeMapping(storageEntitySetMapping);
+            TypeMapping typeMapping = new EntityTypeMapping(storageEntitySetMapping);
 
-            var mappingFragment = new StorageMappingFragment(entitySet, typeMapping, false);
+            var mappingFragment = new MappingFragment(entitySet, typeMapping, false);
 
             fixture.Writer.WriteMappingFragmentElement(mappingFragment);
 
@@ -50,21 +50,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             entityContainer.AddEntitySetBase(entitySet);
 
             var storageEntitySetMapping
-                = new StorageEntitySetMapping(
+                = new EntitySetMapping(
                     entitySet,
-                    new StorageEntityContainerMapping(entityContainer));
+                    new EntityContainerMapping(entityContainer));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     entityType,
                     new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
-                    Enumerable.Empty<StorageModificationFunctionParameterBinding>(),
+                    Enumerable.Empty<ModificationFunctionParameterBinding>(),
                     null,
                     null);
 
             storageEntitySetMapping.AddModificationFunctionMapping(
-                new StorageEntityTypeModificationFunctionMapping(
+                new EntityTypeModificationFunctionMapping(
                     entityType,
                     storageModificationFunctionMapping,
                     storageModificationFunctionMapping,
@@ -99,27 +99,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var typeUsage = TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     entityType,
                     new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 typeUsage,
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new[] { property },
                                 null),
                                 true),
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P_Original",
                                 typeUsage,
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new[] { property },
                                 null),
                                 false)
@@ -127,7 +127,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     new FunctionParameter("RowsAffected", typeUsage, ParameterMode.Out),
                     new[]
                         {
-                            new StorageModificationFunctionResultBinding("C", property)
+                            new ModificationFunctionResultBinding("C", property)
                         });
 
             fixture.Writer.WriteFunctionMapping("InsertFunction", storageModificationFunctionMapping);
@@ -151,18 +151,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             new EntityContainer("EC", DataSpace.SSpace).AddEntitySetBase(entitySet);
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     entityType,
                     new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new[]
                                     {
                                         EdmProperty.CreateComplex("C1", new ComplexType()),
@@ -205,18 +205,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySet,
                     entityType,
                     new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[]
                                     {
                                         new EdmProperty("K"),
@@ -256,18 +256,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             associationSet.AddAssociationSetEnd(new AssociationSetEnd(entitySet, associationSet, associationEndMember2));
 
             var storageModificationFunctionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     associationSet,
                     associationSet.ElementType,
                     new EdmFunction("F", "N", DataSpace.SSpace, new EdmFunctionPayload()),
                     new[]
                         {
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[]
                                     {
                                         new EdmProperty("K"),
@@ -275,12 +275,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                     },
                                 associationSet),
                                 true),
-                            new StorageModificationFunctionParameterBinding(
+                            new ModificationFunctionParameterBinding(
                                 new FunctionParameter(
                                 "P",
                                 TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),
                                 ParameterMode.In),
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                 new EdmMember[]
                                     {
                                         new EdmProperty("K"),
@@ -293,21 +293,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     null);
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     associationSet,
                     entitySet)
                       {
                           SourceEndMapping
-                              = new StorageEndPropertyMapping
+                              = new EndPropertyMapping
                                     {
                                         EndMember = associationEndMember1
                                     },
                           TargetEndMapping
-                              = new StorageEndPropertyMapping
+                              = new EndPropertyMapping
                                     {
                                         EndMember = associationEndMember2
                                     },
-                          ModificationFunctionMapping = new StorageAssociationSetModificationFunctionMapping(
+                          ModificationFunctionMapping = new AssociationSetModificationFunctionMapping(
                               associationSet,
                               storageModificationFunctionMapping,
                               storageModificationFunctionMapping)
@@ -401,21 +401,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         });
 
             var structuralTypeMapping =
-                new Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>(
-                    complexType, new List<StorageConditionPropertyMapping>(), new List<StoragePropertyMapping>());
+                new Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>(
+                    complexType, new List<ConditionPropertyMapping>(), new List<PropertyMapping>());
 
-            structuralTypeMapping.Item3.Add(new StorageScalarPropertyMapping(complexTypeProperty1, rowTypeProperty1));
-            structuralTypeMapping.Item3.Add(new StorageScalarPropertyMapping(complexTypeProperty2, rowTypeProperty2));
+            structuralTypeMapping.Item3.Add(new ScalarPropertyMapping(complexTypeProperty1, rowTypeProperty1));
+            structuralTypeMapping.Item3.Add(new ScalarPropertyMapping(complexTypeProperty2, rowTypeProperty2));
 
             var functionImportMapping = new FunctionImportMappingComposable(
                 functionImport,
                 storeFunction,
-                new List<Tuple<StructuralType, List<StorageConditionPropertyMapping>, List<StoragePropertyMapping>>>
+                new List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
                     {
                         structuralTypeMapping
                     });
 
-            var containerMapping = new StorageEntityContainerMapping(new EntityContainer("C", DataSpace.SSpace));
+            var containerMapping = new EntityContainerMapping(new EntityContainer("C", DataSpace.SSpace));
             containerMapping.AddFunctionImportMapping(functionImportMapping);
 
             var fixture = new Fixture();

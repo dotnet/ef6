@@ -118,7 +118,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
             }
         }
 
-        internal static Tuple<StorageEntityTypeModificationFunctionMapping, StorageEntityContainerMapping>
+        internal static Tuple<EntityTypeModificationFunctionMapping, EntityContainerMapping>
             GetModificationFunctionMapping(string entityName)
         {
             MetadataWorkspace metadataWorkspace;
@@ -137,19 +137,19 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                 = metadataWorkspace
                     .GetItem<EntityType>(typeof(TestContext).Namespace + "." + entityName, DataSpace.CSpace);
 
-            var storageEntityContainerMapping
-                = (StorageEntityContainerMapping)metadataWorkspace.GetMap(entityContainer, DataSpace.CSSpace);
+            var entityContainerMapping
+                = (EntityContainerMapping)metadataWorkspace.GetMap(entityContainer, DataSpace.CSSpace);
 
             var modificationFunctionMapping
-                = storageEntityContainerMapping
+                = entityContainerMapping
                     .EntitySetMappings
                     .SelectMany(esm => esm.ModificationFunctionMappings)
                     .Single(mfm => mfm.EntityType == entityType);
 
-            return Tuple.Create(modificationFunctionMapping, storageEntityContainerMapping);
+            return Tuple.Create(modificationFunctionMapping, entityContainerMapping);
         }
 
-        internal static Tuple<StorageAssociationSetModificationFunctionMapping, StorageEntityContainerMapping>
+        internal static Tuple<AssociationSetModificationFunctionMapping, EntityContainerMapping>
             GetAssociationModificationFunctionMapping(string associationName)
         {
             MetadataWorkspace metadataWorkspace;
@@ -168,18 +168,18 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                 = metadataWorkspace
                     .GetItem<AssociationType>(typeof(TestContext).Namespace + "." + associationName, DataSpace.CSpace);
 
-            var storageEntityContainerMapping
-                = (StorageEntityContainerMapping)metadataWorkspace.GetMap(entityContainer, DataSpace.CSSpace);
+            var entityContainerMapping
+                = (EntityContainerMapping)metadataWorkspace.GetMap(entityContainer, DataSpace.CSSpace);
 
             var modificationFunctionMapping
-                = storageEntityContainerMapping
+                = entityContainerMapping
                     .AssociationSetMappings
                     .Select(esm => esm.ModificationFunctionMapping)
                     .Single(
                         mfm => mfm != null
                                && mfm.AssociationSet.ElementType == associationType);
 
-            return Tuple.Create(modificationFunctionMapping, storageEntityContainerMapping);
+            return Tuple.Create(modificationFunctionMapping, entityContainerMapping);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

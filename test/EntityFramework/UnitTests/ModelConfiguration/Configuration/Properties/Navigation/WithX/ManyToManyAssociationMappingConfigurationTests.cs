@@ -17,7 +17,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var table = database.AddTable("OriginalName");
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     database.GetEntitySet(table))
                     .Initialize();
@@ -43,11 +43,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var database = new EdmModel(DataSpace.CSpace);
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), new EntitySet())
                     .Initialize();
             var column = new EdmProperty("C");
-            associationSetMapping.SourceEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), column));
+            associationSetMapping.SourceEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), column));
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();
@@ -70,14 +70,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var database = new EdmModel(DataSpace.CSpace);
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();
 
             var column = new EdmProperty("C");
 
-            associationSetMapping.TargetEndMapping.AddProperty(new StorageScalarPropertyMapping(new EdmProperty("PK"), column));
+            associationSetMapping.TargetEndMapping.AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), column));
 
             var manyToManyAssociationMappingConfiguration
                 = new ManyToManyAssociationMappingConfiguration();
@@ -100,7 +100,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var database = new EdmModel(DataSpace.CSpace);
 
             var associationSetMapping
-                = new StorageAssociationSetMapping(
+                = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)),
                     new EntitySet())
                     .Initialize();

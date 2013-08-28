@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private readonly MemberDomainMap m_updateDomainMap;
         private readonly Dictionary<EntitySetBase, QueryRewriter> m_queryRewriterCache;
         private readonly List<ForeignConstraint> m_foreignKeyConstraints;
-        private readonly StorageEntityContainerMapping m_entityContainerMapping;
+        private readonly EntityContainerMapping m_entityContainerMapping;
 
         // effects: Creates a ViewGenerator object that is capable of
         // producing query or update mapping views given the relevant schema
@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         internal ViewGenerator(
             CellGroup cellGroup, ConfigViewGenerator config,
             List<ForeignConstraint> foreignKeyConstraints,
-            StorageEntityContainerMapping entityContainerMapping)
+            EntityContainerMapping entityContainerMapping)
         {
             m_cellGroup = cellGroup;
             m_config = config;
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        private void SetConfiguration(StorageEntityContainerMapping entityContainerMapping)
+        private void SetConfiguration(EntityContainerMapping entityContainerMapping)
         {
             m_config.IsValidationEnabled = entityContainerMapping.Validate;
             m_config.GenerateUpdateViews = entityContainerMapping.GenerateUpdateViews;

@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         public void AddMapping(
             EntityType entityType,
             IList<EdmProperty> propertyPath,
-            IEnumerable<StorageConditionPropertyMapping> conditions,
+            IEnumerable<ConditionPropertyMapping> conditions,
             bool isDefaultDiscriminatorCondition)
         {
             _propertyMappings.Add(

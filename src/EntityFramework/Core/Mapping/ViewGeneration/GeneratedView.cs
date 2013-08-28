@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// This constructor is used for user-defined query views only.
         /// </summary>
         internal static bool TryParseUserSpecifiedView(
-            StorageSetMapping setMapping,
+            SetMapping setMapping,
             EntityTypeBase type,
             string eSQL,
             bool includeSubtypes,
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             {
                 var error = new EdmSchemaError(
                     Strings.Mapping_Invalid_QueryView2(setMapping.Set.Name, parserException.Message),
-                    (int)StorageMappingErrorCode.InvalidQueryView, EdmSchemaErrorSeverity.Error,
+                    (int)MappingErrorCode.InvalidQueryView, EdmSchemaErrorSeverity.Error,
                     setMapping.EntityContainerMapping.SourceLocation, setMapping.StartLineNumber, setMapping.StartLinePosition,
                     parserException);
                 errors.Add(error);
@@ -123,7 +123,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 {
                     var error = new EdmSchemaError(
                         Strings.Mapping_Invalid_QueryView_Type(setMapping.Set.Name),
-                        (int)StorageMappingErrorCode.InvalidQueryViewResultType, EdmSchemaErrorSeverity.Error,
+                        (int)MappingErrorCode.InvalidQueryViewResultType, EdmSchemaErrorSeverity.Error,
                         setMapping.EntityContainerMapping.SourceLocation, setMapping.StartLineNumber, setMapping.StartLinePosition);
                     errors.Add(error);
                     failed = true;

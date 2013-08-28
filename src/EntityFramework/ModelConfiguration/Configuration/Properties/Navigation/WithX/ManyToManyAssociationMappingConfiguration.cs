@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal override void Configure(
-            StorageAssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
+            AssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
         {
             DebugCheck.NotNull(associationSetMapping);
             DebugCheck.NotNull(database);
@@ -130,7 +130,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         private static void ConfigureColumnNames(
-            ICollection<string> keyColumnNames, IList<StorageScalarPropertyMapping> propertyMappings)
+            ICollection<string> keyColumnNames, IList<ScalarPropertyMapping> propertyMappings)
         {
             DebugCheck.NotNull(keyColumnNames);
             DebugCheck.NotNull(propertyMappings);

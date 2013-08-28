@@ -248,7 +248,7 @@ namespace System.Data.Entity.Core.Mapping
                 StorageMappingItemCollectionTests.CreateStorageMappingItemCollection(ssdl, csdl, msl);
 
             return MetadataMappingHasherVisitor.GetMappingClosureHash(
-                3.0, mappingCollection.GetItems<StorageEntityContainerMapping>().Single(), sortSequence);
+                3.0, mappingCollection.GetItems<EntityContainerMapping>().Single(), sortSequence);
         }
 
         [Fact]
@@ -258,8 +258,8 @@ namespace System.Data.Entity.Core.Mapping
             var entitySet = new EntitySet("ES", "S", "T", null, entityType);
             var associationType = new AssociationType("AT", "N", false, DataSpace.CSpace);
             var associationSet = new AssociationSet("AS", associationType);
-            var entitySetMapping = new StorageEntitySetMapping(entitySet, null);
-            var associationSetMapping = new StorageAssociationSetMapping(associationSet, entitySet);
+            var entitySetMapping = new EntitySetMapping(entitySet, null);
+            var associationSetMapping = new AssociationSetMapping(associationSet, entitySet);
 
             Assert.Equal(entitySet.Identity, 
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(entitySetMapping));
@@ -274,21 +274,21 @@ namespace System.Data.Entity.Core.Mapping
             var entityType2 = new EntityType("ET2", "N", DataSpace.CSpace);
             var entityType3 = new EntityType("ET3", "N", DataSpace.CSpace);
             var entityType4 = new EntityType("ET4", "N", DataSpace.CSpace);
-            var mapping = new StorageEntityTypeMapping(null);
+            var mapping = new EntityTypeMapping(null);
             mapping.AddType(entityType2);
             mapping.AddType(entityType1);
             mapping.AddIsOfType(entityType4);
             mapping.AddIsOfType(entityType3);
 
             Assert.Equal("N.ET1,N.ET2,N.ET3,N.ET4",
-                BaseMetadataMappingVisitor.IdentityHelper.GetIdentity((StorageTypeMapping)mapping));
+                BaseMetadataMappingVisitor.IdentityHelper.GetIdentity((TypeMapping)mapping));
         }
 
         [Fact]
         public static void GetIdentity_of_StorageAssociationTypeMapping_returns_expected_value()
         {
             var associationType = new AssociationType("AT", "N", false, DataSpace.CSpace);
-            StorageTypeMapping mapping = new StorageAssociationTypeMapping(associationType, null);
+            TypeMapping mapping = new AssociationTypeMapping(associationType, null);
 
             Assert.Equal(associationType.Identity, BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));
         }
@@ -302,10 +302,10 @@ namespace System.Data.Entity.Core.Mapping
             var complexType4 = new ComplexType("CT4", "N", DataSpace.CSpace);
             var property1 = new EdmProperty("A", TypeUsage.Create(complexType1));
             var property2 = new EdmProperty("B", TypeUsage.Create(complexType2));
-            var propertyMapping1 = new StorageComplexPropertyMapping(property1);
-            var propertyMapping2 = new StorageComplexPropertyMapping(property2);
+            var propertyMapping1 = new ComplexPropertyMapping(property1);
+            var propertyMapping2 = new ComplexPropertyMapping(property2);
 
-            var mapping = new StorageComplexTypeMapping(false);
+            var mapping = new ComplexTypeMapping(false);
             mapping.AddType(complexType2);
             mapping.AddType(complexType1);
             mapping.AddIsOfType(complexType4);
@@ -322,9 +322,9 @@ namespace System.Data.Entity.Core.Mapping
         {
             var entityType = new EntityType("ET", "N", DataSpace.CSpace);
             var entitySet = new EntitySet("ES", "S", "T", null, entityType);
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
-            var mappingFragment = new StorageMappingFragment(entitySet, entityTypeMapping, false);
+            var mappingFragment = new MappingFragment(entitySet, entityTypeMapping, false);
 
             Assert.Equal(entitySet.Identity,
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mappingFragment));
@@ -336,7 +336,7 @@ namespace System.Data.Entity.Core.Mapping
             var typeUsage = TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             var property1 = new EdmProperty("A", typeUsage);
             var property2 = new EdmProperty("B", typeUsage);
-            StoragePropertyMapping mapping = new StorageScalarPropertyMapping(property1, property2);
+            PropertyMapping mapping = new ScalarPropertyMapping(property1, property2);
 
             Assert.Equal("ScalarProperty(Identity=A,ColumnIdentity=B)", 
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));
@@ -347,7 +347,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var complexType = new ComplexType("CT", "N", DataSpace.CSpace);
             var property = new EdmProperty("A", TypeUsage.Create(complexType));
-            StoragePropertyMapping mapping = new StorageComplexPropertyMapping(property);
+            PropertyMapping mapping = new ComplexPropertyMapping(property);
 
             Assert.Equal("ComplexProperty(Identity=A)", 
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));
@@ -357,7 +357,7 @@ namespace System.Data.Entity.Core.Mapping
         public static void GetIdentity_of_StorageEndPropertyMapping_returns_expected_value()
         {
             var entityType = new EntityType("ET", "N", DataSpace.CSpace);
-            StoragePropertyMapping mapping = new StorageEndPropertyMapping()
+            PropertyMapping mapping = new EndPropertyMapping()
             {
                 EndMember = new AssociationEndMember("AEM", entityType)
             };
@@ -373,12 +373,12 @@ namespace System.Data.Entity.Core.Mapping
             var property1 = new EdmProperty("A", typeUsage);
             var property2 = new EdmProperty("B", typeUsage);
 
-            StoragePropertyMapping mapping = new StorageConditionPropertyMapping(property1, null, "V", null);
+            PropertyMapping mapping = new ConditionPropertyMapping(property1, null, "V", null);
 
             Assert.Equal("ConditionProperty(Identity=A)",
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));
 
-            mapping = new StorageConditionPropertyMapping(null, property2, "V", null);
+            mapping = new ConditionPropertyMapping(null, property2, "V", null);
 
             Assert.Equal("ConditionProperty(ColumnIdentity=B)",
                 BaseMetadataMappingVisitor.IdentityHelper.GetIdentity(mapping));

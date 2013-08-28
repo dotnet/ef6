@@ -77,7 +77,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     columnMappings);
 
             var modificationStoredProcedureMapping
-                = new StorageEntityTypeModificationFunctionMapping(
+                = new EntityTypeModificationFunctionMapping(
                     entityType,
                     deleteFunctionMapping,
                     insertFunctionMapping,
@@ -87,7 +87,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         private static IEnumerable<ColumnMappingBuilder> GetColumnMappings(
-            EntityType entityType, StorageEntitySetMapping entitySetMapping)
+            EntityType entityType, EntitySetMapping entitySetMapping)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(entitySetMapping);
@@ -102,7 +102,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                               .SelectMany(mf => mf.ColumnMappings));
         }
 
-        public void Generate(StorageAssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
+        public void Generate(AssociationSetMapping associationSetMapping, DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
             DebugCheck.NotNull(databaseMapping);
@@ -135,14 +135,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     functionNamePrefix: functionNamePrefix);
 
             associationSetMapping.ModificationFunctionMapping
-                = new StorageAssociationSetModificationFunctionMapping(
+                = new AssociationSetModificationFunctionMapping(
                     associationSetMapping.AssociationSet,
                     deleteFunctionMapping,
                     insertFunctionMapping);
         }
 
-        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
-            StorageAssociationSetMapping associationSetMapping)
+        private static IEnumerable<Tuple<ModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
+            AssociationSetMapping associationSetMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
 
@@ -150,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             {
                 yield return
                     Tuple.Create(
-                        new StorageModificationFunctionMemberPath(
+                        new ModificationFunctionMemberPath(
                             new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.SourceEndMapping.EndMember },
                             associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
             }
@@ -159,13 +159,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             {
                 yield return
                     Tuple.Create(
-                        new StorageModificationFunctionMemberPath(
+                        new ModificationFunctionMemberPath(
                             new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.TargetEndMapping.EndMember },
                             associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
             }
         }
 
-        private static IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
+        private static IEnumerable<Tuple<ModificationFunctionMemberPath, EdmProperty>> GetIndependentFkColumns(
             EntityType entityType, DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(entityType);
@@ -200,7 +200,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     {
                         yield return
                             Tuple.Create(
-                                new StorageModificationFunctionMemberPath(
+                                new ModificationFunctionMemberPath(
                                     new EdmMember[] { propertyMapping.EdmProperty, dependentEnd },
                                     associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
                     }
@@ -221,13 +221,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        private StorageModificationFunctionMapping GenerateFunctionMapping(
+        private ModificationFunctionMapping GenerateFunctionMapping(
             ModificationOperator modificationOperator,
             EntitySetBase entitySetBase,
             EntityTypeBase entityTypeBase,
             DbDatabaseMapping databaseMapping,
             IEnumerable<EdmProperty> parameterProperties,
-            IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
+            IEnumerable<Tuple<ModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
             IList<ColumnMappingBuilder> columnMappings,
             IEnumerable<EdmProperty> resultProperties = null,
             string functionNamePrefix = null)
@@ -277,7 +277,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                         functionPayload);
 
             var functionMapping
-                = new StorageModificationFunctionMapping(
+                = new ModificationFunctionMapping(
                     entitySetBase,
                     entityTypeBase,
                     function,
@@ -285,7 +285,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     null,
                     resultProperties != null
                         ? resultProperties.Select(
-                            p => new StorageModificationFunctionResultBinding(
+                            p => new ModificationFunctionResultBinding(
                                      columnMappings.First(cm => cm.PropertyPath.SequenceEqual(new[] { p })).ColumnProperty.Name,
                                      p))
                         : null);

@@ -155,13 +155,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             {
                 associationSetMapping.TargetEndMapping
                                      .AddProperty(
-                                         new StorageScalarPropertyMapping(
+                                         new ScalarPropertyMapping(
                                              property,
                                              dependentEntityTypeMapping.GetPropertyMapping(property).ColumnProperty));
             }
         }
 
-        private static StorageAssociationSetMapping GenerateAssociationSetMapping(
+        private static AssociationSetMapping GenerateAssociationSetMapping(
             AssociationType associationType,
             DbDatabaseMapping databaseMapping,
             AssociationEndMember principalEnd,
@@ -191,8 +191,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             EntityType principalEntityType,
             EntityType dependentEntityType,
             EntityType dependentTable,
-            StorageAssociationSetMapping associationSetMapping,
-            StorageEndPropertyMapping associationEndMapping,
+            AssociationSetMapping associationSetMapping,
+            EndPropertyMapping associationEndMapping,
             string name,
             AssociationEndMember principalEnd,
             bool isPrimaryKeyColumn = false)
@@ -238,8 +238,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         private IEnumerable<EdmProperty> GenerateIndependentForeignKeyColumns(
             EntityType principalEntityType,
             EntityType dependentEntityType,
-            StorageAssociationSetMapping associationSetMapping,
-            StorageEndPropertyMapping associationEndMapping,
+            AssociationSetMapping associationSetMapping,
+            EndPropertyMapping associationEndMapping,
             EntityType dependentTable,
             bool isPrimaryKeyColumn,
             NavigationProperty principalNavigationProperty)
@@ -274,12 +274,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
                 yield return foreignKeyColumn;
 
-                associationEndMapping.AddProperty(new StorageScalarPropertyMapping(property, foreignKeyColumn));
+                associationEndMapping.AddProperty(new ScalarPropertyMapping(property, foreignKeyColumn));
 
                 if (foreignKeyColumn.Nullable)
                 {
                     associationSetMapping
-                        .AddColumnCondition(new StorageConditionPropertyMapping(null, foreignKeyColumn, null, false));
+                        .AddColumnCondition(new ConditionPropertyMapping(null, foreignKeyColumn, null, false));
                 }
             }
         }

@@ -42,14 +42,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public void AddEntityTypeMappingFragment(
-            EntitySet entitySet, EntityType entityType, StorageMappingFragment fragment)
+            EntitySet entitySet, EntityType entityType, MappingFragment fragment)
         {
             Debug.Assert(fragment.Table == Table);
 
             _entityTypes.Add(entitySet, entityType);
 
             var defaultDiscriminatorColumn = fragment.GetDefaultDiscriminator();
-            StorageConditionPropertyMapping defaultDiscriminatorCondition = null;
+            ConditionPropertyMapping defaultDiscriminatorCondition = null;
             if (defaultDiscriminatorColumn != null)
             {
                 defaultDiscriminatorCondition =

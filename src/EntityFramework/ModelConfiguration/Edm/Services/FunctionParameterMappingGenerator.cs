@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
         }
 
-        public IEnumerable<StorageModificationFunctionParameterBinding> Generate(
+        public IEnumerable<ModificationFunctionParameterBinding> Generate(
             ModificationOperator modificationOperator,
             IEnumerable<EdmProperty> properties,
             IList<ColumnMappingBuilder> columnMappings,
@@ -62,9 +62,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             && ((modificationOperator != ModificationOperator.Delete) || property.IsKeyMember))
                         {
                             yield return
-                                new StorageModificationFunctionParameterBinding(
+                                new ModificationFunctionParameterBinding(
                                     new FunctionParameter(columnProperty.Name, columnProperty.TypeUsage, ParameterMode.In),
-                                    new StorageModificationFunctionMemberPath(propertyPath, null),
+                                    new ModificationFunctionMemberPath(propertyPath, null),
                                     isCurrent: !useOriginalValues);
                         }
 
@@ -72,9 +72,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                             && property.ConcurrencyMode == ConcurrencyMode.Fixed)
                         {
                             yield return
-                                new StorageModificationFunctionParameterBinding(
+                                new ModificationFunctionParameterBinding(
                                     new FunctionParameter(columnProperty.Name + "_Original", columnProperty.TypeUsage, ParameterMode.In),
-                                    new StorageModificationFunctionMemberPath(propertyPath, null),
+                                    new ModificationFunctionMemberPath(propertyPath, null),
                                     isCurrent: false);
                         }
                     }
@@ -85,8 +85,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public IEnumerable<StorageModificationFunctionParameterBinding> Generate(
-            IEnumerable<Tuple<StorageModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
+        public IEnumerable<ModificationFunctionParameterBinding> Generate(
+            IEnumerable<Tuple<ModificationFunctionMemberPath, EdmProperty>> iaFkProperties,
             bool useOriginalValues = false)
         {
             DebugCheck.NotNull(iaFkProperties);
@@ -97,7 +97,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                        iaFkProperty.Item2.Name,
                        iaFkProperty.Item2.TypeUsage,
                        ParameterMode.In)
-                   select new StorageModificationFunctionParameterBinding(
+                   select new ModificationFunctionParameterBinding(
                        functionParameter,
                        iaFkProperty.Item1,
                        isCurrent: !useOriginalValues);

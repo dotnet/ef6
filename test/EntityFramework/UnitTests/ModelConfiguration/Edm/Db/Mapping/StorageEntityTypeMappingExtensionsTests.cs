@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
         [Fact]
         public void GetPropertyMapping_should_return_mapping_with_path()
         {
-            var entityTypeMapping = new StorageEntityTypeMapping(null);
+            var entityTypeMapping = new EntityTypeMapping(null);
             var propertyFoo = EdmProperty.CreateComplex("Foo", new ComplexType());
             var propertyBar = EdmProperty.CreatePrimitive("Bar", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                         });
 
             var entityTypeMappingFragment
-                = new StorageMappingFragment(new EntitySet(), entityTypeMapping, false);
+                = new MappingFragment(new EntitySet(), entityTypeMapping, false);
 
             entityTypeMappingFragment.AddColumnMapping(entityPropertyMapping);
             entityTypeMapping.AddFragment(entityTypeMappingFragment);

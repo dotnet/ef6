@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         private const string UnmappedPropertiesFragmentAnnotation = "UnmappedPropertiesFragment";
 
         public static EdmProperty GetDefaultDiscriminator(
-            this StorageMappingFragment entityTypeMapppingFragment)
+            this MappingFragment entityTypeMapppingFragment)
         {
             DebugCheck.NotNull(entityTypeMapppingFragment);
 
@@ -25,7 +25,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void SetDefaultDiscriminator(
-            this StorageMappingFragment entityTypeMappingFragment, EdmProperty discriminator)
+            this MappingFragment entityTypeMappingFragment, EdmProperty discriminator)
         {
             DebugCheck.NotNull(entityTypeMappingFragment);
 
@@ -33,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void RemoveDefaultDiscriminatorAnnotation(
-            this StorageMappingFragment entityTypeMappingFragment)
+            this MappingFragment entityTypeMappingFragment)
         {
             DebugCheck.NotNull(entityTypeMappingFragment);
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void RemoveDefaultDiscriminator(
-            this StorageMappingFragment entityTypeMappingFragment, StorageEntitySetMapping entitySetMapping)
+            this MappingFragment entityTypeMappingFragment, EntitySetMapping entitySetMapping)
         {
             DebugCheck.NotNull(entityTypeMappingFragment);
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static EdmProperty RemoveDefaultDiscriminatorCondition(
-            this StorageMappingFragment entityTypeMappingFragment)
+            this MappingFragment entityTypeMappingFragment)
         {
             DebugCheck.NotNull(entityTypeMappingFragment);
 
@@ -95,7 +95,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void AddDiscriminatorCondition(
-            this StorageMappingFragment entityTypeMapppingFragment,
+            this MappingFragment entityTypeMapppingFragment,
             EdmProperty discriminatorColumn,
             object value)
         {
@@ -105,11 +105,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             entityTypeMapppingFragment
                 .AddConditionProperty(
-                    new StorageConditionPropertyMapping(null, discriminatorColumn, value, null));
+                    new ConditionPropertyMapping(null, discriminatorColumn, value, null));
         }
 
         public static void AddNullabilityCondition(
-            this StorageMappingFragment entityTypeMapppingFragment,
+            this MappingFragment entityTypeMapppingFragment,
             EdmProperty column,
             bool isNull)
         {
@@ -118,10 +118,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             entityTypeMapppingFragment
                 .AddConditionProperty(
-                    new StorageConditionPropertyMapping(null, column, null, isNull));
+                    new ConditionPropertyMapping(null, column, null, isNull));
         }
 
-        public static bool IsConditionOnlyFragment(this StorageMappingFragment entityTypeMapppingFragment)
+        public static bool IsConditionOnlyFragment(this MappingFragment entityTypeMapppingFragment)
         {
             DebugCheck.NotNull(entityTypeMapppingFragment);
 
@@ -135,7 +135,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void SetIsConditionOnlyFragment(
-            this StorageMappingFragment entityTypeMapppingFragment, bool isConditionOnlyFragment)
+            this MappingFragment entityTypeMapppingFragment, bool isConditionOnlyFragment)
         {
             DebugCheck.NotNull(entityTypeMapppingFragment);
 
@@ -150,7 +150,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             }
         }
 
-        public static bool IsUnmappedPropertiesFragment(this StorageMappingFragment entityTypeMapppingFragment)
+        public static bool IsUnmappedPropertiesFragment(this MappingFragment entityTypeMapppingFragment)
         {
             DebugCheck.NotNull(entityTypeMapppingFragment);
 
@@ -164,7 +164,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         public static void SetIsUnmappedPropertiesFragment(
-            this StorageMappingFragment entityTypeMapppingFragment, bool isUnmappedPropertiesFragment)
+            this MappingFragment entityTypeMapppingFragment, bool isUnmappedPropertiesFragment)
         {
             DebugCheck.NotNull(entityTypeMapppingFragment);
 

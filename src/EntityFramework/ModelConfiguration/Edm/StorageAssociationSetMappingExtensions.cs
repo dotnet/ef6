@@ -8,25 +8,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
     internal static class StorageAssociationSetMappingExtensions
     {
-        public static StorageAssociationSetMapping Initialize(this StorageAssociationSetMapping associationSetMapping)
+        public static AssociationSetMapping Initialize(this AssociationSetMapping associationSetMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
 
-            associationSetMapping.SourceEndMapping = new StorageEndPropertyMapping();
-            associationSetMapping.TargetEndMapping = new StorageEndPropertyMapping();
+            associationSetMapping.SourceEndMapping = new EndPropertyMapping();
+            associationSetMapping.TargetEndMapping = new EndPropertyMapping();
 
             return associationSetMapping;
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        public static object GetConfiguration(this StorageAssociationSetMapping associationSetMapping)
+        public static object GetConfiguration(this AssociationSetMapping associationSetMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
 
             return associationSetMapping.Annotations.GetConfiguration();
         }
 
-        public static void SetConfiguration(this StorageAssociationSetMapping associationSetMapping, object configuration)
+        public static void SetConfiguration(this AssociationSetMapping associationSetMapping, object configuration)
         {
             DebugCheck.NotNull(associationSetMapping);
 

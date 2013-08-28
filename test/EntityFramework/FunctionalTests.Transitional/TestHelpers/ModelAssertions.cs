@@ -193,9 +193,9 @@ namespace System.Data.Entity
 
         internal class CompositeParameterAssertions
         {
-            private readonly IList<StorageModificationFunctionParameterBinding> _parameterBindings;
+            private readonly IList<ModificationFunctionParameterBinding> _parameterBindings;
 
-            public CompositeParameterAssertions(IList<StorageModificationFunctionParameterBinding> parameterBindings)
+            public CompositeParameterAssertions(IList<ModificationFunctionParameterBinding> parameterBindings)
             {
                 Xunit.Assert.NotEmpty(parameterBindings);
 
@@ -455,9 +455,9 @@ namespace System.Data.Entity
 
         internal class MappingFragmentAssertions
         {
-            private readonly StorageMappingFragment _fragment;
+            private readonly MappingFragment _fragment;
 
-            public MappingFragmentAssertions(StorageMappingFragment fragment)
+            public MappingFragmentAssertions(MappingFragment fragment)
             {
                 _fragment = fragment;
             }

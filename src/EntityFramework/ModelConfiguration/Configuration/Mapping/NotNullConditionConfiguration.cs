@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         internal void Configure(
-            DbDatabaseMapping databaseMapping, StorageMappingFragment fragment, EntityType entityType)
+            DbDatabaseMapping databaseMapping, MappingFragment fragment, EntityType entityType)
         {
             DebugCheck.NotNull(fragment);
 

@@ -163,7 +163,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private void InitializeEntitySet(EntitySetBase entitySetBase, MetadataWorkspace workspace)
         {
-            var mapping = (StorageEntityContainerMapping)m_mappingCollection.GetMap(entitySetBase.EntityContainer);
+            var mapping = (EntityContainerMapping)m_mappingCollection.GetMap(entitySetBase.EntityContainer);
 
             // make sure views have been generated for this sub-graph (trigger generation of the sub-graph
             // by retrieving a view for one of its components; not actually using the view here)
@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var isNullConditionColumns = new Set<EdmMember>();
 
                 // find extent in the container mapping
-                StorageSetMapping setMapping;
+                SetMapping setMapping;
                 if (entitySetBase.BuiltInTypeKind
                     == BuiltInTypeKind.EntitySet)
                 {
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
                     // Check for members that have result bindings in a function mapping. If a 
                     // function returns the member values, it indicates they are server-generated
-                    m_serverGenProperties.Unite(GetMembersWithResultBinding((StorageEntitySetMapping)setMapping));
+                    m_serverGenProperties.Unite(GetMembersWithResultBinding((EntitySetMapping)setMapping));
                 }
                 else if (entitySetBase.BuiltInTypeKind
                          == BuiltInTypeKind.AssociationSet)
@@ -246,7 +246,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// </summary>
         /// <param name="entitySetMapping"> Set mapping to examine </param>
         /// <returns> All result bindings </returns>
-        private IEnumerable<EdmMember> GetMembersWithResultBinding(StorageEntitySetMapping entitySetMapping)
+        private IEnumerable<EdmMember> GetMembersWithResultBinding(EntitySetMapping entitySetMapping)
         {
             foreach (var typeFunctionMapping in entitySetMapping.ModificationFunctionMappings)
             {
@@ -271,7 +271,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         }
 
         // Loads and registers any function mapping translators for the given extent (and related container)
-        private void InitializeFunctionMappingTranslators(EntitySetBase entitySetBase, StorageEntityContainerMapping mapping)
+        private void InitializeFunctionMappingTranslators(EntitySetBase entitySetBase, EntityContainerMapping mapping)
         {
             var requiredEnds = new KeyToListMap<AssociationSet, AssociationEndMember>(
                 EqualityComparer<AssociationSet>.Default);
@@ -280,7 +280,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             if (!m_functionMappingTranslators.ContainsKey(entitySetBase))
             {
                 // load all function mapping data from the current entity container
-                foreach (StorageEntitySetMapping entitySetMapping in mapping.EntitySetMaps)
+                foreach (EntitySetMapping entitySetMapping in mapping.EntitySetMaps)
                 {
                     if (0 < entitySetMapping.ModificationFunctionMappings.Count)
                     {
@@ -311,7 +311,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     }
                 }
 
-                foreach (StorageAssociationSetMapping associationSetMapping in mapping.RelationshipSetMaps)
+                foreach (AssociationSetMapping associationSetMapping in mapping.RelationshipSetMaps)
                 {
                     if (null != associationSetMapping.ModificationFunctionMapping)
                     {
@@ -350,10 +350,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Gets all model properties mapped to server generated columns.
         /// </summary>
-        private static IEnumerable<EdmMember> FindServerGenMembers(StorageMappingFragment mappingFragment)
+        private static IEnumerable<EdmMember> FindServerGenMembers(MappingFragment mappingFragment)
         {
             foreach (var scalarPropertyMapping in FlattenPropertyMappings(mappingFragment.AllProperties)
-                .OfType<StorageScalarPropertyMapping>())
+                .OfType<ScalarPropertyMapping>())
             {
                 if (StoreGeneratedPattern.None
                     != MetadataHelper.GetStoreGeneratedPattern(scalarPropertyMapping.ColumnProperty))
@@ -366,10 +366,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Gets all store columns participating in is null conditions.
         /// </summary>
-        private static IEnumerable<EdmMember> FindIsNullConditionColumns(StorageMappingFragment mappingFragment)
+        private static IEnumerable<EdmMember> FindIsNullConditionColumns(MappingFragment mappingFragment)
         {
             foreach (var conditionPropertyMapping in FlattenPropertyMappings(mappingFragment.AllProperties)
-                .OfType<StorageConditionPropertyMapping>())
+                .OfType<ConditionPropertyMapping>())
             {
                 if (conditionPropertyMapping.ColumnProperty != null
                     &&
@@ -383,10 +383,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Gets all model properties mapped to given columns.
         /// </summary>
-        private static IEnumerable<EdmMember> FindPropertiesMappedToColumns(Set<EdmMember> columns, StorageMappingFragment mappingFragment)
+        private static IEnumerable<EdmMember> FindPropertiesMappedToColumns(Set<EdmMember> columns, MappingFragment mappingFragment)
         {
             foreach (var scalarPropertyMapping in FlattenPropertyMappings(mappingFragment.AllProperties)
-                .OfType<StorageScalarPropertyMapping>())
+                .OfType<ScalarPropertyMapping>())
             {
                 if (columns.Contains(scalarPropertyMapping.ColumnProperty))
                 {
@@ -398,7 +398,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Enumerates all mapping fragments in given set mapping.
         /// </summary>
-        private static IEnumerable<StorageMappingFragment> GetMappingFragments(StorageSetMapping setMapping)
+        private static IEnumerable<MappingFragment> GetMappingFragments(SetMapping setMapping)
         {
             // get all type mappings for the extent
             foreach (var typeMapping in setMapping.TypeMappings)
@@ -415,12 +415,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// Returns all bottom-level mappings (e.g. conditions and scalar property mappings but not complex property mappings
         /// whose components are returned)
         /// </summary>
-        private static IEnumerable<StoragePropertyMapping> FlattenPropertyMappings(
-            ReadOnlyCollection<StoragePropertyMapping> propertyMappings)
+        private static IEnumerable<PropertyMapping> FlattenPropertyMappings(
+            ReadOnlyCollection<PropertyMapping> propertyMappings)
         {
             foreach (var propertyMapping in propertyMappings)
             {
-                var complexPropertyMapping = propertyMapping as StorageComplexPropertyMapping;
+                var complexPropertyMapping = propertyMapping as ComplexPropertyMapping;
                 if (null != complexPropertyMapping)
                 {
                     foreach (var complexTypeMapping in complexPropertyMapping.TypeMappings)

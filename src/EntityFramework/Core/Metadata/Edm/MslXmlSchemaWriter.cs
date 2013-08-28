@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private void WriteSchemaElementHeader()
         {
-            var xmlNamespace = StorageMslConstructs.GetMslNamespace(_version);
-            _xmlWriter.WriteStartElement(StorageMslConstructs.MappingElement, xmlNamespace);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.MappingSpaceAttribute, "C-S");
+            var xmlNamespace = MslConstructs.GetMslNamespace(_version);
+            _xmlWriter.WriteStartElement(MslConstructs.MappingElement, xmlNamespace);
+            _xmlWriter.WriteAttributeString(MslConstructs.MappingSpaceAttribute, "C-S");
         }
 
         private void WriteDbModelElement(DbDatabaseMapping databaseMapping)
@@ -49,14 +49,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         // internal for testing
-        internal void WriteEntityContainerMappingElement(StorageEntityContainerMapping containerMapping)
+        internal void WriteEntityContainerMappingElement(EntityContainerMapping containerMapping)
         {
             DebugCheck.NotNull(containerMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.EntityContainerMappingElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.StorageEntityContainerAttribute, _dbSchemaName);
+            _xmlWriter.WriteStartElement(MslConstructs.EntityContainerMappingElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.StorageEntityContainerAttribute, _dbSchemaName);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.CdmEntityContainerAttribute, containerMapping.EdmEntityContainer.Name);
+                MslConstructs.CdmEntityContainerAttribute, containerMapping.EdmEntityContainer.Name);
 
             foreach (var set in containerMapping.EntitySetMappings)
             {
@@ -76,12 +76,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        public void WriteEntitySetMappingElement(StorageEntitySetMapping entitySetMapping)
+        public void WriteEntitySetMappingElement(EntitySetMapping entitySetMapping)
         {
             DebugCheck.NotNull(entitySetMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.EntitySetMappingElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.EntitySetMappingNameAttribute, entitySetMapping.EntitySet.Name);
+            _xmlWriter.WriteStartElement(MslConstructs.EntitySetMappingElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.EntitySetMappingNameAttribute, entitySetMapping.EntitySet.Name);
 
             foreach (var entityTypeMapping in entitySetMapping.EntityTypeMappings)
             {
@@ -90,9 +90,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var modificationFunctionMapping in entitySetMapping.ModificationFunctionMappings)
             {
-                _xmlWriter.WriteStartElement(StorageMslConstructs.EntityTypeMappingElement);
+                _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.EntityTypeMappingTypeNameAttribute,
+                    MslConstructs.EntityTypeMappingTypeNameAttribute,
                     GetEntityTypeName(_entityTypeNamespace + "." + modificationFunctionMapping.EntityType.Name, false));
 
                 WriteModificationFunctionMapping(modificationFunctionMapping);
@@ -103,18 +103,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        public void WriteAssociationSetMappingElement(StorageAssociationSetMapping associationSetMapping)
+        public void WriteAssociationSetMappingElement(AssociationSetMapping associationSetMapping)
         {
             DebugCheck.NotNull(associationSetMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.AssociationSetMappingElement);
+            _xmlWriter.WriteStartElement(MslConstructs.AssociationSetMappingElement);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.AssociationSetMappingNameAttribute, associationSetMapping.AssociationSet.Name);
+                MslConstructs.AssociationSetMappingNameAttribute, associationSetMapping.AssociationSet.Name);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.AssociationSetMappingTypeNameAttribute,
+                MslConstructs.AssociationSetMappingTypeNameAttribute,
                 _entityTypeNamespace + "." + associationSetMapping.AssociationSet.ElementType.Name);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.AssociationSetMappingStoreEntitySetAttribute, associationSetMapping.Table.Name);
+                MslConstructs.AssociationSetMappingStoreEntitySetAttribute, associationSetMapping.Table.Name);
 
             WriteAssociationEndMappingElement(associationSetMapping.SourceEndMapping);
             WriteAssociationEndMappingElement(associationSetMapping.TargetEndMapping);
@@ -132,12 +132,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteAssociationEndMappingElement(StorageEndPropertyMapping endMapping)
+        private void WriteAssociationEndMappingElement(EndPropertyMapping endMapping)
         {
             DebugCheck.NotNull(endMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.EndPropertyMappingElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.EndPropertyMappingNameAttribute, endMapping.EndMember.Name);
+            _xmlWriter.WriteStartElement(MslConstructs.EndPropertyMappingElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.EndPropertyMappingNameAttribute, endMapping.EndMember.Name);
 
             foreach (var propertyMapping in endMapping.PropertyMappings)
             {
@@ -149,13 +149,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteEntityTypeMappingElement(StorageEntityTypeMapping entityTypeMapping)
+        private void WriteEntityTypeMappingElement(EntityTypeMapping entityTypeMapping)
         {
             DebugCheck.NotNull(entityTypeMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.EntityTypeMappingElement);
+            _xmlWriter.WriteStartElement(MslConstructs.EntityTypeMappingElement);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.EntityTypeMappingTypeNameAttribute,
+                MslConstructs.EntityTypeMappingTypeNameAttribute,
                 GetEntityTypeName(
                     _entityTypeNamespace + "." + entityTypeMapping.EntityType.Name, entityTypeMapping.IsHierarchyMapping));
 
@@ -167,14 +167,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        internal void WriteMappingFragmentElement(StorageMappingFragment mappingFragment)
+        internal void WriteMappingFragmentElement(MappingFragment mappingFragment)
         {
             DebugCheck.NotNull(mappingFragment);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.MappingFragmentElement);
+            _xmlWriter.WriteStartElement(MslConstructs.MappingFragmentElement);
 
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.MappingFragmentStoreEntitySetAttribute, 
+                MslConstructs.MappingFragmentStoreEntitySetAttribute, 
                 mappingFragment.TableSet.Name);
 
             foreach (var propertyMapping in mappingFragment.Properties)
@@ -194,14 +194,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(functionImportMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingElement);
+            _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingElement);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.FunctionImportMappingFunctionNameAttribute,
+                MslConstructs.FunctionImportMappingFunctionNameAttribute,
                 functionImportMapping.TargetFunction.FullName);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.FunctionImportMappingFunctionImportNameAttribute,
+                MslConstructs.FunctionImportMappingFunctionImportNameAttribute,
                 functionImportMapping.FunctionImport.Name);
-            _xmlWriter.WriteStartElement(StorageMslConstructs.FunctionImportMappingResultMapping);
+            _xmlWriter.WriteStartElement(MslConstructs.FunctionImportMappingResultMapping);
 
             Debug.Assert(
                 functionImportMapping.StructuralTypeMappings.Count == 1,
@@ -211,9 +211,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 "mapping to entity sets not supported.");
 
             var structuralMapping = functionImportMapping.StructuralTypeMappings.Single();
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ComplexTypeMappingElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
-            foreach (StorageScalarPropertyMapping propertyMapping in structuralMapping.Item3)
+            _xmlWriter.WriteStartElement(MslConstructs.ComplexTypeMappingElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ComplexTypeMappingTypeNameAttribute, structuralMapping.Item1.FullName);
+            foreach (ScalarPropertyMapping propertyMapping in structuralMapping.Item3)
             {
                 WritePropertyMapping(propertyMapping);
             }
@@ -223,32 +223,32 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteModificationFunctionMapping(StorageEntityTypeModificationFunctionMapping modificationFunctionMapping)
+        private void WriteModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ModificationFunctionMappingElement);
+            _xmlWriter.WriteStartElement(MslConstructs.ModificationFunctionMappingElement);
 
-            WriteFunctionMapping(StorageMslConstructs.InsertFunctionElement, modificationFunctionMapping.InsertFunctionMapping);
-            WriteFunctionMapping(StorageMslConstructs.UpdateFunctionElement, modificationFunctionMapping.UpdateFunctionMapping);
-            WriteFunctionMapping(StorageMslConstructs.DeleteFunctionElement, modificationFunctionMapping.DeleteFunctionMapping);
+            WriteFunctionMapping(MslConstructs.InsertFunctionElement, modificationFunctionMapping.InsertFunctionMapping);
+            WriteFunctionMapping(MslConstructs.UpdateFunctionElement, modificationFunctionMapping.UpdateFunctionMapping);
+            WriteFunctionMapping(MslConstructs.DeleteFunctionElement, modificationFunctionMapping.DeleteFunctionMapping);
 
             _xmlWriter.WriteEndElement();
         }
 
-        private void WriteModificationFunctionMapping(StorageAssociationSetModificationFunctionMapping modificationFunctionMapping)
+        private void WriteModificationFunctionMapping(AssociationSetModificationFunctionMapping modificationFunctionMapping)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ModificationFunctionMappingElement);
+            _xmlWriter.WriteStartElement(MslConstructs.ModificationFunctionMappingElement);
 
             WriteFunctionMapping(
-                StorageMslConstructs.InsertFunctionElement,
+                MslConstructs.InsertFunctionElement,
                 modificationFunctionMapping.InsertFunctionMapping,
                 associationSetMapping: true);
 
             WriteFunctionMapping(
-                StorageMslConstructs.DeleteFunctionElement,
+                MslConstructs.DeleteFunctionElement,
                 modificationFunctionMapping.DeleteFunctionMapping,
                 associationSetMapping: true);
 
@@ -256,17 +256,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         public void WriteFunctionMapping(
-            string functionElement, StorageModificationFunctionMapping functionMapping, bool associationSetMapping = false)
+            string functionElement, ModificationFunctionMapping functionMapping, bool associationSetMapping = false)
         {
             DebugCheck.NotNull(functionMapping);
 
             _xmlWriter.WriteStartElement(functionElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.FunctionNameAttribute, functionMapping.Function.FullName);
+            _xmlWriter.WriteAttributeString(MslConstructs.FunctionNameAttribute, functionMapping.Function.FullName);
 
             if (functionMapping.RowsAffectedParameter != null)
             {
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.RowsAffectedParameterAttribute,
+                    MslConstructs.RowsAffectedParameterAttribute,
                     functionMapping.RowsAffectedParameter.Name);
             }
 
@@ -289,7 +289,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private void WriteAssociationSetMappingParameterBindings(
-            IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings)
+            IEnumerable<ModificationFunctionParameterBinding> parameterBindings)
         {
             DebugCheck.NotNull(parameterBindings);
 
@@ -300,8 +300,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var group in propertyGroups)
             {
-                _xmlWriter.WriteStartElement(StorageMslConstructs.EndPropertyMappingElement);
-                _xmlWriter.WriteAttributeString(StorageMslConstructs.EndPropertyMappingNameAttribute, group.Key.Name);
+                _xmlWriter.WriteStartElement(MslConstructs.EndPropertyMappingElement);
+                _xmlWriter.WriteAttributeString(MslConstructs.EndPropertyMappingNameAttribute, group.Key.Name);
 
                 foreach (var functionParameterBinding in group)
                 {
@@ -313,7 +313,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private void WritePropertyParameterBindings(
-            IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings, int level = 0)
+            IEnumerable<ModificationFunctionParameterBinding> parameterBindings, int level = 0)
         {
             DebugCheck.NotNull(parameterBindings);
 
@@ -329,10 +329,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (property.IsComplexType)
                 {
-                    _xmlWriter.WriteStartElement(StorageMslConstructs.ComplexPropertyElement);
-                    _xmlWriter.WriteAttributeString(StorageMslConstructs.ComplexPropertyNameAttribute, property.Name);
+                    _xmlWriter.WriteStartElement(MslConstructs.ComplexPropertyElement);
+                    _xmlWriter.WriteAttributeString(MslConstructs.ComplexPropertyNameAttribute, property.Name);
                     _xmlWriter.WriteAttributeString(
-                        StorageMslConstructs.ComplexPropertyTypeNameAttribute,
+                        MslConstructs.ComplexPropertyTypeNameAttribute,
                         _entityTypeNamespace + "." + property.ComplexType.Name);
 
                     WritePropertyParameterBindings(group, level + 1);
@@ -350,7 +350,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private void WriteAssociationParameterBindings(
-            IEnumerable<StorageModificationFunctionParameterBinding> parameterBindings)
+            IEnumerable<ModificationFunctionParameterBinding> parameterBindings)
         {
             DebugCheck.NotNull(parameterBindings);
 
@@ -361,14 +361,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var group in propertyGroups)
             {
-                _xmlWriter.WriteStartElement(StorageMslConstructs.AssociationEndElement);
+                _xmlWriter.WriteStartElement(MslConstructs.AssociationEndElement);
 
                 var assocationSet = group.Key.ParentAssociationSet;
 
-                _xmlWriter.WriteAttributeString(StorageMslConstructs.AssociationSetAttribute, assocationSet.Name);
-                _xmlWriter.WriteAttributeString(StorageMslConstructs.FromAttribute, group.Key.Name);
+                _xmlWriter.WriteAttributeString(MslConstructs.AssociationSetAttribute, assocationSet.Name);
+                _xmlWriter.WriteAttributeString(MslConstructs.FromAttribute, group.Key.Name);
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.ToAttribute,
+                    MslConstructs.ToAttribute,
                     assocationSet.AssociationSetEnds.Single(ae => ae != group.Key).Name);
 
                 foreach (var functionParameterBinding in group)
@@ -380,40 +380,40 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        private void WriteResultBindings(IEnumerable<StorageModificationFunctionResultBinding> resultBindings)
+        private void WriteResultBindings(IEnumerable<ModificationFunctionResultBinding> resultBindings)
         {
             DebugCheck.NotNull(resultBindings);
 
             foreach (var resultBinding in resultBindings)
             {
-                _xmlWriter.WriteStartElement(StorageMslConstructs.ResultBindingElement);
-                _xmlWriter.WriteAttributeString(StorageMslConstructs.ScalarPropertyNameAttribute, resultBinding.Property.Name);
-                _xmlWriter.WriteAttributeString(StorageMslConstructs.ScalarPropertyColumnNameAttribute, resultBinding.ColumnName);
+                _xmlWriter.WriteStartElement(MslConstructs.ResultBindingElement);
+                _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, resultBinding.Property.Name);
+                _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, resultBinding.ColumnName);
                 _xmlWriter.WriteEndElement();
             }
         }
 
-        private void WriteScalarParameterElement(EdmMember member, StorageModificationFunctionParameterBinding parameterBinding)
+        private void WriteScalarParameterElement(EdmMember member, ModificationFunctionParameterBinding parameterBinding)
         {
             DebugCheck.NotNull(member);
             DebugCheck.NotNull(parameterBinding);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ScalarPropertyElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ScalarPropertyNameAttribute, member.Name);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ParameterNameAttribute, parameterBinding.Parameter.Name);
+            _xmlWriter.WriteStartElement(MslConstructs.ScalarPropertyElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, member.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ParameterNameAttribute, parameterBinding.Parameter.Name);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.ParameterVersionAttribute,
+                MslConstructs.ParameterVersionAttribute,
                 parameterBinding.IsCurrent
-                    ? StorageMslConstructs.ParameterVersionAttributeCurrentValue
-                    : StorageMslConstructs.ParameterVersionAttributeOriginalValue);
+                    ? MslConstructs.ParameterVersionAttributeCurrentValue
+                    : MslConstructs.ParameterVersionAttributeOriginalValue);
             _xmlWriter.WriteEndElement();
         }
 
-        private void WritePropertyMapping(StoragePropertyMapping propertyMapping)
+        private void WritePropertyMapping(PropertyMapping propertyMapping)
         {
             DebugCheck.NotNull(propertyMapping);
 
-            var scalarPropertyMapping = propertyMapping as StorageScalarPropertyMapping;
+            var scalarPropertyMapping = propertyMapping as ScalarPropertyMapping;
 
             if (scalarPropertyMapping != null)
             {
@@ -421,7 +421,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                var complexPropertyMapping = propertyMapping as StorageComplexPropertyMapping;
+                var complexPropertyMapping = propertyMapping as ComplexPropertyMapping;
 
                 if (complexPropertyMapping != null)
                 {
@@ -430,21 +430,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        private void WritePropertyMapping(StorageScalarPropertyMapping scalarPropertyMapping)
+        private void WritePropertyMapping(ScalarPropertyMapping scalarPropertyMapping)
         {
             DebugCheck.NotNull(scalarPropertyMapping);
 
             WriteScalarPropertyElement(scalarPropertyMapping.EdmProperty, scalarPropertyMapping.ColumnProperty);
         }
 
-        private void WritePropertyMapping(StorageComplexPropertyMapping complexPropertyMapping)
+        private void WritePropertyMapping(ComplexPropertyMapping complexPropertyMapping)
         {
             DebugCheck.NotNull(complexPropertyMapping);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ComplexPropertyElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ComplexPropertyNameAttribute, complexPropertyMapping.EdmProperty.Name);
+            _xmlWriter.WriteStartElement(MslConstructs.ComplexPropertyElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ComplexPropertyNameAttribute, complexPropertyMapping.EdmProperty.Name);
             _xmlWriter.WriteAttributeString(
-                StorageMslConstructs.ComplexPropertyTypeNameAttribute,
+                MslConstructs.ComplexPropertyTypeNameAttribute,
                 _entityTypeNamespace + "." + complexPropertyMapping.EdmProperty.ComplexType.Name);
 
             foreach (var propertyMapping in complexPropertyMapping.TypeMappings.Single().Properties)
@@ -461,34 +461,34 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (isHierarchyMapping)
             {
-                return StorageMslConstructs.IsTypeOf + fullyQualifiedEntityTypeName + StorageMslConstructs.IsTypeOfTerminal;
+                return MslConstructs.IsTypeOf + fullyQualifiedEntityTypeName + MslConstructs.IsTypeOfTerminal;
             }
 
             return fullyQualifiedEntityTypeName;
         }
 
-        private void WriteConditionElement(StorageConditionPropertyMapping condition)
+        private void WriteConditionElement(ConditionPropertyMapping condition)
         {
             DebugCheck.NotNull(condition);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ConditionElement);
+            _xmlWriter.WriteStartElement(MslConstructs.ConditionElement);
             if (condition.IsNull.HasValue)
             {
                 _xmlWriter.WriteAttributeString(
-                    StorageMslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
+                    MslConstructs.ConditionIsNullAttribute, GetLowerCaseStringFromBoolValue(condition.IsNull.Value));
             }
             else
             {
                 if (condition.Value is bool)
                 {
-                    _xmlWriter.WriteAttributeString(StorageMslConstructs.ConditionValueAttribute, (bool)condition.Value ? "1" : "0");
+                    _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, (bool)condition.Value ? "1" : "0");
                 }
                 else
                 {
-                    _xmlWriter.WriteAttributeString(StorageMslConstructs.ConditionValueAttribute, condition.Value.ToString());
+                    _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, condition.Value.ToString());
                 }
             }
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ConditionColumnNameAttribute, condition.ColumnProperty.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnProperty.Name);
             _xmlWriter.WriteEndElement();
         }
 
@@ -497,9 +497,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(column);
 
-            _xmlWriter.WriteStartElement(StorageMslConstructs.ScalarPropertyElement);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ScalarPropertyNameAttribute, property.Name);
-            _xmlWriter.WriteAttributeString(StorageMslConstructs.ScalarPropertyColumnNameAttribute, column.Name);
+            _xmlWriter.WriteStartElement(MslConstructs.ScalarPropertyElement);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyNameAttribute, property.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ScalarPropertyColumnNameAttribute, column.Name);
             _xmlWriter.WriteEndElement();
         }
     }

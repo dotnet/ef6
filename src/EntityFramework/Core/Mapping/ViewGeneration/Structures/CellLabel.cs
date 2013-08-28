@@ -16,7 +16,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_sourceLocation = source.m_sourceLocation;
         }
 
-        internal CellLabel(StorageMappingFragment fragmentInfo)
+        internal CellLabel(MappingFragment fragmentInfo)
             :
                 this(fragmentInfo.StartLineNumber, fragmentInfo.StartLinePosition, fragmentInfo.SourceLocation)
         {
