@@ -246,7 +246,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entity = databaseMapping.Model.EntityTypes.Single();
+                var entity = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntity");
                 Assert.Equal(1, entity.KeyProperties.Count());
                 Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
             }
@@ -262,7 +262,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entity = databaseMapping.Model.EntityTypes.Single();
+                var entity = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntity");
                 Assert.Equal(1, entity.KeyProperties.Count());
                 Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
             }
@@ -278,7 +278,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entity = databaseMapping.Model.EntityTypes.Single();
+                var entity = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntity");
                 var keys = entity.KeyProperties;
                 Assert.Equal(2, keys.Count());
                 Assert.Equal("IntProperty", keys.First().Name);
@@ -351,7 +351,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
+                Assert.Equal(3, databaseMapping.Model.EntityTypes.Count());
                 Assert.Equal(2, databaseMapping.Model.ComplexTypes.Count());
             }
 
@@ -418,7 +418,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
+                Assert.Equal(3, databaseMapping.Model.EntityTypes.Count());
                 Assert.True(databaseMapping.Model.EntityTypes.All(e => e.KeyProperties.Any(p => p.Name == "StringProperty")));
                 Assert.Equal(0, databaseMapping.Model.ComplexTypes.Count());
             }
@@ -434,7 +434,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                Assert.Equal(1, databaseMapping.Model.EntityTypes.Count());
+                Assert.Equal(2, databaseMapping.Model.EntityTypes.Count());
                 Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
             }
 
@@ -496,7 +496,123 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                Assert.NotNull(databaseMapping.Model.EntityTypes.Single().Properties.Single(p => p.Name == "InternalNavigationPropertyId"));
+                Assert.NotNull(databaseMapping.Model.EntityTypes.First().Properties.Single(p => p.Name == "InternalNavigationPropertyId"));
+            }
+
+            // UNDONE: [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_IsUnicode()
+            {
+                var modelBuilder = new DbModelBuilder();
+                
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").IsUnicode(false));
+modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).IsUnicode();
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            // UNDONE: [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_precision()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.DecimalProperty).HasPrecision(5, 2);
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("DecimalProperty").HasPrecision(7, 4));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.True(
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "DecimalProperty").Precision == 7);
+                Assert.True(
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "DecimalProperty").Scale == 2);
+            }
+
+            // UNDONE: [Fact]    
+            public void Property_does_not_override_explicit_configurations_on_base_types_when_generic()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).IsUnicode();
+                modelBuilder.Types<LightweightEntity>().Configure(
+                    t => t.Property(e => e.StringProperty).IsUnicode(false));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            // UNDONE: [Fact]
+            public void Property_does_not_override_explicit_configurations_on_derived_types()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").IsUnicode(false));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            // UNDONE: [Fact]
+            public void Property_does_not_override_explicit_configurations_on_derived_types_when_generic()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
+                modelBuilder.Types<LightweightEntity>().Configure(
+                    t => t.Property(e => e.StringProperty).IsUnicode(false));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_derived_types_with_unmapped_base_type()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").IsUnicode(false));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightDerivedEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_derived_types_with_unmapped_base_type_when_generic()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
+                modelBuilder.Types<LightweightEntity>().Configure(
+                    t => t.Property(e => e.StringProperty).IsUnicode(false));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightDerivedEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
             }
         }
 
@@ -555,7 +671,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entity = databaseMapping.Model.EntityTypes.Single();
+                var entity = databaseMapping.Model.EntityTypes.Single(c => c.Name == "LightweightEntity");
                 Assert.Equal(1, entity.KeyProperties.Count());
                 Assert.Equal("IntProperty", entity.KeyProperties.Single().Name);
             }
@@ -576,7 +692,7 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
-                var entity = databaseMapping.Model.EntityTypes.Single();
+                var entity = databaseMapping.Model.EntityTypes.Single(c => c.Name == "LightweightEntity");
                 var keys = entity.KeyProperties;
                 Assert.Equal(2, keys.Count());
                 Assert.Equal("IntProperty", keys.ElementAt(0).Name);
@@ -676,6 +792,7 @@ namespace FunctionalTests
         internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
         public string StringProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
+        public Decimal DecimalProperty { get; set; }
     }
 
     public class LightweightEntityWithKeyConfiguration : ILightweightEntity
@@ -689,6 +806,10 @@ namespace FunctionalTests
         public int IntProperty1 { get; set; }
         internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
+    }
+
+    public class LightweightDerivedEntity : LightweightEntity
+    {        
     }
 
     #endregion
