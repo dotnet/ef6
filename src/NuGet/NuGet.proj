@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
     
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <OutputPath>bin\$(Configuration)\</OutputPath>
         <NuGetExePath>$(MSBuildProjectDirectory)\..\..\.nuget\nuget.exe</NuGetExePath>
         <LibFolder>net45</LibFolder>
         <LibFolder Condition="'$(Configuration)' == 'ReleaseNet40' Or '$(Configuration)' == 'DebugNet40'">net40</LibFolder>
@@ -12,24 +12,24 @@
     <Target Name="Build">
         <Copy
             DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.dll" />
+            SourceFiles="$(OutputPath)EntityFramework.dll" />
         <Copy 
             DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="..\EntityFramework\bin\$(Configuration)\EntityFramework.xml" />
+            SourceFiles="$(OutputPath)EntityFramework.xml" />
         <Copy 
             DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.dll" />
+            SourceFiles="$(OutputPath)EntityFramework.SqlServer.dll" />
         <Copy
             DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="..\EntityFramework.SqlServer\bin\$(Configuration)\EntityFramework.SqlServer.xml" />
+            SourceFiles="$(OutputPath)EntityFramework.SqlServer.xml" />
         
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.exe" />
-        <!--<Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\Migrate\bin\$(Configuration)\migrate.x86.exe" />-->
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="..\EntityFramework.PowerShell.Utility\bin\$(Configuration)\EntityFramework.PowerShell.Utility.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="..\EntityFramework.PowerShell\bin\$(Configuration)\EntityFramework.PowerShell.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="..\EntityFramework.SqlServerCompact\bin\$(Configuration)\EntityFramework.SqlServerCompact.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="..\EntityFramework.SqlServerCompact\bin\$(Configuration)\EntityFramework.SqlServerCompact.xml" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)migrate.exe" />
+        <!--<Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)migrate.x86.exe" />-->
+        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.Utility.dll" />
+        <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
+        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="$(OutputPath)EntityFramework.SqlServerCompact.dll" />
+        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="$(OutputPath)EntityFramework.SqlServerCompact.xml" />
 
         <MakeDir Directories="$(OutputPath)" />
 

@@ -1,0 +1,8 @@
+<!--
+****************************************************************************************************
+Project global post-settings and targets.
+****************************************************************************************************-->
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
+</Project>
+
