@@ -44,33 +44,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1573;1572;1570</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <AssemblyName>migrate.x86</AssemblyName>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1573;1572;1570</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <AssemblyName>migrate.x86</AssemblyName>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1573;1572;1570</NoWarn>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugNet40|AnyCPU' ">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -95,36 +68,6 @@
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>1573;1572;1570</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugNet40|x86'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <AssemblyName>migrate.x86</AssemblyName>
-    <DefineConstants>DEBUG;TRACE;NET40</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1591;1573;1572;1570</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet40|x86'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <AssemblyName>migrate.x86</AssemblyName>
-    <DefineConstants>TRACE;NET40</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <NoWarn>1573;1572;1570</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
-    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -185,8 +128,7 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  -->
   <Target Name="AfterBuild">
-    <!--<MSBuild Condition=" '$(Platform)' == 'AnyCPU' " Projects="$(MSBuildProjectFullPath)" Properties="Configuration=$(Configuration);Platform=x86;OutputPath=$(OutputPath)" />-->
   </Target>
+  -->
 </Project>

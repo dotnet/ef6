@@ -65,9 +65,6 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
-    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />

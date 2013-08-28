@@ -69,9 +69,6 @@
     <NoWarn>1573;1572;1570</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(InternalsInvisble)'=='true'">
-    <DefineConstants>$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
@@ -159,9 +156,6 @@
       <Project>{73636C32-5633-4D12-AA7B-88DCC26ACDB7}</Project>
       <Name>EntityFramework.PowerShell.Utility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Migrate\Migrate.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -169,8 +163,7 @@
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
-  -->
-  <Target Name="AfterBuild" Condition="$(BuildPackages) == 'true'">
-    <MSBuild Projects="..\NuGet\NuGet.proj" />
+  <Target Name="AfterBuild">
   </Target>
+  -->
 </Project>

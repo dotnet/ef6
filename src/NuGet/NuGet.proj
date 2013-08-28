@@ -31,7 +31,6 @@
         
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)migrate.exe" />
-        <!--<Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)migrate.x86.exe" />-->
         <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.Utility.dll" />
         <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
         <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="$(OutputPath)EntityFramework.SqlServerCompact.dll" />
