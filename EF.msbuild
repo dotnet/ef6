@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Package;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
     <PropertyGroup>
         <Configuration>Release</Configuration>
         <Platform>Any CPU</Platform>
@@ -9,15 +8,16 @@
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
     </PropertyGroup>
 
+    <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
     <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-
+  
     <Target Name="Clean">
         <MSBuild Targets="Clean"
                  Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
+                 Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)" />
         <MSBuild Targets="Clean"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties)" />
+                 Projects="src\NuGet\NuGet.proj"
+                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
     <Target Name="RestorePackages">
@@ -48,20 +48,14 @@
     <Target Name="Build">
         <MSBuild Targets="Build"
                  Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
+                 Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties);BuildPackages=false;RunCodeAnalysis=$(RunCodeAnalysis)" />
         <MSBuild Targets="Build"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
+                 Projects="src\NuGet\NuGet.proj"
+                 Properties="Configuration=$(Configuration)" />
+
     </Target>
 
-    <Target Name="Rebuild">
-        <MSBuild Targets="Rebuild"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
-        <MSBuild Targets="Rebuild"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
-    </Target>
+    <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
     <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
         <MSBuild Targets="CheckSkipStrongNames"
@@ -83,42 +77,7 @@
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
-    <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
-        <MSBuild Targets="Rebuild"
-                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-        <MSBuild Targets="Rebuild"
-                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-    </Target>
-
-    <Target Name="UpdateVersionNumber" Condition=" '$(BUILD_NUMBER)' != '' ">
-        <PropertyGroup>
-            <DatePart>2$([System.DateTime]::Now.ToString("MMdd"))</DatePart>
-            <AssemblyVersion>6.0.0.0</AssemblyVersion>
-            <AssemblyFileVersion>6.0.$(DatePart).$(BUILD_NUMBER)</AssemblyFileVersion>
-            <AssemblyInfoVersion>6.0.0-$(DatePart)</AssemblyInfoVersion>
-            <PackageVersion>6.0.0</PackageVersion>
-        </PropertyGroup>
-        <ItemGroup>
-            <Lines Include="using System.Reflection%3b"/>
-            <Lines Include="[assembly:AssemblyVersion(&quot;$(AssemblyVersion)&quot;)]"/>
-            <Lines Include="[assembly:AssemblyFileVersion(&quot;$(AssemblyFileVersion)&quot;)]"/>
-            <Lines Include="[assembly:AssemblyInformationalVersion(&quot;$(AssemblyInfoVersion)&quot;)]" />
-        </ItemGroup>
-        <WriteLinesToFile File="src\SharedAssemblyVersionInfo.cs"
-                          Lines="@(Lines)"
-                          Overwrite="true"
-                          Encoding="UTF-8" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework\EntityFramework.nuspec"
-                 Query="//x:package/x:metadata/x:version"
-                 Value="$(PackageVersion)"
-                 Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec"
-                 Query="//x:package/x:metadata/x:version"
-                 Value="$(PackageVersion)"
-                 Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
-    </Target>
+    <Target Name="Package" DependsOnTargets="Rebuild" />
 
     <Target Name="CodeCoverage" DependsOnTargets="RestoreSolutionPackages;Build">
         <MSBuild Projects="tools\EF.opencover.targets"

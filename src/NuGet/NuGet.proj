@@ -9,6 +9,12 @@
         <LibFolder Condition="'$(Configuration)' == 'ReleaseNet40' Or '$(Configuration)' == 'DebugNet40'">net40</LibFolder>
     </PropertyGroup>
 
+    <PropertyGroup Label="NuGet package parameters">
+      <NuGetVersion_EntityFramework Condition="'$(NuGetVersion_EntityFramework)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework>
+      <NuGetVersion_EntityFramework_SqlServerCompact Condition="'$(NuGetVersion_EntityFramework_SqlServerCompact)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework_SqlServerCompact>
+      <NuSpecProperties>NuGetVersion_EntityFramework=$(NuGetVersion_EntityFramework);NuGetVersion_EntityFramework_SqlServerCompact=$(NuGetVersion_EntityFramework_SqlServerCompact)</NuSpecProperties>
+    </PropertyGroup>
+
     <Target Name="Build">
         <Copy
             DestinationFolder="EntityFramework\lib\$(LibFolder)" 
@@ -33,8 +39,17 @@
 
         <MakeDir Directories="$(OutputPath)" />
 
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -Properties $(NuSpecProperties) -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
+        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -Properties $(NuSpecProperties) -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
     </Target>
+
+    <Target Name="Clean">
+      <ItemGroup>
+        <Clean Include="$(OutputPath)**\*.nupkg" />
+      </ItemGroup>
+      <Delete Files="@(Clean)" ContinueOnError="true" />
+    </Target>
+
+    <Target Name="Rebuild" DependsOnTargets="Clean;Build"  />
     
 </Project>

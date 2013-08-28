@@ -4,11 +4,19 @@ Project global pre-settings.
 **************************************************************************************************** -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(CustomBeforeEntityFrameworkTargets)" Condition="Exists('$(CustomBeforeEntityFrameworkTargets)')" Label="Pre-targets Build Extensibility Point."/>
+  
+  <!--- Configurable properties -->
+  
+  <PropertyGroup>
+    <VersionMajor>6</VersionMajor>
+    <VersionMinor>0</VersionMinor>
+    <VersionRelease>1-alpha1</VersionRelease>
+  </PropertyGroup>
 
   <!-- Defaults and Computed properties -->
  
   <PropertyGroup>
-    <RepositoryRoot Condition="'$(RepositoryRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), build.cmd))\</RepositoryRoot>
+    <RepositoryRoot Condition="'$(RepositoryRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\</RepositoryRoot>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <OutputPath Condition="'$(OutputPath)' == ''">$(RepositoryRoot)bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
