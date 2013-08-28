@@ -3,6 +3,8 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
     using Xunit.Sdk;
@@ -10,6 +12,12 @@ namespace System.Data.Entity
     public class ExtendedFactAttribute : FactAttribute
     {
         public TestGroup SlowGroup { get; set; }
+
+        public bool SkipForSqlAzure { get; set; }
+
+        public bool SkipForLocalDb { get; set; }
+
+        public string Justification { get; set; }
 
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {
@@ -33,6 +41,25 @@ namespace System.Data.Entity
                 return false;
             }
 #endif
+
+            if (SkipForSqlAzure)
+            {
+                var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
+                if (AzureTestHelpers.IsSqlAzure(connectionString))
+                {
+                    return false;
+                }
+            }
+
+            if (SkipForLocalDb)
+            {
+                var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
+                if (LocalDbTestHelpers.IsLocalDb(connectionString))
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
     }

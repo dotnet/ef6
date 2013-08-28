@@ -45,7 +45,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SkipForLocalDb = true, SkipForSqlAzure = true, Justification = "Test is hard-coded to Sql Express")]
         public void TargetDatabase_should_return_correct_info_for_logging()
         {
             var migrator = CreateMigrator<ShopContext_v1>();

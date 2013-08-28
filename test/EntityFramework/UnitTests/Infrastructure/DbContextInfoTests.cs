@@ -787,10 +787,18 @@ namespace System.Data.Entity.Infrastructure
                     var contextInfo = new DbContextInfo(contextType, config);
 
                     Assert.IsType<FakeDbContextInfoConnectionFactory>(FunctionalTestsConfiguration.OriginalConnectionFactories.Last());
-
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                    Assert.Equal(@"Data Source=.\SQLEXPRESS;Initial Catalog=foo;Integrated Security=True", contextInfo.ConnectionString);
+                    Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString))
+                    {
+                        Assert.True(contextInfo.ConnectionString.Contains(@"Integrated Security=True"));
+                    }
+
+                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    {
+                        Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
+                    }
                 });
         }
 
@@ -817,9 +825,12 @@ namespace System.Data.Entity.Infrastructure
                     var contextInfo = new DbContextInfo(contextType, config);
 
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                    Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
                     Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    {
+                        Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
+                    }
                 });
         }
 
@@ -884,9 +895,12 @@ namespace System.Data.Entity.Infrastructure
                     var contextInfo = new DbContextInfo(contextType, config);
 
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
-                    Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
                     Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
+                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    {
+                        Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
+                    }
                 });
         }
 

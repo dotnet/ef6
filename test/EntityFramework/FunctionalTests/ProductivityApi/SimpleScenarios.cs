@@ -19,10 +19,8 @@ namespace ProductivityApiTests
     {
         #region Scenarios for SQL Server
 
-        [Fact]
-        public void
-            SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
-            ()
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        public void SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
@@ -50,10 +48,8 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
-        public void
-            SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
-            ()
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        public void SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
@@ -81,7 +77,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Find()
         {
             using (var context = new SimpleModelContext())
@@ -102,7 +98,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Insert()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -125,7 +121,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Update()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -145,7 +141,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Query()
         {
             using (var context = new SimpleModelContext())
@@ -158,7 +154,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Relate_using_query()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -190,7 +186,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Relate_using_FK()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -215,7 +211,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_CodeFirst_with_ModelBuilder()
         {
             Database.Delete("Scenario_CodeFirstWithModelBuilder");
@@ -271,7 +267,7 @@ namespace ProductivityApiTests
             context.SaveChanges();
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Using_two_databases()
         {
             EnsureDatabaseInitialized(() => new LoginsContext());
@@ -321,7 +317,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Use_AppConfig_connection_string()
         {
             Database.Delete("Scenario_Use_AppConfig_connection_string");
@@ -338,7 +334,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_Include()
         {
             using (var context = new SimpleModelContext())
@@ -354,7 +350,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [Fact]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         public void Scenario_IncludeWithLambda()
         {
             using (var context = new SimpleModelContext())

@@ -13,6 +13,7 @@ namespace ProductivityApiTests
     using System.IO;
     using SimpleModel;
     using Xunit;
+    using System.Globalization;
 
     /// <summary>
     /// Functional tests for Database.  Unit tests also exist in the unit tests project.
@@ -112,8 +113,9 @@ END";
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>(useInitialCatalog)))
             {
-                // SQL Azure does not support attaching databases
-                if (AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
+                // SQL Azure and LocalDB do not support attaching databases
+                var connectionString = context.Database.Connection.ConnectionString;
+                if (AzureTestHelpers.IsSqlAzure(connectionString) || LocalDbTestHelpers.IsLocalDb(connectionString))
                 {
                     return;
                 }
@@ -1183,8 +1185,7 @@ END";
         }
 
         [Fact]
-        public void
-            If_connection_is_changed_to_point_to_different_database_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
+        public void If_connection_is_changed_to_point_to_different_database_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
         {
             If_connection_is_changed_then_operations_that_use_OriginalConnectionString_pick_up_this_change(
                 c => new MutatingConnectionContext4a(c),
@@ -1202,12 +1203,16 @@ END";
 #if !NET40
 
         [Fact]
-        public void
-            If_connection_is_changed_to_point_to_different_server_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
+        public void If_connection_is_changed_to_point_to_different_server_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
         {
+            var changedServer = LocalDbTestHelpers.IsLocalDb(SimpleConnectionString("")) ? @".\SQLEXPRESS" : @"(localdb)\v11.0";
+            var changedConnectionString = string.Format(
+                CultureInfo.InvariantCulture,
+                @"Data Source={0};Initial Catalog=MutatingConnectionContext4;Integrated Security=True", changedServer);
+         
             If_connection_is_changed_then_operations_that_use_OriginalConnectionString_pick_up_this_change(
                 c => new MutatingConnectionContext4b(c),
-                @"Data Source=(localdb)\v11.0;Initial Catalog=MutatingConnectionContext4;Integrated Security=True");
+                changedConnectionString);
         }
 
 #endif

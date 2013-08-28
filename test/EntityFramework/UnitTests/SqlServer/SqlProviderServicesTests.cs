@@ -288,7 +288,7 @@ namespace System.Data.Entity.SqlServer
                         t => t == "SELECT Count(*) FROM sys.databases WHERE [name]=N'I.Do.Not.Exist'"));
             }
 
-            [Fact]
+            [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true, Justification = "User Instance is not supported for SqlAzure and LocalDb")]
             public void DbDatabaseExists_dispatches_commands_to_interceptors_for_connections_with_no_initial_catalog()
             {
                 // See CodePlex 1554 - Handle User Instance flakiness
@@ -350,7 +350,7 @@ namespace System.Data.Entity.SqlServer
                     interceptor.Commands.Select(c => c.CommandText).Single());
             }
 
-            [Fact]
+            [ExtendedFact(SkipForLocalDb = true, SkipForSqlAzure = true, Justification = "User Instance is not supported for SqlAzure and LocalDb")]
             public void DbDeleteDatabase_dispatches_commands_to_interceptors_for_connections_without_initial_catalog()
             {
                 StoreItemCollection storeItemCollection;
