@@ -355,6 +355,7 @@
     <Compile Include="Migrations\Model\ParameterModelTests.cs" />
     <Compile Include="Migrations\Model\DropProcedureOperationTests.cs" />
     <Compile Include="Migrations\Model\CreateProcedureOperationTests.cs" />
+    <Compile Include="Migrations\Utilities\IndentedTextWriterTests.cs" />
     <Compile Include="Migrations\Utilities\MigrationsConfigurationFinderTests.cs" />
     <Compile Include="Migrations\Utilities\PartialTrustMigrationsConfigurationFinderTests.cs" />
     <Compile Include="ModelConfiguration\Configuration\ConfigurationTypeActivatorTests.cs" />
