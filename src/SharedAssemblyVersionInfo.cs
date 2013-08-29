@@ -2,6 +2,8 @@
 
 using System.Reflection;
 
+#if !BUILD_GENERATED_VERSION
 [assembly: AssemblyVersion("6.0.0.0")]
 [assembly: AssemblyFileVersion("6.0.0.0")]
 [assembly: AssemblyInformationalVersion("6.0.1-alpha1")]
+#endif

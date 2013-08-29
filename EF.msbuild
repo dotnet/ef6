@@ -1,128 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Package;Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Test;Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <Platform>AnyCPU</Platform>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
+    <BuildProperties>Platform=$(Platform);SolutionDir=$(SolutionDir)</BuildProperties>
+    <BuildProperties Condition="'$(InternalsInvisible)' != ''">$(BuildProperties);InternalsInvisible=$(InternalsInvisible)</BuildProperties>
+    <BuildProperties Condition="'$(RunCodeAnalysis)' != ''">$(BuildProperties);RunCodeAnalysis=$(RunCodeAnalysis)</BuildProperties>
+  </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectToBuild Include="src\EntityFramework\EntityFramework.csproj" />
+    <ProjectToBuild Include="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj" />
+    <ProjectToBuild Include="src\EntityFramework.PowerShell.Utility\EntityFramework.PowerShell.Utility.csproj" />
+    <ProjectToBuild Include="src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" />
+    <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
+      <RestorePackages>true</RestorePackages>
+    </ProjectToBuild>
+    <ProjectToBuild Include="src\Migrate\Migrate.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests\FunctionalTests.csproj">
+      <RestorePackages>true</RestorePackages>
+    </NonCoreProjectToBuild>
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
+      <RestorePackages>true</RestorePackages>
+    </NonCoreProjectToBuild>
+    <NonCoreProjectToBuild Include="test\EntityFramework\UnitTests\UnitTests.csproj">
+      <RestorePackages>true</RestorePackages>
+    </NonCoreProjectToBuild>
+    <NonCoreProjectToBuild Include="test\EntityFramework\VBTests\VBTests.vbproj">
+      <RestorePackages>true</RestorePackages>
+    </NonCoreProjectToBuild>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectToBuild Include="@(NonCoreProjectToBuild)" Condition="'$(BuildCoreOnly)' != 'true'" />
+  </ItemGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+
+  <Target Name="Clean">
+    <MSBuild Targets="Clean"
+             Projects="@(ProjectToBuild)"
+             Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)" />
+    <MSBuild Targets="Clean"
+             Projects="src\NuGet\NuGet.proj"
+             Properties="Configuration=%(BuildConfiguration.Identity)" />
+  </Target>
+
+  <Target Name="RestorePackages">
     <PropertyGroup>
-        <Configuration>Release</Configuration>
-        <Platform>Any CPU</Platform>
-        <SolutionFile>EntityFramework.sln</SolutionFile>
-        <BuildProperties>Platform=$(Platform)</BuildProperties>
-        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)</SolutionDir>
+      <RequireRestoreConsent>false</RequireRestoreConsent>
     </PropertyGroup>
+    <Message Text="Restoring NuGet packages..." Importance="High" />
+    <MSBuild Projects="@(ProjectToBuild->WithMetadataValue('RestorePackages', 'true'))" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
+  </Target>
 
-    <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Target Name="RestoreSolutionPackages" DependsOnTargets="CheckPrerequisites" AfterTargets="RestorePackages">
+    <PropertyGroup>
+      <PackagesConfig>$([System.IO.Path]::Combine($(NuGetToolsPath), "packages.config"))</PackagesConfig>
+      <SolutionRequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</SolutionRequireConsentSwitch>
+      <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(SolutionRequireConsentSwitch) -solutionDir "$(SolutionDir) "</RestoreCommand>
+    </PropertyGroup>
+    <Exec Command="$(RestoreCommand)"
+          LogStandardErrorAsError="true" />
+  </Target>
 
-    <Target Name="Clean">
-        <MSBuild Targets="Clean"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
-        <MSBuild Targets="Clean"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties)" />
+  <Target Name="Build">
+    <MSBuild Targets="Build"
+             Projects="@(ProjectToBuild)"
+             Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)" />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+  <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+    <MSBuild Targets="CheckSkipStrongNames"
+             Projects="tools\EF.skipstrongnames.targets" />
+  </Target>
+
+  <Target Name="EnableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+    <MSBuild Targets="EnableSkipStrongNames"
+             Projects="tools\EF.skipstrongnames.targets" />
+  </Target>
+
+  <Target Name="DisableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
+    <MSBuild Targets="DisableSkipStrongNames"
+             Projects="tools\EF.skipstrongnames.targets" />
+  </Target>
+
+  <Target Name="Test" DependsOnTargets="CheckSkipStrongNames;Build">
+    <MSBuild Projects="tools\EF.xunit.targets"
+             Properties="Configuration=$(Configuration);$(BuildProperties)" />
     </Target>
 
-    <Target Name="RestorePackages">
-        <PropertyGroup>
-            <RequireRestoreConsent>false</RequireRestoreConsent>
-        </PropertyGroup>
-        <ItemGroup>
-            <RestoreProjFiles Include="src\EntityFramework.SqlServerCompact\*.csproj" />
-            <RestoreProjFiles Include="test\EntityFramework\FunctionalTests\*.csproj" />
-            <RestoreProjFiles Include="test\EntityFramework\FunctionalTests.Transitional\*.csproj" />
-            <RestoreProjFiles Include="test\EntityFramework\UnitTests\*.csproj" />
-            <RestoreProjFiles Include="test\EntityFramework\VBTests\*.vbproj" />
-        </ItemGroup>
-        <Message Text="Restoring NuGet packages..." Importance="High" />
-        <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
-    </Target>
+  <Target Name="Package">
+    <MSBuild Targets="Rebuild"
+             Projects="$(MSBuildThisFileFullPath)"
+             Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false" />
+    <MSBuild Targets="Build"
+             Projects="src\NuGet\NuGet.proj"
+             Properties="Configuration=%(BuildConfiguration.Identity)" />
+  </Target>
 
-    <Target Name="RestoreSolutionPackages" DependsOnTargets="CheckPrerequisites" AfterTargets="RestorePackages">
-        <PropertyGroup>
-            <PackagesConfig>$([System.IO.Path]::Combine($(NuGetToolsPath), "packages.config"))</PackagesConfig>
-            <SolutionRequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</SolutionRequireConsentSwitch>
-            <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(SolutionRequireConsentSwitch) -solutionDir "$(SolutionDir) "</RestoreCommand>
-        </PropertyGroup>
-        <Exec Command="$(RestoreCommand)"
-              LogStandardErrorAsError="true" />
-    </Target>
-
-    <Target Name="Build">
-        <MSBuild Targets="Build"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
-        <MSBuild Targets="Build"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
-    </Target>
-
-    <Target Name="Rebuild">
-        <MSBuild Targets="Rebuild"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
-        <MSBuild Targets="Rebuild"
-                 Projects="$(SolutionFile)"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);BuildPackages=false" />
-    </Target>
-
-    <Target Name="CheckSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="CheckSkipStrongNames"
-                 Projects="tools\EF.skipstrongnames.targets" />
-    </Target>
-
-    <Target Name="EnableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="EnableSkipStrongNames"
-                 Projects="tools\EF.skipstrongnames.targets" />
-    </Target>
-
-    <Target Name="DisableSkipStrongNames" DependsOnTargets="RestoreSolutionPackages">
-        <MSBuild Targets="DisableSkipStrongNames"
-                 Projects="tools\EF.skipstrongnames.targets" />
-    </Target>
-
-    <Target Name="Test" DependsOnTargets="CheckSkipStrongNames;Rebuild">
-        <MSBuild Projects="tools\EF.xunit.targets"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
-    </Target>
-
-    <Target Name="Package" DependsOnTargets="UpdateVersionNumber;Rebuild">
-        <MSBuild Targets="Rebuild"
-                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="Configuration=$(Configuration);$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-        <MSBuild Targets="Rebuild"
-                 Projects="src\EntityFramework.PowerShell\EntityFramework.PowerShell.csproj"
-                 Properties="Configuration=ReleaseNet40;$(BuildProperties);Platform=AnyCPU;InternalsInvisble=true;RunCodeAnalysis=false" />
-    </Target>
-
-    <Target Name="UpdateVersionNumber" Condition=" '$(BUILD_NUMBER)' != '' ">
-        <PropertyGroup>
-            <DatePart>2$([System.DateTime]::Now.ToString("MMdd"))</DatePart>
-            <AssemblyVersion>6.0.0.0</AssemblyVersion>
-            <AssemblyFileVersion>6.0.$(DatePart).$(BUILD_NUMBER)</AssemblyFileVersion>
-            <AssemblyInfoVersion>6.0.1-alpha1-$(DatePart)</AssemblyInfoVersion>
-            <PackageVersion>$(AssemblyInfoVersion)</PackageVersion>
-        </PropertyGroup>
-        <ItemGroup>
-            <Lines Include="using System.Reflection%3b"/>
-            <Lines Include="[assembly:AssemblyVersion(&quot;$(AssemblyVersion)&quot;)]"/>
-            <Lines Include="[assembly:AssemblyFileVersion(&quot;$(AssemblyFileVersion)&quot;)]"/>
-            <Lines Include="[assembly:AssemblyInformationalVersion(&quot;$(AssemblyInfoVersion)&quot;)]" />
-        </ItemGroup>
-        <WriteLinesToFile File="src\SharedAssemblyVersionInfo.cs"
-                          Lines="@(Lines)"
-                          Overwrite="true"
-                          Encoding="UTF-8" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework\EntityFramework.nuspec"
-                 Query="//x:package/x:metadata/x:version"
-                 Value="$(PackageVersion)"
-                 Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
-        <XmlPoke XmlInputPath="src\NuGet\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec"
-                 Query="//x:package/x:metadata/x:version"
-                 Value="$(PackageVersion)"
-                 Namespaces="&lt;Namespace Prefix='x' Uri='http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd' /&gt;" />
-    </Target>
-
-    <Target Name="CodeCoverage" DependsOnTargets="RestoreSolutionPackages;Build">
-        <MSBuild Projects="tools\EF.opencover.targets"
-                 Properties="Configuration=$(Configuration);$(BuildProperties)" />
-    </Target>
-
+  <Target Name="CodeCoverage" DependsOnTargets="RestoreSolutionPackages;Build">
+    <MSBuild Projects="tools\EF.opencover.targets"
+             Properties="Configuration=$(Configuration);$(BuildProperties)" />
+  </Target>
 </Project>
