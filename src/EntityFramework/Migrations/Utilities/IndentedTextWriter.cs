@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations.Utilities
 {
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
@@ -33,7 +34,7 @@ namespace System.Data.Entity.Migrations.Utilities
         private bool _tabsPending;
         private readonly string _tabString;
 
-        private readonly string[] _cachedIndents = new string[32];
+        private readonly List<string> _cachedIndents = new List<string>();
 
         /// <summary>
         /// Gets the encoding for the text writer to use.
@@ -170,17 +171,26 @@ namespace System.Data.Entity.Migrations.Utilities
                 return _tabString;
             }
 
-            // since _indentLevel is known > 2, we can safely subtract two to index the array
+            // Since _indentLevel is known > 2, we can safely subtract two to index the list
             var cacheIndex = _indentLevel - 2;
-            var cached = _cachedIndents[cacheIndex];
+            var cached = cacheIndex < _cachedIndents.Count ? _cachedIndents[cacheIndex] : null;
 
             if (cached == null)
             {
                 cached = BuildIndent(_indentLevel);
 
-                // we COULD grow the cache here...
-                if (cacheIndex < _cachedIndents.Length)
+                // Common case
+                if (cacheIndex == _cachedIndents.Count)
                 {
+                    _cachedIndents.Add(cached);
+                }
+                // Case of non-sequential indenting
+                else
+                {
+                    for (var i = _cachedIndents.Count; i <= cacheIndex; i++)
+                    {
+                        _cachedIndents.Add(null);
+                    }
                     _cachedIndents[cacheIndex] = cached;
                 }
             }
