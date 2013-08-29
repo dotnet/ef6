@@ -11,6 +11,7 @@ namespace System.Data.Entity.SqlServer
     using Moq;
     using Moq.Protected;
     using Xunit;
+    using System.Data.Entity.TestHelpers;
 
     public class SqlVersionUtilsTests
     {
@@ -119,7 +120,7 @@ namespace System.Data.Entity.SqlServer
             }
 
             [Fact]
-            public void GetServerType_returns_OnPremises_for_real_local_test_database()
+            public void GetServerType_returns_correct_ServerType_for_real_test_database()
             {
                 using (var context = new RealDatabase())
                 {
@@ -128,7 +129,8 @@ namespace System.Data.Entity.SqlServer
                     var connection = context.Database.Connection;
                     connection.Open();
 
-                    Assert.Equal(ServerType.OnPremises, SqlVersionUtils.GetServerType(connection));
+                    var expectedServerType = AzureTestHelpers.IsSqlAzure(connection.ConnectionString) ? ServerType.Cloud : ServerType.OnPremises;
+                    Assert.Equal(expectedServerType, SqlVersionUtils.GetServerType(connection));
 
                     connection.Close();
                 }
