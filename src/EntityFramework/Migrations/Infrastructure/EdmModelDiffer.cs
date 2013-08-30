@@ -1031,71 +1031,71 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         select o);
         }
 
+        private IEnumerable<Tuple<XElement, XElement>> FindTablePairs()
+        {
+            return ((from ces1 in _source.Model.Descendants(EdmXNames.Csdl.EntitySetNames) from ces2 in _target.Model.Descendants(EdmXNames.Csdl.EntitySetNames) where ces1.EntityTypeAttribute().EqualsIgnoreCase(ces2.EntityTypeAttribute()) 
+                  from esm1 in _source.Model.Descendants(EdmXNames.Msl.EntitySetMappingNames) from esm2 in _target.Model.Descendants(EdmXNames.Msl.EntitySetMappingNames) where esm1.NameAttribute().EqualsIgnoreCase(ces1.NameAttribute()) && esm2.NameAttribute().EqualsIgnoreCase(ces2.NameAttribute())
+                  from etm1 in esm1.Descendants(EdmXNames.Msl.EntityTypeMappingNames) from etm2 in esm2.Descendants(EdmXNames.Msl.EntityTypeMappingNames) where etm1.TypeNameAttribute().Split(new[] { '.' }).Last().EqualsIgnoreCase(etm2.TypeNameAttribute().Split(new[] { '.' }).Last())
+                  from mf1 in etm1.Descendants(EdmXNames.Msl.MappingFragmentNames).Select((x, i) => new { Xml = x, Index = i }) from mf2 in etm2.Descendants(EdmXNames.Msl.MappingFragmentNames).Select((x, i) => new { Xml = x, Index = i }) where mf1.Index == mf2.Index
+                  from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames) from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames) where es1.NameAttribute().EqualsIgnoreCase(mf1.Xml.StoreEntitySetAttribute()) && es2.NameAttribute().EqualsIgnoreCase(mf2.Xml.StoreEntitySetAttribute())
+                  select Tuple.Create(es1, es2)).Concat(
+                      from et1 in _source.Model.Descendants(EdmXNames.Csdl.EntityTypeNames) from et2 in _target.Model.Descendants(EdmXNames.Csdl.EntityTypeNames) where et1.NameAttribute().EqualsIgnoreCase(et2.NameAttribute())
+                      from np1 in et1.Descendants(EdmXNames.Csdl.NavigationPropertyNames) from np2 in et2.Descendants(EdmXNames.Csdl.NavigationPropertyNames) where np1.NameAttribute().EqualsIgnoreCase(np2.NameAttribute())
+                      let associationNames = new { SourceAssociation = np1.RelationshipAttribute().Split(new[] { '.' }).Last(), TargetAssociation = np2.RelationshipAttribute().Split(new[] { '.' }).Last() }
+                      from asm1 in _source.Model.Descendants(EdmXNames.Msl.AssociationSetMappingNames) from asm2 in _target.Model.Descendants(EdmXNames.Msl.AssociationSetMappingNames) where asm1.NameAttribute().EqualsIgnoreCase(associationNames.SourceAssociation) && asm2.NameAttribute().EqualsIgnoreCase(associationNames.TargetAssociation)
+                      from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames) from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames) where es1.NameAttribute().EqualsIgnoreCase(asm1.StoreEntitySetAttribute()) && es2.NameAttribute().EqualsIgnoreCase(asm2.StoreEntitySetAttribute())
+                      select Tuple.Create(es1, es2))).Distinct((t1, t2) => t1.Item1.NameAttribute() == t2.Item1.NameAttribute() && t1.Item2.NameAttribute() == t2.Item2.NameAttribute());
+        }
+
         private IEnumerable<RenameTableOperation> FindRenamedTables()
         {
-            return from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                where es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute())
-                      && !es1.TableAttribute().EqualsIgnoreCase(es2.TableAttribute())
-                select
-                    new RenameTableOperation(
-                        GetSchemaQualifiedName(es1.TableAttribute(), es1.SchemaAttribute()), es2.TableAttribute());
+            return (from p in FindTablePairs()
+                    where !p.Item1.TableAttribute().EqualsIgnoreCase(p.Item2.TableAttribute())
+                    select new RenameTableOperation(GetSchemaQualifiedName(p.Item1.TableAttribute(), p.Item1.SchemaAttribute()), p.Item2.TableAttribute()))
+                    .Distinct(new DynamicEqualityComparer<RenameTableOperation>((r1, r2) => r1.Name.EqualsIgnoreCase(r2.Name) && r1.NewName.EqualsIgnoreCase(r2.NewName)));
         }
 
         private IEnumerable<CreateTableOperation> FindAddedTables(IEnumerable<RenameTableOperation> renamedTables)
         {
             DebugCheck.NotNull(renamedTables);
 
-            return _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                .Except(
-                    _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames),
-                    (es1, es2) => es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute()))
-                .Where(es => !renamedTables.Any(rt => rt.NewName.EqualsIgnoreCase(es.TableAttribute())))
-                .Select(
-                    es =>
-                        BuildCreateTableOperation(
-                            es.NameAttribute(),
-                            es.TableAttribute(),
-                            es.SchemaAttribute(),
-                            _target));
+            return (_target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
+                    .Except(FindTablePairs().Select(p => p.Item2),
+                        (x1, x2) => x1.NameAttribute().EqualsIgnoreCase(x2.NameAttribute()))
+                    .Where(es => !renamedTables.Any(rt => rt.NewName.EqualsIgnoreCase(es.TableAttribute())))
+                    .Select(es => BuildCreateTableOperation(es.NameAttribute(),es.TableAttribute(),es.SchemaAttribute(),_target)))
+                    .Distinct(new DynamicEqualityComparer<CreateTableOperation>((t1, t2) => t1.Name.EqualsIgnoreCase(t2.Name)));
         }
 
         private IEnumerable<MoveTableOperation> FindMovedTables()
         {
-            return from es1 in _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                from es2 in _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
-                where es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute())
-                      && !es1.SchemaAttribute().EqualsIgnoreCase(es2.SchemaAttribute())
-                select
-                    new MoveTableOperation(
-                        GetSchemaQualifiedName(es2.TableAttribute(), es1.SchemaAttribute()),
-                        es2.SchemaAttribute())
-                    {
-                        CreateTableOperation
-                            = BuildCreateTableOperation(
-                                es2.NameAttribute(),
-                                es2.TableAttribute(),
-                                es2.SchemaAttribute(),
-                                _target)
-                    };
+            return (from p in FindTablePairs()
+                where !p.Item1.SchemaAttribute().EqualsIgnoreCase(p.Item2.SchemaAttribute())
+                select new MoveTableOperation(GetSchemaQualifiedName(p.Item2.TableAttribute(), p.Item1.SchemaAttribute()), p.Item2.SchemaAttribute())
+                        {
+                            CreateTableOperation = BuildCreateTableOperation(p.Item2.NameAttribute(), p.Item2.TableAttribute(), p.Item2.SchemaAttribute(), _target)
+                        })
+                    .Distinct(new DynamicEqualityComparer<MoveTableOperation>((m1, m2) => m1.Name.EqualsIgnoreCase(m2.Name) && m1.NewSchema.EqualsIgnoreCase(m2.NewSchema)));
         }
 
         private IEnumerable<DropTableOperation> FindRemovedTables(IEnumerable<RenameTableOperation> renamedTables)
         {
             DebugCheck.NotNull(renamedTables);
 
-            return _source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames).Except(
-                _target.Model.Descendants(EdmXNames.Ssdl.EntitySetNames),
-                (es1, es2) => es1.NameAttribute().EqualsIgnoreCase(es2.NameAttribute()))
-                .Where(es => !renamedTables.Any(rt => rt.Name.EqualsIgnoreCase(es.TableAttribute())))
-                .Select(
-                    es => new DropTableOperation(
-                        GetSchemaQualifiedName(es.TableAttribute(), es.SchemaAttribute()),
-                        BuildCreateTableOperation(
-                            es.NameAttribute(),
-                            es.TableAttribute(),
-                            es.SchemaAttribute(),
-                            _source)));
+            return
+                (_source.Model.Descendants(EdmXNames.Ssdl.EntitySetNames)
+                    .Except(FindTablePairs().Select(p => p.Item1),
+                        (x1, x2) => x1.NameAttribute().EqualsIgnoreCase(x2.NameAttribute()))
+                    .Where(es => !renamedTables.Any(rt => rt.Name.EqualsIgnoreCase(es.TableAttribute())))
+                    .Select(es => new DropTableOperation(
+                            GetSchemaQualifiedName(es.TableAttribute(), es.SchemaAttribute()),
+                            BuildCreateTableOperation(
+                                es.NameAttribute(),
+                                es.TableAttribute(),
+                                es.SchemaAttribute(),
+                                _source)))).Distinct(
+                        new DynamicEqualityComparer<DropTableOperation>(
+                            (t1, t2) => t1.Name.EqualsIgnoreCase(t2.Name)));
         }
 
         private IEnumerable<DropColumnOperation> FindRemovedColumns(IEnumerable<RenameColumnOperation> renamedColumns)
@@ -1397,35 +1397,87 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             return canonical;
         }
+        
+        private IEnumerable<Tuple<XElement, XElement>> FindAssociationPairs(XDocument columnNormalizedSourceModel)
+        {
+            DebugCheck.NotNull(columnNormalizedSourceModel);
+
+            return (from et1 in columnNormalizedSourceModel.Descendants(EdmXNames.Csdl.EntityTypeNames) from et2 in _target.Model.Descendants(EdmXNames.Csdl.EntityTypeNames) where et1.NameAttribute().EqualsIgnoreCase(et2.NameAttribute())
+                 from np1 in et1.Descendants(EdmXNames.Csdl.NavigationPropertyNames) from np2 in et2.Descendants(EdmXNames.Csdl.NavigationPropertyNames) where np1.NameAttribute().EqualsIgnoreCase(np2.NameAttribute())
+                 let associations = new { SourceAssociation = np1.RelationshipAttribute().Split(new[] { '.' }).Last(), SourceFromRole = np1.FromRoleAttribute(), SourceToRole = np1.ToRoleAttribute(), TargetAssociation = np2.RelationshipAttribute().Split(new[] { '.' }).Last(), TargetFromRole = np2.FromRoleAttribute(), TargetToRole = np2.ToRoleAttribute() }
+                 from a1 in columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.AssociationNames) from a2 in _target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
+                 where (a1.NameAttribute().EqualsIgnoreCase(associations.SourceAssociation) && a2.NameAttribute().EqualsIgnoreCase(associations.TargetAssociation)) || (a1.NameAttribute().EqualsIgnoreCase(associations.SourceFromRole) && a2.NameAttribute().EqualsIgnoreCase(associations.TargetFromRole)) || (a1.NameAttribute().EqualsIgnoreCase(associations.SourceToRole) && a2.NameAttribute().EqualsIgnoreCase(associations.TargetToRole)) || a1.NameAttribute().EqualsIgnoreCase(a2.NameAttribute()) select Tuple.Create(a1, a2)).Distinct((t1, t2) => t1.Item1.NameAttribute() == t2.Item1.NameAttribute() && t1.Item2.NameAttribute() == t2.Item2.NameAttribute());
+        }
 
         private IEnumerable<AddForeignKeyOperation> FindAddedForeignKeys(XDocument columnNormalizedSourceModel)
         {
             DebugCheck.NotNull(columnNormalizedSourceModel);
 
+            var foreignKeyPairs = FindAssociationPairs(columnNormalizedSourceModel).ToList();
+
             return _target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
-                .Where(
-                    a2 =>
-                        !columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.AssociationNames).Any(
-                            a1 => DiffAssociations(a1, a2)))
-                .Select(a => BuildAddForeignKeyOperation(_target.Model, a));
+                    .Except(foreignKeyPairs.Select(p => p.Item2), (x1, x2) => x1.NameAttribute().EqualsIgnoreCase(x2.NameAttribute()))
+                    .Concat(foreignKeyPairs.Where(fk => !DiffAssociations(fk.Item1, fk.Item2)).Select(fk => fk.Item2))
+                    .Select(a => BuildAddForeignKeyOperation(_target.Model, a));
         }
 
         private IEnumerable<DropForeignKeyOperation> FindRemovedForeignKeys(XDocument columnNormalizedSourceModel)
         {
             DebugCheck.NotNull(columnNormalizedSourceModel);
 
+            var foreignKeyPairs = FindAssociationPairs(columnNormalizedSourceModel).ToList();
+
             return columnNormalizedSourceModel.Descendants(EdmXNames.Ssdl.AssociationNames)
-                .Where(
-                    a1 =>
-                        !_target.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
-                            .Any(a2 => DiffAssociations(a2, a1)))
-                .Select(
-                    a => BuildDropForeignKeyOperation(
-                        _source.Model,
-                        _source.Model.Descendants(EdmXNames.Ssdl.AssociationNames)
-                            .Single(a2 => a2.NameAttribute().EqualsIgnoreCase(a.NameAttribute()))));
+                    .Except(foreignKeyPairs.Select(p => p.Item1), (x1, x2) => x1.NameAttribute().EqualsIgnoreCase(x2.NameAttribute()))
+                    .Concat(foreignKeyPairs.Where(fk => !DiffAssociations(fk.Item1, fk.Item2)).Select(fk => fk.Item1))
+                    .Select(a => BuildDropForeignKeyOperation(_source.Model, _source.Model.Descendants(EdmXNames.Ssdl.AssociationNames).Single(a2 => a2.NameAttribute().EqualsIgnoreCase(a.NameAttribute()))));
         }
 
+        private static bool DiffAssociations(XElement a1, XElement a2)
+        {
+            DebugCheck.NotNull(a1);
+            DebugCheck.NotNull(a2);
+
+            var principal1 = a1.Descendants(EdmXNames.Ssdl.PrincipalNames).Single();
+            var principal2 = a2.Descendants(EdmXNames.Ssdl.PrincipalNames).Single();
+
+            if (!principal1.Descendants(EdmXNames.Ssdl.PropertyRefNames).Select(pr => pr.NameAttribute()).SequenceEqual(principal2.Descendants(EdmXNames.Ssdl.PropertyRefNames).Select(pr => pr.NameAttribute())))
+            {
+                return false;
+            }
+
+            var principalEnd1 = a1.Descendants(EdmXNames.Ssdl.EndNames).Single(e => e.RoleAttribute().EqualsIgnoreCase(principal1.RoleAttribute()));
+            var principalEnd2 = a2.Descendants(EdmXNames.Ssdl.EndNames).Single(e => e.RoleAttribute().EqualsIgnoreCase(principal2.RoleAttribute()));
+
+            if (!principalEnd1.MultiplicityAttribute().EqualsIgnoreCase(principalEnd2.MultiplicityAttribute()))
+            {
+                return false;
+            }
+
+            if (!CanonicalDeepEquals(principalEnd1.Descendants(EdmXNames.Ssdl.OnDeleteNames).SingleOrDefault(), principalEnd2.Descendants(EdmXNames.Ssdl.OnDeleteNames).SingleOrDefault()))
+            {
+                return false;
+            }
+
+            var dependent1 = a1.Descendants(EdmXNames.Ssdl.DependentNames).Single();
+            var dependent2 = a2.Descendants(EdmXNames.Ssdl.DependentNames).Single();
+
+            if (!dependent1.Descendants(EdmXNames.Ssdl.PropertyRefNames).Select(pr => pr.NameAttribute()).SequenceEqual(dependent2.Descendants(EdmXNames.Ssdl.PropertyRefNames).Select(pr => pr.NameAttribute())))
+            {
+                return false;
+            }
+
+            var dependentEnd1 = a1.Descendants(EdmXNames.Ssdl.EndNames).Single(e => e.RoleAttribute().EqualsIgnoreCase(dependent1.RoleAttribute()));
+            var dependentEnd2 = a2.Descendants(EdmXNames.Ssdl.EndNames).Single(e => e.RoleAttribute().EqualsIgnoreCase(dependent2.RoleAttribute()));
+
+            if (!dependentEnd1.MultiplicityAttribute().EqualsIgnoreCase(dependentEnd2.MultiplicityAttribute()))
+            {
+                return false;
+            }
+
+            return CanonicalDeepEquals(dependentEnd1.Descendants(EdmXNames.Ssdl.OnDeleteNames).SingleOrDefault(), dependentEnd2.Descendants(EdmXNames.Ssdl.OnDeleteNames).SingleOrDefault());
+        }
+        
         private IEnumerable<PrimaryKeyOperation> FindChangedPrimaryKeys(XDocument columnNormalizedSourceModel)
         {
             DebugCheck.NotNull(columnNormalizedSourceModel);
@@ -1474,29 +1526,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 pr => addPrimaryKeyOperation.Columns.Add(pr.NameAttribute()));
 
             yield return addPrimaryKeyOperation;
-        }
-
-        private static bool DiffAssociations(XElement a1, XElement a2)
-        {
-            DebugCheck.NotNull(a1);
-            DebugCheck.NotNull(a2);
-
-            return CanonicalDeepEquals(
-                a1.Descendants(EdmXNames.Ssdl.PrincipalNames).Single(),
-                a2.Descendants(EdmXNames.Ssdl.PrincipalNames).Single())
-                   && CanonicalDeepEquals(
-                       a1.Descendants(EdmXNames.Ssdl.DependentNames).Single(),
-                       a2.Descendants(EdmXNames.Ssdl.DependentNames).Single())
-                   && CanonicalDeepEquals(
-                       a2.Descendants(EdmXNames.Ssdl.EndNames).First().Descendants(EdmXNames.Ssdl.OnDeleteNames).
-                           SingleOrDefault(),
-                       a1.Descendants(EdmXNames.Ssdl.EndNames).First().Descendants(EdmXNames.Ssdl.OnDeleteNames).
-                           SingleOrDefault())
-                   && CanonicalDeepEquals(
-                       a2.Descendants(EdmXNames.Ssdl.EndNames).Last().Descendants(EdmXNames.Ssdl.OnDeleteNames).
-                           SingleOrDefault(),
-                       a1.Descendants(EdmXNames.Ssdl.EndNames).Last().Descendants(EdmXNames.Ssdl.OnDeleteNames).
-                           SingleOrDefault());
         }
 
         private static CreateTableOperation BuildCreateTableOperation(
