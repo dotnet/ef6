@@ -426,7 +426,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var operations = new EdmModelDiffer().Diff(
                 model1.GetModel(), model2.GetModel());
 
-            Assert.Equal(12, operations.Count());
+            Assert.Equal(7, operations.Count());
         }
 
         [MigrationsTheory]

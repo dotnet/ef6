@@ -70,6 +70,20 @@ namespace System.Data.Entity.Migrations.Edm
             return (string)element.Attribute("EntityType");
         }
 
+        public static string FromRoleAttribute(this XElement element)
+        {
+            DebugCheck.NotNull(element);
+
+            return (string)element.Attribute("FromRole");
+        }
+
+        public static string ToRoleAttribute(this XElement element)
+        {
+            DebugCheck.NotNull(element);
+
+            return (string)element.Attribute("ToRole");
+        }
+
         public static string NullableAttribute(this XElement element)
         {
             DebugCheck.NotNull(element);
@@ -82,6 +96,13 @@ namespace System.Data.Entity.Migrations.Edm
             DebugCheck.NotNull(element);
 
             return (string)element.Attribute("MaxLength");
+        }
+
+        public static string MultiplicityAttribute(this XElement element)
+        {
+            DebugCheck.NotNull(element);
+
+            return (string)element.Attribute("Multiplicity");
         }
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
@@ -111,6 +132,13 @@ namespace System.Data.Entity.Migrations.Edm
             DebugCheck.NotNull(element);
 
             return (string)element.Attribute("ProviderManifestToken");
+        }
+
+        public static string RelationshipAttribute(this XElement element)
+        {
+            DebugCheck.NotNull(element);
+
+            return (string)element.Attribute("Relationship");
         }
 
         public static string ScaleAttribute(this XElement element)
@@ -192,6 +220,7 @@ namespace System.Data.Entity.Migrations.Edm
             public static readonly IEnumerable<XName> EntityContainerNames = Names("EntityContainer");
             public static readonly IEnumerable<XName> EntitySetNames = Names("EntitySet");
             public static readonly IEnumerable<XName> EntityTypeNames = Names("EntityType");
+            public static readonly IEnumerable<XName> NavigationPropertyNames = Names("NavigationProperty");
             public static readonly IEnumerable<XName> PropertyNames = Names("Property");
             public static readonly IEnumerable<XName> SchemaNames = Names("Schema");
 
