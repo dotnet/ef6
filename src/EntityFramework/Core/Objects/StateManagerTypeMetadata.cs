@@ -9,13 +9,18 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    internal sealed class StateManagerTypeMetadata
+    internal class StateManagerTypeMetadata
     {
         private readonly TypeUsage _typeUsage; // CSpace
         private readonly StateManagerMemberMetadata[] _members;
         private readonly Dictionary<string, int> _objectNameToOrdinal;
         private readonly Dictionary<string, int> _cLayerNameToOrdinal;
         private readonly DataRecordInfo _recordInfo;
+
+        // For testing
+        internal StateManagerTypeMetadata()
+        {
+        }
 
         internal StateManagerTypeMetadata(EdmType edmType, ObjectTypeMapping mapping)
         {
@@ -73,7 +78,7 @@ namespace System.Data.Entity.Core.Objects
             get { return _recordInfo; }
         }
 
-        internal int FieldCount
+        internal virtual int FieldCount
         {
             get { return _members.Length; }
         }
@@ -83,7 +88,7 @@ namespace System.Data.Entity.Core.Objects
             return Member(ordinal).ClrType;
         }
 
-        internal StateManagerMemberMetadata Member(int ordinal)
+        internal virtual StateManagerMemberMetadata Member(int ordinal)
         {
             if (unchecked((uint)ordinal < (uint)_members.Length))
             {

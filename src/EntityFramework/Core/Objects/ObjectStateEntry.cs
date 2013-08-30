@@ -337,7 +337,6 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.ObjectStateEntry_InvalidState);
             }
             Debug.Assert(null != _cache, "null ObjectStateManager");
-            Debug.Assert(null != _entitySet, "null EntitySetBase");
         }
 
         #endregion // Internal members

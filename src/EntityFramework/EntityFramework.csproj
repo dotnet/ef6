@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -125,6 +125,7 @@
     <Compile Include="Core\Metadata\Edm\XmlSchemaWriter.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataRecord.cs" />
     <Compile Include="Core\Objects\Internal\ShapedBufferedDataRecord.cs" />
+    <Compile Include="Core\Objects\StateManagerValue.cs" />
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="DbConfigurationTypeAttribute.cs" />
     <Compile Include="Core\Common\CommandTrees\DbAggregate.cs" />

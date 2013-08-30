@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Objects
 
         // entity entry change tracking
         private BitArray _modifiedFields; // only and always exists if state is Modified or after Delete() on Modified
-        private Dictionary<object, Dictionary<int, object>> _originalValues; // only exists if _modifiedFields has a true-bit
+        private List<StateManagerValue> _originalValues; // only exists if _modifiedFields has a true-bit
 
         // The _originalComplexObjects should always contain references to the values of complex objects which are "original" 
         // at the moment of calling GetComplexObjectSnapshot().  They are used to get original scalar values from _originalValues
@@ -60,6 +60,14 @@ namespace System.Data.Entity.Core.Objects
         /// </summary>
         internal EntityEntry()
             : base(new ObjectStateManager(), null, EntityState.Unchanged)
+        {
+        }
+
+        /// <summary>
+        /// For testing purposes only.
+        /// </summary>
+        internal EntityEntry(ObjectStateManager stateManager)
+            : base(stateManager, null, EntityState.Unchanged)
         {
         }
 
@@ -1146,7 +1154,7 @@ namespace System.Data.Entity.Core.Objects
                     }
                     else
                     {
-                        AddOriginalValue(changingObject, changingOrdinal, oldValue);
+                        AddOriginalValueAt(-1, memberMetadata, changingObject, oldValue);
                     }
                 }
 
@@ -1239,15 +1247,18 @@ namespace System.Data.Entity.Core.Objects
 
             var initialState = State;
 
-            object oldOriginalValue; // the actual value
-
             // Update original values list
             var memberMetadata = metadata.Member(ordinal);
-            RemoveOriginalValue(userObject, ordinal);
+            var originalValueIndex = FindOriginalValueIndex(memberMetadata, userObject);
 
             if (memberMetadata.IsComplex)
             {
-                oldOriginalValue = memberMetadata.GetValue(userObject);
+                if (originalValueIndex >= 0)
+                {
+                    _originalValues.RemoveAt(originalValueIndex);
+                }
+
+                var oldOriginalValue = memberMetadata.GetValue(userObject); // the actual value
                 if (oldOriginalValue == null)
                 {
                     throw new InvalidOperationException(Strings.ComplexObject_NullableComplexTypesNotSupported(memberMetadata.CLayerName));
@@ -1266,7 +1277,7 @@ namespace System.Data.Entity.Core.Objects
             }
             else
             {
-                AddOriginalValue(userObject, ordinal, newValue);
+                AddOriginalValueAt(originalValueIndex, memberMetadata, userObject, newValue);
             }
 
             if (initialState == EntityState.Unchanged)
@@ -1311,7 +1322,7 @@ namespace System.Data.Entity.Core.Objects
             // POCO
             // Entities which don't implement IEntityWithChangeTracker entity can already have original values even in the Unchanged state.
             _cache.SaveOriginalValues = (State == EntityState.Unchanged || State == EntityState.Modified) &&
-                                        !FindOriginalValue(changingObject, changingOrdinal);
+                                        FindOriginalValueIndex(memberMetadata, changingObject) == -1;
 
             // devnote: Not using GetCurrentEntityValue here because change tracking can only be done on OSpace members,
             //          so we don't need to worry about shadow state, and we don't want a CSpace representation of complex objects
@@ -1341,13 +1352,20 @@ namespace System.Data.Entity.Core.Objects
             StateManagerTypeMetadata metadata, int ordinal, object userObject, ObjectStateValueRecord updatableRecord,
             int parentEntityPropertyIndex)
         {
-            // if original value is stored, then use it, otherwise use the current value from the entity
             ValidateState();
-            object retValue;
-            if (FindOriginalValue(userObject, ordinal, out retValue))
+            return GetOriginalEntityValue(metadata, metadata.Member(ordinal), ordinal, userObject, updatableRecord, parentEntityPropertyIndex);
+        }
+
+        internal object GetOriginalEntityValue(
+            StateManagerTypeMetadata metadata, StateManagerMemberMetadata memberMetadata, 
+            int ordinal, object userObject, ObjectStateValueRecord updatableRecord, int parentEntityPropertyIndex)
+        {
+            // if original value is stored, then use it, otherwise use the current value from the entity
+            var originalValueIndex = FindOriginalValueIndex(memberMetadata, userObject);
+            if (originalValueIndex >= 0)
             {
                 // If the object is null, return DBNull.Value to be consistent with GetCurrentEntityValue
-                return retValue ?? DBNull.Value;
+                return _originalValues[originalValueIndex].OriginalValue ?? DBNull.Value;
             }
             return GetCurrentEntityValue(metadata, ordinal, userObject, updatableRecord, parentEntityPropertyIndex);
         }
@@ -1410,40 +1428,20 @@ namespace System.Data.Entity.Core.Objects
             return retValue ?? DBNull.Value;
         }
 
-        private bool FindOriginalValue(object instance, int ordinal)
-        {
-            object tmp;
-            return FindOriginalValue(instance, ordinal, out tmp);
-        }
-
-        internal bool FindOriginalValue(object instance, int ordinal, out object value)
+        internal int FindOriginalValueIndex(StateManagerMemberMetadata metadata, object instance)
         {
             if (_originalValues != null)
             {
-                Dictionary<int, object> propertyOriginalValues;
-                object cacheValue;
-                if (_originalValues.TryGetValue(instance, out propertyOriginalValues)
-                    && propertyOriginalValues.TryGetValue(ordinal, out cacheValue))
+                for (var i = 0; i < _originalValues.Count; i++)
                 {
-                    value = cacheValue;
-                    return true;
+                    if (ReferenceEquals(_originalValues[i].UserObject, instance)
+                        && ReferenceEquals(_originalValues[i].MemberMetadata, metadata))
+                    {
+                        return i;
+                    }
                 }
             }
-
-            value = null;
-            return false;
-        }
-
-        private void RemoveOriginalValue(object instance, int ordinal)
-        {
-            if (_originalValues != null)
-            {
-                Dictionary<int, object> propertyOriginalValues;
-                if (_originalValues.TryGetValue(instance, out propertyOriginalValues))
-                {
-                    propertyOriginalValues.Remove(ordinal);
-                }
-            }
+            return -1;
         }
 
         // Get AssociationEndMember of current entry of given relationship
@@ -1477,7 +1475,7 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="oldComplexObject"> Old value of the complex property. Scalar values from this object are stored in the original values record </param>
         /// <param name="newComplexObject"> New value of the complex property. This object reference is used in the original value record and is associated with the scalar values for the same property on the oldComplexObject </param>
         /// <param name="useOldComplexObject"> Whether or not to use the existing complex object in the original values or to use the original value that is already present </param>
-        private void ExpandComplexTypeAndAddValues(
+        internal void ExpandComplexTypeAndAddValues(
             StateManagerMemberMetadata memberMetadata, object oldComplexObject, object newComplexObject, bool useOldComplexObject)
         {
             Debug.Assert(memberMetadata.IsComplex, "Cannot expand non-complex objects");
@@ -1492,7 +1490,6 @@ namespace System.Data.Entity.Core.Objects
             var typeMetadata = _cache.GetOrAddStateManagerTypeMetadata(memberMetadata.CdmMetadata.TypeUsage.EdmType);
             for (var ordinal = 0; ordinal < typeMetadata.FieldCount; ordinal++)
             {
-                object retValue;
                 var complexMemberMetadata = typeMetadata.Member(ordinal);
                 if (complexMemberMetadata.IsComplex)
                 {
@@ -1503,7 +1500,11 @@ namespace System.Data.Entity.Core.Objects
 
                         if (oldComplexMemberValue == null)
                         {
-                            RemoveOriginalValue(oldComplexObject, ordinal);
+                            var orignalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
+                            if (orignalValueIndex >= 0)
+                            {
+                                _originalValues.RemoveAt(orignalValueIndex);
+                            }
                         }
                     }
                     ExpandComplexTypeAndAddValues(
@@ -1511,8 +1512,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    object originalValue = null;
+                    object originalValue;
                     var complexObject = newComplexObject;
+                    var originalValueIndex = -1;
 
                     if (useOldComplexObject)
                     {
@@ -1526,13 +1528,11 @@ namespace System.Data.Entity.Core.Objects
                     {
                         if (oldComplexObject != null)
                         {
-                            // If we already have an entry for this property in the original values list, we need to remove it. We can't just
-                            // update it because StateManagerValue is a struct and there is no way to get a reference to the entry in the list.
                             originalValue = complexMemberMetadata.GetValue(oldComplexObject);
-                            if (FindOriginalValue(oldComplexObject, ordinal, out retValue))
+                            originalValueIndex = FindOriginalValueIndex(complexMemberMetadata, oldComplexObject);
+                            if (originalValueIndex >= 0)
                             {
-                                RemoveOriginalValue(oldComplexObject, ordinal);
-                                originalValue = retValue;
+                                originalValue = _originalValues[originalValueIndex].OriginalValue;
                             }
                             else
                             {
@@ -1552,7 +1552,7 @@ namespace System.Data.Entity.Core.Objects
                     // existing complex object that is attached to the entity or parent complex object. If an entry is already
                     // in the list this means that it was either explicitly set by the user or the entire complex type was previously
                     // set and expanded down to the individual properties.  In either case we do the same thing.
-                    AddOriginalValue(complexObject, ordinal, originalValue);
+                    AddOriginalValueAt(originalValueIndex, complexMemberMetadata, complexObject, originalValue);
                 }
             }
         }
@@ -1742,7 +1742,7 @@ namespace System.Data.Entity.Core.Objects
                     else if (!onlySnapshotComplexProperties)
                     {
                         currentValue = member.GetValue(_wrappedEntity.Entity);
-                        AddOriginalValue(_wrappedEntity.Entity, ordinal, currentValue);
+                        AddOriginalValueAt(-1, member, _wrappedEntity.Entity, currentValue);
                     }
                 }
             }
@@ -1794,9 +1794,9 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    if (!FindOriginalValue(complexValue, ordinal))
+                    if (FindOriginalValueIndex(complexMember, complexValue) == -1)
                     {
-                        AddOriginalValue(complexValue, ordinal, currentValue);
+                        AddOriginalValueAt(-1, complexMember, complexValue, currentValue);
                     }
                 }
             }
@@ -1931,10 +1931,10 @@ namespace System.Data.Entity.Core.Objects
             }
             else if (!detectOnlyComplexProperties)
             {
-                object originalValue;
-                var originalValueFound = FindOriginalValue(_wrappedEntity.Entity, ordinal, out originalValue);
+                var originalValueIndex = FindOriginalValueIndex(member, _wrappedEntity.Entity);
+                Debug.Assert(originalValueIndex >= 0, "Original value not found even after snapshot.");
 
-                Debug.Assert(originalValueFound, "Original value not found even after snapshot.");
+                var originalValue = _originalValues[originalValueIndex].OriginalValue;
 
                 if (!Equals(currentValue, originalValue))
                 {
@@ -2057,13 +2057,13 @@ namespace System.Data.Entity.Core.Objects
                 }
                 else
                 {
-                    object originalValue;
-                    var originalValueFound = FindOriginalValue(complexValue, ordinal, out originalValue);
+                    var originalValueIndex = FindOriginalValueIndex(member, complexValue);
+                    var originalValue = originalValueIndex == -1 ? null : _originalValues[originalValueIndex].OriginalValue;
 
                     // originalValueFound will be false if the complex value was initially null since then its original
                     // values will always be null, in which case all original scalar properties of the complex value are
                     // considered null.
-                    if (!Equals(currentValue, originalValueFound ? originalValue : null))
+                    if (!Equals(currentValue, originalValue))
                     {
                         changeDetected = true;
 
@@ -3029,21 +3029,22 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        internal void AddOriginalValue(object userObject, int ordinal, object value)
+        internal void AddOriginalValueAt(int index, StateManagerMemberMetadata memberMetadata, object userObject, object value)
         {
-            if (_originalValues == null)
+            var stateManagerValue = new StateManagerValue(memberMetadata, userObject, value);
+            
+            if (index >= 0)
             {
-                _originalValues = new Dictionary<object, Dictionary<int, object>>(new ObjectReferenceEqualityComparer());
+                _originalValues[index] = stateManagerValue;
             }
-
-            Dictionary<int, object> originalPropertyValues;
-            if (!_originalValues.TryGetValue(userObject, out originalPropertyValues))
+            else
             {
-                originalPropertyValues = new Dictionary<int, object>();
-                _originalValues.Add(userObject, originalPropertyValues);
+                if (_originalValues == null)
+                {
+                    _originalValues = new List<StateManagerValue>();
+                }
+                _originalValues.Add(stateManagerValue);
             }
-
-            originalPropertyValues[ordinal] = value;
         }
 
         internal void CompareKeyProperties(object changed)
