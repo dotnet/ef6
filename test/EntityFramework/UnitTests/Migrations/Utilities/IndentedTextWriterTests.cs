@@ -38,11 +38,12 @@ namespace System.Data.Entity.Migrations.Utilities
         {
             var writer = new IndentedTextWriter(new StringWriter(), "   ");
 
-            foreach (var i in new[] { 4, 2, 5, 7, 0, 5, 1, 9, 0, 0 })
+            foreach (var i in new[] { 4, 2, 5, -7, 0, 5, -1, 9, 0, 0 })
             {
                 writer.Indent = i;
-                Assert.Equal(i * 3, writer.CurrentIndentation().Length);
-                Assert.Equal(i * 3, writer.CurrentIndentation().Length);
+                var j = i < 0 ? 0 : i;
+                Assert.Equal(j * 3, writer.CurrentIndentation().Length);
+                Assert.Equal(j * 3, writer.CurrentIndentation().Length);
             }
         }
     }
