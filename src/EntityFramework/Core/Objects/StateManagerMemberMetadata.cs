@@ -8,12 +8,17 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    internal sealed class StateManagerMemberMetadata
+    internal class StateManagerMemberMetadata
     {
         private readonly EdmProperty _clrProperty;
         private readonly EdmProperty _edmProperty;
         private readonly bool _isPartOfKey;
         private readonly bool _isComplexType;
+
+        // For testing
+        internal StateManagerMemberMetadata()
+        {
+        }
 
         internal StateManagerMemberMetadata(ObjectPropertyMapping memberMap, EdmProperty memberMetadata, bool isPartOfKey)
         {
@@ -40,12 +45,12 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        internal bool IsComplex
+        internal virtual bool IsComplex
         {
             get { return _isComplexType; }
         }
 
-        internal EdmProperty CdmMetadata
+        internal virtual EdmProperty CdmMetadata
         {
             get { return _edmProperty; }
         }
@@ -64,7 +69,7 @@ namespace System.Data.Entity.Core.Objects
             get { return _isPartOfKey; }
         }
 
-        public object GetValue(object userObject) // wrapp it in cacheentry
+        public virtual object GetValue(object userObject) // wrapp it in cacheentry
         {
             Debug.Assert(null != _clrProperty);
             var dataObject = DelegateFactory.GetValue(_clrProperty, userObject);
