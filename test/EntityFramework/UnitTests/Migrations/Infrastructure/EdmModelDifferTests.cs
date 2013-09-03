@@ -25,6 +25,87 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public class B
+        {
+            public int Id { get; set; }
+            public A A { get; set; }
+        }
+
+        public class A
+        {
+            public int Id { get; set; }
+            public B B { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_table_rename_when_sets_have_different_names()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<A>().ToTable("Foos");
+            modelBuilder.Entity<B>().ToTable("Foos");
+            modelBuilder.Entity<B>().HasRequired(b => b.A).WithRequiredPrincipal(a => a.B);
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<B>().ToTable("Foos");
+            modelBuilder.Entity<A>().ToTable("Foos");
+            modelBuilder.Entity<B>().HasRequired(b => b.A).WithRequiredPrincipal(a => a.B);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel())
+                    .ToList();
+
+            Assert.Equal(0, operations.Count());
+        }
+
+        public class A1
+        {
+            public int Id { get; set; }
+            public ICollection<B1> Bs { get; set; }
+        }
+
+        public class B1
+        {
+            public int Id { get; set; }
+            public ICollection<A1> As { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_detect_table_rename_when_associations_have_different_names_and_table_renamed()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<A1>();
+            modelBuilder.Entity<B1>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<B1>();
+            modelBuilder.Entity<A1>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel())
+                    .ToList();
+
+            Assert.Equal(1, operations.Count());
+
+            var tableRename = operations.OfType<RenameTableOperation>().Single();
+
+            Assert.Equal("dbo.B1A1", tableRename.Name);
+            Assert.Equal("A1B1", tableRename.NewName);
+        }
+
         public class ArubaTask
         {
             public int Id { get; set; }
