@@ -134,7 +134,7 @@ namespace Microsoft.DbContextPackage.Resources
         }
 
         /// <summary>
-        /// A string like "Reverse engineer complete in {0}."
+        /// A string like "Reverse engineer completed in {0}."
         /// </summary>
         internal static string ReverseEngineer_Complete(object p0)
         {
@@ -150,11 +150,11 @@ namespace Microsoft.DbContextPackage.Resources
         }
 
         /// <summary>
-        /// A string like "Generating entity and mapping classes..."
+        /// A string like "Generating entity and mapping classes for '{0}'..."
         /// </summary>
-        internal static string ReverseEngineer_GenerateClasses
+        internal static string ReverseEngineer_GenerateClasses(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ReverseEngineer_GenerateClasses); }
+            return EntityRes.GetString(EntityRes.ReverseEngineer_GenerateClasses, p0);
         }
 
         /// <summary>
@@ -195,14 +195,6 @@ namespace Microsoft.DbContextPackage.Resources
         internal static string ReverseEngineer_LoadSchema
         {
             get { return EntityRes.GetString(EntityRes.ReverseEngineer_LoadSchema); }
-        }
-
-        /// <summary>
-        /// A string like "Processing {0}..."
-        /// </summary>
-        internal static string ReverseEngineer_ProcessingClass(object p0)
-        {
-            return EntityRes.GetString(EntityRes.ReverseEngineer_ProcessingClass, p0);
         }
 
         /// <summary>
@@ -347,7 +339,6 @@ namespace Microsoft.DbContextPackage.Resources
         internal const string ReverseEngineer_InstallEntityFramework = "ReverseEngineer_InstallEntityFramework";
         internal const string ReverseEngineer_InstallEntityFrameworkError = "ReverseEngineer_InstallEntityFrameworkError";
         internal const string ReverseEngineer_LoadSchema = "ReverseEngineer_LoadSchema";
-        internal const string ReverseEngineer_ProcessingClass = "ReverseEngineer_ProcessingClass";
         internal const string ReverseEngineer_SchemaError = "ReverseEngineer_SchemaError";
         internal const string UnknownDirectiveProcessor = "UnknownDirectiveProcessor";
         internal const string UnsupportedVersion = "UnsupportedVersion";
