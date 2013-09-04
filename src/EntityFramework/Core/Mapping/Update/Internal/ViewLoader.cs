@@ -179,7 +179,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var isNullConditionColumns = new Set<EdmMember>();
 
                 // find extent in the container mapping
-                SetMapping setMapping;
+                EntitySetBaseMapping setMapping;
                 if (entitySetBase.BuiltInTypeKind
                     == BuiltInTypeKind.EntitySet)
                 {
@@ -398,7 +398,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         /// <summary>
         /// Enumerates all mapping fragments in given set mapping.
         /// </summary>
-        private static IEnumerable<MappingFragment> GetMappingFragments(SetMapping setMapping)
+        private static IEnumerable<MappingFragment> GetMappingFragments(EntitySetBaseMapping setMapping)
         {
             // get all type mappings for the extent
             foreach (var typeMapping in setMapping.TypeMappings)

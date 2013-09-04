@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Defines a binding from a named result set column to a member taking the value.
     /// </summary>
-    internal sealed class ModificationFunctionResultBinding
+    internal sealed class ModificationFunctionResultBinding : MappingItem
     {
         internal ModificationFunctionResultBinding(string columnName, EdmProperty property)
         {

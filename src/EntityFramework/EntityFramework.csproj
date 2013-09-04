@@ -771,7 +771,7 @@
     <Compile Include="Core\Mapping\MslConstructs.cs" />
     <Compile Include="Core\Mapping\PropertyMapping.cs" />
     <Compile Include="Core\Mapping\ScalarPropertyMapping.cs" />
-    <Compile Include="Core\Mapping\SetMapping.cs" />
+    <Compile Include="Core\Mapping\EntitySetBaseMapping.cs" />
     <Compile Include="Core\Mapping\TypeMapping.cs" />
     <Compile Include="Core\Mapping\Update\Internal\AssociationSetMetadata.cs" />
     <Compile Include="Core\Mapping\Update\Internal\ChangeNode.cs" />

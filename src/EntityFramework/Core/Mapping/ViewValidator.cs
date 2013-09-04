@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns> Errors in view definition. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IEnumerable<EdmSchemaError> ValidateQueryView(
-            DbQueryCommandTree view, SetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
+            DbQueryCommandTree view, EntitySetBaseMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
         {
             var validator = new ViewExpressionValidator(setMapping, elementType, includeSubtypes);
             validator.VisitExpression(view.Query);
@@ -50,7 +50,7 @@ namespace System.Data.Entity.Core.Mapping
 
         private sealed class ViewExpressionValidator : BasicExpressionVisitor
         {
-            private readonly SetMapping _setMapping;
+            private readonly EntitySetBaseMapping _setMapping;
             private readonly List<EdmSchemaError> _errors;
             private readonly EntityTypeBase _elementType;
             private readonly bool _includeSubtypes;
@@ -65,7 +65,7 @@ namespace System.Data.Entity.Core.Mapping
                 get { return _setMapping.EntityContainerMapping.StorageMappingItemCollection.StoreItemCollection; }
             }
 
-            internal ViewExpressionValidator(SetMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
+            internal ViewExpressionValidator(EntitySetBaseMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
             {
                 DebugCheck.NotNull(setMapping);
                 DebugCheck.NotNull(elementType);
@@ -300,10 +300,10 @@ namespace System.Data.Entity.Core.Mapping
             private readonly Stack<KeyValuePair<string, DbExpressionEntitySetInfo>> variableScopes =
                 new Stack<KeyValuePair<string, DbExpressionEntitySetInfo>>();
 
-            private readonly SetMapping _setMapping;
+            private readonly EntitySetBaseMapping _setMapping;
             private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
 
-            internal AssociationSetViewValidator(SetMapping setMapping)
+            internal AssociationSetViewValidator(EntitySetBaseMapping setMapping)
             {
                 DebugCheck.NotNull(setMapping);
                 _setMapping = setMapping;

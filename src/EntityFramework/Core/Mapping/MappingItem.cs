@@ -2,27 +2,39 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
-    /// <summary>
-    /// ILegacyMappingItem
-    /// </summary>
-    internal interface ILegacyMappingItem
-    {
-        string TypeFullName { get; }
-    }
+    using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
 
     /// <summary>
-    /// MappingItem
+    /// Base class for items in the mapping space (DataSpace.CSSpace)
     /// </summary>
-    public abstract class MappingItem : ILegacyMappingItem
+    public abstract class MappingItem
     {
-        string ILegacyMappingItem.TypeFullName
+        private bool _readOnly;
+        private readonly List<MetadataProperty> _annotations = new List<MetadataProperty>();
+
+        internal bool IsReadOnly
         {
-            get { return TypeFullName; }
+            get { return _readOnly; }
         }
 
-        internal virtual string TypeFullName 
+        internal IList<MetadataProperty> Annotations
         {
-            get { return GetType().Namespace + ".Storage" + GetType().Name; }
+            get { return _annotations; }
+        }
+
+        internal void SetReadOnly()
+        {
+            _readOnly = true;
+        }
+
+        internal void ThrowIfReadOnly()
+        {
+            if (IsReadOnly)
+            {
+                throw new InvalidOperationException(Strings.OperationOnReadOnlyItem);
+            }
         }
     }
 }

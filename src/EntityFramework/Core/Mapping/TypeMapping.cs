@@ -45,8 +45,8 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Construct the new TypeMapping object.
         /// </summary>
-        /// <param name="setMapping"> SetMapping that contains this type mapping </param>
-        internal TypeMapping(SetMapping setMapping)
+        /// <param name="setMapping"> EntitySetBaseMapping that contains this type mapping </param>
+        internal TypeMapping(EntitySetBaseMapping setMapping)
         {
             m_fragments = new List<MappingFragment>();
             m_setMapping = setMapping;
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// ExtentMap that contains this type mapping.
         /// </summary>
-        private readonly SetMapping m_setMapping;
+        private readonly EntitySetBaseMapping m_setMapping;
 
         /// <summary>
         /// Set of fragments that make up the type Mapping.
@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<MappingFragment>(m_fragments); }
         }
 
-        public SetMapping SetMapping
+        public EntitySetBaseMapping SetMapping
         {
             get { return m_setMapping; }
         }

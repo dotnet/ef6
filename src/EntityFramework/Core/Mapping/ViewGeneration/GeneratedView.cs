@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         /// This constructor is used for user-defined query views only.
         /// </summary>
         internal static bool TryParseUserSpecifiedView(
-            SetMapping setMapping,
+            EntitySetBaseMapping setMapping,
             EntityTypeBase type,
             string eSQL,
             bool includeSubtypes,

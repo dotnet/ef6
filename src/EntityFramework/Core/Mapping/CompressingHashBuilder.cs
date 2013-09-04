@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.Security.Cryptography;
@@ -18,6 +19,9 @@ namespace System.Data.Entity.Core.Mapping
         private const int SpacesPerIndent = 4;
 
         private int _indent;
+
+        private static readonly Dictionary<Type, string> _legacyTypeNames
+            = InitializeLegacyTypeNames();
 
         // we are starting the buffer at 1.5 times the number of bytes
         // for the threshold
@@ -41,19 +45,54 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
+        /// Several classes were renamed while creating the public mapping API. The old names were used 
+        /// in the process of computing a mapping hash value (see AppendObjectStartDump). To avoid hash 
+        /// value changes that invalidate pre-generated views, this method builds a dictionary that maps 
+        /// types to their original names, and it is used to lookup the old names when the hash value is
+        /// computed.
+        /// </summary>
+        private static Dictionary<Type, string> InitializeLegacyTypeNames()
+        {
+            var typeNames = new Dictionary<Type, string>();
+
+            typeNames.Add(typeof(AssociationSetMapping), "System.Data.Entity.Core.Mapping.StorageAssociationSetMapping");
+            typeNames.Add(typeof(AssociationSetModificationFunctionMapping), "System.Data.Entity.Core.Mapping.StorageAssociationSetModificationFunctionMapping");
+            typeNames.Add(typeof(AssociationTypeMapping), "System.Data.Entity.Core.Mapping.StorageAssociationTypeMapping");
+            typeNames.Add(typeof(ComplexPropertyMapping), "System.Data.Entity.Core.Mapping.StorageComplexPropertyMapping");
+            typeNames.Add(typeof(ComplexTypeMapping), "System.Data.Entity.Core.Mapping.StorageComplexTypeMapping");
+            typeNames.Add(typeof(ConditionPropertyMapping), "System.Data.Entity.Core.Mapping.StorageConditionPropertyMapping");
+            typeNames.Add(typeof(EndPropertyMapping), "System.Data.Entity.Core.Mapping.StorageEndPropertyMapping");
+            typeNames.Add(typeof(EntityContainerMapping), "System.Data.Entity.Core.Mapping.StorageEntityContainerMapping");
+            typeNames.Add(typeof(EntitySetMapping), "System.Data.Entity.Core.Mapping.StorageEntitySetMapping");
+            typeNames.Add(typeof(EntityTypeMapping), "System.Data.Entity.Core.Mapping.StorageEntityTypeMapping");
+            typeNames.Add(typeof(EntityTypeModificationFunctionMapping), "System.Data.Entity.Core.Mapping.StorageEntityTypeModificationFunctionMapping");
+            typeNames.Add(typeof(MappingFragment), "System.Data.Entity.Core.Mapping.StorageMappingFragment");
+            typeNames.Add(typeof(ModificationFunctionMapping), "System.Data.Entity.Core.Mapping.StorageModificationFunctionMapping");
+            typeNames.Add(typeof(ModificationFunctionMemberPath), "System.Data.Entity.Core.Mapping.StorageModificationFunctionMemberPath");
+            typeNames.Add(typeof(ModificationFunctionParameterBinding), "System.Data.Entity.Core.Mapping.StorageModificationFunctionParameterBinding");
+            typeNames.Add(typeof(ModificationFunctionResultBinding), "System.Data.Entity.Core.Mapping.StorageModificationFunctionResultBinding");
+            typeNames.Add(typeof(PropertyMapping), "System.Data.Entity.Core.Mapping.StoragePropertyMapping");
+            typeNames.Add(typeof(ScalarPropertyMapping), "System.Data.Entity.Core.Mapping.StorageScalarPropertyMapping");
+            typeNames.Add(typeof(EntitySetBaseMapping), "System.Data.Entity.Core.Mapping.StorageSetMapping");
+            typeNames.Add(typeof(TypeMapping), "System.Data.Entity.Core.Mapping.StorageTypeMapping");
+
+            return typeNames;
+        }
+
+        /// <summary>
         /// add string like "typename Instance#1"
         /// </summary>
         internal void AppendObjectStartDump(object o, int objectIndex)
         {
             base.Append(string.Empty.PadLeft(SpacesPerIndent * _indent, ' '));
 
-            var legacyMappingItem = o as ILegacyMappingItem;
+            string typeName;
+            if (!_legacyTypeNames.TryGetValue(o.GetType(), out typeName))
+            {
+                typeName = o.GetType().ToString();
+            }
 
-            base.Append(
-                legacyMappingItem != null
-                    ? legacyMappingItem.TypeFullName
-                    : o.GetType().ToString());
-
+            base.Append(typeName);
             base.Append(" Instance#");
             base.AppendLine(objectIndex.ToString(CultureInfo.InvariantCulture));
             CompressHash();

@@ -27,17 +27,17 @@ namespace System.Data.Entity.Core.Mapping
     /// --MappingFragment
     /// This class represents the metadata for all the extent map elements in the
     /// above example namely EntitySetMapping, AssociationSetMapping and CompositionSetMapping.
-    /// The SetMapping elements that are children of the EntityContainerMapping element
+    /// The EntitySetBaseMapping elements that are children of the EntityContainerMapping element
     /// can be accessed through the properties on this type.
     /// </example>
-    internal abstract class SetMapping : MappingItem
+    internal abstract class EntitySetBaseMapping : MappingItem
     {
         /// <summary>
-        /// Construct the new SetMapping object.
+        /// Construct the new EntitySetBaseMapping object.
         /// </summary>
         /// <param name="extent"> Extent metadata object </param>
         /// <param name="entityContainerMapping"> The EntityContainer mapping that contains this extent mapping </param>
-        internal SetMapping(EntitySetBase extent, EntityContainerMapping entityContainerMapping)
+        internal EntitySetBaseMapping(EntitySetBase extent, EntityContainerMapping entityContainerMapping)
         {
             m_entityContainerMapping = entityContainerMapping;
             m_extent = extent;
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Whether the SetMapping has empty content
+        /// Whether the EntitySetBaseMapping has empty content
         /// Returns true if there no table Mapping fragments
         /// </summary>
         internal virtual bool HasNoContent
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Mapping
         internal bool HasModificationFunctionMapping { get; set; }
 
         /// <summary>
-        /// Add type mapping as a child under this SetMapping
+        /// Add type mapping as a child under this EntitySetBaseMapping
         /// </summary>
         public void AddTypeMapping(TypeMapping typeMapping)
         {

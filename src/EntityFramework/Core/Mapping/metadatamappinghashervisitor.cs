@@ -92,7 +92,7 @@ namespace System.Data.Entity.Core.Mapping
             AddObjectEndDumpToHashBuilder();
         }
 
-        protected override void Visit(SetMapping setMapping)
+        protected override void Visit(EntitySetBaseMapping setMapping)
         {
             int index;
             if (!AddObjectToSeenListAndHashBuilder(setMapping, out index))

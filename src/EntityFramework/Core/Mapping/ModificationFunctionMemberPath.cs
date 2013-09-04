@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Describes the location of a member within an entity or association type structure.
     /// </summary>
-    internal sealed class ModificationFunctionMemberPath
+    internal sealed class ModificationFunctionMemberPath : MappingItem
     {
         internal ModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSetNavigation)
         {

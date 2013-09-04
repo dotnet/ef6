@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="relation"> Represents the Association Type metadata object </param>
         /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        public AssociationTypeMapping(AssociationType relation, SetMapping setMapping)
+        public AssociationTypeMapping(AssociationType relation, EntitySetBaseMapping setMapping)
             : base(setMapping)
         {
             m_relation = relation;

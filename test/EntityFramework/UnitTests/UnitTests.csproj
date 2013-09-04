@@ -159,6 +159,7 @@
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingTests.cs" />
+    <Compile Include="Core\Mapping\MappingItemTests.cs" />
     <Compile Include="Core\Mapping\MetadataMappingHasherVisitorTests.cs" />
     <Compile Include="Core\Mapping\AssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\EntityTypeModificationFunctionMappingTests.cs" />

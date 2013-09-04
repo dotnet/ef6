@@ -28,10 +28,8 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. And it is possible to access the AssociationTypeMap underneath it.
     /// There will be only one TypeMap under AssociationSetMap.
     /// </example>
-    internal class AssociationSetMapping : SetMapping
+    internal class AssociationSetMapping : EntitySetBaseMapping
     {
-        private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
-
         /// <summary>
         /// Construct a new AssociationSetMapping object
         /// </summary>
@@ -119,11 +117,6 @@ namespace System.Data.Entity.Core.Mapping
 
                 SingleFragment.AddProperty(value);
             }
-        }
-
-        internal virtual IList<MetadataProperty> Annotations
-        {
-            get { return _annotationsList; }
         }
 
         public virtual IEnumerable<ConditionPropertyMapping> ColumnConditions

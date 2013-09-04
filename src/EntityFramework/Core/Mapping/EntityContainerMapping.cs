@@ -25,14 +25,14 @@ namespace System.Data.Entity.Core.Mapping
     ///     --EntitySetMapping
     ///     --AssociationSetMapping
     ///     The type represents the metadata for EntityContainerMapping element in the above example.
-    ///     The SetMapping elements that are children of the EntityContainerMapping element
+    ///     The EntitySetBaseMapping elements that are children of the EntityContainerMapping element
     ///     can be accessed through the properties on this type.
     /// </example>
     /// <remarks>
     ///     We currently assume that an Entity Container on the C side
     ///     is mapped to a single Entity Container in the S - space.
     /// </remarks>
-    internal class EntityContainerMapping : Map, ILegacyMappingItem
+    internal class EntityContainerMapping : Map
     {
         /// <summary>
         /// Construct a new EntityContainer mapping object
@@ -68,13 +68,13 @@ namespace System.Data.Entity.Core.Mapping
         private readonly EntityContainer m_entityContainer; //Entity Continer type that is being mapped on the C-side
         private readonly EntityContainer m_storageEntityContainer; //Entity Continer type that the C-space container is being mapped to
 
-        private readonly Dictionary<string, SetMapping> m_entitySetMappings =
-            new Dictionary<string, SetMapping>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EntitySetBaseMapping> m_entitySetMappings =
+            new Dictionary<string, EntitySetBaseMapping>(StringComparer.Ordinal);
 
         //A collection of EntitySetMappings under this EntityContainer mapping
 
-        private readonly Dictionary<string, SetMapping> m_associationSetMappings =
-            new Dictionary<string, SetMapping>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EntitySetBaseMapping> m_associationSetMappings =
+            new Dictionary<string, EntitySetBaseMapping>(StringComparer.Ordinal);
 
         //A collection of AssociationSetMappings under this EntityContainer mapping        
 
@@ -133,7 +133,7 @@ namespace System.Data.Entity.Core.Mapping
             get
             {
                 return HasMappingFragments()
-                       || AllSetMaps.Any((SetMapping setMap) => setMap.QueryView != null);
+                       || AllSetMaps.Any((EntitySetBaseMapping setMap) => setMap.QueryView != null);
             }
         }
 
@@ -162,9 +162,9 @@ namespace System.Data.Entity.Core.Mapping
         /// container. In CS mapping, the mapping is done
         /// at the extent level as opposed to the type level.
         /// </summary>
-        public ReadOnlyCollection<SetMapping> EntitySetMaps
+        public ReadOnlyCollection<EntitySetBaseMapping> EntitySetMaps
         {
-            get { return new ReadOnlyCollection<SetMapping>(new List<SetMapping>(m_entitySetMappings.Values)); }
+            get { return new ReadOnlyCollection<EntitySetBaseMapping>(new List<EntitySetBaseMapping>(m_entitySetMappings.Values)); }
         }
 
         public virtual IEnumerable<EntitySetMapping> EntitySetMappings
@@ -193,16 +193,16 @@ namespace System.Data.Entity.Core.Mapping
         /// The reason we have RelationshipSetMaps is to be consistent with CDM metadata
         /// which treats both associations and compositions as Relationships.
         /// </remarks>
-        public ReadOnlyCollection<SetMapping> RelationshipSetMaps
+        public ReadOnlyCollection<EntitySetBaseMapping> RelationshipSetMaps
         {
-            get { return new ReadOnlyCollection<SetMapping>(new List<SetMapping>(m_associationSetMappings.Values)); }
+            get { return new ReadOnlyCollection<EntitySetBaseMapping>(new List<EntitySetBaseMapping>(m_associationSetMappings.Values)); }
         }
 
         /// <summary>
         /// a list of all the  set maps under this
         /// container.
         /// </summary>
-        public IEnumerable<SetMapping> AllSetMaps
+        public IEnumerable<EntitySetBaseMapping> AllSetMaps
         {
             get { return m_entitySetMappings.Values.Concat(m_associationSetMappings.Values); }
         }
@@ -233,21 +233,16 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_generateUpdateViews; }
         }
 
-        string ILegacyMappingItem.TypeFullName
-        {
-            get { return GetType().Namespace + ".Storage" + GetType().Name; }
-        }
-
         /// <summary>
         /// get an EntitySet mapping based upon the name of the entity set.
         /// </summary>
         /// ///
         /// <param name="entitySetName"> the name of the entity set </param>
-        internal SetMapping GetEntitySetMapping(String entitySetName)
+        internal EntitySetBaseMapping GetEntitySetMapping(String entitySetName)
         {
             DebugCheck.NotNull(entitySetName);
             //Key for EntitySetMapping should be EntitySet name and Entoty type name
-            SetMapping setMapping = null;
+            EntitySetBaseMapping setMapping = null;
             m_entitySetMappings.TryGetValue(entitySetName, out setMapping);
             return setMapping;
         }
@@ -257,10 +252,10 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         /// <param name="relationshipSetName"> the name of the relationship set </param>
         /// <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
-        internal SetMapping GetRelationshipSetMapping(string relationshipSetName)
+        internal EntitySetBaseMapping GetRelationshipSetMapping(string relationshipSetName)
         {
             DebugCheck.NotNull(relationshipSetName);
-            SetMapping setMapping = null;
+            EntitySetBaseMapping setMapping = null;
             m_associationSetMappings.TryGetValue(relationshipSetName, out setMapping);
             return setMapping;
         }
@@ -288,7 +283,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Get a set mapping based upon the name of the set
         /// </summary>
-        internal SetMapping GetSetMapping(string setName)
+        internal EntitySetBaseMapping GetSetMapping(string setName)
         {
             var setMap = GetEntitySetMapping(setName);
             if (setMap == null)
@@ -303,7 +298,7 @@ namespace System.Data.Entity.Core.Mapping
         /// under this entity container mapping. The method will be called
         /// by the Mapping loader.
         /// </summary>
-        public void AddEntitySetMapping(SetMapping setMapping)
+        public void AddEntitySetMapping(EntitySetBaseMapping setMapping)
         {
             if (!m_entitySetMappings.ContainsKey(setMapping.Set.Name))
             {
@@ -316,7 +311,7 @@ namespace System.Data.Entity.Core.Mapping
         /// under this entity container mapping. The method will be called
         /// by the Mapping loader.
         /// </summary>
-        public void AddAssociationSetMapping(SetMapping setMapping)
+        public void AddAssociationSetMapping(EntitySetBaseMapping setMapping)
         {
             m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
         }

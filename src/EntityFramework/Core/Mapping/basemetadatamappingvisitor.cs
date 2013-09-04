@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        protected virtual void Visit(SetMapping setMapping)
+        protected virtual void Visit(EntitySetBaseMapping setMapping)
         {
             foreach (var typeMapping in GetSequence(setMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
@@ -465,7 +465,7 @@ namespace System.Data.Entity.Core.Mapping
         // Internal for testing
         internal static class IdentityHelper
         {
-            public static string GetIdentity(SetMapping mapping)
+            public static string GetIdentity(EntitySetBaseMapping mapping)
             {
                 return mapping.Set.Identity;
             }

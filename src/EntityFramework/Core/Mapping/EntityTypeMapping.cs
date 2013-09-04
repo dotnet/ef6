@@ -51,16 +51,9 @@ namespace System.Data.Entity.Core.Mapping
         /// Construct the new EntityTypeMapping object.
         /// </summary>
         /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        public EntityTypeMapping(SetMapping setMapping)
+        public EntityTypeMapping(EntitySetBaseMapping setMapping)
             : base(setMapping)
         {
-        }
-
-        private readonly List<MetadataProperty> _annotationsList = new List<MetadataProperty>();
-
-        internal IList<MetadataProperty> Annotations
-        {
-            get { return _annotationsList; }
         }
 
         /// <summary>

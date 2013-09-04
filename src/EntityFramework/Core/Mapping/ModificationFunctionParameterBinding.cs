@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Binds a modification function parameter to a member of the entity or association being modified.
     /// </summary>
-    internal sealed class ModificationFunctionParameterBinding
+    internal sealed class ModificationFunctionParameterBinding : MappingItem
     {
         internal ModificationFunctionParameterBinding(
             FunctionParameter parameter, ModificationFunctionMemberPath memberPath, bool isCurrent)

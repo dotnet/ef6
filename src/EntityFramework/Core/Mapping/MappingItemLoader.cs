@@ -652,7 +652,7 @@ namespace System.Data.Entity.Core.Mapping
             // then add the tableset with setmapping to the dictionary
 
             var setMappingPerTable =
-                new KeyToListMap<EntitySet, SetMapping>(EqualityComparer<EntitySet>.Default);
+                new KeyToListMap<EntitySet, EntitySetBaseMapping>(EqualityComparer<EntitySet>.Default);
 
             // Walk through all set mappings
             foreach (var setMapping in entityContainerMapping.AllSetMaps)
@@ -1320,7 +1320,7 @@ namespace System.Data.Entity.Core.Mapping
         /// The method loads the query view for the Set Mapping node
         /// into the internal datastructures.
         /// </summary>
-        private bool LoadQueryView(XPathNavigator nav, SetMapping setMapping)
+        private bool LoadQueryView(XPathNavigator nav, EntitySetBaseMapping setMapping)
         {
             Debug.Assert(nav.LocalName == MslConstructs.QueryViewElement);
 
