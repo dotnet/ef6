@@ -3,12 +3,10 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.SqlServer.Resources;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Reflection;
 
     /// <summary>
     /// Contains function stubs that expose SqlServer methods in Linq to Entities.
@@ -21,14 +19,7 @@ namespace System.Data.Entity.SqlServer
         [DbFunction("SqlServer", "CHECKSUM_AGG")]
         public static Int32? ChecksumAggregate(IEnumerable<Int32> arg)
         {
-            var objectQuerySource = arg as ObjectQuery<Int32>;
-            if (objectQuerySource != null)
-            {
-                return
-                    ((IQueryable)objectQuerySource).Provider.Execute<Int32?>(
-                        Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), Expression.Constant(arg)));
-            }
-            throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
+            return BootstrapFunction(a => ChecksumAggregate(a), arg);
         }
 
         /// <summary>Returns the checksum of the values in a collection. Null values are ignored.</summary>
@@ -38,13 +29,20 @@ namespace System.Data.Entity.SqlServer
         [DbFunction("SqlServer", "CHECKSUM_AGG")]
         public static Int32? ChecksumAggregate(IEnumerable<Int32?> arg)
         {
-            var objectQuerySource = arg as ObjectQuery<Int32?>;
-            if (objectQuerySource != null)
+            return BootstrapFunction(a => ChecksumAggregate(a), arg);
+        }
+
+        private static TOut BootstrapFunction<TIn, TOut>(Expression<Func<IEnumerable<TIn>, TOut>> methodExpression, IEnumerable<TIn> arg)
+        {
+            var asQueryable = arg as IQueryable;
+            if (asQueryable != null)
             {
-                return
-                    ((IQueryable)objectQuerySource).Provider.Execute<Int32?>(
-                        Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), Expression.Constant(arg)));
+                // We could use methodExpression directly here, but it seems marginally better (and consistent with
+                // previous versions) to use a constant expression for the parameter.
+                return asQueryable.Provider.Execute<TOut>(
+                    Expression.Call(((MethodCallExpression)methodExpression.Body).Method, Expression.Constant(arg)));
             }
+
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);
         }
 

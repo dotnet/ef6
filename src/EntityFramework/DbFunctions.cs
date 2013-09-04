@@ -32,7 +32,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<decimal> collection)
         {
-            return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<decimal?> collection)
         {
-            return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<double> collection)
         {
-            return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<double?> collection)
         {
-            return BootstrapFunction<double?, Double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<int> collection)
         {
-            return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<int?> collection)
         {
-            return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<long> collection)
         {
-            return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDev")]
         public static double? StandardDeviation(IEnumerable<long?> collection)
         {
-            return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviation(c), collection);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<decimal> collection)
         {
-            return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<decimal?> collection)
         {
-            return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<double> collection)
         {
-            return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<double?> collection)
         {
-            return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<int> collection)
         {
-            return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<int?> collection)
         {
-            return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<long> collection)
         {
-            return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "StDevP")]
         public static double? StandardDeviationP(IEnumerable<long?> collection)
         {
-            return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => StandardDeviationP(c), collection);
         }
 
         /// <summary>
@@ -296,7 +296,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<decimal> collection)
         {
-            return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<decimal?> collection)
         {
-            return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<double> collection)
         {
-            return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -346,7 +346,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<double?> collection)
         {
-            return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<int> collection)
         {
-            return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -379,7 +379,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<int?> collection)
         {
-            return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<long> collection)
         {
-            return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "Var")]
         public static double? Var(IEnumerable<long?> collection)
         {
-            return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => Var(c), collection);
         }
 
         /// <summary>
@@ -428,7 +428,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<decimal> collection)
         {
-            return BootstrapFunction<decimal, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<decimal?> collection)
         {
-            return BootstrapFunction<decimal?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -461,7 +461,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<double> collection)
         {
-            return BootstrapFunction<double, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -478,7 +478,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<double?> collection)
         {
-            return BootstrapFunction<double?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -494,7 +494,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<int> collection)
         {
-            return BootstrapFunction<int, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -511,7 +511,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<int?> collection)
         {
-            return BootstrapFunction<int?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -527,7 +527,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<long> collection)
         {
-            return BootstrapFunction<long, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -544,7 +544,7 @@ namespace System.Data.Entity
         [DbFunction("Edm", "VarP")]
         public static double? VarP(IEnumerable<long?> collection)
         {
-            return BootstrapFunction<long?, double?>(collection, (MethodInfo)MethodBase.GetCurrentMethod());
+            return BootstrapFunction(c => VarP(c), collection);
         }
 
         /// <summary>
@@ -1715,12 +1715,15 @@ namespace System.Data.Entity
             return value;
         }
 
-        private static TOut BootstrapFunction<TIn, TOut>(IEnumerable<TIn> collection, MethodInfo method)
+        private static TOut BootstrapFunction<TIn, TOut>(Expression<Func<IEnumerable<TIn>, TOut>> methodExpression, IEnumerable<TIn> collection)
         {
             var asQueryable = collection as IQueryable;
             if (asQueryable != null)
             {
-                return asQueryable.Provider.Execute<TOut>(Expression.Call(method, Expression.Constant(collection)));
+                // We could use methodExpression directly here, but it seems marginally better (and consistent with
+                // previous versions) to use a constant expression for the parameter.
+                return asQueryable.Provider.Execute<TOut>(
+                    Expression.Call(((MethodCallExpression)methodExpression.Body).Method, Expression.Constant(collection)));
             }
 
             throw new NotSupportedException(Strings.ELinq_DbFunctionDirectCall);

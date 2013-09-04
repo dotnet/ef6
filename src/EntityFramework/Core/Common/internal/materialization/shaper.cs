@@ -936,7 +936,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 {
                     var type = typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType);
                     return (T)type.GetMethod(
-                        MethodBase.GetCurrentMethod().Name, BindingFlags.NonPublic | BindingFlags.Static).Invoke(
+                        "GetTypedValueDefault", BindingFlags.NonPublic | BindingFlags.Static).Invoke(
                             null, new object[] { reader, ordinal });
                 }
 
