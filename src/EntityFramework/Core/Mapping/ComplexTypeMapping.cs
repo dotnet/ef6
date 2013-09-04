@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Mapping metadata for Complex Types.
     /// </summary>
-    internal class ComplexTypeMapping : StructuralTypeMapping
+    public class ComplexTypeMapping : StructuralTypeMapping
     {
         private readonly Dictionary<string, PropertyMapping> m_properties =
             new Dictionary<string, PropertyMapping>(StringComparer.Ordinal);

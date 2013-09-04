@@ -20,7 +20,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     var exception = Assert.Throws<ArgumentException>(() => new EdmModel(dataSpace));
 
                     Assert.Equal("dataSpace", exception.ParamName);
-                    Assert.True(exception.Message.StartsWith(Strings.EdmModel_InvalidDataSpace(dataSpace)));
+                    Assert.True(exception.Message.StartsWith(Strings.MetadataItem_InvalidDataSpace(dataSpace, typeof(EdmModel).Name)));
                 }
                 else
                 {

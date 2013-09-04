@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -24,7 +25,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
-        public void Can_get_properties()
+        public void Can_add_get_remove_properties()
         {
             var endPropertyMapping = new EndPropertyMapping();
 
@@ -35,7 +36,11 @@ namespace System.Data.Entity.Core.Mapping
 
             endPropertyMapping.AddProperty(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, endPropertyMapping.Properties.Single());            
+            Assert.Same(scalarPropertyMapping, endPropertyMapping.Properties.Single());
+
+            endPropertyMapping.RemoveProperty(scalarPropertyMapping);
+
+            Assert.Empty(endPropertyMapping.Properties);
         }
 
         [Fact]
@@ -51,5 +56,49 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Same(endMember, endPropertyMapping.EndMember);
         }
 
+        [Fact]
+        public void Can_create_mapping_and_get_association_end()
+        {
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
+            var mapping = new EndPropertyMapping(associationEnd);
+
+            Assert.Same(associationEnd, mapping.AssociationEnd);
+        }
+
+        [Fact]
+        public void Cannot_add_property_when_read_only()
+        {
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
+            var mapping = new EndPropertyMapping(associationEnd);
+            mapping.SetReadOnly();
+
+            Assert.True(mapping.IsReadOnly);
+
+            var scalarPropertyMapping
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mapping.AddProperty(scalarPropertyMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_remove_property_when_read_only()
+        {
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
+            var mapping = new EndPropertyMapping(associationEnd);
+            var scalarPropertyMapping
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            mapping.AddProperty(scalarPropertyMapping);
+            mapping.SetReadOnly();
+
+            Assert.True(mapping.IsReadOnly);
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mapping.RemoveProperty(scalarPropertyMapping)).Message);
+        }
     }
 }

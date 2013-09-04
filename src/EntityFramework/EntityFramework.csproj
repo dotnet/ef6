@@ -106,7 +106,9 @@
     <Compile Include="..\Common\StringExtensions.cs">
       <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
+    <Compile Include="Core\Mapping\IsNullConditionMapping.cs" />
     <Compile Include="Core\Mapping\MappingItem.cs" />
+    <Compile Include="Core\Mapping\ValueConditionMapping.cs" />
     <Compile Include="Core\Metadata\Edm\CsdlSerializer.cs" />
     <Compile Include="Core\Metadata\Edm\DataModelErrorEventArgs.cs" />
     <Compile Include="Core\Metadata\Edm\DataModelValidationRule.cs" />

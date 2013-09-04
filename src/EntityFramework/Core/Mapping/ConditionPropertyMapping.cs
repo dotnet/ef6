@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
@@ -41,23 +42,53 @@ namespace System.Data.Entity.Core.Mapping
     /// This class represents the metadata for all the condition property map elements in the
     /// above example.
     /// </example>
-    internal class ConditionPropertyMapping : PropertyMapping
+    public class ConditionPropertyMapping : PropertyMapping
     {
+        internal ConditionPropertyMapping(EdmProperty propertyOrColumn, object value, bool? isNull)
+        {
+            DebugCheck.NotNull(propertyOrColumn);
+            Debug.Assert((isNull.HasValue) || (value != null), "Either Value or IsNull has to be specified on Condition Mapping");
+            Debug.Assert(!(isNull.HasValue) || (value == null), "Both Value and IsNull can not be specified on Condition Mapping");
+
+            var dataSpace = propertyOrColumn.TypeUsage.EdmType.DataSpace;
+
+            switch (dataSpace)
+            {
+                case DataSpace.CSpace:
+                    Property = propertyOrColumn;
+                    break;
+
+                case DataSpace.SSpace:
+                    m_columnMember = propertyOrColumn;
+                    break;
+
+                default:
+                    throw new ArgumentException(
+                        Strings.MetadataItem_InvalidDataSpace(dataSpace, typeof(EdmProperty).Name),
+                        "propertyOrColumn");
+            }
+
+            m_value = value;
+            m_isNull = isNull;
+        }
+
         /// <summary>
         /// Construct a new condition Property mapping object
         /// </summary>
-        public ConditionPropertyMapping(
+        internal ConditionPropertyMapping(
             EdmProperty edmProperty, EdmProperty columnMember
             , object value, bool? isNull)
             : base(edmProperty)
         {
             Debug.Assert(
-                (edmProperty != null) || (columnMember != null), "Both CDM and Column Members can not be specified for Condition Mapping");
+                (edmProperty != null) || (columnMember != null), "Either CDM or Column Members has to be specified for Condition Mapping");
             Debug.Assert(
-                (edmProperty == null) || (columnMember == null), "Either CDM or Column Members has to be specified for Condition Mapping");
-            Debug.Assert((isNull.HasValue) || (value != null), "Both Value and IsNull can not be specified on Condition Mapping");
-            Debug.Assert(!(isNull.HasValue) || (value == null), "Either Value or IsNull has to be specified on Condition Mapping");
+                (edmProperty == null) || (columnMember == null), "Both CDM and Column Members can not be specified for Condition Mapping");
+            Debug.Assert((isNull.HasValue) || (value != null), "Either Value or IsNull has to be specified on Condition Mapping");
+            Debug.Assert(!(isNull.HasValue) || (value == null), "Both Value and IsNull can not be specified on Condition Mapping");
+
             m_columnMember = columnMember;
+            
             m_value = value;
             m_isNull = isNull;
         }
@@ -77,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Value for the condition
         /// </summary>
-        public object Value
+        internal object Value
         {
             get { return m_value; }
         }
@@ -85,23 +116,34 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Whether the property is being mapped to Null or NotNull
         /// </summary>
-        public bool? IsNull
+        internal bool? IsNull
         {
             get { return m_isNull; }
         }
 
         /// <summary>
-        /// ColumnMember for which the Condition Map is being specified
+        /// Gets and EdmProperty that specifies the mapped column.
         /// </summary>
-        public EdmProperty ColumnProperty
+        public EdmProperty Column
         {
             get { return m_columnMember; }
+
             internal set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
 
                 m_columnMember = value;
             }
+        }
+
+        /// <summary>
+        /// ColumnMember for which the Condition Map is being specified
+        /// </summary>
+        internal EdmProperty ColumnProperty
+        {
+            get { return Column; }
+            set { Column = value; }
         }
     }
 }

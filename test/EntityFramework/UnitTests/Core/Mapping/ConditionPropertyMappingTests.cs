@@ -10,19 +10,20 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_and_set_column_property()
         {
-            var columnMember1 = new EdmProperty("C");
+            var column1 = new EdmProperty("C");
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, columnMember1, 42, null);
+                = new ConditionPropertyMapping(null, column1, 42, null);
 
-            Assert.Same(columnMember1, conditionPropertyMapping.ColumnProperty);
+            Assert.Same(column1, conditionPropertyMapping.Column);
 
-            var columnMember2 = new EdmProperty("C");
+            var column2 = new EdmProperty("C");
 
-            conditionPropertyMapping.ColumnProperty = columnMember2;
+            conditionPropertyMapping.ColumnProperty = column2;
 
-            Assert.Same(columnMember2, conditionPropertyMapping.ColumnProperty);
-        }
+            Assert.Same(column2, conditionPropertyMapping.Column);
+        }        
 
+        [Fact]
         public void Can_get_and_set_Value()
         {
             var conditionPropertyMapping
@@ -32,6 +33,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Null(conditionPropertyMapping.IsNull);
         }
 
+        [Fact]
         public void Can_get_and_set_IsNull()
         {
             var conditionPropertyMapping

@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Same(
                 property,
-                new PropertyMappingFake(property).EdmProperty);
+                new PropertyMappingFake(property).Property);
         }
 
         private class PropertyMappingFake : PropertyMapping

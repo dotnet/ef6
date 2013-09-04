@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             if (dataSpace != DataSpace.CSpace && dataSpace != DataSpace.SSpace)
             {
-                throw new ArgumentException(Strings.EdmModel_InvalidDataSpace(dataSpace), "dataSpace");
+                throw new ArgumentException(Strings.MetadataItem_InvalidDataSpace(dataSpace, typeof(EdmModel).Name), "dataSpace");
             }
 
             _container = new EntityContainer(

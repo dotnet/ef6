@@ -14,20 +14,20 @@ namespace System.Data.Entity.Core.Mapping
             var column = new EdmProperty("C");
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), column);
 
-            Assert.Same(column, scalarPropertyMapping.ColumnProperty);
+            Assert.Same(column, scalarPropertyMapping.Column);
         
             column = new EdmProperty("C'");
 
             scalarPropertyMapping.ColumnProperty = column;
 
-            Assert.Same(column, scalarPropertyMapping.ColumnProperty);
+            Assert.Same(column, scalarPropertyMapping.Column);
         }
 
         [Fact]
-        public void Cannot_set_null_property()
+        public void Cannot_create_mapping_with_null_property()
         {
             Assert.Equal(
-                "member",
+                "property",
                 Assert.Throws<ArgumentNullException>(
                     () => new ScalarPropertyMapping(
                               null,
@@ -35,10 +35,10 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
-        public void Cannot_create_mapping_for_null_store_property()
+        public void Cannot_create_mapping_with_null_column()
         {
             Assert.Equal(
-                "columnMember",
+                "column",
                 Assert.Throws<ArgumentNullException>(
                     () => new ScalarPropertyMapping(
                               EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)),

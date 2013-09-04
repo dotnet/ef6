@@ -5,6 +5,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     /// <summary>
@@ -45,38 +47,69 @@ namespace System.Data.Entity.Core.Mapping
     /// This class represents the metadata for all the end property map elements in the
     /// above example. EndPropertyMaps provide mapping for each end of the association.
     /// </example>
-    internal class EndPropertyMapping : PropertyMapping
+    public class EndPropertyMapping : PropertyMapping
     {
+        private AssociationEndMember _associationEnd;
+
         /// <summary>
-        /// Construct a new End Property mapping object
+        /// Creates an association end property mapping.
         /// </summary>
-        public EndPropertyMapping()
-            : base(null)
+        /// <param name="associationEnd">An AssociationEndMember that specifies 
+        /// the association end to be mapped.</param>
+        public EndPropertyMapping(AssociationEndMember associationEnd)
+        {
+            Check.NotNull(associationEnd, "associationEnd");
+
+            _associationEnd = associationEnd;
+        }
+
+        internal EndPropertyMapping()
         {
         }
 
         /// <summary>
         /// List of property mappings that make up the End.
         /// </summary>
-        private readonly List<PropertyMapping> m_properties = new List<PropertyMapping>();
+        private readonly List<ScalarPropertyMapping> m_properties = new List<ScalarPropertyMapping>();
 
         /// <summary>
-        /// return ReadOnlyCollection of property mappings that are children of this End mapping
+        /// Gets a ReadOnlyCollection of ScalarPropertyMapping that specifies the children 
+        /// of this association end property mapping.
         /// </summary>
-        public ReadOnlyCollection<PropertyMapping> Properties
+        public ReadOnlyCollection<ScalarPropertyMapping> Properties
         {
-            get { return new ReadOnlyCollection<PropertyMapping>(m_properties); }
+            get { return new ReadOnlyCollection<ScalarPropertyMapping>(m_properties); }
         }
 
-        public IEnumerable<ScalarPropertyMapping> PropertyMappings
+        internal IEnumerable<ScalarPropertyMapping> PropertyMappings
         {
-            get { return m_properties.OfType<ScalarPropertyMapping>(); }
+            get { return m_properties; }
+        }
+
+        /// <summary>
+        /// Gets an AssociationEndMember that specifies the mapped association end.
+        /// </summary>
+        public AssociationEndMember AssociationEnd
+        {
+            get { return _associationEnd; }
+
+            internal set
+            {
+                DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
+
+                _associationEnd = value;
+            }
         }
 
         /// <summary>
         /// The relation end property Metadata object for which the mapping is represented.
         /// </summary>
-        public RelationshipEndMember EndMember { get; set; }
+        internal RelationshipEndMember EndMember
+        {
+            get { return AssociationEnd; }
+            set { AssociationEnd = (AssociationEndMember)value; }
+        }
 
         /// <summary>
         /// Returns all store properties that are mapped under this mapping fragment
@@ -87,11 +120,29 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Add a property mapping as a child of End property mapping
+        /// Adds a child property-column mapping.
         /// </summary>
-        public void AddProperty(PropertyMapping prop)
+        /// <param name="propertyMapping">A ScalarPropertyMapping that specifies
+        /// the property-column mapping to be added.</param>
+        public void AddProperty(ScalarPropertyMapping propertyMapping)
         {
-            m_properties.Add(prop);
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
+            m_properties.Add(propertyMapping);
+        }
+
+        /// <summary>
+        /// Removes a child property-column mapping.
+        /// </summary>
+        /// <param name="propertyMapping">A ScalarPropertyMapping that specifies
+        /// the property-column mapping to be removed.</param>
+        public void RemoveProperty(ScalarPropertyMapping propertyMapping)
+        {
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
+            m_properties.Remove(propertyMapping);
         }
     }
 }

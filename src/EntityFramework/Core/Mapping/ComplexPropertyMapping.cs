@@ -5,6 +5,8 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     /// Mapping metadata for Complex properties.
@@ -45,15 +47,22 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. ComplexPropertyMaps contain ComplexTypeMaps which define mapping based
     /// on the type of the ComplexProperty in case of inheritance.
     /// </example>
-    internal class ComplexPropertyMapping : PropertyMapping
+    public class ComplexPropertyMapping : PropertyMapping
     {
         /// <summary>
         /// Construct a new Complex Property mapping object
         /// </summary>
         /// <param name="cdmMember"> The MemberMetadata object that represents this Complex member </param>
-        internal ComplexPropertyMapping(EdmProperty cdmMember)
-            : base(cdmMember)
+        public ComplexPropertyMapping(EdmProperty property)
+            : base(property)
         {
+            Check.NotNull(property, "property");
+
+            if (!TypeSemantics.IsComplexType(property.TypeUsage))
+            {
+                throw new ArgumentException(Strings.StorageComplexPropertyMapping_OnlyComplexPropertyAllowed, "property");
+            }
+
             m_typeMappings = new List<ComplexTypeMapping>();
         }
 
@@ -63,19 +72,37 @@ namespace System.Data.Entity.Core.Mapping
         private readonly List<ComplexTypeMapping> m_typeMappings;
 
         /// <summary>
-        /// TypeMappings that make up this property.
+        /// Gets a read only collections of type mappings corresponding to the 
+        /// nested complex types.
         /// </summary>
-        internal ReadOnlyCollection<ComplexTypeMapping> TypeMappings
+        public ReadOnlyCollection<ComplexTypeMapping> TypeMappings
         {
             get { return new ReadOnlyCollection<ComplexTypeMapping>(m_typeMappings); }
         }
 
         /// <summary>
-        /// Add type mapping as a child under this Property Mapping
+        /// Adds a type mapping corresponding to a nested complex type.
         /// </summary>
-        internal void AddTypeMapping(ComplexTypeMapping typeMapping)
+        /// </summary>
+        /// <param name="typeMapping">The complex type mapping to be added.</param>
+        public void AddTypeMapping(ComplexTypeMapping typeMapping)
         {
+            Check.NotNull(typeMapping, "typeMapping");
+            ThrowIfReadOnly();
+
             m_typeMappings.Add(typeMapping);
+        }
+
+        /// <summary>
+        /// Removes a type mapping corresponding to a nested complex type.
+        /// </summary>
+        /// <param name="typeMapping">The complex type mapping to be removed.</param>
+        public void RemoveTypeMapping(ComplexTypeMapping typeMapping)
+        {
+            Check.NotNull(typeMapping, "typeMapping");
+            ThrowIfReadOnly();
+
+            m_typeMappings.Remove(typeMapping);
         }
     }
 }

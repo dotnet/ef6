@@ -1878,11 +1878,11 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
-        /// A string like "'{0}' is not valid data space for EdmModel. EdmModel supports only DataSpace.CSpace and DataSpace.SSpace."
+        /// A string like "'{0}' is not valid data space for {1}. {1} supports only DataSpace.CSpace and DataSpace.SSpace."
         /// </summary>
-        internal static string EdmModel_InvalidDataSpace(object p0)
+        internal static string MetadataItem_InvalidDataSpace(object p0, object p1)
         {
-            return EntityRes.GetString(EntityRes.EdmModel_InvalidDataSpace, p0);
+            return EntityRes.GetString(EntityRes.MetadataItem_InvalidDataSpace, p0, p1);
         }
 
         /// <summary>
@@ -13422,6 +13422,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "Invalid complex property mapping. The entity model property must be a complex property."
+        /// </summary>
+        internal static string StorageComplexPropertyMapping_OnlyComplexPropertyAllowed
+        {
+            get { return EntityRes.GetString(EntityRes.StorageComplexPropertyMapping_OnlyComplexPropertyAllowed); }
+        }
+
+        /// <summary>
         /// A string like "Errors Found During Generation:"
         /// </summary>
         internal static string MetadataItemErrorsFoundDuringGeneration
@@ -15582,7 +15590,7 @@ namespace System.Data.Entity.Resources
         internal const string EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationSet_SourceSetMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull = "EdmModel_Validator_Syntactic_EdmAssociationSet_TargetSetMustNotBeNull";
         internal const string EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid = "EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid";
-        internal const string EdmModel_InvalidDataSpace = "EdmModel_InvalidDataSpace";
+        internal const string MetadataItem_InvalidDataSpace = "MetadataItem_InvalidDataSpace";
         internal const string EdmModel_AddItem_NonMatchingNamespace = "EdmModel_AddItem_NonMatchingNamespace";
         internal const string Serializer_OneNamespaceAndOneContainer = "Serializer_OneNamespaceAndOneContainer";
         internal const string MaxLengthAttribute_ValidationError = "MaxLengthAttribute_ValidationError";
@@ -17025,6 +17033,7 @@ namespace System.Data.Entity.Resources
         internal const string VisitDbInExpressionNotImplemented = "VisitDbInExpressionNotImplemented";
         internal const string InvalidColumnBuilderArgument = "InvalidColumnBuilderArgument";
         internal const string StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed = "StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed";
+        internal const string StorageComplexPropertyMapping_OnlyComplexPropertyAllowed = "StorageComplexPropertyMapping_OnlyComplexPropertyAllowed";
         internal const string MetadataItemErrorsFoundDuringGeneration = "MetadataItemErrorsFoundDuringGeneration";
         internal const string AutomaticStaleFunctions = "AutomaticStaleFunctions";
         internal const string ScaffoldSprocInDownNotSupported = "ScaffoldSprocInDownNotSupported";

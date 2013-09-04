@@ -4,8 +4,14 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.ObjectModel;
 
-    internal abstract class StructuralTypeMapping : MappingItem
+    /// <summary>
+    /// StructuralTypeMapping
+    /// </summary>
+    public abstract class StructuralTypeMapping : MappingItem
     {
+        /// <summary>
+        /// Properties
+        /// </summary>
         public abstract ReadOnlyCollection<PropertyMapping> Properties { get; }
 
         internal abstract void AddProperty(PropertyMapping propertyMapping);

@@ -952,8 +952,8 @@
   <data name="EdmModel_Validator_Syntactic_EdmTypeReferenceNotValid" xml:space="preserve">
     <value>The type is not a valid EdmTypeReference.</value>
   </data>
-  <data name="EdmModel_InvalidDataSpace" xml:space="preserve">
-    <value>'{0}' is not valid data space for EdmModel. EdmModel supports only DataSpace.CSpace and DataSpace.SSpace.</value>
+  <data name="MetadataItem_InvalidDataSpace" xml:space="preserve">
+    <value>'{0}' is not valid data space for {1}. {1} supports only DataSpace.CSpace and DataSpace.SSpace.</value>
   </data>
   <data name="EdmModel_AddItem_NonMatchingNamespace" xml:space="preserve">
     <value>The data space of the item does not match the data space of the EdmModel.</value>
@@ -5343,6 +5343,9 @@
   </data>
   <data name="StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed" xml:space="preserve">
     <value>Invalid scalar property mapping. Both entity model property and store column must be scalar properties.</value>
+  </data>
+  <data name="StorageComplexPropertyMapping_OnlyComplexPropertyAllowed" xml:space="preserve">
+    <value>Invalid complex property mapping. The entity model property must be a complex property.</value>
   </data>
   <data name="MetadataItemErrorsFoundDuringGeneration" xml:space="preserve">
     <value>Errors Found During Generation:</value>

@@ -3,6 +3,8 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     /// Mapping metadata for all types of property mappings.
@@ -37,8 +39,12 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. This includes the scalar property maps, complex property maps
     /// and end property maps.
     /// </example>
-    internal abstract class PropertyMapping : MappingItem
+    public abstract class PropertyMapping : MappingItem
     {
+        internal PropertyMapping()
+        {
+        }
+
         /// <summary>
         /// Construct a new EdmProperty mapping object
         /// </summary>
@@ -51,14 +57,30 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// EdmProperty metadata representing the Cdm member for which the mapping is specified.
         /// </summary>
-        private readonly EdmProperty m_cdmMember;
+        private EdmProperty m_cdmMember;
 
         /// <summary>
         /// The PropertyMetadata object that represents the member for which mapping is being specified
         /// </summary>
-        public virtual EdmProperty EdmProperty
+        internal EdmProperty EdmProperty
+        {
+            get { return Property; }
+        }
+
+        /// <summary>
+        /// Gets an EdmProperty that specifies the mapped property.
+        /// </summary>
+        public EdmProperty Property
         {
             get { return m_cdmMember; }
+
+            internal set
+            {
+                DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
+
+                m_cdmMember = value;
+            }
         }
     }
 }

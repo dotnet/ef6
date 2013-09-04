@@ -157,9 +157,11 @@
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\FieldNameLookupTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
+    <Compile Include="Core\Mapping\ComplexPropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingTests.cs" />
     <Compile Include="Core\Mapping\MappingItemTests.cs" />
+    <Compile Include="Core\Mapping\IsNullConditionMappingTests.cs" />
     <Compile Include="Core\Mapping\MetadataMappingHasherVisitorTests.cs" />
     <Compile Include="Core\Mapping\AssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\EntityTypeModificationFunctionMappingTests.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Core\Mapping\ScalarPropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\SetMappingTests.cs" />
     <Compile Include="Core\Mapping\Update\Internal\PropagatorTests.cs" />
+    <Compile Include="Core\Mapping\ValueConditionMappingTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\Utils\ExternalCallsTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewgenContextTests.cs" />
     <Compile Include="Core\Metadata\Edm\AspProxyTests.cs" />

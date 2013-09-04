@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     /// Mapping metadata for scalar properties.
@@ -38,24 +39,26 @@ namespace System.Data.Entity.Core.Mapping
     /// This class represents the metadata for all the scalar property map elements in the
     /// above example.
     /// </example>
-    internal class ScalarPropertyMapping : PropertyMapping
+    public class ScalarPropertyMapping : PropertyMapping
     {
         /// <summary>
-        /// Construct a new Scalar EdmProperty mapping object
+        /// Creates a mapping between a simple property and a column.
         /// </summary>
-        public ScalarPropertyMapping(EdmProperty member, EdmProperty columnMember)
-            : base(member)
+        /// <param name="property">The property to be mapped.</param>
+        /// <param name="column">The column to be mapped.</param>
+        public ScalarPropertyMapping(EdmProperty property, EdmProperty column)
+            : base(property)
         {
-            Check.NotNull(member, "member");
-            Check.NotNull(columnMember, "columnMember");
+            Check.NotNull(property, "property");
+            Check.NotNull(column, "column");
 
-            if (!Helper.IsScalarType(member.TypeUsage.EdmType)
-                || !Helper.IsPrimitiveType(columnMember.TypeUsage.EdmType))
+            if (!Helper.IsScalarType(property.TypeUsage.EdmType)
+                || !Helper.IsPrimitiveType(column.TypeUsage.EdmType))
             {
                 throw new ArgumentException(Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed);
             }
 
-            m_columnMember = columnMember;
+            m_columnMember = column;
         }
 
         /// <summary>
@@ -65,14 +68,23 @@ namespace System.Data.Entity.Core.Mapping
         private EdmProperty m_columnMember;
 
         /// <summary>
-        /// column name from which the sclar property is being mapped
+        /// Gets and EdmProperty that specifies the mapped column.
         /// </summary>
-        public EdmProperty ColumnProperty
+        public EdmProperty Column
         {
             get { return m_columnMember; }
-            internal set
+        }
+
+        /// <summary>
+        /// column name from which the sclar property is being mapped
+        /// </summary>
+        internal EdmProperty ColumnProperty
+        {
+            get { return m_columnMember; }
+            set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
 
                 m_columnMember = value;
             }
