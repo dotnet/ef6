@@ -7,7 +7,7 @@
     <XunitConsoleRunner Include="..\packages\**\xunit.console.clr4.x86.exe"/>
   </ItemGroup>
   <UsingTask TaskName="OpenCover.MSBuild.OpenCover" AssemblyFile="@(OpenCoverMsBuild)" />
-  <UsingTask TaskName="ReportGenerator" AssemblyFile="@(ReportGeneratorMsBuild)" />  
+  <UsingTask TaskName="Palmmedia.ReportGenerator.MSBuild.ReportGenerator" AssemblyFile="@(ReportGeneratorMsBuild)" />  
   <Target Name="OpenCover">
     <Message Text="Running tests with code coverage..." Importance="High" />
     <OpenCover ToolPath="@(OpenCoverConsole->'%(RelativeDir)')"
