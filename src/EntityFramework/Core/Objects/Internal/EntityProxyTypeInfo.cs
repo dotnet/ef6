@@ -105,8 +105,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 Object_Parameter, Value_Parameter).Compile();
 
             var PropertyName_Parameter = Expression.Parameter(typeof(string), "propertyName");
-            var baseGetterMethod = proxyType.GetMethod(
-                "GetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+            var baseGetterMethod = proxyType.GetPublicInstanceMethod("GetBasePropertyValue", new[] { typeof(string) });
             if (baseGetterMethod != null)
             {
                 _baseGetter = Expression.Lambda<Func<object, string, object>>(
@@ -115,8 +114,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
 
             var PropertyValue_Parameter = Expression.Parameter(typeof(object), "propertyName");
-            var baseSetterMethod = proxyType.GetMethod(
-                "SetBasePropertyValue", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string), typeof(object) }, null);
+            var baseSetterMethod = proxyType.GetPublicInstanceMethod("SetBasePropertyValue", new[] { typeof(string), typeof(object) });
             if (baseSetterMethod != null)
             {
                 _baseSetter = Expression.Lambda<Action<object, string, object>>(

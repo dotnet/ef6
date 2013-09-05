@@ -8,6 +8,12 @@ namespace System.Data.Entity.Internal
     public class DbHelpersTests
     {
         [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(DbHelpers.ConvertAndSetMethod);
+        }
+
+        [Fact]
         public void KeyValuesEqual_checks_value_equality_for_value_types_and_Equals_implementation_for_reference_types()
         {
             Equality_tests(DbHelpers.KeyValuesEqual);

@@ -28,8 +28,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// <summary>
         /// Generic MethodInfo used in the non-generic CreateQuery
         /// </summary>
-        private static readonly MethodInfo _createObjectQueryMethod =
-            typeof(ObjectQueryState).GetMethod("CreateObjectQuery", BindingFlags.Instance | BindingFlags.Public);
+        internal static readonly MethodInfo CreateObjectQueryMethod = typeof(ObjectQueryState).GetDeclaredMethod("CreateObjectQuery");
 
         /// <summary>
         /// The context of the ObjectQuery
@@ -336,9 +335,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </returns>
         public ObjectQuery CreateQuery()
         {
-            Debug.Assert(_createObjectQueryMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method");
+            Debug.Assert(CreateObjectQueryMethod != null, "Unable to retrieve ObjectQueryState.CreateObjectQuery<> method");
 
-            var genericObjectQueryMethod = _createObjectQueryMethod.MakeGenericMethod(_elementType);
+            var genericObjectQueryMethod = CreateObjectQueryMethod.MakeGenericMethod(_elementType);
             return (ObjectQuery)genericObjectQueryMethod.Invoke(this, new object[0]);
         }
 

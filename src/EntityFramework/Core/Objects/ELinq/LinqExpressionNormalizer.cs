@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections.Generic;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
@@ -431,8 +432,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return result;
         }
 
-        private static readonly MethodInfo _relationalOperatorPlaceholderMethod =
-            typeof(LinqExpressionNormalizer).GetMethod("RelationalOperatorPlaceholder", BindingFlags.Static | BindingFlags.NonPublic);
+        internal static readonly MethodInfo RelationalOperatorPlaceholderMethod =
+            typeof(LinqExpressionNormalizer).GetDeclaredMethod("RelationalOperatorPlaceholder");
 
         /// <summary>
         /// This method exists solely to support creation of valid relational operator LINQ expressions that are not natively supported
@@ -463,7 +464,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// </summary>
         private static bool TryCreateRelationalOperator(ExpressionType op, Expression left, Expression right, out BinaryExpression result)
         {
-            var relationalOperatorPlaceholderMethod = _relationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
+            var relationalOperatorPlaceholderMethod = RelationalOperatorPlaceholderMethod.MakeGenericMethod(left.Type, right.Type);
 
             switch (op)
             {

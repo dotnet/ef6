@@ -238,7 +238,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> A new ObjectQueryState instance that incorporates the Include path, in this case a new method call expression </returns>
         internal override ObjectQueryState Include<TElementType>(ObjectQuery<TElementType> sourceQuery, string includePath)
         {
-            var includeMethod = sourceQuery.GetType().GetMethod("Include", BindingFlags.Public | BindingFlags.Instance);
+            var includeMethod = GetIncludeMethod(sourceQuery);
             Debug.Assert(includeMethod != null, "Unable to find ObjectQuery.Include method?");
 
             Expression includeCall = Expression.Call(
@@ -246,6 +246,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
             ObjectQueryState retState = new ELinqQueryState(ElementType, ObjectContext, includeCall);
             ApplySettingsTo(retState);
             return retState;
+        }
+
+        internal static MethodInfo GetIncludeMethod<TElementType>(ObjectQuery<TElementType> sourceQuery)
+        {
+            return sourceQuery.GetType().GetDeclaredMethod("Include");
         }
 
         /// <summary>

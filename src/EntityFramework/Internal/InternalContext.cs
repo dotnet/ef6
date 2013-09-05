@@ -50,21 +50,18 @@ namespace System.Data.Entity.Internal
     {
         #region Fields and constructors
 
-        private static readonly MethodInfo _createObjectAsObjectMethod = typeof(InternalContext).GetMethod(
-            "CreateObjectAsObject", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo CreateObjectAsObjectMethod = typeof(InternalContext).GetDeclaredMethod("CreateObjectAsObject");
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, object>> _entityFactories =
             new ConcurrentDictionary<Type, Func<InternalContext, object>>();
 
-        private static readonly MethodInfo _executeSqlQueryAsIEnumeratorMethod =
-            typeof(InternalContext).GetMethod(
-                "ExecuteSqlQueryAsIEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo ExecuteSqlQueryAsIEnumeratorMethod
+            = typeof(InternalContext).GetDeclaredMethod("ExecuteSqlQueryAsIEnumerator");
 
 #if !NET40
 
-        private static readonly MethodInfo _executeSqlQueryAsIDbAsyncEnumeratorMethod =
-            typeof(InternalContext).GetMethod(
-                "ExecuteSqlQueryAsIDbAsyncEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo ExecuteSqlQueryAsIDbAsyncEnumeratorMethod
+            = typeof(InternalContext).GetDeclaredMethod("ExecuteSqlQueryAsIDbAsyncEnumerator");
 #endif
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IEnumerator>>
@@ -83,8 +80,8 @@ namespace System.Data.Entity.Internal
             _setFactories =
                 new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
 
-        private static readonly MethodInfo _createInitializationAction =
-            typeof(InternalContext).GetMethod("CreateInitializationAction", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo CreateInitializationActionMethod
+            = typeof(InternalContext).GetDeclaredMethod("CreateInitializationAction");
 
         // The configuration to use for initializers, connection strings and default connection factory
         private AppConfig _appConfig = AppConfig.DefaultInstance;
@@ -526,7 +523,7 @@ namespace System.Data.Entity.Internal
                               ?? new NullDatabaseInitializer<DbContext>();
 
             var initializerAction =
-                (Action)_createInitializationAction.MakeGenericMethod(Owner.GetType()).Invoke(this, new[] { initializer });
+                (Action)CreateInitializationActionMethod.MakeGenericMethod(Owner.GetType()).Invoke(this, new[] { initializer });
 
             var autoDetectChangesEnabled = AutoDetectChangesEnabled;
             var validateOnSaveEnabled = ValidateOnSaveEnabled;
@@ -717,9 +714,7 @@ namespace System.Data.Entity.Internal
                 }
 
                 var genericType = typeof(InternalDbSet<>).MakeGenericType(entityType);
-                var factoryMethod = genericType.GetMethod(
-                    "Create", BindingFlags.Static | BindingFlags.Public, null,
-                    new[] { typeof(InternalContext), typeof(IInternalSet) }, null);
+                var factoryMethod = genericType.GetDeclaredMethod("Create", new[] { typeof(InternalContext), typeof(IInternalSet) });
                 factory =
                     (Func<InternalContext, IInternalSet, IInternalSetAdapter>)
                     Delegate.CreateDelegate(
@@ -907,7 +902,7 @@ namespace System.Data.Entity.Internal
             Func<InternalContext, string, bool, object[], IEnumerator> executor;
             if (!_queryExecutors.TryGetValue(elementType, out executor))
             {
-                var genericExecuteMethod = _executeSqlQueryAsIEnumeratorMethod.MakeGenericMethod(elementType);
+                var genericExecuteMethod = ExecuteSqlQueryAsIEnumeratorMethod.MakeGenericMethod(elementType);
                 executor =
                     (Func<InternalContext, string, bool, object[], IEnumerator>)
                     Delegate.CreateDelegate(
@@ -945,7 +940,7 @@ namespace System.Data.Entity.Internal
             Func<InternalContext, string, bool, object[], IDbAsyncEnumerator> executor;
             if (!_asyncQueryExecutors.TryGetValue(elementType, out executor))
             {
-                var genericExecuteMethod = _executeSqlQueryAsIDbAsyncEnumeratorMethod.MakeGenericMethod(elementType);
+                var genericExecuteMethod = ExecuteSqlQueryAsIDbAsyncEnumeratorMethod.MakeGenericMethod(elementType);
                 executor =
                     (Func<InternalContext, string, bool, object[], IDbAsyncEnumerator>)
                     Delegate.CreateDelegate(
@@ -1118,7 +1113,7 @@ namespace System.Data.Entity.Internal
             Func<InternalContext, object> entityFactory;
             if (!_entityFactories.TryGetValue(type, out entityFactory))
             {
-                var factoryMethod = _createObjectAsObjectMethod.MakeGenericMethod(type);
+                var factoryMethod = CreateObjectAsObjectMethod.MakeGenericMethod(type);
                 entityFactory =
                     (Func<InternalContext, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalContext, object>), factoryMethod);

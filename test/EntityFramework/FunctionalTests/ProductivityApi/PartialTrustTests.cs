@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
@@ -238,9 +239,7 @@ namespace ProductivityApiTests
         public void InvokeIsAspNetEnvironment()
         {
             var aspProxy = Activator.CreateInstance(_aspProxy, nonPublic: true);
-            var isAspNetEnvironment = _aspProxy.GetMethod(
-                "IsAspNetEnvironment",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            var isAspNetEnvironment = _aspProxy.GetDeclaredMethod("IsAspNetEnvironment");
 
             // Before fixing Dev11 216491 this would throw a SecurityException
             Assert.False((bool)isAspNetEnvironment.Invoke(aspProxy, new object[0]));

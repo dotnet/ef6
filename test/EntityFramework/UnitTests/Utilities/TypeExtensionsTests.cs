@@ -595,6 +595,329 @@ namespace System.Data.Entity.Utilities
                 Assert.False(typeof(NormalInternalClass.NestedPseudoPublicClass.NestedInternalClass).IsPublic());
             }
         }
+
+        public class GetMethodInfo
+        {
+            private static readonly Type[] _params1 = new[] { typeof(Random) };
+            private static readonly Type[] _params2 = new[] { typeof(Random), typeof(int) };
+            private static readonly Type[] _params3 = new[] { typeof(int), typeof(Random) };
+            private static readonly object[] _args1 = new object[] { new Random() };
+            private static readonly object[] _args2 = new object[] { new Random(), 1 };
+            private static readonly object[] _args3 = new object[] { 1, new Random() };
+
+            [Fact]
+            public void Types_method_finds_public_static_method_only_with_matching_parameters()
+            {
+                Assert.Equal(1, typeof(Queen).GetDeclaredMethod("Brian", Type.EmptyTypes).Invoke(null, null));
+                Assert.Equal(2, typeof(Queen).GetDeclaredMethod("Brian", _params1).Invoke(null, _args1));
+                Assert.Equal(3, typeof(Queen).GetDeclaredMethod("Brian", _params2).Invoke(null, _args2));
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethod("Brian", _params3).Invoke(null, _args3));
+            }
+
+            [Fact]
+            public void Types_method_finds_non_public_static_method_only_with_matching_parameters()
+            {
+                Assert.Equal(5, typeof(Queen).GetDeclaredMethod("Freddie", Type.EmptyTypes).Invoke(null, null));
+                Assert.Equal(6, typeof(Queen).GetDeclaredMethod("Freddie", _params1).Invoke(null, _args1));
+                Assert.Equal(7, typeof(Queen).GetDeclaredMethod("Freddie", _params2).Invoke(null, _args2));
+                Assert.Equal(8, typeof(Queen).GetDeclaredMethod("Freddie", _params3).Invoke(null, _args3));
+            }
+
+            [Fact]
+            public void Types_method_finds_public_instance_method_only_with_matching_parameters()
+            {
+                Assert.Equal(9, typeof(Queen).GetDeclaredMethod("John", Type.EmptyTypes).Invoke(new Queen(), null));
+                Assert.Equal(10, typeof(Queen).GetDeclaredMethod("John", _params1).Invoke(new Queen(), _args1));
+                Assert.Equal(11, typeof(Queen).GetDeclaredMethod("John", _params2).Invoke(new Queen(), _args2));
+                Assert.Equal(12, typeof(Queen).GetDeclaredMethod("John", _params3).Invoke(new Queen(), _args3));
+            }
+
+            [Fact]
+            public void Types_method_finds_non_public_instance_method_only_with_matching_parameters()
+            {
+                Assert.Equal(13, typeof(Queen).GetDeclaredMethod("Roger", Type.EmptyTypes).Invoke(new Queen(), null));
+                Assert.Equal(14, typeof(Queen).GetDeclaredMethod("Roger", _params1).Invoke(new Queen(), _args1));
+                Assert.Equal(15, typeof(Queen).GetDeclaredMethod("Roger", _params2).Invoke(new Queen(), _args2));
+                Assert.Equal(16, typeof(Queen).GetDeclaredMethod("Roger", _params3).Invoke(new Queen(), _args3));
+            }
+
+            [Fact]
+            public void Types_method_returns_null_for_method_that_is_not_found()
+            {
+                Assert.Null(typeof(Queen).GetDeclaredMethod("Brian", new[] { typeof(int) }));
+            }
+
+            public class Queen
+            {
+                public static int Brian()
+                {
+                    return 1;
+                }
+
+                public static int Brian(Random may)
+                {
+                    return 2;
+                }
+
+                public static int Brian(Random harold, int may)
+                {
+                    return 3;
+                }
+
+                public static int Brian(int harold, Random may)
+                {
+                    return 4;
+                }
+
+                private static int Freddie()
+                {
+                    return 5;
+                }
+
+                private static int Freddie(Random mercury)
+                {
+                    return 6;
+                }
+
+                private static int Freddie(Random bulsara, int mercury)
+                {
+                    return 7;
+                }
+
+                private static int Freddie(int bulsara, Random mercury)
+                {
+                    return 8;
+                }
+
+                public int John()
+                {
+                    return 9;
+                }
+
+                public int John(Random deacon)
+                {
+                    return 10;
+                }
+
+                public int John(Random richard, int deacon)
+                {
+                    return 11;
+                }
+
+                public int John(int richard, Random deacon)
+                {
+                    return 12;
+                }
+
+                private int Roger()
+                {
+                    return 13;
+                }
+
+                private int Roger(Random taylor)
+                {
+                    return 14;
+                }
+
+                private int Roger(Random meddows, int taylor)
+                {
+                    return 15;
+                }
+
+                private int Roger(int meddows, Random taylor)
+                {
+                    return 16;
+                }
+            }
+
+            [Fact]
+            public void Name_only_method_finds_only_public_static_method_with_name()
+            {
+                Assert.Equal(1, typeof(Beatles).GetDeclaredMethod("George").Invoke(null, null));
+            }
+
+            [Fact]
+            public void Name_only_method_finds_only_non_public_static_method_with_name()
+            {
+                Assert.Equal(2, typeof(Beatles).GetDeclaredMethod("Ringo").Invoke(null, _args1));
+            }
+
+            [Fact]
+            public void Name_only_method_finds_only_public_instance_method_with_name()
+            {
+                Assert.Equal(3, typeof(Beatles).GetDeclaredMethod("John").Invoke(new Beatles(), _args2));
+            }
+
+            [Fact]
+            public void Name_only_method_finds_only_non_public_instance_method_with_name()
+            {
+                Assert.Equal(4, typeof(Beatles).GetDeclaredMethod("James").Invoke(new Beatles(), _args3));
+            }
+
+            [Fact]
+            public void Name_only_method_returns_null_for_method_that_is_not_found()
+            {
+                Assert.Null(typeof(Beatles).GetDeclaredMethod("Pete"));
+            }
+
+            public class Beatles
+            {
+                public static int George()
+                {
+                    return 1;
+                }
+
+                private static int Ringo(Random starr)
+                {
+                    return 2;
+                }
+
+                public int John(Random winston, int lennon)
+                {
+                    return 3;
+                }
+
+                private int James(int paul, Random mcCartney)
+                {
+                    return 4;
+                }
+            }
+
+            [Fact]
+            public void Public_instance_only_method_does_not_find_public_static_methods()
+            {
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", Type.EmptyTypes));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params1));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params2));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params3));
+            }
+
+            [Fact]
+            public void Public_instance_only_method_does_not_find_non_public_static_methods()
+            {
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", Type.EmptyTypes));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params1));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params2));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params3));
+            }
+
+            [Fact]
+            public void Public_instance_only_method_finds_public_instance_method_only_with_matching_parameters()
+            {
+                Assert.Equal(9, typeof(Queen).GetPublicInstanceMethod("John", Type.EmptyTypes).Invoke(new Queen(), null));
+                Assert.Equal(10, typeof(Queen).GetPublicInstanceMethod("John", _params1).Invoke(new Queen(), _args1));
+                Assert.Equal(11, typeof(Queen).GetPublicInstanceMethod("John", _params2).Invoke(new Queen(), _args2));
+                Assert.Equal(12, typeof(Queen).GetPublicInstanceMethod("John", _params3).Invoke(new Queen(), _args3));
+            }
+
+            [Fact]
+            public void Public_instance_only_method_does_not_finds_public_instance_methods()
+            {
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", Type.EmptyTypes));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params1));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params2));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params3));
+            }
+
+            [Fact]
+            public void Public_instance_only_method_handles_inherited_overridden_and_new_methods()
+            {
+                Assert.Equal(1, typeof(Deep).GetPublicInstanceMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetPublicInstanceMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Deep).GetPublicInstanceMethod("Blackmore", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Deep).GetPublicInstanceMethod("Lord", Type.EmptyTypes).Invoke(new Deep(), null));
+            }
+
+            [Fact]
+            public void Types_method_only_returns_declared_methods()
+            {
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(3, typeof(Deep).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Null(typeof(Deep).GetDeclaredMethod("Blackmore", Type.EmptyTypes));
+                Assert.Null(typeof(Deep).GetDeclaredMethod("Lord", Type.EmptyTypes));
+
+                Assert.Equal(1, typeof(Purple).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord", Type.EmptyTypes).Invoke(new Deep(), null));
+
+                Assert.Equal(5, typeof(Purple).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Purple(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Purple(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Purple(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore", Type.EmptyTypes).Invoke(new Purple(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord", Type.EmptyTypes).Invoke(new Purple(), null));
+            }
+
+            [Fact]
+            public void Name_only_method_only_returns_declared_methods()
+            {
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethod("Gillan").Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetDeclaredMethod("Paice").Invoke(new Deep(), null));
+                Assert.Equal(3, typeof(Deep).GetDeclaredMethod("Glover").Invoke(new Deep(), null));
+                Assert.Null(typeof(Deep).GetDeclaredMethod("Blackmore"));
+                Assert.Null(typeof(Deep).GetDeclaredMethod("Lord"));
+
+                Assert.Equal(1, typeof(Purple).GetDeclaredMethod("Gillan").Invoke(new Deep(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice").Invoke(new Deep(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover").Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore").Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord").Invoke(new Deep(), null));
+
+                Assert.Equal(5, typeof(Purple).GetDeclaredMethod("Gillan").Invoke(new Purple(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice").Invoke(new Purple(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover").Invoke(new Purple(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore").Invoke(new Purple(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord").Invoke(new Purple(), null));
+            }
+
+            public class Deep : Purple
+            {
+                public override int Gillan()
+                {
+                    return 1;
+                }
+
+                public new int Paice()
+                {
+                    return 2;
+                }
+
+                private int Glover()
+                {
+                    return 3;
+                }
+            }
+
+            public class Purple
+            {
+                public virtual int Blackmore()
+                {
+                    return 4;
+                }
+
+                public virtual int Gillan()
+                {
+                    return 5;
+                }
+
+                public virtual int Paice()
+                {
+                    return 6;
+                }
+
+                public int Lord()
+                {
+                    return 7;
+                }
+
+                private int Glover()
+                {
+                    return 8;
+                }
+            }
+        }
     }
 
     public class NormalPublicClass

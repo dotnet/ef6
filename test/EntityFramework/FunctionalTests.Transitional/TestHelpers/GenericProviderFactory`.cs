@@ -3,7 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Common;
-    using System.Reflection;
+    using System.Data.Entity.Utilities;
 
     public class GenericProviderFactory<T> : DbProviderFactory
         where T : DbProviderFactory
@@ -14,7 +14,7 @@ namespace System.Data.Entity
         {
             var providerTable =
                 (DataTable)
-                typeof(DbProviderFactories).GetMethod("GetProviderTable", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, null);
+                typeof(DbProviderFactories).GetDeclaredMethod("GetProviderTable").Invoke(null, null);
 
             var row = providerTable.NewRow();
             row["Name"] = "GenericProviderFactory";

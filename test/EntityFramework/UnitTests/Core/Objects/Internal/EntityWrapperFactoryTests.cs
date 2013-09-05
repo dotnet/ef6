@@ -9,6 +9,12 @@ namespace System.Data.Entity.Core.Objects.Internal
     public class EntityWrapperFactoryTests
     {
         [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(EntityProxyFactory.GetInterceptorDelegateMethod);
+        }
+
+        [Fact]
         public void Factory_sets_override_flag_appropriately_for_IPOCO_EntityObject_entities()
         {
             var wrappedEntity = EntityWrapperFactory.CreateNewWrapper(new Mock<EntityObject>().Object, new EntityKey());

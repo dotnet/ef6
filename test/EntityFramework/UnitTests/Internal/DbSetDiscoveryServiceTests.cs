@@ -20,6 +20,12 @@ namespace System.Data.Entity.Internal
     /// </summary>
     public class DbSetDiscoveryServiceTests : TestBase
     {
+        [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(DbSetDiscoveryService.SetMethod);
+        }
+
         #region Positive DbContext discovery and initialization tests
 
         public class FakeEntity1

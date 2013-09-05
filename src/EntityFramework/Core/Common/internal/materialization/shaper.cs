@@ -908,7 +908,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region nested types
 
-        private abstract class ErrorHandlingValueReader<T>
+        internal abstract class ErrorHandlingValueReader<T>
         {
             private readonly Func<DbDataReader, int, T> getTypedValue;
             private readonly Func<DbDataReader, int, object> getUntypedValue;
@@ -934,10 +934,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 if (underlyingType != null
                     && underlyingType.IsEnum)
                 {
-                    var type = typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType);
-                    return (T)type.GetMethod(
-                        "GetTypedValueDefault", BindingFlags.NonPublic | BindingFlags.Static).Invoke(
-                            null, new object[] { reader, ordinal });
+                    var methodInfo = GetGenericTypedValueDefaultMethod(underlyingType);
+                    return (T)methodInfo.Invoke(null, new object[] { reader, ordinal });
                 }
 
                 // use the specific reader.GetXXX method
@@ -945,6 +943,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 var readerMethod = CodeGenEmitter.GetReaderMethod(typeof(T), out isNullable);
                 var result = (T)readerMethod.Invoke(reader, new object[] { ordinal });
                 return result;
+            }
+
+            public static MethodInfo GetGenericTypedValueDefaultMethod(Type underlyingType)
+            {
+                return typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType).GetDeclaredMethod("GetTypedValueDefault");
             }
 
             private static object GetUntypedValueDefault(DbDataReader reader, int ordinal)

@@ -4,6 +4,8 @@
 namespace System.Data.Entity.SqlServer.Utilities
 #elif SQLSERVERCOMPACT
 namespace System.Data.Entity.SqlServerCompact.Utilities
+#elif EF_FUNCTIONALS
+namespace System.Data.Entity.Functionals.Utilities
 #else
 namespace System.Data.Entity.Utilities
 #endif

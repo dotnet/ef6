@@ -172,9 +172,7 @@ namespace System.Data.Entity.Internal.Linq
                 if (!_wrapperFactories.TryGetValue(elementType, out factory))
                 {
                     var genericType = typeof(ReplacementDbQueryWrapper<>).MakeGenericType(elementType);
-                    var factoryMethod = genericType.GetMethod(
-                        "Create", BindingFlags.Static | BindingFlags.NonPublic, null, new[] { typeof(ObjectQuery) },
-                        null);
+                    var factoryMethod = genericType.GetDeclaredMethod("Create", new[] { typeof(ObjectQuery) });
                     factory =
                         (Func<ObjectQuery, object>)
                         Delegate.CreateDelegate(typeof(Func<ObjectQuery, object>), factoryMethod);

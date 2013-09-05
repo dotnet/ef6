@@ -20,28 +20,22 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     {
         #region Static Reflection info used in emitters
 
-        internal static readonly MethodInfo CodeGenEmitter_BinaryEquals = typeof(CodeGenEmitter).GetMethod(
-            "BinaryEquals", BindingFlags.NonPublic | BindingFlags.Static);
-
-        internal static readonly MethodInfo CodeGenEmitter_CheckedConvert = typeof(CodeGenEmitter).GetMethod(
-            "CheckedConvert", BindingFlags.NonPublic | BindingFlags.Static);
-
-        internal static readonly MethodInfo CodeGenEmitter_Compile = typeof(CodeGenEmitter).GetMethod(
-            "Compile", BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(Expression) }, null);
-
-        internal static readonly MethodInfo DbDataReader_GetValue = typeof(DbDataReader).GetMethod("GetValue");
-        internal static readonly MethodInfo DbDataReader_GetString = typeof(DbDataReader).GetMethod("GetString");
-        internal static readonly MethodInfo DbDataReader_GetInt16 = typeof(DbDataReader).GetMethod("GetInt16");
-        internal static readonly MethodInfo DbDataReader_GetInt32 = typeof(DbDataReader).GetMethod("GetInt32");
-        internal static readonly MethodInfo DbDataReader_GetInt64 = typeof(DbDataReader).GetMethod("GetInt64");
-        internal static readonly MethodInfo DbDataReader_GetBoolean = typeof(DbDataReader).GetMethod("GetBoolean");
-        internal static readonly MethodInfo DbDataReader_GetDecimal = typeof(DbDataReader).GetMethod("GetDecimal");
-        internal static readonly MethodInfo DbDataReader_GetFloat = typeof(DbDataReader).GetMethod("GetFloat");
-        internal static readonly MethodInfo DbDataReader_GetDouble = typeof(DbDataReader).GetMethod("GetDouble");
-        internal static readonly MethodInfo DbDataReader_GetDateTime = typeof(DbDataReader).GetMethod("GetDateTime");
-        internal static readonly MethodInfo DbDataReader_GetGuid = typeof(DbDataReader).GetMethod("GetGuid");
-        internal static readonly MethodInfo DbDataReader_GetByte = typeof(DbDataReader).GetMethod("GetByte");
-        internal static readonly MethodInfo DbDataReader_IsDBNull = typeof(DbDataReader).GetMethod("IsDBNull");
+        internal static readonly MethodInfo CodeGenEmitter_BinaryEquals = typeof(CodeGenEmitter).GetDeclaredMethod("BinaryEquals");
+        internal static readonly MethodInfo CodeGenEmitter_CheckedConvert = typeof(CodeGenEmitter).GetDeclaredMethod("CheckedConvert");
+        internal static readonly MethodInfo CodeGenEmitter_Compile = typeof(CodeGenEmitter).GetDeclaredMethod("Compile", new[] { typeof(Expression) });
+        internal static readonly MethodInfo DbDataReader_GetValue = typeof(DbDataReader).GetDeclaredMethod("GetValue");
+        internal static readonly MethodInfo DbDataReader_GetString = typeof(DbDataReader).GetDeclaredMethod("GetString");
+        internal static readonly MethodInfo DbDataReader_GetInt16 = typeof(DbDataReader).GetDeclaredMethod("GetInt16");
+        internal static readonly MethodInfo DbDataReader_GetInt32 = typeof(DbDataReader).GetDeclaredMethod("GetInt32");
+        internal static readonly MethodInfo DbDataReader_GetInt64 = typeof(DbDataReader).GetDeclaredMethod("GetInt64");
+        internal static readonly MethodInfo DbDataReader_GetBoolean = typeof(DbDataReader).GetDeclaredMethod("GetBoolean");
+        internal static readonly MethodInfo DbDataReader_GetDecimal = typeof(DbDataReader).GetDeclaredMethod("GetDecimal");
+        internal static readonly MethodInfo DbDataReader_GetFloat = typeof(DbDataReader).GetDeclaredMethod("GetFloat");
+        internal static readonly MethodInfo DbDataReader_GetDouble = typeof(DbDataReader).GetDeclaredMethod("GetDouble");
+        internal static readonly MethodInfo DbDataReader_GetDateTime = typeof(DbDataReader).GetDeclaredMethod("GetDateTime");
+        internal static readonly MethodInfo DbDataReader_GetGuid = typeof(DbDataReader).GetDeclaredMethod("GetGuid");
+        internal static readonly MethodInfo DbDataReader_GetByte = typeof(DbDataReader).GetDeclaredMethod("GetByte");
+        internal static readonly MethodInfo DbDataReader_IsDBNull = typeof(DbDataReader).GetDeclaredMethod("IsDBNull");
 
         internal static readonly ConstructorInfo EntityKey_ctor_SingleKey =
             typeof(EntityKey).GetConstructor(
@@ -52,32 +46,32 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(EntitySet), typeof(object[]) }, null);
 
         internal static readonly MethodInfo EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetEntityWithChangeTrackerStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetEntityWithChangeTrackerStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetEntityWithKeyStrategyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetEntityWithKeyStrategyStrategyFunc");
 
-        internal static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetMethod(
-            "SetEntityWrapper", BindingFlags.NonPublic | BindingFlags.Instance);
+        internal static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetDeclaredMethod(
+            "SetEntityWrapper");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetNullPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetNullPropertyAccessorStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetPocoEntityKeyStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetPocoEntityKeyStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetPocoEntityKeyStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetPocoPropertyAccessorStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetPocoPropertyAccessorStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc =
-            typeof(EntityWrapperFactory).GetMethod("GetSnapshotChangeTrackingStrategyFunc", BindingFlags.NonPublic | BindingFlags.Static);
+            typeof(EntityWrapperFactory).GetDeclaredMethod("GetSnapshotChangeTrackingStrategyFunc");
 
         internal static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(NullEntityWrapper).GetProperty(
             "NullWrapper", BindingFlags.Static | BindingFlags.NonPublic);
 
         internal static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetProperty("Entity");
 
-        internal static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<string>).GetMethod(
+        internal static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<string>).GetDeclaredMethod(
             "Equals", new[] { typeof(string), typeof(string) });
 
         internal static readonly ConstructorInfo MaterializedDataRecord_ctor = typeof(MaterializedDataRecord).GetConstructor(
@@ -85,40 +79,36 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             null, new[] { typeof(MetadataWorkspace), typeof(TypeUsage), typeof(object[]) },
             null);
 
-        internal static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetMethod(
-            "GatherData", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        internal static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetMethod(
-            "SetNullRecord", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        internal static readonly MethodInfo Shaper_Discriminate = typeof(Shaper).GetMethod("Discriminate");
+        internal static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetDeclaredMethod("GatherData");
+        internal static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetDeclaredMethod("SetNullRecord");
+        internal static readonly MethodInfo Shaper_Discriminate = typeof(Shaper).GetDeclaredMethod("Discriminate");
 
         internal static readonly MethodInfo Shaper_GetPropertyValueWithErrorHandling =
-            typeof(Shaper).GetMethod("GetPropertyValueWithErrorHandling");
+            typeof(Shaper).GetDeclaredMethod("GetPropertyValueWithErrorHandling");
 
         internal static readonly MethodInfo Shaper_GetColumnValueWithErrorHandling =
-            typeof(Shaper).GetMethod("GetColumnValueWithErrorHandling");
+            typeof(Shaper).GetDeclaredMethod("GetColumnValueWithErrorHandling");
 
-        internal static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetMethod("GetGeographyColumnValue");
-        internal static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetMethod("GetGeometryColumnValue");
+        internal static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetDeclaredMethod("GetGeographyColumnValue");
+        internal static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetDeclaredMethod("GetGeometryColumnValue");
 
         internal static readonly MethodInfo Shaper_GetSpatialColumnValueWithErrorHandling =
-            typeof(Shaper).GetMethod("GetSpatialColumnValueWithErrorHandling");
+            typeof(Shaper).GetDeclaredMethod("GetSpatialColumnValueWithErrorHandling");
 
         internal static readonly MethodInfo Shaper_GetSpatialPropertyValueWithErrorHandling =
-            typeof(Shaper).GetMethod("GetSpatialPropertyValueWithErrorHandling");
+            typeof(Shaper).GetDeclaredMethod("GetSpatialPropertyValueWithErrorHandling");
 
-        internal static readonly MethodInfo Shaper_HandleEntity = typeof(Shaper).GetMethod("HandleEntity");
-        internal static readonly MethodInfo Shaper_HandleEntityAppendOnly = typeof(Shaper).GetMethod("HandleEntityAppendOnly");
-        internal static readonly MethodInfo Shaper_HandleEntityNoTracking = typeof(Shaper).GetMethod("HandleEntityNoTracking");
-        internal static readonly MethodInfo Shaper_HandleFullSpanCollection = typeof(Shaper).GetMethod("HandleFullSpanCollection");
-        internal static readonly MethodInfo Shaper_HandleFullSpanElement = typeof(Shaper).GetMethod("HandleFullSpanElement");
-        internal static readonly MethodInfo Shaper_HandleIEntityWithKey = typeof(Shaper).GetMethod("HandleIEntityWithKey");
-        internal static readonly MethodInfo Shaper_HandleRelationshipSpan = typeof(Shaper).GetMethod("HandleRelationshipSpan");
-        internal static readonly MethodInfo Shaper_SetColumnValue = typeof(Shaper).GetMethod("SetColumnValue");
-        internal static readonly MethodInfo Shaper_SetEntityRecordInfo = typeof(Shaper).GetMethod("SetEntityRecordInfo");
-        internal static readonly MethodInfo Shaper_SetState = typeof(Shaper).GetMethod("SetState");
-        internal static readonly MethodInfo Shaper_SetStatePassthrough = typeof(Shaper).GetMethod("SetStatePassthrough");
+        internal static readonly MethodInfo Shaper_HandleEntity = typeof(Shaper).GetDeclaredMethod("HandleEntity");
+        internal static readonly MethodInfo Shaper_HandleEntityAppendOnly = typeof(Shaper).GetDeclaredMethod("HandleEntityAppendOnly");
+        internal static readonly MethodInfo Shaper_HandleEntityNoTracking = typeof(Shaper).GetDeclaredMethod("HandleEntityNoTracking");
+        internal static readonly MethodInfo Shaper_HandleFullSpanCollection = typeof(Shaper).GetDeclaredMethod("HandleFullSpanCollection");
+        internal static readonly MethodInfo Shaper_HandleFullSpanElement = typeof(Shaper).GetDeclaredMethod("HandleFullSpanElement");
+        internal static readonly MethodInfo Shaper_HandleIEntityWithKey = typeof(Shaper).GetDeclaredMethod("HandleIEntityWithKey");
+        internal static readonly MethodInfo Shaper_HandleRelationshipSpan = typeof(Shaper).GetDeclaredMethod("HandleRelationshipSpan");
+        internal static readonly MethodInfo Shaper_SetColumnValue = typeof(Shaper).GetDeclaredMethod("SetColumnValue");
+        internal static readonly MethodInfo Shaper_SetEntityRecordInfo = typeof(Shaper).GetDeclaredMethod("SetEntityRecordInfo");
+        internal static readonly MethodInfo Shaper_SetState = typeof(Shaper).GetDeclaredMethod("SetState");
+        internal static readonly MethodInfo Shaper_SetStatePassthrough = typeof(Shaper).GetDeclaredMethod("SetStatePassthrough");
 
         #endregion
 

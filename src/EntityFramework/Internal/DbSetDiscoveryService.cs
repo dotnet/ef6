@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal
             new ConcurrentDictionary<Type, DbContextTypesInitializersPair>();
 
         // Used by the code below to create DbSet instances
-        private static readonly MethodInfo _setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes);
+        public static readonly MethodInfo SetMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes);
 
         private readonly DbContext _context;
 
@@ -98,7 +98,7 @@ namespace System.Data.Entity.Internal
                             var setter = propertyInfo.GetSetMethod(nonPublic: false);
                             if (setter != null)
                             {
-                                var setMethod = _setMethod.MakeGenericMethod(entityType);
+                                var setMethod = SetMethod.MakeGenericMethod(entityType);
 
                                 var newExpression = Expression.Call(dbContextParam, setMethod);
                                 var setExpression = Expression.Call(

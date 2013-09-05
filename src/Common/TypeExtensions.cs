@@ -1,6 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if SQLSERVER
+namespace System.Data.Entity.SqlServer.Utilities
+#elif EF_FUNCTIONALS
+namespace System.Data.Entity.Functionals.Utilities
+#else
 namespace System.Data.Entity.Utilities
+#endif
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core;
@@ -199,6 +205,7 @@ namespace System.Data.Entity.Utilities
             return _primitiveTypesMap.TryGetValue(type, out primitiveType);
         }
 
+#if !SQLSERVER && !EF_FUNCTIONALS
         public static T CreateInstance<T>(
             this Type type,
             Func<string, string, string> typeMessageFactory,
@@ -243,6 +250,7 @@ namespace System.Data.Entity.Utilities
 
             return (T)Activator.CreateInstance(type, nonPublic: true);
         }
+#endif
 
         public static bool IsValidEdmScalarType(this Type type)
         {
@@ -303,6 +311,63 @@ namespace System.Data.Entity.Utilities
         public static bool IsPublic(this Type type)
         {
             return type.IsPublic || (type.IsNestedPublic && type.DeclaringType.IsPublic());
+        }
+
+        public static MethodInfo GetDeclaredMethod(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetMethod(name, bindingFlags);
+#else
+            return type.GetTypeInfo()
+                .GetDeclaredMethods(name)
+                .SingleOrDefault();
+#endif
+        }
+
+        public static MethodInfo GetDeclaredMethod(this Type type, string name, Type[] parameterTypes)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(parameterTypes);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetMethod(name, bindingFlags, null, parameterTypes, null);
+#else
+            return type.GetTypeInfo()
+                .GetDeclaredMethods(name)
+                .SingleOrDefault(m => m.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes));
+#endif
+        }
+
+        public static MethodInfo GetPublicInstanceMethod(this Type type, string name, Type[] parameterTypes)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+            DebugCheck.NotNull(parameterTypes);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public;
+            return type.GetMethod(name, bindingFlags, null, parameterTypes, null);
+#else
+            var methods = type.GetRuntimeMethods().Where(
+                m => name == m.Name
+                     && !m.IsStatic
+                     && m.IsPublic
+                     && m.GetParameters().Select(p => p.ParameterType).SequenceEqual(parameterTypes)).ToArray();
+
+            if (methods.Length == 1)
+            {
+                return methods[0];
+            }
+
+            return methods.SingleOrDefault(
+                m => !methods.Any(m2 => m2.DeclaringType.GetTypeInfo().IsSubclassOf(m.DeclaringType)));
+#endif
         }
     }
 }

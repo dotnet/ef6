@@ -524,7 +524,7 @@ namespace System.Data.Entity
         {
             DebugCheck.NotNull((object)source);
 
-            var includeMethod = source.GetType().GetMethod("Include", _stringIncludeTypes);
+            var includeMethod = source.GetType().GetPublicInstanceMethod("Include", _stringIncludeTypes);
             if (includeMethod != null
                 && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
             {
@@ -631,7 +631,7 @@ namespace System.Data.Entity
                 return (T)DbHelpers.CreateNoTrackingQuery(asObjectQuery);
             }
 
-            var noTrackingMethod = source.GetType().GetMethod("AsNoTracking", Type.EmptyTypes);
+            var noTrackingMethod = source.GetType().GetPublicInstanceMethod("AsNoTracking", Type.EmptyTypes);
             if (noTrackingMethod != null
                 && typeof(T).IsAssignableFrom(noTrackingMethod.ReturnType))
             {
@@ -692,7 +692,7 @@ namespace System.Data.Entity
                 return (T)DbHelpers.CreateStreamingQuery(asObjectQuery);
             }
 
-            var asStreamingMethod = source.GetType().GetMethod("AsStreaming", Type.EmptyTypes);
+            var asStreamingMethod = source.GetType().GetPublicInstanceMethod("AsStreaming", Type.EmptyTypes);
             if (asStreamingMethod != null
                 && typeof(T).IsAssignableFrom(asStreamingMethod.ReturnType))
             {

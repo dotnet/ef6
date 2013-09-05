@@ -46,8 +46,7 @@ namespace System.Data.Entity.SqlServer
             sqlGeometryFromGMLReader = CreateStaticConstructorDelegate<XmlReader>(sqlGeom, "GeomFromGml");
 
             // Retrieve SQL Server specific primitive types
-            var asTextMethod = SqlGeometryType.GetMethod(
-                "STAsText", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
+            var asTextMethod = SqlGeometryType.GetPublicInstanceMethod("STAsText", Type.EmptyTypes);
             SqlCharsType = asTextMethod.ReturnType;
             SqlStringType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
             SqlBooleanType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBoolean", throwOnError: true);
@@ -1218,7 +1217,7 @@ namespace System.Data.Entity.SqlServer
             DebugCheck.NotNull(spatialType);
             var dataParam = Expression.Parameter(typeof(TArg));
             var sridParam = Expression.Parameter(typeof(int));
-            var staticCtorMethod = spatialType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static);
+            var staticCtorMethod = spatialType.GetDeclaredMethod(methodName);
             Debug.Assert(staticCtorMethod != null, "Could not find method '" + methodName + "' on type '" + spatialType.FullName + "'");
             Debug.Assert(
                 staticCtorMethod.GetParameters().Length == 2 && staticCtorMethod.GetParameters()[1].ParameterType == typeof(int),
@@ -1980,12 +1979,12 @@ namespace System.Data.Entity.SqlServer
 
         private MethodInfo FindSqlGeographyMethod(string methodName, params Type[] argTypes)
         {
-            return SqlGeographyType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance, null, argTypes, null);
+            return SqlGeographyType.GetDeclaredMethod(methodName, argTypes);
         }
 
         private MethodInfo FindSqlGeographyStaticMethod(string methodName, params Type[] argTypes)
         {
-            return SqlGeographyType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static, null, argTypes, null);
+            return SqlGeographyType.GetDeclaredMethod(methodName, argTypes);
         }
 
         private PropertyInfo FindSqlGeographyProperty(string propertyName)
@@ -1995,12 +1994,12 @@ namespace System.Data.Entity.SqlServer
 
         private MethodInfo FindSqlGeometryStaticMethod(string methodName, params Type[] argTypes)
         {
-            return SqlGeometryType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Static, null, argTypes, null);
+            return SqlGeometryType.GetDeclaredMethod(methodName, argTypes);
         }
 
         private MethodInfo FindSqlGeometryMethod(string methodName, params Type[] argTypes)
         {
-            return SqlGeometryType.GetMethod(methodName, BindingFlags.Public | BindingFlags.Instance, null, argTypes, null);
+            return SqlGeometryType.GetDeclaredMethod(methodName, argTypes);
         }
 
         private PropertyInfo FindSqlGeometryProperty(string propertyName)

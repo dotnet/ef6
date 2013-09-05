@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     /// <summary>
@@ -147,9 +148,7 @@ namespace System.Data.Entity.Internal
                         typeof(ICollection<>).MakeGenericType(elementType));
                 }
 
-                var factoryMethod = genericType.GetMethod(
-                    "Create", BindingFlags.Static | BindingFlags.NonPublic, null,
-                    new[] { typeof(InternalCollectionEntry) }, null);
+                var factoryMethod = genericType.GetDeclaredMethod("Create", new[] { typeof(InternalCollectionEntry) });
                 factory =
                     (Func<InternalCollectionEntry, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalCollectionEntry, object>), factoryMethod);

@@ -28,8 +28,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     /// </summary>
     internal class Translator
     {
-        private static readonly MethodInfo GenericTranslateColumnMap = typeof(Translator).GetMethod(
-            "TranslateColumnMap", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo GenericTranslateColumnMap
+            = typeof(Translator).GetDeclaredMethod(
+            "TranslateColumnMap", 
+            new[] { typeof(ColumnMap), typeof(MetadataWorkspace), typeof(SpanIndex), typeof(MergeOption), typeof(bool), typeof(bool) });
 
         /// <summary>
         /// The main entry point for the translation process. Given a ColumnMap, returns
@@ -125,7 +127,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         }
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        private class TranslatorVisitor : ColumnMapVisitorWithResults<TranslatorResult, TranslatorArg>
+        internal class TranslatorVisitor : ColumnMapVisitorWithResults<TranslatorResult, TranslatorArg>
         {
             #region Private state
 
@@ -169,12 +171,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             #endregion
 
-            private static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper =
-                typeof(TranslatorVisitor).GetMethod(
-                    "MultipleDiscriminatorPolymorphicColumnMapHelper", BindingFlags.NonPublic | BindingFlags.Instance);
+            public static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper
+                = typeof(TranslatorVisitor).GetDeclaredMethod("MultipleDiscriminatorPolymorphicColumnMapHelper");
 
-            private static readonly MethodInfo Translator_TypedCreateInlineDelegate = typeof(TranslatorVisitor).GetMethod(
-                "TypedCreateInlineDelegate", BindingFlags.NonPublic | BindingFlags.Instance);
+            public static readonly MethodInfo Translator_TypedCreateInlineDelegate
+                = typeof(TranslatorVisitor).GetDeclaredMethod("TypedCreateInlineDelegate");
 
             public TranslatorVisitor(MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool streaming, bool valueLayer)
             {
@@ -979,8 +980,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // get expression retrieving the coordinator
                 var expressionToGetCoordinator = BuildExpressionToGetCoordinator(
                     elementType, elementReader, keyReaders, discriminatorReader, discriminatorValue, coordinatorScratchpad);
-                var getElementsExpression = typeof(Coordinator<>).MakeGenericType(elementType).GetMethod(
-                    "GetElements", BindingFlags.NonPublic | BindingFlags.Instance);
+                var getElementsExpression = GetGenericElementsMethod(elementType);
 
                 Expression result;
                 if (IsValueLayer)
@@ -1035,6 +1035,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 }
                 ExitCoordinatorTranslateScope();
                 return new CollectionTranslatorResult(result, arg.RequestedType, expressionToGetCoordinator);
+            }
+
+            public static MethodInfo GetGenericElementsMethod(Type elementType)
+            {
+                return typeof(Coordinator<>).MakeGenericType(elementType).GetDeclaredMethod("GetElements");
             }
 
             /// <summary>

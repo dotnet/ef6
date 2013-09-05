@@ -20,6 +20,15 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static readonly Memoizer<Type, Func<object, IEntityWrapper>> _delegateCache =
             new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
 
+        internal static readonly MethodInfo CreateWrapperDelegateTypedLightweightMethod 
+            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedLightweight");
+
+        internal static readonly MethodInfo CreateWrapperDelegateTypedWithRelationshipsMethod
+            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedWithRelationships");
+
+        internal static readonly MethodInfo CreateWrapperDelegateTypedWithoutRelationshipsMethod
+            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedWithoutRelationships");
+
         /// <summary>
         /// Called to create a new wrapper outside of the normal materialization process.
         /// This method is typically used when a new entity is created outside the context and then is
@@ -76,20 +85,17 @@ namespace System.Data.Entity.Core.Objects.Internal
                 && isIEntityWithKey
                 && !isProxy)
             {
-                createDelegate = typeof(EntityWrapperFactory).GetMethod(
-                    "CreateWrapperDelegateTypedLightweight", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = CreateWrapperDelegateTypedLightweightMethod;
             }
             else if (isIEntityWithRelationships)
             {
                 // This type of strategy wrapper is used when the entity implements IEntityWithRelationships
                 // In this case it is important that the entity itself is used to create the RelationshipManager
-                createDelegate = typeof(EntityWrapperFactory).GetMethod(
-                    "CreateWrapperDelegateTypedWithRelationships", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = CreateWrapperDelegateTypedWithRelationshipsMethod;
             }
             else
             {
-                createDelegate = typeof(EntityWrapperFactory).GetMethod(
-                    "CreateWrapperDelegateTypedWithoutRelationships", BindingFlags.NonPublic | BindingFlags.Static);
+                createDelegate = CreateWrapperDelegateTypedWithoutRelationshipsMethod;
             }
             createDelegate = createDelegate.MakeGenericMethod(entityType);
             return (Func<object, IEntityWrapper>)createDelegate.Invoke(null, new object[0]);

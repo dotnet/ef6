@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             try
             {
-                var result = PrivateMapWebPath(EdmConstants.WebHomeSymbol);
+                var result = InternalMapWebPath(EdmConstants.WebHomeSymbol);
                 return result != null;
             }
             catch (SecurityException)
@@ -119,7 +119,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(path);
 
-            path = PrivateMapWebPath(path);
+            path = InternalMapWebPath(path);
             if (path == null)
             {
                 var errMsg = Strings.InvalidUseOfWebPath(EdmConstants.WebHomeSymbol);
@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return path;
         }
 
-        private string PrivateMapWebPath(string path)
+        internal string InternalMapWebPath(string path)
         {
             DebugCheck.NotEmpty(path);
             Debug.Assert(path.StartsWith(EdmConstants.WebHomeSymbol, StringComparison.Ordinal));
@@ -142,8 +142,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 var hostingEnvType = _webAssembly.GetType("System.Web.Hosting.HostingEnvironment", true);
 
-                var miMapPath = hostingEnvType.GetMethod("MapPath");
-                Debug.Assert(miMapPath != null, "Unpexpected missing member in type System.Web.Hosting.HostingEnvironment");
+                var miMapPath = hostingEnvType.GetDeclaredMethod("MapPath", new[] { typeof(string) });
 
                 // Note:
                 //   1. If path is null, then the MapPath() method returns the full physical path to the directory 
@@ -203,16 +202,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             //
             //    public static ICollection GetReferencedAssemblies();
             //
-            Type buildManager;
-            if (!TryGetBuildManagerType(out buildManager))
-            {
-                throw new InvalidOperationException(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
-            }
-
-            var getRefAssembliesMethod = buildManager.GetMethod(
-                @"GetReferencedAssemblies",
-                BindingFlags.InvokeMethod | BindingFlags.Static | BindingFlags.Public
-                );
+            var getRefAssembliesMethod = GetReferencedAssembliesMethod();
 
             if (getRefAssembliesMethod == null)
             {
@@ -242,6 +232,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 throw new InvalidOperationException(Strings.UnableToDetermineApplicationContext, e);
             }
+        }
+
+        internal MethodInfo GetReferencedAssembliesMethod()
+        {
+            Type buildManager;
+            if (!TryGetBuildManagerType(out buildManager))
+            {
+                throw new InvalidOperationException(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
+            }
+
+            return buildManager.GetDeclaredMethod("GetReferencedAssemblies", new Type[0]);
         }
     }
 }

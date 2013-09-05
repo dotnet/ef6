@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
@@ -679,33 +680,22 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_can_create_private_non_virtual_function_import()
         {
-            Assert.True(typeof(MonsterModel).GetMethod("FunctionImport1", MemberBindingFlags).IsPrivate);
-            Assert.False(typeof(MonsterModel).GetMethod("FunctionImport1", MemberBindingFlags).IsVirtual);
+            Assert.True(typeof(MonsterModel).GetDeclaredMethod("FunctionImport1").IsPrivate);
+            Assert.False(typeof(MonsterModel).GetDeclaredMethod("FunctionImport1").IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_function_import_with_specific_method_access()
         {
-            Assert.True(
-                typeof(MonsterModel).GetMethod("FunctionImport2", MemberBindingFlags, null, new Type[0], null).
-                    IsAssembly);
-            Assert.True(
-                typeof(MonsterModel).GetMethod(
-                    "FunctionImport2", MemberBindingFlags, null,
-                    new[] { typeof(MergeOption) }, null).IsAssembly);
+            Assert.True(typeof(MonsterModel).GetDeclaredMethod("FunctionImport2", new Type[0]).IsAssembly);
+            Assert.True(typeof(MonsterModel).GetDeclaredMethod("FunctionImport2", new[] { typeof(MergeOption) }).IsAssembly);
         }
 
         [Fact]
         public void CSharp_DbContext_template_creates_virtual_function_imports()
         {
-            Assert.True(
-                typeof(AdvancedPatternsModelFirstContext).GetMethod(
-                    "AllOfficesStoredProc", MemberBindingFlags, null,
-                    new Type[0], null).IsVirtual);
-            Assert.True(
-                typeof(AdvancedPatternsModelFirstContext).GetMethod(
-                    "AllOfficesStoredProc", MemberBindingFlags, null,
-                    new[] { typeof(MergeOption) }, null).IsVirtual);
+            Assert.True(typeof(AdvancedPatternsModelFirstContext).GetDeclaredMethod("AllOfficesStoredProc", new Type[0]).IsVirtual);
+            Assert.True(typeof(AdvancedPatternsModelFirstContext).GetDeclaredMethod("AllOfficesStoredProc", new[] { typeof(MergeOption) }).IsVirtual);
         }
 
         [Fact]

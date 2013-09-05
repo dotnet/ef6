@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     {
         // Base class supporting the translation of LINQ node type(s) given a LINQ expression
         // of that type, and the "parent" translation context (the ExpressionConverter processor)
-        private abstract class Translator
+        internal abstract class Translator
         {
             private readonly ExpressionType[] _nodeTypes;
 
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         #region Misc
 
         // Typed version of Translator
-        private abstract class TypedTranslator<T_Linq> : Translator
+        internal abstract class TypedTranslator<T_Linq> : Translator
             where T_Linq : Expression
         {
             protected TypedTranslator(params ExpressionType[] nodeTypes)

@@ -9,6 +9,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -482,7 +483,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             if (type == typeof(char))
             {
-                return typeof(DbDataReader).GetMethod("GetChar");
+                return typeof(DbDataReader).GetDeclaredMethod("GetChar");
             }
             bool isNullable;
             return CodeGenEmitter.GetReaderMethod(type, out isNullable);

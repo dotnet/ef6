@@ -8,6 +8,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using Moq;
     using Xunit;
@@ -482,7 +483,7 @@ namespace System.Data.Entity
                 new DatabaseInitializerTracker<FakeForDisirbcsiwn, DropCreateDatabaseAlways<FakeForDisirbcsiwn>>(databaseExists: false);
 
             var mockContextType = tracker.Context.GetType();
-            var initMethod = typeof(Database).GetMethod("SetInitializer").MakeGenericMethod(mockContextType);
+            var initMethod = typeof(Database).GetDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
             initMethod.Invoke(null, new object[] { null });
 
             tracker.Context.Database.Initialize(force: true);

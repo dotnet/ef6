@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -23,9 +24,8 @@ namespace System.Data.Entity.Internal
         private static readonly ConcurrentDictionary<Type, Action<IRelatedEnd, object>> _entityReferenceValueSetters =
             new ConcurrentDictionary<Type, Action<IRelatedEnd, object>>();
 
-        private static readonly MethodInfo _setValueOnEntityReferenceMethod =
-            typeof(InternalReferenceEntry).GetMethod(
-                "SetValueOnEntityReference", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly MethodInfo SetValueOnEntityReferenceMethod
+            = typeof(InternalReferenceEntry).GetDeclaredMethod("SetValueOnEntityReference");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InternalReferenceEntry" /> class.
@@ -72,7 +72,7 @@ namespace System.Data.Entity.Internal
             if (!_entityReferenceValueSetters.TryGetValue(entityRefType, out setter))
             {
                 var setMethod =
-                    _setValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
+                    SetValueOnEntityReferenceMethod.MakeGenericMethod(entityRefType.GetGenericArguments().Single());
                 setter =
                     (Action<IRelatedEnd, object>)Delegate.CreateDelegate(typeof(Action<IRelatedEnd, object>), setMethod);
                 _entityReferenceValueSetters.TryAdd(entityRefType, setter);

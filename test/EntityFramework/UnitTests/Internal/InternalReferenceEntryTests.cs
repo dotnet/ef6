@@ -9,6 +9,12 @@ namespace System.Data.Entity.Internal
 
     public class InternalReferenceEntryTests
     {
+        [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(InternalReferenceEntry.SetValueOnEntityReferenceMethod);
+        }
+
         public class CurrentValue
         {
             [Fact]

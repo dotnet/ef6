@@ -15,8 +15,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     /// </summary>
     internal static class TypeSystem
     {
-        private static readonly MethodInfo _getDefaultMethod = typeof(TypeSystem).GetMethod(
-            "GetDefault", BindingFlags.Static | BindingFlags.NonPublic);
+        internal static readonly MethodInfo GetDefaultMethod = typeof(TypeSystem).GetDeclaredMethod("GetDefault");
 
         private static T GetDefault<T>()
         {
@@ -32,7 +31,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 return null;
             }
-            var getDefaultMethod = _getDefaultMethod.MakeGenericMethod(type);
+            var getDefaultMethod = GetDefaultMethod.MakeGenericMethod(type);
             var defaultValue = getDefaultMethod.Invoke(null, new object[] { });
             return defaultValue;
         }

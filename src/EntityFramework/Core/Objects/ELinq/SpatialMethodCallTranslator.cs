@@ -12,7 +12,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
     internal sealed partial class ExpressionConverter
     {
-        private sealed partial class MethodCallTranslator
+        internal sealed partial class MethodCallTranslator
             : TypedTranslator<MethodCallExpression>
         {
             private sealed class SpatialMethodCallTranslator : CallTranslator

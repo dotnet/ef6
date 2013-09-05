@@ -22,6 +22,17 @@ namespace System.Data.Entity.Internal
 
     public class InternalContextTests : TestBase
     {
+        [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(InternalContext.CreateInitializationActionMethod);
+            Assert.NotNull(InternalContext.CreateObjectAsObjectMethod);
+#if !NET40
+            Assert.NotNull(InternalContext.ExecuteSqlQueryAsIDbAsyncEnumeratorMethod);
+#endif
+            Assert.NotNull(InternalContext.ExecuteSqlQueryAsIEnumeratorMethod);
+        }
+
         public class OnDisposing : TestBase
         {
             [Fact]

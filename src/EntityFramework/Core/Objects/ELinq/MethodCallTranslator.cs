@@ -25,7 +25,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         /// Translates System.Linq.Expression.MethodCallExpression to System.Data.Entity.Core.Common.CommandTrees.DbExpression
         /// </summary>
-        private sealed partial class MethodCallTranslator : TypedTranslator<MethodCallExpression>
+        internal sealed partial class MethodCallTranslator : TypedTranslator<MethodCallExpression>
         {
             internal MethodCallTranslator()
                 : base(ExpressionType.Call)
@@ -327,7 +327,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             #region Method translators
 
-            private abstract class CallTranslator
+            internal abstract class CallTranslator
             {
                 private readonly IEnumerable<MethodInfo> _methods;
 
@@ -597,80 +597,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class DefaultTranslator : CallTranslator
+            internal sealed class DefaultTranslator : CallTranslator
             {
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
-                    MethodInfo suggestedMethodInfo;
-                    if (TryGetAlternativeMethod(call.Method, out suggestedMethodInfo))
+                    var unsupportedMethod = call.Method;
+                    if (unsupportedMethod.DeclaringType.Assembly.FullName == s_visualBasicAssemblyFullName
+                        && unsupportedMethod.Name == "Mid"
+                        && new[] { typeof(string), typeof(int) }.SequenceEqual(unsupportedMethod.GetParameters().Select(p => p.ParameterType)))
                     {
                         throw new NotSupportedException(
-                            Strings.ELinq_UnsupportedMethodSuggestedAlternative(call.Method, suggestedMethodInfo));
+                            Strings.ELinq_UnsupportedMethodSuggestedAlternative(unsupportedMethod, "System.String Mid(System.String, Int32, Int32)"));
                     }
-                    //The default error message
-                    throw new NotSupportedException(Strings.ELinq_UnsupportedMethod(call.Method));
+                    throw new NotSupportedException(Strings.ELinq_UnsupportedMethod(unsupportedMethod));
                 }
-
-                #region Static Members
-
-                private static readonly Dictionary<MethodInfo, MethodInfo> _alternativeMethods = InitializeAlternateMethodInfos();
-                private static bool _vbMethodsInitialized;
-                private static readonly object _vbInitializerLock = new object();
-
-                /// <summary>
-                /// Tries to check whether there is an alternative method suggested insted of the given unsupported one.
-                /// </summary>
-                private static bool TryGetAlternativeMethod(MethodInfo originalMethodInfo, out MethodInfo suggestedMethodInfo)
-                {
-                    if (_alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo))
-                    {
-                        return true;
-                    }
-                    // check if this is the visual basic assembly
-                    if (s_visualBasicAssemblyFullName == originalMethodInfo.DeclaringType.Assembly.FullName)
-                    {
-                        lock (_vbInitializerLock)
-                        {
-                            if (!_vbMethodsInitialized)
-                            {
-                                InitializeVBMethods(originalMethodInfo.DeclaringType.Assembly);
-                                _vbMethodsInitialized = true;
-                            }
-                            // try again
-                            return _alternativeMethods.TryGetValue(originalMethodInfo, out suggestedMethodInfo);
-                        }
-                    }
-                    suggestedMethodInfo = null;
-                    return false;
-                }
-
-                /// <summary>
-                /// Initializes the dictionary of alternative methods.
-                /// Currently, it simply initializes an empty dictionary.
-                /// </summary>
-                private static Dictionary<MethodInfo, MethodInfo> InitializeAlternateMethodInfos()
-                {
-                    return new Dictionary<MethodInfo, MethodInfo>(1);
-                }
-
-                /// <summary>
-                /// Populates the dictionary of alternative methods with the VB methods
-                /// </summary>
-                private static void InitializeVBMethods(Assembly vbAssembly)
-                {
-                    Debug.Assert(!_vbMethodsInitialized);
-
-                    //Handle { Mid(arg1, ar2), Mid(arg1, arg2, arg3) }
-                    var stringsType = vbAssembly.GetType(s_stringsTypeFullName);
-
-                    _alternativeMethods.Add(
-                        stringsType.GetMethod(
-                            "Mid", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(int) }, null),
-                        stringsType.GetMethod(
-                            "Mid", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(int), typeof(int) }, null));
-                }
-
-                #endregion
             }
 
             private sealed class FunctionCallTranslator
@@ -890,7 +830,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class CanonicalFunctionDefaultTranslator : CallTranslator
+            internal sealed class CanonicalFunctionDefaultTranslator : CallTranslator
             {
                 internal CanonicalFunctionDefaultTranslator()
                     : base(GetMethods())
@@ -902,53 +842,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var result = new List<MethodInfo>
                         {
                             //Math functions
-                            typeof(Math).GetMethod(
-                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Math).GetMethod(
-                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                            typeof(Math).GetMethod(
-                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Math).GetMethod(
-                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                            typeof(Math).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Math).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null),
-                            typeof(Math).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null,
-                                new[] { typeof(decimal), typeof(int) }, null),
-                            typeof(Math).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(int) },
-                                null),
+                            typeof(Math).GetDeclaredMethod("Ceiling", new[] { typeof(decimal) }),
+                            typeof(Math).GetDeclaredMethod("Ceiling", new[] { typeof(double) }),
+                            typeof(Math).GetDeclaredMethod("Floor", new[] { typeof(decimal) }),
+                            typeof(Math).GetDeclaredMethod("Floor", new[] { typeof(double) }),
+                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(decimal) }),
+                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(double) }),
+                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(decimal), typeof(int) }),
+                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(double), typeof(int) }),
                             //Decimal functions
-                            typeof(Decimal).GetMethod(
-                                "Floor", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Decimal).GetMethod(
-                                "Ceiling", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Decimal).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Decimal).GetMethod(
-                                "Round", BindingFlags.Public | BindingFlags.Static, null,
-                                new[] { typeof(decimal), typeof(int) }, null),
+                            typeof(Decimal).GetDeclaredMethod("Floor", new[] { typeof(decimal) }),
+                            typeof(Decimal).GetDeclaredMethod("Ceiling", new[] { typeof(decimal) }),
+                            typeof(Decimal).GetDeclaredMethod("Round", new[] { typeof(decimal) }),
+                            typeof(Decimal).GetDeclaredMethod("Round", new[] { typeof(decimal), typeof(int) }),
                             //String functions
-                            typeof(String).GetMethod(
-                                "Replace", BindingFlags.Public | BindingFlags.Instance, null,
-                                new[] { typeof(String), typeof(String) }, null),
-                            typeof(String).GetMethod(
-                                "ToLower", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
-                            typeof(String).GetMethod(
-                                "ToUpper", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
-                            typeof(String).GetMethod(
-                                "Trim", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { }, null),
+                            typeof(String).GetDeclaredMethod("Replace", new[] { typeof(String), typeof(String) }),
+                            typeof(String).GetDeclaredMethod("ToLower", new Type[0]),
+                            typeof(String).GetDeclaredMethod("ToUpper", new Type[0]),
+                            typeof(String).GetDeclaredMethod("Trim", new Type[0]),
                         };
 
                     // Math.Abs
-                    foreach (
-                        var argType in
-                            new[] { typeof(decimal), typeof(double), typeof(float), typeof(int), typeof(long), typeof(sbyte), typeof(short) })
-                    {
-                        result.Add(typeof(Math).GetMethod("Abs", BindingFlags.Public | BindingFlags.Static, null, new[] { argType }, null));
-                    }
+                    result.AddRange(
+                        new[] { typeof(decimal), typeof(double), typeof(float), typeof(int), typeof(long), typeof(sbyte), typeof(short) }
+                            .Select(a => typeof(Math).GetDeclaredMethod("Abs", new[] { a })));
 
                     return result;
                 }
@@ -977,7 +894,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private abstract class AsUnicodeNonUnicodeBaseFunctionTranslator : CallTranslator
+            internal abstract class AsUnicodeNonUnicodeBaseFunctionTranslator : CallTranslator
             {
                 private readonly bool _isUnicode;
 
@@ -1018,7 +935,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class AsUnicodeFunctionTranslator : AsUnicodeNonUnicodeBaseFunctionTranslator
+            internal sealed class AsUnicodeFunctionTranslator : AsUnicodeNonUnicodeBaseFunctionTranslator
             {
                 internal AsUnicodeFunctionTranslator()
                     : base(GetMethods(), true)
@@ -1028,17 +945,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(DbFunctions).GetMethod(
-                            AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        typeof(DbFunctions).GetDeclaredMethod(AsUnicode, new[] { typeof(string) });
                     yield return
 #pragma warning disable 612,618
- typeof(EntityFunctions).GetMethod(
+                        typeof(EntityFunctions).GetDeclaredMethod(AsUnicode, new[] { typeof(string) });
 #pragma warning restore 612,618
-AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
 
-            private sealed class AsNonUnicodeFunctionTranslator : AsUnicodeNonUnicodeBaseFunctionTranslator
+            internal sealed class AsNonUnicodeFunctionTranslator : AsUnicodeNonUnicodeBaseFunctionTranslator
             {
                 internal AsNonUnicodeFunctionTranslator()
                     : base(GetMethods(), false)
@@ -1048,27 +963,23 @@ AsUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(strin
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(DbFunctions).GetMethod(
-                            AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        typeof(DbFunctions).GetDeclaredMethod(AsNonUnicode, new[] { typeof(string) });
                     yield return
 #pragma warning disable 612,618
- typeof(EntityFunctions).GetMethod(
+                        typeof(EntityFunctions).GetDeclaredMethod(AsNonUnicode, new[] { typeof(string) });
 #pragma warning restore 612,618
-AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
                 }
             }
 
             #region System.Math method translators
 
-            private sealed class MathTruncateTranslator : CallTranslator
+            internal sealed class MathTruncateTranslator : CallTranslator
             {
                 internal MathTruncateTranslator()
                     : base(new[]
                         {
-                            typeof(Math).GetMethod(
-                                "Truncate", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(decimal) }, null),
-                            typeof(Math).GetMethod(
-                                "Truncate", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double) }, null)
+                            typeof(Math).GetDeclaredMethod("Truncate", new[] { typeof(decimal) }),
+                            typeof(Math).GetDeclaredMethod("Truncate", new[] { typeof(double) })
                         })
                 {
                 }
@@ -1085,14 +996,12 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class MathPowerTranslator : CallTranslator
+            internal sealed class MathPowerTranslator : CallTranslator
             {
                 internal MathPowerTranslator()
                     : base(new[]
                         {
-                            typeof(Math).GetMethod(
-                                "Pow", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(double), typeof(double) },
-                                null),
+                            typeof(Math).GetDeclaredMethod("Pow", new[] { typeof(double), typeof(double) })
                         })
                 {
                 }
@@ -1109,12 +1018,12 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
 
             #region System.Guid method translators
 
-            private sealed class GuidNewGuidTranslator : CallTranslator
+            internal sealed class GuidNewGuidTranslator : CallTranslator
             {
                 internal GuidNewGuidTranslator()
                     : base(new[]
                         {
-                            typeof(Guid).GetMethod("NewGuid", BindingFlags.Public | BindingFlags.Static, null, Type.EmptyTypes, null)
+                            typeof(Guid).GetDeclaredMethod("NewGuid", Type.EmptyTypes)
                             ,
                         })
                 {
@@ -1130,7 +1039,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
 
             #region System.String Method Translators
 
-            private sealed class StringContainsTranslator : CallTranslator
+            internal sealed class StringContainsTranslator : CallTranslator
             {
                 internal StringContainsTranslator()
                     : base(GetMethods())
@@ -1140,8 +1049,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "Contains", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("Contains", new[] { typeof(string) });
                 }
 
                 // Translation:
@@ -1166,7 +1074,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class IndexOfTranslator : CallTranslator
+            internal sealed class IndexOfTranslator : CallTranslator
             {
                 internal IndexOfTranslator()
                     : base(GetMethods())
@@ -1176,8 +1084,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "IndexOf", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("IndexOf", new[] { typeof(string) });
                 }
 
                 // Translation:
@@ -1193,7 +1100,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class StartsWithTranslator : CallTranslator
+            internal sealed class StartsWithTranslator : CallTranslator
             {
                 internal StartsWithTranslator()
                     : base(GetMethods())
@@ -1203,8 +1110,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "StartsWith", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("StartsWith", new[] { typeof(string) });
                 }
 
                 // Translation:
@@ -1229,7 +1135,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class EndsWithTranslator : CallTranslator
+            internal sealed class EndsWithTranslator : CallTranslator
             {
                 internal EndsWithTranslator()
                     : base(GetMethods())
@@ -1239,8 +1145,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "EndsWith", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("EndsWith", new[] { typeof(string) });
                 }
 
                 // Translation:
@@ -1269,7 +1174,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class SubstringTranslator : CallTranslator
+            internal sealed class SubstringTranslator : CallTranslator
             {
                 internal SubstringTranslator()
                     : base(GetMethods())
@@ -1279,11 +1184,9 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "Substring", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int) }, null);
+                        typeof(String).GetDeclaredMethod("Substring", new[] { typeof(int) });
                     yield return
-                        typeof(String).GetMethod(
-                            "Substring", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int), typeof(int) }, null);
+                        typeof(String).GetDeclaredMethod("Substring", new[] { typeof(int), typeof(int) });
                 }
 
                 // Translation:
@@ -1315,7 +1218,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class RemoveTranslator : CallTranslator
+            internal sealed class RemoveTranslator : CallTranslator
             {
                 internal RemoveTranslator()
                     : base(GetMethods())
@@ -1325,10 +1228,9 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod("Remove", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int) }, null);
+                        typeof(String).GetDeclaredMethod("Remove", new[] { typeof(int) });
                     yield return
-                        typeof(String).GetMethod(
-                            "Remove", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int), typeof(int) }, null);
+                        typeof(String).GetDeclaredMethod("Remove", new[] { typeof(int), typeof(int) });
                 }
 
                 // Translation:
@@ -1407,7 +1309,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class InsertTranslator : CallTranslator
+            internal sealed class InsertTranslator : CallTranslator
             {
                 internal InsertTranslator()
                     : base(GetMethods())
@@ -1417,8 +1319,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "Insert", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(int), typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("Insert", new[] { typeof(int), typeof(string) });
                 }
 
                 // Translation:
@@ -1459,7 +1360,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class IsNullOrEmptyTranslator : CallTranslator
+            internal sealed class IsNullOrEmptyTranslator : CallTranslator
             {
                 internal IsNullOrEmptyTranslator()
                     : base(GetMethods())
@@ -1469,8 +1370,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "IsNullOrEmpty", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("IsNullOrEmpty", new[] { typeof(string) });
                 }
 
                 // Translation:
@@ -1493,7 +1393,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class StringConcatTranslator : CallTranslator
+            internal sealed class StringConcatTranslator : CallTranslator
             {
                 internal StringConcatTranslator()
                     : base(GetMethods())
@@ -1503,16 +1403,11 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "Concat", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string) });
                     yield return
-                        typeof(String).GetMethod(
-                            "Concat", BindingFlags.Public | BindingFlags.Static, null,
-                            new[] { typeof(string), typeof(string), typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string), typeof(string) });
                     yield return
-                        typeof(String).GetMethod(
-                            "Concat", BindingFlags.Public | BindingFlags.Static, null,
-                            new[] { typeof(string), typeof(string), typeof(string), typeof(string) }, null);
+                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string), typeof(string), typeof(string) });
                 }
 
                 // Translation:
@@ -1537,7 +1432,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private abstract class TrimBaseTranslator : CallTranslator
+            internal abstract class TrimBaseTranslator : CallTranslator
             {
                 private readonly string _canonicalFunctionName;
 
@@ -1586,7 +1481,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class TrimTranslator : TrimBaseTranslator
+            internal sealed class TrimTranslator : TrimBaseTranslator
             {
                 internal TrimTranslator()
                     : base(GetMethods(), Trim)
@@ -1596,11 +1491,11 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod("Trim", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(Char[]) }, null);
+                        typeof(String).GetDeclaredMethod("Trim", new[] { typeof(Char[]) });
                 }
             }
 
-            private sealed class TrimStartTranslator : TrimBaseTranslator
+            internal sealed class TrimStartTranslator : TrimBaseTranslator
             {
                 internal TrimStartTranslator()
                     : base(GetMethods(), LTrim)
@@ -1610,12 +1505,11 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "TrimStart", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(Char[]) }, null);
+                        typeof(String).GetDeclaredMethod("TrimStart", new[] { typeof(Char[]) });
                 }
             }
 
-            private sealed class TrimEndTranslator : TrimBaseTranslator
+            internal sealed class TrimEndTranslator : TrimBaseTranslator
             {
                 internal TrimEndTranslator()
                     : base(GetMethods(), RTrim)
@@ -1625,8 +1519,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetMethod(
-                            "TrimEnd", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(Char[]) }, null);
+                        typeof(String).GetDeclaredMethod("TrimEnd", new[] { typeof(Char[]) });
                 }
             }
 
@@ -1634,7 +1527,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
 
             #region Visual Basic Specific Translators
 
-            private sealed class VBCanonicalFunctionDefaultTranslator : CallTranslator
+            internal sealed class VBCanonicalFunctionDefaultTranslator : CallTranslator
             {
                 private const string s_stringsTypeFullName = "Microsoft.VisualBasic.Strings";
                 private const string s_dateAndTimeTypeFullName = "Microsoft.VisualBasic.DateAndTime";
@@ -1649,32 +1542,30 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                     //Strings Types 
                     var stringsType = vbAssembly.GetType(s_stringsTypeFullName);
                     yield return
-                        stringsType.GetMethod("Trim", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        stringsType.GetDeclaredMethod("Trim", new[] { typeof(string) });
                     yield return
-                        stringsType.GetMethod("LTrim", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        stringsType.GetDeclaredMethod("LTrim", new[] { typeof(string) });
                     yield return
-                        stringsType.GetMethod("RTrim", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string) }, null);
+                        stringsType.GetDeclaredMethod("RTrim", new[] { typeof(string) });
                     yield return
-                        stringsType.GetMethod(
-                            "Left", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(int) }, null);
+                        stringsType.GetDeclaredMethod("Left", new[] { typeof(string), typeof(int) });
                     yield return
-                        stringsType.GetMethod(
-                            "Right", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(string), typeof(int) }, null);
+                        stringsType.GetDeclaredMethod("Right", new[] { typeof(string), typeof(int) });
 
                     //DateTimeType
                     var dateTimeType = vbAssembly.GetType(s_dateAndTimeTypeFullName);
                     yield return
-                        dateTimeType.GetMethod("Year", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Year", new[] { typeof(DateTime) });
                     yield return
-                        dateTimeType.GetMethod("Month", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Month", new[] { typeof(DateTime) });
                     yield return
-                        dateTimeType.GetMethod("Day", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Day", new[] { typeof(DateTime) });
                     yield return
-                        dateTimeType.GetMethod("Hour", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Hour", new[] { typeof(DateTime) });
                     yield return
-                        dateTimeType.GetMethod("Minute", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Minute", new[] { typeof(DateTime) });
                     yield return
-                        dateTimeType.GetMethod("Second", BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(DateTime) }, null);
+                        dateTimeType.GetDeclaredMethod("Second", new[] { typeof(DateTime) });
                 }
 
                 // Default translator for vb static method calls into canonical functions.
@@ -1686,13 +1577,13 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class VBCanonicalFunctionRenameTranslator : CallTranslator
+            internal sealed class VBCanonicalFunctionRenameTranslator : CallTranslator
             {
                 private const string s_stringsTypeFullName = "Microsoft.VisualBasic.Strings";
                 private static readonly Dictionary<MethodInfo, string> s_methodNameMap = new Dictionary<MethodInfo, string>(4);
 
                 internal VBCanonicalFunctionRenameTranslator(Assembly vbAssembly)
-                    : base(GetMethods(vbAssembly))
+                    : base(GetMethods(vbAssembly).ToArray())
                 {
                 }
 
@@ -1700,17 +1591,16 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 {
                     //Strings Types 
                     var stringsType = vbAssembly.GetType(s_stringsTypeFullName);
-                    yield return GetMethod(stringsType, "Len", Length, new[] { typeof(string) });
-                    yield return GetMethod(stringsType, "Mid", Substring, new[] { typeof(string), typeof(int), typeof(int) });
-                    yield return GetMethod(stringsType, "UCase", ToUpper, new[] { typeof(string) });
-                    yield return GetMethod(stringsType, "LCase", ToLower, new[] { typeof(string) });
+                    yield return GetMethodInfo(stringsType, "Len", Length, new[] { typeof(string) });
+                    yield return GetMethodInfo(stringsType, "Mid", Substring, new[] { typeof(string), typeof(int), typeof(int) });
+                    yield return GetMethodInfo(stringsType, "UCase", ToUpper, new[] { typeof(string) });
+                    yield return GetMethodInfo(stringsType, "LCase", ToLower, new[] { typeof(string) });
                 }
 
-                private static MethodInfo GetMethod(
+                private static MethodInfo GetMethodInfo(
                     Type declaringType, string methodName, string canonicalFunctionName, Type[] argumentTypes)
                 {
-                    var methodInfo = declaringType.GetMethod(
-                        methodName, BindingFlags.Public | BindingFlags.Static, null, argumentTypes, null);
+                    var methodInfo = declaringType.GetDeclaredMethod(methodName, argumentTypes);
                     s_methodNameMap.Add(methodInfo, canonicalFunctionName);
                     return methodInfo;
                 }
@@ -1725,7 +1615,7 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                 }
             }
 
-            private sealed class VBDatePartTranslator : CallTranslator
+            internal sealed class VBDatePartTranslator : CallTranslator
             {
                 private const string s_dateAndTimeTypeFullName = "Microsoft.VisualBasic.DateAndTime";
                 private const string s_DateIntervalFullName = "Microsoft.VisualBasic.DateInterval";
@@ -1754,9 +1644,8 @@ AsNonUnicode, BindingFlags.Public | BindingFlags.Static, null, new[] { typeof(st
                     var firstDayOfWeekEnum = vbAssembly.GetType(s_FirstDayOfWeekFullName);
                     var firstWeekOfYearEnum = vbAssembly.GetType(s_FirstWeekOfYearFullName);
 
-                    yield return dateAndTimeType.GetMethod(
-                        "DatePart", BindingFlags.Public | BindingFlags.Static, null,
-                        new[] { dateIntervalEnum, typeof(DateTime), firstDayOfWeekEnum, firstWeekOfYearEnum }, null);
+                    yield return dateAndTimeType.GetDeclaredMethod(
+                        "DatePart", new[] { dateIntervalEnum, typeof(DateTime), firstDayOfWeekEnum, firstWeekOfYearEnum });
                 }
 
                 // Translation:

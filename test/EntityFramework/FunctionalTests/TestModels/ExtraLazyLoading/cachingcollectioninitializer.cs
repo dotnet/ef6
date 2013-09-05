@@ -6,6 +6,7 @@ namespace LazyUnicorns
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
@@ -16,7 +17,7 @@ namespace LazyUnicorns
             = new ConcurrentDictionary<Type, IList<Tuple<string, Func<DbCollectionEntry, object>>>>();
 
         private static readonly MethodInfo _factoryMethodInfo
-            = typeof(CachingCollectionInitializer).GetMethod("CreateCollection");
+            = typeof(CachingCollectionInitializer).GetDeclaredMethod("CreateCollection");
 
         public virtual Type TryGetElementType(PropertyInfo collectionProperty)
         {

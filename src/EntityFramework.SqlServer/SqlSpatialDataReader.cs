@@ -113,8 +113,7 @@ namespace System.Data.Entity.SqlServer
 
             var readerParam = Expression.Parameter(typeof(BinaryReader));
             var binarySerializable = Expression.Variable(spatialType);
-            var readMethod = spatialType.GetMethod(
-                "Read", BindingFlags.Public | BindingFlags.Instance, null, new[] { typeof(BinaryReader) }, null);
+            var readMethod = spatialType.GetPublicInstanceMethod("Read", new[] { typeof(BinaryReader) });
 
             var ex = Expression.Lambda<Func<BinaryReader, object>>(
                 Expression.Block(

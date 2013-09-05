@@ -5,6 +5,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
@@ -19,7 +20,7 @@ namespace System.Data.Entity.WrappingProvider
         private const string SqlClientInvariantName = "System.Data.SqlClient";
 
         private static readonly DataTable _providerTable =
-            (DataTable)typeof(DbProviderFactories).GetMethod("GetProviderTable", BindingFlags.NonPublic | BindingFlags.Static)
+            (DataTable)typeof(DbProviderFactories).GetDeclaredMethod("GetProviderTable")
                                                   .Invoke(null, BindingFlags.NonPublic | BindingFlags.Static, null, null, null);
 
         public WrappingProviderTests()

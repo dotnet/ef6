@@ -57,6 +57,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         /// </summary>
         private static readonly HashSet<Assembly> _proxyRuntimeAssemblies = new HashSet<Assembly>();
 
+        internal static readonly MethodInfo GetInterceptorDelegateMethod 
+            = typeof(LazyLoadBehavior).GetDeclaredMethod("GetInterceptorDelegate");
+
         private static ModuleBuilder GetDynamicModule(EntityType ospaceEntityType)
         {
             var assembly = ospaceEntityType.ClrType.Assembly;
@@ -468,10 +471,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                     CultureInfo.CurrentCulture, "Expected interceptor field for property {0} to be defined on proxy type {1}", member.Name,
                     proxyType.FullName));
 
-            var interceptorDelegate =
-                typeof(LazyLoadBehavior).GetMethod("GetInterceptorDelegate", BindingFlags.NonPublic | BindingFlags.Static).
-                                         MakeGenericMethod(proxyType, property.PropertyType).
-                                         Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
+            var interceptorDelegate = GetInterceptorDelegateMethod.
+                                          MakeGenericMethod(proxyType, property.PropertyType).
+                                          Invoke(null, new object[] { member, proxyTypeInfo.EntityWrapperDelegate }) as Delegate;
 
             AssignInterceptionDelegate(interceptorDelegate, interceptorField);
         }
@@ -609,7 +611,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             private TypeBuilder _typeBuilder;
             private readonly BaseProxyImplementor _baseImplementor;
-            private readonly IPOCOImplementor _ipocoImplementor;
+            private readonly IPocoImplementor _ipocoImplementor;
             private readonly LazyLoadImplementor _lazyLoadImplementor;
             private readonly DataContractImplementor _dataContractImplementor;
             private readonly SerializableImplementor _iserializableImplementor;
@@ -621,7 +623,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 _ospaceEntityType = ospaceEntityType;
                 _baseImplementor = new BaseProxyImplementor();
-                _ipocoImplementor = new IPOCOImplementor(ospaceEntityType);
+                _ipocoImplementor = new IPocoImplementor(ospaceEntityType);
                 _lazyLoadImplementor = new LazyLoadImplementor(ospaceEntityType);
                 _dataContractImplementor = new DataContractImplementor(ospaceEntityType);
                 _iserializableImplementor = new SerializableImplementor(ospaceEntityType);

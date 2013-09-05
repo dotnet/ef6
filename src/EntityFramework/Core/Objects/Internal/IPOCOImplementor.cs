@@ -6,11 +6,12 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Reflection;
     using System.Reflection.Emit;
 
-    internal class IPOCOImplementor
+    internal class IPocoImplementor
     {
         private readonly EntityType _ospaceEntityType;
 
@@ -30,40 +31,42 @@ namespace System.Data.Entity.Core.Objects.Internal
         private HashSet<EdmMember> _scalarMembers;
         private HashSet<EdmMember> _relationshipMembers;
 
-        private static readonly MethodInfo _entityMemberChangingMethod = typeof(IEntityChangeTracker).GetMethod(
+        internal static readonly MethodInfo EntityMemberChangingMethod = typeof(IEntityChangeTracker).GetDeclaredMethod(
             "EntityMemberChanging", new[] { typeof(string) });
 
-        private static readonly MethodInfo _entityMemberChangedMethod = typeof(IEntityChangeTracker).GetMethod(
+        internal static readonly MethodInfo EntityMemberChangedMethod = typeof(IEntityChangeTracker).GetDeclaredMethod(
             "EntityMemberChanged", new[] { typeof(string) });
 
-        private static readonly MethodInfo _createRelationshipManagerMethod = typeof(RelationshipManager).GetMethod(
+        internal static readonly MethodInfo CreateRelationshipManagerMethod = typeof(RelationshipManager).GetDeclaredMethod(
             "Create", new[] { typeof(IEntityWithRelationships) });
 
-        private static readonly MethodInfo _getRelationshipManagerMethod =
+        internal static readonly MethodInfo GetRelationshipManagerMethod =
             typeof(IEntityWithRelationships).GetProperty("RelationshipManager").GetGetMethod();
 
-        private static readonly MethodInfo _getRelatedReferenceMethod = typeof(RelationshipManager).GetMethod(
+        internal static readonly MethodInfo GetRelatedReferenceMethod = typeof(RelationshipManager).GetDeclaredMethod(
             "GetRelatedReference", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo _getRelatedCollectionMethod = typeof(RelationshipManager).GetMethod(
+        internal static readonly MethodInfo GetRelatedCollectionMethod = typeof(RelationshipManager).GetDeclaredMethod(
             "GetRelatedCollection", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo _getRelatedEndMethod = typeof(RelationshipManager).GetMethod(
+        internal static readonly MethodInfo GetRelatedEndMethod = typeof(RelationshipManager).GetDeclaredMethod(
             "GetRelatedEnd", new[] { typeof(string), typeof(string) });
 
-        private static readonly MethodInfo _objectEqualsMethod = typeof(object).GetMethod(
+        internal static readonly MethodInfo ObjectEqualsMethod = typeof(object).GetDeclaredMethod(
             "Equals", new[] { typeof(object), typeof(object) });
 
         private static readonly ConstructorInfo _invalidOperationConstructorMethod =
             typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
 
         private static readonly MethodInfo _getEntityMethod = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
-        private static readonly MethodInfo _invokeMethod = typeof(Action<object>).GetMethod("Invoke", new[] { typeof(object) });
+        internal static readonly MethodInfo InvokeMethod = typeof(Action<object>).GetDeclaredMethod("Invoke", new[] { typeof(object) });
 
-        private static readonly MethodInfo _funcInvokeMethod = typeof(Func<object, object, bool>).GetMethod(
+        internal static readonly MethodInfo FuncInvokeMethod = typeof(Func<object, object, bool>).GetDeclaredMethod(
             "Invoke", new[] { typeof(object), typeof(object) });
 
-        public IPOCOImplementor(EntityType ospaceEntityType)
+        internal static readonly MethodInfo SetChangeTrackerMethod = typeof(IEntityWithChangeTracker).GetDeclaredMethod("SetChangeTracker");
+
+        public IPocoImplementor(EntityType ospaceEntityType)
         {
             var baseType = ospaceEntityType.ClrType;
             _referenceProperties = new List<KeyValuePair<NavigationProperty, PropertyInfo>>();
@@ -189,14 +192,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 generator.Emit(OpCodes.Castclass, proxyType);
                 generator.Emit(OpCodes.Stloc_0);
                 generator.Emit(OpCodes.Ldloc_0);
-                generator.Emit(OpCodes.Callvirt, _getRelationshipManagerMethod);
+                generator.Emit(OpCodes.Callvirt, GetRelationshipManagerMethod);
                 generator.Emit(OpCodes.Stloc_1);
 
                 foreach (var navProperty in _collectionProperties)
                 {
                     // Update Constructor to initialize this property
                     var getRelatedCollection =
-                        _getRelatedCollectionMethod.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
+                        GetRelatedCollectionMethod.MakeGenericMethod(EntityUtil.GetCollectionElementType(navProperty.Value.PropertyType));
 
                     generator.Emit(OpCodes.Ldloc_0);
                     generator.Emit(OpCodes.Ldloc_1);
@@ -306,13 +309,13 @@ namespace System.Data.Entity.Core.Objects.Internal
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, baseGetter);
                         generator.Emit(OpCodes.Ldarg_1);
-                        generator.Emit(OpCodes.Callvirt, _funcInvokeMethod);
+                        generator.Emit(OpCodes.Callvirt, FuncInvokeMethod);
                         generator.Emit(OpCodes.Brtrue_S, endOfMethod);
                     }
                     else
                     {
                         // Get the specific type's inequality method if it exists
-                        var op_inequality = propertyType.GetMethod("op_Inequality", new[] { propertyType, propertyType });
+                        var op_inequality = propertyType.GetDeclaredMethod("op_Inequality", new[] { propertyType, propertyType });
                         if (op_inequality != null)
                         {
                             generator.Emit(OpCodes.Ldarg_0);
@@ -335,7 +338,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                             {
                                 generator.Emit(OpCodes.Box, propertyType);
                             }
-                            generator.Emit(OpCodes.Call, _objectEqualsMethod);
+                            generator.Emit(OpCodes.Call, ObjectEqualsMethod);
                             generator.Emit(OpCodes.Brtrue_S, endOfMethod);
                         }
                     }
@@ -372,7 +375,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.BeginFinallyBlock();
             generator.Emit(OpCodes.Ldsfld, _resetFKSetterFlagField);
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Callvirt, _invokeMethod);
+            generator.Emit(OpCodes.Callvirt, InvokeMethod);
             generator.EndExceptionBlock();
             generator.MarkLabel(endOfMethod);
             generator.Emit(OpCodes.Ret);
@@ -385,8 +388,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
             var baseSetter = baseProperty.GetSetMethod(true);
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
-            var specificGetRelatedReference = _getRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
-            var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetMethod(
+            var specificGetRelatedReference = GetRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
+            var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetDeclaredMethod(
                 "set_Value");
 
             var setterBuilder = typeBuilder.DefineMethod(
@@ -421,7 +424,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Call, _getRelationshipManager);
             generator.Emit(OpCodes.Ldstr, navProperty.RelationshipType.FullName);
             generator.Emit(OpCodes.Ldstr, navProperty.ToEndMember.Name);
-            generator.Emit(OpCodes.Callvirt, _getRelatedEndMethod);
+            generator.Emit(OpCodes.Callvirt, GetRelatedEndMethod);
             generator.Emit(OpCodes.Beq_S, instanceEqual);
             generator.Emit(OpCodes.Ldstr, cannotSetException);
             generator.Emit(OpCodes.Newobj, _invalidOperationConstructorMethod);
@@ -454,7 +457,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _changeTrackerField);
             generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Callvirt, _entityMemberChangingMethod);
+            generator.Emit(OpCodes.Callvirt, EntityMemberChangingMethod);
             generator.MarkLabel(methodEnd);
             generator.Emit(OpCodes.Ret);
 
@@ -469,7 +472,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldfld, _changeTrackerField);
             generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Callvirt, _entityMemberChangedMethod);
+            generator.Emit(OpCodes.Callvirt, EntityMemberChangedMethod);
             generator.MarkLabel(methodEnd);
             generator.Emit(OpCodes.Ret);
 
@@ -487,9 +490,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Stfld, _changeTrackerField);
             generator.Emit(OpCodes.Ret);
 
-            typeBuilder.DefineMethodOverride(
-                setChangeTracker, 
-                typeof(IEntityWithChangeTracker).GetMethod("SetChangeTracker"));
+            typeBuilder.DefineMethodOverride(setChangeTracker, SetChangeTrackerMethod);
         }
 
         private void ImplementIEntityWithRelationships(TypeBuilder typeBuilder, Action<FieldBuilder, bool> registerField)
@@ -516,7 +517,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Brtrue_S, trueLabel);
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_0);
-            generator.Emit(OpCodes.Call, _createRelationshipManagerMethod);
+            generator.Emit(OpCodes.Call, CreateRelationshipManagerMethod);
             generator.Emit(OpCodes.Stfld, _relationshipManagerField);
             generator.MarkLabel(trueLabel);
             generator.Emit(OpCodes.Ldarg_0);
@@ -524,9 +525,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.Emit(OpCodes.Ret);
             relationshipManagerProperty.SetGetMethod(_getRelationshipManager);
 
-            typeBuilder.DefineMethodOverride(
-                _getRelationshipManager, 
-                typeof(IEntityWithRelationships).GetMethod("get_RelationshipManager"));
+            typeBuilder.DefineMethodOverride(_getRelationshipManager, GetRelationshipManagerMethod);
         }
 
         #endregion

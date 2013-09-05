@@ -14,6 +14,13 @@ namespace System.Data.Entity.Core.Objects
     public class ObjectQueryTests : TestBase
     {
         [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(ObjectQuery<int>.IncludeSpanMethod);
+            Assert.NotNull(ObjectQuery<string>.MergeAsMethod);
+        }
+
+        [Fact]
         public void GetEnumerator_calls_Shaper_GetEnumerator_lazily()
         {
             GetEnumerator_calls_Shaper_GetEnumerator_lazily_implementation(q => ((IEnumerable<object>)q).GetEnumerator());

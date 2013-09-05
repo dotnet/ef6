@@ -6,6 +6,7 @@ namespace System.Data.Entity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
@@ -78,12 +79,7 @@ namespace System.Data.Entity
             get { return _attributes; }
         }
 
-        //private static MethodInfo s_RegisterSet = typeof(DbModelBuilder).GetMethod("RegisterSet", BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null);
-        private static readonly MethodInfo s_Entity = typeof(DbModelBuilder).GetMethod(
-            "Entity",
-            BindingFlags.Public |
-            BindingFlags.Instance, null,
-            Type.EmptyTypes, null);
+        private static readonly MethodInfo s_Entity = typeof(DbModelBuilder).GetPublicInstanceMethod("Entity", Type.EmptyTypes);
 
         public DbModelBuilder ToBuilder()
         {

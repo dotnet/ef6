@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Reflection;
@@ -45,7 +46,7 @@ namespace System.Data.Entity
                     {
                         var dataType = @interface.GetGenericArguments()[0];
                         var fixtureData = Activator.CreateInstance(dataType);
-                        var method = @interface.GetMethod("SetFixture", new[] { dataType });
+                        var method = @interface.GetDeclaredMethod("SetFixture", new[] { dataType });
 
                         fixtures[method] = fixtureData;
                     }

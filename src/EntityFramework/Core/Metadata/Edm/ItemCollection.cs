@@ -200,7 +200,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal ICollection InternalGetItems(Type type)
         {
-            var mi = typeof(ItemCollection).GetMethod("GenericGetItems", BindingFlags.NonPublic | BindingFlags.Static);
+            var mi = typeof(ItemCollection).GetDeclaredMethod("GenericGetItems");
             var genericMi = mi.MakeGenericMethod(type);
 
             return genericMi.Invoke(null, new object[] { this }) as ICollection;

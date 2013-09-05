@@ -7,8 +7,8 @@ namespace System.Data.Entity
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.IO;
-    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -250,8 +250,7 @@ namespace System.Data.Entity
                 }
                 finally
                 {
-                    typeof(Database).GetMethod("ResetDefaultConnectionFactory", BindingFlags.Static | BindingFlags.NonPublic)
-                                    .Invoke(null, null);
+                    typeof(Database).GetDeclaredMethod("ResetDefaultConnectionFactory").Invoke(null, null);
                     Database.ResetDefaultConnectionFactory();
                 }
             }

@@ -313,8 +313,7 @@ namespace System.Data.Entity.Internal
 
         #region Compiled delegates for accessing property getters and setters
 
-        private static readonly MethodInfo _convertAndSetMethod = typeof(DbHelpers).GetMethod(
-            "ConvertAndSet", BindingFlags.Static | BindingFlags.NonPublic);
+        public static readonly MethodInfo ConvertAndSetMethod = typeof(DbHelpers).GetDeclaredMethod("ConvertAndSet");
 
         private static readonly ConcurrentDictionary<Type, IDictionary<string, Type>> _propertyTypes =
             new ConcurrentDictionary<Type, IDictionary<string, Type>>();
@@ -381,7 +380,7 @@ namespace System.Data.Entity.Internal
 
                         // Next create a delegate with CreateDelegate that calls the internal ConvertAndSet method below.
                         // This works in partial trust because it is using CreateDelegate to avoid creating any dynamic code.
-                        var convertMethod = _convertAndSetMethod.MakeGenericMethod(property.PropertyType);
+                        var convertMethod = ConvertAndSetMethod.MakeGenericMethod(property.PropertyType);
                         var convertAndSet = (Action<object, object, Action<object, object>, string, string>)
                                             Delegate.CreateDelegate(
                                                 typeof(Action<object, object, Action<object, object>, string, string>),

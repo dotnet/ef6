@@ -594,5 +594,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 spatialDataReaderMock.Verify(m => m.GetGeometry(0), Times.Once());
             }
         }
+
+        [Fact]
+        public void GetGenericTypedValueDefaultMethod_finds_method_by_Reflection()
+        {
+            Shaper.ErrorHandlingValueReader<int>.GetGenericTypedValueDefaultMethod(typeof(int));
+        }
     }
 }

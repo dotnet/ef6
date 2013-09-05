@@ -39,6 +39,10 @@ namespace System.Data.Entity.Core.Objects
     {
         #region Private Static Members
 
+        internal static readonly MethodInfo MergeAsMethod = typeof(ObjectQuery<T>).GetDeclaredMethod("MergeAs");
+
+        internal static readonly MethodInfo IncludeSpanMethod = typeof(ObjectQuery<T>).GetDeclaredMethod("IncludeSpan");
+
         /// <summary>
         /// The default query name, which is used in query-building to refer to an
         /// element of the ObjectQuery; e.g., in a call to ObjectQuery.Where(), a predicate of
@@ -678,21 +682,16 @@ namespace System.Data.Entity.Core.Objects
                 retExpr = Expression.Constant(this);
             }
 
-            var objectQueryType = typeof(ObjectQuery<T>);
             if (QueryState.UserSpecifiedMergeOption.HasValue)
             {
-                var mergeAsMethod = objectQueryType.GetMethod("MergeAs", BindingFlags.Instance | BindingFlags.NonPublic);
-                Debug.Assert(mergeAsMethod != null, "Could not retrieve ObjectQuery<T>.MergeAs method using reflection?");
-                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, mergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
+                retExpr = TypeSystem.EnsureType(retExpr, typeof(ObjectQuery<T>));
+                retExpr = Expression.Call(retExpr, MergeAsMethod, Expression.Constant(QueryState.UserSpecifiedMergeOption.Value));
             }
 
             if (null != QueryState.Span)
             {
-                var includeSpanMethod = objectQueryType.GetMethod("IncludeSpan", BindingFlags.Instance | BindingFlags.NonPublic);
-                Debug.Assert(includeSpanMethod != null, "Could not retrieve ObjectQuery<T>.IncludeSpan method using reflection?");
-                retExpr = TypeSystem.EnsureType(retExpr, objectQueryType);
-                retExpr = Expression.Call(retExpr, includeSpanMethod, Expression.Constant(QueryState.Span));
+                retExpr = TypeSystem.EnsureType(retExpr, typeof(ObjectQuery<T>));
+                retExpr = Expression.Call(retExpr, IncludeSpanMethod, Expression.Constant(QueryState.Span));
             }
 
             return retExpr;

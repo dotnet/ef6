@@ -52,7 +52,7 @@ namespace System.Data.Entity.Migrations
 
             var targetType = set.GetType();
 
-            var method = targetType.GetMethod("AddOrUpdate", new[] { typeof(TEntity[]) });
+            var method = targetType.GetDeclaredMethod("AddOrUpdate", new[] { typeof(TEntity[]) });
 
             if (method == null)
             {
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Migrations
             var targetType = set.GetType();
 
             var method
-                = targetType.GetMethod(
+                = targetType.GetDeclaredMethod(
                     "AddOrUpdate",
                     new[] { typeof(Expression<Func<TEntity, object>>), typeof(TEntity[]) });
 

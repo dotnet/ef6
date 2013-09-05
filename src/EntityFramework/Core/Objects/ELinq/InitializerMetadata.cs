@@ -445,7 +445,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <summary>
         /// Metadata for entity collection initializer.
         /// </summary>
-        private class EntityCollectionInitializerMetadata : InitializerMetadata
+        internal class EntityCollectionInitializerMetadata : InitializerMetadata
         {
             internal EntityCollectionInitializerMetadata(Type type, NavigationProperty navigationProperty)
                 : base(type)
@@ -473,10 +473,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return _navigationProperty.Equals(otherInitializer._navigationProperty);
             }
 
-            private static readonly MethodInfo _createEntityCollectionMethod =
-                typeof(EntityCollectionInitializerMetadata).GetMethod(
-                    "CreateEntityCollection",
-                    BindingFlags.Static | BindingFlags.Public);
+            internal static readonly MethodInfo CreateEntityCollectionMethod =
+                typeof(EntityCollectionInitializerMetadata).GetDeclaredMethod("CreateEntityCollection");
 
             internal override Expression Emit(List<TranslatorResult> propertyTranslatorResults)
             {
@@ -484,7 +482,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 Debug.Assert(propertyTranslatorResults[1] is CollectionTranslatorResult, "not a collection?");
 
                 var elementType = GetElementType();
-                var createEntityCollectionMethod = _createEntityCollectionMethod.MakeGenericMethod(elementType);
+                var createEntityCollectionMethod = CreateEntityCollectionMethod.MakeGenericMethod(elementType);
 
                 Expression shaper = CodeGenEmitter.Shaper_Parameter;
                 var owner = propertyTranslatorResults[0].Expression;

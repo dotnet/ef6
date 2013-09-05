@@ -6,7 +6,6 @@ namespace System.Data.Entity.SqlServer
     using System.Data.Entity.SqlServer.Utilities;
     using System.Data.SqlTypes;
     using System.IO;
-    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
@@ -118,9 +117,7 @@ namespace System.Data.Entity.SqlServer
             {
                 var writer = new BinaryWriter(memoryStream);
 
-                var writeMethod = spatialProviderValueToReturn.GetType().GetMethod(
-                    "Write", BindingFlags.Public | BindingFlags.Instance,
-                    binder: null, types: new[] { typeof(BinaryWriter) }, modifiers: null);
+                var writeMethod = spatialProviderValueToReturn.GetType().GetPublicInstanceMethod("Write", new[] { typeof(BinaryWriter) });
                 writeMethod.Invoke(spatialProviderValueToReturn, new[] { writer });
                 var sqlBytes = new SqlBytes(memoryStream.ToArray());
 

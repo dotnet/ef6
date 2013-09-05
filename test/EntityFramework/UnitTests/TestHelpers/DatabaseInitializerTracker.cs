@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Text;
     using Moq;
     using Moq.Protected;
@@ -104,7 +105,7 @@ namespace System.Data.Entity
         public void RegisterStrategy()
         {
             var mockContextType = _mockDbContext.Object.GetType();
-            var initMethod = typeof(Database).GetMethod("SetInitializer").MakeGenericMethod(mockContextType);
+            var initMethod = typeof(Database).GetDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
             initMethod.Invoke(null, new object[] { _mockStrategy.Object });
         }
 

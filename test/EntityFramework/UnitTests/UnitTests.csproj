@@ -78,6 +78,7 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
@@ -178,6 +179,7 @@
     <Compile Include="Core\Mapping\Update\Internal\PropagatorTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\Utils\ExternalCallsTests.cs" />
     <Compile Include="Core\Mapping\ViewGeneration\ViewgenContextTests.cs" />
+    <Compile Include="Core\Metadata\Edm\AspProxyTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationEndMemberTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationSetTests.cs" />
     <Compile Include="Core\Metadata\Edm\AssociationTypeTests.cs" />
@@ -207,6 +209,7 @@
     <Compile Include="Core\Metadata\Edm\FacetValuesTests.cs" />
     <Compile Include="Core\Metadata\Edm\ForeignKeyBuilderTests.cs" />
     <Compile Include="Core\Metadata\Edm\FunctionParameterTests.cs" />
+    <Compile Include="Core\Metadata\Edm\ItemCollectionTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataCacheTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataPropertyTests.cs" />
     <Compile Include="Core\Metadata\Edm\MetadataWorkspaceTests.cs" />
@@ -227,15 +230,24 @@
     <Compile Include="Core\Metadata\Edm\StucturalTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\TypeUsageTests.cs" />
     <Compile Include="Core\Objects\DataClasses\TestHelpers\MockHelper.cs" />
+    <Compile Include="Core\Objects\ELinq\ELinqQueryStateTests.cs" />
     <Compile Include="Core\Objects\ELinq\ExpressionConverterTests.cs" />
+    <Compile Include="Core\Objects\ELinq\InitializerMetadataTests.cs" />
+    <Compile Include="Core\Objects\ELinq\LinqExpressionNormalizerTests.cs" />
+    <Compile Include="Core\Objects\ELinq\TypeSystemTests.cs" />
     <Compile Include="Core\Objects\EntityFunctionsTests.cs" />
     <Compile Include="Core\Objects\ExecutionOptionsTests.cs" />
+    <Compile Include="Core\Objects\Internal\BaseProxyImplementorTests.cs" />
     <Compile Include="Core\Objects\Internal\BufferedDataReaderTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityProxyFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityProxyTypeInfoTests.cs" />
     <Compile Include="Core\Objects\Internal\EntityWrapperFactoryTests.cs" />
+    <Compile Include="Core\Objects\Internal\IPocoImplementorTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanFactoryTests.cs" />
     <Compile Include="Core\Objects\Internal\ObjectQueryExecutionPlanTests.cs" />
+    <Compile Include="Core\Objects\Internal\ObjectQueryStateTests.cs" />
+    <Compile Include="Core\Objects\Internal\PocoPropertyAccessorStrategyTests.cs" />
+    <Compile Include="Core\Objects\Internal\SerializableImplementorTests.cs" />
     <Compile Include="Core\Objects\Internal\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntityClient\EntityConnectionStringBuilderTests.cs" />
     <Compile Include="Core\Objects\ELinq\ObjectQueryProviderTests.cs" />

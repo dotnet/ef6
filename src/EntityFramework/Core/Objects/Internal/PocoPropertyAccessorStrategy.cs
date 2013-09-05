@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -16,11 +17,11 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// </summary>
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
-        private static readonly MethodInfo _addToCollectionGeneric =
-            typeof(PocoPropertyAccessorStrategy).GetMethod("AddToCollection", BindingFlags.NonPublic | BindingFlags.Static);
+        internal static readonly MethodInfo AddToCollectionGeneric 
+            = typeof(PocoPropertyAccessorStrategy).GetDeclaredMethod("AddToCollection");
 
-        private static readonly MethodInfo _removeFromCollectionGeneric =
-            typeof(PocoPropertyAccessorStrategy).GetMethod("RemoveFromCollection", BindingFlags.NonPublic | BindingFlags.Static);
+        internal static readonly MethodInfo RemoveFromCollectionGeneric 
+            = typeof(PocoPropertyAccessorStrategy).GetDeclaredMethod("RemoveFromCollection");
 
         private readonly object _entity;
 
@@ -191,7 +192,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var navPropType = GetNavigationPropertyType(type, propertyName);
             var elementType = EntityUtil.GetCollectionElementType(navPropType);
 
-            var addToCollection = _addToCollectionGeneric.MakeGenericMethod(elementType);
+            var addToCollection = AddToCollectionGeneric.MakeGenericMethod(elementType);
             return (Action<object, object>)addToCollection.Invoke(null, null);
         }
 
@@ -253,7 +254,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var navPropType = GetNavigationPropertyType(type, propertyName);
             var elementType = EntityUtil.GetCollectionElementType(navPropType);
 
-            var removeFromCollection = _removeFromCollectionGeneric.MakeGenericMethod(elementType);
+            var removeFromCollection = RemoveFromCollectionGeneric.MakeGenericMethod(elementType);
             return (Func<object, object, bool>)removeFromCollection.Invoke(null, null);
         }
 

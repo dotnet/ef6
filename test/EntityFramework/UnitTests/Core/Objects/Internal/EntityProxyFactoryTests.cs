@@ -10,6 +10,14 @@ namespace System.Data.Entity.Core.Objects.Internal
 
     public class EntityProxyFactoryTests : TestBase
     {
+        [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedLightweightMethod);
+            Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithRelationshipsMethod);
+            Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithoutRelationshipsMethod);
+        }
+
         public class TryGetAssociationTypeFromProxyInfo : TestBase
         {
             [Fact]

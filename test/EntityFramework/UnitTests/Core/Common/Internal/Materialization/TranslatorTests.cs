@@ -15,6 +15,20 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     public class TranslatorTests
     {
         [Fact]
+        public void MethodInfo_fields_are_initialized()
+        {
+            Assert.NotNull(Translator.GenericTranslateColumnMap);
+            Assert.NotNull(Translator.TranslatorVisitor.Translator_MultipleDiscriminatorPolymorphicColumnMapHelper);
+            Assert.NotNull(Translator.TranslatorVisitor.Translator_TypedCreateInlineDelegate);
+        }
+
+        [Fact]
+        public void GetGenericElementsMethod_returns_a_generic_MethodInfo()
+        {
+            Assert.NotNull(Translator.TranslatorVisitor.GetGenericElementsMethod(typeof(int)));
+        }
+
+        [Fact]
         public void Static_TranslateColumnMap_calls_instance_method()
         {
             var typeUsageMock = new Mock<TypeUsage>();

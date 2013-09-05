@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
     using System.Reflection.Emit;
 
@@ -49,8 +50,8 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        private static readonly MethodInfo _stringEquals = typeof(string).GetMethod(
-            "op_Equality", new[] { typeof(string), typeof(string) });
+        internal static readonly MethodInfo StringEquals 
+            = typeof(string).GetDeclaredMethod("op_Equality", new[] { typeof(string), typeof(string) });
 
         private static readonly ConstructorInfo _invalidOperationConstructor =
             typeof(InvalidOperationException).GetConstructor(Type.EmptyTypes);
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
                 gen.Emit(OpCodes.Ldstr, _baseGetters[i].Name);
-                gen.Emit(OpCodes.Call, _stringEquals);
+                gen.Emit(OpCodes.Call, StringEquals);
                 gen.Emit(OpCodes.Brfalse_S, labels[i]);
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Call, _baseGetters[i].GetGetMethod(true));
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 labels[i] = gen.DefineLabel();
                 gen.Emit(OpCodes.Ldarg_1);
                 gen.Emit(OpCodes.Ldstr, _baseSetters[i].Name);
-                gen.Emit(OpCodes.Call, _stringEquals);
+                gen.Emit(OpCodes.Call, StringEquals);
                 gen.Emit(OpCodes.Brfalse_S, labels[i]);
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Ldarg_2);

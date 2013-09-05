@@ -88,6 +88,9 @@
     <Compile Include="..\Common\ByteExtensions.cs">
       <Link>Utilities\ByteExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Common\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Check.cs">
       <Link>Utilities\Check.cs</Link>
     </Compile>
@@ -1761,7 +1764,6 @@
     <Compile Include="Utilities\HashSetExtensions.cs" />
     <Compile Include="Utilities\PropertyInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPath.cs" />
-    <Compile Include="Utilities\TypeExtensions.cs" />
     <Compile Include="Utilities\ValidationContextExtensions.cs" />
     <Compile Include="Validation\DbEntityValidationException.cs" />
     <Compile Include="Validation\DbEntityValidationResult.cs" />

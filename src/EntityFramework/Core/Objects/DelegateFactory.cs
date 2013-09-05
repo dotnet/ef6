@@ -20,9 +20,8 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     internal static class DelegateFactory
     {
-        private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetMethod(
-            "ThrowSetInvalidValue", BindingFlags.Static | BindingFlags.NonPublic, null,
-            new[] { typeof(object), typeof(Type), typeof(string), typeof(string) }, null);
+        private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetDeclaredMethod(
+            "ThrowSetInvalidValue", new[] { typeof(object), typeof(Type), typeof(string), typeof(string) });
 
         /// <summary>
         /// For an OSpace ComplexType returns the delegate to construct the clr instance.
@@ -374,13 +373,13 @@ namespace System.Data.Entity.Core.Objects
             var sourceAccessor = MetadataHelper.GetNavigationPropertyAccessor(targetEntityType, targetMember, sourceMember);
             var targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
 
-            var genericCreateRelatedEndMethod = typeof(DelegateFactory).GetMethod(
-                "CreateGetRelatedEndMethod", BindingFlags.NonPublic | BindingFlags.Static, null,
+            var genericCreateRelatedEndMethod = typeof(DelegateFactory).GetDeclaredMethod(
+                "CreateGetRelatedEndMethod", 
                 new[]
                     {
                         typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor),
                         typeof(NavigationPropertyAccessor)
-                    }, null);
+                    });
             Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method DelegateFactory.CreateGetRelatedEndMethod");
 
             var createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);

@@ -11,6 +11,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ViewGeneration;
     using System.Data.SqlClient;
@@ -136,7 +137,7 @@ namespace ProductivityApiTests
                 "public class DerivedCategory : SimpleModel.Category { }");
 
             var derivedCategoryType = result.CompiledAssembly.GetTypes().Single();
-            var dbContextSet = typeof(DbContext).GetMethod("Set", Type.EmptyTypes);
+            var dbContextSet = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes);
             var dbContextSetOfDerivedCategory = dbContextSet.MakeGenericMethod(derivedCategoryType);
 
             using (var ctx = new AdvancedPatternsMasterContext())
@@ -266,7 +267,7 @@ namespace ProductivityApiTests
             var model = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).Compile();
 
             var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
-            var setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
+            var setMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
             var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
                                               .GetMethods()
                                               .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
@@ -289,7 +290,7 @@ namespace ProductivityApiTests
             assembly.Compile(new AssemblyName("MixedPocoEocoAssembly"));
 
             var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
-            var setMethod = typeof(DbContext).GetMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
+            var setMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
             var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
                                               .GetMethods()
                                               .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
