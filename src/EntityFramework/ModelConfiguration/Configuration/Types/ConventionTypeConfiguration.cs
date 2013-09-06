@@ -227,9 +227,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             var propertyConfiguration = _entityTypeConfiguration != null
-                                            ? _entityTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                                            ? _entityTypeConfiguration().Property(propertyPath)
                                             : _complexTypeConfiguration != null
-                                                  ? _complexTypeConfiguration().Property(propertyPath, OverridableConfigurationParts.None)
+                                                  ? _complexTypeConfiguration().Property(propertyPath)
                                                   : null;
 
             return new ConventionPrimitivePropertyConfiguration(propertyInfo, () => propertyConfiguration);
