@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
 {
+    using System.Linq;
     using System.Diagnostics.CodeAnalysis;
 
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -29,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
                             new ColumnAttributeConvention(),
                             new InversePropertyAttributeConvention(),
                             new ForeignKeyPrimitivePropertyAttributeConvention(),
-                        },
+                        }.Reverse(),
                 entityModelConventions:
                     new IConvention[]
                         {

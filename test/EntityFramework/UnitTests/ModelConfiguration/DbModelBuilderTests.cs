@@ -214,7 +214,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void ConventionsConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ConventionsConfiguration>(4);
+            VerifyFieldCount<ConventionsConfiguration>(5);
         }
 
         [Fact]

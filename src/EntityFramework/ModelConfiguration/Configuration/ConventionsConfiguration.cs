@@ -27,6 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private readonly List<IConvention> _conceptualModelConventions = new List<IConvention>();
         private readonly List<IConvention> _conceptualToStoreMappingConventions = new List<IConvention>();
         private readonly List<IConvention> _storeModelConventions = new List<IConvention>();
+        private readonly ConventionSet _initialConventionSet;
 
         internal ConventionsConfiguration()
             : this(V2ConventionSet.Conventions)
@@ -45,6 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _conceptualModelConventions.AddRange(conventionSet.ConceptualModelConventions);
             _conceptualToStoreMappingConventions.AddRange(conventionSet.ConceptualToStoreMappingConventions);
             _storeModelConventions.AddRange(conventionSet.StoreModelConventions);
+            _initialConventionSet = conventionSet;
         }
 
         private ConventionsConfiguration(ConventionsConfiguration source)
@@ -106,7 +108,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 if (IsConfigurationConvention(c.GetType()))
                 {
                     invalidType = false;
-                    _configurationConventions.Add(c);
+                    var existingConventionIndex = _configurationConventions.FindIndex(
+                            initialConvention => _initialConventionSet.ConfigurationConventions.Contains(initialConvention));
+                    existingConventionIndex = existingConventionIndex == -1
+                                                  ? _configurationConventions.Count
+                                                  : existingConventionIndex;
+                    _configurationConventions.Insert(existingConventionIndex, c);
                 }
 
                 if (IsConceptualModelConvention(c.GetType()))
@@ -387,7 +394,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 var configurationConvention
                     = convention as IConfigurationConvention;
@@ -412,7 +419,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 var modelConfigurationConvention
                     = convention as IConfigurationConvention<Type>;
@@ -441,7 +448,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<Type, TStructuralTypeConfiguration>;
@@ -474,7 +481,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(modelConfiguration);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 var propertyConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo>;
@@ -503,7 +510,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var propertyConfigurationType
                 = StructuralTypeConfiguration.GetPropertyConfigurationType(propertyInfo.PropertyType);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 new PropertyConfigurationConventionDispatcher(
                     convention, propertyConfigurationType, propertyInfo, propertyConfiguration, modelConfiguration)
@@ -528,7 +535,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(propertyInfo);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            foreach (var convention in _configurationConventions)
+            foreach (var convention in ((IList<IConvention>)_configurationConventions).Reverse())
             {
                 var propertyTypeConfigurationConvention
                     = convention as IConfigurationConvention<PropertyInfo, TStructuralTypeConfiguration>;
