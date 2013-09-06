@@ -108,12 +108,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     != OverridableConfigurationParts.OverridableInCSpace
                     && !existingConfiguration.IsCompatible(this, inCSpace: true, errorMessage: out errorMessage))
                 {
-                    var propertyInfo = property.GetClrPropertyInfo();
-                    var declaringTypeName = propertyInfo == null
-                                                ? string.Empty
-                                                : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
-                                                                         FullNameWithNesting();
-                    throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
+                    if (OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInCSpace))
+                    {
+                        OverrideFrom(existingConfiguration);
+                    }
+                    else
+                    {
+                        var propertyInfo = property.GetClrPropertyInfo();
+                        var declaringTypeName = propertyInfo == null
+                            ? string.Empty
+                            : ObjectContextTypeCache.GetObjectType(propertyInfo.DeclaringType).
+                                FullNameWithNesting();
+                        throw Error.ConflictingPropertyConfiguration(property.Name, declaringTypeName, errorMessage);
+                    }
                 }
 
                 // Choose the more derived type for the merged configuration
@@ -245,7 +252,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     && !fillFromExistingConfiguration
                     && !existingConfiguration.IsCompatible(this, inCSpace: false, errorMessage: out errorMessage))
                 {
-                    throw Error.ConflictingColumnConfiguration(column.Name, table.Name, errorMessage);
+                    if (OverridableConfigurationParts.HasFlag(OverridableConfigurationParts.OverridableInSSpace))
+                    {
+                        OverrideFrom(existingConfiguration);
+                    }
+                    else
+                    {
+                        throw Error.ConflictingColumnConfiguration(column.Name, table.Name, errorMessage);
+                    }
                 }
 
                 FillFrom(existingConfiguration, inCSpace: false);
@@ -365,6 +379,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
 
             OverridableConfigurationParts &= other.OverridableConfigurationParts;
+        }
+
+        internal virtual void OverrideFrom(PrimitivePropertyConfiguration other)
+        {
+            DebugCheck.NotNull(other);
+
+            if (other.ColumnName != null) ColumnName = null;
+            if (other.ParameterName != null) ParameterName = null;
+            if (other.ColumnOrder != null) ColumnOrder = null;
+            if (other.ColumnType != null) ColumnType = null;
+            if (other.ConcurrencyMode != null) ConcurrencyMode = null;
+            if (other.DatabaseGeneratedOption != null) DatabaseGeneratedOption = null;
+            if (other.IsNullable != null) IsNullable = null;
         }
 
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#")]

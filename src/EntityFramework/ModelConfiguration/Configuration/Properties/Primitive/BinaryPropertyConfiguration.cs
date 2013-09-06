@@ -96,6 +96,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             }
         }
 
+        internal override void OverrideFrom(PrimitivePropertyConfiguration other)
+        {
+            DebugCheck.NotNull(other);
+
+            base.OverrideFrom(other);
+
+            var binaryPropertyConfiguration = other as BinaryPropertyConfiguration;
+
+            if (binaryPropertyConfiguration == null) return;
+            if (binaryPropertyConfiguration.IsRowVersion != null) IsRowVersion = null;
+        }
+        
         internal override bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             var binaryRhs = other as BinaryPropertyConfiguration;
