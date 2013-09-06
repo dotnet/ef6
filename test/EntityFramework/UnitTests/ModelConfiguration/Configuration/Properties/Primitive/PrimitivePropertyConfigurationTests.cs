@@ -327,6 +327,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var configurationRequired = CreateConfiguration();
             configurationRequired.IsNullable = false;
+            configurationRequired.OverridableConfigurationParts = OverridableConfigurationParts.None;
 
             var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
