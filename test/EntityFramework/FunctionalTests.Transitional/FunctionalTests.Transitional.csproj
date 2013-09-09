@@ -150,7 +150,7 @@
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />
-    <Compile Include="TestHelpers\AzureTestHelpers.cs" />
+    <Compile Include="TestHelpers\DatabaseTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
@@ -167,7 +167,6 @@
     </Compile>
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
-    <Compile Include="TestHelpers\LocalDbTestHelpers.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />
     <Compile Include="TestHelpers\TestGroup.cs" />

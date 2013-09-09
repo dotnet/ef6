@@ -790,12 +790,12 @@ namespace System.Data.Entity.Infrastructure
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
                     Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString))
+                    if (!DatabaseTestHelpers.IsSqlAzure(contextInfo.ConnectionString))
                     {
                         Assert.True(contextInfo.ConnectionString.Contains(@"Integrated Security=True"));
                     }
 
-                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    if (!DatabaseTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !DatabaseTestHelpers.IsLocalDb(contextInfo.ConnectionString))
                     {
                         Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
                     }
@@ -827,7 +827,7 @@ namespace System.Data.Entity.Infrastructure
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
                     Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    if (!DatabaseTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !DatabaseTestHelpers.IsLocalDb(contextInfo.ConnectionString))
                     {
                         Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
                     }
@@ -897,7 +897,7 @@ namespace System.Data.Entity.Infrastructure
                     Assert.Equal(DbConnectionStringOrigin.Convention, contextInfo.ConnectionStringOrigin);
                     Assert.True(contextInfo.ConnectionString.Contains(@"Initial Catalog=foo"));
                     Assert.Equal("System.Data.SqlClient", contextInfo.ConnectionProviderName);
-                    if (!AzureTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !LocalDbTestHelpers.IsLocalDb(contextInfo.ConnectionString))
+                    if (!DatabaseTestHelpers.IsSqlAzure(contextInfo.ConnectionString) && !DatabaseTestHelpers.IsLocalDb(contextInfo.ConnectionString))
                     {
                         Assert.True(contextInfo.ConnectionString.Contains(@"Data Source=.\SQLEXPRESS"));
                     }

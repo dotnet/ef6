@@ -45,7 +45,7 @@ namespace System.Data.Entity
             if (SkipForSqlAzure)
             {
                 var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
-                if (AzureTestHelpers.IsSqlAzure(connectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(connectionString))
                 {
                     return false;
                 }
@@ -54,7 +54,7 @@ namespace System.Data.Entity
             if (SkipForLocalDb)
             {
                 var connectionString = ConfigurationManager.AppSettings["BaseConnectionString"];
-                if (LocalDbTestHelpers.IsLocalDb(connectionString))
+                if (DatabaseTestHelpers.IsLocalDb(connectionString))
                 {
                     return false;
                 }

@@ -55,7 +55,7 @@ namespace System.Data.Entity.Migrations
             }
         }
 
-        [MigrationsTheory]
+        [MigrationsTheory(SkipForSqlAzure = true, Justification = "sp_grantlogin is not supported on Sql Azure")]
         public void Can_run_custom_sql_outside_of_transaction()
         {
             ResetDatabase();

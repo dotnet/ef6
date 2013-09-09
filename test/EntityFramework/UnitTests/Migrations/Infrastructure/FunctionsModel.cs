@@ -106,7 +106,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
         {
             using (var context = new TestContext())
             {
-                var providerInfo = AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString)
+                var providerInfo = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString)
                                        ? ProviderRegistry.SqlAzure2012_ProviderInfo
                                        : ProviderRegistry.Sql2008_ProviderInfo;
                                                    

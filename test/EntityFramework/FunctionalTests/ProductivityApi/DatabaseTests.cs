@@ -38,7 +38,7 @@ namespace ProductivityApiTests
             {
                 connection.Open();
 
-                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
                     CreateLoginForSqlAzure(connection);
                 }
@@ -115,7 +115,7 @@ END";
             {
                 // SQL Azure and LocalDB do not support attaching databases
                 var connectionString = context.Database.Connection.ConnectionString;
-                if (AzureTestHelpers.IsSqlAzure(connectionString) || LocalDbTestHelpers.IsLocalDb(connectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(connectionString) || DatabaseTestHelpers.IsLocalDb(connectionString))
                 {
                     return;
                 }
@@ -323,7 +323,7 @@ END";
             using (var connection = new SqlConnection(SimpleConnectionString<NoMasterPermissionContext>()))
             {
                 connection.Open();
-                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
                     // Scenario not supported on SqlAzure, need to be connected to master
                     // in order to view existing users
@@ -464,7 +464,7 @@ END";
         {
             using (var context = new AttachedContext(SimpleAttachConnectionString<AttachedContext>()))
             {
-                if (AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
                 {
                     // SQL Azure does not suppot attaching databases
                     return;
@@ -1205,7 +1205,7 @@ END";
         [Fact]
         public void If_connection_is_changed_to_point_to_different_server_then_operations_that_use_OriginalConnectionString_pick_up_this_change()
         {
-            var changedServer = LocalDbTestHelpers.IsLocalDb(SimpleConnectionString("")) ? @".\SQLEXPRESS" : @"(localdb)\v11.0";
+            var changedServer = DatabaseTestHelpers.IsLocalDb(SimpleConnectionString("")) ? @".\SQLEXPRESS" : @"(localdb)\v11.0";
             var changedConnectionString = string.Format(
                 CultureInfo.InvariantCulture,
                 @"Data Source={0};Initial Catalog=MutatingConnectionContext4;Integrated Security=True", changedServer);

@@ -159,7 +159,7 @@ namespace System.Data.Entity.Migrations
         public override void DropDatabase()
         {
             SqlConnection.ClearAllPools();
-            if (AzureTestHelpers.IsSqlAzure(ConnectionString))
+            if (DatabaseTestHelpers.IsSqlAzure(ConnectionString))
             {
                 string azureConnectionString = ConnectionString + ";Database=Master;";
                 ExecuteNonQuery(

@@ -88,7 +88,7 @@ namespace ProductivityApiUnitTests
             using (var connection = new SqlConnection(SimpleConnectionString("master")))
             {
                 connection.Open();
-                if (AzureTestHelpers.IsSqlAzure(connection.ConnectionString))
+                if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
                     bool loginExists = false;                    
                     using (var command = connection.CreateCommand())

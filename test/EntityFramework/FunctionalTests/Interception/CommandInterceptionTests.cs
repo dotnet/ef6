@@ -152,7 +152,7 @@ namespace System.Data.Entity.Interception
             Assert.True(executedLog.TaskStatus.HasFlag(TaskStatus.Faulted));
         }
 
-        [Fact]
+        [ExtendedFact(SkipForSqlAzure = true, Justification = "Fails on Azure due to issue #1148")]
         public void Async_commands_that_are_canceled_are_still_intercepted()
         {
             var logger = new CommandLogger();

@@ -4,13 +4,18 @@ namespace System.Data.Entity.Metadata
 {
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Migrations;
     using Xunit;
 
-    public class MetadataCachingTests : FunctionalTestBase
+    public class MetadataCachingTests : FunctionalTestBase, IUseFixture<MetadataCachingTestsFixture>
     {
         private static readonly string connectionString = string.Format(
             @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl;provider=System.Data.SqlClient;provider connection string=""{0}""",
-            ModelHelpers.SimpleConnectionString("tempdb"));
+            ModelHelpers.SimpleConnectionString("MetadataCachingTests"));
+
+        public void SetFixture(MetadataCachingTestsFixture data)
+        {
+        }
 
         [Fact]
         public void Verify_that_metadata_is_the_same_for_two_workspaces_created_from_two_entity_connections_with_same_connection_strings()
@@ -44,7 +49,7 @@ namespace System.Data.Entity.Metadata
         {
             var connectionString2 = string.Format(
                  @"metadata=res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.msl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.ssdl|res://EntityFramework.FunctionalTests/System.Data.Entity.Metadata.MetadataCachingModel.csdl;provider=System.Data.SqlClient;provider connection string=""{0}""",
-                ModelHelpers.SimpleConnectionString("tempdb"));
+                ModelHelpers.SimpleConnectionString("MetadataCachingTests"));
 
             var connection1 = new EntityConnection(connectionString);
             var connection2 = new EntityConnection(connectionString2);
@@ -103,6 +108,15 @@ namespace System.Data.Entity.Metadata
                 Assert.Same(weakReferences[1].Target, connection2.GetMetadataWorkspace().GetItemCollection(DataSpace.SSpace));
                 Assert.Same(weakReferences[2].Target, connection2.GetMetadataWorkspace().GetItemCollection(DataSpace.CSSpace));
             }
+        }
+    }
+
+    public class MetadataCachingTestsFixture
+    {
+        public MetadataCachingTestsFixture()
+        {
+            var database = new SqlTestDatabase("MetadataCachingTests");
+            database.EnsureDatabase();
         }
     }
 }

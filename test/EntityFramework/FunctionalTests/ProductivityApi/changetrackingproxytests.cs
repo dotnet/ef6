@@ -27,7 +27,7 @@ namespace ProductivityApiTests
 
             using (var context = new HaveToDoContext())
             {
-                _isSqlAzure = AzureTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString);
+                _isSqlAzure = DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString);
                 if (!_isSqlAzure)
                 {
                     context.Database.Initialize(force: false);

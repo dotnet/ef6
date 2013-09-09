@@ -2,6 +2,11 @@
 
 namespace ProductivityApiTests
 {
+    using AdvancedPatternsModel;
+    using AllTypeKeysModel;
+    using ConcurrencyModel;
+    using DaFunc;
+    using SimpleModel;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -12,18 +17,13 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Validation;
     using System.Data.SqlClient;
     using System.Globalization;
     using System.Linq;
     using System.Transactions;
-    using AdvancedPatternsModel;
-    using AllTypeKeysModel;
-    using ConcurrencyModel;
-    using DaFunc;
-    using SimpleModel;
     using Xunit;
     using Xunit.Extensions;
 
@@ -3485,15 +3485,21 @@ namespace ProductivityApiTests
                 connectionString = context.Database.Connection.ConnectionString;
             }
 
-            using (new TransactionScope())
+            // this only works for integrated security, or when password is persisted after connecting
+            // otherwise we can't connect to database during context initialization (password is gone from connection string)
+            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+                DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
-                using (var connection = new SqlConnection(connectionString))
+                using (new TransactionScope())
                 {
-                    connection.Open();
-                    connection.EnlistTransaction(Transaction.Current);
-                    using (var context = new TransactionTestsContext(connection, false))
+                    using (var connection = new SqlConnection(connectionString))
                     {
-                        context.Entities.Count();
+                        connection.Open();
+                        connection.EnlistTransaction(Transaction.Current);
+                        using (var context = new TransactionTestsContext(connection, false))
+                        {
+                            context.Entities.Count();
+                        }
                     }
                 }
             }
@@ -3510,15 +3516,21 @@ namespace ProductivityApiTests
                 connectionString = context.Database.Connection.ConnectionString;
             }
 
-            using (var connection = new SqlConnection(connectionString))
+            // this only works for integrated security, or when password is persisted after connecting
+            // otherwise we can't connect to database during context initialization (password is gone from connection string)
+            if (DatabaseTestHelpers.IsIntegratedSecutity(connectionString) ||
+                DatabaseTestHelpers.PersistsSecurityInfo(connectionString))
             {
-                connection.Open();
-                using (var transaction = connection.BeginTransaction())
+                using (var connection = new SqlConnection(connectionString))
                 {
-                    using (var context = new TransactionTestsContext(connection, false))
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
                     {
-                        context.Database.UseTransaction(transaction);
-                        context.Entities.Count();
+                        using (var context = new TransactionTestsContext(connection, false))
+                        {
+                            context.Database.UseTransaction(transaction);
+                            context.Entities.Count();
+                        }
                     }
                 }
             }

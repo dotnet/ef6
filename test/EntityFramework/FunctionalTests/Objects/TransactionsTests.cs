@@ -9,6 +9,7 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
@@ -516,36 +517,42 @@ namespace System.Data.Entity.Objects
 
             using (var connection = SimpleConnection<NonInitUseTransaction>())
             {
-                connection.Open();
-
-                using (var transaction = connection.BeginTransaction())
+                // this test only works for integrated security, or when password is persisted after connecting
+                // otherwise we can't connect to database during context initialization (password is gone from connection string)
+                if (DatabaseTestHelpers.IsIntegratedSecutity(connection.ConnectionString) || 
+                    DatabaseTestHelpers.PersistsSecurityInfo(connection.ConnectionString))
                 {
+                    connection.Open();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
+                        {
+                            context.Database.UseTransaction(transaction);
+
+                            Assert.False(UseTransactionInitializer.InitializerRun);
+
+                            context.Categories.Add(new Category("Fresca"));
+
+                            Assert.True(UseTransactionInitializer.InitializerRun);
+
+                            context.SaveChanges();
+
+                            Assert.Equal(
+                                new[] { "Fresca", "Pepsi" },
+                                context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
+                        }
+                    }
+
                     using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
                     {
-                        context.Database.UseTransaction(transaction);
-
-                        Assert.False(UseTransactionInitializer.InitializerRun);
-
-                        context.Categories.Add(new Category("Fresca"));
-
-                        Assert.True(UseTransactionInitializer.InitializerRun);
-
-                        context.SaveChanges();
-
+                        // Note that the initializer did not use the transaction because it was run with
+                        // a cloned connection. We did a lot of work around using the same connection instead
+                        // of cloning it, but this caused more problems than it fixed.
                         Assert.Equal(
-                            new[] { "Fresca", "Pepsi" },
+                            new[] { "Pepsi" },
                             context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
                     }
-                }
-
-                using (var context = new NonInitUseTransaction(connection, contextOwnsConnection: false))
-                {
-                    // Note that the initializer did not use the transaction because it was run with
-                    // a cloned connection. We did a lot of work around using the same connection instead
-                    // of cloning it, but this caused more problems than it fixed.
-                    Assert.Equal(
-                        new[] { "Pepsi" },
-                        context.Categories.Select(c => c.Id).OrderBy(c => c).ToList());
                 }
             }
         }

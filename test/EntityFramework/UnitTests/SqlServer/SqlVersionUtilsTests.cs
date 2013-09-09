@@ -129,7 +129,7 @@ namespace System.Data.Entity.SqlServer
                     var connection = context.Database.Connection;
                     connection.Open();
 
-                    var expectedServerType = AzureTestHelpers.IsSqlAzure(connection.ConnectionString) ? ServerType.Cloud : ServerType.OnPremises;
+                    var expectedServerType = DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString) ? ServerType.Cloud : ServerType.OnPremises;
                     Assert.Equal(expectedServerType, SqlVersionUtils.GetServerType(connection));
 
                     connection.Close();
