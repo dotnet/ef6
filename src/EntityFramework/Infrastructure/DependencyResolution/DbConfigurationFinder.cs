@@ -29,8 +29,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             if (contextTypeHint != null)
             {
-                var typeFromAttribute = contextTypeHint.GetCustomAttributes(inherit: true)
-                    .OfType<DbConfigurationTypeAttribute>()
+                var typeFromAttribute = contextTypeHint.GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)
                     .Select(a => a.ConfigurationType)
                     .FirstOrDefault();
 
@@ -81,7 +80,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                     t => t.IsSubclassOf(typeof(DbContext))
                          && !t.IsAbstract
                          && !t.IsGenericType
-                         && t.GetCustomAttributes(typeof(DbConfigurationTypeAttribute), inherit: true).Any())
+                         && t.GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true).Any())
                 .ToList();
 
             return contextTypes.Count == 1 ? contextTypes[0] : null;

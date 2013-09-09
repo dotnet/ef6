@@ -36,7 +36,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
             var attrs = new HashSet<Attribute>(GetTypeDescriptor(type).GetAttributes().Cast<Attribute>());
 
             // Data Services workaround
-            foreach (var attribute in type.GetCustomAttributes(true).Cast<Attribute>()
+            foreach (var attribute in type.GetCustomAttributes<Attribute>(inherit: true)
                                           .Where(
                                               a =>
                                               a.GetType().FullName.Equals(
@@ -64,7 +64,7 @@ namespace System.Data.Entity.ModelConfiguration.Utilities
                            = (propertyDescriptor != null)
                                    ? propertyDescriptor.Attributes.Cast<Attribute>()
                            // Fallback to standard reflection (non-public properties)
-                                   : propertyInfo.GetCustomAttributes(true).Cast<Attribute>();
+                                   : propertyInfo.GetCustomAttributes<Attribute>(inherit: true);
 
                        // Get the attributes for the property's type and exclude them
                        var propertyTypeAttributes = GetAttributes(propertyInfo.PropertyType);

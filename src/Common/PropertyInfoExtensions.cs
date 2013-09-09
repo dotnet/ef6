@@ -1,6 +1,10 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if EF_FUNCTIONALS
+namespace System.Data.Entity.Functionals.Utilities
+#else
 namespace System.Data.Entity.Utilities
+#endif
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -113,15 +117,65 @@ namespace System.Data.Entity.Utilities
         {
             Debug.Assert(propertyInfo.DeclaringType != null);
 
+            const BindingFlags defaultBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+
             return propertyInfo.DeclaringType == propertyInfo.ReflectedType
                        ? propertyInfo
                        : propertyInfo
                              .DeclaringType
-                             .GetProperties(PropertyFilter.DefaultBindingFlags)
+                             .GetProperties(defaultBindingFlags)
                              .SingleOrDefault(
                                  p => p.Name == propertyInfo.Name
                                       && !p.GetIndexParameters().Any()
                                       && p.PropertyType == propertyInfo.PropertyType);
+        }
+
+        public static IEnumerable<PropertyInfo> GetPropertiesInHierarchy(this PropertyInfo property)
+        {
+            DebugCheck.NotNull(property);
+
+            var collection = new List<PropertyInfo> { property };
+            CollectProperties(property, collection);
+            return collection.Distinct();
+        }
+
+        private static void CollectProperties(PropertyInfo property, IList<PropertyInfo> collection)
+        {
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(collection);
+
+            FindNextProperty(property, collection, getter: true);
+            FindNextProperty(property, collection, getter: false);
+        }
+
+        private static void FindNextProperty(PropertyInfo property, IList<PropertyInfo> collection, bool getter)
+        {
+            DebugCheck.NotNull(property);
+            DebugCheck.NotNull(collection);
+
+            var method = getter ? property.GetGetMethod(nonPublic: true) : property.GetSetMethod(nonPublic: true);
+
+            if (method != null)
+            {
+                var nextType = method.DeclaringType.BaseType;
+                if (nextType != null && nextType != typeof(object))
+                {
+                    var baseMethod = method.GetBaseDefinition();
+                    const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
+
+                    var nextProperty =
+                        (from p in nextType.GetProperties(bindingFlags)
+                         let candidateMethod = getter ? p.GetGetMethod(nonPublic: true) : p.GetSetMethod(nonPublic: true)
+                         where candidateMethod != null && candidateMethod.GetBaseDefinition() == baseMethod
+                         select p).FirstOrDefault();
+
+                    if (nextProperty != null)
+                    {
+                        collection.Add(nextProperty);
+                        CollectProperties(nextProperty, collection);
+                    }
+                }
+            }
         }
     }
 }

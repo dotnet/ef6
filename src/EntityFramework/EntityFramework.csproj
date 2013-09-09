@@ -106,6 +106,15 @@
     <Compile Include="..\Common\StringExtensions.cs">
       <Link>Utilities\StringExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Common\MemberInfoExtensions.cs">
+      <Link>Utilities\MemberInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\AssemblyExtensions.cs">
+      <Link>Utilities\AssemblyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\Common\PropertyInfoExtensions.cs">
+      <Link>Utilities\PropertyInfoExtensions.cs</Link>
+    </Compile>
     <Compile Include="Core\Mapping\IsNullConditionMapping.cs" />
     <Compile Include="Core\Mapping\MappingItem.cs" />
     <Compile Include="Core\Mapping\ValueConditionMapping.cs" />
@@ -1418,12 +1427,10 @@
     <Compile Include="Migrations\Design\VisualBasicMigrationCodeGenerator.cs" />
     <Compile Include="Migrations\Edm\EdmXNames.cs" />
     <Compile Include="Migrations\Edm\ModelCompressor.cs" />
-    <Compile Include="Utilities\AssemblyExtensions.cs" />
     <Compile Include="Utilities\DbContextExtensions.cs" />
     <Compile Include="Utilities\ExpressionExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utilities\MemberInfoExtensions.cs" />
     <Compile Include="Utilities\ProviderRowFinder.cs" />
     <Compile Include="Utilities\TaskHelper.cs" />
     <Compile Include="Utilities\TypeFinder.cs" />
@@ -1764,7 +1771,6 @@
     <Compile Include="Utilities\DbProviderInfoExtensions.cs" />
     <Compile Include="Utilities\DbProviderManifestExtensions.cs" />
     <Compile Include="Utilities\HashSetExtensions.cs" />
-    <Compile Include="Utilities\PropertyInfoExtensions.cs" />
     <Compile Include="ModelConfiguration\Utilities\PropertyPath.cs" />
     <Compile Include="Utilities\ValidationContextExtensions.cs" />
     <Compile Include="Validation\DbEntityValidationException.cs" />

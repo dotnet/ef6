@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Linq;
     using System.Reflection;
     using Xunit.Sdk;
@@ -25,8 +26,7 @@ namespace System.Data.Entity.Migrations
         {
             var methodVariants
                 = method
-                    .GetCustomAttributes(typeof(VariantAttribute), true)
-                    .Cast<VariantAttribute>()
+                    .GetCustomAttributes<VariantAttribute>(inherit: true)
                     .ToList();
 
             if (methodVariants.Any())
@@ -36,9 +36,8 @@ namespace System.Data.Entity.Migrations
 
             var typeVariants
                 = method.DeclaringType
-                        .GetCustomAttributes(typeof(VariantAttribute), true)
-                        .Cast<VariantAttribute>()
-                        .ToList();
+                    .GetCustomAttributes<VariantAttribute>(inherit: true)
+                    .ToList();
 
             if (typeVariants.Any())
             {

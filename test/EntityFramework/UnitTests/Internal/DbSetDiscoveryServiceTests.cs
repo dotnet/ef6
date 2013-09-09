@@ -10,6 +10,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -488,10 +489,7 @@ namespace System.Data.Entity.Internal
 
         private static AttributeUsageAttribute GetDbSetDiscoveryAttributeUsage()
         {
-            return
-                (AttributeUsageAttribute)typeof(SuppressDbSetInitializationAttribute).GetCustomAttributes(
-                    typeof(AttributeUsageAttribute),
-                    inherit: false).Single();
+            return typeof(SuppressDbSetInitializationAttribute).GetCustomAttributes<AttributeUsageAttribute>(inherit: false).Single();
         }
 
         #endregion

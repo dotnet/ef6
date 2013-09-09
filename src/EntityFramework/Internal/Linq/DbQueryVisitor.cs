@@ -49,7 +49,7 @@ namespace System.Data.Entity.Internal.Linq
                     // as a function.
                     var context = GetContextFromConstantExpression(memberExpression.Expression, memberExpression.Member);
                     if (context != null
-                        && !node.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false).Any()
+                        && !node.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).Any()
                         && node.Method.GetParameters().Length == 0)
                     {
                         var expression =

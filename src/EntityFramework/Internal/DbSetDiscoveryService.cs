@@ -164,10 +164,8 @@ namespace System.Data.Entity.Internal
         /// </summary>
         private static bool DbSetPropertyShouldBeInitialized(PropertyInfo propertyInfo)
         {
-            return propertyInfo.GetCustomAttributes(typeof(SuppressDbSetInitializationAttribute), inherit: false).Length
-                   == 0 &&
-                   propertyInfo.DeclaringType.GetCustomAttributes(
-                       typeof(SuppressDbSetInitializationAttribute), inherit: false).Length == 0;
+            return !propertyInfo.GetCustomAttributes<SuppressDbSetInitializationAttribute>(inherit: false).Any() &&
+                   !propertyInfo.DeclaringType.GetCustomAttributes<SuppressDbSetInitializationAttribute>(inherit: false).Any();
         }
 
         #endregion

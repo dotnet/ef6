@@ -4,7 +4,9 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Entity.Core;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
     using Moq;
     using Xunit;
 
@@ -63,7 +65,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void DbUpdateException_is_marked_as_Serializable()
         {
-            Assert.True(typeof(DbUpdateException).GetCustomAttributes(typeof(SerializableAttribute), inherit: false).Any());
+            Assert.True(typeof(DbUpdateException).GetCustomAttributes<SerializableAttribute>(inherit: false).Any());
         }
 
         [Fact] // CodePlex 1107

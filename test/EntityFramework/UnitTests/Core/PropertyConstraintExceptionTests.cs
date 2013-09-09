@@ -5,7 +5,9 @@ namespace System.Data.Entity.Core
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class PropertyConstraintExceptionTests : TestBase
@@ -116,7 +118,7 @@ namespace System.Data.Entity.Core
         [Fact]
         public void PropertyConstraintException_is_marked_as_Serializable()
         {
-            Assert.True(typeof(PropertyConstraintException).GetCustomAttributes(typeof(SerializableAttribute), inherit: false).Any());
+            Assert.True(typeof(PropertyConstraintException).GetCustomAttributes<SerializableAttribute>(inherit: false).Any());
         }
     }
 }

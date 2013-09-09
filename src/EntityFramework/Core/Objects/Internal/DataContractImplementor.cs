@@ -3,6 +3,8 @@
 namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Runtime.Serialization;
@@ -30,12 +32,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal DataContractImplementor(EntityType ospaceEntityType)
         {
             _baseClrType = ospaceEntityType.ClrType;
-
-            var attributes = (DataContractAttribute[])_baseClrType.GetCustomAttributes(typeof(DataContractAttribute), false);
-            if (attributes.Length > 0)
-            {
-                _dataContract = attributes[0];
-            }
+            _dataContract = _baseClrType.GetCustomAttributes<DataContractAttribute>(inherit: false).FirstOrDefault();
         }
 
         internal void Implement(TypeBuilder typeBuilder)

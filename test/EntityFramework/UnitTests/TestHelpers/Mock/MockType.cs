@@ -32,6 +32,8 @@ namespace System.Data.Entity
             Setup(t => t.Equals(It.IsAny<object>())).Returns<Type>(t => ReferenceEquals(Object, t));
             Setup(t => t.ToString()).Returns(typeName);
             Setup(t => t.Namespace).Returns(@namespace);
+            Setup(t => t.GetCustomAttributes(typeof(Attribute), It.IsAny<bool>())).Returns(new Attribute[0]);
+            Setup(t => t.GetCustomAttributes(typeof(FlagsAttribute), It.IsAny<bool>())).Returns(new FlagsAttribute[0]);
 
             this.Protected()
                 .Setup<PropertyInfo>(

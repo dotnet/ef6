@@ -55,7 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
 
                 enumType = _mappingContext.Model.AddEnumType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
-                enumType.IsFlags = type.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+                enumType.IsFlags = type.GetCustomAttributes<FlagsAttribute>(inherit: false).Any();
                 enumType.SetClrType(type);
 
                 enumType.UnderlyingType = primitiveType;

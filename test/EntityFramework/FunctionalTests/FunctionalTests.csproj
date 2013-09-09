@@ -188,6 +188,15 @@
     <Compile Include="..\..\..\src\Common\DebugCheck.cs">
       <Link>Utilities\DebugCheck.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\src\Common\MemberInfoExtensions.cs">
+      <Link>Utilities\MemberInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\AssemblyExtensions.cs">
+      <Link>Utilities\AssemblyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\PropertyInfoExtensions.cs">
+      <Link>Utilities\PropertyInfoExtensions.cs</Link>
+    </Compile>
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
     <Compile Include="CodeFirst\EntitySplittingTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />

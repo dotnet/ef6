@@ -136,7 +136,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 !SessionData.TypesInLoading.ContainsKey(clrType.FullName), "This should be called only after looking in typesInLoading");
             Debug.Assert(
                 SessionData.EdmItemErrors.Count > 0 || // had an error during loading
-                clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/).Length == 0 || // not a type we track
+                !clrType.GetCustomAttributes<EdmTypeAttribute>(inherit: false).Any() || // not a type we track
                 SourceAssembly != clrType.Assembly, // not from this assembly
                 "Given that we don't have any error, if the type is part of this assembly, it should not be loaded from the cache");
 
@@ -201,9 +201,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </summary>
         private void LoadRelationshipTypes()
         {
-            foreach (
-                EdmRelationshipAttribute roleAttribute in
-                    SourceAssembly.GetCustomAttributes(typeof(EdmRelationshipAttribute), false /*inherit*/))
+            foreach (var roleAttribute in SourceAssembly.GetCustomAttributes<EdmRelationshipAttribute>())
             {
                 // Check if there is an entry already with this name
                 if (TryFindNullParametersInRelationshipAttribute(roleAttribute))
@@ -282,11 +280,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             EdmType edmType = null;
 
-            var typeAttributes = (EdmTypeAttribute[])clrType.GetCustomAttributes(typeof(EdmTypeAttribute), false /*inherit*/);
+            var typeAttributes = clrType.GetCustomAttributes<EdmTypeAttribute>(inherit: false);
 
             // the CLR doesn't allow types to have duplicate/multiple attribute declarations
 
-            if (typeAttributes.Length != 0)
+            if (typeAttributes.Any())
             {
                 if (clrType.IsNested)
                 {
@@ -294,7 +292,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         new EdmItemError(Strings.NestedClassNotSupported(clrType.FullName, clrType.Assembly.FullName)));
                     return;
                 }
-                var typeAttribute = typeAttributes[0];
+                var typeAttribute = typeAttributes.First();
                 var cspaceTypeName = String.IsNullOrEmpty(typeAttribute.Name) ? clrType.Name : typeAttribute.Name;
                 if (String.IsNullOrEmpty(typeAttribute.NamespaceName)
                     && clrType.Namespace == null)
@@ -307,13 +305,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                               ? clrType.Namespace
                                               : typeAttribute.NamespaceName;
 
-                if (typeAttribute.GetType()
-                    == typeof(EdmEntityTypeAttribute))
+                if (typeAttribute.GetType() == typeof(EdmEntityTypeAttribute))
                 {
                     edmType = new ClrEntityType(clrType, cspaceNamespaceName, cspaceTypeName);
                 }
-                else if (typeAttribute.GetType()
-                         == typeof(EdmComplexTypeAttribute))
+                else if (typeAttribute.GetType() == typeof(EdmComplexTypeAttribute))
                 {
                     edmType = new ClrComplexType(clrType, cspaceNamespaceName, cspaceTypeName);
                 }
@@ -377,7 +373,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private EdmType ResolveBaseType(Type type)
         {
             EdmType edmType;
-            if (type.GetCustomAttributes(typeof(EdmEntityTypeAttribute), false).Length > 0
+            if (type.GetCustomAttributes<EdmEntityTypeAttribute>(inherit: false).Any()
                 && TryGetLoadedType(type, out edmType))
             {
                 return edmType;
@@ -541,9 +537,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // EdmScalarPropertyAttribute, EdmComplexPropertyAttribute and EdmRelationshipNavigationPropertyAttribute
             // are all EdmPropertyAttributes that we need to process. If the current property is not an EdmPropertyAttribute
             // we will just ignore it and skip to the next property.
-            var relationshipPropertyAttributes = propertyInfo.GetCustomAttributes(typeof(EdmRelationshipNavigationPropertyAttribute), false);
+            var relationshipPropertyAttributes = propertyInfo.GetCustomAttributes<EdmRelationshipNavigationPropertyAttribute>(inherit: false);
 
-            Debug.Assert(relationshipPropertyAttributes.Length == 1, "There should be exactly one property for every navigation property");
+            Debug.Assert(relationshipPropertyAttributes.Count() == 1, "There should be exactly one property for every navigation property");
 
             // The only valid return types from navigation properties are:
             //     (1) EntityType
@@ -573,7 +569,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // Expecting EdmRelationshipNavigationPropertyAttribute to have AllowMultiple=False, so only look at first element in the attribute array
 
-            var attribute = (EdmRelationshipNavigationPropertyAttribute)relationshipPropertyAttributes[0];
+            var attribute = (EdmRelationshipNavigationPropertyAttribute)relationshipPropertyAttributes.First();
 
             EdmMember member = null;
             EdmType type;
@@ -671,12 +667,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                var attrs = property.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false);
+                var attrs = property.GetCustomAttributes<EdmScalarPropertyAttribute>(inherit: false);
 
-                Debug.Assert(attrs.Length == 1, "Every property can exactly have one ScalarProperty Attribute");
+                Debug.Assert(attrs.Count() == 1, "Every property can exactly have one ScalarProperty Attribute");
                 // Expecting EdmScalarPropertyAttribute to have AllowMultiple=False, so only look at first element in the attribute array
-                isEntityKeyProperty = ((EdmScalarPropertyAttribute)attrs[0]).EntityKeyProperty;
-                var isNullable = ((EdmScalarPropertyAttribute)attrs[0]).IsNullable;
+                isEntityKeyProperty = attrs.First().EntityKeyProperty;
+                var isNullable = attrs.First().IsNullable;
 
                 member = new EdmProperty(
                     property.Name,
@@ -717,8 +713,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
             else
             {
-                var edmScalarPropertyAttribute =
-                    (EdmScalarPropertyAttribute)clrProperty.GetCustomAttributes(typeof(EdmScalarPropertyAttribute), false).Single();
+                var edmScalarPropertyAttribute = clrProperty.GetCustomAttributes<EdmScalarPropertyAttribute>(inherit: false).Single();
 
                 var enumProperty = new EdmProperty(
                     clrProperty.Name,

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -16,7 +17,7 @@ namespace System.Data.Entity
 
             foreach (var function in entityFunctions.Where(f => f.Name != "AsUnicode" && f.Name != "AsNonUnicode"))
             {
-                Assert.NotNull(function.GetCustomAttributes(inherit: false).OfType<DbFunctionAttribute>().FirstOrDefault());
+                Assert.NotNull(function.GetCustomAttributes<DbFunctionAttribute>(inherit: false).FirstOrDefault());
             }
         }
     }

@@ -1340,8 +1340,8 @@ namespace System.Data.Entity.Internal
         /// </summary>
         private static bool IsPocoTypeInNonPocoAssembly(Type entityType)
         {
-            return entityType.Assembly.GetCustomAttributes(typeof(EdmSchemaAttribute), inherit: false).Any() &&
-                   !entityType.GetCustomAttributes(typeof(EdmEntityTypeAttribute), inherit: true).Any();
+            return entityType.Assembly.GetCustomAttributes<EdmSchemaAttribute>().Any() &&
+                   !entityType.GetCustomAttributes<EdmEntityTypeAttribute>(inherit: true).Any();
         }
 
         /// <summary>

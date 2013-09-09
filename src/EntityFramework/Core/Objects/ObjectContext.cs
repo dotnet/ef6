@@ -4938,9 +4938,7 @@ namespace System.Data.Entity.Core.Objects
 
             _contextTypesWithViewCacheInitialized.GetOrAdd(contextType, (t) =>
             {
-                var attributes = ((IEnumerable<DbMappingViewCacheTypeAttribute>)t.Assembly
-                    .GetCustomAttributes(typeof(DbMappingViewCacheTypeAttribute), inherit: false))
-                    .Where(a => a.ContextType == t);
+                var attributes = t.Assembly.GetCustomAttributes<DbMappingViewCacheTypeAttribute>().Where(a => a.ContextType == t);
 
                 var attributeCount = attributes.Count();
                 if (attributeCount > 1)

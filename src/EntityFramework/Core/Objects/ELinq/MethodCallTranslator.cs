@@ -61,8 +61,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check if this method has the FunctionAttribute (known proxy)
-                var functionAttribute = linq.Method.GetCustomAttributes(typeof(DbFunctionAttribute), false)
-                                            .Cast<DbFunctionAttribute>().FirstOrDefault();
+                var functionAttribute = linq.Method.GetCustomAttributes<DbFunctionAttribute>(inherit: false).FirstOrDefault();
                 if (null != functionAttribute)
                 {
                     return _functionCallTranslator.TranslateFunctionCall(parent, linq, functionAttribute);

@@ -3,7 +3,9 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class DbConfigurationTypeAttributeTests
@@ -13,8 +15,7 @@ namespace System.Data.Entity
         {
             Assert.Same(
                 typeof(FakeDbConfiguration),
-                typeof(ContextWithTypeAttribute).GetCustomAttributes(inherit: true)
-                    .OfType<DbConfigurationTypeAttribute>()
+                typeof(ContextWithTypeAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)
                     .Single()
                     .ConfigurationType);
         }
@@ -33,8 +34,7 @@ namespace System.Data.Entity
         {
             Assert.Same(
                 typeof(FakeDbConfiguration),
-                typeof(ContextWithStringAttribute).GetCustomAttributes(inherit: true)
-                    .OfType<DbConfigurationTypeAttribute>()
+                typeof(ContextWithStringAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)
                     .Single()
                     .ConfigurationType);
         }
@@ -49,8 +49,8 @@ namespace System.Data.Entity
         {
             Assert.Equal(
                 "configurationType",
-                Assert.Throws<ArgumentNullException>(() => typeof(ContextWithNullTypeAttribute).GetCustomAttributes(inherit: true)).
-                    ParamName);
+                Assert.Throws<ArgumentNullException>(
+                    () => typeof(ContextWithNullTypeAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)).ParamName);
         }
 
         [DbConfigurationType((Type)null)]
@@ -63,16 +63,19 @@ namespace System.Data.Entity
         {
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("configurationTypeName"),
-                Assert.Throws<ArgumentException>(() => typeof(ContextWithNullStringAttribute).GetCustomAttributes(inherit: true)).Message);
-
-            Assert.Equal(
-                Strings.ArgumentIsNullOrWhitespace("configurationTypeName"),
-                Assert.Throws<ArgumentException>(() => typeof(ContextWithEmptyStringAttribute).GetCustomAttributes(inherit: true)).Message);
+                Assert.Throws<ArgumentException>(
+                    () => typeof(ContextWithNullStringAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)).Message);
 
             Assert.Equal(
                 Strings.ArgumentIsNullOrWhitespace("configurationTypeName"),
                 Assert.Throws<ArgumentException>(
-                    () => typeof(ContextWithWhitespaceStringAttribute).GetCustomAttributes(inherit: true)).Message);
+                    () => typeof(ContextWithEmptyStringAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("configurationTypeName"),
+                Assert.Throws<ArgumentException>(
+                    () => typeof(ContextWithWhitespaceStringAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true))
+                    .Message);
         }
 
         [DbConfigurationType((string)null)]
@@ -95,7 +98,8 @@ namespace System.Data.Entity
         {
             Assert.Equal(
                 Strings.DbConfigurationTypeInAttributeNotFound("Pretty.Vacant"),
-                Assert.Throws<InvalidOperationException>(() => typeof(ContextWithBadAttribute).GetCustomAttributes(inherit: true)).Message);
+                Assert.Throws<InvalidOperationException>(
+                    () => typeof(ContextWithBadAttribute).GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true)).Message);
         }
 
         [DbConfigurationType("Pretty.Vacant")]

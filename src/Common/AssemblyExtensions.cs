@@ -1,6 +1,10 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
+#if EF_FUNCTIONALS
+namespace System.Data.Entity.Functionals.Utilities
+#else
 namespace System.Data.Entity.Utilities
+#endif
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -13,8 +17,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(assembly);
 
             return assembly
-                .GetCustomAttributes(false)
-                .OfType<AssemblyInformationalVersionAttribute>()
+                .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
                 .Single()
                 .InformationalVersion;
         }
@@ -33,5 +36,14 @@ namespace System.Data.Entity.Utilities
                 return ex.Types.Where(t => t != null);
             }
         }
+
+#if NET40
+        public static IEnumerable<T> GetCustomAttributes<T>(this Assembly assembly) where T : Attribute
+        {
+            DebugCheck.NotNull(assembly);
+
+            return assembly.GetCustomAttributes(typeof(T), inherit: false).OfType<T>();
+        }
+#endif
     }
 }

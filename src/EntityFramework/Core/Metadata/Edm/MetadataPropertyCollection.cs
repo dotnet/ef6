@@ -76,8 +76,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var result = new List<ItemPropertyInfo>();
                 foreach (var propertyInfo in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    foreach (MetadataPropertyAttribute attribute in propertyInfo.GetCustomAttributes(
-                        typeof(MetadataPropertyAttribute), false))
+                    foreach (var attribute in propertyInfo.GetCustomAttributes<MetadataPropertyAttribute>(inherit: false))
                     {
                         result.Add(new ItemPropertyInfo(propertyInfo, attribute));
                     }

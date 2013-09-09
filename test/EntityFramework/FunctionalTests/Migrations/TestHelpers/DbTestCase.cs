@@ -7,6 +7,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Design;
@@ -399,8 +400,7 @@ namespace System.Data.Entity.Migrations
         protected HistoryOperation CreateInsertOperation(string contextKey, string migrationId, XDocument model)
         {
             var productVersion = typeof(DbContext).Assembly
-                .GetCustomAttributes(false)
-                .OfType<AssemblyInformationalVersionAttribute>()
+                .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
                 .Single()
                 .InformationalVersion;
 

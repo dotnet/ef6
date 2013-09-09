@@ -29,6 +29,7 @@ namespace System.Data.Entity
             SetupGet(p => p.CanWrite).Returns(true);
             Setup(p => p.GetGetMethod(It.IsAny<bool>())).Returns(_mockGetMethod.Object);
             Setup(p => p.Equals(It.IsAny<object>())).Returns<PropertyInfo>(p => ReferenceEquals(Object, p));
+            Setup(p => p.GetCustomAttributes(typeof(Attribute), It.IsAny<bool>())).Returns(new Attribute[0]);
 
             _mockGetMethod.SetupGet(m => m.Attributes).Returns(MethodAttributes.Public);
         }

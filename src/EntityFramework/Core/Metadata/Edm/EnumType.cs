@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Represents an enumeration type.
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Helper.IsSupportedEnumUnderlyingType(_underlyingType.PrimitiveTypeKind),
                 "unsupported CLR types should have been filtered out by .TryGetPrimitiveType() method.");
 
-            _isFlags = clrType.GetCustomAttributes(typeof(FlagsAttribute), false).Any();
+            _isFlags = clrType.GetCustomAttributes<FlagsAttribute>(inherit: false).Any();
 
             foreach (var name in Enum.GetNames(clrType))
             {

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Meta
 {
     using System;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Linq;
     using Xunit;
     using System.Reflection;
@@ -37,7 +38,7 @@ namespace System.Data.Entity.Meta
         private bool IsTypeTestClass(Type type)
         {
             return type.GetMethods()
-                .Any(method => method.GetCustomAttributes(inherit: true)
+                .Any(method => method.GetCustomAttributes<Attribute>(inherit: true)
                     .Any(attribute =>
                     {
                         var attribType = (attribute as Attribute).TypeId as Type;

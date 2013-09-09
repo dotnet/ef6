@@ -2,7 +2,9 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     /// <summary>
@@ -44,7 +46,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void DbUpdateConcurrencyException_is_marked_as_Serializable()
         {
-            Assert.True(typeof(DbUpdateConcurrencyException).GetCustomAttributes(typeof(SerializableAttribute), inherit: false).Any());
+            Assert.True(typeof(DbUpdateConcurrencyException).GetCustomAttributes<SerializableAttribute>(inherit: false).Any());
         }
 
         [Fact] // CodePlex 1107

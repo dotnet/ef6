@@ -6,6 +6,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Spatial;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using Moq;
     using Xunit;
@@ -280,6 +281,74 @@ namespace System.Data.Entity.Utilities
             {
                 public int Key { get; set; }
                 public EntityType EdmProperty { get; set; }
+            }
+        }
+
+        public class GetPropertiesInHierarchy : TestBase
+        {
+            [Fact]
+            public void Returns_all_properties_in_virtual_hierarchy()
+            {
+                Assert.Equal(new[] { "Cher.Mary", "ChimChim.Mary", "Ee.Mary" }, GetProperties("Mary"));
+                Assert.Equal(new[] { "Cher.Poppins", "ChimChim.Poppins", "Ee.Poppins" }, GetProperties("Poppins"));
+                Assert.Equal(new[] { "Cher.Bert", "ChimChim.Bert", "Ee.Bert" }, GetProperties("Bert"));
+                Assert.Equal(new[] { "Cher.Banks", "ChimChim.Banks", "Ee.Banks" }, GetProperties("Banks"));
+                Assert.Equal(new[] { "Cher.AdmiralBoom", "ChimChim.AdmiralBoom", "Ee.AdmiralBoom" }, GetProperties("AdmiralBoom"));
+                Assert.Equal(new[] { "Cher.MrsBrill", "ChimChim.MrsBrill" }, GetProperties("MrsBrill"));
+                Assert.Equal(new[] { "Cher.MrBinnacle", "ChimChim.MrBinnacle" }, GetProperties("MrBinnacle"));
+                Assert.Equal(new[] { "ChimChim.ConstableJones" }, GetProperties("ConstableJones"));
+                Assert.Equal(new[] { "ChimChim.MrDawesSr" }, GetProperties("MrDawesSr"));
+                Assert.Equal(new[] { "ChimChim.UncleAlbert", "Ee.UncleAlbert" }, GetProperties("UncleAlbert"));
+            }
+
+            private static IEnumerable<string> GetProperties(string propertyName)
+            {
+                const BindingFlags bindingFlags =
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+
+                return typeof(ChimChim)
+                    .GetProperty(propertyName, bindingFlags)
+                    .GetPropertiesInHierarchy()
+                    .Select(p => p.DeclaringType.Name + "." + p.Name)
+                    .OrderBy(n => n);
+            }
+
+            public class ChimChim : Cher
+            {
+                public override int Mary { get; set; }
+                internal override int Poppins { get; set; }
+                protected override int Bert { get; set; }
+                public override int Banks { get { return 0; } }
+                public override int AdmiralBoom { set { } }
+                public override int MrsBrill { get; set; }
+                public override int MrBinnacle { get; set; }
+                public int ConstableJones { get; set; }
+                public new static int MrDawesSr { get; set; }
+                public override int UncleAlbert { get; set; }
+            }
+
+            public class Cher : Ee
+            {
+                public override int Mary { get; set; }
+                internal override int Poppins { get; set; }
+                protected override int Bert { get; set; }
+                public override int Banks { get { return 0; } }
+                public override int AdmiralBoom { set { } }
+                public new virtual int MrsBrill { get; set; }
+                public virtual int MrBinnacle { get; set; }
+                public new static int MrDawesSr { get; set; }
+            }
+
+            public class Ee
+            {
+                public virtual int Mary { get; set; }
+                internal virtual int Poppins { get; set; }
+                protected virtual int Bert { get; set; }
+                public virtual int Banks { get; private set; }
+                public virtual int AdmiralBoom { private get; set; }
+                public virtual int MrsBrill { get; set; }
+                public static int MrDawesSr { get; set; }
+                public virtual int UncleAlbert { get; set; }
             }
         }
 
