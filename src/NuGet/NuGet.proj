@@ -7,11 +7,12 @@
         <NuGetExePath>$(MSBuildProjectDirectory)\..\..\.nuget\nuget.exe</NuGetExePath>
         <LibFolder>net45</LibFolder>
         <LibFolder Condition="'$(Configuration)' == 'ReleaseNet40' Or '$(Configuration)' == 'DebugNet40'">net40</LibFolder>
+        <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetPackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Label="NuGet package parameters">
-      <NuGetVersion_EntityFramework Condition="'$(NuGetVersion_EntityFramework)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework>
-      <NuGetVersion_EntityFramework_SqlServerCompact Condition="'$(NuGetVersion_EntityFramework_SqlServerCompact)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework_SqlServerCompact>
+      <NuGetVersion_EntityFramework>$(NuGetPackageVersion)</NuGetVersion_EntityFramework>
+      <NuGetVersion_EntityFramework_SqlServerCompact>$(NuGetPackageVersion)</NuGetVersion_EntityFramework_SqlServerCompact>
       <NuSpecProperties>NuGetVersion_EntityFramework=$(NuGetVersion_EntityFramework);NuGetVersion_EntityFramework_SqlServerCompact=$(NuGetVersion_EntityFramework_SqlServerCompact)</NuSpecProperties>
     </PropertyGroup>
 
