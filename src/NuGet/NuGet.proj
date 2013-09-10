@@ -1,54 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets" />
     
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <NuGetExePath>$(MSBuildProjectDirectory)\..\..\.nuget\nuget.exe</NuGetExePath>
-        <LibFolder>net45</LibFolder>
-        <LibFolder Condition="'$(Configuration)' == 'ReleaseNet40' Or '$(Configuration)' == 'DebugNet40'">net40</LibFolder>
-    </PropertyGroup>
+  <ItemGroup>
+    <NuGetProject Include="$(MSBuildThisFileDirectory)**\*.nuproj" />
+  </ItemGroup>
 
-    <PropertyGroup Label="NuGet package parameters">
-      <NuGetVersion_EntityFramework Condition="'$(NuGetVersion_EntityFramework)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework>
-      <NuGetVersion_EntityFramework_SqlServerCompact Condition="'$(NuGetVersion_EntityFramework_SqlServerCompact)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</NuGetVersion_EntityFramework_SqlServerCompact>
-      <NuSpecProperties>NuGetVersion_EntityFramework=$(NuGetVersion_EntityFramework);NuGetVersion_EntityFramework_SqlServerCompact=$(NuGetVersion_EntityFramework_SqlServerCompact)</NuSpecProperties>
-    </PropertyGroup>
+  <Target Name="Build">
+    <MSBuild Targets="Build" Projects="@(NuGetProject)" />
+  </Target>
 
-    <Target Name="Build">
-        <Copy
-            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="$(OutputPath)EntityFramework.dll" />
-        <Copy 
-            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="$(OutputPath)EntityFramework.xml" />
-        <Copy 
-            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="$(OutputPath)EntityFramework.SqlServer.dll" />
-        <Copy
-            DestinationFolder="EntityFramework\lib\$(LibFolder)" 
-            SourceFiles="$(OutputPath)EntityFramework.SqlServer.xml" />
-        
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)migrate.exe" />
-        <Copy DestinationFolder="EntityFramework\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.Utility.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\tools" SourceFiles="$(OutputPath)EntityFramework.PowerShell.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="$(OutputPath)EntityFramework.SqlServerCompact.dll" />
-        <Copy DestinationFolder="EntityFramework.SqlServerCompact\lib\net40" SourceFiles="$(OutputPath)EntityFramework.SqlServerCompact.xml" />
+  <Target Name="Clean">
+    <MSBuild Targets="Clean" Projects="@(NuGetProject)" />
+  </Target>
+  
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
 
-        <MakeDir Directories="$(OutputPath)" />
-
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework\EntityFramework.nuspec -Properties $(NuSpecProperties) -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
-        <Exec Command="&quot;$(NuGetExePath)&quot; pack EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.nuspec -Properties $(NuSpecProperties) -OutputDirectory &quot;$(OutputPath).&quot; -NoPackageAnalysis" />
-    </Target>
-
-    <Target Name="Clean">
-      <ItemGroup>
-        <Clean Include="$(OutputPath)**\*.nupkg" />
-      </ItemGroup>
-      <Delete Files="@(Clean)" ContinueOnError="true" />
-    </Target>
-
-    <Target Name="Rebuild" DependsOnTargets="Clean;Build"  />
-    
 </Project>

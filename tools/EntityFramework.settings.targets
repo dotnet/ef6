@@ -4,23 +4,23 @@ Project global pre-settings.
 **************************************************************************************************** -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(CustomBeforeEntityFrameworkTargets)" Condition="Exists('$(CustomBeforeEntityFrameworkTargets)')" Label="Pre-targets Build Extensibility Point."/>
-
+  
   <!--- Configurable properties -->
-
+  
   <PropertyGroup>
     <VersionMajor>6</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionRelease>0</VersionRelease>
   </PropertyGroup>
 
-  <!-- Defaults and Computed properties -->
-
+  <!-- Default properties -->
+ 
   <PropertyGroup>
     <RepositoryRoot Condition="'$(RepositoryRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\</RepositoryRoot>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <OutputPath Condition="'$(OutputPath)' == ''">$(RepositoryRoot)bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-
+  
   <PropertyGroup>
     <Configuration45>$([System.Text.RegularExpressions.Regex]::Replace('$(Configuration)', 'Net40', '', System.Text.RegularExpressions.RegexOptions.IgnoreCase))</Configuration45>
     <Configuration40>$(Configuration45)Net40</Configuration40>
@@ -39,5 +39,6 @@ Project global pre-settings.
   <PropertyGroup>
     <!-- Use CustomAfterMicrosoftCommonTargets property (Microsoft.Common.targets) to inject project post-targets  -->
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
+    <CustomAfterNuGetProjTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterNuGetProjTargets>
   </PropertyGroup>
 </Project>

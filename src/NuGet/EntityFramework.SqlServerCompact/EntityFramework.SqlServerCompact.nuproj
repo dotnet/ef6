@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <PropertyGroup>
+    <NuSpecFile>EntityFramework.SqlServerCompact.nuspec</NuSpecFile>
+  </PropertyGroup>  
+  <ItemGroup>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.pdb;EntityFramework.SqlServerCompact.xml">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.pdb;EntityFramework.SqlServerCompact.xml">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\**\*.cs">
+      <Destination>src\%(RecursiveDir)</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.PowerShell.dll">
+      <Source>$(OutputPath)</Source>
+      <Destination>tools</Destination>
+    </NuGetContent>
+    <NuGetContent Include="tools\*">
+      <Destination>tools</Destination>
+    </NuGetContent>
+    <NuGetContent Include="Content\*">
+      <Destination>content</Destination>
+    </NuGetContent>
+  </ItemGroup>
+  <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>
+</Project>

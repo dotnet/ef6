@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <PropertyGroup>
+    <NuSpecFile>EntityFramework.nuspec</NuSpecFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <NuGetContent Include="EntityFramework.dll;EntityFramework.pdb;EntityFramework.xml">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.dll;EntityFramework.pdb;EntityFramework.xml">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework\**\*.cs">
+      <Destination>src\EntityFramework\%(RecursiveDir)</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.pdb;EntityFramework.SqlServer.xml">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.pdb;EntityFramework.SqlServer.xml">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework.SqlServer\**\*.cs">
+      <Destination>src\EntityFramework.SqlServer\%(RecursiveDir)</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.PowerShell.dll">
+      <Source>$(OutputPath)</Source>
+      <Destination>tools</Destination>
+    </NuGetContent>
+    <NuGetContent Include="tools\*">
+      <Destination>tools</Destination>
+    </NuGetContent>
+    <NuGetContent Include="Content\*">
+      <Destination>content</Destination>
+    </NuGetContent>
+  </ItemGroup>
+  <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>
+</Project>

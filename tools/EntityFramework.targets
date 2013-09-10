@@ -3,9 +3,19 @@
 Project global post-settings and targets.
 ****************************************************************************************************-->
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Set computed properties after all dependent properties have been resolved -->
   <PropertyGroup>
     <DefineConstants Condition="'$(InternalsInvisible)' == 'true'">$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
+    <BuildDependsOn>SetComputedProperties;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
+  <Target Name="SetComputedProperties">
+    <PropertyGroup>
+      <EFPackageVersion Condition="'$(EFPackageVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</EFPackageVersion>
+      <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(EFPackageVersion)</NuGetPackageVersion>
+      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EFPackageVersion=$(EFPackageVersion)</NuSpecProperties>
+    </PropertyGroup>
+  </Target>
 
   <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 </Project>
