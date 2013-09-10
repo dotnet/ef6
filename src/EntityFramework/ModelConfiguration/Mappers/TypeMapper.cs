@@ -176,7 +176,13 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     entityType.BaseType != null,
                     entityTypeConfiguration);
 
-                foreach (var propertyInfo in navigationProperties.OrderBy(p => p.Name))
+                var propertyInfos = (IEnumerable<PropertyInfo>)navigationProperties;
+                if (_mappingContext.ModelBuilderVersion.IsEF6OrHigher())
+                {
+                    propertyInfos = propertyInfos.OrderBy(p => p.Name);
+                }
+
+                foreach (var propertyInfo in propertyInfos)
                 {
                     new NavigationPropertyMapper(this).Map(propertyInfo, entityType, entityTypeConfiguration);
                 }
@@ -258,7 +264,13 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 _knownTypes.AddRange(type.Assembly.GetAccessibleTypes().Where(t => t.IsValidStructuralType()));
             }
 
-            foreach (var derivedType in _knownTypes.Where(t => t.BaseType == type).OrderBy(t => t.FullName).ToList())
+            var derivedTypes = _knownTypes.Where(t => t.BaseType == type);
+            if (_mappingContext.ModelBuilderVersion.IsEF6OrHigher())
+            {
+                derivedTypes = derivedTypes.OrderBy(t => t.FullName);
+            }
+
+            foreach (var derivedType in derivedTypes.ToList())
             {
                 var derivedEntityType = MapEntityType(derivedType);
 

@@ -21,5 +21,11 @@ namespace System.Data.Entity.Utilities
                     throw new ArgumentOutOfRangeException("modelBuilderVersion");
             }
         }
+
+        public static bool IsEF6OrHigher(this DbModelBuilderVersion modelBuilderVersion)
+        {
+            return modelBuilderVersion >= DbModelBuilderVersion.V6_0 
+                || modelBuilderVersion == DbModelBuilderVersion.Latest;
+        }
     }
 }
