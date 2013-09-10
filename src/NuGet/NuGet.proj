@@ -7,11 +7,11 @@
   </ItemGroup>
 
   <Target Name="Build">
-    <MSBuild Targets="Build" Projects="@(NuGetProject)" />
+    <MSBuild Targets="Build" Projects="@(NuGetProject)" Properties="Configuration=$(Configuration)" />
   </Target>
 
   <Target Name="Clean">
-    <MSBuild Targets="Clean" Projects="@(NuGetProject)" />
+    <MSBuild Targets="Clean" Projects="@(NuGetProject)" Properties="Configuration=$(Configuration)" />
   </Target>
   
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
