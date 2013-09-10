@@ -216,6 +216,58 @@ namespace FunctionalTests
                         .Configure(e => e.ToTable("TheTable"));
                 }
             }
+
+            [Fact]
+            public void Encapsulated_lightweight_convention_does_not_override_annotations()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
+                var convention = new Convention();
+                convention.Properties<string>()
+                    .Configure(p => p.HasMaxLength(256));
+                modelBuilder.Conventions.Add(convention);
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithConfiguration");
+
+                var attributeColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByAttribute");
+                Assert.Equal(64, attributeColumn.MaxLength);
+
+                var fluentColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByFluent");
+                Assert.Equal(128, fluentColumn.MaxLength);
+
+                var unconfiguredColumn = table.Properties.Single(c => c.Name == "PropertyNotConfigured");
+                Assert.Equal(256, unconfiguredColumn.MaxLength);
+            }
+
+            [Fact]
+            public void Encapsulated_lightweight_convention_overrides_annotations_if_added_after()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Configurations.Add(new LightweightEntityWithConfiguration.Configuration());
+                var convention = new Convention();
+                convention.Properties<string>()
+                    .Configure(p => p.HasMaxLength(256));
+                modelBuilder.Conventions.AddAfter<StringLengthAttributeConvention>(convention);
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithConfiguration");
+
+                var attributeColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByAttribute");
+                Assert.Equal(256, attributeColumn.MaxLength);
+
+                var fluentColumn = table.Properties.Single(c => c.Name == "PropertyConfiguredByFluent");
+                Assert.Equal(128, fluentColumn.MaxLength);
+
+                var unconfiguredColumn = table.Properties.Single(c => c.Name == "PropertyNotConfigured");
+                Assert.Equal(256, unconfiguredColumn.MaxLength);
+            }
         }
 
         public class LightweightTypeConventions : TestBase
@@ -286,20 +338,20 @@ namespace FunctionalTests
             }
 
             [Fact]
-            public void HasKey_ignores_rule_if_key_configured_with_annotations()
+            public void HasKey_overrides_key_configured_with_annotations()
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
                 modelBuilder.Types<ILightweightEntity>()
-                    .Configure(c => c.HasKey(e => e.IntProperty));
+                    .Configure(c => c.HasKey(e => e.IntProperty1));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
                 var entity = databaseMapping.Model.EntityTypes.Single();
                 var keys = entity.KeyProperties;
                 Assert.Equal(1, keys.Count());
-                Assert.Equal("IntProperty", keys.First().Name);
+                Assert.Equal("IntProperty1", keys.First().Name);
             }
 
             [Fact]
@@ -508,8 +560,8 @@ namespace FunctionalTests
 
                 modelBuilder.Entity<LightweightEntity>();
 
-                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Foo"));
                 modelBuilder.Types<LightweightDerivedEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Bar"));
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Foo"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
@@ -668,12 +720,53 @@ namespace FunctionalTests
                     storeModel.EntityTypes.Single(e => e.Name == "LightweightDerivedEntity").Properties
                     .Single(p => p.Name == "StringProperty").IsUnicode);
             }
+
+            [Fact]
+            public void Property_IsUnicode_overrides_previous_convention()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").IsUnicode(false));
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").IsUnicode(true));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.Equal(
+                    true,
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Single(p => p.Name == "StringProperty").IsUnicode);
+            }
+
+            [Fact]
+            public void Property_HasColumnName_overrides_previous_convention()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").HasColumnName("foo"));
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
+                    t => t.Property("StringProperty").HasColumnName("bar"));
+
+                var storeModel = BuildMapping(modelBuilder).Database;
+
+                Assert.True(
+                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
+                    .Any(p => p.Name == "bar"));
+            }
         }
 
         public class LightweightPropertyConventions : TestBase
         {
             [Fact]
-            public void Does_not_override_explicit_configurations()
+            public void HasMaxLength_does_not_override_explicit_configurations()
             {
                 var modelBuilder = new DbModelBuilder();
 
@@ -695,6 +788,157 @@ namespace FunctionalTests
 
                 var unconfiguredColumn = table.Properties.Single(c => c.Name == "PropertyNotConfigured");
                 Assert.Equal(256, unconfiguredColumn.MaxLength);
+            }
+            
+            [Fact]
+            public void HasColumnName_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Properties().Where(p => p.Name == "IntProperty")
+                    .Configure(p => p.HasColumnName("foo"));
+                
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table
+                    = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithAnnotations");
+
+                Assert.True(table.Properties.Any(p => p.Name == "PrimaryKey"));
+                Assert.False(table.Properties.Any(p => p.Name == "IntProperty"));
+                Assert.False(table.Properties.Any(p => p.Name == "foo"));
+            }
+
+            [Fact]
+            public void HasColumnOrder_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+                
+                modelBuilder.Properties().Where(p => p.Name == "IntProperty1")
+                    .Configure(p => p.HasColumnOrder(0));
+                
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table
+                    = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal("IntProperty1", table.Properties[1].Name);
+            }
+
+            [Fact]
+            public void HasColumnType_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+                
+                modelBuilder.Properties().Where(p => p.Name == "IntProperty1")
+                    .Configure(p => p.HasColumnType("bigint"));
+                
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table
+                    = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal("int", table.Properties.Single(c => c.Name == "IntProperty1").TypeName);
+            }
+            
+            [Fact]
+            public void HasDatabaseGeneratedOption_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Properties().Where(p => p.Name == "Id")
+                    .Configure(p => p.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table
+                    = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal(StoreGeneratedPattern.Identity, table.Properties.Single(c => c.Name == "Id").StoreGeneratedPattern);
+            }
+
+            [Fact]
+            public void IsConcurrencyToken_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Properties().Where(p => p.Name == "Id")
+                    .Configure(p => p.IsConcurrencyToken(false));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var entityType
+                    = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal(ConcurrencyMode.Fixed, entityType.Properties.Single(c => c.Name == "Id").ConcurrencyMode);
+            }
+
+            [Fact]
+            public void IsFixedLength_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Properties().Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.IsFixedLength());
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var table
+                    = databaseMapping.Database.EntityTypes
+                        .Single(t => t.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal(false, table.Properties.Single(c => c.Name == "StringProperty").IsFixedLength);
+            }
+            
+            [Fact]
+            public void IsOptional_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+                
+                modelBuilder.Properties().Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.IsOptional());
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var entityType
+                    = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal(false, entityType.Properties.Single(c => c.Name == "StringProperty").Nullable);
+            }
+
+            [Fact]
+            public void IsUnicode_does_not_override_annotation()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Properties().Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.IsUnicode(false));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                var entityType
+                    = databaseMapping.Model.EntityTypes.Single(e => e.Name == "LightweightEntityWithAnnotations");
+
+                Assert.Equal(true, entityType.Properties.Single(c => c.Name == "StringProperty").IsUnicode);
             }
 
             [Fact]
@@ -758,7 +1002,7 @@ namespace FunctionalTests
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>().HasKey(e => e.IntProperty);
+                modelBuilder.Entity<LightweightEntityWithAnnotations>().HasKey(e => e.IntProperty);
                 modelBuilder.Properties()
                     .Where(p => p.Name == "IntProperty1")
                     .Configure(c => c.HasColumnOrder(1).IsKey());
@@ -776,7 +1020,7 @@ namespace FunctionalTests
             {
                 var modelBuilder = new DbModelBuilder();
 
-                modelBuilder.Entity<LightweightEntityWithKeyConfiguration>();
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
                 modelBuilder.Properties()
                     .Where(p => p.Name == "IntProperty1")
                     .Configure(c => c.HasColumnOrder(1).IsKey());
@@ -842,24 +1086,31 @@ namespace FunctionalTests
         public int IntProperty { get; set; }
         public int IntProperty1 { get; set; }
         internal int? InternalNavigationPropertyId { get; set; }
-        internal LightweightEntityWithKeyConfiguration InternalNavigationProperty { get; set; }
+        internal LightweightEntityWithAnnotations InternalNavigationProperty { get; set; }
         internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
         public string StringProperty { get; set; }
         public LightweightComplexType ComplexProperty { get; set; }
         public Decimal DecimalProperty { get; set; }
     }
 
-    public class LightweightEntityWithKeyConfiguration : ILightweightEntity
+    public class LightweightEntityWithAnnotations : ILightweightEntity
     {
+        [ConcurrencyCheck]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Key]
-        [Column(Order = 0)]
+        [Column("PrimaryKey", Order = 0)]
         public int IntProperty { get; set; }
 
+        [Column(Order = 1, TypeName = "int")]
         public int IntProperty1 { get; set; }
+
         internal ICollection<LightweightEntity> InternalCollectionNavigationProperty { get; set; }
-        public LightweightComplexType ComplexProperty { get; set; }
+
+        [Required]
+        [StringLength(15)]
+        public string StringProperty { get; set; }
     }
 
     public class LightweightDerivedEntity : LightweightEntity

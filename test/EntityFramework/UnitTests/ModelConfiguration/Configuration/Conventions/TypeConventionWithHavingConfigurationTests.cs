@@ -29,6 +29,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
             var conventions = new ConventionsConfiguration();
             var entities = new TypeConventionConfiguration(conventions);
 
+            Assert.Equal(15, conventions.ConfigurationConventions.Count());
+
             entities
                 .Where(predicate)
                 .Having(capturingPredicate)
@@ -36,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
 
             Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
-            var convention = (TypeConventionWithHaving<object>)conventions.ConfigurationConventions.Last();
+            var convention = (TypeConventionWithHaving<object>)conventions.ConfigurationConventions.First();
             Assert.Equal(1, convention.Predicates.Count());
             Assert.Same(predicate, convention.Predicates.Single());
             Assert.Same(capturingPredicate, convention.CapturingPredicate);

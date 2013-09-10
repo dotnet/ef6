@@ -25,15 +25,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var mockConvention2 = new Mock<IConfigurationConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>()));
+            
+            conventionsConfiguration.Add(mockConvention1.Object);
+            conventionsConfiguration.Add(mockConvention2.Object);
+
+            Assert.Equal(2, conventionsConfiguration.ConfigurationConventions.Count());
+            Assert.Same(mockConvention2.Object, conventionsConfiguration.ConfigurationConventions.Last());
+        }
+
+        [Fact]
+        public void Add_should_append_configuration_convention_on_to_internal_list_before_initial_conventions()
+        {
+            var mockConvention1 = new Mock<IConfigurationConvention>();
+            var mockConvention2 = new Mock<IConfigurationConvention>();
+            var mockConvention3 = new Mock<IConfigurationConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet(
                     new[] { mockConvention1.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
             conventionsConfiguration.Add(mockConvention2.Object);
+            conventionsConfiguration.Add(mockConvention3.Object);
 
-            Assert.Equal(2, conventionsConfiguration.ConfigurationConventions.Count());
-            Assert.Same(mockConvention2.Object, conventionsConfiguration.ConfigurationConventions.Last());
+            Assert.Equal(3, conventionsConfiguration.ConfigurationConventions.Count());
+            Assert.Same(mockConvention2.Object, conventionsConfiguration.ConfigurationConventions.First());
+            Assert.Same(mockConvention1.Object, conventionsConfiguration.ConfigurationConventions.Last());
         }
 
         [Fact]
@@ -96,6 +118,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var mockConvention1 = new Mock<IConfigurationConvention>();
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>(),
+                    Enumerable.Empty<IConvention>()));
+            
+            conventionsConfiguration.Add(mockConvention1.Object);
+            conventionsConfiguration.Add<ConventionFixture>();
+
+            Assert.Equal(2, conventionsConfiguration.ConfigurationConventions.Count());
+            Assert.Same(mockConvention1.Object, conventionsConfiguration.ConfigurationConventions.First());
+            Assert.IsType<ConventionFixture>(conventionsConfiguration.ConfigurationConventions.Last());
+        }
+
+        [Fact]
+        public void Generic_Add_should_append_configuration_convention_on_to_internal_list_before_initial_conventions()
+        {
+            var mockConvention1 = new Mock<IConfigurationConvention>();
+            var conventionsConfiguration = new ConventionsConfiguration(
+                new ConventionSet(
                     new[] { mockConvention1.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
@@ -104,8 +145,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             conventionsConfiguration.Add<ConventionFixture>();
 
             Assert.Equal(2, conventionsConfiguration.ConfigurationConventions.Count());
-            Assert.Same(mockConvention1.Object, conventionsConfiguration.ConfigurationConventions.First());
-            Assert.IsType<ConventionFixture>(conventionsConfiguration.ConfigurationConventions.Last());
+            Assert.IsType<ConventionFixture>(conventionsConfiguration.ConfigurationConventions.First());
+            Assert.Same(mockConvention1.Object, conventionsConfiguration.ConfigurationConventions.Last());
         }
 
         [Fact]
@@ -762,54 +803,72 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyConceptualModel_should_run_model_conventions()
+        public void ApplyConceptualModel_should_run_model_conventions_in_order()
         {
             var model = CreateDbModel();
-            var mockConvention = new Mock<IConceptualModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IConceptualModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IConceptualModelConvention<EdmModel>>();
+            mockConvention1.Setup(c => c.Apply(model.GetConceptualModel(), model))
+                .Callback(
+                    () => mockConvention2.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
 
             conventionsConfiguration.ApplyConceptualModel(model);
 
-            mockConvention.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
+            mockConvention1.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
+            mockConvention2.Verify(c => c.Apply(model.GetConceptualModel(), model), Times.Once());
         }
 
         [Fact]
-        public void ApplyMapping_should_run_mapping_conventions()
+        public void ApplyMapping_should_run_mapping_conventions_in_order()
         {
             var mapping = new DbDatabaseMapping();
-            var mockConvention = new Mock<IDbMappingConvention>();
+            var mockConvention1 = new Mock<IDbMappingConvention>();
+            var mockConvention2 = new Mock<IDbMappingConvention>();
+            mockConvention1.Setup(c => c.Apply(mapping))
+                .Callback(
+                    () => mockConvention2.Verify(c => c.Apply(mapping), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>()));
 
             conventionsConfiguration.ApplyMapping(mapping);
 
-            mockConvention.Verify(c => c.Apply(mapping), Times.Once());
+            mockConvention1.Verify(c => c.Apply(mapping), Times.Once());
+            mockConvention2.Verify(c => c.Apply(mapping), Times.Once());
         }
 
         [Fact]
-        public void ApplyStoreModel_should_run_database_conventions()
+        public void ApplyStoreModel_should_run_database_conventions_in_order()
         {
             var model = CreateDbModel();
-            var mockConvention = new Mock<IStoreModelConvention<EdmModel>>();
+            var mockConvention1 = new Mock<IStoreModelConvention<EdmModel>>();
+            var mockConvention2 = new Mock<IStoreModelConvention<EdmModel>>();
+            mockConvention1.Setup(c => c.Apply(model.GetStoreModel(), model))
+                .Callback(
+                    () => mockConvention2.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { mockConvention.Object }));
+                    new[] { mockConvention1.Object, mockConvention2.Object }));
 
             conventionsConfiguration.ApplyStoreModel(model);
 
-            mockConvention.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
+            mockConvention1.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
+            mockConvention2.Verify(c => c.Apply(model.GetStoreModel(), model), Times.Once());
         }
 
         [Fact]
@@ -855,20 +914,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyModelConfiguration_should_run_model_configuration_conventions()
+        public void ApplyModelConfiguration_should_run_model_configuration_conventions_in_reverse_order()
         {
-            var mockConvention = new Mock<IConfigurationConvention>();
+            var modelConfiguration = new ModelConfiguration();
+            var mockConvention1 = new Mock<IConfigurationConvention>();
+            var mockConvention2 = new Mock<IConfigurationConvention>();
+            mockConvention2.Setup(c => c.Apply(modelConfiguration))
+                .Callback(() => mockConvention1.Verify(c => c.Apply(modelConfiguration), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            var modelConfiguration = new ModelConfiguration();
 
             conventionsConfiguration.ApplyModelConfiguration(modelConfiguration);
 
-            mockConvention.Verify(c => c.Apply(modelConfiguration), Times.Once());
+            mockConvention1.Verify(c => c.Apply(modelConfiguration), Times.Once());
+            mockConvention2.Verify(c => c.Apply(modelConfiguration), Times.Once());
         }
 
         [Fact]
@@ -889,21 +953,25 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyModelConfiguration_should_run_type_model_configuration_conventions()
+        public void ApplyModelConfiguration_should_run_type_model_configuration_conventions_in_reverse_order()
         {
-            var mockConvention = new Mock<IConfigurationConvention<Type>>();
+            var modelConfiguration = new ModelConfiguration();
+            var mockConvention1 = new Mock<IConfigurationConvention<Type>>();
+            var mockConvention2 = new Mock<IConfigurationConvention<Type>>();
+            mockConvention2.Setup(c => c.Apply(typeof(object), modelConfiguration))
+                .Callback(() => mockConvention1.Verify(c => c.Apply(typeof(object), modelConfiguration), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            var modelConfiguration = new ModelConfiguration();
 
             conventionsConfiguration.ApplyModelConfiguration(typeof(object), modelConfiguration);
 
-            mockConvention.Verify(
-                c => c.Apply(typeof(object), modelConfiguration), Times.Once());
+            mockConvention1.Verify(c => c.Apply(typeof(object), modelConfiguration), Times.Once());
+            mockConvention2.Verify(c => c.Apply(typeof(object), modelConfiguration), Times.Once());
         }
 
         [Fact]
@@ -924,18 +992,22 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyTypeConfiguration_should_run_type_configuration_conventions()
+        public void ApplyTypeConfiguration_should_run_type_configuration_conventions_in_reverse_order()
         {
+            var entityTypeConfiguration = new Func<EntityTypeConfiguration>(() => new EntityTypeConfiguration(typeof(object)));
             var mockConvention1 = new Mock<IConfigurationConvention<Type, EntityTypeConfiguration>>();
             var mockConvention2 = new Mock<IConfigurationConvention<Type, StructuralTypeConfiguration>>();
+            mockConvention2.Setup(c => c.Apply(typeof(object), entityTypeConfiguration, It.IsAny<ModelConfiguration>()))
+                .Callback(() =>
+                    mockConvention1.Verify(
+                        c => c.Apply(typeof(object), entityTypeConfiguration, It.IsAny<ModelConfiguration>()), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new IConvention[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-
-            var entityTypeConfiguration = new Func<EntityTypeConfiguration>(() => new EntityTypeConfiguration(typeof(object)));
 
             conventionsConfiguration.ApplyTypeConfiguration(typeof(object), entityTypeConfiguration, new ModelConfiguration());
 
@@ -962,39 +1034,62 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyPluralizingTableNameConvention_should_run_PluralizingTableName_conventions()
+        public void ApplyPluralizingTableNameConvention_should_run_PluralizingTableName_conventions_in_order()
         {
             var model = CreateDbModel();
             model.GetStoreModel().AddItem(new EntityType("foo", "bar", DataSpace.SSpace));
-            var mockConvention = new Mock<PluralizingTableNameConvention>();
+            var mockConvention1 = new Mock<PluralizingTableNameConvention>();
+            var mockConvention2 = new Mock<PluralizingTableNameConvention>();
+            mockConvention1.Setup(c => c.Apply(It.IsAny<EntityType>(), model))
+                .Callback(() => mockConvention2.Verify(c => c.Apply(It.IsAny<EntityType>(), model), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
-                    new[] { mockConvention.Object }));
+                    new[] { mockConvention1.Object, mockConvention2.Object }));
 
             conventionsConfiguration.ApplyPluralizingTableNameConvention(model);
 
-            mockConvention.Verify(c => c.Apply(It.IsAny<EntityType>(), model), Times.Once());
+            mockConvention1.Verify(c => c.Apply(It.IsAny<EntityType>(), model), Times.Once());
+            mockConvention2.Verify(c => c.Apply(It.IsAny<EntityType>(), model), Times.Once());
         }
 
         [Fact]
-        public void ApplyPropertyConfiguration_should_run_property_configuration_conventions()
+        public void ApplyPropertyConfiguration_should_run_property_configuration_conventions_in_reverse_order()
         {
-            var mockConvention = new Mock<IConfigurationConvention<PropertyInfo, Properties.Primitive.StringPropertyConfiguration>>();
+            var mockPropertyInfo = new MockPropertyInfo(typeof(string), "S");
+            var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo, Properties.Primitive.StringPropertyConfiguration>>();
+            var mockConvention2 = new Mock<IConfigurationConvention<PropertyInfo, Properties.Primitive.StringPropertyConfiguration>>();
+            mockConvention2.Setup(
+                c =>
+                c.Apply(
+                    mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>(), It.IsAny<ModelConfiguration>()))
+                .Callback(
+                    () =>
+                    mockConvention1.Verify(
+                        c =>
+                        c.Apply(
+                            mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>(),
+                            It.IsAny<ModelConfiguration>()), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            var mockPropertyInfo = new MockPropertyInfo(typeof(string), "S");
 
             conventionsConfiguration.ApplyPropertyConfiguration(
                 mockPropertyInfo, () => new Properties.Primitive.StringPropertyConfiguration(), new ModelConfiguration());
 
-            mockConvention.Verify(
+            mockConvention1.Verify(
+                c =>
+                c.Apply(
+                    mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>(), It.IsAny<ModelConfiguration>()),
+                Times.Once());
+            mockConvention2.Verify(
                 c =>
                 c.Apply(
                     mockPropertyInfo, It.IsAny<Func<Properties.Primitive.StringPropertyConfiguration>>(), It.IsAny<ModelConfiguration>()),
@@ -1047,22 +1142,29 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyPropertyConfiguration_should_run_property_model_conventions()
+        public void ApplyPropertyConfiguration_should_run_property_model_conventions_in_reverse_order()
         {
-            var mockConvention = new Mock<IConfigurationConvention<PropertyInfo>>();
+            var mockPropertyInfo = new MockPropertyInfo(typeof(object), "N");
+            var modelConfiguration = new ModelConfiguration();
+            var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo>>();
+            var mockConvention2 = new Mock<IConfigurationConvention<PropertyInfo>>();
+            mockConvention2.Setup(c => c.Apply(mockPropertyInfo, modelConfiguration))
+                .Callback(
+                    () => mockConvention1.Verify(
+                        c => c.Apply(mockPropertyInfo, modelConfiguration), Times.Never()));
 
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
-                    new[] { mockConvention.Object },
+                    new[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            var mockPropertyInfo = new MockPropertyInfo(typeof(object), "N");
-            var modelConfiguration = new ModelConfiguration();
 
             conventionsConfiguration.ApplyPropertyConfiguration(mockPropertyInfo, modelConfiguration);
 
-            mockConvention.Verify(
+            mockConvention1.Verify(
+                c => c.Apply(mockPropertyInfo, modelConfiguration), Times.Once());
+            mockConvention2.Verify(
                 c => c.Apply(mockPropertyInfo, modelConfiguration), Times.Once());
         }
 
@@ -1114,18 +1216,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
-        public void ApplyPropertyTypeConfiguration_should_run_property_type_configuration_conventions()
+        public void ApplyPropertyTypeConfiguration_should_run_property_type_configuration_conventions_in_reverse_order()
         {
+            var complexTypeConfiguration = new Func<ComplexTypeConfiguration>(() => new ComplexTypeConfiguration(typeof(object)));
+            var mockPropertyInfo = new MockPropertyInfo();
             var mockConvention1 = new Mock<IConfigurationConvention<PropertyInfo, ComplexTypeConfiguration>>();
             var mockConvention2 = new Mock<IConfigurationConvention<PropertyInfo, StructuralTypeConfiguration>>();
+            mockConvention2.Setup(c => c.Apply(mockPropertyInfo, complexTypeConfiguration, It.IsAny<ModelConfiguration>()))
+                .Callback(
+                    () =>
+                    mockConvention1.Verify(
+                        c => c.Apply(mockPropertyInfo, complexTypeConfiguration, It.IsAny<ModelConfiguration>()), Times.Never()));
+
             var conventionsConfiguration = new ConventionsConfiguration(
                 new ConventionSet(
                     new IConvention[] { mockConvention1.Object, mockConvention2.Object },
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>(),
                     Enumerable.Empty<IConvention>()));
-            var complexTypeConfiguration = new Func<ComplexTypeConfiguration>(() => new ComplexTypeConfiguration(typeof(object)));
-            var mockPropertyInfo = new MockPropertyInfo();
 
             conventionsConfiguration.ApplyPropertyTypeConfiguration(mockPropertyInfo, complexTypeConfiguration, new ModelConfiguration());
 
