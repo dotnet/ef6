@@ -41,6 +41,12 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             // E2 declared after E3.
@@ -70,12 +76,24 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
                 Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
+            {
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
             }
         }
 
@@ -110,6 +128,12 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             // E2 declared after E3.
@@ -140,12 +164,24 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
                 Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
+            {
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
             }
         }
 
@@ -172,6 +208,12 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             public class Order2
@@ -194,12 +236,24 @@ namespace System.Data.Entity.CodeFirst
                 {
                     public DbSet<E1> E1s { get; set; }
                 }
+
+                [DbModelBuilderVersion(DbModelBuilderVersion.V5_0)]
+                public class ContextV5 : DbContext
+                {
+                    public DbSet<E1> E1s { get; set; }
+                }
             }
 
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
                 Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+            }
+
+            [Fact]
+            public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
+            {
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
             }
         }
 
@@ -226,7 +280,7 @@ namespace System.Data.Entity.CodeFirst
 
                 [ForeignKey("P")]
                 public int PId { get; set; }
-
+                
                 public E4 P { get; set; }
             }
 

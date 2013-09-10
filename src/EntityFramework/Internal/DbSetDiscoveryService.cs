@@ -72,8 +72,7 @@ namespace System.Data.Entity.Internal
                 foreach (var propertyInfo in _context.GetType().GetProperties(bindingFlags)
                                                      .Where(
                                                          p => p.GetIndexParameters().Length == 0 &&
-                                                              p.DeclaringType != typeof(DbContext))
-                                                     .OrderBy(p => p.Name))
+                                                              p.DeclaringType != typeof(DbContext)))
                 {
                     var entityType = GetSetType(propertyInfo.PropertyType);
                     if (entityType != null)
@@ -142,7 +141,13 @@ namespace System.Data.Entity.Internal
         /// <param name="modelBuilder"> The model builder. </param>
         public void RegisterSets(DbModelBuilder modelBuilder)
         {
-            foreach (var set in GetSets())
+            var sets = (IEnumerable<KeyValuePair<Type, List<String>>>) GetSets();
+            if (modelBuilder.Version.IsEF6OrHigher())
+            {
+                sets = sets.OrderBy(s => s.Value[0]);
+            }
+
+            foreach (var set in sets)
             {
                 if (set.Value.Count > 1)
                 {
