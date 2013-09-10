@@ -560,8 +560,8 @@ namespace FunctionalTests
 
                 modelBuilder.Entity<LightweightEntity>();
 
-                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Foo"));
                 modelBuilder.Types<LightweightDerivedEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Bar"));
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Foo"));
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
