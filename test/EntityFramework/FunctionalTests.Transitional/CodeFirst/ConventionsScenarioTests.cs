@@ -496,91 +496,145 @@ namespace FunctionalTests
 
                 var databaseMapping = BuildMapping(modelBuilder);
 
+                databaseMapping.AssertValid();
+
                 Assert.NotNull(databaseMapping.Model.EntityTypes.First().Properties.Single(p => p.Name == "InternalNavigationPropertyId"));
             }
 
-            // UNDONE: [Fact]
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_column_name_inheritance()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Foo"));
+                modelBuilder.Types<LightweightDerivedEntity>().Configure(t => t.Property(e => e.StringProperty).HasColumnName("Bar"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<LightweightEntity>(e => e.StringProperty).DbEqual("Foo", c => c.Name);
+            }
+
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_column_name_complex_type()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.ComplexProperty.StringProperty).HasColumnName("Foo"));
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.ComplexProperty.StringProperty).HasColumnName("Bar");
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<LightweightComplexType>(c => c.StringProperty).DbEqual("Bar", c => c.Name);
+            }
+
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_column_name_tpt()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightDerivedEntity>().ToTable("Derived");
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(t => t.Property("StringProperty").HasColumnName("Foo"));
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).HasColumnName("Bar");
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<LightweightEntity>(e => e.StringProperty).DbEqual("Bar", c => c.Name);
+                databaseMapping.Assert<LightweightDerivedEntity>(e => e.StringProperty).DbEqual("Foo", c => c.Name);
+            }
+
+            [Fact]
+            public void Property_does_not_override_explicit_configurations_on_base_types_column_name()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(t => t.Property("StringProperty").HasColumnName("Foo"));
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).HasColumnName("Bar");
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<LightweightEntity>(e => e.StringProperty).DbEqual("Bar", c => c.Name);
+            }
+
+            [Fact]
             public void Property_does_not_override_explicit_configurations_on_base_types_IsUnicode()
             {
                 var modelBuilder = new DbModelBuilder();
-                
-                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
-                    t => t.Property("StringProperty").IsUnicode(false));
-modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).IsUnicode();
+
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(t => t.Property("StringProperty").IsUnicode(false));
+                modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).IsUnicode();
+
                 var storeModel = BuildMapping(modelBuilder).Database;
 
                 Assert.Equal(
                     true,
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "StringProperty").IsUnicode);
+                    storeModel.EntityTypes
+                        .Single(e => e.Name == "LightweightEntity").Properties
+                        .Single(p => p.Name == "StringProperty").IsUnicode);
             }
 
-            // UNDONE: [Fact]
+            [Fact]
             public void Property_does_not_override_explicit_configurations_on_base_types_precision()
             {
                 var modelBuilder = new DbModelBuilder();
+
                 modelBuilder.Entity<LightweightEntity>().Property(e => e.DecimalProperty).HasPrecision(5, 2);
-                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
-                    t => t.Property("DecimalProperty").HasPrecision(7, 4));
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(t => t.Property("DecimalProperty").HasPrecision(7, 4));
 
                 var storeModel = BuildMapping(modelBuilder).Database;
 
-                Assert.True(
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "DecimalProperty").Precision == 7);
-                Assert.True(
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "DecimalProperty").Scale == 2);
+                Assert.True(storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties.Single(p => p.Name == "DecimalProperty").Precision == 5);
+                Assert.True(storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties.Single(p => p.Name == "DecimalProperty").Scale == 2);
             }
 
-            // UNDONE: [Fact]    
+            [Fact]
             public void Property_does_not_override_explicit_configurations_on_base_types_when_generic()
             {
                 var modelBuilder = new DbModelBuilder();
+
                 modelBuilder.Entity<LightweightEntity>().Property(e => e.StringProperty).IsUnicode();
-                modelBuilder.Types<LightweightEntity>().Configure(
-                    t => t.Property(e => e.StringProperty).IsUnicode(false));
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).IsUnicode(false));
 
                 var storeModel = BuildMapping(modelBuilder).Database;
 
-                Assert.Equal(
-                    true,
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "StringProperty").IsUnicode);
+                Assert.Equal(true,storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties.Single(p => p.Name == "StringProperty").IsUnicode);
             }
 
-            // UNDONE: [Fact]
+            [Fact]
             public void Property_does_not_override_explicit_configurations_on_derived_types()
             {
                 var modelBuilder = new DbModelBuilder();
+
                 modelBuilder.Entity<LightweightEntity>();
                 modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
-                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(
-                    t => t.Property("StringProperty").IsUnicode(false));
+                modelBuilder.Types().Where(typeof(LightweightEntity).IsAssignableFrom).Configure(t => t.Property("StringProperty").IsUnicode(false));
 
                 var storeModel = BuildMapping(modelBuilder).Database;
 
-                Assert.Equal(
-                    true,
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "StringProperty").IsUnicode);
+                Assert.Equal(true,storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties.Single(p => p.Name == "StringProperty").IsUnicode);
             }
 
-            // UNDONE: [Fact]
+            [Fact]
             public void Property_does_not_override_explicit_configurations_on_derived_types_when_generic()
             {
                 var modelBuilder = new DbModelBuilder();
+
                 modelBuilder.Entity<LightweightEntity>();
                 modelBuilder.Entity<LightweightDerivedEntity>().Property(e => e.StringProperty).IsUnicode();
-                modelBuilder.Types<LightweightEntity>().Configure(
-                    t => t.Property(e => e.StringProperty).IsUnicode(false));
+                modelBuilder.Types<LightweightEntity>().Configure(t => t.Property(e => e.StringProperty).IsUnicode(false));
 
                 var storeModel = BuildMapping(modelBuilder).Database;
 
-                Assert.Equal(
-                    true,
-                    storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
-                    .Single(p => p.Name == "StringProperty").IsUnicode);
+                Assert.Equal(true,storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties.Single(p => p.Name == "StringProperty").IsUnicode);
             }
 
             [Fact]
