@@ -12,8 +12,8 @@ namespace System.Data.Entity
         [Fact]
         public void All_DbFunctions_are_attributed_with_DbFunctionAttribute_except_unicode_methods()
         {
-            var entityFunctions = typeof(DbFunctions).GetMethods(BindingFlags.Static | BindingFlags.Public);
-            Assert.True(entityFunctions.Length >= 93); // Just make sure Reflection is returning what we expect
+            var entityFunctions = typeof(DbFunctions).GetDeclaredMethods().Where(f => f.IsPublic);
+            Assert.True(entityFunctions.Count() >= 93); // Just make sure Reflection is returning what we expect
 
             foreach (var function in entityFunctions.Where(f => f.Name != "AsUnicode" && f.Name != "AsNonUnicode"))
             {

@@ -4,6 +4,7 @@ namespace System.Data.Entity.TestDoubles
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Linq.Expressions;
@@ -17,10 +18,10 @@ namespace System.Data.Entity.TestDoubles
 #endif
     {
         private static readonly MethodInfo _createQueryMethod
-            = typeof(InMemoryAsyncQueryProvider).GetMethods().Single(m => m.IsGenericMethodDefinition && m.Name == "CreateQuery");
+            = typeof(InMemoryAsyncQueryProvider).GetDeclaredMethods().Single(m => m.IsGenericMethodDefinition && m.Name == "CreateQuery");
 
         private static readonly MethodInfo _executeMethod
-            = typeof(InMemoryAsyncQueryProvider).GetMethods().Single(m => m.IsGenericMethodDefinition && m.Name == "Execute");
+            = typeof(InMemoryAsyncQueryProvider).GetDeclaredMethods().Single(m => m.IsGenericMethodDefinition && m.Name == "Execute");
 
         private readonly IQueryProvider _provider;
         private readonly Action<string, IEnumerable> _include;

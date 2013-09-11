@@ -7511,7 +7511,7 @@ namespace System.Data.Entity
 
         private static MethodInfo GetMethod(string methodName, MethodInfo getParameterTypesMethod, int genericArgumentsCount)
         {
-            var candidates = typeof(Queryable).GetMember(methodName, MemberTypes.Method, BindingFlags.Public | BindingFlags.Static);
+            var candidates = typeof(Queryable).GetDeclaredMethods(methodName);
 
             foreach (MethodInfo candidate in candidates)
             {

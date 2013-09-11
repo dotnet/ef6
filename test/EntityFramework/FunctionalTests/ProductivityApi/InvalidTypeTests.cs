@@ -145,7 +145,7 @@ namespace ProductivityApiTests
                 // Create a set for the new type
                 var set = dbContextSetOfDerivedCategory.Invoke(ctx, null);
                 var iQueryableFirstOrDefault = typeof(Queryable)
-                    .GetMethods()
+                    .GetDeclaredMethods()
                     .Single(m => m.Name == "FirstOrDefault" && m.GetParameters().Count() == 1);
                 var iQueryableOfDerivedCategoryFirstOrDefault =
                     iQueryableFirstOrDefault.MakeGenericMethod(derivedCategoryType);
@@ -269,7 +269,7 @@ namespace ProductivityApiTests
             var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
             var setMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
             var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
-                                              .GetMethods()
+                                              .GetDeclaredMethods()
                                               .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
 
             using (var context = new DbContext("MixedPocoEocoContext", model))
@@ -292,7 +292,7 @@ namespace ProductivityApiTests
             var pocoType = assembly.Types.Single(t => t.Name == "PocoEntity");
             var setMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes).MakeGenericMethod(pocoType);
             var createMethod = typeof(DbSet<>).MakeGenericType(pocoType)
-                                              .GetMethods()
+                                              .GetDeclaredMethods()
                                               .Single(m => m.Name == "Create" && !m.IsGenericMethodDefinition);
 
             var edmItemCollection = new EdmItemCollection(new[] { XDocument.Parse(PregenContextEdmx.Csdl).CreateReader() });

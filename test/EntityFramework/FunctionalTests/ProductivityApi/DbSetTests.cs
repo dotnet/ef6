@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Reflection;
@@ -3368,9 +3369,8 @@ namespace ProductivityApiTests
                 Assert.NotSame(typeof(Driver), driverProxy.GetType());
 
                 var setMethod = typeof(DbContext)
-                    .GetMethods()
-                    .Where(m => m.Name == "Set" && m.IsGenericMethodDefinition)
-                    .Single()
+                    .GetDeclaredMethods()
+                    .Single(m => m.Name == "Set" && m.IsGenericMethodDefinition)
                     .MakeGenericMethod(driverProxy.GetType());
 
                 // This throws because Set always returns the same Set instance every time
@@ -3415,9 +3415,8 @@ namespace ProductivityApiTests
                 Assert.NotSame(typeof(TestDriver), testDriverProxy1.GetType());
 
                 var createMethod = typeof(DbSet<Driver>)
-                    .GetMethods()
-                    .Where(m => m.Name == "Create" && m.IsGenericMethodDefinition)
-                    .Single()
+                    .GetDeclaredMethods()
+                    .Single(m => m.Name == "Create" && m.IsGenericMethodDefinition)
                     .MakeGenericMethod(testDriverProxy1.GetType());
 
                 var testDriverProxy2 = createMethod.Invoke(context.Drivers, null);
@@ -3449,9 +3448,8 @@ namespace ProductivityApiTests
                 Assert.NotSame(typeof(Driver), driverProxy.GetType());
 
                 var entryMethod = typeof(DbContext)
-                    .GetMethods()
-                    .Where(m => m.Name == "Entry" && m.IsGenericMethodDefinition)
-                    .Single()
+                    .GetDeclaredMethods()
+                    .Single(m => m.Name == "Entry" && m.IsGenericMethodDefinition)
                     .MakeGenericMethod(driverProxy.GetType());
 
                 var entry = entryMethod.Invoke(context, new object[] { driverProxy });
@@ -3469,9 +3467,8 @@ namespace ProductivityApiTests
                 Assert.NotSame(typeof(Driver), driverProxy.GetType());
 
                 var entriesMethod = typeof(DbChangeTracker)
-                    .GetMethods()
-                    .Where(m => m.Name == "Entries" && m.IsGenericMethodDefinition)
-                    .Single()
+                    .GetDeclaredMethods()
+                    .Single(m => m.Name == "Entries" && m.IsGenericMethodDefinition)
                     .MakeGenericMethod(driverProxy.GetType());
 
                 var entries = entriesMethod.Invoke(context.ChangeTracker, null);

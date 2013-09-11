@@ -596,7 +596,7 @@ namespace System.Data.Entity.Utilities
             }
         }
 
-        public class GetMethodInfo
+        public class GetDeclaredMethod
         {
             private static readonly Type[] _params1 = new[] { typeof(Random) };
             private static readonly Type[] _params2 = new[] { typeof(Random), typeof(int) };
@@ -916,6 +916,75 @@ namespace System.Data.Entity.Utilities
                 {
                     return 8;
                 }
+            }
+
+            [Fact]
+            public void Named_GetDeclaredMethods_returns_all_methods_with_given_name()
+            {
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Brian").Count());
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Brian").Distinct().Count());
+                Assert.True(typeof(Queen).GetDeclaredMethods("Brian").All(m => m.Name == "Brian"));
+
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Roger").Count());
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Roger").Distinct().Count());
+                Assert.True(typeof(Queen).GetDeclaredMethods("Roger").All(m => m.Name == "Roger"));
+
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Freddie").Count());
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("Freddie").Distinct().Count());
+                Assert.True(typeof(Queen).GetDeclaredMethods("Freddie").All(m => m.Name == "Freddie"));
+
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("John").Count());
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods("John").Distinct().Count());
+                Assert.True(typeof(Queen).GetDeclaredMethods("John").All(m => m.Name == "John"));
+            }
+
+            [Fact]
+            public void Named_GetDeclaredMethods_returns_only_declared_methods()
+            {
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethods("Gillan").Single().Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetDeclaredMethods("Paice").Single().Invoke(new Deep(), null));
+                Assert.Equal(3, typeof(Deep).GetDeclaredMethods("Glover").Single().Invoke(new Deep(), null));
+                Assert.Null(typeof(Deep).GetDeclaredMethods("Blackmore").SingleOrDefault());
+                Assert.Null(typeof(Deep).GetDeclaredMethods("Lord").SingleOrDefault());
+
+                Assert.Equal(1, typeof(Purple).GetDeclaredMethods("Gillan").Single().Invoke(new Deep(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethods("Paice").Single().Invoke(new Deep(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethods("Glover").Single().Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethods("Blackmore").Single().Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethods("Lord").Single().Invoke(new Deep(), null));
+
+                Assert.Equal(5, typeof(Purple).GetDeclaredMethods("Gillan").Single().Invoke(new Purple(), null));
+                Assert.Equal(6, typeof(Purple).GetDeclaredMethods("Paice").Single().Invoke(new Purple(), null));
+                Assert.Equal(8, typeof(Purple).GetDeclaredMethods("Glover").Single().Invoke(new Purple(), null));
+                Assert.Equal(4, typeof(Purple).GetDeclaredMethods("Blackmore").Single().Invoke(new Purple(), null));
+                Assert.Equal(7, typeof(Purple).GetDeclaredMethods("Lord").Single().Invoke(new Purple(), null));
+            }
+
+            [Fact]
+            public void GetDeclaredMethods_returns_all_methods()
+            {
+                Assert.Equal(16, typeof(Queen).GetDeclaredMethods().Count());
+                Assert.Equal(16, typeof(Queen).GetDeclaredMethods().Distinct().Count());
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "Brian"));
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "Roger"));
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "Freddie"));
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "John"));
+            }
+
+            [Fact]
+            public void GetDeclaredMethods_returns_only_declared_methods()
+            {
+                Assert.Equal(
+                    new[] { 1, 3, 2 },
+                    typeof(Deep).GetDeclaredMethods().OrderBy(m => m.Name).Select(m => (int)m.Invoke(new Deep(), null)));
+
+                Assert.Equal(
+                    new[] { 4, 1, 8, 7, 6 },
+                    typeof(Purple).GetDeclaredMethods().OrderBy(m => m.Name).Select(m => (int)m.Invoke(new Deep(), null)));
+
+                Assert.Equal(
+                    new[] { 4, 5, 8, 7, 6 },
+                    typeof(Purple).GetDeclaredMethods().OrderBy(m => m.Name).Select(m => (int)m.Invoke(new Purple(), null)));
             }
         }
     }

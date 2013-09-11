@@ -487,6 +487,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #endregion
 
+        internal static Dictionary<MethodInfo, SequenceMethod> MethodMap
+        {
+            get { return _methodMap; }
+        }
+
+        internal static Dictionary<SequenceMethod, MethodInfo> InverseMap
+        {
+            get { return _inverseMap; }
+        }
+
         /// <summary>
         /// Identifies methods as instances of known sequence operators.
         /// </summary>
@@ -634,13 +644,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Returns all static methods in the Queryable and Enumerable classes.
-        /// </summary>
-        internal static IEnumerable<MethodInfo> GetAllLinqOperators()
+        private static IEnumerable<MethodInfo> GetAllLinqOperators()
         {
-            return typeof(Queryable).GetMethods(BindingFlags.Static | BindingFlags.Public).Concat(
-                typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public));
+            return typeof(Queryable).GetDeclaredMethods().Concat(typeof(Enumerable).GetDeclaredMethods());
         }
     }
 }

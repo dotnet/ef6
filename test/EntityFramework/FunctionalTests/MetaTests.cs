@@ -37,15 +37,13 @@ namespace System.Data.Entity.Meta
         /// <returns> True if the type is a test class, false otherwise. </returns>
         private bool IsTypeTestClass(Type type)
         {
-            return type.GetMethods()
+            return type.GetDeclaredMethods()
                 .Any(method => method.GetCustomAttributes<Attribute>(inherit: true)
                     .Any(attribute =>
                     {
-                        var attribType = (attribute as Attribute).TypeId as Type;
+                        var attribType = attribute.TypeId as Type;
                         
-                        return attribType != null 
-                            ? attribType.Namespace == "Xunit"
-                            : false;    
+                        return attribType != null && attribType.Namespace == "Xunit";    
                     }));
         }
 

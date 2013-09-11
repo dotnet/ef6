@@ -294,7 +294,7 @@ namespace System.Data.Entity.Utilities
 
             while (type != typeof(object))
             {
-                if (type.GetMethods()
+                if (type.GetDeclaredMethods()
                     .Any(m => (m.Name == "Equals" || m.Name == "GetHashCode")
                         && m.DeclaringType != typeof(object)
                         && m.GetBaseDefinition().DeclaringType == typeof(object)))
@@ -369,5 +369,31 @@ namespace System.Data.Entity.Utilities
                 m => !methods.Any(m2 => m2.DeclaringType.GetTypeInfo().IsSubclassOf(m.DeclaringType)));
 #endif
         }
+
+        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetMethods(bindingFlags);
+#else
+            return type.GetTypeInfo().DeclaredMethods;
+#endif
+        }
+
+        public static IEnumerable<MethodInfo> GetDeclaredMethods(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetMember(name, MemberTypes.Method, bindingFlags).OfType<MethodInfo>();
+#else
+            return type.GetTypeInfo().GetDeclaredMethods(name);
+#endif
+        }
+
     }
 }

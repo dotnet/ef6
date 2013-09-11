@@ -239,6 +239,7 @@
     <Compile Include="Core\Objects\ELinq\ExpressionConverterTests.cs" />
     <Compile Include="Core\Objects\ELinq\InitializerMetadataTests.cs" />
     <Compile Include="Core\Objects\ELinq\LinqExpressionNormalizerTests.cs" />
+    <Compile Include="Core\Objects\ELinq\ReflectionUtilTests.cs" />
     <Compile Include="Core\Objects\ELinq\TypeSystemTests.cs" />
     <Compile Include="Core\Objects\EntityFunctionsTests.cs" />
     <Compile Include="Core\Objects\ExecutionOptionsTests.cs" />
