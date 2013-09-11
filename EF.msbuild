@@ -49,7 +49,8 @@
              BuildInParallel="true" />
     <MSBuild Targets="Clean"
              Projects="src\NuGet\NuGet.proj"
-             Properties="Configuration=%(BuildConfiguration.Identity)" />
+             Properties="Configuration=$(Configuration)"
+             Condition="'$(Configuration)' == '$(Configuration45)'" />
   </Target>
 
   <Target Name="RestorePackages">
@@ -105,7 +106,8 @@
              Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false" />
     <MSBuild Targets="Build"
              Projects="src\NuGet\NuGet.proj"
-             Properties="Configuration=%(BuildConfiguration.Identity)" />
+             Properties="Configuration=$(Configuration)"
+             Condition="'$(Configuration)' == '$(Configuration45)'" />
   </Target>
 
   <Target Name="CodeCoverage" DependsOnTargets="RestoreSolutionPackages;Build">
