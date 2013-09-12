@@ -172,7 +172,7 @@ namespace System.Data.Entity.Migrations
             return internalSet.InternalContext
                               .GetEntitySetAndBaseTypeForType(typeof(TEntity))
                               .EntitySet.ElementType.KeyMembers
-                              .Select(km => new PropertyPath(entityType.GetProperty(km.Name, PropertyFilter.DefaultBindingFlags)));
+                              .Select(km => new PropertyPath(entityType.GetAnyProperty(km.Name)));
         }
     }
 }

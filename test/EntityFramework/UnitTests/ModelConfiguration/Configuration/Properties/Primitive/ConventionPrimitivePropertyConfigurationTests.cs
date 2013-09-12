@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -834,14 +835,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void IsKey_configures_when_unset()
         {
-            var type = new MockType()
-                .Property<int>("Property1");
-            var typeConfig = new EntityTypeConfiguration(type);
+            var typeConfig = new EntityTypeConfiguration(typeof(AType1));
             var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration
                 {
                     TypeConfiguration = typeConfig
                 };
-            var propertyInfo = type.GetProperty("Property1");
+            var propertyInfo = typeof(AType1).GetDeclaredProperty("Property1");
             var config = new ConventionPrimitivePropertyConfiguration(propertyInfo, () => innerConfig);
 
             var result = config.IsKey();
@@ -851,25 +850,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Same(config, result);
         }
 
+        public class AType1
+        {
+            public int Property1 { get; set; }
+        }
+
         [Fact]
         public void IsKey_is_noop_when_set()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2");
-            var typeConfig = new EntityTypeConfiguration(type);
-            typeConfig.Key(new[] { type.GetProperty("Property1") });
+            var typeConfig = new EntityTypeConfiguration(typeof(AType2));
+            typeConfig.Key(new[] { typeof(AType2).GetDeclaredProperty("Property1") });
             var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration
                 {
                     TypeConfiguration = typeConfig
                 };
-            var propertyInfo = type.GetProperty("Property2");
+            var propertyInfo = typeof(AType2).GetDeclaredProperty("Property2");
             var config = new ConventionPrimitivePropertyConfiguration(propertyInfo, () => innerConfig);
 
             var result = config.IsKey();
 
             Assert.DoesNotContain(propertyInfo, typeConfig.KeyProperties);
             Assert.Same(config, result);
+        }
+
+        public class AType2
+        {
+            public int Property1 { get; set; }
+            public int Property2 { get; set; }
         }
 
         [Fact]

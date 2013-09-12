@@ -118,7 +118,7 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(navigationProperty);
 
             var propertyInfoForSet = navigationProperty.GetPropertyInfoForSet();
-            var setMethod = propertyInfoForSet.GetSetMethod(nonPublic: true);
+            var setMethod = propertyInfoForSet.Setter();
 
             if (setMethod == null)
             {
@@ -204,7 +204,7 @@ namespace System.Data.Entity.Core.Objects
             DebugCheck.NotNull(entityDeclaringType);
             DebugCheck.NotNull(propertyInfo);
 
-            var getter = propertyInfo.GetGetMethod(nonPublic: true);
+            var getter = propertyInfo.Getter();
 
             if (getter == null)
             {
@@ -326,7 +326,7 @@ namespace System.Data.Entity.Core.Objects
 
             var propertyInfoForSet = propertyInfo.GetPropertyInfoForSet();
 
-            var setterMethodInfo = propertyInfoForSet.GetSetMethod(nonPublic: true);
+            var setterMethodInfo = propertyInfoForSet.Setter();
 
             if (setterMethodInfo == null)
             {

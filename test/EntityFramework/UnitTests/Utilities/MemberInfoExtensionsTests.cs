@@ -15,7 +15,7 @@ namespace System.Data.Entity.Utilities
             {
                 Assert.Equal(
                     "People Are People",
-                    typeof(FakeForGetValue).GetProperty("Property").GetValue());
+                    typeof(FakeForGetValue).GetDeclaredProperty("Property").GetValue());
             }
 
             [Fact]
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Can_return_attributes_from_properties()
             {
-                var property = typeof(BetterCall).GetProperty("AmountLaundered");
+                var property = typeof(BetterCall).GetDeclaredProperty("AmountLaundered");
 
                 Assert.IsType<CarWashAttribute>(property.GetCustomAttributes<CarWashAttribute>(inherit: true).Single());
                 Assert.IsType<CarWashAttribute>(property.GetCustomAttributes<CarWashAttribute>(inherit: false).Single());

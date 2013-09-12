@@ -7,6 +7,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Sql;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Reflection;
 
     public class WrappingEfProvider<TAdoNetBase, TEfBase> : DbProviderServices
@@ -19,8 +20,7 @@ namespace System.Data.Entity.WrappingProvider
 
         private WrappingEfProvider()
         {
-            _baseServices =
-                (DbProviderServices)typeof(TEfBase).GetProperty("Instance", BindingFlags.Public | BindingFlags.Static).GetValue(null, null);
+            _baseServices = (DbProviderServices)typeof(TEfBase).GetStaticProperty("Instance").GetValue(null, null);
         }
 
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)

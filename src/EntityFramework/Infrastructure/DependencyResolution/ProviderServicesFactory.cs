@@ -41,7 +41,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             DebugCheck.NotNull(providerType);
 
             const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            var instanceMember = providerType.GetProperty("Instance", bindingFlags)
+
+            var instanceMember = providerType.GetStaticProperty("Instance")
                                  ?? (MemberInfo)providerType.GetField("Instance", bindingFlags);
             if (instanceMember == null)
             {

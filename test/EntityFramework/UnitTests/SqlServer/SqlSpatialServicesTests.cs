@@ -4,6 +4,7 @@ namespace System.Data.Entity.SqlServer
 {
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -109,10 +110,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void GeographyFromProviderValue_returns_null_for_null_value()
         {
-            var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType
-                .GetProperty(
-                    "Null",
-                    BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+            var nullSqlGeography = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeographyType.GetDeclaredProperty("Null");
             var convertedDbGeography = SqlSpatialServices.Instance.GeographyFromProviderValue(nullSqlGeography.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeography);
@@ -133,10 +131,7 @@ namespace System.Data.Entity.SqlServer
         [Fact]
         public void GeometryFromProviderValue_returns_null_for_null_value()
         {
-            var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType
-                .GetProperty(
-                    "Null",
-                    BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty);
+            var nullSqlGeometry = new SqlTypesAssemblyLoader().GetSqlTypesAssembly().SqlGeometryType.GetDeclaredProperty("Null");
             var convertedDbGeometry = SqlSpatialServices.Instance.GeometryFromProviderValue(nullSqlGeometry.GetValue(null, null));
 
             Assert.Same(null, convertedDbGeometry);

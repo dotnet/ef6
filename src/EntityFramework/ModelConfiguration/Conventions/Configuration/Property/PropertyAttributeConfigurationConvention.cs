@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -32,7 +33,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             Types().Configure(
                 ec =>
                     {
-                        foreach (var propertyInfo in ec.ClrType.GetProperties(PropertyFilter.DefaultBindingFlags))
+                        foreach (var propertyInfo in ec.ClrType.GetInstanceProperties())
                         {
                             foreach (var attribute in _attributeProvider.GetAttributes(propertyInfo).OfType<TAttribute>())
                             {

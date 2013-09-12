@@ -28,6 +28,9 @@ namespace System.Data.Entity.Migrations.History
         private static readonly string _productVersion
             = Assembly.GetExecutingAssembly().GetInformationalVersion();
 
+        public static readonly PropertyInfo MigrationIdProperty = typeof(HistoryRow).GetDeclaredProperty("MigrationId");
+        public static readonly PropertyInfo ContextKeyProperty = typeof(HistoryRow).GetDeclaredProperty("ContextKey");
+
         private readonly string _contextKey;
         private readonly int? _commandTimeout;
         private readonly IEnumerable<string> _schemas;
@@ -75,7 +78,7 @@ namespace System.Data.Entity.Migrations.History
                     var maxLength
                         = historyRowEntity
                             .Properties
-                            .Single(p => p.GetClrPropertyInfo().IsSameAs(typeof(HistoryRow).GetProperty("MigrationId")))
+                            .Single(p => p.GetClrPropertyInfo().IsSameAs(MigrationIdProperty))
                             .MaxLength;
 
                     _migrationIdMaxLength
@@ -86,7 +89,7 @@ namespace System.Data.Entity.Migrations.History
                     maxLength
                         = historyRowEntity
                             .Properties
-                            .Single(p => p.GetClrPropertyInfo().IsSameAs(typeof(HistoryRow).GetProperty("ContextKey")))
+                            .Single(p => p.GetClrPropertyInfo().IsSameAs(ContextKeyProperty))
                             .MaxLength;
 
                     _contextKeyMaxLength

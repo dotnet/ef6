@@ -240,5 +240,60 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Assert.Equal(1, methods.Count());
             Assert.True(methods.All(m => m != null));
         }
+
+        [Fact]
+        public void DefaultCanonicalFunctionPropertyTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.DefaultCanonicalFunctionPropertyTranslator().Properties;
+
+            Assert.Equal(15, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void RenameCanonicalFunctionPropertyTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.RenameCanonicalFunctionPropertyTranslator().Properties;
+
+            Assert.Equal(7, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void VBDateAndTimeNowTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.VBDateAndTimeNowTranslator(
+                typeof(Microsoft.VisualBasic.DateAndTime).Assembly).Properties;
+
+            Assert.Equal(1, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void EntityCollectionCountTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.EntityCollectionCountTranslator().Properties;
+
+            Assert.Equal(1, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void NullableHasValueTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.NullableHasValueTranslator().Properties;
+
+            Assert.Equal(1, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
+
+        [Fact]
+        public void NullableValueTranslator_finds_all_expected_properties()
+        {
+            var properties = new ExpressionConverter.MemberAccessTranslator.NullableValueTranslator().Properties;
+
+            Assert.Equal(1, properties.Count());
+            Assert.True(properties.All(p => p != null));
+        }
     }
 }

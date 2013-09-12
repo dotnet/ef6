@@ -141,16 +141,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
             name = null;
             type = null;
 
-            if (member.MemberType
-                == MemberTypes.Field)
+            if (member.MemberType == MemberTypes.Field)
             {
                 var field = (FieldInfo)member;
                 name = field.Name;
                 type = field.FieldType;
                 return field;
             }
-            else if (member.MemberType
-                     == MemberTypes.Property)
+            else if (member.MemberType == MemberTypes.Property)
             {
                 var property = (PropertyInfo)member;
                 if (0 != property.GetIndexParameters().Length)
@@ -162,19 +160,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 type = property.PropertyType;
                 return property;
             }
-            else if (member.MemberType
-                     == MemberTypes.Method)
+            else if (member.MemberType == MemberTypes.Method)
             {
                 // this may be a property accessor in disguise (if it's a RuntimeMethodHandle)
                 var method = (MethodInfo)member;
                 if (method.IsSpecialName) // property accessor methods must set IsSpecialName
                 {
                     // try to find a property with the given getter
-                    foreach (var property in method.DeclaringType.GetProperties(
-                        BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                    foreach (var property in method.DeclaringType.GetRuntimeProperties())
                     {
                         if (property.CanRead
-                            && (property.GetGetMethod(true) == method))
+                            && (property.Getter() == method))
                         {
                             return PropertyOrField(property, out name, out type);
                         }
@@ -295,7 +291,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             Debug.Assert(interfaceType.IsInterface, "Ensure interfaceType is an interface before calling IsImplementationOf");
 
             // Find the property with the corresponding name on the interface, if present
-            var interfaceProp = interfaceType.GetProperty(propertyInfo.Name, BindingFlags.Public | BindingFlags.Instance);
+            var interfaceProp = interfaceType.GetDeclaredProperty(propertyInfo.Name);
             if (null == interfaceProp)
             {
                 return false;
@@ -314,7 +310,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             var result = false;
 
             // Get the get_<Property> method from the interface property.
-            var getInterfaceProp = interfaceProp.GetGetMethod();
+            var getInterfaceProp = interfaceProp.Getter();
 
             // Retrieve the interface mapping for the interface on the candidate property's declaring type.
             var interfaceMap = propertyInfo.DeclaringType.GetInterfaceMap(interfaceType);
@@ -330,7 +326,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // If the get method of the referenced property is the target of the get_<Property> method in this interface mapping,
                 // then the property is the implementation of the interface's corresponding property.
-                var getPropertyMethod = propertyInfo.GetGetMethod();
+                var getPropertyMethod = propertyInfo.Getter();
                 if (getPropertyMethod != null)
                 {
                     result = getPropertyMethod.Equals(targetMethods[propIndex]);

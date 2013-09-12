@@ -83,6 +83,9 @@
     <Compile Include="..\Common\TypeExtensions.cs">
       <Link>Utilities\TypeExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\Common\PropertyInfoExtensions.cs">
+      <Link>Utilities\PropertyInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Common\Check.cs">
       <Link>Utilities\Check.cs</Link>
     </Compile>

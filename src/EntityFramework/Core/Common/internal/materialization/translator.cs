@@ -465,7 +465,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     var edmProperty = mapping.GetPropertyMap(properties[i].Name).ClrProperty;
 
                     var propertyInfoForSet = DelegateFactory.ValidateSetterProperty(edmProperty.PropertyInfo);
-                    var propertyAccessor = propertyInfoForSet.GetSetMethod(nonPublic: true);
+                    var propertyAccessor = propertyInfoForSet.Setter();
                     var propertyType = propertyInfoForSet.PropertyType;
 
                     // get translation of property value

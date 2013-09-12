@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.ModelConfiguration;
     using System.Linq;
     using System.Linq.Expressions;
@@ -13,7 +14,7 @@ namespace System.Data.Entity
             this EntityTypeConfiguration<TEntityType> entityTypeConfiguration, params string[] names)
             where TEntityType : class
         {
-            var properties = typeof(TEntityType).GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            var properties = typeof(TEntityType).GetInstanceProperties().Where(p => p.IsPublic());
 
             foreach (var property in properties.Where(p => !names.Contains(p.Name)))
             {

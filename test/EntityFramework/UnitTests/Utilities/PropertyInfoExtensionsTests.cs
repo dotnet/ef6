@@ -51,29 +51,23 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void IsValidStructuralProperty_should_return_false_when_property_read_only()
             {
-                var mockProperty = new MockPropertyInfo(typeof(object), "Prop");
-                mockProperty.SetupGet(p => p.CanWrite).Returns(false);
+                Assert.False(typeof(AType2).GetInstanceProperty("Prop").IsValidStructuralProperty());
+            }
 
-                var mockType = new MockType();
-                mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(new[] { mockProperty.Object });
-
-                mockProperty.SetupGet(p => p.DeclaringType).Returns(mockType.Object);
-
-                Assert.False(mockProperty.Object.IsValidStructuralProperty());
+            public class AType2
+            {
+                public object Prop { get { return null; } }
             }
 
             [Fact]
             public void IsValidStructuralProperty_should_return_true_when_property_read_only_collection()
             {
-                var mockProperty = new MockPropertyInfo(typeof(List<string>), "Coll");
-                mockProperty.SetupGet(p => p.CanWrite).Returns(false);
+                Assert.True(typeof(AType1).GetInstanceProperty("Coll").IsValidStructuralProperty());
+            }
 
-                var mockType = new MockType();
-                mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(new[] { mockProperty.Object });
-
-                mockProperty.SetupGet(p => p.DeclaringType).Returns(mockType.Object);
-
-                Assert.True(mockProperty.Object.IsValidStructuralProperty());
+            public class AType1
+            {
+                public List<string> Coll { get { return null; } } 
             }
 
             [Fact]
@@ -88,7 +82,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void IsValidStructuralProperty_should_return_true_when_declaring_type_can_be_set()
             {
-                Assert.True(typeof(Derived).GetProperty("Prop").IsValidStructuralProperty());
+                Assert.True(typeof(Derived).GetRuntimeProperty("Prop").IsValidStructuralProperty());
             }
         }
 
@@ -97,25 +91,25 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void CanWriteExtended_returns_true_for_property_that_has_a_private_setter()
             {
-                Assert.True(typeof(Base).GetProperty("Prop").CanWriteExtended());
+                Assert.True(typeof(Base).GetDeclaredProperty("Prop").CanWriteExtended());
             }
 
             [Fact]
             public void CanWriteExtended_returns_true_for_property_that_has_a_private_setter_on_the_declaring_type()
             {
-                Assert.True(typeof(Derived).GetProperty("Prop").CanWriteExtended());
+                Assert.True(typeof(Derived).GetRuntimeProperty("Prop").CanWriteExtended());
             }
 
             [Fact]
             public void CanWriteExtended_returns_false_for_property_that_has_no_setter()
             {
-                Assert.False(typeof(BaseNoSetter).GetProperty("Prop").CanWriteExtended());
+                Assert.False(typeof(BaseNoSetter).GetDeclaredProperty("Prop").CanWriteExtended());
             }
 
             [Fact]
             public void CanWriteExtended_returns_false_for_property_that_has_no_setter_on_the_declaring_type()
             {
-                Assert.False(typeof(DerivedNoSetter).GetProperty("Prop").CanWriteExtended());
+                Assert.False(typeof(DerivedNoSetter).GetRuntimeProperty("Prop").CanWriteExtended());
             }
 
             public class BaseNoSetter
@@ -133,13 +127,13 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void CanWriteExtended_returns_false_for_indexer_property_that_has_no_setter()
             {
-                Assert.False(typeof(BaseWithIndexer).GetProperty("Item").CanWriteExtended());
+                Assert.False(typeof(BaseWithIndexer).GetDeclaredProperty("Item").CanWriteExtended());
             }
 
             [Fact] // CodePlex 1215
             public void CanWriteExtended_returns_false_for_indexer_property_that_has_no_setter_on_the_declaring_type()
             {
-                Assert.False(typeof(DerivedWithIndexer).GetProperty("Item").CanWriteExtended());
+                Assert.False(typeof(DerivedWithIndexer).GetRuntimeProperty("Item").CanWriteExtended());
             }
 
             public class BaseWithIndexer
@@ -160,14 +154,14 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void GetPropertyInfoForSet_returns_given_property_if_it_has_a_setter()
             {
-                var propertyInfo = typeof(Base).GetProperty("Prop");
+                var propertyInfo = typeof(Base).GetDeclaredProperty("Prop");
                 Assert.Same(propertyInfo, propertyInfo.GetPropertyInfoForSet());
             }
 
             [Fact]
             public void GetPropertyInfoForSet_returns_declaring_type_property_if_it_has_a_setter()
             {
-                Assert.Same(typeof(Base).GetProperty("Prop"), typeof(Derived).GetProperty("Prop").GetPropertyInfoForSet());
+                Assert.Same(typeof(Base).GetRuntimeProperty("Prop"), typeof(Derived).GetRuntimeProperty("Prop").GetPropertyInfoForSet());
             }
         }
 
@@ -251,7 +245,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void AsEdmPrimitiveProperty_sets_fields_from_propertyInfo()
             {
-                var propertyInfo = typeof(PropertyInfoExtensions_properties_fixture).GetProperty("Key");
+                var propertyInfo = typeof(PropertyInfoExtensions_properties_fixture).GetDeclaredProperty("Key");
                 var property = propertyInfo.AsEdmPrimitiveProperty();
 
                 Assert.Equal("Key", property.Name);
@@ -271,7 +265,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void AsEdmPrimitiveProperty_returns_null_for_non_primitive_type()
             {
-                var propertyInfo = typeof(PropertyInfoExtensions_properties_fixture).GetProperty("EdmProperty");
+                var propertyInfo = typeof(PropertyInfoExtensions_properties_fixture).GetDeclaredProperty("EdmProperty");
                 var property = propertyInfo.AsEdmPrimitiveProperty();
 
                 Assert.Null(property);
@@ -281,6 +275,109 @@ namespace System.Data.Entity.Utilities
             {
                 public int Key { get; set; }
                 public EntityType EdmProperty { get; set; }
+            }
+        }
+
+        public class IsStaticEtc : TestBase
+        {
+            [Fact]
+            public void IsStatic_identifies_static_properties()
+            {
+                Assert.True(typeof(KitKat).GetAnyProperty("Yummy").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Wafers").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("And").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Chocolate").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("With").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("No").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Nuts").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("But").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("May").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Contain").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("TreeNuts").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Just").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Like").IsStatic());
+                Assert.False(typeof(KitKat).GetAnyProperty("A").IsStatic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Twix").IsStatic());
+            }
+
+            [Fact]
+            public void IsPublic_identifies_public_properties()
+            {
+                Assert.True(typeof(KitKat).GetAnyProperty("Yummy").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Wafers").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("And").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Chocolate").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("With").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("No").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Nuts").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("But").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("May").IsPublic());
+                Assert.False(typeof(KitKat).GetAnyProperty("Contain").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("TreeNuts").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Just").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Like").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("A").IsPublic());
+                Assert.True(typeof(KitKat).GetAnyProperty("Twix").IsPublic());
+            }
+
+            [Fact]
+            public void Getter_gets_any_getter()
+            {
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Yummy").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Wafers").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("And").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Chocolate").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("With").Getter());
+                Assert.Null(typeof(KitKat).GetAnyProperty("No").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Nuts").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("But").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("May").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Contain").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("TreeNuts").Getter());
+                Assert.Null(typeof(KitKat).GetAnyProperty("Just").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Like").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("A").Getter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Twix").Getter());
+            }
+
+            [Fact]
+            public void Setter_gets_any_setter()
+            {
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Yummy").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Wafers").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("And").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Chocolate").Setter());
+                Assert.Null(typeof(KitKat).GetAnyProperty("With").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("No").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Nuts").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("But").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("May").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Contain").Setter());
+                Assert.Null(typeof(KitKat).GetAnyProperty("TreeNuts").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Just").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Like").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("A").Setter());
+                Assert.NotNull(typeof(KitKat).GetAnyProperty("Twix").Setter());
+            }
+
+
+            public class KitKat
+            {
+                public static int Yummy { get; set; }
+                private static int Wafers { get; set; }
+                internal static int And { private get; set; }
+                internal static int Chocolate { get; private set; }
+                internal protected static int With { get { return 0; } }
+                public static int No { set { } }
+                public int Nuts { get; set; }
+                private int But { get; set; }
+                internal int May { private get; set; }
+                internal protected int Contain { get; private set; }
+                public int TreeNuts { get { return 0; } }
+                public int Just { set { } }
+                public static int Like { private get; set; }
+                public int A { get; private set; }
+                public static int Twix { protected internal get; set; }
             }
         }
 
@@ -303,11 +400,8 @@ namespace System.Data.Entity.Utilities
 
             private static IEnumerable<string> GetProperties(string propertyName)
             {
-                const BindingFlags bindingFlags =
-                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
-
                 return typeof(ChimChim)
-                    .GetProperty(propertyName, bindingFlags)
+                    .GetDeclaredProperty(propertyName)
                     .GetPropertiesInHierarchy()
                     .Select(p => p.DeclaringType.Name + "." + p.Name)
                     .OrderBy(n => n);

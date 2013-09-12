@@ -4,6 +4,7 @@ namespace ProductivityApiTests
 {
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Linq;
     using LazyUnicorns;
     using Xunit;
@@ -98,9 +99,7 @@ namespace ProductivityApiTests
         {
             Assert.Null(
                 new QueryableCollectionInitializer()
-                    .TryGetElementType(
-                        typeof(FakeEntityWithListCollection)
-                            .GetProperty("Posts")));
+                    .TryGetElementType(typeof(FakeEntityWithListCollection).GetDeclaredProperty("Posts")));
         }
 
         public class FakeEntityWithReadonlyCollection
@@ -116,9 +115,7 @@ namespace ProductivityApiTests
         {
             Assert.Null(
                 new QueryableCollectionInitializer()
-                    .TryGetElementType(
-                        typeof(FakeEntityWithReadonlyCollection)
-                            .GetProperty("Posts")));
+                    .TryGetElementType(typeof(FakeEntityWithReadonlyCollection).GetDeclaredProperty("Posts")));
         }
 
         [Fact]

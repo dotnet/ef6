@@ -456,7 +456,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void InterceptMember(EdmMember member, Type proxyType, EntityProxyTypeInfo proxyTypeInfo)
         {
-            var property = EntityUtil.GetTopProperty(proxyType, member.Name);
+            var property = proxyType.GetTopProperty(member.Name);
             Debug.Assert(
                 property != null,
                 String.Format(
@@ -598,13 +598,13 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal static bool CanProxyGetter(PropertyInfo clrProperty)
         {
             DebugCheck.NotNull(clrProperty);
-            return CanProxyMethod(clrProperty.GetGetMethod(true));
+            return CanProxyMethod(clrProperty.Getter());
         }
 
         internal static bool CanProxySetter(PropertyInfo clrProperty)
         {
             DebugCheck.NotNull(clrProperty);
-            return CanProxyMethod(clrProperty.GetSetMethod(true));
+            return CanProxyMethod(clrProperty.Setter());
         }
 
         private class ProxyTypeBuilder
@@ -667,7 +667,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                             ||
                             _lazyLoadImplementor.CanProxyMember(member))
                         {
-                            var baseProperty = EntityUtil.GetTopProperty(BaseType, member.Name);
+                            var baseProperty = BaseType.GetTopProperty(member.Name);
                             var propertyBuilder = TypeBuilder.DefineProperty(
                                 member.Name, PropertyAttributes.None, baseProperty.PropertyType, Type.EmptyTypes);
 
@@ -736,7 +736,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 if (CanProxyGetter(baseProperty))
                 {
-                    var baseGetter = baseProperty.GetGetMethod(true);
+                    var baseGetter = baseProperty.Getter();
                     const MethodAttributes getterAttributes =
                         MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
                     var getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;
@@ -758,7 +758,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 if (CanProxySetter(baseProperty))
                 {
-                    var baseSetter = baseProperty.GetSetMethod(true);
+                    var baseSetter = baseProperty.Setter();
 
                     const MethodAttributes methodAttributes =
                         MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;

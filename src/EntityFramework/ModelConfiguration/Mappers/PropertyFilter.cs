@@ -12,9 +12,6 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
     internal sealed class PropertyFilter
     {
-        internal const BindingFlags DefaultBindingFlags
-            = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
         private readonly DbModelBuilderVersion _modelBuilderVersion;
 
         public PropertyFilter(DbModelBuilderVersion modelBuilderVersion = DbModelBuilderVersion.Latest)
@@ -36,17 +33,12 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
             ValidatePropertiesForModelVersion(type, explicitlyMappedProperties);
 
-            var bindingFlags
-                = declaredOnly
-                      ? DefaultBindingFlags | BindingFlags.DeclaredOnly
-                      : DefaultBindingFlags;
-
             var propertyInfos
-                = from p in type.GetProperties(bindingFlags)
-                  where p.IsValidStructuralProperty()
-                  let m = p.GetGetMethod(true)
+                = from p in declaredOnly ? type.GetDeclaredProperties() : type.GetRuntimeProperties()
+                  where !p.IsStatic() && p.IsValidStructuralProperty()
+                  let m = p.Getter()
                   where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))
-                        && (!declaredOnly || type.BaseType.GetProperties(DefaultBindingFlags).All(bp => bp.Name != p.Name))
+                        && (!declaredOnly || type.BaseType.GetInstanceProperties().All(bp => bp.Name != p.Name))
                         && (EdmV3FeaturesSupported || (!IsEnumType(p.PropertyType) && !IsSpatialType(p.PropertyType)))
                         && (Ef6FeaturesSupported || !p.PropertyType.IsNested)
                   select p;

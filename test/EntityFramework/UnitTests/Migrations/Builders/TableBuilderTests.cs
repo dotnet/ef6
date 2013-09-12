@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Builders
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -38,13 +39,13 @@ namespace System.Data.Entity.Migrations.Builders
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Foo",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Foo")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Bar",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Bar")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
@@ -70,13 +71,13 @@ namespace System.Data.Entity.Migrations.Builders
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Foo",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Foo")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Bar",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Bar")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
@@ -108,13 +109,13 @@ namespace System.Data.Entity.Migrations.Builders
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Foo",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Foo")
                     });
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Bar",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Bar")
                     });
 
             var migration = new TestMigration();
@@ -147,14 +148,14 @@ namespace System.Data.Entity.Migrations.Builders
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Foo",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Foo")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Foo")
                     });
             
             createTableOperation.Columns.Add(
                 new ColumnModel(PrimitiveTypeKind.Guid)
                     {
                         Name = "Bar",
-                        ApiPropertyInfo = typeof(Columns).GetProperty("Bar")
+                        ApiPropertyInfo = typeof(Columns).GetDeclaredProperty("Bar")
                     });
 
             var migration = new TestMigration();

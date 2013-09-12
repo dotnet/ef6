@@ -24,9 +24,6 @@ namespace ProductivityApiTests
     {
         #region Infrastructure/setup
 
-        private const BindingFlags MemberBindingFlags =
-            BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-
         static TemplateTests()
         {
             TemplateTestsDatabaseInitializer.InitializeModelFirstDatabases();
@@ -463,19 +460,19 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_creates_non_virtual_scalar_and_complex_properties()
         {
-            Assert.False(typeof(CustomerMm).GetProperty("Name").GetGetMethod().IsVirtual);
-            Assert.False(typeof(CustomerMm).GetProperty("Name").GetSetMethod().IsVirtual);
-            Assert.False(typeof(CustomerMm).GetProperty("ContactInfo").GetGetMethod().IsVirtual);
-            Assert.False(typeof(CustomerMm).GetProperty("ContactInfo").GetSetMethod().IsVirtual);
+            Assert.False(typeof(CustomerMm).GetDeclaredProperty("Name").Getter().IsVirtual);
+            Assert.False(typeof(CustomerMm).GetDeclaredProperty("Name").Setter().IsVirtual);
+            Assert.False(typeof(CustomerMm).GetDeclaredProperty("ContactInfo").Getter().IsVirtual);
+            Assert.False(typeof(CustomerMm).GetDeclaredProperty("ContactInfo").Setter().IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_creates_virtual_collection_and_reference_navigation_properties()
         {
-            Assert.True(typeof(CustomerMm).GetProperty("Orders").GetGetMethod().IsVirtual);
-            Assert.True(typeof(CustomerMm).GetProperty("Orders").GetSetMethod().IsVirtual);
-            Assert.True(typeof(CustomerMm).GetProperty("Info").GetGetMethod().IsVirtual);
-            Assert.True(typeof(CustomerMm).GetProperty("Info").GetSetMethod().IsVirtual);
+            Assert.True(typeof(CustomerMm).GetDeclaredProperty("Orders").Getter().IsVirtual);
+            Assert.True(typeof(CustomerMm).GetDeclaredProperty("Orders").Setter().IsVirtual);
+            Assert.True(typeof(CustomerMm).GetDeclaredProperty("Info").Getter().IsVirtual);
+            Assert.True(typeof(CustomerMm).GetDeclaredProperty("Info").Setter().IsVirtual);
         }
 
         [Fact]
@@ -487,114 +484,114 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_can_create_private_non_virtual_nav_prop()
         {
-            var navProp = typeof(OfficeMf).GetProperty("Building", MemberBindingFlags);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsPrivate);
-            Assert.False(navProp.GetGetMethod(nonPublic: true).IsVirtual);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsPrivate);
-            Assert.False(navProp.GetSetMethod(nonPublic: true).IsVirtual);
+            var navProp = typeof(OfficeMf).GetDeclaredProperty("Building");
+            Assert.True(navProp.Getter().IsPrivate);
+            Assert.False(navProp.Getter().IsVirtual);
+            Assert.True(navProp.Setter().IsPrivate);
+            Assert.False(navProp.Setter().IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_fully_internal_nav_prop()
         {
-            var navProp = typeof(WorkOrderMf).GetProperty("Employee", MemberBindingFlags);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsVirtual);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsAssembly);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsVirtual);
+            var navProp = typeof(WorkOrderMf).GetDeclaredProperty("Employee");
+            Assert.True(navProp.Getter().IsAssembly);
+            Assert.True(navProp.Getter().IsVirtual);
+            Assert.True(navProp.Setter().IsAssembly);
+            Assert.True(navProp.Setter().IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_nav_prop_with_specific_getter_access()
         {
-            var navProp = typeof(OfficeMf).GetProperty("WhiteBoards", MemberBindingFlags);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsVirtual);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsPublic);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsVirtual);
+            var navProp = typeof(OfficeMf).GetDeclaredProperty("WhiteBoards");
+            Assert.True(navProp.Getter().IsAssembly);
+            Assert.True(navProp.Getter().IsVirtual);
+            Assert.True(navProp.Setter().IsPublic);
+            Assert.True(navProp.Setter().IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_nav_prop_with_specific_setter_access()
         {
-            var navProp = typeof(BuildingMf).GetProperty("MailRooms", MemberBindingFlags);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(navProp.GetGetMethod(nonPublic: true).IsVirtual);
-            Assert.True(navProp.GetSetMethod(nonPublic: true).IsPrivate);
-            Assert.False(navProp.GetSetMethod(nonPublic: true).IsVirtual);
+            var navProp = typeof(BuildingMf).GetDeclaredProperty("MailRooms");
+            Assert.True(navProp.Getter().IsAssembly);
+            Assert.True(navProp.Getter().IsVirtual);
+            Assert.True(navProp.Setter().IsPrivate);
+            Assert.False(navProp.Setter().IsVirtual);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_fully_internal_primitive_prop()
         {
-            var prop = typeof(BuildingMf).GetProperty("Value", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsAssembly);
+            var prop = typeof(BuildingMf).GetDeclaredProperty("Value");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsAssembly);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_primitive_prop_with_specific_getter_access()
         {
-            var prop = typeof(EmployeeMf).GetProperty("LastName", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsPrivate);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsAssembly);
+            var prop = typeof(EmployeeMf).GetDeclaredProperty("LastName");
+            Assert.True(prop.Getter().IsPrivate);
+            Assert.True(prop.Setter().IsAssembly);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_primitive_prop_with_specific_setter_access()
         {
-            var prop = typeof(EmployeeMf).GetProperty("FirstName", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsPublic);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsPrivate);
+            var prop = typeof(EmployeeMf).GetDeclaredProperty("FirstName");
+            Assert.True(prop.Getter().IsPublic);
+            Assert.True(prop.Setter().IsPrivate);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_fully_internal_primitive_prop_on_a_complex_type()
         {
-            var prop = typeof(AddressMf).GetProperty("State", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsAssembly);
+            var prop = typeof(AddressMf).GetDeclaredProperty("State");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsAssembly);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_primitive_prop_on_a_complex_type_with_specific_getter_access()
         {
-            var prop = typeof(AddressMf).GetProperty("City", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsPrivate);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsPublic);
+            var prop = typeof(AddressMf).GetDeclaredProperty("City");
+            Assert.True(prop.Getter().IsPrivate);
+            Assert.True(prop.Setter().IsPublic);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_primitive_prop_on_a_complex_type_with_specific_setter_access()
         {
-            var prop = typeof(AddressMf).GetProperty("ZipCode", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsPrivate);
+            var prop = typeof(AddressMf).GetDeclaredProperty("ZipCode");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsPrivate);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_complex_prop_with_different_getter_and_setter_access()
         {
-            var prop = typeof(BuildingMf).GetProperty("Address", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsPrivate);
+            var prop = typeof(BuildingMf).GetDeclaredProperty("Address");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsPrivate);
         }
 
         [Fact]
         public void
             CSharp_DbContext_template_can_create_complex_prop_on_a_complex_type_with_different_getter_and_setter_access()
         {
-            var prop = typeof(AddressMf).GetProperty("SiteInfo", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsPrivate);
+            var prop = typeof(AddressMf).GetDeclaredProperty("SiteInfo");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsPrivate);
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_non_public_DbSet_property()
         {
-            var prop = typeof(AdvancedPatternsModelFirstContext).GetProperty("MailRooms", MemberBindingFlags);
-            Assert.True(prop.GetGetMethod(nonPublic: true).IsAssembly);
-            Assert.True(prop.GetSetMethod(nonPublic: true).IsAssembly);
+            var prop = typeof(AdvancedPatternsModelFirstContext).GetDeclaredProperty("MailRooms");
+            Assert.True(prop.Getter().IsAssembly);
+            Assert.True(prop.Setter().IsAssembly);
         }
 
         [Fact]
@@ -656,7 +653,7 @@ namespace ProductivityApiTests
                                                  "ProductPageView", "BackOrderLine", "DiscontinuedProduct",
                                              };
 
-            var properties = new HashSet<string>(typeof(MonsterModel).GetProperties().Select(p => p.Name));
+            var properties = new HashSet<string>(typeof(MonsterModel).GetRuntimeProperties().Where(p => p.IsPublic()).Select(p => p.Name));
 
             foreach (var expected in expectedMonsterSets)
             {
@@ -702,14 +699,14 @@ namespace ProductivityApiTests
         public void CSharp_DbContext_template_can_create_nullable_prop()
         {
             Assert.True(
-                typeof(CurrentEmployeeMf).GetProperty("LeaveBalance", MemberBindingFlags).PropertyType ==
+                typeof(CurrentEmployeeMf).GetDeclaredProperty("LeaveBalance").PropertyType ==
                 typeof(decimal?));
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_nullable_prop_on_a_complex_type()
         {
-            Assert.True(typeof(SiteInfoMf).GetProperty("Zone", MemberBindingFlags).PropertyType == typeof(int?));
+            Assert.True(typeof(SiteInfoMf).GetDeclaredProperty("Zone").PropertyType == typeof(int?));
         }
 
         #endregion

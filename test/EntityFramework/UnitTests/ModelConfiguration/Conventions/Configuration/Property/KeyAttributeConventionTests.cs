@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
+    using System.Data.Entity.Utilities;
     using Moq;
     using Xunit;
 
@@ -15,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         public void Apply_should_find_single_key()
         {
             var mockEntityTypeConfiguration = new Mock<EntityTypeConfiguration>(typeof(KeyAttributeEntity));
-            var propertyInfo = typeof(KeyAttributeEntity).GetProperty("Id");
+            var propertyInfo = typeof(KeyAttributeEntity).GetDeclaredProperty("Id");
 
             new KeyAttributeConvention()
                 .ApplyPropertyTypeConfiguration(propertyInfo, () => mockEntityTypeConfiguration.Object, new ModelConfiguration());

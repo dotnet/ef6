@@ -144,7 +144,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            var propertyInfo = _type.GetInstanceProperty(propertyName);
             if (propertyInfo == null)
             {
                 throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
@@ -191,7 +191,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            var propertyInfo = _type.GetInstanceProperty(propertyName);
 
             if (propertyInfo == null)
             {
@@ -244,7 +244,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            var propertyInfo = _type.GetInstanceProperty(propertyName);
             if (propertyInfo == null)
             {
                 throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
@@ -296,13 +296,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             Check.NotEmpty(propertyName, "propertyName");
 
-            var propertyInfo = _type.GetProperty(propertyName, PropertyFilter.DefaultBindingFlags);
+            var propertyInfo = _type.GetInstanceProperty(propertyName);
             if (propertyInfo == null)
             {
                 throw new InvalidOperationException(Strings.NoSuchProperty(propertyName, _type.Name));
             }
 
-            return HasKey(_type.GetProperty(propertyName));
+            return HasKey(propertyInfo);
         }
 
         /// <summary>
@@ -342,7 +342,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 .Select(
                     n =>
                     {
-                        var propertyInfo = _type.GetProperty(n, PropertyFilter.DefaultBindingFlags);
+                        var propertyInfo = _type.GetInstanceProperty(n);
                         if (propertyInfo == null)
                         {
                             throw new InvalidOperationException(Strings.NoSuchProperty(n, _type.Name));

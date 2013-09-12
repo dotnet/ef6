@@ -47,14 +47,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (relatedEnd.TargetAccessor.ValueGetter == null)
                 {
                     var type = GetDeclaringType(relatedEnd);
-                    var propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
+                    var propertyInfo = type.GetTopProperty(relatedEnd.TargetAccessor.PropertyName);
                     if (propertyInfo == null)
                     {
                         throw new EntityException(
                             Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
                     }
                     var factory = new EntityProxyFactory();
-                    relatedEnd.TargetAccessor.ValueGetter = factory.CreateBaseGetter(type, propertyInfo);
+                    relatedEnd.TargetAccessor.ValueGetter = factory.CreateBaseGetter(propertyInfo.DeclaringType, propertyInfo);
                 }
                 try
                 {
@@ -82,14 +82,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                 if (relatedEnd.TargetAccessor.ValueSetter == null)
                 {
                     var type = GetDeclaringType(relatedEnd);
-                    var propertyInfo = EntityUtil.GetTopProperty(ref type, relatedEnd.TargetAccessor.PropertyName);
+                    var propertyInfo = type.GetTopProperty(relatedEnd.TargetAccessor.PropertyName);
                     if (propertyInfo == null)
                     {
                         throw new EntityException(
                             Strings.PocoEntityWrapper_UnableToSetFieldOrProperty(relatedEnd.TargetAccessor.PropertyName, type.FullName));
                     }
                     var factory = new EntityProxyFactory();
-                    relatedEnd.TargetAccessor.ValueSetter = factory.CreateBaseSetter(type, propertyInfo);
+                    relatedEnd.TargetAccessor.ValueSetter = factory.CreateBaseSetter(propertyInfo.DeclaringType, propertyInfo);
                 }
                 try
                 {
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static Type GetNavigationPropertyType(Type entityType, string propertyName)
         {
             Type navPropType;
-            var property = EntityUtil.GetTopProperty(entityType, propertyName);
+            var property = entityType.GetTopProperty(propertyName);
             if (property != null)
             {
                 navPropType = property.PropertyType;

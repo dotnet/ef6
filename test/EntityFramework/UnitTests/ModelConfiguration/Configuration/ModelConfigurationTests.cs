@@ -63,15 +63,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Configure_should_uniquify_unconfigured_association_function_names()
         {
-            var typeA = new MockType("A");
-            var typeB = new MockType("B").Property(typeA.AsCollection(), "As");
-            var mockPropertyInfo = typeB.GetProperty("As");
-            typeA.Property(typeB.AsCollection(), "Bs");
+            var mockPropertyInfo = typeof(BType1).GetDeclaredProperty("As");
 
             var modelConfiguration = new ModelConfiguration();
 
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(typeB).Navigation(mockPropertyInfo);
+                = modelConfiguration.Entity(typeof(BType1)).Navigation(mockPropertyInfo);
 
             navigationPropertyConfiguration.ModificationStoredProceduresConfiguration
                 = new ModificationStoredProceduresConfiguration();
@@ -85,12 +82,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var entityA = model.AddEntityType("A");
-            entityA.Annotations.SetClrType(typeA);
-            entityA.SetConfiguration(modelConfiguration.Entity(typeA));
+            entityA.Annotations.SetClrType(typeof(AType1));
+            entityA.SetConfiguration(modelConfiguration.Entity(typeof(AType1)));
 
             var entityB = model.AddEntityType("B");
-            entityB.Annotations.SetClrType(typeB);
-            entityB.SetConfiguration(modelConfiguration.Entity(typeB));
+            entityB.Annotations.SetClrType(typeof(BType1));
+            entityB.SetConfiguration(modelConfiguration.Entity(typeof(BType1)));
 
             model.AddEntitySet("AS", entityA);
             model.AddEntitySet("BS", entityB);
@@ -120,6 +117,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "AB_Delete"));
             Assert.True(databaseMapping.Database.Functions.Any(f => f.StoreFunctionNameAttribute == "AB_Delete1"));
+        }
+
+        public class AType1
+        {
+            public ICollection<BType1> Bs { get; set; }
+        }
+
+        public class BType1
+        {
+            public ICollection<AType1> As { get; set; }
         }
 
         [Fact]

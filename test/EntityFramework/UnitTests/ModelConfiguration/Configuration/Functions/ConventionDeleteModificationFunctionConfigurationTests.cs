@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int", "Foo"));
-            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String"), "Foo"));
+            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo"));
         }
 
         [Fact]
@@ -48,7 +49,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
+                    .Parameter("Pint", "Foo").Configuration.ParameterNames.Single().Item1);
+            
+            Assert.Equal(
+                "Foo",
+                new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity))
+                    .Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
@@ -57,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionDeleteModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int1", "Foo"));
-            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String1"), "Foo"));
+            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetDeclaredProperty("String1"), "Foo"));
         }
 
         [Fact]

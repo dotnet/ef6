@@ -987,6 +987,587 @@ namespace System.Data.Entity.Utilities
                     typeof(Purple).GetDeclaredMethods().OrderBy(m => m.Name).Select(m => (int)m.Invoke(new Purple(), null)));
             }
         }
+
+        public class GetProperties
+        {
+            [Fact]
+            public void GetDeclaredProperty_returns_any_and_only_declared_properties()
+            {
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("Mistakes").DeclaringType);
+                Assert.Null(typeof(TindersticksII).GetDeclaredProperty("VertrauenIII"));
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetDeclaredProperty("SleepySong").DeclaringType);
+
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("ShesGone").DeclaringType);
+                Assert.Null(typeof(TindersticksIIVinyl).GetDeclaredProperty("Mistakes"));
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("VertrauenIII").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("SleepySong").DeclaringType);
+
+                Assert.Null(typeof(TindersticksIICd).GetDeclaredProperty("ElDiabloEnElOjo"));
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("CherryBlossoms").DeclaringType);
+                Assert.Null(typeof(TindersticksIICd).GetDeclaredProperty("ShesGone"));
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("VertrauenIII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetDeclaredProperty("SleepySong").DeclaringType);
+            }
+
+            [Fact]
+            public void GetTopProperty_returns_PropertyInfo_from_highest_type_in_hierarchy()
+            {
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIICd).GetTopProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetTopProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("VertrauenIII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetTopProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIICd).GetTopProperty("SleepySong").DeclaringType);
+                Assert.Null(typeof(TindersticksIICd).GetTopProperty("Curtains"));
+                Assert.Null(typeof(object).GetTopProperty("SleepySong"));
+            }
+
+            private class PropData
+            {
+                public PropData(string name, Type declaringType, Type reflectedType)
+                {
+                    Name = name;
+                    DeclaringType = declaringType;
+                    ReflectedType = reflectedType;
+                }
+
+                public string Name { get; set; }
+                public Type DeclaringType { get; set; }
+                public Type ReflectedType { get; set; }
+
+                protected bool Equals(PropData other)
+                {
+                    return string.Equals(Name, other.Name) 
+                        && DeclaringType.Equals(other.DeclaringType) 
+                        && ReflectedType.Equals(other.ReflectedType);
+                }
+
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, obj))
+                    {
+                        return false;
+                    }
+
+                    if (ReferenceEquals(this, obj))
+                    {
+                        return true;
+                    }
+
+                    if (obj.GetType() != GetType())
+                    {
+                        return false;
+                    }
+
+                    return Equals((PropData)obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    unchecked
+                    {
+                        var hashCode = Name.GetHashCode();
+                        hashCode = (hashCode * 397) ^ DeclaringType.GetHashCode();
+                        hashCode = (hashCode * 397) ^ ReflectedType.GetHashCode();
+                        return hashCode;
+                    }
+                }
+            }
+
+            [Fact]
+            public void GetRuntimeProperties_returns_all_runtime_properties()
+            {
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksIIVinyl), typeof(TindersticksIICd)),
+                            new PropData("Mistakes", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("MySister", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("Seaweed", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("ShesGone", typeof(TindersticksIIVinyl), typeof(TindersticksIICd)),
+                            new PropData("Singing", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksIICd)),
+                            new PropData("SleepySong", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TalkToMe", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TinyTears", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TravellingLight", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenIII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                        },
+                    typeof(TindersticksIICd).GetRuntimeProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Mistakes", typeof(TindersticksII), typeof(TindersticksIIVinyl)),
+                            new PropData("MySister", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Seaweed", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ShesGone", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Singing", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksIIVinyl)),
+                            new PropData("SleepySong", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TalkToMe", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TinyTears", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TravellingLight", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenIII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                        },
+                    typeof(TindersticksIIVinyl).GetRuntimeProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("CherryBlossoms", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Mistakes", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("MySister", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Seaweed", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ShesGone", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Singing", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TalkToMe", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TinyTears", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TravellingLight", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("VertrauenII", typeof(TindersticksII), typeof(TindersticksII)),
+                        },
+                    typeof(TindersticksII).GetRuntimeProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+            }
+
+            [Fact]
+            public void GetInstanceProperties_returns_all_runtime_instance_properties()
+            {
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksIIVinyl), typeof(TindersticksIICd)),
+                            new PropData("Mistakes", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("MySister", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("Seaweed", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("ShesGone", typeof(TindersticksIIVinyl), typeof(TindersticksIICd)),
+                            new PropData("Singing", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksIICd)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TalkToMe", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TinyTears", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TravellingLight", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenIII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                        },
+                    typeof(TindersticksIICd).GetInstanceProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Mistakes", typeof(TindersticksII), typeof(TindersticksIIVinyl)),
+                            new PropData("MySister", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Seaweed", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ShesGone", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Singing", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksIIVinyl)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TalkToMe", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TinyTears", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TravellingLight", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenIII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                        },
+                    typeof(TindersticksIIVinyl).GetInstanceProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("CherryBlossoms", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Mistakes", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("MySister", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Seaweed", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ShesGone", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Singing", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TalkToMe", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TinyTears", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TravellingLight", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("VertrauenII", typeof(TindersticksII), typeof(TindersticksII)),
+                        },
+                    typeof(TindersticksII).GetInstanceProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+            }
+
+            [Fact]
+            public void GetDeclaredProperties_returns_only_declared_properties()
+            {
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("Mistakes", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("MySister", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("Seaweed", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("Singing", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("SleepySong", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TalkToMe", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TinyTears", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("TravellingLight", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                            new PropData("VertrauenIII", typeof(TindersticksIICd), typeof(TindersticksIICd)),
+                        },
+                    typeof(TindersticksIICd).GetDeclaredProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("CherryBlossoms", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("MySister", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Seaweed", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("ShesGone", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("Singing", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("SleepySong", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TalkToMe", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TinyTears", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("TravellingLight", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                            new PropData("VertrauenIII", typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl)),
+                        },
+                    typeof(TindersticksIIVinyl).GetDeclaredProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            new PropData("ANightIn", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("CherryBlossoms", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ElDiabloEnElOjo", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Mistakes", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("MySister", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("NoMoreAffairs", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Seaweed", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("ShesGone", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("Singing", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SleepySong", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("SnowyInFSharpMinor", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TalkToMe", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TinyTears", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("TravellingLight", typeof(TindersticksII), typeof(TindersticksII)),
+                            new PropData("VertrauenII", typeof(TindersticksII), typeof(TindersticksII)),
+                        },
+                    typeof(TindersticksII).GetDeclaredProperties()
+                        .OrderBy(p => p.Name)
+                        .ThenBy(p => p.DeclaringType.Name)
+                        .Select(p => new PropData(p.Name, p.DeclaringType, p.ReflectedType)));
+            }
+
+            [Fact]
+            public void GetRuntimeProperty_returns_only_public_properties()
+            {
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Null(typeof(TindersticksII).GetRuntimeProperty("ANightIn"));
+                Assert.Null(typeof(TindersticksII).GetRuntimeProperty("MySister"));
+                Assert.Null(typeof(TindersticksII).GetRuntimeProperty("TinyTears"));
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("Mistakes").DeclaringType);
+                Assert.Null(typeof(TindersticksII).GetRuntimeProperty("VertrauenIII"));
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetRuntimeProperty("SleepySong").DeclaringType);
+
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Null(typeof(TindersticksIIVinyl).GetRuntimeProperty("ANightIn"));
+                Assert.Null(typeof(TindersticksIIVinyl).GetRuntimeProperty("MySister"));
+                Assert.Null(typeof(TindersticksIIVinyl).GetRuntimeProperty("TinyTears"));
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIIVinyl).GetRuntimeProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetRuntimeProperty("VertrauenIII").DeclaringType);
+                Assert.Throws<AmbiguousMatchException>(() => typeof(TindersticksIIVinyl).GetRuntimeProperty("SleepySong"));
+
+                Assert.Null(typeof(TindersticksIICd).GetDeclaredProperty("ElDiabloEnElOjo"));
+                Assert.Null(typeof(TindersticksIICd).GetRuntimeProperty("ANightIn"));
+                Assert.Null(typeof(TindersticksIICd).GetRuntimeProperty("MySister"));
+                Assert.Null(typeof(TindersticksIICd).GetRuntimeProperty("TinyTears"));
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIICd).GetRuntimeProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetRuntimeProperty("VertrauenIII").DeclaringType);
+                Assert.Throws<AmbiguousMatchException>(() => typeof(TindersticksIICd).GetRuntimeProperty("SleepySong"));
+            }
+
+            [Fact]
+            public void GetInstanceProperty_returns_any_instance_property()
+            {
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("Mistakes").DeclaringType);
+                Assert.Null(typeof(TindersticksII).GetInstanceProperty("VertrauenIII"));
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetInstanceProperty("SleepySong").DeclaringType);
+
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIIVinyl).GetInstanceProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("VertrauenIII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIIVinyl).GetInstanceProperty("SleepySong").DeclaringType);
+
+                Assert.Null(typeof(TindersticksIICd).GetDeclaredProperty("ElDiabloEnElOjo"));
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIICd).GetInstanceProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetInstanceProperty("VertrauenIII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIICd).GetInstanceProperty("SleepySong").DeclaringType);
+            }
+
+            [Fact]
+            public void GetAnyProperty_returns_any_property()
+            {
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("Mistakes").DeclaringType);
+                Assert.Null(typeof(TindersticksII).GetAnyProperty("VertrauenIII"));
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksII).GetAnyProperty("SleepySong").DeclaringType);
+
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("ElDiabloEnElOjo").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksII), typeof(TindersticksIIVinyl).GetAnyProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetAnyProperty("VertrauenIII").DeclaringType);
+                Assert.Throws<AmbiguousMatchException>(() => typeof(TindersticksIICd).GetAnyProperty("SleepySong"));
+
+                Assert.Null(typeof(TindersticksIICd).GetDeclaredProperty("ElDiabloEnElOjo"));
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("ANightIn").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("MySister").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("TinyTears").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("Seaweed").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("VertrauenII").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("TalkToMe").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("NoMoreAffairs").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("Singing").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("TravellingLight").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("CherryBlossoms").DeclaringType);
+                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIICd).GetAnyProperty("ShesGone").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("Mistakes").DeclaringType);
+                Assert.Same(typeof(TindersticksIICd), typeof(TindersticksIICd).GetAnyProperty("VertrauenIII").DeclaringType);
+                Assert.Throws<AmbiguousMatchException>(() => typeof(TindersticksIICd).GetAnyProperty("SleepySong"));
+            }
+
+            public class TindersticksII
+            {
+                public virtual int ElDiabloEnElOjo { get; set; }
+                internal virtual int ANightIn { get; set; }
+                private int MySister { get; set; }
+                protected virtual int TinyTears { get; set; }
+                public virtual int SnowyInFSharpMinor { get; private set; }
+                public virtual int Seaweed { private get; set; }
+                public virtual int VertrauenII { get; protected set; }
+                public virtual int TalkToMe { protected get; set; }
+                public virtual int NoMoreAffairs { get { return 1995; } }
+                public virtual int Singing { set { } }
+                public virtual int TravellingLight { get; set; }
+                public int CherryBlossoms { get; set; }
+                public int ShesGone { get; set; }
+                public virtual int Mistakes { get; set; }
+                public int SleepySong { get; set; }
+            }
+
+            public class TindersticksIIVinyl : TindersticksII
+            {
+                public override int ElDiabloEnElOjo { get; set; }
+                internal override int ANightIn { get; set; }
+                private int MySister { get; set; }
+                protected override int TinyTears { get; set; }
+                public override int SnowyInFSharpMinor { get { return 1995; } }
+                public override int Seaweed {  set { } }
+                public override int VertrauenII { get; protected set; }
+                public override int TalkToMe { protected get; set; }
+                public override int NoMoreAffairs { get { return 1995; } }
+                public override int Singing { set { } }
+                public new virtual int TravellingLight { get; set; }
+                public new virtual int CherryBlossoms { get; set; }
+                public new int ShesGone { get; set; }
+                public virtual int VertrauenIII { get; set; }
+                public static new int SleepySong { get; set; }
+            }
+
+            public class TindersticksIICd : TindersticksIIVinyl
+            {
+                internal override int ANightIn { get; set; }
+                private int MySister { get; set; }
+                protected override int TinyTears { get; set; }
+                public override int SnowyInFSharpMinor { get { return 1995; }  }
+                public override int Seaweed { set { } }
+                public override int VertrauenII { get; protected set; }
+                public override int TalkToMe { protected get; set; }
+                public override int NoMoreAffairs { get { return 1995; } }
+                public override int Singing { set { } }
+                public override int TravellingLight { get; set; }
+                public override int CherryBlossoms { get; set; }
+                public override int Mistakes { get; set; }
+                public override int VertrauenIII { get; set; }
+                public static new int SleepySong { get; set; }
+            }
+        }
     }
 
     public class NormalPublicClass

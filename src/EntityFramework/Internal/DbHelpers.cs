@@ -336,7 +336,7 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Type> types;
             if (!_propertyTypes.TryGetValue(type, out types))
             {
-                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetInstanceProperties().Where(p => p.GetIndexParameters().Length == 0);
                 types = new Dictionary<string, Type>(properties.Count());
                 foreach (var property in properties)
                 {
@@ -358,12 +358,12 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Action<object, object>> setters;
             if (!_propertySetters.TryGetValue(type, out setters))
             {
-                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetInstanceProperties().Where(p => p.GetIndexParameters().Length == 0);
                 setters = new Dictionary<string, Action<object, object>>(properties.Count());
                 foreach (var property in properties.Select(p => p.GetPropertyInfoForSet()))
                 {
                     // Only create delegates for properties that are found and have a setter.
-                    var setMethod = property.GetSetMethod(nonPublic: true);
+                    var setMethod = property.Setter();
                     if (setMethod != null)
                     {
                         // First create a dynamic delegate that will call the setter on the object instance.
@@ -424,11 +424,11 @@ namespace System.Data.Entity.Internal
             IDictionary<string, Func<object, object>> getters;
             if (!_propertyGetters.TryGetValue(type, out getters))
             {
-                var properties = type.GetProperties(PropertyFilter.DefaultBindingFlags).Where(p => p.GetIndexParameters().Length == 0);
+                var properties = type.GetInstanceProperties().Where(p => p.GetIndexParameters().Length == 0);
                 getters = new Dictionary<string, Func<object, object>>(properties.Count());
                 foreach (var property in properties)
                 {
-                    var getMethod = property.GetGetMethod(nonPublic: true);
+                    var getMethod = property.Getter();
                     if (getMethod != null)
                     {
                         var instanceParam = Expression.Parameter(typeof(object), "instance");

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -20,8 +21,6 @@ namespace System.Data.Entity.Infrastructure
     public class DbPropertyValuesTests : TestBase
     {
         #region Helper classes
-
-        private const BindingFlags PropertyBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
         /// <summary>
         /// A type with a variety of different types of properties used for the tests in this class.
@@ -154,11 +153,11 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(2, clone.PublicIntProp);
             Assert.Equal(
                 "PrivateStringPropValue",
-                typeof(FakeTypeWithProps).GetProperty("PrivateStringProp", PropertyBindingFlags).GetValue(clone, null));
-            Assert.Equal(3, typeof(FakeTypeWithProps).GetProperty("PrivateIntProp", PropertyBindingFlags).GetValue(clone, null));
+                typeof(FakeTypeWithProps).GetDeclaredProperty("PrivateStringProp").GetValue(clone, null));
+            Assert.Equal(3, typeof(FakeTypeWithProps).GetDeclaredProperty("PrivateIntProp").GetValue(clone, null));
             Assert.Equal(4, clone.PublicIntPropWithPrivateSetter);
             Assert.Equal(
-                5, typeof(FakeTypeWithProps).GetProperty("PublicIntPropWithPrivateGetter", PropertyBindingFlags).GetValue(clone, null));
+                5, typeof(FakeTypeWithProps).GetDeclaredProperty("PublicIntPropWithPrivateGetter").GetValue(clone, null));
             Assert.True(DbHelpers.KeyValuesEqual(new byte[] { 3, 1, 4, 1, 5, 9 }, clone.PublicBinaryProp));
         }
 
@@ -194,7 +193,7 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal("PublicReadonlyStringProp", clone.PublicReadonlyStringProp);
             Assert.Equal(
                 "PrivateReadonlyStringProp",
-                typeof(FakeTypeWithProps).GetProperty("PrivateReadonlyStringProp", PropertyBindingFlags).GetValue(clone, null));
+                typeof(FakeTypeWithProps).GetDeclaredProperty("PrivateReadonlyStringProp").GetValue(clone, null));
         }
 
         [Fact]

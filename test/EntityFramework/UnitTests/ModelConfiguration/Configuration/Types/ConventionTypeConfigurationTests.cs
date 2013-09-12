@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -29,11 +30,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.False(initialized);
         }
 
+        public class AType
+        {
+            public int Property1 { get; set; }
+            public AType Property2 { get; set; }
+            private decimal Property3 { get; set; }
+            public int Property4 { get; set; }
+            public decimal Property5 { get; set; }
+            public object NonScalar { get; set; }
+        }
+
         [Fact]
         public void Methods_dont_throw_when_configuration_is_null()
         {
-            var type = new MockType();
-            type.Property<int>("Property1");
+            var type = typeof(AType);
 
             Methods_dont_throw_when_configuration_is_null_implementation(
                 () => new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()));
@@ -52,11 +62,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             config().HasEntitySetName("EntitySet1");
             config().HasKey("Property1");
             config().HasKey(new[] { "Property1" });
-            config().HasKey(config().ClrType.GetProperties().First());
-            config().HasKey(new[] { config().ClrType.GetProperties().First() });
+            config().HasKey(config().ClrType.GetRuntimeProperties().First(p => p.IsPublic()));
+            config().HasKey(new[] { config().ClrType.GetRuntimeProperties().First(p => p.IsPublic()) });
             config().Property("Property1");
-            config().Property(config().ClrType.GetProperties().First());
-            config().Property(new PropertyPath(config().ClrType.GetProperties().First()));
+            config().Property(config().ClrType.GetRuntimeProperties().First(p => p.IsPublic()));
+            config().Property(new PropertyPath(config().ClrType.GetRuntimeProperties().First(p => p.IsPublic())));
             config().ToTable("Table1");
             config().ToTable("Table1", "Schema1");
             config().MapToStoredProcedures();
@@ -125,8 +135,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Ignore_configures()
         {
-            var type = new MockType()
-                .Property<int>("Property1");
+            var type = typeof(AType);
+
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
@@ -137,10 +147,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void Ignore_configures_private_property()
+        {
+            var type = typeof(AType);
+
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            config.Ignore("Property3");
+
+            Assert.Equal(1, innerConfig.IgnoredProperties.Count());
+            Assert.True(innerConfig.IgnoredProperties.Any(p => p.Name == "Property3"));
+        }
+
+        [Fact]
         public void Ignore_configures_complex_type_property()
         {
-            var type = new MockType()
-                .Property<int>("Property1");
+            var type = typeof(AType);
+
             var innerConfig = new ComplexTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
@@ -189,17 +213,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.HasKey(new[] { "Property1" }), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey(config.ClrType.GetProperties().First()), "HasKey");
+                config => config.HasKey(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }), "HasKey");
+                config => config.HasKey(new[] { config.ClrType.GetRuntimeProperties().First(p => p.IsPublic()) }), "HasKey");
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.Property("Property1"), "Property");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.Property(config.ClrType.GetProperties().First()), "Property");
+                config => config.Property(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "Property");
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.NavigationProperty("Property2"), "NavigationProperty");
             Ignore_type_throws_with_any_other_configuration_implementation(
-                config => config.NavigationProperty(config.ClrType.GetProperties().Last()), "NavigationProperty");
+                config => config.NavigationProperty(config.ClrType.GetRuntimeProperties().Last(p => p.IsPublic())), "NavigationProperty");
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.ToTable("Table1"), "ToTable");
             Ignore_type_throws_with_any_other_configuration_implementation(
@@ -213,9 +237,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
             string methodName)
         {
-            var type = new MockType();
-            type.Property<int>("Property1");
-            type.Property(type, "Property2");
+            var type = typeof(AType);
 
             Ignore_type_throws_with_any_other_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
@@ -268,9 +290,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.HasKey(new[] { "Property1" }), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey(config.ClrType.GetProperties().First()), "HasKey");
+                config => config.HasKey(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.HasKey(new[] { config.ClrType.GetProperties().First() }), "HasKey");
+                config => config.HasKey(new[] { config.ClrType.GetRuntimeProperties().First(p => p.IsPublic()) }), "HasKey");
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.ToTable("Table1"), "ToTable");
             IsComplexType_throws_with_conflicting_configuration_implementation(
@@ -282,14 +304,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.NavigationProperty("Property1"), "NavigationProperty");
             IsComplexType_throws_with_conflicting_configuration_implementation(
-                config => config.NavigationProperty(config.ClrType.GetProperties().First()), "NavigationProperty");
+                config => config.NavigationProperty(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "NavigationProperty");
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
             string methodName)
         {
-            var type = new MockType();
-            type.Property<int>("Property1");
+            var type = typeof(AType);
 
             IsComplexType_throws_with_conflicting_configuration_assert(
                 new ConventionTypeConfiguration(type, () => new EntityTypeConfiguration(type), new ModelConfiguration()),
@@ -336,8 +357,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Property_throws_when_nonscalar()
         {
-            var type = new MockType()
-                .Property<object>("NonScalar");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
@@ -367,13 +387,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Property_throws_when_not_exists()
         {
-            var type = new MockType();
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
-                Strings.NoSuchProperty("Property1", type.Object.FullName),
-                Assert.Throws<InvalidOperationException>(() => config.Property("Property1")).Message);
+                Strings.NoSuchProperty("DoesNotExist", type.Name),
+                Assert.Throws<InvalidOperationException>(() => config.Property("DoesNotExist")).Message);
 
             Assert.Equal(
                 "propertyInfo",
@@ -383,16 +403,32 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Property_returns_configuration()
         {
-            var type = new MockType()
-                .Property<decimal>("Property1");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.Property("Property1");
+            var result = config.Property("Property5");
 
             Assert.NotNull(result);
             Assert.NotNull(result.ClrPropertyInfo);
-            Assert.Equal("Property1", result.ClrPropertyInfo.Name);
+            Assert.Equal("Property5", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<Properties.Primitive.DecimalPropertyConfiguration>(result.Configuration());
+        }
+
+        [Fact]
+        public void Property_returns_configuration_for_private_property()
+        {
+            var type = typeof(AType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.Property("Property3");
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("Property3", result.ClrPropertyInfo.Name);
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
             Assert.IsType<Properties.Primitive.DecimalPropertyConfiguration>(result.Configuration());
@@ -401,17 +437,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void Property_returns_configuration_for_complex_type_properties()
         {
-            var type = new MockType()
-                .Property<decimal>("Property1");
+            var type = typeof(AType);
             var innerConfig = new ComplexTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             config.IsComplexType();
-            var result = config.Property("Property1");
+            var result = config.Property("Property5");
 
             Assert.NotNull(result);
             Assert.NotNull(result.ClrPropertyInfo);
-            Assert.Equal("Property1", result.ClrPropertyInfo.Name);
+            Assert.Equal("Property5", result.ClrPropertyInfo.Name);
             Assert.Equal(typeof(decimal), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
             Assert.IsType<Properties.Primitive.DecimalPropertyConfiguration>(result.Configuration());
@@ -432,7 +467,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Equal(
                 Strings.LightweightEntityConfiguration_InvalidNavigationProperty("Property1"),
                 Assert.Throws<InvalidOperationException>(
-                    () => config.NavigationProperty(type.GetProperty("Property1"))).Message);
+                    () => config.NavigationProperty(type.GetDeclaredProperty("Property1"))).Message);
         }
 
         [Fact]
@@ -442,7 +477,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.NavigationProperty(type.GetProperty("NavigationProperty"));
+            var result = config.NavigationProperty(type.GetDeclaredProperty("NavigationProperty"));
 
             Assert.NotNull(result);
             Assert.NotNull(result.ClrPropertyInfo);
@@ -464,6 +499,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.NotNull(result);
             Assert.NotNull(result.ClrPropertyInfo);
             Assert.Equal("NavigationProperty", result.ClrPropertyInfo.Name);
+            Assert.Equal(typeof(LocalEntityType), result.ClrPropertyInfo.PropertyType);
+            Assert.NotNull(result.Configuration);
+            Assert.IsType<NavigationPropertyConfiguration>(result.Configuration);
+        }
+
+        [Fact]
+        public void NavigationProperty_returns_configuration_by_name_for_private_property()
+        {
+            var type = typeof(LocalEntityType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.NavigationProperty("PrivateNavigationProperty");
+
+            Assert.NotNull(result);
+            Assert.NotNull(result.ClrPropertyInfo);
+            Assert.Equal("PrivateNavigationProperty", result.ClrPropertyInfo.Name);
             Assert.Equal(typeof(LocalEntityType), result.ClrPropertyInfo.PropertyType);
             Assert.NotNull(result.Configuration);
             Assert.IsType<NavigationPropertyConfiguration>(result.Configuration);
@@ -592,42 +644,54 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasKey_configures_when_unset()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey("Property1").HasKey("Property2");
+            var result = config.HasKey("Property1").HasKey("Property4");
 
-            Assert.Equal(new[] { "Property1", "Property2" }, innerConfig.KeyProperties.Select(p => p.Name));
+            Assert.Equal(new[] { "Property1", "Property4" }, innerConfig.KeyProperties.Select(p => p.Name));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_configures_with_private_property()
+        {
+            var type = typeof(AType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.HasKey("Property1").HasKey("Property3");
+
+            Assert.Equal(new[] { "Property1", "Property3" }, innerConfig.KeyProperties.Select(p => p.Name));
             Assert.Same(config, result);
         }
 
         [Fact]
         public void HasKey_PropertyInfo_configures_when_unset()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2");
-            var innerConfig = new EntityTypeConfiguration(type);
-            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+            var innerConfig = new EntityTypeConfiguration(typeof(AType2));
+            var config = new ConventionTypeConfiguration(typeof(AType2), () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey(config.ClrType.GetProperties().First())
-                .HasKey(config.ClrType.GetProperties().Last());
+            var result = config.HasKey(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic()))
+                .HasKey(config.ClrType.GetRuntimeProperties().Last(p => p.IsPublic()));
 
             Assert.Equal(new[] { "Property1", "Property2" }, innerConfig.KeyProperties.Select(p => p.Name));
             Assert.Same(config, result);
         }
 
+        public class AType2
+        {
+            public int Property1 { get; set; }
+            public int Property2 { get; set; }
+        }
+
         [Fact]
         public void HasKey_is_noop_when_set()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
-            innerConfig.Key(new[] { type.GetProperty("Property1") });
+            innerConfig.Key(new[] { type.GetDeclaredProperty("Property1") });
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey("Property2");
@@ -640,13 +704,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasKey_throws_when_not_exists()
         {
-            var type = new MockType();
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
-                Strings.NoSuchProperty("Property2", "T"),
-                Assert.Throws<InvalidOperationException>(() => config.HasKey("Property2")).Message);
+                Strings.NoSuchProperty("DoesNotExist", "AType"),
+                Assert.Throws<InvalidOperationException>(() => config.HasKey("DoesNotExist")).Message);
         }
 
         [Fact]
@@ -670,74 +734,81 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         [Fact]
         public void HasKey_composite_configures_when_unset()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey(new[] { "Property1", "Property2" });
+            var result = config.HasKey(new[] { "Property1", "Property4" });
 
             Assert.Equal(2, innerConfig.KeyProperties.Count());
             Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
-            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property4"));
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasKey_composite_configures_with_private_property_when_unset()
+        {
+            var type = typeof(AType);
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.HasKey(new[] { "Property1", "Property3" });
+
+            Assert.Equal(2, innerConfig.KeyProperties.Count());
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property1"));
+            Assert.True(innerConfig.KeyProperties.Any(p => p.Name == "Property3"));
             Assert.Same(config, result);
         }
 
         [Fact]
         public void HasKey_composite_is_noop_when_set()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2")
-                .Property<int>("Property3");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
-            innerConfig.Key(new[] { type.GetProperty("Property1") });
+            innerConfig.Key(new[] { type.GetDeclaredProperty("Property1") });
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
-            var result = config.HasKey(new[] { "Property2", "Property3" });
+            var result = config.HasKey(new[] { "Property2", "Property4" });
 
             Assert.Equal(1, innerConfig.KeyProperties.Count());
             Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
-            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property3"));
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property4"));
             Assert.Same(config, result);
         }
 
         [Fact]
         public void HasKey_composite_is_noop_when_called_twice()
         {
-            var type = new MockType()
-                .Property<int>("Property1")
-                .Property<int>("Property2")
-                .Property<int>("Property3");
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             var result = config.HasKey(new[] { "Property1" })
-                .HasKey(new[] { "Property2", "Property3" });
+                .HasKey(new[] { "Property2", "Property4" });
 
             Assert.Equal(1, innerConfig.KeyProperties.Count());
             Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property2"));
-            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property3"));
+            Assert.False(innerConfig.KeyProperties.Any(p => p.Name == "Property4"));
             Assert.Same(config, result);
         }
 
         [Fact]
         public void HasKey_composite_throws_when_not_exists()
         {
-            var type = new MockType();
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
             Assert.Equal(
-                Strings.NoSuchProperty("Property1", "T"),
-                Assert.Throws<InvalidOperationException>(() => config.HasKey(new[] { "Property1", "Property2" })).Message);
+                Strings.NoSuchProperty("DoesNotExist1", "AType"),
+                Assert.Throws<InvalidOperationException>(() => config.HasKey(new[] { "DoesNotExist1", "DoesNotExist2" })).Message);
         }
 
         [Fact]
         public void MapToStoredProcedures_configures_when_unset()
         {
-            var type = new MockType();
+            var type = typeof(AType);
             var innerConfig = new EntityTypeConfiguration(type);
             var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
 
@@ -793,6 +864,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             public decimal Property1 { get; set; }
             public LocalEntityType NavigationProperty { get; set; }
+            private LocalEntityType PrivateNavigationProperty { get; set; }
         }
     }
 }

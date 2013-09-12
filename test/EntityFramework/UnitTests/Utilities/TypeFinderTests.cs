@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Utilities
 {
     using System.Linq;
+    using System.Reflection;
     using Xunit;
 
     public class TypeFinderTests : TestBase
@@ -111,7 +112,7 @@ namespace System.Data.Entity.Utilities
                 new TypeFinder(GetType().Assembly).FindType(
                     typeof(ABase),
                     null,
-                    t => t.Where(n => n.GetProperties().Any(p => p.Name == "DiscoverMe"))));
+                    t => t.Where(n => n.GetRuntimeProperties().Any(p => p.Name == "DiscoverMe"))));
         }
 
         public class CanYouFindMe : ABase
@@ -128,7 +129,7 @@ namespace System.Data.Entity.Utilities
                     () => new TypeFinder(GetType().Assembly).FindType(
                         typeof(ABase),
                         null,
-                        t => t.Where(n => n.GetProperties().Any(p => p.Name == "DontDiscoverMe")),
+                        t => t.Where(n => n.GetRuntimeProperties().Any(p => p.Name == "DontDiscoverMe")),
                         noType: a => new InvalidOperationException(a))).Message);
         }
 
@@ -139,7 +140,7 @@ namespace System.Data.Entity.Utilities
                 new TypeFinder(GetType().Assembly).FindType(
                     typeof(ABase),
                     null,
-                    t => t.Where(n => n.GetProperties().Any(p => p.Name == "DontDiscoverMe"))));
+                    t => t.Where(n => n.GetRuntimeProperties().Any(p => p.Name == "DontDiscoverMe"))));
         }
 
         [Fact]
@@ -151,7 +152,7 @@ namespace System.Data.Entity.Utilities
                     () => new TypeFinder(GetType().Assembly).FindType(
                         typeof(ABase),
                         null,
-                        t => t.Where(n => n.GetProperties().Any(p => p.Name == "DiscoverMeMeMe")),
+                        t => t.Where(n => n.GetRuntimeProperties().Any(p => p.Name == "DiscoverMeMeMe")),
                         multipleTypes: (a, t) => new InvalidOperationException(t.First().Name + " " + t.Skip(1).First().Name + " " + a)))
                       .Message);
         }
@@ -163,7 +164,7 @@ namespace System.Data.Entity.Utilities
                 new TypeFinder(GetType().Assembly).FindType(
                     typeof(ABase),
                     null,
-                    t => t.Where(n => n.GetProperties().Any(p => p.Name == "DiscoverMeMeMe"))));
+                    t => t.Where(n => n.GetRuntimeProperties().Any(p => p.Name == "DiscoverMeMeMe"))));
         }
 
         public class CanYouFindMeTwo : ABase

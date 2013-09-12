@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Linq;
     using System.Xml;
@@ -2523,6 +2524,126 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             this.productsEntitySet = data.ProductsEntitySet;
             this.categoriesEntitySet = data.CategoriesEntitySet;
         }
+
+        [Fact]
+        public void TryGetAnonymousTypeValues_reads_values_from_types_that_look_anonymous()
+        {
+            var values = DbExpressionBuilder.TryGetAnonymousTypeValues<PseudoAnonymous1, int>(new PseudoAnonymous1(1, 2));
+            Assert.Equal(2, values.Count);
+            Assert.Contains(new KeyValuePair<string, int>("A", 1), values);
+            Assert.Contains(new KeyValuePair<string, int>("B", 2), values);
+
+            var anonObject = new { A = 3, B = 4 };
+
+            values = (List<KeyValuePair<string, int>>)typeof(DbExpressionBuilder)
+                .GetDeclaredMethod("TryGetAnonymousTypeValues")
+                .MakeGenericMethod(new[] { anonObject.GetType(), typeof(int) })
+                .Invoke(null, new object[] { anonObject });
+
+            Assert.Equal(2, values.Count);
+            Assert.Contains(new KeyValuePair<string, int>("A", 3), values);
+            Assert.Contains(new KeyValuePair<string, int>("B", 4), values);
+        }
+
+        [Fact]
+        public void TryGetAnonymousTypeValues_reads_values_from_types_that_look_anonymous_but_have_static_properties()
+        {
+            var values = DbExpressionBuilder.TryGetAnonymousTypeValues<PseudoAnonymous2, int>(new PseudoAnonymous2(1, 2));
+            Assert.Equal(2, values.Count);
+            Assert.Contains(new KeyValuePair<string, int>("A", 1), values);
+            Assert.Contains(new KeyValuePair<string, int>("B", 2), values);
+        }
+
+        [Fact]
+        public void TryGetAnonymousTypeValues_returns_null_for_non_anonymous_looking_types()
+        {
+            Assert.Null(DbExpressionBuilder.TryGetAnonymousTypeValues<NotAnonymous1, int>(new NotAnonymous1(1, 2)));
+            Assert.Null(DbExpressionBuilder.TryGetAnonymousTypeValues<NotAnonymous2, int>(new NotAnonymous2(1, 2)));
+            Assert.Null(DbExpressionBuilder.TryGetAnonymousTypeValues<NotAnonymous3, int>(new NotAnonymous3(1, 2)));
+            Assert.Null(DbExpressionBuilder.TryGetAnonymousTypeValues<PseudoAnonymous1, string>(new PseudoAnonymous1(1, 2)));
+        }
+
+        public class PseudoAnonymous1
+        {
+            private readonly int _a;
+            private readonly int _b;
+
+            public PseudoAnonymous1(int a, int b)
+            {
+                _a = a;
+                _b = b;
+            }
+
+            public int A { get { return _a; } }
+            public int B { get { return _b; } }
+        }
+
+        public class PseudoAnonymous2
+        {
+            private readonly int _a;
+            private readonly int _b;
+
+            public PseudoAnonymous2(int a, int b)
+            {
+                _a = a;
+                _b = b;
+            }
+
+            public int A { get { return _a; } }
+            public int B { get { return _b; } }
+
+            public static int C { get { return 7; } }
+        }
+
+        public class NotAnonymous1
+        {
+            private readonly int _a;
+            private readonly int _b;
+
+            public NotAnonymous1(int a, int b)
+            {
+                _a = a;
+                _b = b;
+            }
+
+            public int A { get { return _a; } }
+            internal int B { get { return _b; } }
+        }
+
+        public class BaseClass
+        {
+        }
+
+        public class NotAnonymous2 : BaseClass
+        {
+            private readonly int _a;
+            private readonly int _b;
+
+            public NotAnonymous2(int a, int b)
+            {
+                _a = a;
+                _b = b;
+            }
+
+            public int A { get { return _a; } }
+            public int B { get { return _b; } }
+        }
+
+        public class NotAnonymous3
+        {
+            private readonly int _a;
+            private readonly int _b;
+
+            public NotAnonymous3(int a, int b)
+            {
+                _a = a;
+                _b = b;
+            }
+
+            public int A { get { return _a; } }
+            public int B { set { } }
+        }
+
     }
 
     public class DbExpressionBuilderFixture

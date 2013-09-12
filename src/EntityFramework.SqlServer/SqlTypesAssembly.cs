@@ -1989,7 +1989,7 @@ namespace System.Data.Entity.SqlServer
 
         private PropertyInfo FindSqlGeographyProperty(string propertyName)
         {
-            return SqlGeographyType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            return SqlGeographyType.GetRuntimeProperty(propertyName);
         }
 
         private MethodInfo FindSqlGeometryStaticMethod(string methodName, params Type[] argTypes)
@@ -2004,7 +2004,7 @@ namespace System.Data.Entity.SqlServer
 
         private PropertyInfo FindSqlGeometryProperty(string propertyName)
         {
-            return SqlGeometryType.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
+            return SqlGeometryType.GetRuntimeProperty(propertyName);
         }
     }
 }

@@ -569,32 +569,6 @@ namespace System.Data.Entity.Core
             return ((null != nullable) && nullable.IsNull);
         }
 
-        internal static PropertyInfo GetTopProperty(Type t, string propertyName)
-        {
-            return GetTopProperty(ref t, propertyName);
-        }
-
-        /// <summary>
-        /// Returns the PropertyInfo and Type where a given property is defined
-        /// This is done by traversing the type hierarchy to find the type match.
-        /// </summary>
-        internal static PropertyInfo GetTopProperty(ref Type t, string propertyName)
-        {
-            PropertyInfo propertyInfo = null;
-            while (propertyInfo == null
-                   && t != null)
-            {
-                propertyInfo = t.GetProperty(
-                    propertyName, BindingFlags.Instance |
-                                  BindingFlags.Public |
-                                  BindingFlags.NonPublic |
-                                  BindingFlags.DeclaredOnly);
-                t = t.BaseType;
-            }
-            t = propertyInfo.DeclaringType;
-            return propertyInfo;
-        }
-
         internal static int SrcCompare(string strA, string strB)
         {
             return ((strA == strB) ? 0 : 1);

@@ -18,18 +18,18 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Linq;
     using System.Reflection;
     using Xunit;
-    using BinaryPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration
-        ;
+    using BinaryPropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.BinaryPropertyConfiguration;
     using DateTimePropertyConfiguration =
         System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DateTimePropertyConfiguration;
     using DecimalPropertyConfiguration =
         System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.DecimalPropertyConfiguration;
-    using LengthPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration
-        ;
+    using LengthPropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration;
     using PrimitivePropertyConfiguration =
         System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.PrimitivePropertyConfiguration;
-    using StringPropertyConfiguration = System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration
-        ;
+    using StringPropertyConfiguration =
+        System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.StringPropertyConfiguration;
 
     public sealed class DbModelBuilderTests
     {
@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration
         public void Build_should_validate_and_throw_with_invalid_model()
         {
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.Entity(new MockType(), true);
+            modelConfiguration.Entity(typeof(Random), true);
 
             Assert.Throws<ModelValidationException>(
                 () => new DbModelBuilder(modelConfiguration).Build(ProviderRegistry.Sql2008_ProviderInfo));
@@ -124,9 +124,8 @@ namespace System.Data.Entity.ModelConfiguration
         public void Build_should_map_types()
         {
             var modelConfiguration = new ModelConfiguration();
-            var mockType = new MockType("T").Property<int>("Id");
-            modelConfiguration.Entity(mockType).Key(mockType.GetProperty("Id"));
-            modelConfiguration.ComplexType(new MockType("C"));
+            modelConfiguration.Entity(typeof(AType2)).Key(typeof(AType2).GetInstanceProperty("Id"));
+            modelConfiguration.ComplexType(typeof(CType2));
             var modelBuilder = new DbModelBuilder(modelConfiguration);
 
             var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
@@ -137,13 +136,21 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal(1, databaseMapping.Model.ComplexTypes.Count());
         }
 
+        public class AType2
+        {
+            public int Id { get; set; }
+        }
+
+        public class CType2
+        {
+        }
+
         [Fact]
         public void Build_should_apply_model_configuration()
         {
             var modelConfiguration = new ModelConfiguration();
-            var mockType = new MockType("T").Property<int>("Id");
-            modelConfiguration.Entity(mockType)
-                .Property(new PropertyPath(mockType.GetProperty("Id")))
+            modelConfiguration.Entity(typeof(AType1))
+                .Property(new PropertyPath(typeof(AType1).GetInstanceProperty("Id")))
                 .ConcurrencyMode = ConcurrencyMode.Fixed;
 
             var databaseMapping = new DbModelBuilder(modelConfiguration).Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
@@ -154,17 +161,26 @@ namespace System.Data.Entity.ModelConfiguration
                 databaseMapping.Model.EntityTypes.Single().DeclaredProperties.Single().ConcurrencyMode);
         }
 
+        public class AType1
+        {
+            public int Id { get; set; }
+        }
+
         [Fact]
         public void Mapping_a_single_abstract_type_should_not_throw()
         {
             var modelConfiguration = new ModelConfiguration();
-            var mockType = new MockType("T").TypeAttributes(TypeAttributes.Abstract).Property<int>("Id");
-            modelConfiguration.Entity(mockType).Key(mockType.GetProperty("Id"));
+            modelConfiguration.Entity(typeof(AType1)).Key(typeof(AType1).GetDeclaredProperty("Id"));
             var modelBuilder = new DbModelBuilder();
 
             var databaseMapping = modelBuilder.Build(ProviderRegistry.Sql2008_ProviderInfo);
 
             Assert.NotNull(databaseMapping);
+        }
+
+        public abstract class AType3
+        {
+            public int Id { get; set; }
         }
 
         #region Model builder cloning tests

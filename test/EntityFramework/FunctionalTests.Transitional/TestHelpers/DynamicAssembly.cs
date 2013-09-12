@@ -420,7 +420,7 @@ namespace System.Data.Entity
                 return new CustomAttributeBuilder(
                     typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
                     new object[] { },
-                    new[] { typeof(DataMemberAttribute).GetProperty("Order") },
+                    new[] { typeof(DataMemberAttribute).GetDeclaredProperty("Order") },
                     new object[] { attribute.Order });
             }
         }
@@ -432,8 +432,8 @@ namespace System.Data.Entity
                     new object[0],
                     new PropertyInfo[] 
                     {
-                        typeof(EdmTypeAttribute).GetProperty("Name"),
-                        typeof(EdmTypeAttribute).GetProperty("NamespaceName")
+                        typeof(EdmTypeAttribute).GetDeclaredProperty("Name"),
+                        typeof(EdmTypeAttribute).GetDeclaredProperty("NamespaceName")
                     },
                     new object[] 
                     {
@@ -449,8 +449,8 @@ namespace System.Data.Entity
                     new object[0],
                     new PropertyInfo[] 
                     { 
-                        typeof(EdmScalarPropertyAttribute).GetProperty("EntityKeyProperty"), 
-                        typeof(EdmScalarPropertyAttribute).GetProperty("IsNullable") 
+                        typeof(EdmScalarPropertyAttribute).GetDeclaredProperty("EntityKeyProperty"), 
+                        typeof(EdmScalarPropertyAttribute).GetDeclaredProperty("IsNullable") 
                     },
                     new object[] 
                     {

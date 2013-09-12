@@ -9,6 +9,7 @@ namespace FunctionalTests
     using System.Data.Entity.Migrations;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using ConcurrencyModel;
     using Xunit;
@@ -1400,7 +1401,7 @@ namespace FunctionalTests
                                 map =>
                                     {
                                         map.Insert(f => f.Parameter("OrderId", "ins_order_id"));
-                                        map.Update(f => f.Parameter(typeof(OrderLine).GetProperty("Id"), "upd_id"));
+                                        map.Update(f => f.Parameter(typeof(OrderLine).GetDeclaredProperty("Id"), "upd_id"));
                                         map.Delete(f => f.Parameter("Id", "del_id"));
                                     }));
 

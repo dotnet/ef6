@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using Moq;
     using Xunit;
 
@@ -43,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration
 
             entityConfiguration.HasKey(f => f.Id);
 
-            mockEntityTypeConfiguration.Verify(e => e.Key(new[] { typeof(Fixture).GetProperty("Id") }));
+            mockEntityTypeConfiguration.Verify(e => e.Key(new[] { typeof(Fixture).GetDeclaredProperty("Id") }));
         }
 
         [Fact]

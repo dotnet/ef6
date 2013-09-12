@@ -4,12 +4,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -168,7 +170,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        private sealed partial class MemberAccessTranslator
+        internal sealed partial class MemberAccessTranslator
             : TypedTranslator<MemberExpression>
         {
             internal MemberAccessTranslator()
@@ -247,8 +249,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     try
                     {
-                        propertyInfo = propertyInfo.DeclaringType.GetGenericTypeDefinition().GetProperty(
-                            propertyInfo.Name, BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
+                        propertyInfo = propertyInfo.DeclaringType.GetGenericTypeDefinition().GetDeclaredProperty(propertyInfo.Name);
                     }
                     catch (AmbiguousMatchException)
                     {
@@ -437,17 +438,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             private static IEnumerable<PropertyTranslator> GetVisualBasicPropertyTranslators(Assembly vbAssembly)
             {
-                yield return new VBDateAndTimeNowTranslator(vbAssembly);
+                return new PropertyTranslator[] { new VBDateAndTimeNowTranslator(vbAssembly) };
             }
 
             private static IEnumerable<PropertyTranslator> GetPropertyTranslators()
             {
-                yield return new DefaultCanonicalFunctionPropertyTranslator();
-                yield return new RenameCanonicalFunctionPropertyTranslator();
-                yield return new EntityCollectionCountTranslator();
-                yield return new NullableHasValueTranslator();
-                yield return new NullableValueTranslator();
-                yield return new SpatialPropertyTranslator();
+                return new PropertyTranslator[]
+                    {
+                        new DefaultCanonicalFunctionPropertyTranslator(),
+                        new RenameCanonicalFunctionPropertyTranslator(),
+                        new EntityCollectionCountTranslator(),
+                        new NullableHasValueTranslator(),
+                        new NullableValueTranslator(),
+                        new SpatialPropertyTranslator()
+                    };
             }
 
             /// <summary>
@@ -494,8 +498,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     // Int32 Count
                     //
                     if (propertyInfo.Name == "Count"
-                        &&
-                        propertyInfo.PropertyType.Equals(typeof(int)))
+                        && propertyInfo.PropertyType.Equals(typeof(int)))
                     {
                         foreach (var implementedCollectionInfo in GetImplementedICollections(propertyInfo.DeclaringType))
                         {
@@ -518,8 +521,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static bool IsICollection(Type candidateType, out Type elementType)
                 {
                     if (candidateType.IsGenericType
-                        &&
-                        candidateType.GetGenericTypeDefinition().Equals(typeof(ICollection<>)))
+                        && candidateType.GetGenericTypeDefinition().Equals(typeof(ICollection<>)))
                     {
                         elementType = candidateType.GetGenericArguments()[0];
                         return true;
@@ -552,7 +554,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             #region Signature-based Property Translators
 
-            private abstract class PropertyTranslator
+            internal abstract class PropertyTranslator
             {
                 private readonly IEnumerable<PropertyInfo> _properties;
 
@@ -579,7 +581,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class DefaultCanonicalFunctionPropertyTranslator : PropertyTranslator
+            internal sealed class DefaultCanonicalFunctionPropertyTranslator : PropertyTranslator
             {
                 internal DefaultCanonicalFunctionPropertyTranslator()
                     : base(GetProperties())
@@ -588,22 +590,25 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static IEnumerable<PropertyInfo> GetProperties()
                 {
-                    yield return typeof(String).GetProperty("Length", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Year", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Month", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Day", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Hour", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Minute", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Second", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTime).GetProperty("Millisecond", BindingFlags.Public | BindingFlags.Instance);
+                    return new[]
+                        {
+                            typeof(String).GetDeclaredProperty("Length"),
+                            typeof(DateTime).GetDeclaredProperty("Year"),
+                            typeof(DateTime).GetDeclaredProperty("Month"),
+                            typeof(DateTime).GetDeclaredProperty("Day"),
+                            typeof(DateTime).GetDeclaredProperty("Hour"),
+                            typeof(DateTime).GetDeclaredProperty("Minute"),
+                            typeof(DateTime).GetDeclaredProperty("Second"),
+                            typeof(DateTime).GetDeclaredProperty("Millisecond"),
 
-                    yield return typeof(DateTimeOffset).GetProperty("Year", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Month", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Day", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Hour", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Minute", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Second", BindingFlags.Public | BindingFlags.Instance);
-                    yield return typeof(DateTimeOffset).GetProperty("Millisecond", BindingFlags.Public | BindingFlags.Instance);
+                            typeof(DateTimeOffset).GetDeclaredProperty("Year"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Month"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Day"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Hour"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Minute"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Second"),
+                            typeof(DateTimeOffset).GetDeclaredProperty("Millisecond")
+                        };
                 }
 
                 // Default translator for method calls into canonical functions.
@@ -615,7 +620,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class RenameCanonicalFunctionPropertyTranslator : PropertyTranslator
+            internal sealed class RenameCanonicalFunctionPropertyTranslator : PropertyTranslator
             {
                 private static readonly Dictionary<PropertyInfo, string> _propertyRenameMap = new Dictionary<PropertyInfo, string>(2);
 
@@ -626,27 +631,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static IEnumerable<PropertyInfo> GetProperties()
                 {
-                    yield return GetProperty(typeof(DateTime), "Now", BindingFlags.Public | BindingFlags.Static, CurrentDateTime);
-                    yield return GetProperty(typeof(DateTime), "UtcNow", BindingFlags.Public | BindingFlags.Static, CurrentUtcDateTime);
-                    yield return
-                        GetProperty(typeof(DateTimeOffset), "Now", BindingFlags.Public | BindingFlags.Static, CurrentDateTimeOffset);
+                    return new[]
+                        {
+                            GetProperty(typeof(DateTime), "Now", CurrentDateTime),
+                            GetProperty(typeof(DateTime), "UtcNow", CurrentUtcDateTime),
 
-                    yield return GetProperty(typeof(TimeSpan), "Hours", BindingFlags.Public | BindingFlags.Instance, Hour);
-                    yield return GetProperty(typeof(TimeSpan), "Minutes", BindingFlags.Public | BindingFlags.Instance, Minute);
-                    yield return GetProperty(typeof(TimeSpan), "Seconds", BindingFlags.Public | BindingFlags.Instance, Second);
-                    yield return GetProperty(typeof(TimeSpan), "Milliseconds", BindingFlags.Public | BindingFlags.Instance, Millisecond);
+                            GetProperty(typeof(DateTimeOffset), "Now", CurrentDateTimeOffset),
+
+                            GetProperty(typeof(TimeSpan), "Hours", Hour),
+                            GetProperty(typeof(TimeSpan), "Minutes", Minute),
+                            GetProperty(typeof(TimeSpan), "Seconds", Second),
+                            GetProperty(typeof(TimeSpan), "Milliseconds", Millisecond),
+                        };
                 }
 
                 private static PropertyInfo GetProperty(
-                    Type declaringType, string propertyName, BindingFlags bindingFlages, string canonicalFunctionName)
+                    Type declaringType, string propertyName, string canonicalFunctionName)
                 {
-                    var propertyInfo = declaringType.GetProperty(propertyName, bindingFlages);
-                    _propertyRenameMap.Add(propertyInfo, canonicalFunctionName);
+                    var propertyInfo = declaringType.GetDeclaredProperty(propertyName);
+                    _propertyRenameMap[propertyInfo] = canonicalFunctionName;
                     return propertyInfo;
                 }
 
                 // Translator for static properties into canonical functions when there is a corresponding 
-                // canonical function but with a differnet name
+                // canonical function but with a different name
                 // Translation:
                 //      object.PropertyName  -> CanonicalFunctionName(object)
                 //      Type.PropertyName  -> CanonicalFunctionName()
@@ -667,7 +675,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class VBDateAndTimeNowTranslator : PropertyTranslator
+            internal sealed class VBDateAndTimeNowTranslator : PropertyTranslator
             {
                 private const string s_dateAndTimeTypeFullName = "Microsoft.VisualBasic.DateAndTime";
 
@@ -678,7 +686,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static PropertyInfo GetProperty(Assembly vbAssembly)
                 {
-                    return vbAssembly.GetType(s_dateAndTimeTypeFullName).GetProperty("Now", BindingFlags.Public | BindingFlags.Static);
+                    return vbAssembly.GetType(s_dateAndTimeTypeFullName).GetDeclaredProperty("Now");
                 }
 
                 // Translation:
@@ -689,7 +697,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class EntityCollectionCountTranslator : PropertyTranslator
+            internal sealed class EntityCollectionCountTranslator : PropertyTranslator
             {
                 internal EntityCollectionCountTranslator()
                     : base(GetProperty())
@@ -698,8 +706,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(EntityCollection<>).GetProperty(
-                        s_entityCollectionCountPropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(EntityCollection<>).GetDeclaredProperty("Count");
                 }
 
                 // Translation:
@@ -712,7 +719,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class NullableHasValueTranslator : PropertyTranslator
+            internal sealed class NullableHasValueTranslator : PropertyTranslator
             {
                 internal NullableHasValueTranslator()
                     : base(GetProperty())
@@ -721,7 +728,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(Nullable<>).GetProperty(s_nullableHasValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(Nullable<>).GetDeclaredProperty("HasValue");
                 }
 
                 // Translation:
@@ -734,7 +741,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            private sealed class NullableValueTranslator : PropertyTranslator
+            internal sealed class NullableValueTranslator : PropertyTranslator
             {
                 internal NullableValueTranslator()
                     : base(GetProperty())
@@ -743,7 +750,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static PropertyInfo GetProperty()
                 {
-                    return typeof(Nullable<>).GetProperty(s_nullableValuePropertyName, BindingFlags.Public | BindingFlags.Instance);
+                    return typeof(Nullable<>).GetDeclaredProperty("Value");
                 }
 
                 // Translation:

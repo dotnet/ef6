@@ -12,6 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Linq;
     using System.Reflection;
     using Moq;
+    using SimpleModel;
     using Xunit;
 
     public sealed class TypeMapperTests
@@ -54,10 +55,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var mockModelConfiguration = new Mock<ModelConfiguration>();
             var typeMapper = new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo");
-            mockModelConfiguration.Setup(m => m.IsIgnoredType(mockType)).Returns(true);
+            mockModelConfiguration.Setup(m => m.IsIgnoredType(typeof(AType1))).Returns(true);
 
-            var complexType = typeMapper.MapComplexType(mockType);
+            var complexType = typeMapper.MapComplexType(typeof(AType1));
 
             Assert.Null(complexType);
         }
@@ -67,15 +67,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockType = new MockType("Bar").BaseType(new MockType("Foo"));
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType3));
 
             Assert.NotNull(entityType);
             Assert.Null(entityType.BaseType);
             Assert.Equal(1, model.EntityTypes.Count());
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
-            Assert.Equal("Bar", model.GetEntitySet(entityType).Name);
+            Assert.Equal("AType3", model.GetEntitySet(entityType).Name);
+        }
+
+        public class AType3 : BType3
+        {
+        }
+
+        public class BType3
+        {
         }
 
         [Fact]
@@ -84,12 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Bar").BaseType(mockType1);
-
-            new MockAssembly(mockType1, mockType2);
-
-            typeMapper.MapEntityType(mockType1);
+            typeMapper.MapEntityType(typeof(BType3));
 
             Assert.Equal(2, model.EntityTypes.Count());
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
@@ -101,15 +103,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            var mockType1 = new MockType("Foo").TypeAttributes(TypeAttributes.Sealed);
-            var mockType2 = new MockType("Bar").BaseType(mockType1);
-
-            new MockAssembly(mockType1, mockType2);
-
-            typeMapper.MapEntityType(mockType1);
+            typeMapper.MapEntityType(typeof(AType2));
 
             Assert.Equal(1, model.EntityTypes.Count());
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
+        }
+
+        public sealed class AType2
+        {
         }
 
         [Fact]
@@ -118,22 +119,25 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Bar").BaseType(mockType1);
-            var mockType3 = new MockType("Baz");
+            Assert.NotSame(typeof(AType9).Assembly, typeof(Product).Assembly);
 
-            new MockAssembly(mockType1);
-            new MockAssembly(mockType2, mockType3);
-
-            typeMapper.MapEntityType(mockType3);
+            typeMapper.MapEntityType(typeof(CType9));
 
             Assert.Equal(1, model.EntityTypes.Count());
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
 
-            typeMapper.MapEntityType(mockType1);
+            typeMapper.MapEntityType(typeof(ExtraEntity));
 
             Assert.Equal(3, model.EntityTypes.Count());
             Assert.Equal(2, model.Containers.Single().EntitySets.Count);
+        }
+
+        public class AType9 : ExtraEntity
+        {
+        }
+
+        public class CType9
+        {
         }
 
         [Fact]
@@ -144,16 +148,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .Setup(m => m.GetStructuralTypeConfiguration(It.IsAny<Type>()))
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
             var model = new EdmModel(DataSpace.CSpace);
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Bar").BaseType(mockType1);
 
-            new MockAssembly(mockType1);
-            new MockAssembly(mockType2);
+            Assert.NotSame(typeof(AType9).Assembly, typeof(Product).Assembly);
 
-            mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(new[] { mockType2.Object });
+            mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(new[] { typeof(AType9) });
 
             new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model)).MapEntityType(
-                mockType1);
+                typeof(ExtraEntity));
 
             Assert.Equal(2, model.EntityTypes.Count());
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
@@ -164,16 +165,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEntityType(mockType1));
+            Assert.NotNull(typeMapper.MapEntityType(typeof(AType1)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer1.AType1).FullName, typeof(AType1).FullName, "AType1"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(typeof(Outer1.AType1))).Message);
+        }
+
+        public class Outer1
+        {
+            public class AType1
+            {
+            }
         }
 
         [Fact]
@@ -203,19 +208,27 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType1);
+            modelConfiguration.ComplexType(typeof(AType6));
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapComplexType(mockType1));
+            Assert.NotNull(typeMapper.MapComplexType(typeof(AType6)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer6.AType6).FullName, typeof(AType6).FullName, "AType6"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(typeof(Outer6.AType6))).Message);
+        }
+
+        public class AType6
+        {
+        }
+
+        public class Outer6
+        {
+            public class AType6
+            {
+            }
         }
         
         [Fact]
@@ -223,20 +236,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType1);
-            modelConfiguration.ComplexType(mockType2);
+            modelConfiguration.ComplexType(typeof(AType6));
+            modelConfiguration.ComplexType(typeof(Outer6.AType6));
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapComplexType(mockType1));
+            Assert.NotNull(typeMapper.MapComplexType(typeof(AType6)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer6.AType6).FullName, typeof(AType6).FullName, "AType6"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(typeof(Outer6.AType6))).Message);
         }
 
         [Fact]
@@ -244,44 +254,43 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType2);
+            modelConfiguration.ComplexType(typeof(Outer6.AType6));
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEntityType(mockType1));
+            Assert.NotNull(typeMapper.MapEntityType(typeof(AType6)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer6.AType6).FullName, typeof(AType6).FullName, "AType6"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(typeof(Outer6.AType6))).Message);
         }
 
         [Fact]
         public void MapComplexType_should_throw_for_new_type_if_enum_type_with_same_simple_name_already_used()
         {
             var model = new EdmModel(DataSpace.CSpace);
-
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType2);
-
-            mockType1.SetupGet(t => t.IsEnum).Returns(true);
-            mockType1.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
-            mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
-            mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
+            modelConfiguration.ComplexType(typeof(Outer5.AType5));
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEnumType(mockType1));
+            Assert.NotNull(typeMapper.MapEnumType(typeof(AType5)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer5.AType5).FullName, typeof(AType5).FullName, "AType5"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapComplexType(typeof(Outer5.AType5))).Message);
+        }
+
+        public enum AType5
+        {
+        }
+
+        public class Outer5
+        {
+            public class AType5
+            {
+            }
         }
         
         [Fact]
@@ -289,22 +298,24 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
-            mockType1.SetupGet(t => t.IsEnum).Returns(true);
-            mockType1.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
-            mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
-            mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
-            mockType2.SetupGet(t => t.IsEnum).Returns(true);
-
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEnumType(mockType1));
+            Assert.NotNull(typeMapper.MapEnumType(typeof(AType4)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer4.AType4).FullName, typeof(AType4).FullName, "AType4"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(typeof(Outer4.AType4))).Message);
+        }
+
+        public enum AType4
+        {
+        }
+
+        public class Outer4
+        {
+            public enum AType4
+            {
+            }
         }
 
         [Fact]
@@ -312,21 +323,16 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType1);
-
-            mockType2.SetupGet(t => t.IsEnum).Returns(true);
+            modelConfiguration.ComplexType(typeof(Outer5.AType5));
 
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapComplexType(mockType1));
+            Assert.NotNull(typeMapper.MapComplexType(typeof(Outer5.AType5)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(AType5).FullName, typeof(Outer5.AType5).FullName, "AType5"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(typeof(AType5))).Message);
         }
 
         [Fact]
@@ -334,18 +340,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
 
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
-            mockType2.SetupGet(t => t.IsEnum).Returns(true);
-
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEntityType(mockType1));
+            Assert.NotNull(typeMapper.MapEntityType(typeof(Outer5.AType5)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(AType5).FullName, typeof(Outer5.AType5).FullName, "AType5"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEnumType(typeof(AType5))).Message);
         }
 
         [Fact]
@@ -353,14 +354,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockObjectType = new MockType("Object");
-            var mockBaseType = new MockType("Foo").BaseType(mockObjectType).Property<int>("Id");
-            var mockType = new MockType("Bar").BaseType(mockBaseType).Property<string>("Baz");
 
-            new MockAssembly(mockObjectType, mockBaseType, mockType);
-
-            var entityType = typeMapper.MapEntityType(mockType);
-            var baseEntityType = typeMapper.MapEntityType(mockBaseType);
+            var entityType = typeMapper.MapEntityType(typeof(AType8));
+            var baseEntityType = typeMapper.MapEntityType(typeof(BType8));
 
             Assert.Equal(1, baseEntityType.DeclaredProperties.Count);
             Assert.Same(baseEntityType, entityType.BaseType);
@@ -368,17 +364,30 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.Equal(1, model.Containers.Single().EntitySets.Count);
         }
 
+        public class AType8 : BType8
+        {
+            public int Id { get; set; }
+        }
+
+        public class BType8
+        {
+            public string Baz { get; set; }
+        }
+
         [Fact]
         public void MapEntityType_should_create_abstract_entity_when_clr_type_is_abstract()
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo").TypeAttributes(TypeAttributes.Abstract);
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType7));
 
             Assert.NotNull(entityType);
             Assert.True(entityType.Abstract);
+        }
+
+        public abstract class AType7
+        {
         }
 
         [Fact]
@@ -393,9 +402,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                                 ModelNamespace = "Bar"
                             },
                         new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo").TypeAttributes(TypeAttributes.Abstract);
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType7));
 
             Assert.NotNull(entityType);
             Assert.Equal("Bar", entityType.NamespaceName);
@@ -406,42 +414,43 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo");
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType1));
 
             Assert.NotNull(entityType);
-            Assert.Same(entityType, model.GetEntityType("Foo"));
+            Assert.Same(entityType, model.GetEntityType("AType1"));
+        }
+
+        public class AType1
+        {
         }
 
         [Fact]
         public void MapComplexType_should_create_complex_type_with_clr_type_name_and_add_to_model()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var mockType = new MockType("Foo");
             var modelConfiguration = new ModelConfiguration();
-            modelConfiguration.ComplexType(mockType);
+            modelConfiguration.ComplexType(typeof(AType1));
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            var complexType = typeMapper.MapComplexType(mockType);
+            var complexType = typeMapper.MapComplexType(typeof(AType1));
 
             Assert.NotNull(complexType);
-            Assert.Same(complexType, model.GetComplexType("Foo"));
+            Assert.Same(complexType, model.GetComplexType("AType1"));
         }
 
         [Fact]
         public void MapComplexType_should_set_namespace_when_provided_via_model_configuration()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var mockType = new MockType("Foo");
             var modelConfiguration = new ModelConfiguration
                                          {
                                              ModelNamespace = "Bar"
                                          };
-            modelConfiguration.ComplexType(mockType);
+            modelConfiguration.ComplexType(typeof(AType7));
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            var complexType = typeMapper.MapComplexType(mockType);
+            var complexType = typeMapper.MapComplexType(typeof(AType7));
 
             Assert.NotNull(complexType);
             Assert.Equal("Bar", complexType.NamespaceName);
@@ -497,15 +506,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo");
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType1));
 
             var entitySet = model.GetEntitySet(entityType);
 
             Assert.NotNull(entitySet);
             Assert.Same(entityType, entitySet.ElementType);
-            Assert.Equal("Foo", entitySet.Name);
+            Assert.Equal("AType1", entitySet.Name);
         }
 
         [Fact]
@@ -513,10 +521,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo");
 
-            typeMapper.MapEntityType(mockType);
-            typeMapper.MapEntityType(mockType);
+            typeMapper.MapEntityType(typeof(AType1));
+            typeMapper.MapEntityType(typeof(AType1));
 
             Assert.Equal(1, model.EntityTypes.Count());
         }

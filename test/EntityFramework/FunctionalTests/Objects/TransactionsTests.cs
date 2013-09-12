@@ -8,6 +8,7 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
@@ -2041,7 +2042,7 @@ namespace System.Data.Entity.Objects
         // TODO: this is temporary, tests that use these internals should be in unit tests
         private EntityTransaction GetCurrentEntityTransaction(EntityConnection connection)
         {
-            var propertyInfo = connection.GetType().GetProperty("CurrentTransaction", BindingFlags.Instance | BindingFlags.NonPublic);
+            var propertyInfo = connection.GetType().GetDeclaredProperty("CurrentTransaction");
 
             return (EntityTransaction)propertyInfo.GetValue(connection, null);
         }
@@ -2050,7 +2051,7 @@ namespace System.Data.Entity.Objects
         private DbTransaction GetCurrentStoreTransaction(EntityConnection connection)
         {
             var entityTransaction = GetCurrentEntityTransaction(connection);
-            var propertyInfo = entityTransaction.GetType().GetProperty("StoreTransaction", BindingFlags.Instance | BindingFlags.NonPublic);
+            var propertyInfo = entityTransaction.GetType().GetDeclaredProperty("StoreTransaction");
 
             return (DbTransaction)propertyInfo.GetValue(entityTransaction, null);
         }

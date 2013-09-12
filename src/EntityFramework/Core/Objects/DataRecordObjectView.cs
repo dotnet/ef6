@@ -6,6 +6,8 @@ namespace System.Data.Entity.Core.Objects
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -65,19 +67,17 @@ namespace System.Data.Entity.Core.Objects
             PropertyInfo indexer = null;
 
             if (typeof(IList).IsAssignableFrom(type)
-                ||
-                typeof(ITypedList).IsAssignableFrom(type)
-                ||
-                typeof(IListSource).IsAssignableFrom(type))
+                || typeof(ITypedList).IsAssignableFrom(type)
+                || typeof(IListSource).IsAssignableFrom(type))
             {
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                var props = type.GetInstanceProperties().Where(p => p.IsPublic());
 
-                for (var idx = 0; idx < props.Length; idx++)
+                foreach (var prop in props)
                 {
-                    if (props[idx].GetIndexParameters().Length > 0
-                        && props[idx].PropertyType != typeof(object))
+                    if (prop.GetIndexParameters().Length > 0
+                        && prop.PropertyType != typeof(object))
                     {
-                        indexer = props[idx];
+                        indexer = prop;
                         //Prefer the standard indexer, if there is one
                         if (indexer.Name == "Item")
                         {

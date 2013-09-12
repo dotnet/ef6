@@ -2283,8 +2283,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return new[] { leftBinding, rightBinding };
         }
 
-        private static bool TryGetAnonymousTypeValues<TInstance, TRequired>(
-            object instance, out List<KeyValuePair<string, TRequired>> values)
+        internal static List<KeyValuePair<string, TRequired>> TryGetAnonymousTypeValues<TInstance, TRequired>(object instance)
         {
             DebugCheck.NotNull(instance);
 
@@ -2292,36 +2291,37 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             // - Derived directly from System.Object
             // - Declares only public instance properties
             // - All public instance properties are readable and of an appropriate type
+            // Note that code originally tried to ignore types with static properties, but that code was incorrect and didn't
+            // work, so we allow static properties.
 
-            values = null;
-            if (typeof(TInstance).BaseType.Equals(typeof(object))
-                &&
-                typeof(TInstance).GetProperties(BindingFlags.Static).Length == 0
-                &&
-                typeof(TInstance).GetProperties(BindingFlags.Instance | BindingFlags.NonPublic).Length == 0)
+            var properties = typeof(TInstance).GetInstanceProperties();
+
+            if (typeof(TInstance).BaseType != typeof(object)
+                || properties.Any(p => !p.IsPublic()))
             {
-                List<KeyValuePair<string, TRequired>> foundValues = null;
-                foreach (var pi in typeof(TInstance).GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (pi.CanRead
-                        && typeof(TRequired).IsAssignableFrom(pi.PropertyType))
-                    {
-                        if (foundValues == null)
-                        {
-                            foundValues = new List<KeyValuePair<string, TRequired>>();
-                        }
-                        foundValues.Add(new KeyValuePair<string, TRequired>(pi.Name, (TRequired)pi.GetValue(instance, null)));
-                    }
-                    else
-                    {
-                        foundValues = null;
-                        break;
-                    }
-                }
-                values = foundValues;
+                return null;
             }
 
-            return (values != null);
+            List<KeyValuePair<string, TRequired>> values = null;
+
+            foreach (var pi in properties.Where(p => p.IsPublic()))
+            {
+                if (pi.CanRead
+                    && typeof(TRequired).IsAssignableFrom(pi.PropertyType))
+                {
+                    if (values == null)
+                    {
+                        values = new List<KeyValuePair<string, TRequired>>();
+                    }
+                    values.Add(new KeyValuePair<string, TRequired>(pi.Name, (TRequired)pi.GetValue(instance, null)));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return values;
         }
 
         private static bool TryResolveToConstant(Type type, object value, out DbExpression constantOrNullExpression)
@@ -2380,8 +2380,8 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             }
 
             // Conversion from anonymous type instance to DbNewInstanceExpression of a corresponding row type
-            List<KeyValuePair<string, DbExpression>> columnValues;
-            if (TryGetAnonymousTypeValues<TArgument, DbExpression>(untypedArgument, out columnValues))
+            var columnValues = TryGetAnonymousTypeValues<TArgument, DbExpression>(untypedArgument);
+            if (columnValues != null)
             {
                 return NewRow(columnValues);
             }

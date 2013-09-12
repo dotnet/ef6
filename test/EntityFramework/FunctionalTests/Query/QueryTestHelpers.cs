@@ -8,6 +8,7 @@ namespace System.Data.Entity.Query
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.IO;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Query
             metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.SSpace, false).Returns(storeItemCollection);
             metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSSpace, true).Returns(storageMappingItemCollection);
             metadataWorkspaceMock.Protected().Setup<ItemCollection>("GetItemCollection", DataSpace.CSSpace, false).Returns(storageMappingItemCollection);
-            var queryCacheManager = typeof(StoreItemCollection).GetProperty("QueryCacheManager", Reflection.BindingFlags.NonPublic | Reflection.BindingFlags.Instance).GetValue(storeItemCollection, null);
+            var queryCacheManager = typeof(StoreItemCollection).GetDeclaredProperty("QueryCacheManager").GetValue(storeItemCollection, null);
             metadataWorkspaceMock.Protected().Setup<object>("GetQueryCacheManager").Returns(queryCacheManager);
 
             return metadataWorkspaceMock.Object;

@@ -234,41 +234,28 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         [Fact]
         public void PropertyFilter_includes_enum_and_spatial_properties_if_V3_features_are_supported()
         {
-            var mockType = new MockType();
-            mockType.Setup(m => m.IsEnum).Returns(true);
+            var filteredProperties = new PropertyFilter().GetProperties(typeof(AType1), declaredOnly: false);
 
-            var properties = new PropertyInfo[]
-                                 {
-                                     new MockPropertyInfo(typeof(DbGeography), "Geography"),
-                                     new MockPropertyInfo(typeof(DbGeometry), "Geometry"),
-                                     new MockPropertyInfo(mockType, "EnumProp")
-                                 };
-
-            mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(properties);
-
-            var filteredProperties = new PropertyFilter().GetProperties(mockType, declaredOnly: false);
-
-            properties.All(p => filteredProperties.Select(f => f.Name).Contains(p.Name));
+            Assert.Equal(
+                new[] { "EnumProp", "Geography", "Geometry" },
+                filteredProperties.Select(f => f.Name).OrderBy(n => n));
         }
 
         [Fact]
         public void PropertyFilter_excludes_enum_and_spatial_properties_if_V3_features_are_not_supported()
         {
-            var mockType = new MockType();
-            mockType.Setup(m => m.IsEnum).Returns(true);
+            Assert.Equal(0, new PropertyFilter(DbModelBuilderVersion.V4_1).GetProperties(typeof(AType1), declaredOnly: false).Count());
+        }
 
-            var properties = new PropertyInfo[]
-                                 {
-                                     new MockPropertyInfo(typeof(DbGeography), "Geography"),
-                                     new MockPropertyInfo(typeof(DbGeometry), "Geometry"),
-                                     new MockPropertyInfo(mockType, "EnumProp")
-                                 };
+        public enum EnumType1
+        {
+        }
 
-            mockType.Setup(m => m.GetProperties(It.IsAny<BindingFlags>())).Returns(properties);
-
-            var filteredProperties = new PropertyFilter(DbModelBuilderVersion.V4_1).GetProperties(mockType, declaredOnly: false);
-
-            Assert.Equal(0, filteredProperties.Count());
+        public class AType1
+        {
+            public DbGeography Geography { get; set; }
+            public DbGeometry Geometry { get; set; }
+            public EnumType1 EnumProp { get; set; }
         }
 
         public interface PropertyFilterTests_Interface

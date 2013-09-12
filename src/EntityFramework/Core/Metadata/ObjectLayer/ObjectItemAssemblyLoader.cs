@@ -10,11 +10,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     internal abstract class ObjectItemAssemblyLoader
     {
-        protected const BindingFlags PropertyReflectionBindingFlags = BindingFlags.DeclaredOnly |
-                                                                      BindingFlags.Instance |
-                                                                      BindingFlags.Public |
-                                                                      BindingFlags.NonPublic;
-
         private readonly ObjectItemLoadingSessionData _sessionData;
         private readonly Assembly _assembly;
         private readonly AssemblyCacheEntry _cacheEntry;

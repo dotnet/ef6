@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(
-                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                    new MockPropertyInfo(typeof(Target1), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.AssociationTypes.Count());
@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(
-                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                    new MockPropertyInfo(typeof(Target1), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.AssociationTypes.Count());
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(
-                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                    new MockPropertyInfo(typeof(Target1), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, model.Containers.Single().AssociationSets.Count);
@@ -132,7 +132,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(
-                    new MockPropertyInfo(new MockType("Target"), "Nav"), entityType,
+                    new MockPropertyInfo(typeof(Target1), "Nav"), entityType,
                     () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredNavigationProperties.Count);
@@ -144,6 +144,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             Assert.NotSame(entityType, navigationProperty.ResultEnd.GetEntityType());
         }
 
+        public class Target1
+        {
+        }
+
         [Fact]
         public void Map_should_set_clr_property_info_on_assocation_source_end()
         {
@@ -153,7 +157,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             model.AddEntitySet("Source", entityType);
             var mappingContext = new MappingContext(modelConfiguration, new ConventionsConfiguration(), model);
 
-            var mockPropertyInfo = new MockPropertyInfo(new MockType("Target"), "Nav");
+            var mockPropertyInfo = new MockPropertyInfo(typeof(Target1), "Nav");
 
             new NavigationPropertyMapper(new TypeMapper(mappingContext))
                 .Map(

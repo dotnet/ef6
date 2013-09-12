@@ -68,11 +68,9 @@ namespace System.Data.Entity.Internal
                 var entityTypes = new Dictionary<Type, List<string>>();
 
                 // Properties declared directly on DbContext such as Database are skipped
-                const BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-                foreach (var propertyInfo in _context.GetType().GetProperties(bindingFlags)
-                                                     .Where(
-                                                         p => p.GetIndexParameters().Length == 0 &&
-                                                              p.DeclaringType != typeof(DbContext)))
+                foreach (var propertyInfo in _context.GetType().GetInstanceProperties()
+                    .Where(p => p.GetIndexParameters().Length == 0
+                        && p.DeclaringType != typeof(DbContext)))
                 {
                     var entityType = GetSetType(propertyInfo.PropertyType);
                     if (entityType != null)
@@ -94,8 +92,8 @@ namespace System.Data.Entity.Internal
 
                         if (DbSetPropertyShouldBeInitialized(propertyInfo))
                         {
-                            var setter = propertyInfo.GetSetMethod(nonPublic: false);
-                            if (setter != null)
+                            var setter = propertyInfo.Setter();
+                            if (setter != null && setter.IsPublic)
                             {
                                 var setMethod = SetMethod.MakeGenericMethod(entityType);
 

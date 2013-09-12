@@ -23,10 +23,9 @@ namespace LazyUnicorns
         {
             // We can only replace properties that are declared as ICollection<T> and have a setter.
             var propertyType = collectionProperty.PropertyType;
-            if (propertyType.IsGenericType &&
-                propertyType.GetGenericTypeDefinition() == typeof(ICollection<>)
-                &&
-                collectionProperty.GetSetMethod() != null)
+            if (propertyType.IsGenericType
+                && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>)
+                && collectionProperty.Setter() != null)
             {
                 return propertyType.GetGenericArguments().Single();
             }
@@ -46,7 +45,7 @@ namespace LazyUnicorns
 
                             var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
 
-                            foreach (var property in t.GetProperties())
+                            foreach (var property in t.GetRuntimeProperties().Where(p => p.IsPublic()))
                             {
                                 var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
 

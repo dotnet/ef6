@@ -355,7 +355,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     else if (a.GetType().FullName.Equals(DataServicesMimeTypeAttribute, StringComparison.Ordinal))
                     {
                         // Move down to the appropriate property
-                        var propertyName = a.GetType().GetProperty("MemberName").GetValue(a, null) as string;
+                        var propertyName = a.GetType().GetDeclaredProperty("MemberName").GetValue(a, null) as string;
                         var property =
                             entityType.Properties.SingleOrDefault(
                                 p => p.Name.Equals(propertyName, StringComparison.Ordinal));
@@ -365,7 +365,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         DataServicesEntityPropertyMappingAttribute, StringComparison.Ordinal))
                     {
                         // Move down to the appropriate property
-                        var sourcePath = a.GetType().GetProperty("SourcePath").GetValue(a, null) as string;
+                        var sourcePath = a.GetType().GetDeclaredProperty("SourcePath").GetValue(a, null) as string;
                         var slashIndex = sourcePath.IndexOf("/", StringComparison.Ordinal);
                         string propertyName;
                         if (slashIndex == -1)
@@ -532,7 +532,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     if (a.GetType().FullName.Equals(DataServicesMimeTypeAttribute, StringComparison.Ordinal))
                     {
-                        var mimeType = a.GetType().GetProperty("MimeType").GetValue(a, null) as string;
+                        var mimeType = a.GetType().GetDeclaredProperty("MimeType").GetValue(a, null) as string;
                         _xmlWriter.WriteAttributeString(DataServicesPrefix, "MimeType", DataServicesNamespace, mimeType);
                     }
                     else if (a.GetType().FullName.Equals(
@@ -542,7 +542,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                          ? String.Empty
                                          : string.Format(CultureInfo.InvariantCulture, "_{0}", epmCount);
 
-                        var sourcePath = a.GetType().GetProperty("SourcePath").GetValue(a, null) as string;
+                        var sourcePath = a.GetType().GetDeclaredProperty("SourcePath").GetValue(a, null) as string;
                         var slashIndex = sourcePath.IndexOf("/", StringComparison.Ordinal);
                         if (slashIndex != -1
                             && slashIndex + 1 < sourcePath.Length)
@@ -553,9 +553,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         }
 
                         // There are three ways to write out this attribute
-                        var syndicationItem = a.GetType().GetProperty("TargetSyndicationItem").GetValue(a, null);
-                        var keepInContext = a.GetType().GetProperty("KeepInContent").GetValue(a, null).ToString();
-                        var criteriaValueProperty = a.GetType().GetProperty("CriteriaValue");
+                        var syndicationItem = a.GetType().GetDeclaredProperty("TargetSyndicationItem").GetValue(a, null);
+                        var keepInContext = a.GetType().GetDeclaredProperty("KeepInContent").GetValue(a, null).ToString();
+                        var criteriaValueProperty = a.GetType().GetDeclaredProperty("CriteriaValue");
                         string criteriaValue = null;
                         if (criteriaValueProperty != null)
                         {
@@ -579,11 +579,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         else if (string.Equals(
                             syndicationItem.ToString(), "CustomProperty", StringComparison.Ordinal))
                         {
-                            var targetPath = a.GetType().GetProperty("TargetPath").GetValue(a, null).ToString();
+                            var targetPath = a.GetType().GetDeclaredProperty("TargetPath").GetValue(a, null).ToString();
                             var targetNamespacePrefix =
-                                a.GetType().GetProperty("TargetNamespacePrefix").GetValue(a, null).ToString();
+                                a.GetType().GetDeclaredProperty("TargetNamespacePrefix").GetValue(a, null).ToString();
                             var targetNamespaceUri =
-                                a.GetType().GetProperty("TargetNamespaceUri").GetValue(a, null).ToString();
+                                a.GetType().GetDeclaredProperty("TargetNamespaceUri").GetValue(a, null).ToString();
 
                             _xmlWriter.WriteAttributeString(
                                 DataServicesPrefix, "FC_TargetPath" + suffix, DataServicesNamespace, targetPath);
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         }
                         else
                         {
-                            var contextKind = a.GetType().GetProperty("TargetTextContentKind").GetValue(a, null);
+                            var contextKind = a.GetType().GetDeclaredProperty("TargetTextContentKind").GetValue(a, null);
 
                             _xmlWriter.WriteAttributeString(
                                 DataServicesPrefix,

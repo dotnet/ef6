@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             "Create", new[] { typeof(IEntityWithRelationships) });
 
         internal static readonly MethodInfo GetRelationshipManagerMethod =
-            typeof(IEntityWithRelationships).GetProperty("RelationshipManager").GetGetMethod();
+            typeof(IEntityWithRelationships).GetDeclaredProperty("RelationshipManager").Getter();
 
         internal static readonly MethodInfo GetRelatedReferenceMethod = typeof(RelationshipManager).GetDeclaredMethod(
             "GetRelatedReference", new[] { typeof(string), typeof(string) });
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static readonly ConstructorInfo _invalidOperationConstructorMethod =
             typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
 
-        private static readonly MethodInfo _getEntityMethod = typeof(IEntityWrapper).GetProperty("Entity").GetGetMethod();
+        internal static readonly MethodInfo GetEntityMethod = typeof(IEntityWrapper).GetDeclaredProperty("Entity").Getter();
         internal static readonly MethodInfo InvokeMethod = typeof(Action<object>).GetDeclaredMethod("Invoke", new[] { typeof(object) });
 
         internal static readonly MethodInfo FuncInvokeMethod = typeof(Func<object, object, bool>).GetDeclaredMethod(
@@ -87,7 +87,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             foreach (var member in ospaceEntityType.Members)
             {
-                var clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                var clrProperty = ospaceEntityType.ClrType.GetTopProperty(member.Name);
                 if (clrProperty != null
                     && EntityProxyFactory.CanProxySetter(clrProperty))
                 {
@@ -188,7 +188,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 generator.DeclareLocal(proxyType);
                 generator.DeclareLocal(typeof(RelationshipManager));
                 generator.Emit(OpCodes.Ldarg_0);
-                generator.Emit(OpCodes.Callvirt, _getEntityMethod);
+                generator.Emit(OpCodes.Callvirt, GetEntityMethod);
                 generator.Emit(OpCodes.Castclass, proxyType);
                 generator.Emit(OpCodes.Stloc_0);
                 generator.Emit(OpCodes.Ldloc_0);
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     generator.Emit(OpCodes.Ldstr, navProperty.Key.RelationshipType.FullName);
                     generator.Emit(OpCodes.Ldstr, navProperty.Key.ToEndMember.Name);
                     generator.Emit(OpCodes.Callvirt, getRelatedCollection);
-                    generator.Emit(OpCodes.Callvirt, navProperty.Value.GetSetMethod(true));
+                    generator.Emit(OpCodes.Callvirt, navProperty.Value.Setter());
                 }
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.Emit(OpCodes.Ret);
@@ -253,7 +253,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private void EmitScalarSetter(TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, bool isKeyMember)
         {
-            var baseSetter = baseProperty.GetSetMethod(true);
+            var baseSetter = baseProperty.Setter();
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
 
@@ -266,7 +266,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             // ignore attempts to set the key value to the same value.
             if (isKeyMember)
             {
-                var baseGetter = baseProperty.GetGetMethod(true);
+                var baseGetter = baseProperty.Getter();
 
                 if (baseGetter != null)
                 {
@@ -386,7 +386,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-            var baseSetter = baseProperty.GetSetMethod(true);
+            var baseSetter = baseProperty.Setter();
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
             var specificGetRelatedReference = GetRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
             var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetDeclaredMethod(
@@ -412,7 +412,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             TypeBuilder typeBuilder, PropertyBuilder propertyBuilder, PropertyInfo baseProperty, NavigationProperty navProperty)
         {
             const MethodAttributes methodAttributes = MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
-            var baseSetter = baseProperty.GetSetMethod(true);
+            var baseSetter = baseProperty.Setter();
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
             var cannotSetException = Strings.EntityProxyTypeInfo_CannotSetEntityCollectionProperty(propertyBuilder.Name, typeBuilder.Name);
             var setterBuilder = typeBuilder.DefineMethod(
@@ -432,7 +432,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             generator.MarkLabel(instanceEqual);
             generator.Emit(OpCodes.Ldarg_0);
             generator.Emit(OpCodes.Ldarg_1);
-            generator.Emit(OpCodes.Call, baseProperty.GetSetMethod(true));
+            generator.Emit(OpCodes.Call, baseProperty.Setter());
             generator.Emit(OpCodes.Ret);
             propertyBuilder.SetSetMethod(setterBuilder);
 

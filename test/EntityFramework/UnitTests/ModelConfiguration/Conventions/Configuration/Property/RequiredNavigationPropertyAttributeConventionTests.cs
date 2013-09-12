@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
+    using System.Data.Entity.Utilities;
     using Xunit;
 
     public sealed class RequiredNavigationPropertyAttributeConventionTests : TestBase
@@ -13,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_make_end_kind_required()
         {
-            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigation");
+            var propertyInfo = typeof(RequiredAttributeEntity).GetDeclaredProperty("Navigation");
             var associationConfiguration = new NavigationPropertyConfiguration(propertyInfo);
 
             new RequiredNavigationPropertyAttributeConvention()
@@ -25,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_ignore_when_end_kind_set()
         {
-            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigation");
+            var propertyInfo = typeof(RequiredAttributeEntity).GetDeclaredProperty("Navigation");
             var associationConfiguration
                 = new NavigationPropertyConfiguration(propertyInfo)
                     {
@@ -41,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_should_ignore_when_end_kind_is_collection()
         {
-            var propertyInfo = typeof(RequiredAttributeEntity).GetProperty("Navigations");
+            var propertyInfo = typeof(RequiredAttributeEntity).GetDeclaredProperty("Navigations");
             var associationConfiguration
                 = new NavigationPropertyConfiguration(propertyInfo)
                     {

@@ -152,7 +152,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             // build a LINQ expression used by result assembly to create results
             var memberInfo = new List<Tuple<MemberAssignment, int, EdmProperty>>();
-            foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            foreach (var prop in type.GetInstanceProperties()
                                      .Select(p => p.GetPropertyInfoForSet()))
             {
                 // for enums unwrap the type if nullable
@@ -167,7 +167,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     && (Helper.IsScalarType(modelType))
                     && prop.CanWriteExtended()
                     && prop.GetIndexParameters().Length == 0
-                    && null != prop.GetSetMethod(nonPublic: true))
+                    && null != prop.Setter())
                 {
                     memberInfo.Add(
                         Tuple.Create(

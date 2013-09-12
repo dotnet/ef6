@@ -23,7 +23,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             return (TStructuralTypeConfiguration)typeof(StructuralTypeConfiguration<>)
                                                      .MakeGenericType(type.TryGetElementType(typeof(StructuralTypeConfiguration<>)))
-                                                     .GetProperty("Configuration", bindingFlags)
+                                                     .GetDeclaredProperty("Configuration")
                                                      .GetValue(Activator.CreateInstance(type, nonPublic: true), null);
         }
     }

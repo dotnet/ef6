@@ -18,12 +18,12 @@ namespace System.Data.Entity.Core.Objects.Internal
     /// </remarks>
     internal sealed class DataContractImplementor
     {
-        private static readonly ConstructorInfo _dataContractAttributeConstructor =
+        internal static readonly ConstructorInfo DataContractAttributeConstructor =
             typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
 
-        private static readonly PropertyInfo[] _dataContractProperties = new[]
+        internal static readonly PropertyInfo[] DataContractProperties = new[]
             {
-                typeof(DataContractAttribute).GetProperty("IsReference")
+                typeof(DataContractAttribute).GetDeclaredProperty("IsReference")
             };
 
         private readonly Type _baseClrType;
@@ -47,7 +47,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     };
 
                 var attributeBuilder = new CustomAttributeBuilder(
-                    _dataContractAttributeConstructor, new object[0], _dataContractProperties, propertyValues);
+                    DataContractAttributeConstructor, new object[0], DataContractProperties, propertyValues);
                 typeBuilder.SetCustomAttribute(attributeBuilder);
             }
         }

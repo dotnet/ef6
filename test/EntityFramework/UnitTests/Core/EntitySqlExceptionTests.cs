@@ -4,14 +4,13 @@ namespace System.Data.Entity.Core
 {
     using System.Data.Entity.Core.Common.EntitySql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
     using Xunit;
 
     public class EntitySqlExceptionTests
     {
-        private static readonly PropertyInfo _hResultProperty = typeof(Exception).GetProperty(
-            "HResult", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
-
+        private static readonly PropertyInfo _hResultProperty = typeof(Exception).GetDeclaredProperty("HResult");
         private const int HResultInvalidQuery = -2146232006;
 
         [Fact]

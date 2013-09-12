@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
             foreach (var member in ospaceEntityType.Members)
             {
-                var clrProperty = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                var clrProperty = ospaceEntityType.ClrType.GetTopProperty(member.Name);
                 if (clrProperty != null
                     &&
                     EntityProxyFactory.CanProxyGetter(clrProperty)
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             if (_members.Contains(member))
             {
-                var baseGetter = baseProperty.GetGetMethod(true);
+                var baseGetter = baseProperty.Getter();
                 const MethodAttributes getterAttributes =
                     MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.Virtual;
                 var getterAccess = baseGetter.Attributes & MethodAttributes.MemberAccessMask;

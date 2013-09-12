@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
@@ -65,7 +66,7 @@ namespace System.Data.Entity.SqlServer
 
         internal static Expression Property<TPropertyType>(this Expression exp, string propertyName)
         {
-            var prop = exp.Type.GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+            var prop = exp.Type.GetRuntimeProperty(propertyName);
             Debug.Assert(
                 prop != null,
                 "Type '" + exp.Type.FullName + "' does not declare a public instance property with the name '" + propertyName + "'");

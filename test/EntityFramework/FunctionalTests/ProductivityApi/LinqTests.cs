@@ -8,8 +8,10 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Reflection;
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
@@ -13281,7 +13283,7 @@ namespace ProductivityApiTests
                     // Only do property-based comparison if Object.Equals says they are not equal
                     if (!Equals(left, right))
                     {
-                        var properties = left.GetType().GetProperties();
+                        var properties = left.GetType().GetRuntimeProperties().Where(p => p.IsPublic());
                         if (properties.Any())
                         {
                             foreach (var property in properties)

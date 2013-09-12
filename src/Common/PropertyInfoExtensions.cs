@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-#if EF_FUNCTIONALS
+#if SQLSERVER
+namespace System.Data.Entity.SqlServer.Utilities
+#elif EF_FUNCTIONALS
 namespace System.Data.Entity.Functionals.Utilities
 #else
 namespace System.Data.Entity.Utilities
@@ -42,7 +44,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(propertyInfo);
 
             return propertyInfo.IsValidInterfaceStructuralProperty()
-                   && !propertyInfo.GetGetMethod(true).IsAbstract;
+                   && !propertyInfo.Getter().IsAbstract;
         }
 
         public static bool IsValidInterfaceStructuralProperty(this PropertyInfo propertyInfo)
@@ -117,13 +119,11 @@ namespace System.Data.Entity.Utilities
         {
             Debug.Assert(propertyInfo.DeclaringType != null);
 
-            const BindingFlags defaultBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
             return propertyInfo.DeclaringType == propertyInfo.ReflectedType
                        ? propertyInfo
                        : propertyInfo
                              .DeclaringType
-                             .GetProperties(defaultBindingFlags)
+                             .GetInstanceProperties()
                              .SingleOrDefault(
                                  p => p.Name == propertyInfo.Name
                                       && !p.GetIndexParameters().Any()
@@ -153,7 +153,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(property);
             DebugCheck.NotNull(collection);
 
-            var method = getter ? property.GetGetMethod(nonPublic: true) : property.GetSetMethod(nonPublic: true);
+            var method = getter ? property.Getter() : property.Setter();
 
             if (method != null)
             {
@@ -161,11 +161,10 @@ namespace System.Data.Entity.Utilities
                 if (nextType != null && nextType != typeof(object))
                 {
                     var baseMethod = method.GetBaseDefinition();
-                    const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
 
                     var nextProperty =
-                        (from p in nextType.GetProperties(bindingFlags)
-                         let candidateMethod = getter ? p.GetGetMethod(nonPublic: true) : p.GetSetMethod(nonPublic: true)
+                        (from p in nextType.GetInstanceProperties()
+                         let candidateMethod = getter ? p.Getter() : p.Setter()
                          where candidateMethod != null && candidateMethod.GetBaseDefinition() == baseMethod
                          select p).FirstOrDefault();
 
@@ -176,6 +175,67 @@ namespace System.Data.Entity.Utilities
                     }
                 }
             }
+        }
+
+        public static MethodInfo Getter(this PropertyInfo property)
+        {
+            DebugCheck.NotNull(property);
+
+#if NET40
+            return property.GetGetMethod(nonPublic: true);
+#else
+            return property.GetMethod;
+#endif
+        }
+
+        public static MethodInfo Setter(this PropertyInfo property)
+        {
+            DebugCheck.NotNull(property);
+
+#if NET40
+            return property.GetSetMethod(nonPublic: true);
+#else
+            return property.SetMethod;
+#endif
+        }
+
+        public static bool IsStatic(this PropertyInfo property)
+        {
+            DebugCheck.NotNull(property);
+
+            return (property.Getter() ?? property.Setter()).IsStatic;
+        }
+
+        public static bool IsPublic(this PropertyInfo property)
+        {
+            DebugCheck.NotNull(property);
+
+            // The MethodAttributes enum for member access has the following values:
+            // 1 Private
+            // 2 FamANDAssem
+            // 3 Assembly
+            // 4 Family
+            // 5 FamORAssem
+            // 6 Public
+            // Starting from the bottom, Public is more permissive than anything above it--meaning that
+            // if it can be accessed publically then it can be accessed by anything. Likewise,
+            // FamORAssem is more permissive than anything above it. Assembly can be more permissive
+            // than Family and vice versa. (However, at least in C# and VB a property setter cannot be
+            // Assembly while the getter is Family or vice versa.) Since there is no real permissive winner
+            // here, we will use the enum order and call Family more permissive than Assembly, but this is
+            // a largely arbitrary choice. Finally, FamANDAssem is more permissive than private, which is the
+            // least permissive.
+            // We can therefore use this order to infer the accessibility of the property.
+
+            var getter = property.Getter();
+            var getterAccess = getter == null ? MethodAttributes.Private : (getter.Attributes & MethodAttributes.MemberAccessMask);
+
+            var setter = property.Setter();
+            var setterAccess = setter == null ? MethodAttributes.Private : (setter.Attributes & MethodAttributes.MemberAccessMask);
+
+            var propertyAccess = getterAccess > setterAccess ? getterAccess : setterAccess;
+
+            return propertyAccess == MethodAttributes.Public;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(parameterName, "parameterName");
 
-            return Parameter(_type.GetProperty(propertyName), parameterName);
+            return Parameter(_type.GetAnyProperty(propertyName), parameterName);
         }
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
@@ -89,7 +89,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(currentValueParameterName, "currentValueParameterName");
             Check.NotEmpty(originalValueParameterName, "originalValueParameterName");
 
-            return Parameter(_type.GetProperty(propertyName), currentValueParameterName, originalValueParameterName);
+            return Parameter(_type.GetAnyProperty(propertyName), currentValueParameterName, originalValueParameterName);
         }
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(columnName, "columnName");
 
-            Configuration.Result(new PropertyPath(_type.GetProperty(propertyName)), columnName);
+            Configuration.Result(new PropertyPath(_type.GetAnyProperty(propertyName)), columnName);
 
             return this;
         }

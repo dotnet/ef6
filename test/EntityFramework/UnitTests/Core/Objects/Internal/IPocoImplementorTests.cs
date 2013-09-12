@@ -12,6 +12,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.NotNull(IPocoImplementor.EntityMemberChangingMethod);
             Assert.NotNull(IPocoImplementor.EntityMemberChangedMethod);
             Assert.NotNull(IPocoImplementor.CreateRelationshipManagerMethod);
+            Assert.NotNull(IPocoImplementor.GetEntityMethod);
             Assert.NotNull(IPocoImplementor.GetRelationshipManagerMethod);
             Assert.NotNull(IPocoImplementor.GetRelatedReferenceMethod);
             Assert.NotNull(IPocoImplementor.GetRelatedCollectionMethod);

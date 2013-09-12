@@ -250,8 +250,10 @@ namespace System.Data.Entity.Internal.Validation
         {
             DebugCheck.NotNull(type);
 
-            return type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                       .Where(p => p.GetIndexParameters().Length == 0 && p.GetGetMethod() != null);
+            return type.GetInstanceProperties()
+                       .Where(p => p.IsPublic()
+                           && p.GetIndexParameters().Length == 0
+                           && p.Getter() != null);
         }
 
         /// <summary>

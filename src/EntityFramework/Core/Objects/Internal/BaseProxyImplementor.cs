@@ -72,7 +72,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 gen.Emit(OpCodes.Call, StringEquals);
                 gen.Emit(OpCodes.Brfalse_S, labels[i]);
                 gen.Emit(OpCodes.Ldarg_0);
-                gen.Emit(OpCodes.Call, _baseGetters[i].GetGetMethod(true));
+                gen.Emit(OpCodes.Call, _baseGetters[i].Getter());
                 gen.Emit(OpCodes.Ret);
                 gen.MarkLabel(labels[i]);
             }
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 gen.Emit(OpCodes.Ldarg_0);
                 gen.Emit(OpCodes.Ldarg_2);
                 gen.Emit(OpCodes.Castclass, _baseSetters[i].PropertyType);
-                gen.Emit(OpCodes.Call, _baseSetters[i].GetSetMethod(true));
+                gen.Emit(OpCodes.Call, _baseSetters[i].Setter());
                 gen.Emit(OpCodes.Ret);
                 gen.MarkLabel(labels[i]);
             }

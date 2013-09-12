@@ -3,14 +3,14 @@
 namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Migrations.Model;
     using System.Linq;
     using System.Reflection;
 
     public static class DbMigratorExtensions
     {
-        private static readonly PropertyInfo _operationsProperty
-            = typeof(DbMigration).GetProperty("Operations", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly PropertyInfo _operationsProperty = typeof(DbMigration).GetDeclaredProperty("Operations");
 
         public static IList<MigrationOperation> GetOperations(this DbMigration migration)
         {

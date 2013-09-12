@@ -5,13 +5,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
 
     internal sealed partial class ExpressionConverter
     {
-        private sealed partial class MemberAccessTranslator
+        internal sealed partial class MemberAccessTranslator
             : TypedTranslator<MemberExpression>
         {
             private sealed class SpatialPropertyTranslator : PropertyTranslator
@@ -28,8 +29,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var memberEx = (MemberExpression)lambda.Body;
                     var property = (PropertyInfo)memberEx.Member;
                     Debug.Assert(
-                        property.GetGetMethod().IsPublic &&
-                        !property.GetGetMethod().IsStatic &&
+                        property.Getter().IsPublic &&
+                        !property.Getter().IsStatic &&
                         (property.DeclaringType == typeof(DbGeography) || property.DeclaringType == typeof(DbGeometry)),
                         "GetProperty<T, TResult> should only be used to bind to public instance spatial properties");
                     return property;

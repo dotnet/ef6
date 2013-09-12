@@ -306,7 +306,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 entityTypeConfiguration.ClearKey();
 
-                foreach (var property in type.BaseType.GetProperties(PropertyFilter.DefaultBindingFlags))
+                foreach (var property in type.BaseType.GetInstanceProperties())
                 {
                     if (!_mappingContext.AttributeProvider.GetAttributes(property).OfType<NotMappedAttribute>().Any()
                         && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))

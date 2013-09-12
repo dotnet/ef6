@@ -10,6 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
         protected class Entity
         {
             public int Int { get; set; }
+            private int Pint { get; set; }
             public short? Nullable { get; set; }
             public string String { get; set; }
             public byte[] Bytes { get; set; }

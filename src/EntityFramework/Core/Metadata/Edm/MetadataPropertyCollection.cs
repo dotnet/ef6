@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private static List<ItemPropertyInfo> GetItemProperties(Type clrType)
             {
                 var result = new List<ItemPropertyInfo>();
-                foreach (var propertyInfo in clrType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+                foreach (var propertyInfo in clrType.GetInstanceProperties())
                 {
                     foreach (var attribute in propertyInfo.GetCustomAttributes<MetadataPropertyAttribute>(inherit: false))
                     {

@@ -96,7 +96,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 var navProperty = (NavigationProperty)member;
                 var multiplicity = navProperty.ToEndMember.RelationshipMultiplicity;
 
-                var propertyInfo = EntityUtil.GetTopProperty(ospaceEntityType.ClrType, member.Name);
+                var propertyInfo = ospaceEntityType.ClrType.GetTopProperty(member.Name);
                 Debug.Assert(propertyInfo != null, "Should have found lazy loading property");
                 var propertyValueType = propertyInfo.PropertyType;
 

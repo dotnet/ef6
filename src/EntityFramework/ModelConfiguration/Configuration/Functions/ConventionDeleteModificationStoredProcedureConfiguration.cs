@@ -57,7 +57,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(propertyName, "propertyName");
             Check.NotEmpty(parameterName, "parameterName");
 
-            return Parameter(_type.GetProperty(propertyName), parameterName);
+            return Parameter(_type.GetAnyProperty(propertyName), parameterName);
         }
 
         /// <summary>Configures a parameter for this stored procedure.</summary>

@@ -3454,7 +3454,7 @@ namespace ProductivityApiTests
 
                 var entry = entryMethod.Invoke(context, new object[] { driverProxy });
 
-                Assert.Same(driverProxy, entry.GetType().GetProperty("Entity").GetValue(entry, null));
+                Assert.Same(driverProxy, entry.GetType().GetDeclaredProperty("Entity").GetValue(entry, null));
             }
         }
 

@@ -7,6 +7,8 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Internal.Linq;
+    using System.Data.Entity.Utilities;
+    using System.Linq;
     using System.Reflection;
     using Moq;
 
@@ -159,10 +161,10 @@ namespace System.Data.Entity.Internal
             // do not create mocks for nulls
             if (parent != null)
             {
-                foreach (var childPropInfo in parent.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (var childPropInfo in parent.GetType().GetInstanceProperties().Where(p => p.IsPublic()))
                 {
-                    if (childPropInfo.GetGetMethod() != null
-                        && childPropInfo.GetSetMethod() != null)
+                    if (childPropInfo.Getter() != null
+                        && childPropInfo.Setter() != null)
                     {
                         var mockInternalPropertyEntry = CreateMockInternalPropertyEntry(owner, parentPropertyEntry, childPropInfo, parent);
                         mockChildProperties.Add(childPropInfo.Name, mockInternalPropertyEntry);
@@ -176,7 +178,7 @@ namespace System.Data.Entity.Internal
         internal static InternalPropertyEntry CreateMockInternalPropertyEntry(
             InternalEntityEntry owner, InternalPropertyEntry parentPropertyEntry, PropertyInfo propInfo, object parent)
         {
-            var propertyValue = propInfo.GetGetMethod().Invoke(parent, new object[0]);
+            var propertyValue = propInfo.Getter().Invoke(parent, new object[0]);
 
             InternalPropertyEntry childPropertyEntry;
             if (parentPropertyEntry == null)

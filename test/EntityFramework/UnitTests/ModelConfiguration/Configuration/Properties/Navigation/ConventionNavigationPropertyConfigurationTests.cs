@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void ClrPropertyInfo_returns_the_propertyInfo()
         {
-            var propInfo = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var propInfo = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var config = new ConventionNavigationPropertyConfiguration(
                 new NavigationPropertyConfiguration(propInfo), new ModelConfiguration());
 
@@ -40,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasConstraint<ForeignKeyConstraintConfiguration>();
@@ -53,7 +54,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var property = new MockPropertyInfo();
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasConstraint<ForeignKeyConstraintConfiguration>(c => c.AddColumn(property));
@@ -66,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasConstraint<IndependentConstraintConfiguration>();
@@ -78,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             configuration.Constraint = new ForeignKeyConstraintConfiguration();
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
@@ -91,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             configuration.Constraint = IndependentConstraintConfiguration.Instance;
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
@@ -103,14 +104,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void HasConstraint_is_noop_when_set_on_inverse()
         {
             var modelConfiguration = new ModelConfiguration();
-            var inverseNavigationProperty = typeof(LightweighEntity).GetProperty(
-                "PrivateNavigationProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+            var inverseNavigationProperty = typeof(LightweighEntity).GetDeclaredProperty("PrivateNavigationProperty");
             modelConfiguration.Entity(typeof(LightweighEntity))
                 .Navigation(inverseNavigationProperty)
                 .Constraint = IndependentConstraintConfiguration.Instance;
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             configuration.InverseNavigationProperty = inverseNavigationProperty;
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, modelConfiguration);
 
@@ -123,7 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasDeleteAction(OperationAction.Cascade);
@@ -139,7 +139,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasInverseEndMultiplicity(RelationshipMultiplicity.ZeroOrOne);
@@ -153,13 +153,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseEndMultiplicity_throws_on_incompatible_multiplicity()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var modelConfiguration = new ModelConfiguration();
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, modelConfiguration);
 
             var inverseNavigationProperty =
-                typeof(LightweighEntity).GetProperty("ValidInverseNavigationProperty");
+                typeof(LightweighEntity).GetDeclaredProperty("ValidInverseNavigationProperty");
             lightweightConfiguration.HasInverseNavigationProperty(p => inverseNavigationProperty);
 
             Assert.Equal(
@@ -174,18 +174,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_sets_the_InverseNavigationProperty()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var modelConfiguration = new ModelConfiguration();
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, modelConfiguration);
 
             var inverseNavigationProperty1 =
-                typeof(LightweighEntity).GetProperty("ValidInverseNavigationProperty");
+                typeof(LightweighEntity).GetDeclaredProperty("ValidInverseNavigationProperty");
             lightweightConfiguration.HasInverseNavigationProperty(p => inverseNavigationProperty1);
             Assert.Same(inverseNavigationProperty1, configuration.InverseNavigationProperty);
 
-            var inverseNavigationProperty2 = typeof(LightweighEntity).GetProperty(
-                "PrivateNavigationProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+            var inverseNavigationProperty2 = typeof(LightweighEntity).GetDeclaredProperty("PrivateNavigationProperty");
             configuration.InverseNavigationProperty = inverseNavigationProperty2;
             lightweightConfiguration.HasInverseNavigationProperty(p => inverseNavigationProperty1);
             Assert.Same(inverseNavigationProperty2, configuration.InverseNavigationProperty);
@@ -194,8 +193,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_checks_preconditions()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty(
-                "PrivateNavigationProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("PrivateNavigationProperty");
             var lightweightConfiguration =
                 new ConventionNavigationPropertyConfiguration(
                     new NavigationPropertyConfiguration(navigationProperty), new ModelConfiguration());
@@ -207,12 +205,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_throws_on_invalid_nagivation_property()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var lightweightConfiguration =
                 new ConventionNavigationPropertyConfiguration(
                     new NavigationPropertyConfiguration(navigationProperty), new ModelConfiguration());
 
-            var inverseNavigationProperty = typeof(LightweighEntity).GetProperty("InvalidNavigationProperty");
+            var inverseNavigationProperty = typeof(LightweighEntity).GetDeclaredProperty("InvalidNavigationProperty");
 
             Assert.Equal(
                 Strings.LightweightEntityConfiguration_InvalidNavigationProperty(inverseNavigationProperty.Name),
@@ -223,11 +221,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_throws_on_nonmatching_nagivation_property()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("UnrelatedNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("UnrelatedNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
-            var inverseNavigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var inverseNavigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
 
             Assert.Equal(
                 Strings.LightweightEntityConfiguration_MismatchedInverseNavigationProperty(
@@ -240,12 +238,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_throws_on_nonmatching_inverse_property()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             var inverseNavigationProperty =
-                typeof(LightweighEntity).GetProperty("UnrelatedNavigationProperty");
+                typeof(LightweighEntity).GetDeclaredProperty("UnrelatedNavigationProperty");
 
             Assert.Equal(
                 Strings.LightweightEntityConfiguration_InvalidInverseNavigationProperty(
@@ -258,8 +256,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_throws_on_itself()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty(
-                "PrivateNavigationProperty", BindingFlags.Instance | BindingFlags.NonPublic);
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("PrivateNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
@@ -272,13 +269,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasInverseNavigationProperty_throws_on_incompatible_multiplicity()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty("ValidNavigationProperty");
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var modelConfiguration = new ModelConfiguration();
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, modelConfiguration);
 
             var inverseNavigationProperty =
-                typeof(LightweighEntity).GetProperty("ValidInverseNavigationProperty");
+                typeof(LightweighEntity).GetDeclaredProperty("ValidInverseNavigationProperty");
 
             lightweightConfiguration.HasInverseEndMultiplicity(RelationshipMultiplicity.Many);
 
@@ -296,7 +293,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.IsDeclaringTypePrincipal(false);
@@ -312,7 +309,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
             var configuration =
                 new NavigationPropertyConfiguration(
-                    typeof(LightweighEntity).GetProperty("ValidNavigationProperty"));
+                    typeof(LightweighEntity).GetDeclaredProperty("ValidNavigationProperty"));
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, new ModelConfiguration());
 
             lightweightConfiguration.HasRelationshipMultiplicity(RelationshipMultiplicity.ZeroOrOne);
@@ -326,9 +323,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void HasRelationshipMultiplicity_throws_on_incompatible_multiplicity()
         {
-            var navigationProperty = typeof(LightweighEntity).GetProperty(
-                "PrivateNavigationProperty",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+            var navigationProperty = typeof(LightweighEntity).GetDeclaredProperty("PrivateNavigationProperty");
             var configuration = new NavigationPropertyConfiguration(navigationProperty);
             var modelConfiguration = new ModelConfiguration();
             var lightweightConfiguration = new ConventionNavigationPropertyConfiguration(configuration, modelConfiguration);

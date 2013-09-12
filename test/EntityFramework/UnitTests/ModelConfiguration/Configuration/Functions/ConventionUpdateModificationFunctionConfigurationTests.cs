@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
 {
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Xunit;
 
@@ -34,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int", "Foo"));
-            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String"), "Foo"));
+            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo"));
         }
 
         [Fact]
@@ -48,7 +49,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
+                    .Parameter("Pint", "Foo").Configuration.ParameterNames.Single().Item1);
+
+            Assert.Equal(
+                "Foo",
+                new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
+                    .Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo").Configuration.ParameterNames.Single().Item1);
         }
 
         [Fact]
@@ -57,7 +63,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int", "Foo", "Bar"));
-            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String"), "Foo", "Bar"));
+            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo", "Bar"));
         }
 
         [Fact]
@@ -71,7 +77,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Bar",
                 new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
-                    .Parameter(typeof(Entity).GetProperty("String"), "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
+                    .Parameter("Pint", "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
+
+            Assert.Equal(
+                "Bar",
+                new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
+                    .Parameter(typeof(Entity).GetDeclaredProperty("String"), "Foo", "Bar").Configuration.ParameterNames.Single().Item2);
         }
 
         [Fact]
@@ -80,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Result("Int", "Foo"));
-            Assert.Same(configuration, configuration.Result(typeof(Entity).GetProperty("String"), "Foo"));
+            Assert.Same(configuration, configuration.Result(typeof(Entity).GetDeclaredProperty("String"), "Foo"));
         }
 
         [Fact]
@@ -94,7 +105,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             Assert.Equal(
                 "Foo",
                 new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
-                    .Result(typeof(Entity).GetProperty("String"), "Foo").Configuration.ResultBindings.Single().Value);
+                    .Result("Pint", "Foo").Configuration.ResultBindings.Single().Value);
+
+            Assert.Equal(
+                "Foo",
+                new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity))
+                    .Result(typeof(Entity).GetDeclaredProperty("String"), "Foo").Configuration.ResultBindings.Single().Value);
         }
 
         [Fact]
@@ -103,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Functions
             var configuration = new ConventionUpdateModificationStoredProcedureConfiguration(typeof(Entity));
 
             Assert.Same(configuration, configuration.Parameter("Int1", "Foo"));
-            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetProperty("String1"), "Foo"));
+            Assert.Same(configuration, configuration.Parameter(typeof(Entity).GetDeclaredProperty("String1"), "Foo"));
         }
 
         [Fact]

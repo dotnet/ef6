@@ -18,14 +18,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     internal abstract class OSpaceTypeFactory
     {
-        protected const BindingFlags PropertyReflectionBindingFlags = BindingFlags.DeclaredOnly |
-                                                                      BindingFlags.Instance |
-                                                                      BindingFlags.Public |
-                                                                      BindingFlags.NonPublic;
-
-        private const BindingFlags RootEntityPropertyReflectionBindingFlags =
-            PropertyReflectionBindingFlags & ~BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
-
         public abstract List<Action> ReferenceResolutions { get; }
 
         public abstract void LogLoadMessage(string message, EdmType relatedType);
@@ -232,9 +224,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryCreateMembers(
             Type type, StructuralType cspaceType, StructuralType ospaceType, List<Action> referenceResolutionListForCurrentType)
         {
-            var flags = cspaceType.BaseType == null ? RootEntityPropertyReflectionBindingFlags : PropertyReflectionBindingFlags;
-
-            var clrProperties = type.GetProperties(flags);
+            var clrProperties = (cspaceType.BaseType == null
+                                     ? type.GetRuntimeProperties()
+                                     : type.GetDeclaredProperties()).Where(p => !p.IsStatic());
 
             // required properties scalar properties first
             if (!TryFindAndCreatePrimitiveProperties(type, cspaceType, ospaceType, clrProperties))
@@ -261,7 +253,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private bool TryFindComplexProperties(
-            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            Type type, StructuralType cspaceType, StructuralType ospaceType, IEnumerable<PropertyInfo> clrProperties,
             List<Action> referenceResolutionListForCurrentType)
         {
             var typeClosureToTrack =
@@ -299,7 +291,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private bool TryFindNavigationProperties(
-            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            Type type, StructuralType cspaceType, StructuralType ospaceType, IEnumerable<PropertyInfo> clrProperties,
             List<Action> referenceResolutionListForCurrentType)
         {
             var typeClosureToTrack =
@@ -357,7 +349,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private bool TryFindAndCreatePrimitiveProperties(
-            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties)
+            Type type, StructuralType cspaceType, StructuralType ospaceType, IEnumerable<PropertyInfo> clrProperties)
         {
             foreach (
                 var cspaceProperty in
@@ -406,7 +398,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         private bool TryFindAndCreateEnumProperties(
-            Type type, StructuralType cspaceType, StructuralType ospaceType, PropertyInfo[] clrProperties,
+            Type type, StructuralType cspaceType, StructuralType ospaceType, IEnumerable<PropertyInfo> clrProperties,
             List<Action> referenceResolutionListForCurrentType)
         {
             var typeClosureToTrack = new List<KeyValuePair<EdmProperty, PropertyInfo>>();

@@ -64,7 +64,9 @@ namespace System.Data.Entity.Utilities
         {
             DebugCheck.NotNull(type);
 
-            return type.GetProperties().Where(p => !p.GetIndexParameters().Any());
+            return type.GetRuntimeProperties().Where(
+                p => p.IsPublic()
+                     && !p.GetIndexParameters().Any());
         }
 
         /// <summary>
@@ -319,7 +321,8 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotEmpty(name);
 
 #if NET40
-            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags 
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
             return type.GetMethod(name, bindingFlags);
 #else
             return type.GetTypeInfo()
@@ -335,7 +338,8 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(parameterTypes);
 
 #if NET40
-            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
             return type.GetMethod(name, bindingFlags, null, parameterTypes, null);
 #else
             return type.GetTypeInfo()
@@ -375,7 +379,8 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(type);
 
 #if NET40
-            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
             return type.GetMethods(bindingFlags);
 #else
             return type.GetTypeInfo().DeclaredMethods;
@@ -388,12 +393,151 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotEmpty(name);
 
 #if NET40
-            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            const BindingFlags bindingFlags
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
             return type.GetMember(name, MemberTypes.Method, bindingFlags).OfType<MethodInfo>();
 #else
             return type.GetTypeInfo().GetDeclaredMethods(name);
 #endif
         }
 
+        public static PropertyInfo GetDeclaredProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+#if NET40
+            const BindingFlags bindingFlags
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetProperty(name, bindingFlags);
+#else
+            return type.GetTypeInfo().GetDeclaredProperty(name);
+#endif
+        }
+
+        public static IEnumerable<PropertyInfo> GetDeclaredProperties(this Type type)
+        {
+            DebugCheck.NotNull(type);
+#if NET40
+            const BindingFlags bindingFlags
+                = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+            return type.GetProperties(bindingFlags);
+#else
+            return type.GetTypeInfo().DeclaredProperties;
+#endif
+        }
+
+        public static IEnumerable<PropertyInfo> GetInstanceProperties(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            return type.GetRuntimeProperties().Where(p => !p.IsStatic());
+        }
+
+#if NET40
+        public static IEnumerable<PropertyInfo> GetRuntimeProperties(this Type type)
+        {
+            DebugCheck.NotNull(type);
+
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            return type.GetProperties(bindingFlags);
+        }
+#endif
+
+#if NET40
+        public static PropertyInfo GetRuntimeProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+            return type.GetProperty(name);
+        }
+#endif
+
+        public static PropertyInfo GetAnyProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            return type.GetProperty(name, bindingFlags);
+#else
+            var props = type.GetRuntimeProperties().Where(p => p.Name == name).ToList();
+            if (props.Count() > 1)
+            {
+                throw new AmbiguousMatchException();
+            }
+
+            return props.SingleOrDefault();
+#endif
+        }
+
+        public static PropertyInfo GetInstanceProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            return type.GetProperty(name, bindingFlags);
+#else
+            var props = type.GetRuntimeProperties().Where(p => p.Name == name && !p.IsStatic()).ToList();
+            if (props.Count() > 1)
+            {
+                throw new AmbiguousMatchException();
+            }
+
+            return props.SingleOrDefault();
+#endif
+        }
+
+        public static PropertyInfo GetStaticProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+#if NET40
+            const BindingFlags bindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+            return type.GetProperty(name, bindingFlags);
+#else
+            var properties = type.GetRuntimeProperties().Where(p => p.Name == name && p.IsStatic()).ToList();
+            if (properties.Count() > 1)
+            {
+                throw new AmbiguousMatchException();
+            }
+
+            return properties.SingleOrDefault();
+#endif
+        }
+
+        public static PropertyInfo GetTopProperty(this Type type, string name)
+        {
+            DebugCheck.NotNull(type);
+            DebugCheck.NotEmpty(name);
+
+            do
+            {
+#if NET40
+                const BindingFlags bindingFlags
+                    = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
+                var propertyInfo = type.GetProperty(name, bindingFlags);
+                if (propertyInfo != null)
+                {
+                    return propertyInfo;
+                }
+                type = type.BaseType;
+#else
+                var typeInfo = type.GetTypeInfo();
+                var propertyInfo = typeInfo.GetDeclaredProperty(name);
+                if (propertyInfo != null && !(propertyInfo.GetMethod ?? propertyInfo.SetMethod).IsStatic)
+                {
+                    return propertyInfo;
+                }
+                type = typeInfo.BaseType;
+#endif
+            } while (type != null);
+
+            return null;
+        }
     }
 }

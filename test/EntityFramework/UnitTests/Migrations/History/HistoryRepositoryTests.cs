@@ -24,6 +24,13 @@ namespace System.Data.Entity.Migrations.History
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class HistoryRepositoryTests : DbTestCase
     {
+        [Fact]
+        public void Members_are_found_by_Reflection()
+        {
+            Assert.NotNull(HistoryRepository.ContextKeyProperty);
+            Assert.NotNull(HistoryRepository.MigrationIdProperty);
+        }
+
         [MigrationsTheory]
         public void Should_throw_when_upgrading_5_6_and_custom_history_context_factory_specified()
         {

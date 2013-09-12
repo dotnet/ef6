@@ -8,6 +8,7 @@ namespace System.Data.Entity.Validation
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.Validation;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq.Protected;
@@ -245,7 +246,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
-                    entity.GetType().GetProperties(),
+                    entity.GetType().GetRuntimeProperties().Where(p => p.IsPublic()),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties,
                     ctx.Entry(entity).InternalEntry.EdmEntityType.NavigationProperties);
 
@@ -360,7 +361,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
-                    new[] { entity.GetType().GetProperty("ID") },
+                    new[] { entity.GetType().GetDeclaredProperty("ID") },
                     new EdmProperty[0],
                     new NavigationProperty[0]);
 
@@ -390,7 +391,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildValidatorsForPropertiesBase(
-                    new[] { entity.GetType().GetProperty("ID") },
+                    new[] { entity.GetType().GetDeclaredProperty("ID") },
                     new[] { ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single() },
                     new NavigationProperty[0]);
 
@@ -408,7 +409,7 @@ namespace System.Data.Entity.Validation
             {
                 Assert.Null(
                     builder.Object.BuildPropertyValidatorBase(
-                        entity.GetType().GetProperty("ID"),
+                        entity.GetType().GetDeclaredProperty("ID"),
                         ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
                         true));
             }
@@ -431,7 +432,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ID"),
+                    entity.GetType().GetDeclaredProperty("ID"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
                     true);
 
@@ -460,7 +461,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ID"),
+                    entity.GetType().GetDeclaredProperty("ID"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
                     false);
 
@@ -485,7 +486,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ID"),
+                    entity.GetType().GetDeclaredProperty("ID"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
                     false);
 
@@ -506,7 +507,7 @@ namespace System.Data.Entity.Validation
             {
                 Assert.Null(
                     builder.Object.BuildPropertyValidatorBase(
-                        entity.GetType().GetProperty("ComplexProperty"),
+                        entity.GetType().GetDeclaredProperty("ComplexProperty"),
                         ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
                         true));
             }
@@ -530,7 +531,7 @@ namespace System.Data.Entity.Validation
             {
                 Assert.Null(
                     builder.Object.BuildPropertyValidatorBase(
-                        entity.GetType().GetProperty("ComplexProperty"),
+                        entity.GetType().GetDeclaredProperty("ComplexProperty"),
                         ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
                         true));
             }
@@ -553,7 +554,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ComplexProperty"),
+                    entity.GetType().GetDeclaredProperty("ComplexProperty"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
                     true);
 
@@ -579,7 +580,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validator = builder.Object.BuildPropertyValidatorBase(
-                    entity.GetType().GetProperty("ComplexProperty"),
+                    entity.GetType().GetDeclaredProperty("ComplexProperty"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ComplexProperty").Single(),
                     false);
 
@@ -600,7 +601,7 @@ namespace System.Data.Entity.Validation
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Throws<AssertException>();
 
-            Assert.Null(builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetProperty("ID")));
+            Assert.Null(builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID")));
         }
 
         [Fact]
@@ -633,7 +634,7 @@ namespace System.Data.Entity.Validation
                     "BuildFacetValidators", ItExpr.IsAny<PropertyInfo>(), ItExpr.IsAny<EdmMember>(), ItExpr.IsAny<IEnumerable<Attribute>>())
                 .Throws<AssertException>();
 
-            var validator = builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetProperty("ID"));
+            var validator = builder.Object.BuildPropertyValidatorBase(typeof(EntityWithComplexType).GetDeclaredProperty("ID"));
 
             Assert.NotNull(validator);
             Assert.IsNotType<ComplexPropertyValidator>(validator);
@@ -664,7 +665,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new SelfPopulatingContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    entity.GetType().GetProperty("Self"),
+                    entity.GetType().GetDeclaredProperty("Self"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.NavigationProperties.Where(p => p.Name == "Self").Single(),
                     new Attribute[0]);
 
@@ -681,7 +682,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    entity.GetType().GetProperty("Self"),
+                    entity.GetType().GetDeclaredProperty("Self"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.NavigationProperties.Where(p => p.Name == "Self").Single(),
                     new Attribute[0]);
 
@@ -698,7 +699,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    entity.GetType().GetProperty("NonNullableProperty"),
+                    entity.GetType().GetDeclaredProperty("NonNullableProperty"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "NonNullableProperty").Single(),
                     new Attribute[0]);
 
@@ -715,7 +716,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    entity.GetType().GetProperty("ID"),
+                    entity.GetType().GetDeclaredProperty("ID"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.Properties.Where(p => p.Name == "ID").Single(),
                     new Attribute[0]);
 
@@ -732,7 +733,7 @@ namespace System.Data.Entity.Validation
             using (var ctx = new ConfigurationOverridesContext(entity))
             {
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    entity.GetType().GetProperty("Self"),
+                    entity.GetType().GetDeclaredProperty("Self"),
                     ctx.Entry(entity).InternalEntry.EdmEntityType.NavigationProperties.Where(p => p.Name == "Self").Single(),
                     new[] { new RequiredAttribute() });
 
@@ -751,7 +752,7 @@ namespace System.Data.Entity.Validation
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
                                                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
+                    typeof(ComplexTypeWithNoValidation).GetDeclaredProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
                     new Attribute[0]);
 
@@ -770,7 +771,7 @@ namespace System.Data.Entity.Validation
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
                                                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
+                    typeof(ComplexTypeWithNoValidation).GetDeclaredProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
                     new[] { new MaxLengthAttribute() });
 
@@ -789,7 +790,7 @@ namespace System.Data.Entity.Validation
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
                                                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    typeof(ComplexTypeWithNoValidation).GetProperty("AnotherStringProperty"),
+                    typeof(ComplexTypeWithNoValidation).GetDeclaredProperty("AnotherStringProperty"),
                     complexType.Properties.Where(p => p.Name == "AnotherStringProperty").Single(),
                     new[] { new StringLengthAttribute(1) });
 
@@ -808,7 +809,7 @@ namespace System.Data.Entity.Validation
                 var complexType = (ComplexType)ctx.Entry(entity).InternalEntry.EdmEntityType.Properties
                                                    .Where(p => p.Name == "ComplexProperty").Single().TypeUsage.EdmType;
                 var validators = builder.Object.BuildFacetValidatorsBase(
-                    typeof(ComplexTypeWithNoValidation).GetProperty("StringProperty"),
+                    typeof(ComplexTypeWithNoValidation).GetDeclaredProperty("StringProperty"),
                     complexType.Properties.Where(p => p.Name == "StringProperty").Single(),
                     new Attribute[0]);
 

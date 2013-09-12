@@ -15,8 +15,6 @@ namespace System.Data.Entity
             return mockType.Object;
         }
 
-        private readonly List<PropertyInfo> _propertyInfos = new List<PropertyInfo>();
-
         public MockType()
             : this("T")
         {
@@ -28,24 +26,11 @@ namespace System.Data.Entity
             SetupGet(t => t.FullName).Returns(typeName);
             SetupGet(t => t.BaseType).Returns(typeof(Object));
             SetupGet(t => t.Assembly).Returns(typeof(object).Assembly);
-            Setup(t => t.GetProperties(It.IsAny<BindingFlags>())).Returns(() => _propertyInfos.ToArray());
             Setup(t => t.Equals(It.IsAny<object>())).Returns<Type>(t => ReferenceEquals(Object, t));
             Setup(t => t.ToString()).Returns(typeName);
             Setup(t => t.Namespace).Returns(@namespace);
             Setup(t => t.GetCustomAttributes(typeof(Attribute), It.IsAny<bool>())).Returns(new Attribute[0]);
             Setup(t => t.GetCustomAttributes(typeof(FlagsAttribute), It.IsAny<bool>())).Returns(new FlagsAttribute[0]);
-
-            this.Protected()
-                .Setup<PropertyInfo>(
-                    "GetPropertyImpl",
-                    ItExpr.IsAny<string>(),
-                    ItExpr.IsAny<BindingFlags>(),
-                    ItExpr.IsNull<Binder>(),
-                    ItExpr.IsNull<Type>(),
-                    ItExpr.IsNull<Type[]>(),
-                    ItExpr.IsNull<ParameterModifier[]>())
-                .Returns<string, BindingFlags, Binder, Type, Type[], ParameterModifier[]>(
-                    (name, bindingAttr, binder, returnType, types, modifiers) => GetProperty(name));
 
             if (hasDefaultCtor)
             {
@@ -76,29 +61,6 @@ namespace System.Data.Entity
             Setup(t => t.IsSubclassOf(mockBaseType)).Returns(true);
 
             return this;
-        }
-
-        public MockType Property<T>(string propertyName)
-        {
-            Property(typeof(T), propertyName);
-
-            return this;
-        }
-
-        public MockType Property(Type propertyType, string propertyName)
-        {
-            var mockPropertyInfo = new MockPropertyInfo(propertyType, propertyName);
-            mockPropertyInfo.SetupGet(p => p.DeclaringType).Returns(this);
-            mockPropertyInfo.SetupGet(p => p.ReflectedType).Returns(this);
-
-            _propertyInfos.Add(mockPropertyInfo);
-
-            return this;
-        }
-
-        public PropertyInfo GetProperty(string name)
-        {
-            return _propertyInfos.SingleOrDefault(p => p.Name == name);
         }
 
         public MockType AsCollection()

@@ -50,10 +50,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         private static readonly Dictionary<ExpressionType, Translator> _translators = InitializeTranslators();
 
-        internal const string s_entityCollectionCountPropertyName = "Count";
-        internal const string s_nullableHasValuePropertyName = "HasValue";
-        internal const string s_nullableValuePropertyName = "Value";
-
         /// <summary>
         /// Gets the name of the key column appearing in ELinq GroupBy projections
         /// </summary>

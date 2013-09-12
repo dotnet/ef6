@@ -39,7 +39,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 = new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model);
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(new MockType(), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
+                .Map(new MockPropertyInfo(typeof(AType1), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(1, entityType.DeclaredNavigationProperties.Count);
         }
@@ -47,23 +47,26 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         [Fact]
         public void Map_should_map_complex_properties()
         {
-            var mockComplexType = new MockType();
             var mockModelConfiguration = new Mock<ModelConfiguration>();
             mockModelConfiguration
-                .Setup(m => m.IsComplexType(mockComplexType)).Returns(true);
+                .Setup(m => m.IsComplexType(typeof(AType1))).Returns(true);
             mockModelConfiguration
-                .Setup(m => m.GetStructuralTypeConfiguration(mockComplexType))
+                .Setup(m => m.GetStructuralTypeConfiguration(typeof(AType1)))
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var mappingContext
                 = new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), new EdmModel(DataSpace.CSpace));
 
             new PropertyMapper(new TypeMapper(mappingContext))
-                .Map(new MockPropertyInfo(mockComplexType, "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
+                .Map(new MockPropertyInfo(typeof(AType1), "Foo"), entityType, () => new EntityTypeConfiguration(typeof(object)));
 
             Assert.Equal(0, entityType.DeclaredNavigationProperties.Count);
             Assert.Equal(1, entityType.DeclaredProperties.Count);
             Assert.NotNull(entityType.DeclaredProperties.Single().ComplexType);
+        }
+
+        public class AType1
+        {
         }
 
         [Fact]

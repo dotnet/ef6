@@ -4,12 +4,12 @@ namespace System.Data.Entity.TestHelpers
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
 
     public class FakeProviderFactoryResolver : IDbProviderFactoryResolver
     {
-        private static readonly PropertyInfo _factoryProperty 
-            = typeof(DbConnection).GetProperty("ProviderFactory", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+        private static readonly PropertyInfo _factoryProperty = typeof(DbConnection).GetDeclaredProperty("ProviderFactory");
 
         private readonly IDbProviderFactoryResolver _originalProviderFactoryResolver;
         

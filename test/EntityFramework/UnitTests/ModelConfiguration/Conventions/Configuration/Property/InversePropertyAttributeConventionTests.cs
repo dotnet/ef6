@@ -2,10 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Conventions
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration.Configuration;
-    using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using Xunit;
 
     public sealed class InversePropertyAttributeConventionTests
@@ -13,161 +14,200 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         [Fact]
         public void Apply_finds_inverse_when_optional_to_many()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B").Property(mockTypeA, "A");
-            mockTypeA.Property(mockTypeB.AsCollection(), "Bs");
-            var mockPropertyInfo = mockTypeA.GetProperty("Bs");
+            var propertyInfo = typeof(AType1).GetInstanceProperty("Bs");
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo,
-                    new ConventionTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    propertyInfo,
+                    new ConventionTypeConfiguration(typeof(AType1), () => modelConfiguration.Entity(typeof(AType1)), modelConfiguration),
                     new InversePropertyAttribute("A"));
 
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(mockTypeA).Navigation(mockPropertyInfo);
+                = modelConfiguration.Entity(typeof(AType1)).Navigation(propertyInfo);
 
-            Assert.Same(mockTypeB.GetProperty("A"), navigationPropertyConfiguration.InverseNavigationProperty);
+            Assert.Same(typeof(BType1).GetDeclaredProperty("A"), navigationPropertyConfiguration.InverseNavigationProperty);
+        }
+
+        public class AType1
+        {
+            public ICollection<BType1> Bs { get; set; }
+        }
+
+        public class BType1
+        {
+            public AType1 A { get; set; }
         }
 
         [Fact]
         public void Apply_finds_inverse_when_many_to_optional()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B").Property(mockTypeA, "A");
-            var mockPropertyInfo = mockTypeB.GetProperty("A");
-            mockTypeA.Property(mockTypeB.AsCollection(), "Bs");
+            var propertyInfo = typeof(BType1).GetInstanceProperty("A");
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo,
-                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    propertyInfo,
+                    new ConventionTypeConfiguration(typeof(BType1), () => modelConfiguration.Entity(typeof(BType1)), modelConfiguration),
                     new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
+                = modelConfiguration.Entity(typeof(BType1)).Navigation(propertyInfo);
 
-            Assert.Same(mockTypeA.GetProperty("Bs"), navigationPropertyConfiguration.InverseNavigationProperty);
+            Assert.Same(typeof(AType1).GetDeclaredProperty("Bs"), navigationPropertyConfiguration.InverseNavigationProperty);
         }
 
         [Fact]
         public void Apply_finds_inverse_when_optional_to_optional()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B").Property(mockTypeA, "A");
-            var mockPropertyInfo = mockTypeB.GetProperty("A");
-            mockTypeA.Property(mockTypeB, "B");
+            var propertyInfo = typeof(BType3).GetInstanceProperty("A");
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo,
-                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    propertyInfo,
+                    new ConventionTypeConfiguration(typeof(BType3), () => modelConfiguration.Entity(typeof(BType3)), modelConfiguration),
                     new InversePropertyAttribute("B"));
 
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
+                = modelConfiguration.Entity(typeof(BType3)).Navigation(propertyInfo);
 
-            Assert.Same(mockTypeA.GetProperty("B"), navigationPropertyConfiguration.InverseNavigationProperty);
+            Assert.Same(typeof(AType3).GetDeclaredProperty("B"), navigationPropertyConfiguration.InverseNavigationProperty);
+        }
+
+        public class AType3
+        {
+            public BType3 B { get; set; }
+        }
+
+        public class BType3
+        {
+            public AType3 A { get; set; }
         }
 
         [Fact]
         public void Apply_finds_inverse_when_many_to_many()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B").Property(mockTypeA.AsCollection(), "As");
-            var mockPropertyInfo = mockTypeB.GetProperty("As");
-            mockTypeA.Property(mockTypeB.AsCollection(), "Bs");
+            var propertyInfo = typeof(BType2).GetInstanceProperty("As");
             var modelConfiguration = new ModelConfiguration();
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo,
-                    new ConventionTypeConfiguration(mockTypeB, () => modelConfiguration.Entity(mockTypeB), modelConfiguration),
+                    propertyInfo,
+                    new ConventionTypeConfiguration(typeof(BType2), () => modelConfiguration.Entity(typeof(BType2)), modelConfiguration),
                     new InversePropertyAttribute("Bs"));
 
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(mockTypeB).Navigation(mockPropertyInfo);
+                = modelConfiguration.Entity(typeof(BType2)).Navigation(propertyInfo);
 
-            Assert.Same(mockTypeA.GetProperty("Bs"), navigationPropertyConfiguration.InverseNavigationProperty);
+            Assert.Same(typeof(AType2).GetInstanceProperty("Bs"), navigationPropertyConfiguration.InverseNavigationProperty);
+        }
+
+        public class AType2
+        {
+            public ICollection<BType2> Bs { get; set; }
+        }
+
+        public class BType2
+        {
+            public ICollection<AType2> As { get; set; }
         }
 
         [Fact]
         public void Apply_ignores_inverse_when_already_configured()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B").Property(mockTypeA, "A1").Property(mockTypeA, "A2");
-            mockTypeA.Property(mockTypeB, "B");
-            var mockPropertyInfo = mockTypeA.GetProperty("B");
+            var propertyInfo = typeof(AType4).GetInstanceProperty("B");
             var modelConfiguration = new ModelConfiguration();
             var navigationPropertyConfiguration
-                = modelConfiguration.Entity(mockTypeA).Navigation(mockPropertyInfo);
-            navigationPropertyConfiguration.InverseNavigationProperty = mockTypeB.GetProperty("A2");
+                = modelConfiguration.Entity(typeof(AType4)).Navigation(propertyInfo);
+            navigationPropertyConfiguration.InverseNavigationProperty = typeof(BType4).GetInstanceProperty("A2");
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo,
-                    new ConventionTypeConfiguration(mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                    propertyInfo,
+                    new ConventionTypeConfiguration(typeof(AType4), () => modelConfiguration.Entity(typeof(AType4)), modelConfiguration),
                     new InversePropertyAttribute("A1"));
 
-            Assert.NotSame(mockTypeB.GetProperty("A1"), navigationPropertyConfiguration.InverseNavigationProperty);
+            Assert.NotSame(typeof(BType4).GetInstanceProperty("A1"), navigationPropertyConfiguration.InverseNavigationProperty);
+        }
+
+        public class AType4
+        {
+            public BType4 B { get; set; }
+        }
+
+        public class BType4
+        {
+            public AType4 A1 { get; set; }
+            public AType4 A2 { get; set; }
         }
 
         [Fact]
         public void Apply_ignores_inverse_on_nonnavigation()
         {
-            var mockTypeA = new MockType("A").Property(typeof(int), "B");
-            var mockPropertyInfo = mockTypeA.GetProperty("B");
+            var propertyInfo = typeof(AType5).GetInstanceProperty("B");
             var modelConfiguration = new ModelConfiguration();
-            var entityConfiguration = modelConfiguration.Entity(mockTypeA);
+            var entityConfiguration = modelConfiguration.Entity(typeof(AType5));
 
             new InversePropertyAttributeConvention()
                 .Apply(
-                    mockPropertyInfo, new ConventionTypeConfiguration(mockTypeA, () => entityConfiguration, modelConfiguration),
+                    propertyInfo, new ConventionTypeConfiguration(typeof(AType5), () => entityConfiguration, modelConfiguration),
                     new InversePropertyAttribute("A1"));
 
-            Assert.False(entityConfiguration.IsNavigationPropertyConfigured(mockPropertyInfo));
+            Assert.False(entityConfiguration.IsNavigationPropertyConfigured(propertyInfo));
+        }
+
+        public class AType5
+        {
+            public int B { get; set; }
         }
 
         [Fact]
         public void Apply_throws_on_self_inverse()
         {
-            var mockTypeA = new MockType("A");
-            mockTypeA.Property(mockTypeA, "A");
-            var mockPropertyInfo = mockTypeA.GetProperty("A");
+            var propertyInfo = typeof(AType6).GetInstanceProperty("A");
             var modelConfiguration = new ModelConfiguration();
 
             Assert.Equal(
-                Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", mockTypeA.Object),
+                Strings.InversePropertyAttributeConvention_SelfInverseDetected("A", typeof(AType6)),
                 Assert.Throws<InvalidOperationException>(
                     () => new InversePropertyAttributeConvention()
                               .Apply(
-                                  mockPropertyInfo,
+                                  propertyInfo,
                                   new ConventionTypeConfiguration(
-                              mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                              typeof(AType6), () => modelConfiguration.Entity(typeof(AType6)), modelConfiguration),
                                   new InversePropertyAttribute("A"))).Message);
+        }
+
+        public class AType6
+        {
+            public AType6 A { get; set; }
         }
 
         [Fact]
         public void Apply_throws_when_cannot_find_inverse_property()
         {
-            var mockTypeA = new MockType("A");
-            var mockTypeB = new MockType("B");
-            mockTypeA.Property(mockTypeB, "B");
-            var mockPropertyInfo = mockTypeA.GetProperty("B");
+            var propertyInfo = typeof(AType7).GetInstanceProperty("B");
             var modelConfiguration = new ModelConfiguration();
 
             Assert.Equal(
-                Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", mockTypeB.Object, "B", mockTypeA.Object),
+                Strings.InversePropertyAttributeConvention_PropertyNotFound("Foo", typeof(BType7), "B", typeof(AType7)),
                 Assert.Throws<InvalidOperationException>(
                     () => new InversePropertyAttributeConvention()
                               .Apply(
-                                  mockPropertyInfo,
+                                  propertyInfo,
                                   new ConventionTypeConfiguration(
-                              mockTypeA, () => modelConfiguration.Entity(mockTypeA), modelConfiguration),
+                              typeof(AType7), () => modelConfiguration.Entity(typeof(AType7)), modelConfiguration),
                                   new InversePropertyAttribute("Foo"))).Message);
+        }
+
+        public class AType7
+        {
+            public BType7 B { get; set; }
+        }
+
+        public class BType7
+        {
         }
     }
 }

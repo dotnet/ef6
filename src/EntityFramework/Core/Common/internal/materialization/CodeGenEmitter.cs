@@ -66,10 +66,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal static readonly MethodInfo EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc =
             typeof(EntityWrapperFactory).GetDeclaredMethod("GetSnapshotChangeTrackingStrategyFunc");
 
-        internal static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(NullEntityWrapper).GetProperty(
-            "NullWrapper", BindingFlags.Static | BindingFlags.NonPublic);
+        internal static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(NullEntityWrapper).GetDeclaredProperty("NullWrapper");
 
-        internal static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetProperty("Entity");
+        internal static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetDeclaredProperty("Entity");
 
         internal static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<string>).GetDeclaredMethod(
             "Equals", new[] { typeof(string), typeof(string) });
@@ -124,10 +123,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         internal static readonly Expression Shaper_Context = Expression.Field(Shaper_Parameter, typeof(Shaper).GetField("Context"));
 
         internal static readonly Expression Shaper_Context_Options = Expression.Property(
-            Shaper_Context, typeof(ObjectContext).GetProperty("ContextOptions"));
+            Shaper_Context, typeof(ObjectContext).GetDeclaredProperty("ContextOptions"));
 
         internal static readonly Expression Shaper_ProxyCreationEnabled = Expression.Property(
-            Shaper_Context_Options, typeof(ObjectContextOptions).GetProperty("ProxyCreationEnabled"));
+            Shaper_Context_Options, typeof(ObjectContextOptions).GetDeclaredProperty("ProxyCreationEnabled"));
 
         #endregion
 
