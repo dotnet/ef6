@@ -34,6 +34,10 @@
       <Source>$(OutputPath)</Source>
       <Destination>tools</Destination>
     </NuGetContent>
+	<NuGetContent Include="EntityFramework.PowerShell.Utility.dll">
+      <Source>$(OutputPath)</Source>
+      <Destination>tools</Destination>
+    </NuGetContent>
     <NuGetContent Include="tools\*">
       <Destination>tools</Destination>
     </NuGetContent>
