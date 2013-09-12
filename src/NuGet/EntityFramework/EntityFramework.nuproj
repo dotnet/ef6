@@ -13,23 +13,32 @@
       <Source>$(OutputPath45)</Source>
       <Destination>lib\net45</Destination>
     </NuGetContent>
-    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework\**\*.cs">
-      <Destination>src\EntityFramework\%(RecursiveDir)</Destination>
-    </NuGetContent>
-    <NuGetContent Include="$(RepositoryRoot)\src\Common\**\*.cs">
-      <Destination>src\Common\%(RecursiveDir)</Destination>
-    </NuGetContent>
-    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.pdb;EntityFramework.SqlServer.xml">
+    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.xml">
       <Source>$(OutputPath40)</Source>
       <Destination>lib\net40</Destination>
     </NuGetContent>
-    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.pdb;EntityFramework.SqlServer.xml">
+    <NuGetContent Include="EntityFramework.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
       <Source>$(OutputPath45)</Source>
       <Destination>lib\net45</Destination>
     </NuGetContent>
-    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework.SqlServer\**\*.cs">
-      <Destination>src\EntityFramework.SqlServer\%(RecursiveDir)</Destination>
+    <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework\EntityFramework.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
+    <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.xml">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
     </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServer.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServer.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
     <NuGetContent Include="EntityFramework.PowerShell.dll">
       <Source>$(OutputPath)</Source>
       <Destination>tools</Destination>

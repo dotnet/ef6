@@ -5,17 +5,23 @@
     <NuSpecFile>EntityFramework.SqlServerCompact.nuspec</NuSpecFile>
   </PropertyGroup>  
   <ItemGroup>
-    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.pdb;EntityFramework.SqlServerCompact.xml">
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.xml">
       <Source>$(OutputPath40)</Source>
       <Destination>lib\net40</Destination>
     </NuGetContent>
-    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.pdb;EntityFramework.SqlServerCompact.xml">
+    <NuGetContent Include="EntityFramework.SqlServerCompact.dll;EntityFramework.SqlServerCompact.xml">
       <Source>$(OutputPath45)</Source>
       <Destination>lib\net45</Destination>
     </NuGetContent>
-    <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\**\*.cs">
-      <Destination>src\%(RecursiveDir)</Destination>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
     </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
     <NuGetContent Include="EntityFramework.PowerShell.dll">
       <Source>$(OutputPath)</Source>
       <Destination>tools</Destination>
