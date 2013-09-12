@@ -34,7 +34,11 @@
       <Source>$(OutputPath)</Source>
       <Destination>tools</Destination>
     </NuGetContent>
-	<NuGetContent Include="EntityFramework.PowerShell.Utility.dll">
+	  <NuGetContent Include="EntityFramework.PowerShell.Utility.dll">
+      <Source>$(OutputPath)</Source>
+      <Destination>tools</Destination>
+    </NuGetContent>
+	<NuGetContent Include="migrate.exe">
       <Source>$(OutputPath)</Source>
       <Destination>tools</Destination>
     </NuGetContent>
