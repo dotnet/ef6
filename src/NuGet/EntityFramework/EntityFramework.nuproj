@@ -16,6 +16,9 @@
     <NuGetContent Include="$(RepositoryRoot)\src\EntityFramework\**\*.cs">
       <Destination>src\EntityFramework\%(RecursiveDir)</Destination>
     </NuGetContent>
+    <NuGetContent Include="$(RepositoryRoot)\src\Common\**\*.cs">
+      <Destination>src\Common\%(RecursiveDir)</Destination>
+    </NuGetContent>
     <NuGetContent Include="EntityFramework.SqlServer.dll;EntityFramework.SqlServer.pdb;EntityFramework.SqlServer.xml">
       <Source>$(OutputPath40)</Source>
       <Destination>lib\net40</Destination>
