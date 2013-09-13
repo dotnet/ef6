@@ -67,6 +67,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
                     }.TypeName);
         }
 
+#if NET40
         [Fact]
         public void TypeName_cannot_be_set_to_null_or_whitespace()
         {
@@ -92,5 +93,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
                                   TypeName = " "
                               }).Message);
         }
+#endif
     }
 }

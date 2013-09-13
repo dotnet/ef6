@@ -9,16 +9,14 @@ namespace System.Data.Entity.Core
         [Fact]
         public void Constructors_can_be_passed_null_or_empty_message_without_throwing()
         {
-            Assert.Equal(
-                "Exception of type 'System.Data.Entity.Core.EntityCommandCompilationException' was thrown.",
-                new EntityCommandCompilationException(null).Message);
+            Assert.True(new EntityCommandCompilationException(null).Message.Contains(
+                "System.Data.Entity.Core.EntityCommandCompilationException"));
 
             Assert.Equal("", new EntityCommandCompilationException("").Message);
             Assert.Equal(" ", new EntityCommandCompilationException(" ").Message);
 
-            Assert.Equal(
-                "Exception of type 'System.Data.Entity.Core.EntityCommandCompilationException' was thrown.",
-                new EntityCommandCompilationException(null, new Exception()).Message);
+            Assert.True(new EntityCommandCompilationException(null, new Exception()).Message.Contains(
+                "System.Data.Entity.Core.EntityCommandCompilationException"));
 
             Assert.Equal("", new EntityCommandCompilationException("", new Exception()).Message);
             Assert.Equal(" ", new EntityCommandCompilationException(" ", new Exception()).Message);

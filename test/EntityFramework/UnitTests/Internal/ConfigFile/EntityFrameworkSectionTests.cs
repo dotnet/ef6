@@ -88,7 +88,7 @@ namespace System.Data.Entity.Internal.ConfigFile
                       </entityFramework>");
 
                 Assert.True(
-                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains(" 'type' "));
+                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains("type"));
             }
 
             [Fact]
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Internal.ConfigFile
                       </entityFramework>");
 
                 Assert.True(
-                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains(" 'value' "));
+                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains("value"));
             }
         }
 
@@ -206,7 +206,7 @@ namespace System.Data.Entity.Internal.ConfigFile
                       </entityFramework>");
 
                 Assert.True(
-                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains(" 'type' "));
+                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains("type"));
             }
 
             [Fact]
@@ -222,7 +222,7 @@ namespace System.Data.Entity.Internal.ConfigFile
                       </entityFramework>");
 
                 Assert.True(
-                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains(" 'type' "));
+                    Assert.Throws<ConfigurationErrorsException>(() => config.GetSection("entityFramework")).Message.Contains("type"));
             }
 
             [Fact]

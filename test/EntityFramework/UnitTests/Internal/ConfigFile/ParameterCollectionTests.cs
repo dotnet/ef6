@@ -32,7 +32,7 @@ namespace System.Data.Entity.Internal.ConfigFile
             p1.ValueString = "MyValue";
             p1.TypeName = "Not.A.Type";
 
-            Assert.True(Assert.Throws<TypeLoadException>(() => coll.GetTypedParameterValues()).Message.Contains(" 'Not.A.Type' "));
+            Assert.True(Assert.Throws<TypeLoadException>(() => coll.GetTypedParameterValues()).Message.Contains("Not.A.Type"));
         }
 
         [Fact]

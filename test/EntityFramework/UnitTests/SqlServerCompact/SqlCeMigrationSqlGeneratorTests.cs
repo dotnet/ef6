@@ -48,29 +48,34 @@ namespace System.Data.Entity.SqlServerCompact
         [Fact]
         public void Generate_should_throw_when_column_rename()
         {
-            var migrationProvider = new SqlCeMigrationSqlGenerator();
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                var migrationProvider = new SqlCeMigrationSqlGenerator();
+                var renameColumnOperation = new RenameColumnOperation("T", "c", "c'");
 
-            var renameColumnOperation = new RenameColumnOperation("T", "c", "c'");
-
-            Assert.Equal(
-                Strings.SqlCeColumnRenameNotSupported,
-                Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameColumnOperation }, "4.0").ToList()).
-                    Message);
+                Assert.Equal(
+                    Strings.SqlCeColumnRenameNotSupported,
+                    Assert.Throws<MigrationsException>(() => migrationProvider.Generate(new[] { renameColumnOperation }, "4.0").ToList()).
+                        Message);
+            }
         }
 
         [Fact]
         public void Generate_throws_when_operation_unknown()
         {
-            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
-            var unknownOperation = new Mock<MigrationOperation>(null).Object;
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+                var unknownOperation = new Mock<MigrationOperation>(null).Object;
 
-            var ex = Assert.Throws<InvalidOperationException>(
-                () => migrationSqlGenerator.Generate(new[] { unknownOperation }, "4.0"));
+                var ex = Assert.Throws<InvalidOperationException>(
+                    () => migrationSqlGenerator.Generate(new[] { unknownOperation }, "4.0"));
 
-            Assert.Equal(
-                Strings.SqlServerMigrationSqlGenerator_UnknownOperation(
-                    typeof(SqlCeMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
-                ex.Message);
+                Assert.Equal(
+                    Strings.SqlServerMigrationSqlGenerator_UnknownOperation(
+                        typeof(SqlCeMigrationSqlGenerator).Name, unknownOperation.GetType().FullName),
+                    ex.Message);
+            }
         }
 
         [Fact]

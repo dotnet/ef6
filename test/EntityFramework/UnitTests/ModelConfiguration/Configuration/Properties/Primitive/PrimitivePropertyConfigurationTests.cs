@@ -332,12 +332,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var property = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             configurationNullable.Configure(property);
-            Assert.Equal(
-                Strings.ConflictingPropertyConfiguration(
-                    "P", string.Empty, Environment.NewLine + "\tIsNullable = True conflicts with IsNullable = False"),
-                Assert.Throws<InvalidOperationException>(
-                    () =>
-                    configurationRequired.Configure(property)).Message);
+
+            var message = Assert.Throws<InvalidOperationException>(() => configurationRequired.Configure(property)).Message;
+
+            Assert.True(message.StartsWith(
+                Strings.ConflictingPropertyConfiguration("P", string.Empty, string.Empty)));
         }
 
         [Fact]

@@ -19,6 +19,7 @@ namespace System.ComponentModel.DataAnnotations
             Assert.Equal(-10, new MaxLengthAttribute(-10).Length);
         }
 
+#if NET40
         [Fact]
         public void IsValid_throws_for_negative_or_zero_lengths_other_than_negative_one()
         {
@@ -32,6 +33,7 @@ namespace System.ComponentModel.DataAnnotations
                 Strings.MaxLengthAttribute_InvalidMaxLength,
                 Assert.Throws<InvalidOperationException>(() => attribute2.IsValid("Twoflower")).Message);
         }
+#endif
 
         [Fact]
         public void IsValid_throws_for_object_that_is_not_string_or_array()

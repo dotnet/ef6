@@ -5,6 +5,7 @@ namespace CmdLine.Tests
     extern alias migrate;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -304,43 +305,55 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenNoPositionOneShouldThrow()
         {
-            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(
-                new migrate::CmdLine.CommandLineException(
-                    "Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message,
-                Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgNoOne>()).
-                    Message);
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
+                Assert.Equal(
+                    new migrate::CmdLine.CommandLineException(
+                        "Out of order parameter \"source\" should have be at parameter index 1 but was found at 2").Message,
+                    Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgNoOne>()).
+                        Message);
+            }
         }
 
         [Fact]
         public void WhenNoPositionTwoShouldThrow()
         {
-            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(
-                new migrate::CmdLine.CommandLineException(
-                    "Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").
-                    Message,
-                Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgMissingTwo>()).
-                    Message);
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
+                Assert.Equal(
+                    new migrate::CmdLine.CommandLineException(
+                        "Out of order parameter \"destination\" should have be at parameter index 2 but was found at 3").
+                        Message,
+                    Assert.Throws<migrate::CmdLine.CommandLineException>(() => migrate::CmdLine.CommandLine.Parse<BadPositionArgMissingTwo>()).
+                        Message);
+            }
         }
 
         [Fact]
         public void WhenDuplicatePositionShouldThrow()
         {
-            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(
-                new migrate::CmdLine.CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message,
-                Assert.Throws<migrate::CmdLine.CommandLineException>(
-                    () => migrate::CmdLine.CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
+                Assert.Equal(
+                    new migrate::CmdLine.CommandLineException("Duplicate Parameter Index [1] on Property \"S2\"").Message,
+                    Assert.Throws<migrate::CmdLine.CommandLineException>(
+                        () => migrate::CmdLine.CommandLine.Parse<TypeWithDuplicateParamIndex>()).Message);
+            }
         }
 
         [Fact]
         public void WhenBadParameterIndexShouldThrow()
         {
-            migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
-            Assert.Equal(
-                new CustomAttributeFormatException("'ParameterIndex' property specified was not found.").Message,
-                Assert.Throws<CustomAttributeFormatException>(() => migrate::CmdLine.CommandLine.Parse<TypeWithBadParamIndex>()).Message);
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            {
+                migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
+                Assert.Equal(
+                    new CustomAttributeFormatException("'ParameterIndex' property specified was not found.").Message,
+                    Assert.Throws<CustomAttributeFormatException>(() => migrate::CmdLine.CommandLine.Parse<TypeWithBadParamIndex>()).Message);
+            }
         }
     }
 
