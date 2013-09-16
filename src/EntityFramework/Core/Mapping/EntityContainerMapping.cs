@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
     ///     We currently assume that an Entity Container on the C side
     ///     is mapped to a single Entity Container in the S - space.
     /// </remarks>
-    internal class EntityContainerMapping : Map
+    public class EntityContainerMapping : Map
     {
         /// <summary>
         /// Construct a new EntityContainer mapping object
@@ -84,6 +84,9 @@ namespace System.Data.Entity.Core.Mapping
         private readonly StorageMappingItemCollection m_storageMappingItemCollection;
         private readonly Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups> m_memoizedCellGroupEvaluator;
 
+        /// <summary>
+        /// StorageMappingItemCollection
+        /// </summary>
         public StorageMappingItemCollection StorageMappingItemCollection
         {
             get { return m_storageMappingItemCollection; }
@@ -167,16 +170,25 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<EntitySetBaseMapping>(new List<EntitySetBaseMapping>(m_entitySetMappings.Values)); }
         }
 
+        /// <summary>
+        /// EntitySetMappings
+        /// </summary>
         public virtual IEnumerable<EntitySetMapping> EntitySetMappings
         {
             get { return EntitySetMaps.OfType<EntitySetMapping>(); }
         }
 
+        /// <summary>
+        /// AssociationSetMappings
+        /// </summary>
         public virtual IEnumerable<AssociationSetMapping> AssociationSetMappings
         {
             get { return RelationshipSetMaps.OfType<AssociationSetMapping>(); }
         }
 
+        /// <summary>
+        /// FunctionImportMappings
+        /// </summary>
         public ReadOnlyCollection<FunctionImportMapping> FunctionImportMappings
         {
             get { return new ReadOnlyCollection<FunctionImportMapping>(m_functionImportMappings.Values.ToList()); }
@@ -355,6 +367,10 @@ namespace System.Data.Entity.Core.Mapping
 
         // Methods to modify and access function imports, which association a "functionImport" declared
         // in the model entity container with a targetFunction declared in the target
+        /// <summary>
+        /// AddFunctionImportMapping
+        /// </summary>
+        /// <param name="mapping"></param>
         public void AddFunctionImportMapping(FunctionImportMapping mapping)
         {
             Check.NotNull(mapping, "mapping");

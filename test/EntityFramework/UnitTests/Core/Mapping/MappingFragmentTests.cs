@@ -52,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping
                     new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace))));
 
             Assert.Equal(
-                "tableExtent",
+                "storeEntitySet",
                 Assert.Throws<ArgumentNullException>(
                     () => new MappingFragment(null, entityTypeMapping, false)).ParamName);
         }
@@ -381,6 +381,92 @@ namespace System.Data.Entity.Core.Mapping
             mappingFragment.RemoveConditionProperty(conditionPropertyMapping);
 
             Assert.Empty(mappingFragment.ColumnConditions);
+        }
+
+        [Fact]
+        public void Cannot_add_property_when_read_only()
+        {
+            var mappingFragment
+                = new MappingFragment(
+                    new EntitySet(),
+                    new EntityTypeMapping(
+                        new EntitySetMapping(
+                            new EntitySet(),
+                            new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+
+            mappingFragment.SetReadOnly();
+
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mappingFragment.AddProperty(scalarPropertyMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_remove_property_when_read_only()
+        {
+            var mappingFragment
+                = new MappingFragment(
+                    new EntitySet(),
+                    new EntityTypeMapping(
+                        new EntitySetMapping(
+                            new EntitySet(),
+                            new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+
+            mappingFragment.AddProperty(scalarPropertyMapping);
+
+            mappingFragment.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mappingFragment.RemoveProperty(scalarPropertyMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_add_condition_when_read_only()
+        {
+            var mappingFragment
+                = new MappingFragment(
+                    new EntitySet(),
+                    new EntityTypeMapping(
+                        new EntitySetMapping(
+                            new EntitySet(),
+                            new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+
+            mappingFragment.SetReadOnly();
+
+            var conditionMapping = new IsNullConditionMapping(new EdmProperty("P"), true);
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mappingFragment.AddCondition(conditionMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_remove_condition_when_read_only()
+        {
+            var mappingFragment
+                = new MappingFragment(
+                    new EntitySet(),
+                    new EntityTypeMapping(
+                        new EntitySetMapping(
+                            new EntitySet(),
+                            new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+            var conditionMapping = new IsNullConditionMapping(new EdmProperty("P"), true);
+
+            mappingFragment.AddCondition(conditionMapping);
+
+            mappingFragment.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => mappingFragment.RemoveCondition(conditionMapping)).Message);
         }
     }
 }

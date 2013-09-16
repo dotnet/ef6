@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Describes modification function binding for change processing of entities or associations.
     /// </summary>
-    internal sealed class ModificationFunctionMapping : MappingItem
+    public sealed class ModificationFunctionMapping : MappingItem
     {
         private FunctionParameter _rowsAffectedParameter;
         private readonly EdmFunction _function;
@@ -98,6 +98,10 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal readonly ReadOnlyCollection<ModificationFunctionResultBinding> ResultBindings;
 
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return String.Format(

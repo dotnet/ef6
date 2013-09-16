@@ -30,7 +30,7 @@ namespace System.Data.Entity.Core.Mapping
     /// The EntitySetBaseMapping elements that are children of the EntityContainerMapping element
     /// can be accessed through the properties on this type.
     /// </example>
-    internal abstract class EntitySetBaseMapping : MappingItem
+    public abstract class EntitySetBaseMapping : MappingItem
     {
         /// <summary>
         /// Construct the new EntitySetBaseMapping object.
@@ -74,16 +74,19 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_extent; }
         }
 
-        ///// <summary>
-        ///// TypeMappings that make up this set type.
-        ///// For AssociationSet and CompositionSet there will be one type (at least that's what
-        ///// we expect as of now). EntitySet could have mappings for multiple Entity types.
-        ///// </summary>
+        /// <summary>
+        /// TypeMappings that make up this set type.
+        /// For AssociationSet and CompositionSet there will be one type (at least that's what
+        /// we expect as of now). EntitySet could have mappings for multiple Entity types.
+        /// </summary>
         public ReadOnlyCollection<TypeMapping> TypeMappings
         {
             get { return new ReadOnlyCollection<TypeMapping>(m_typeMappings); }
         }
 
+        /// <summary>
+        /// EntityContainerMapping
+        /// </summary>
         public EntityContainerMapping EntityContainerMapping
         {
             get { return m_entityContainerMapping; }

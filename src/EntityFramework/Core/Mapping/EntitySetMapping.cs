@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
     /// This class represents the metadata for the EntitySetMapping elements in the
     /// above example. And it is possible to access the EntityTypeMaps underneath it.
     /// </example>
-    internal class EntitySetMapping : EntitySetBaseMapping
+    public class EntitySetMapping : EntitySetBaseMapping
     {
         /// <summary>
         /// Construct a EntitySet mapping object
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<EntityTypeModificationFunctionMapping>(m_modificationFunctionMappings); }
         }
 
-        public void ClearModificationFunctionMappings()
+        internal void ClearModificationFunctionMappings()
         {
             m_modificationFunctionMappings.Clear();
         }
@@ -67,11 +67,17 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<AssociationSetEnd>(m_implicitlyMappedAssociationSetEnds); }
         }
 
+        /// <summary>
+        /// EntityTypeMappings
+        /// </summary>
         public IEnumerable<EntityTypeMapping> EntityTypeMappings
         {
             get { return TypeMappings.OfType<EntityTypeMapping>(); }
         }
 
+        /// <summary>
+        /// EntitySet
+        /// </summary>
         public EntitySet EntitySet
         {
             get { return (EntitySet)Set; }

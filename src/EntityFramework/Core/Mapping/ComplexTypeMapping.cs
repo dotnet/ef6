@@ -5,8 +5,10 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
 
     /// <summary>
     /// Mapping metadata for Complex Types.
@@ -18,8 +20,8 @@ namespace System.Data.Entity.Core.Mapping
 
         //child property mappings that make up this complex property
 
-        private readonly Dictionary<EdmProperty, PropertyMapping> m_conditionProperties =
-            new Dictionary<EdmProperty, PropertyMapping>(EqualityComparer<EdmProperty>.Default);
+        private readonly Dictionary<EdmProperty, ConditionPropertyMapping> m_conditionProperties =
+            new Dictionary<EdmProperty, ConditionPropertyMapping>(EqualityComparer<EdmProperty>.Default);
 
         //Condition property mappings for this complex type
 
@@ -37,6 +39,17 @@ namespace System.Data.Entity.Core.Mapping
         // not only the type specified but the sub-types of that type as well.        
 
         /// <summary>
+        /// Creates a ComplexTypeMapping instance.
+        /// </summary>
+        /// <param name="complexType">The ComplexType being mapped.</param>
+        public ComplexTypeMapping(ComplexType complexType)
+        {
+            Check.NotNull(complexType, "complexType");
+
+            AddType(complexType);
+        }
+
+        /// <summary>
         /// Construct a new Complex Property mapping object
         /// </summary>
         /// <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
@@ -46,6 +59,14 @@ namespace System.Data.Entity.Core.Mapping
 #if DEBUG
             m_isPartial = isPartial;
 #endif
+        }
+
+        /// <summary>
+        /// Gets the ComplexType being mapped.
+        /// </summary>
+        public ComplexType ComplexType
+        {
+            get { return m_types.Values.SingleOrDefault(); }
         }
 
         /// <summary>
@@ -66,11 +87,19 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// List of child properties that make up this complex property
+        /// Gets a read-only collection of property mappings.
         /// </summary>
         public override ReadOnlyCollection<PropertyMapping> Properties
         {
             get { return new ReadOnlyCollection<PropertyMapping>(new List<PropertyMapping>(m_properties.Values)); }
+        }
+
+        /// <summary>
+        /// Gets a read-only collection of property mapping conditions.
+        /// </summary>
+        public override ReadOnlyCollection<ConditionPropertyMapping> Conditions
+        {
+            get { return new ReadOnlyCollection<ConditionPropertyMapping>(new List<ConditionPropertyMapping>(m_conditionProperties.Values)); }
         }
 
         /// <summary>
@@ -105,17 +134,51 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Add a property mapping as a child of this complex property mapping
+        /// Adds a property mapping.
         /// </summary>
-        /// <param name="propertyMapping"> The mapping that needs to be added </param>
-        internal override void AddProperty(PropertyMapping propertyMapping)
+        /// <param name="propertyMapping">The property mapping to be added.</param>
+        public override void AddProperty(PropertyMapping propertyMapping)
         {
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
             m_properties.Add(propertyMapping.EdmProperty.Name, propertyMapping);
         }
 
-        internal override void RemoveProperty(PropertyMapping prop)
+        /// <summary>
+        /// Removes a property mapping.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping to be removed.</param>
+        public override void RemoveProperty(PropertyMapping propertyMapping)
         {
-            m_properties.Remove(prop.EdmProperty.Name);
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
+            m_properties.Remove(propertyMapping.EdmProperty.Name);
+        }
+
+        /// <summary>
+        /// Adds a property mapping condition.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping condition to be added.</param>
+        public override void AddCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            AddConditionProperty(condition, _ => { });
+        }
+
+        /// <summary>
+        /// Removes a property mapping condition.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping condition to be removed.</param>
+        public override void RemoveCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            m_conditionProperties.Remove(condition.Property ?? condition.Column);
         }
 
         /// <summary>

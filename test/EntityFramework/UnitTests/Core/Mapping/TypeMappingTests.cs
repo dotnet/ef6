@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -58,6 +59,47 @@ namespace System.Data.Entity.Core.Mapping
                 "fragment",
                 Assert.Throws<ArgumentNullException>(
                     () => new EntityTypeMapping(storageSetMapping).AddFragment(null)).ParamName);
+        }
+
+        [Fact]
+        public void Cannot_add_mapping_fragment_when_read_only()
+        {
+            var setMapping
+                = new EntitySetMapping(
+                    new EntitySet(),
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+            var typeMapping
+                = new EntityTypeMapping(setMapping);
+
+            typeMapping.SetReadOnly();
+
+            var mappingFragment = new MappingFragment(new EntitySet(), typeMapping, false);
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => typeMapping.AddFragment(mappingFragment)).Message);
+        }
+
+        [Fact]
+        public void Cannot_remove_mapping_fragment_when_read_only()
+        {
+            var setMapping
+                = new EntitySetMapping(
+                    new EntitySet(),
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+            var typeMapping
+                = new EntityTypeMapping(setMapping);
+            var mappingFragment = new MappingFragment(new EntitySet(), typeMapping, false);
+
+            typeMapping.AddFragment(mappingFragment);
+
+            typeMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => typeMapping.RemoveFragment(mappingFragment)).Message);
         }
     }
 }

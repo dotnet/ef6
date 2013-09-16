@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
 
     /// <summary>
     /// Represents the Mapping metadata for an association type map in CS space.
@@ -40,14 +41,25 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. Users can access the table mapping fragments under the
     /// association type mapping through this class.
     /// </example>
-    internal class AssociationTypeMapping : TypeMapping
+    public class AssociationTypeMapping : TypeMapping
     {
+        /// <summary>
+        /// Creates an AssociationTypeMapping instance.
+        /// </summary>
+        /// <param name="associationSetMapping">The AssociationSetMapping that 
+        /// the contains this AssociationTypeMapping.</param>
+        public AssociationTypeMapping(AssociationSetMapping associationSetMapping)
+            : base(Check.NotNull(associationSetMapping, "associationSetMapping"))
+        {
+            m_relation = associationSetMapping.AssociationSet.ElementType;
+        }
+
         /// <summary>
         /// Construct the new AssociationTypeMapping object.
         /// </summary>
         /// <param name="relation"> Represents the Association Type metadata object </param>
         /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        public AssociationTypeMapping(AssociationType relation, EntitySetBaseMapping setMapping)
+        internal AssociationTypeMapping(AssociationType relation, EntitySetBaseMapping setMapping)
             : base(setMapping)
         {
             m_relation = relation;
@@ -59,7 +71,15 @@ namespace System.Data.Entity.Core.Mapping
         private readonly AssociationType m_relation;
 
         /// <summary>
-        /// The AssociationTypeType Metadata object for which the mapping is represented.
+        /// Gets the AssociationSetMapping that contains this AssociationTypeMapping.
+        /// </summary>
+        public AssociationSetMapping AssociationSetMapping
+        {
+            get { return (AssociationSetMapping)SetMapping; }
+        }
+
+        /// <summary>
+        /// Gets the association type being mapped.
         /// </summary>
         public AssociationType AssociationType
         {
@@ -71,9 +91,9 @@ namespace System.Data.Entity.Core.Mapping
         /// Since Association types dont participate in Inheritance, This can only
         /// be one type.
         /// </summary>
-        public override ReadOnlyCollection<EdmType> Types
+        internal override ReadOnlyCollection<EntityTypeBase> Types
         {
-            get { return new ReadOnlyCollection<EdmType>(new[] { m_relation }); }
+            get { return new ReadOnlyCollection<EntityTypeBase>(new[] { m_relation }); }
         }
 
         /// <summary>
@@ -82,9 +102,9 @@ namespace System.Data.Entity.Core.Mapping
         /// Since Association types dont participate in Inheritance, an Empty list
         /// is returned here.
         /// </summary>
-        public override ReadOnlyCollection<EdmType> IsOfTypes
+        internal override ReadOnlyCollection<EntityTypeBase> IsOfTypes
         {
-            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>()); }
+            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>()); }
         }
     }
 }

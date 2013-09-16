@@ -50,5 +50,27 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(new AssociationTypeMapping(associationType, setMapping).IsOfTypes);
         }
+
+        [Fact]
+        public void Can_get_association_set_mapping()
+        {
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            var associationSetMapping
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType), 
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+            var associationTypeMapping = new AssociationTypeMapping(associationSetMapping);
+
+            Assert.Same(associationSetMapping, associationTypeMapping.AssociationSetMapping);
+        }
+
+        [Fact]
+        public void Cannot_create_with_null_association_set_mapping()
+        {
+            Assert.Equal(
+                "associationSetMapping",
+                Assert.Throws<ArgumentNullException>(
+                    () => new AssociationTypeMapping(null)).ParamName);
+        }
     }
 }

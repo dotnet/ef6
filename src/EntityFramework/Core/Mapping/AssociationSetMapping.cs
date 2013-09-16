@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. And it is possible to access the AssociationTypeMap underneath it.
     /// There will be only one TypeMap under AssociationSetMap.
     /// </example>
-    internal class AssociationSetMapping : EntitySetBaseMapping
+    public class AssociationSetMapping : EntitySetBaseMapping
     {
         /// <summary>
         /// Construct a new AssociationSetMapping object
@@ -56,6 +56,9 @@ namespace System.Data.Entity.Core.Mapping
             AddTypeMapping(associationTypeMapping);
         }
 
+        /// <summary>
+        /// AssociationSet
+        /// </summary>
         public virtual AssociationSet AssociationSet
         {
             get { return (AssociationSet)Set; }
@@ -66,6 +69,9 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal AssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
+        /// <summary>
+        /// StoreEntitySet
+        /// </summary>
         public EntitySet StoreEntitySet
         {
             get { return (SingleFragment != null) ? SingleFragment.TableSet : null; }
@@ -78,11 +84,17 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// Table
+        /// </summary>
         public EntityType Table
         {
             get { return (StoreEntitySet != null ? StoreEntitySet.ElementType : null); }
         }
 
+        /// <summary>
+        /// SourceEndMapping
+        /// </summary>
         public EndPropertyMapping SourceEndMapping
         {
             get
@@ -101,6 +113,9 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// TargetEndMapping
+        /// </summary>
         public EndPropertyMapping TargetEndMapping
         {
             get
@@ -119,6 +134,9 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// ColumnConditions
+        /// </summary>
         public virtual IEnumerable<ConditionPropertyMapping> ColumnConditions
         {
             get
@@ -129,6 +147,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// AddProperty
+        /// </summary>
+        /// <param name="mapping"></param>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public void AddProperty(EndPropertyMapping mapping)
         {
@@ -138,6 +160,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// AddColumnCondition
+        /// </summary>
+        /// <param name="conditionPropertyMapping"></param>
         public void AddColumnCondition(ConditionPropertyMapping conditionPropertyMapping)
         {
             if (SingleFragment != null)

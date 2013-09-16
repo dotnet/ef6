@@ -52,29 +52,32 @@ namespace System.Data.Entity.Core.Mapping
     /// MappingFragment element like EntityKey map, Property Maps, Discriminator
     /// property through this mapping fragment class.
     /// </example>
-    internal class MappingFragment : StructuralTypeMapping
+    public class MappingFragment : StructuralTypeMapping
     {
         private readonly List<ColumnMappingBuilder> _columnMappings = new List<ColumnMappingBuilder>();
 
         /// <summary>
-        /// Construct a new Mapping Fragment object
+        /// Creates a MappingFragment instance.
         /// </summary>
-        public MappingFragment(EntitySet tableExtent, TypeMapping typeMapping, bool isSQueryDistinct)
+        /// <param name="storeEntitySet">The EntitySet corresponding to the table of view being mapped.</param>
+        /// <param name="typeMapping">The TypeMapping that contains this MappingFragment.</param>
+        /// <param name="makeColumnsDistinct">Flag that indicates whether to include 'DISTINCT' when generating queries.</param>
+        public MappingFragment(EntitySet storeEntitySet, TypeMapping typeMapping, bool makeColumnsDistinct)
         {
-            Check.NotNull(tableExtent, "tableExtent");
+            Check.NotNull(storeEntitySet, "storeEntitySet");
             Check.NotNull(typeMapping, "typeMapping");
 
-            m_tableExtent = tableExtent;
+            m_tableExtent = storeEntitySet;
             m_typeMapping = typeMapping;
-            m_isSQueryDistinct = isSQueryDistinct;
+            m_isSQueryDistinct = makeColumnsDistinct;
         }
 
-        public IEnumerable<ColumnMappingBuilder> ColumnMappings
+        internal IEnumerable<ColumnMappingBuilder> ColumnMappings
         {
             get { return _columnMappings; }
         }
 
-        public void AddColumnMapping(ColumnMappingBuilder columnMappingBuilder)
+        internal void AddColumnMapping(ColumnMappingBuilder columnMappingBuilder)
         {
             Check.NotNull(columnMappingBuilder, "columnMappingBuilder");
             if (!columnMappingBuilder.PropertyPath.Any()
@@ -219,34 +222,61 @@ namespace System.Data.Entity.Core.Mapping
         private readonly bool m_isSQueryDistinct;
 
         /// <summary>
-        /// The table from which the properties are mapped in this fragment
+        /// Gets the EntitySet corresponding to the table or view being mapped.
         /// </summary>
-        public EntitySet TableSet
+        public EntitySet StoreEntitySet
         {
             get { return m_tableExtent; }
+
             internal set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
 
                 m_tableExtent = value;
             }
         }
 
-        public EntityType Table
+        /// <summary>
+        /// The table from which the properties are mapped in this fragment
+        /// </summary>
+        internal EntitySet TableSet
+        {
+            get { return StoreEntitySet; }
+            set { StoreEntitySet = value; }
+        }
+
+        internal EntityType Table
         {
             get { return m_tableExtent.ElementType; }
         }
 
-        internal bool IsSQueryDistinct
+        /// <summary>
+        /// Gets the TypeMapping that contains this MappingFragment.
+        /// </summary>
+        public TypeMapping TypeMapping
+        {
+            get { return m_typeMapping; }
+        }
+
+        /// <summary>
+        /// Gets a flag that indicates whether to include 'DISTINCT' when generating queries.
+        /// </summary>
+        public bool MakeColumnsDistinct
         {
             get { return m_isSQueryDistinct; }
+        }
+
+        internal bool IsSQueryDistinct
+        {
+            get { return MakeColumnsDistinct; }
         }
 
         /// <summary>
         /// Returns all the property mappings defined in the complex type mapping
         /// including Properties and Condition Properties
         /// </summary>
-        public ReadOnlyCollection<PropertyMapping> AllProperties
+        internal ReadOnlyCollection<PropertyMapping> AllProperties
         {
             get
             {
@@ -258,15 +288,22 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Returns all the property mappings defined in the complex type mapping
-        /// including Properties and Condition Properties
+        /// Gets a read-only collection of property mappings.
         /// </summary>
         public override ReadOnlyCollection<PropertyMapping> Properties
         {
             get { return new ReadOnlyCollection<PropertyMapping>(m_properties); }
         }
 
-        public IEnumerable<ColumnMappingBuilder> FlattenedProperties
+        /// <summary>
+        /// Gets a read-only collection of property mapping conditions.
+        /// </summary>
+        public override ReadOnlyCollection<ConditionPropertyMapping> Conditions
+        {
+            get { return new ReadOnlyCollection<ConditionPropertyMapping>(new List<ConditionPropertyMapping>(m_conditionProperties.Values)); }
+        }
+
+        internal IEnumerable<ColumnMappingBuilder> FlattenedProperties
         {
             get { return GetFlattenedProperties(m_properties, new List<EdmProperty>()); }
         }
@@ -311,7 +348,7 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        public IEnumerable<ConditionPropertyMapping> ColumnConditions
+        internal IEnumerable<ConditionPropertyMapping> ColumnConditions
         {
             get { return m_conditionProperties.Values; }
         }
@@ -337,17 +374,51 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Add a property mapping as a child of this mapping fragment
+        /// Adds a property mapping.
         /// </summary>
-        /// <param name="propertyMapping"> child property mapping to be added </param>
-        internal override void AddProperty(PropertyMapping propertyMapping)
+        /// <param name="propertyMapping">The property mapping to be added.</param>
+        public override void AddProperty(PropertyMapping propertyMapping)
         {
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
             m_properties.Add(propertyMapping);
         }
 
-        internal override void RemoveProperty(PropertyMapping prop)
+        /// <summary>
+        /// Removes a property mapping.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping to be removed.</param>
+        public override void RemoveProperty(PropertyMapping propertyMapping)
         {
-            m_properties.Remove(prop);
+            Check.NotNull(propertyMapping, "propertyMapping");
+            ThrowIfReadOnly();
+
+            m_properties.Remove(propertyMapping);
+        }
+
+        /// <summary>
+        /// Adds a property mapping condition.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping condition to be added.</param>
+        public override void AddCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            m_properties.Add(condition);
+        }
+
+        /// <summary>
+        /// Removes a property mapping condition.
+        /// </summary>
+        /// <param name="propertyMapping">The property mapping condition to be removed.</param>
+        public override void RemoveCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            RemoveConditionProperty(condition);
         }
 
         internal void ClearConditions()

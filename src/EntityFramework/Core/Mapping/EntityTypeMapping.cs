@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -45,88 +46,122 @@ namespace System.Data.Entity.Core.Mapping
     /// above example. Users can access the table mapping fragments under the
     /// entity type mapping through this class.
     /// </example>
-    internal class EntityTypeMapping : TypeMapping
+    public class EntityTypeMapping : TypeMapping
     {
         /// <summary>
-        /// Construct the new EntityTypeMapping object.
+        /// Creates an EntityTypeMapping instance.
         /// </summary>
-        /// <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        public EntityTypeMapping(EntitySetBaseMapping setMapping)
-            : base(setMapping)
+        /// <param name="entitySetMapping">The EntitySetMapping that contains this EntityTypeMapping.</param>
+        public EntityTypeMapping(EntitySetMapping entitySetMapping)
+            : base(entitySetMapping)
         {
         }
 
         /// <summary>
         /// Types for which the mapping holds true for.
         /// </summary>
-        private readonly Dictionary<string, EdmType> m_entityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EntityType> m_entityTypes = new Dictionary<string, EntityType>(StringComparer.Ordinal);
 
         /// <summary>
         /// Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
         /// </summary>
-        private readonly Dictionary<string, EdmType> m_isOfEntityTypes = new Dictionary<string, EdmType>(StringComparer.Ordinal);
+        private readonly Dictionary<string, EntityType> m_isOfEntityTypes = new Dictionary<string, EntityType>(StringComparer.Ordinal);
+
+        /// <summary>
+        /// Gets the EntitySetMapping that contains this EntityTypeMapping.
+        /// </summary>
+        public EntitySetMapping EntitySetMapping
+        {
+            get { return (EntitySetMapping)SetMapping; }
+        }
+
+        /// <summary>
+        /// Gets the single EntityType being mapped. Throws exception in case of hierarchy type mapping.
+        /// </summary>
+        public EntityType EntityType
+        {
+            get { return m_entityTypes.Values.SingleOrDefault(); }
+        }
+
+        /// <summary>
+        /// Gets a flag that indicates whether this is a type hierarchy mapping.
+        /// </summary>
+        public bool IsHierarchyMapping
+        {
+            get { return m_isOfEntityTypes.Count > 0 || m_entityTypes.Count > 1; }
+        }
 
         /// <summary>
         /// a list of TypeMetadata that this mapping holds true for.
         /// </summary>
-        public override ReadOnlyCollection<EdmType> Types
+        internal override ReadOnlyCollection<EntityTypeBase> Types
         {
-            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>(m_entityTypes.Values)); }
-        }
-
-        public EntityType EntityType
-        {
-            get { return m_entityTypes.Values.OfType<EntityType>().SingleOrDefault(); }
-        }
-
-        public bool IsHierarchyMapping
-        {
-            get
-            {
-                return (EntityType != null)
-                       && m_isOfEntityTypes.ContainsKey(EntityType.FullName);
-            }
+            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_entityTypes.Values)); }
         }
 
         /// <summary>
         /// a list of TypeMetadatas for which the mapping holds true for
         /// not only the type specified but the sub-types of that type as well.
         /// </summary>
-        public override ReadOnlyCollection<EdmType> IsOfTypes
+        internal override ReadOnlyCollection<EntityTypeBase> IsOfTypes
         {
-            get { return new ReadOnlyCollection<EdmType>(new List<EdmType>(m_isOfEntityTypes.Values)); }
+            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_isOfEntityTypes.Values)); }
         }
 
         /// <summary>
-        /// Add a Type to the list of types that this mapping is valid for
+        /// Adds an entity type to the mapping.
         /// </summary>
-        public void AddType(EdmType type)
+        /// <param name="type">The EntityType to be added.</param>
+        public void AddType(EntityType type)
         {
             Check.NotNull(type, "type");
+            ThrowIfReadOnly();
 
             m_entityTypes.Add(type.FullName, type);
         }
 
         /// <summary>
-        /// Add a Type to the list of Is-Of types that this mapping is valid for
+        /// Removes an entity type from the mapping.
         /// </summary>
-        internal void AddIsOfType(EdmType type)
+        /// <param name="type">The EntityType to be removed.</param>
+        public void RemoveType(EntityType type)
         {
-            DebugCheck.NotNull(type);
+            Check.NotNull(type, "type");
+            ThrowIfReadOnly();
+
+            m_entityTypes.Remove(type.FullName);
+        }
+
+        /// <summary>
+        /// Adds an entity type hierarchy to the mapping.
+        /// The hierarchy is represented by the specified root entity type.
+        /// </summary>
+        /// <param name="type">The root EntityType of the hierarchy to be added.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "AddIs")]
+        public void AddIsOfType(EntityType type)
+        {
+            Check.NotNull(type, "type");
+            ThrowIfReadOnly();
 
             m_isOfEntityTypes.Add(type.FullName, type);
         }
 
-        internal void RemoveIsOfType(EdmType type)
+        /// <summary>
+        /// Removes an entity type hierarchy from the mapping.
+        /// The hierarchy is represented by the specified root entity type.
+        /// </summary>
+        /// <param name="type">The root EntityType of the hierarchy to be removed.</param>
+        public void RemoveIsOfType(EntityType type)
         {
-            DebugCheck.NotNull(type);
+            Check.NotNull(type, "type");
+            ThrowIfReadOnly();
 
             m_isOfEntityTypes.Remove(type.FullName);
         }
 
         internal EntityType GetContainerType(string memberName)
         {
-            foreach (EntityType type in m_entityTypes.Values)
+            foreach (var type in m_entityTypes.Values)
             {
                 if (type.Properties.Contains(memberName))
                 {
@@ -134,7 +169,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
-            foreach (EntityType type in m_isOfEntityTypes.Values)
+            foreach (var type in m_isOfEntityTypes.Values)
             {
                 if (type.Properties.Contains(memberName))
                 {

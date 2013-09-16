@@ -11,7 +11,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Describes modification function mappings for an entity type within an entity set.
     /// </summary>
-    internal sealed class EntityTypeModificationFunctionMapping : MappingItem
+    public sealed class EntityTypeModificationFunctionMapping : MappingItem
     {
         private readonly ModificationFunctionMapping _deleteFunctionMapping;
         private readonly ModificationFunctionMapping _insertFunctionMapping;
@@ -90,6 +90,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
+        /// <summary>
+        /// ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return String.Format(
