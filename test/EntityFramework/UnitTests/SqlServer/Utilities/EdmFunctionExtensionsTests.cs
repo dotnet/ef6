@@ -51,6 +51,7 @@ namespace System.Data.Entity.SqlServer.Utilities
         {
             var mockProperty = new Mock<MetadataProperty>();
             mockProperty.Setup(m => m.Name).Returns("DataSpace");
+            mockProperty.Setup(m => m.Identity).Returns("DataSpace");
             mockProperty.Setup(m => m.Value).Returns(dataSpace);
 
             var mockEdmFunction = new Mock<EdmFunction>("F", namespaceName, dataSpace)
