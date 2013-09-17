@@ -90,37 +90,54 @@ namespace ProductivityApiUnitTests
                 connection.Open();
                 if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
                 {
-                    bool loginExists = false;                    
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText = "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestUser'";
-                        loginExists = (int)command.ExecuteScalar() == 1;
-                    }
+                    var loginExists = ExecuteScalarReturnsOne(
+                        connection, 
+                        "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestUser'");                    
 
                     if (!loginExists)
                     {
-                        using (var command = connection.CreateCommand())
-                        {
-                            command.CommandText =
-                                "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1'";                                
-                            command.ExecuteNonQuery();
-                        }
+                        ExecuteNonQuery(connection, "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1'");
+                    }
+
+                    var userExists = ExecuteScalarReturnsOne(
+                        connection,
+                        "SELECT COUNT(*) FROM sys.sysusers WHERE name = N'EFTestUser'");
+
+                    if (!userExists)
+                    {
+                        ExecuteNonQuery(connection, "CREATE USER [EFTestUser] FROM LOGIN [EFTestUser]");
+                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'loginmanager', 'EFTestUser'");
+                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'dbmanager', 'EFTestUser'");
                     }
                 }
                 else
                 {
-                    using (var command = connection.CreateCommand())
-                    {
-                        command.CommandText
-                            = 
+                    ExecuteNonQuery(
+                        connection, 
 @"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
 BEGIN
     CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
     EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
-END";
-                        command.ExecuteNonQuery();
-                    }
+END");
                 }                
+            }
+        }
+
+        private static void ExecuteNonQuery(SqlConnection connection, string commandText)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private static bool ExecuteScalarReturnsOne(SqlConnection connection, string commandText)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                return (int)command.ExecuteScalar() == 1;
             }
         }
 

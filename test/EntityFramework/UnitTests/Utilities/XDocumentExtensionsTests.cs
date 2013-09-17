@@ -5,6 +5,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Edm;
+    using System.Data.Entity.TestHelpers;
     using System.Xml.Linq;
     using Xunit;
 
@@ -14,13 +15,22 @@ namespace System.Data.Entity.Utilities
         public void GetStorageMappingItemCollection_should_return_collection()
         {
             DbProviderInfo providerInfo;
-            var storageMappingItemCollection
-                = new ShopContext_v1().GetModel().GetStorageMappingItemCollection(out providerInfo);
+            using (var context = new ShopContext_v1())
+            {
+                var storageMappingItemCollection = context.GetModel().GetStorageMappingItemCollection(out providerInfo);
+                Assert.NotNull(storageMappingItemCollection);
+                Assert.NotNull(providerInfo);
+                Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
 
-            Assert.NotNull(storageMappingItemCollection);
-            Assert.NotNull(providerInfo);
-            Assert.Equal("System.Data.SqlClient", providerInfo.ProviderInvariantName);
-            Assert.True(providerInfo.ProviderManifestToken == "2008");
+                if (DatabaseTestHelpers.IsSqlAzure(context.Database.Connection.ConnectionString))
+                {
+                    Assert.True(providerInfo.ProviderManifestToken == "2012.Azure");
+                }
+                else
+                {
+                    Assert.True(providerInfo.ProviderManifestToken == "2008");
+                }
+            }
         }
     }
 }
