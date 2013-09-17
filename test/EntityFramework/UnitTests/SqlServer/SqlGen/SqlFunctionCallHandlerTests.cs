@@ -341,7 +341,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         {
             var mockProperty = new Mock<MetadataProperty>();
             mockProperty.Setup(m => m.Name).Returns("DataSpace");
-            mockProperty.Setup(m => m.Identity).Returns("DataSpace");
+            mockProperty.Setup(m => m.Identity).Returns("DataSpace"); 
             mockProperty.Setup(m => m.Value).Returns(DataSpace.CSpace);
 
             var mockEdmFunction = new Mock<EdmFunction>("F", "N", DataSpace.SSpace);
