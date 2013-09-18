@@ -7,7 +7,7 @@ namespace System.Data.Entity.TestHelpers
     /// <summary>
     /// Helper methods that provide functionality needed to run against azure.
     /// </summary>
-    public class DatabaseTestHelpers
+    public static class DatabaseTestHelpers
     {
         public static bool IsSqlAzure(string connectionString)
         {

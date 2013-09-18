@@ -45,11 +45,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     new EdmProperty(
                         "p",
                         TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Byte)))));
-            Assert.Equal(
+
+            Assert.True(ex1.Message.StartsWith(
                 Resources.Strings.AttemptToAddEdmMemberFromWrongDataSpace(
-                    "p", "CT", DataSpace.CSpace, DataSpace.SSpace) +
-                    "\r\nParameter name: member",
-                ex1.Message);
+                    "p", "CT", DataSpace.CSpace, DataSpace.SSpace)));
             Assert.Equal("member", ex1.ParamName);
         }
 

@@ -167,6 +167,7 @@
     </Compile>
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
+    <Compile Include="TestHelpers\LocalizationTestHelpers.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />
     <Compile Include="TestHelpers\TestGroup.cs" />

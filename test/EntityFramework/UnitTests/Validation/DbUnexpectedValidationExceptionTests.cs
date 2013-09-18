@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Validation
 {
+    using System.Data.Entity.TestHelpers;
     using Xunit;
 
     public class DbUnexpectedValidationExceptionTests
@@ -9,9 +10,12 @@ namespace System.Data.Entity.Validation
         [Fact]
         public void DbUnexpectedValidationException_parameterless_constructor()
         {
-            var exception = new DbUnexpectedValidationException();
+            if (LocalizationTestHelpers.IsEnglishLocale())
+            {
+                var exception = new DbUnexpectedValidationException();
 
-            Assert.Equal("Data Exception.", exception.Message);
+                Assert.Equal("Data Exception.", exception.Message);
+            }
         }
 
         [Fact]

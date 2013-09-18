@@ -13,6 +13,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal("Old Mother Dismass", new ForeignKeyAttribute("Old Mother Dismass").Name);
         }
 
+#if NET40
         [Fact]
         public void Name_cannot_be_set_to_null_or_whitespace()
         {
@@ -26,5 +27,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(() => new ForeignKeyAttribute(" ")).Message);
         }
+#endif
     }
 }

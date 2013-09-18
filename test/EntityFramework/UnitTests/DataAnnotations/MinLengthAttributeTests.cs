@@ -21,9 +21,10 @@ namespace System.ComponentModel.DataAnnotations
         public void IsValid_throws_for_negative_lengths()
         {
             var attribute = new MinLengthAttribute(-1);
-            Assert.Equal(
-                Strings.MinLengthAttribute_InvalidMinLength,
-                Assert.Throws<InvalidOperationException>(() => attribute.IsValid("Rincewind")).Message);
+            var exception = Assert.Throws<InvalidOperationException>(() => attribute.IsValid("Rincewind"));
+#if NET40
+            Assert.Equal(Strings.MinLengthAttribute_InvalidMinLength, exception.Message);
+#endif
         }
 
         [Fact]

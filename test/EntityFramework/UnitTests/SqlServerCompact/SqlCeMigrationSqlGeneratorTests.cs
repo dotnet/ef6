@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using Moq;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -11,11 +12,11 @@ namespace System.Data.Entity.SqlServerCompact
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
-    using Moq;
     using Xunit;
 
     public class SqlCeMigrationSqlGeneratorTests
@@ -48,7 +49,7 @@ namespace System.Data.Entity.SqlServerCompact
         [Fact]
         public void Generate_should_throw_when_column_rename()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 var migrationProvider = new SqlCeMigrationSqlGenerator();
                 var renameColumnOperation = new RenameColumnOperation("T", "c", "c'");
@@ -63,7 +64,7 @@ namespace System.Data.Entity.SqlServerCompact
         [Fact]
         public void Generate_throws_when_operation_unknown()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
                 var unknownOperation = new Mock<MigrationOperation>(null).Object;

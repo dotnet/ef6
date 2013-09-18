@@ -6,7 +6,7 @@ namespace System.Data.Entity.Metadata
     using System.Collections.Generic;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Resources;
+    using System.Data.Entity.TestHelpers;
     using System.IO;
     using System.Linq;
     using System.Xml;
@@ -449,17 +449,20 @@ namespace System.Data.Entity.Metadata
                 }
                 catch (MetadataException ex)
                 {
-                    if (new string[] { "MaxLength", "Precision", "Scale" }.Contains(funcImportInvalidEnumParamFacets[i, 0]))
+                    if (LocalizationTestHelpers.IsEnglishLocale())
                     {
-                        Assert.True(ex.Message.Contains(funcImportInvalidEnumParamFacets[i, 0] + " facet isn't allowed for properties of type EnumTestModel.Color"), "Unexpected exception\n: " + ex);
-                    }
-                    else if (funcImportInvalidEnumParamFacets[i, 0] == "Nullable")
-                    {
-                        Assert.True(ex.Message.Contains("non-nullable"), "Unexpected exception\n: " + ex);
-                    }
-                    else
-                    {
-                        Assert.True(ex.Message.Contains("The '" + funcImportInvalidEnumParamFacets[i, 0] + "' attribute is not allowed"), "Unexpected exception\n: " + ex);
+                        if (new string[] { "MaxLength", "Precision", "Scale" }.Contains(funcImportInvalidEnumParamFacets[i, 0]))
+                        {
+                            Assert.True(ex.Message.Contains(funcImportInvalidEnumParamFacets[i, 0] + " facet isn't allowed for properties of type EnumTestModel.Color"), "Unexpected exception\n: " + ex);
+                        }
+                        else if (funcImportInvalidEnumParamFacets[i, 0] == "Nullable")
+                        {
+                            Assert.True(ex.Message.Contains("non-nullable"), "Unexpected exception\n: " + ex);
+                        }
+                        else
+                        {
+                            Assert.True(ex.Message.Contains("The '" + funcImportInvalidEnumParamFacets[i, 0] + "' attribute is not allowed"), "Unexpected exception\n: " + ex);
+                        }
                     }
                 }
             }
@@ -538,7 +541,14 @@ namespace System.Data.Entity.Metadata
 
             var exceptionMessage = string.Empty;
             csdl.Validate(csdlSchemaSet, (o, e) => exceptionMessage = e.Message);
-            Assert.Equal("The required attribute 'Name' is missing.", exceptionMessage);
+            if (LocalizationTestHelpers.IsEnglishLocale())
+            {
+                Assert.Equal("The required attribute 'Name' is missing.", exceptionMessage);
+            }
+            else
+            {
+                Assert.False(string.IsNullOrEmpty(exceptionMessage));
+            }
         }
 
         [Fact]
@@ -603,7 +613,14 @@ namespace System.Data.Entity.Metadata
 
             var exceptionMessage = string.Empty;
             csdl.Validate(csdlSchemaSet, (o, e) => exceptionMessage = e.Message);
-            Assert.Equal("The required attribute 'Name' is missing.", exceptionMessage);
+            if (LocalizationTestHelpers.IsEnglishLocale())
+            {
+                Assert.Equal("The required attribute 'Name' is missing.", exceptionMessage);
+            }
+            else
+            {
+                Assert.False(string.IsNullOrEmpty(exceptionMessage));
+            }
         }
 
         [Fact]

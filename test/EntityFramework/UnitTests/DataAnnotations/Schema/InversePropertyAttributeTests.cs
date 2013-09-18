@@ -13,6 +13,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal("Gammer Brevis", new InversePropertyAttribute("Gammer Brevis").Property);
         }
 
+#if NET40
         [Fact]
         public void Property_cannot_be_set_to_null_or_whitespace()
         {
@@ -26,5 +27,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 Strings.ArgumentIsNullOrWhitespace("property"),
                 Assert.Throws<ArgumentException>(() => new InversePropertyAttribute(" ")).Message);
         }
+#endif
     }
 }

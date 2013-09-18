@@ -9,15 +9,15 @@ namespace System.Data.Entity.Core
         [Fact]
         public void Constructors_can_be_passed_null_or_empty_message_without_throwing()
         {
-            Assert.Equal(
-                "Exception of type 'System.Data.Entity.Core.EntityCommandExecutionException' was thrown.",
+            Assert.Contains(
+                "System.Data.Entity.Core.EntityCommandExecutionException",
                 new EntityCommandExecutionException(null).Message);
 
             Assert.Equal("", new EntityCommandExecutionException("").Message);
             Assert.Equal(" ", new EntityCommandExecutionException(" ").Message);
 
-            Assert.Equal(
-                "Exception of type 'System.Data.Entity.Core.EntityCommandExecutionException' was thrown.",
+            Assert.Contains(
+                "System.Data.Entity.Core.EntityCommandExecutionException", 
                 new EntityCommandExecutionException(null, new Exception()).Message);
 
             Assert.Equal("", new EntityCommandExecutionException("", new Exception()).Message);

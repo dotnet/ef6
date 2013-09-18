@@ -16,8 +16,8 @@ namespace System.Data.Entity.Core
         [Fact]
         public void Constructors_allow_for_null_message_and_inner_exception()
         {
-            Assert.True(new EntitySqlException(null).Message.Contains("'System.Data.Entity.Core.EntitySqlException'"));
-            Assert.True(new EntitySqlException(null, null).Message.Contains("'System.Data.Entity.Core.EntitySqlException'"));
+            Assert.True(new EntitySqlException(null).Message.Contains("System.Data.Entity.Core.EntitySqlException"));
+            Assert.True(new EntitySqlException(null, null).Message.Contains("System.Data.Entity.Core.EntitySqlException"));
             Assert.Null(new EntitySqlException(null, null).InnerException);
         }
 

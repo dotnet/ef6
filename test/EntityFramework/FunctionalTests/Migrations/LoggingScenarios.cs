@@ -2,8 +2,9 @@
 
 namespace System.Data.Entity.Migrations
 {
-    using System.Data.Entity.Migrations.Infrastructure;
     using Moq;
+    using System.Data.Entity.Migrations.Infrastructure;
+    using System.Data.Entity.TestHelpers;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     public class LoggingScenarios : DbTestCase
@@ -42,11 +43,18 @@ namespace System.Data.Entity.Migrations
 
             migratorLoggingDecorator.Update();
 
-            mockLogger
-                .Verify(
-                    ml => ml.Warning(
-                        "Warning! The maximum key length is 900 bytes. The index 'PK_PkTooLong' has maximum length of 902 bytes. For some combination of large values, the insert/update operation will fail."),
-                    Times.Once());
+            if (LocalizationTestHelpers.IsEnglishLocale())
+            {
+                mockLogger
+                    .Verify(
+                        ml => ml.Warning(
+                            "Warning! The maximum key length is 900 bytes. The index 'PK_PkTooLong' has maximum length of 902 bytes. For some combination of large values, the insert/update operation will fail."),
+                        Times.Once());
+            }
+            else
+            {
+                mockLogger.Verify(ml => ml.Warning(It.IsAny<string>()), Times.Once());
+            }
         }
     }
 }

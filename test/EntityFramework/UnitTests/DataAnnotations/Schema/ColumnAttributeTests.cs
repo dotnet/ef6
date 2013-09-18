@@ -21,6 +21,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal("Granny Weatherwax", new ColumnAttribute("Granny Weatherwax").Name);
         }
 
+#if NET40
         [Fact]
         public void Name_cannot_be_set_to_null_or_whitespace()
         {
@@ -34,6 +35,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(() => new ColumnAttribute(" ")).Message);
         }
+#endif
 
         [Fact]
         public void Order_can_be_got_and_set()
@@ -41,9 +43,9 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal(
                 0,
                 new ColumnAttribute
-                    {
-                        Order = 0
-                    }.Order);
+                {
+                    Order = 0
+                }.Order);
         }
 
         [Fact]
@@ -51,9 +53,9 @@ namespace System.ComponentModel.DataAnnotations.Schema
         {
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => new ColumnAttribute
-                          {
-                              Order = -1
-                          });
+                {
+                    Order = -1
+                });
         }
 
         [Fact]
@@ -62,9 +64,9 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal(
                 "Nanny Ogg",
                 new ColumnAttribute
-                    {
-                        TypeName = "Nanny Ogg"
-                    }.TypeName);
+                {
+                    TypeName = "Nanny Ogg"
+                }.TypeName);
         }
 
 #if NET40

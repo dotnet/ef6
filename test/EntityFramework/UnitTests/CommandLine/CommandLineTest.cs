@@ -5,7 +5,7 @@ namespace CmdLine.Tests
     extern alias migrate;
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Reflection;
     using Xunit;
@@ -305,7 +305,7 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenNoPositionOneShouldThrow()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
                 Assert.Equal(
@@ -319,7 +319,7 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenNoPositionTwoShouldThrow()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
                 Assert.Equal(
@@ -334,7 +334,7 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenDuplicatePositionShouldThrow()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
                 Assert.Equal(
@@ -347,7 +347,7 @@ namespace CmdLine.Tests
         [Fact]
         public void WhenBadParameterIndexShouldThrow()
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en")
+            if (LocalizationTestHelpers.IsEnglishLocale())
             {
                 migrate::CmdLine.CommandLine.CommandEnvironment = new TestCommandEnvironment();
                 Assert.Equal(

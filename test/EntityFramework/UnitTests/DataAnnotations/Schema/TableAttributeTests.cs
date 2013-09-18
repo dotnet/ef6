@@ -19,6 +19,7 @@ namespace System.ComponentModel.DataAnnotations.Schema
             Assert.Equal("Black Aliss", new TableAttribute("Black Aliss").Name);
         }
 
+#if NET40
         [Fact]
         public void Name_cannot_be_set_to_null_or_whitespace()
         {
@@ -32,17 +33,19 @@ namespace System.ComponentModel.DataAnnotations.Schema
                 Strings.ArgumentIsNullOrWhitespace("name"),
                 Assert.Throws<ArgumentException>(() => new TableAttribute(" ")).Message);
         }
+#endif
 
         [Fact]
         public void Schema_can_be_got_and_set()
         {
             Assert.Equal(
                 "Mrs Letice Earwig", new TableAttribute("Perspicacia Tick")
-                                         {
-                                             Schema = "Mrs Letice Earwig"
-                                         }.Schema);
+                {
+                    Schema = "Mrs Letice Earwig"
+                }.Schema);
         }
 
+#if NET40
         [Fact]
         public void Schema_cannot_be_set_to_null_or_whitespace()
         {
@@ -68,5 +71,6 @@ namespace System.ComponentModel.DataAnnotations.Schema
                                   Schema = " "
                               }).Message);
         }
+#endif
     }
 }
