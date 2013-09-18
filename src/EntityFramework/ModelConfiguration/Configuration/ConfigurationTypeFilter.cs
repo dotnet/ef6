@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(structuralTypeConfiguration);
 
-            return !type.IsAbstract && type.TryGetElementType(structuralTypeConfiguration) != null;
+            return !type.IsAbstract() && type.TryGetElementType(structuralTypeConfiguration) != null;
         }
     }
 }

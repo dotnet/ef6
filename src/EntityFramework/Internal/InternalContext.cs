@@ -50,18 +50,18 @@ namespace System.Data.Entity.Internal
     {
         #region Fields and constructors
 
-        public static readonly MethodInfo CreateObjectAsObjectMethod = typeof(InternalContext).GetDeclaredMethod("CreateObjectAsObject");
+        public static readonly MethodInfo CreateObjectAsObjectMethod = typeof(InternalContext).GetOnlyDeclaredMethod("CreateObjectAsObject");
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, object>> _entityFactories =
             new ConcurrentDictionary<Type, Func<InternalContext, object>>();
 
         public static readonly MethodInfo ExecuteSqlQueryAsIEnumeratorMethod
-            = typeof(InternalContext).GetDeclaredMethod("ExecuteSqlQueryAsIEnumerator");
+            = typeof(InternalContext).GetOnlyDeclaredMethod("ExecuteSqlQueryAsIEnumerator");
 
 #if !NET40
 
         public static readonly MethodInfo ExecuteSqlQueryAsIDbAsyncEnumeratorMethod
-            = typeof(InternalContext).GetDeclaredMethod("ExecuteSqlQueryAsIDbAsyncEnumerator");
+            = typeof(InternalContext).GetOnlyDeclaredMethod("ExecuteSqlQueryAsIDbAsyncEnumerator");
 #endif
 
         private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IEnumerator>>
@@ -81,7 +81,7 @@ namespace System.Data.Entity.Internal
                 new ConcurrentDictionary<Type, Func<InternalContext, IInternalSet, IInternalSetAdapter>>();
 
         public static readonly MethodInfo CreateInitializationActionMethod
-            = typeof(InternalContext).GetDeclaredMethod("CreateInitializationAction");
+            = typeof(InternalContext).GetOnlyDeclaredMethod("CreateInitializationAction");
 
         // The configuration to use for initializers, connection strings and default connection factory
         private AppConfig _appConfig = AppConfig.DefaultInstance;
@@ -713,13 +713,13 @@ namespace System.Data.Entity.Internal
             if (!_setFactories.TryGetValue(entityType, out factory))
             {
                 // No value type can ever be an entity type in the model
-                if (entityType.IsValueType)
+                if (entityType.IsValueType())
                 {
                     throw Error.DbSet_EntityTypeNotInModel(entityType.Name);
                 }
 
                 var genericType = typeof(InternalDbSet<>).MakeGenericType(entityType);
-                var factoryMethod = genericType.GetDeclaredMethod("Create", new[] { typeof(InternalContext), typeof(IInternalSet) });
+                var factoryMethod = genericType.GetDeclaredMethod("Create", typeof(InternalContext), typeof(IInternalSet));
                 factory =
                     (Func<InternalContext, IInternalSet, IInternalSetAdapter>)
                     Delegate.CreateDelegate(
@@ -1304,8 +1304,8 @@ namespace System.Data.Entity.Internal
             var typeToLoad = entityType;
             do
             {
-                ObjectContext.MetadataWorkspace.LoadFromAssembly(typeToLoad.Assembly);
-                typeToLoad = typeToLoad.BaseType;
+                ObjectContext.MetadataWorkspace.LoadFromAssembly(typeToLoad.Assembly());
+                typeToLoad = typeToLoad.BaseType();
             }
             while (typeToLoad != null
                    && typeToLoad != typeof(Object));
@@ -1345,7 +1345,7 @@ namespace System.Data.Entity.Internal
         // </summary>
         private static bool IsPocoTypeInNonPocoAssembly(Type entityType)
         {
-            return entityType.Assembly.GetCustomAttributes<EdmSchemaAttribute>().Any() &&
+            return entityType.Assembly().GetCustomAttributes<EdmSchemaAttribute>().Any() &&
                    !entityType.GetCustomAttributes<EdmEntityTypeAttribute>(inherit: true).Any();
         }
 
@@ -1495,7 +1495,7 @@ namespace System.Data.Entity.Internal
                 {
                     var contextType = Owner.GetType();
                     var discoveredConfig
-                        = new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
+                        = new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly()))
                             .FindMigrationsConfiguration(contextType, null);
 
                     if (discoveredConfig != null)

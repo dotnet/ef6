@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -160,15 +161,16 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
         private void PropertyFilter_validates_enum_types(PropertyFilter filter)
         {
-            var mockType = new MockType();
-            mockType.Setup(m => m.IsEnum).Returns(true);
-
             var properties = new List<PropertyInfo>
-                                 {
-                                     new MockPropertyInfo(mockType, "EnumProp")
-                                 };
+                {
+                    new MockPropertyInfo(typeof(AnEnum1), "EnumProp")
+                };
 
-            filter.ValidatePropertiesForModelVersion(mockType, properties);
+            filter.ValidatePropertiesForModelVersion(typeof(AType1), properties);
+        }
+
+        public enum AnEnum1
+        {
         }
 
         private void PropertyFilter_validates_spatial_types(PropertyFilter filter)
@@ -185,18 +187,15 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         [Fact]
         public void PropertyFilter_rejects_enum_properties_if_V2_builder_version_is_used()
         {
-            var mockType = new MockType("BadType");
-            mockType.Setup(m => m.IsEnum).Returns(true);
-
             var properties = new List<PropertyInfo>
                                  {
-                                     new MockPropertyInfo(mockType, "EnumProp")
+                                     new MockPropertyInfo(typeof(AnEnum1), "EnumProp")
                                  };
 
             Assert.Equal(
-                Strings.UnsupportedUseOfV3Type("BadType", "EnumProp"),
+                Strings.UnsupportedUseOfV3Type("AType1", "EnumProp"),
                 Assert.Throws<NotSupportedException>(
-                    () => new PropertyFilter(DbModelBuilderVersion.V4_1).ValidatePropertiesForModelVersion(mockType, properties)).Message);
+                    () => new PropertyFilter(DbModelBuilderVersion.V4_1).ValidatePropertiesForModelVersion(typeof(AType1), properties)).Message);
         }
 
         [Fact]

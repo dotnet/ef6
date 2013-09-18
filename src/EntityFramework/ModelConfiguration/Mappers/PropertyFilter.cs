@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                   where !p.IsStatic() && p.IsValidStructuralProperty()
                   let m = p.Getter()
                   where (includePrivate || (m.IsPublic || explicitlyMappedProperties.Contains(p) || knownTypes.Contains(p.PropertyType)))
-                        && (!declaredOnly || type.BaseType.GetInstanceProperties().All(bp => bp.Name != p.Name))
+                        && (!declaredOnly || type.BaseType().GetInstanceProperties().All(bp => bp.Name != p.Name))
                         && (EdmV3FeaturesSupported || (!IsEnumType(p.PropertyType) && !IsSpatialType(p.PropertyType)))
                         && (Ef6FeaturesSupported || !p.PropertyType.IsNested)
                   select p;
@@ -83,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         {
             type.TryUnwrapNullableType(out type);
 
-            return type.IsEnum;
+            return type.IsEnum();
         }
 
         private static bool IsSpatialType(Type type)

@@ -54,7 +54,7 @@ namespace System.Data.Entity.Migrations.Model
 
         private object CreateDefaultValue()
         {
-            if (_clrType.IsValueType)
+            if (_clrType.IsValueType())
             {
                 return Activator.CreateInstance(_clrType);
             }

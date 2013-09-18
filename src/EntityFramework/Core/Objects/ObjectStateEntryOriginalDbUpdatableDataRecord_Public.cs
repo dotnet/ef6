@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Objects
 {
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
     // Public version of writable original values record that is to be returned to the user for setting original values directly.
@@ -61,10 +62,8 @@ namespace System.Data.Entity.Core.Objects
                 // Need to continue allowing CLR reference types to be set to null for backwards compatibility
                 var memberClrType = member.ClrType;
                 if (DBNull.Value == fieldValue
-                    &&
-                    memberClrType.IsValueType
-                    &&
-                    !member.CdmMetadata.Nullable)
+                    && memberClrType.IsValueType()
+                    && !member.CdmMetadata.Nullable)
                 {
                     // Throw if the underlying CLR type of this property is not nullable, and it is being set to null
                     throw new InvalidOperationException(

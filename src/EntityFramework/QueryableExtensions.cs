@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
@@ -423,8 +424,6 @@ namespace System.Data.Entity
 
         #region Include
 
-        private static readonly Type[] _stringIncludeTypes = new[] { typeof(string) };
-
         /// <summary>
         /// Specifies the related objects to include in the query results.
         /// </summary>
@@ -524,7 +523,18 @@ namespace System.Data.Entity
         {
             DebugCheck.NotNull((object)source);
 
-            var includeMethod = source.GetType().GetPublicInstanceMethod("Include", _stringIncludeTypes);
+            var includeMethod = source.GetType().GetRuntimeMethod(
+                "Include", 
+                p => p.IsPublic && !p.IsStatic,
+                new[] { typeof(string) },
+                new[] { typeof(IComparable) },
+                new[] { typeof(ICloneable) },
+                new[] { typeof(IComparable<string>) },
+                new[] { typeof(IEnumerable<char>) },
+                new[] { typeof(IEnumerable) },
+                new[] { typeof(IEquatable<string>) },
+                new[] { typeof(object) });
+
             if (includeMethod != null
                 && typeof(T).IsAssignableFrom(includeMethod.ReturnType))
             {
@@ -631,7 +641,7 @@ namespace System.Data.Entity
                 return (T)DbHelpers.CreateNoTrackingQuery(asObjectQuery);
             }
 
-            var noTrackingMethod = source.GetType().GetPublicInstanceMethod("AsNoTracking", Type.EmptyTypes);
+            var noTrackingMethod = source.GetType().GetPublicInstanceMethod("AsNoTracking");
             if (noTrackingMethod != null
                 && typeof(T).IsAssignableFrom(noTrackingMethod.ReturnType))
             {
@@ -692,7 +702,7 @@ namespace System.Data.Entity
                 return (T)DbHelpers.CreateStreamingQuery(asObjectQuery);
             }
 
-            var asStreamingMethod = source.GetType().GetPublicInstanceMethod("AsStreaming", Type.EmptyTypes);
+            var asStreamingMethod = source.GetType().GetPublicInstanceMethod("AsStreaming");
             if (asStreamingMethod != null
                 && typeof(T).IsAssignableFrom(asStreamingMethod.ReturnType))
             {

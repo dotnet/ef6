@@ -4,6 +4,7 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.IO;
@@ -19,7 +20,7 @@ namespace ProductivityApiTests
 
         private static readonly Lazy<Assembly> _sqlCeAssembly
             =
-            new Lazy<Assembly>(() => new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly);
+            new Lazy<Assembly>(() => new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly());
 
         #endregion
 
@@ -66,7 +67,7 @@ namespace ProductivityApiTests
             using (var connection = factory.CreateConnection("FakeDatabaseName"))
             {
                 Assert.Throws<NotSupportedException>(() => connection.Open()).ValidateMessage(
-                    typeof(File).Assembly,
+                    typeof(File).Assembly(),
                     "Argument_PathFormatNotSupported",
                     null);
             }
@@ -114,7 +115,7 @@ namespace ProductivityApiTests
         {
             var factory = new SqlConnectionFactory("You Wouldnt Let It Lie=True");
             Assert.Throws<ArgumentException>(() => factory.CreateConnection("FakeDatabaseName")).ValidateMessage(
-                typeof(SqlConnection).Assembly, "ADP_KeywordNotSupported", null, "you wouldnt let it lie");
+                typeof(SqlConnection).Assembly(), "ADP_KeywordNotSupported", null, "you wouldnt let it lie");
         }
 
         #endregion

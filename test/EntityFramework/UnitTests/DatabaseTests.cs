@@ -250,7 +250,7 @@ namespace System.Data.Entity
                 }
                 finally
                 {
-                    typeof(Database).GetDeclaredMethod("ResetDefaultConnectionFactory").Invoke(null, null);
+                    typeof(Database).GetOnlyDeclaredMethod("ResetDefaultConnectionFactory").Invoke(null, null);
                     Database.ResetDefaultConnectionFactory();
                 }
             }

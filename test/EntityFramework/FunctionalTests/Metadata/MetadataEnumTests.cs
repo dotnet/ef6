@@ -6,6 +6,7 @@ namespace System.Data.Entity.Metadata
     using System.Collections.Generic;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.TestHelpers;
     using System.IO;
     using System.Linq;
@@ -693,7 +694,7 @@ namespace System.Data.Entity.Metadata
             var exception = Assert.Throws<MetadataException>(
                 () => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
 
-            exception.ValidateMessage(typeof(DbContext).Assembly, "DuplicateEnumMember", null);
+            exception.ValidateMessage(typeof(DbContext).Assembly(), "DuplicateEnumMember", null);
         }
 
         [Fact]
@@ -733,7 +734,7 @@ namespace System.Data.Entity.Metadata
             enumType.SetAttributeValue("UnderlyingType", typeName);
 
             var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { csdlDocument.CreateReader() }));
-            exception.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
+            exception.ValidateMessage(typeof(DbContext).Assembly(), resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
         }
 
         [Fact]
@@ -748,7 +749,7 @@ namespace System.Data.Entity.Metadata
 </Schema>";
 
             var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
-            exception.ValidateMessage(typeof(DbContext).Assembly, "CalculatedEnumValueOutOfRange", null);
+            exception.ValidateMessage(typeof(DbContext).Assembly(), "CalculatedEnumValueOutOfRange", null);
         }
 
         [Fact]
@@ -817,7 +818,7 @@ namespace System.Data.Entity.Metadata
                     .SetAttributeValue("Value", value);
 
             var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { document.CreateReader() }));
-            exception.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
+            exception.ValidateMessage(typeof(DbContext).Assembly(), resourceKey, null, /*isExactMatch*/ false, exceptionParameters);
         }
 
         [Fact]
@@ -919,7 +920,7 @@ namespace System.Data.Entity.Metadata
             var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { document.CreateReader() }));
             foreach (var expectedException in expectedExceptions)
             {
-                exception.ValidateMessage(typeof(DbContext).Assembly, expectedException.Key, null, /*isExactMatch*/ false, expectedException.Value);
+                exception.ValidateMessage(typeof(DbContext).Assembly(), expectedException.Key, null, /*isExactMatch*/ false, expectedException.Value);
             }
         }
 
@@ -940,7 +941,7 @@ namespace System.Data.Entity.Metadata
 </Schema>";
 
             var exception = Assert.Throws<MetadataException>(() => new EdmItemCollection(new[] { XmlReader.Create(new StringReader(csdl)) }));
-            exception.ValidateMessage(typeof(DbContext).Assembly, "DefaultNotAllowed", null);
+            exception.ValidateMessage(typeof(DbContext).Assembly(), "DefaultNotAllowed", null);
         }
     }
 
@@ -958,7 +959,7 @@ namespace System.Data.Entity.Metadata
                     "System.Data.Resources.AnnotationSchema.xsd"})
             {
                 this.CsdlSchemaSet.Add(XmlSchema.Read(
-                    typeof(EntityContainer).Assembly.GetManifestResourceStream(schemaName),
+                    typeof(EntityContainer).Assembly().GetManifestResourceStream(schemaName),
                     (o, e) => { throw new InvalidOperationException("The built-in schema is invalid", e.Exception); }));
             }
 

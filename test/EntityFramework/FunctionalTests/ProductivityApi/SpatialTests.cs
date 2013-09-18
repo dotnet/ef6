@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Globalization;
@@ -27,7 +28,7 @@ namespace ProductivityApiTests
         {
             const string prefix = "FunctionalTests.ProductivityApi.SpatialTvfsModel.";
             ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(
-                typeof(SpatialTests).Assembly, prefix, /*overwrite*/ true,
+                typeof(SpatialTests).Assembly(), prefix, /*overwrite*/ true,
                 "226644SpatialModel.csdl", "226644SpatialModel.msl",
                 "226644SpatialModel.ssdl");
 
@@ -395,7 +396,7 @@ namespace ProductivityApiTests
             Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly);
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly());
 
             return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }
@@ -407,7 +408,7 @@ namespace ProductivityApiTests
             Func<IQueryable<DbDataRecord>, List<DbDataRecord>> toList)
         {
             var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly);
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(WidgetWithLineString).Assembly());
 
             return toList(objectContext.CreateQuery<DbDataRecord>(query));
         }

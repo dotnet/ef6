@@ -1253,12 +1253,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             {
                 DebugCheck.NotNull(resourceName);
 
-                Stream resourceStream = null;
-                var executingAssembly = Assembly.GetExecutingAssembly();
-                if (executingAssembly != null)
-                {
-                    resourceStream = executingAssembly.GetManifestResourceStream(resourceName);
-                }
+                var resourceStream = typeof(Schema).Assembly().GetManifestResourceStream(resourceName);
 
                 Debug.Assert(
                     resourceStream != null,

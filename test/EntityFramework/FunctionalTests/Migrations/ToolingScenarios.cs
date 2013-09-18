@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations
 {
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.SqlServer;
@@ -398,10 +399,10 @@ namespace System.Data.Entity.Migrations
             var targetFileName = targetName + ".dll";
             var targetPath = Path.Combine(targetDir, targetFileName);
 
-            var entityFrameworkPath = new Uri(typeof(DbContext).Assembly.CodeBase).LocalPath;
+            var entityFrameworkPath = new Uri(typeof(DbContext).Assembly().CodeBase).LocalPath;
             IOHelpers.CopyToDir(entityFrameworkPath, targetDir);
 
-            var entityFrameworkSqlServerPath = new Uri(typeof(SqlProviderServices).Assembly.CodeBase).LocalPath;
+            var entityFrameworkSqlServerPath = new Uri(typeof(SqlProviderServices).Assembly().CodeBase).LocalPath;
             IOHelpers.CopyToDir(entityFrameworkSqlServerPath, targetDir);
 
             using (var compiler = new CSharpCodeProvider())

@@ -17,7 +17,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             DebugCheck.NotNull(contextType);
 
-            return TryFindConfigurationType(contextType.Assembly, contextType, typesToSearch);
+            return TryFindConfigurationType(contextType.Assembly(), contextType, typesToSearch);
         }
 
         public virtual Type TryFindConfigurationType(
@@ -47,14 +47,14 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             var configurations = (typesToSearch ?? assemblyHint.GetAccessibleTypes())
                 .Where(
                     t => t.IsSubclassOf(typeof(DbConfiguration))
-                         && !t.IsAbstract
-                         && !t.IsGenericType)
+                         && !t.IsAbstract()
+                         && !t.IsGenericType())
                 .ToList();
 
             if (configurations.Count > 1)
             {
                 throw new InvalidOperationException(
-                    Strings.MultipleConfigsInAssembly(configurations.First().Assembly, typeof(DbConfiguration).Name));
+                    Strings.MultipleConfigsInAssembly(configurations.First().Assembly(), typeof(DbConfiguration).Name));
             }
 
             return configurations.FirstOrDefault();
@@ -78,8 +78,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             var contextTypes = (typesToSearch ?? assemblyHint.GetAccessibleTypes())
                 .Where(
                     t => t.IsSubclassOf(typeof(DbContext))
-                         && !t.IsAbstract
-                         && !t.IsGenericType
+                         && !t.IsAbstract()
+                         && !t.IsGenericType()
                          && t.GetCustomAttributes<DbConfigurationTypeAttribute>(inherit: true).Any())
                 .ToList();
 

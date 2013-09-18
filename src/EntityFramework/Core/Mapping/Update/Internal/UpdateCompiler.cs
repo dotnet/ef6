@@ -489,7 +489,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var propertyType = Helper.GetModelTypeUsage(property);
                 var principalType = principalValue.GetType();
 
-                if (principalType.IsEnum)
+                if (principalType.IsEnum())
                 {
                     principalValue = Convert.ChangeType(principalValue, principalType.GetEnumUnderlyingType(), CultureInfo.InvariantCulture);
                 }

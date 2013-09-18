@@ -77,7 +77,7 @@ namespace System.Data.Entity.SqlServer
 
         private static XmlReader GetXmlResource(string resourceName)
         {
-            return XmlReader.Create(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName), null, resourceName);
+            return XmlReader.Create(typeof(SqlProviderManifest).Assembly().GetManifestResourceStream(resourceName), null, resourceName);
         }
 
         internal static XmlReader GetProviderManifest()

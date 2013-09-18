@@ -15,7 +15,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
     // </summary>
     internal static class TypeSystem
     {
-        internal static readonly MethodInfo GetDefaultMethod = typeof(TypeSystem).GetDeclaredMethod("GetDefault");
+        internal static readonly MethodInfo GetDefaultMethod = typeof(TypeSystem).GetOnlyDeclaredMethod("GetDefault");
 
         private static T GetDefault<T>()
         {
@@ -25,8 +25,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
         internal static object GetDefaultValue(Type type)
         {
             // null is always the default for non value types and Nullable<>
-            if (!type.IsValueType
-                || (type.IsGenericType &&
+            if (!type.IsValueType()
+                || (type.IsGenericType() &&
                     typeof(Nullable<>) == type.GetGenericTypeDefinition()))
             {
                 return null;
@@ -193,7 +193,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 return typeof(IEnumerable<>).MakeGenericType(seqType.GetElementType());
             }
-            if (seqType.IsGenericType)
+            if (seqType.IsGenericType())
             {
                 foreach (var arg in seqType.GetGenericArguments())
                 {
@@ -217,10 +217,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                 }
             }
-            if (seqType.BaseType != null
-                && seqType.BaseType != typeof(object))
+            if (seqType.BaseType() != null
+                && seqType.BaseType() != typeof(object))
             {
-                return FindIEnumerable(seqType.BaseType);
+                return FindIEnumerable(seqType.BaseType());
             }
             return null;
         }
@@ -252,16 +252,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // check requirements for a match
             if (null == test
                 || null == match
-                || !match.IsInterface
-                || !match.IsGenericTypeDefinition
+                || !match.IsInterface()
+                || !match.IsGenericTypeDefinition()
                 || null == test.DeclaringType)
             {
                 return false;
             }
 
             // we might be looking at the interface implementation directly
-            if (test.DeclaringType.IsInterface
-                && test.DeclaringType.IsGenericType
+            if (test.DeclaringType.IsInterface()
+                && test.DeclaringType.IsGenericType()
                 && test.DeclaringType.GetGenericTypeDefinition() == match)
             {
                 return true;
@@ -270,7 +270,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // figure out if we implement the interface
             foreach (var testInterface in test.DeclaringType.GetInterfaces())
             {
-                if (testInterface.IsGenericType
+                if (testInterface.IsGenericType()
                     && testInterface.GetGenericTypeDefinition() == match)
                 {
                     // check if the method aligns
@@ -288,7 +288,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static bool IsImplementationOf(this PropertyInfo propertyInfo, Type interfaceType)
         {
-            Debug.Assert(interfaceType.IsInterface, "Ensure interfaceType is an interface before calling IsImplementationOf");
+            Debug.Assert(interfaceType.IsInterface(), "Ensure interfaceType is an interface before calling IsImplementationOf");
 
             // Find the property with the corresponding name on the interface, if present
             var interfaceProp = interfaceType.GetDeclaredProperty(propertyInfo.Name);
@@ -298,7 +298,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             // If the declaring type is an interface, compare directly.
-            if (propertyInfo.DeclaringType.IsInterface)
+            if (propertyInfo.DeclaringType.IsInterface())
             {
                 return interfaceProp.Equals(propertyInfo);
             }

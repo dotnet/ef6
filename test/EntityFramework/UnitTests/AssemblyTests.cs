@@ -13,13 +13,13 @@ namespace System.Data.Entity
     {
         public static Assembly EntityFrameworkSqlServerCompactAssembly
         {
-            get { return typeof(SqlCeProviderServices).Assembly; }
+            get { return typeof(SqlCeProviderServices).Assembly(); }
         }
 
         [Fact]
         public void EntityFramework_assembly_is_CLSCompliant()
         {
-            Assert.True(typeof(DbModelBuilder).Assembly.GetCustomAttributes<CLSCompliantAttribute>().Single().IsCompliant);
+            Assert.True(typeof(DbModelBuilder).Assembly().GetCustomAttributes<CLSCompliantAttribute>().Single().IsCompliant);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace System.Data.Entity
 #if NET40
             Assert.Same(EntityFrameworkAssembly, type.Assembly);
 #else
-            Assert.Same(SystemComponentModelDataAnnotationsAssembly, type.Assembly);
+            Assert.Same(SystemComponentModelDataAnnotationsAssembly, type.Assembly());
 #endif
         }
 

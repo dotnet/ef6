@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Data.Entity.Resources;
     using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Utilities;
     using Moq;
     using Xunit;
 
@@ -37,10 +38,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void TryFindConfigurationType_throws_if_types_list_contains_more_than_one_normal_DbConfigurations()
             {
                 Assert.Equal(
-                    Strings.MultipleConfigsInAssembly(_normalConfigType.Assembly, typeof(DbConfiguration).Name),
+                    Strings.MultipleConfigsInAssembly(_normalConfigType.Assembly(), typeof(DbConfiguration).Name),
                     Assert.Throws<InvalidOperationException>(
                         () => new DbConfigurationFinder().TryFindConfigurationType(
-                            typeof(DbContext).Assembly, null,
+                            typeof(DbContext).Assembly(), null,
                             new[] { typeof(object), _normalConfigType, _normalConfigType })).Message);
             }
 
@@ -60,7 +61,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     _normalConfigType,
                     new DbConfigurationFinder().TryFindConfigurationType(
-                        typeof(DbContext).Assembly, null,
+                        typeof(DbContext).Assembly(), null,
                         new[] { typeof(object), _normalConfigType, typeof(object) }));
             }
 
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Same(
                     typeof(FakeContextWithBadAttribute), 
-                    new DbConfigurationFinder().TryFindContextType(typeof(Random).Assembly, typeof(FakeContextWithBadAttribute)));
+                    new DbConfigurationFinder().TryFindContextType(typeof(Random).Assembly(), typeof(FakeContextWithBadAttribute)));
             }
 
             [Fact]
@@ -102,7 +103,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.Same(
                     typeof(FakeContextWithAttribute),
                     new DbConfigurationFinder().TryFindContextType(
-                        typeof(Random).Assembly,
+                        typeof(Random).Assembly(),
                         null,
                         new[] { typeof(object), typeof(FakeContextWithAttribute), typeof(object) }));
             }
@@ -112,7 +113,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Null(
                     new DbConfigurationFinder().TryFindContextType(
-                        typeof(Random).Assembly,
+                        typeof(Random).Assembly(),
                         null,
                         new[] { typeof(FakeContextWithBadAttribute), typeof(FakeContextWithAttribute), typeof(object) }));
             }
@@ -122,7 +123,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.Null(
                     new DbConfigurationFinder().TryFindContextType(
-                        typeof(Random).Assembly,
+                        typeof(Random).Assembly(),
                         null,
                         new[] { typeof(FakeContextWithNoAttribute), typeof(object), typeof(object) }));
             }

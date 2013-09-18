@@ -3,6 +3,7 @@
 namespace System.Data.Entity.SqlServer.Resources
 {
     using System.CodeDom.Compiler;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.Globalization;
     using System.Resources;
     using System.Threading;
@@ -508,7 +509,7 @@ namespace System.Data.Entity.SqlServer.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.SqlServer.Properties.Resources.SqlServer", typeof(System.Data.Entity.SqlServer.SqlProviderServices).Assembly);
+                "System.Data.Entity.SqlServer.Properties.Resources.SqlServer", typeof(System.Data.Entity.SqlServer.SqlProviderServices).Assembly());
         }
 
         private static EntityRes GetLoader()

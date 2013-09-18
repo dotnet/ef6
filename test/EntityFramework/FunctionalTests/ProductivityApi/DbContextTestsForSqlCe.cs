@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.IO;
     using System.Linq;
@@ -704,7 +705,7 @@ namespace ProductivityApiTests
         public void DbContext_construction_does_not_throw_but_subsequent_calls_using_connection_throw_for_invalid_SqlCE_connection_string()
         {
             var sqlCeAssembly =
-                new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly;
+                new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0").CreateConnection("Dummy").GetType().Assembly();
             var context = new SimpleModelContextWithNoData("Data Sourc=Scenario_Use_AppConfig.sdf");
             Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage(
                 sqlCeAssembly,

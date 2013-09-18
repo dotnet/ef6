@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         public static readonly MethodInfo GenericTranslateColumnMap
             = typeof(Translator).GetDeclaredMethod(
             "TranslateColumnMap", 
-            new[] { typeof(ColumnMap), typeof(MetadataWorkspace), typeof(SpanIndex), typeof(MergeOption), typeof(bool), typeof(bool) });
+            typeof(ColumnMap), typeof(MetadataWorkspace), typeof(SpanIndex), typeof(MergeOption), typeof(bool), typeof(bool));
 
         // <summary>
         // The main entry point for the translation process. Given a ColumnMap, returns
@@ -172,10 +172,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             #endregion
 
             public static readonly MethodInfo Translator_MultipleDiscriminatorPolymorphicColumnMapHelper
-                = typeof(TranslatorVisitor).GetDeclaredMethod("MultipleDiscriminatorPolymorphicColumnMapHelper");
+                = typeof(TranslatorVisitor).GetOnlyDeclaredMethod("MultipleDiscriminatorPolymorphicColumnMapHelper");
 
             public static readonly MethodInfo Translator_TypedCreateInlineDelegate
-                = typeof(TranslatorVisitor).GetDeclaredMethod("TypedCreateInlineDelegate");
+                = typeof(TranslatorVisitor).GetOnlyDeclaredMethod("TypedCreateInlineDelegate");
 
             public TranslatorVisitor(MetadataWorkspace workspace, SpanIndex spanIndex, MergeOption mergeOption, bool streaming, bool valueLayer)
             {
@@ -516,7 +516,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // this choice if it can't produce a result
                     var type = DetermineClrType(typeChoice.Value.Type);
 
-                    if (type.IsAbstract)
+                    if (type.IsAbstract())
                     {
                         continue;
                     }
@@ -581,8 +581,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // Next build the expressions that will construct the type choices. An array of KeyValuePair<EntityType, Func<Shaper, TElement>>
                 var elementDelegates = new List<Expression>();
                 var typeDelegatePairType = typeof(KeyValuePair<EntityType, Func<Shaper, TElement>>);
-                var typeDelegatePairConstructor =
-                    typeDelegatePairType.GetConstructor(new[] { typeof(EntityType), typeof(Func<Shaper, TElement>) });
+                var typeDelegatePairConstructor = typeDelegatePairType.GetDeclaredConstructor(typeof(EntityType), typeof(Func<Shaper, TElement>));
                 foreach (var typeChoice in columnMap.TypeChoices)
                 {
                     var typeReader = CodeGenEmitter.Emit_EnsureType(
@@ -855,8 +854,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     }
                     else
                     {
-                        if (typeof(EntityKey)
-                            == spannedResultReader.Type)
+                        if (typeof(EntityKey) == spannedResultReader.Type)
                         {
                             // relationship span
                             var handleRelationshipSpanMethod = CodeGenEmitter.Shaper_HandleRelationshipSpan;
@@ -1039,7 +1037,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public static MethodInfo GetGenericElementsMethod(Type elementType)
             {
-                return typeof(Coordinator<>).MakeGenericType(elementType).GetDeclaredMethod("GetElements");
+                return typeof(Coordinator<>).MakeGenericType(elementType).GetOnlyDeclaredMethod("GetElements");
             }
 
             // <summary>
@@ -1236,7 +1234,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                     // Note that we guard against null values by wrapping the expression with DbNullCheck later. Also we don't actually 
                     // look at the type of the value returned by reader. If the value is not castable to enum we will fail with cast exception.
                     nonNullableType = TypeSystem.GetNonNullableType(type);
-                    if (nonNullableType.IsEnum
+                    if (nonNullableType.IsEnum()
                         && nonNullableType != type)
                     {
                         Debug.Assert(
@@ -1288,7 +1286,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 if (!_streaming)
                 {
                     var expectedColumnType = nonNullableType ?? type;
-                    expectedColumnType = expectedColumnType.IsEnum ? expectedColumnType.GetEnumUnderlyingType() : expectedColumnType;
+                    expectedColumnType = expectedColumnType.IsEnum() ? expectedColumnType.GetEnumUnderlyingType() : expectedColumnType;
                     Type existingType;
                     if (ColumnTypes.TryGetValue(ordinal, out existingType))
                     {
@@ -1403,7 +1401,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     case BuiltInTypeKind.PrimitiveType:
                         result = ((PrimitiveType)edmType).ClrEquivalentType;
-                        if (result.IsValueType)
+                        if (result.IsValueType())
                         {
                             result = typeof(Nullable<>).MakeGenericType(result);
                         }
@@ -1454,7 +1452,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             // </summary>
             private static ConstructorInfo GetConstructor(Type type)
             {
-                return type.IsAbstract ? null : DelegateFactory.GetConstructorForType(type);
+                return type.IsAbstract() ? null : DelegateFactory.GetConstructorForType(type);
             }
 
             // <summary>

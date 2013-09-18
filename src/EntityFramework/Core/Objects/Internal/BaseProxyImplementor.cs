@@ -51,10 +51,10 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         internal static readonly MethodInfo StringEquals 
-            = typeof(string).GetDeclaredMethod("op_Equality", new[] { typeof(string), typeof(string) });
+            = typeof(string).GetDeclaredMethod("op_Equality", typeof(string), typeof(string));
 
         private static readonly ConstructorInfo _invalidOperationConstructor =
-            typeof(InvalidOperationException).GetConstructor(Type.EmptyTypes);
+            typeof(InvalidOperationException).GetDeclaredConstructor();
 
         private void ImplementBaseGetter(TypeBuilder typeBuilder)
         {

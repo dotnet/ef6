@@ -824,7 +824,7 @@ namespace Foo
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")]
+    [GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")]
     public sealed partial class Bar : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));
@@ -975,7 +975,7 @@ namespace Foo
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    [GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")]
+    [GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")]
     public sealed partial class Bar : IMigrationMetadata
     {
         private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));
@@ -1115,7 +1115,7 @@ using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Infrastructure;
 using System.Resources;
 
-[GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")]
+[GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")]
 public sealed partial class Bar : IMigrationMetadata
 {
     private readonly ResourceManager Resources = new ResourceManager(typeof(Bar));

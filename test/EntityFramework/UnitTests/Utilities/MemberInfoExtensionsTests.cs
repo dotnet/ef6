@@ -71,7 +71,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Can_return_attributes_from_methods()
             {
-                var method = typeof(BetterCall).GetDeclaredMethod("Launder");
+                var method = typeof(BetterCall).GetOnlyDeclaredMethod("Launder");
 
                 Assert.IsType<CarWashAttribute>(method.GetCustomAttributes<CarWashAttribute>(inherit: true).Single());
                 Assert.IsType<CarWashAttribute>(method.GetCustomAttributes<CarWashAttribute>(inherit: false).Single());

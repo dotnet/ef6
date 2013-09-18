@@ -9,6 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Migrations.Utilities;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using Moq;
     using Xunit;
@@ -218,7 +219,7 @@ namespace System.Data.Entity.Internal
                 Assert.Same(typeof(FakeContext), configuration.ContextType);
                 Assert.True(configuration.AutomaticMigrationsEnabled);
                 Assert.False(configuration.AutomaticMigrationDataLossAllowed);
-                Assert.Same(typeof(FakeContext).Assembly, configuration.MigrationsAssembly);
+                Assert.Same(typeof(FakeContext).Assembly(), configuration.MigrationsAssembly);
                 Assert.Equal(typeof(FakeContext).Namespace, configuration.MigrationsNamespace);
                 Assert.Equal("Key", configuration.ContextKey);
                 Assert.Equal(123, configuration.CommandTimeout);

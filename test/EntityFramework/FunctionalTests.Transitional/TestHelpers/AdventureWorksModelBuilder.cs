@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
 
@@ -25,7 +26,7 @@ namespace System.Data.Entity
         private void IgnoreAll(params Type[] unignoredTypes)
         {
             Ignore(
-                Assembly.GetExecutingAssembly().GetTypes()
+                typeof(AdventureWorksModelBuilder).Assembly().GetTypes()
                     .Where(
                         t => !string.IsNullOrWhiteSpace(t.Namespace)
                              && t.Namespace.Contains("Model")).Except(

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Query.LinqToEntities
 {
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.IO;
     using System.Linq;
@@ -112,7 +113,7 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
             {
                 Assert.Throws<NotSupportedException>(
                     () => context.AllTypes.Select(a => (ArubaEnum?)a.c33_enum is ArubaEnum).ToList()).ValidateMessage(
-                    typeof(DbContext).Assembly,
+                    typeof(DbContext).Assembly(),
                     "ELinq_UnsupportedIsOrAs",
                     null, 
                     "TypeIs",
@@ -128,7 +129,7 @@ WHERE 2 =  CAST( [Extent1].[c34_byteenum] AS int)";
             {
                 Assert.Throws<NotSupportedException>(
                     () => context.AllTypes.Select(a => a.c33_enum as ArubaEnum?).ToList()).ValidateMessage(
-                    typeof(DbContext).Assembly,
+                    typeof(DbContext).Assembly(),
                     "ELinq_UnsupportedIsOrAs",
                     null, 
                     "TypeAs", 

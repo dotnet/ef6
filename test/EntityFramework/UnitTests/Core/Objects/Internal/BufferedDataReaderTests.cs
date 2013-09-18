@@ -483,7 +483,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             if (type == typeof(char))
             {
-                return typeof(DbDataReader).GetDeclaredMethod("GetChar");
+                return typeof(DbDataReader).GetOnlyDeclaredMethod("GetChar");
             }
             bool isNullable;
             return CodeGenEmitter.GetReaderMethod(type, out isNullable);

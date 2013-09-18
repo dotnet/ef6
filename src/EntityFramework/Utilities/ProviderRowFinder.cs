@@ -17,7 +17,7 @@ namespace System.Data.Entity.Utilities
 
             const int assemblyQualifiedNameIndex = 3;
 
-            var assemblyHint = hintType == null ? null : new AssemblyName(hintType.Assembly.FullName);
+            var assemblyHint = hintType == null ? null : new AssemblyName(hintType.Assembly().FullName);
 
             foreach (var row in dataRows)
             {

@@ -552,7 +552,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
                 // type of the value has to match the edm enum type or underlying types have to be the same
                 var clrEnumUnderlyingType = edmEnumType.UnderlyingType.ClrEquivalentType;
                 if (clrEnumUnderlyingType != value.GetType()
-                    && !(value.GetType().IsEnum && ClrEdmEnumTypesMatch(edmEnumType, value.GetType())))
+                    && !(value.GetType().IsEnum() && ClrEdmEnumTypesMatch(edmEnumType, value.GetType())))
                 {
                     throw new ArgumentException(
                         Strings.Cqt_Constant_ClrEnumTypeDoesNotMatchEdmEnumType(
@@ -1292,7 +1292,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder.Internal
         {
             DebugCheck.NotNull(edmEnumType);
             DebugCheck.NotNull(clrEnumType);
-            Debug.Assert(clrEnumType.IsEnum, "non enum clr type.");
+            Debug.Assert(clrEnumType.IsEnum(), "non enum clr type.");
 
             // check that type names are the same and the edm type does not have more members than the clr type.
             if (clrEnumType.Name != edmEnumType.Name

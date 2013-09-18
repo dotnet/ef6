@@ -932,7 +932,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // but first needs to be cast to the non-nullable enum type. Therefore we will call this method for non-nullable
                 // underlying enum type and cast to the target type. 
                 if (underlyingType != null
-                    && underlyingType.IsEnum)
+                    && underlyingType.IsEnum())
                 {
                     var methodInfo = GetGenericTypedValueDefaultMethod(underlyingType);
                     return (T)methodInfo.Invoke(null, new object[] { reader, ordinal });
@@ -947,7 +947,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
             public static MethodInfo GetGenericTypedValueDefaultMethod(Type underlyingType)
             {
-                return typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType).GetDeclaredMethod("GetTypedValueDefault");
+                return typeof(ErrorHandlingValueReader<>).MakeGenericType(underlyingType).GetOnlyDeclaredMethod("GetTypedValueDefault");
             }
 
             private static object GetUntypedValueDefault(DbDataReader reader, int ordinal)

@@ -19,7 +19,7 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal sealed class DataContractImplementor
     {
         internal static readonly ConstructorInfo DataContractAttributeConstructor =
-            typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes);
+            typeof(DataContractAttribute).GetDeclaredConstructor();
 
         internal static readonly PropertyInfo[] DataContractProperties = new[]
             {

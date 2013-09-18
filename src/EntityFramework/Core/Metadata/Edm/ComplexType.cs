@@ -156,7 +156,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _type = clrType;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;
-            Abstract = clrType.IsAbstract;
+            Abstract = clrType.IsAbstract();
         }
 
         internal static ClrComplexType CreateReadonlyClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)

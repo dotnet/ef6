@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             _knownTypes.AddRange(
                 mappingContext.ModelConfiguration
                     .ConfiguredTypes
-                    .Select(t => t.Assembly)
+                    .Select(t => t.Assembly())
                     .Distinct()
                     .SelectMany(a => a.GetAccessibleTypes().Where(type => type.IsValidStructuralType())));
         }
@@ -42,7 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
         public EnumType MapEnumType(Type type)
         {
             DebugCheck.NotNull(type);
-            Debug.Assert(type.IsEnum);
+            Debug.Assert(type.IsEnum());
 
             var enumType = GetExistingEdmType<EnumType>(_mappingContext.Model, type);
 
@@ -136,11 +136,11 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
 
                 entityType = _mappingContext.Model.AddEntityType(type.Name, _mappingContext.ModelConfiguration.ModelNamespace);
-                entityType.Abstract = type.IsAbstract;
+                entityType.Abstract = type.IsAbstract();
 
-                Debug.Assert(type.BaseType != null);
+                Debug.Assert(type.BaseType() != null);
 
-                var baseType = _mappingContext.Model.GetEntityType(type.BaseType.Name);
+                var baseType = _mappingContext.Model.GetEntityType(type.BaseType().Name);
 
                 if (baseType == null)
                 {
@@ -148,7 +148,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 }
                 else if (ReferenceEquals(baseType, entityType))
                 {
-                    throw new NotSupportedException(Strings.SimpleNameCollision(type.FullName, type.BaseType.FullName, type.Name));
+                    throw new NotSupportedException(Strings.SimpleNameCollision(type.FullName, type.BaseType().FullName, type.Name));
                 }
 
                 entityType.BaseType = baseType;
@@ -254,17 +254,17 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(entityType);
 
-            if (type.IsSealed)
+            if (type.IsSealed())
             {
                 return;
             }
 
             if (!_knownTypes.Contains(type))
             {
-                _knownTypes.AddRange(type.Assembly.GetAccessibleTypes().Where(t => t.IsValidStructuralType()));
+                _knownTypes.AddRange(type.Assembly().GetAccessibleTypes().Where(t => t.IsValidStructuralType()));
             }
 
-            var derivedTypes = _knownTypes.Where(t => t.BaseType == type);
+            var derivedTypes = _knownTypes.Where(t => t.BaseType() == type);
             if (_mappingContext.ModelBuilderVersion.IsEF6OrHigher())
             {
                 derivedTypes = derivedTypes.OrderBy(t => t.FullName);
@@ -306,7 +306,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
             {
                 entityTypeConfiguration.ClearKey();
 
-                foreach (var property in type.BaseType.GetInstanceProperties())
+                foreach (var property in type.BaseType().GetInstanceProperties())
                 {
                     if (!_mappingContext.AttributeProvider.GetAttributes(property).OfType<NotMappedAttribute>().Any()
                         && entityTypeConfiguration.IgnoredProperties.Any(p => p.IsSameAs(property)))

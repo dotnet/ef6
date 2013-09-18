@@ -105,7 +105,7 @@ namespace System.Data.Entity
         public void RegisterStrategy()
         {
             var mockContextType = _mockDbContext.Object.GetType();
-            var initMethod = typeof(Database).GetDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
+            var initMethod = typeof(Database).GetOnlyDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
             initMethod.Invoke(null, new object[] { _mockStrategy.Object });
         }
 

@@ -46,14 +46,14 @@ namespace System.Data.Entity.SqlServer
             sqlGeometryFromGMLReader = CreateStaticConstructorDelegate<XmlReader>(sqlGeom, "GeomFromGml");
 
             // Retrieve SQL Server specific primitive types
-            var asTextMethod = SqlGeometryType.GetPublicInstanceMethod("STAsText", Type.EmptyTypes);
+            var asTextMethod = SqlGeometryType.GetPublicInstanceMethod("STAsText");
             SqlCharsType = asTextMethod.ReturnType;
-            SqlStringType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
-            SqlBooleanType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBoolean", throwOnError: true);
-            SqlBytesType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlBytes", throwOnError: true);
-            SqlDoubleType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlDouble", throwOnError: true);
-            SqlInt32Type = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlInt32", throwOnError: true);
-            SqlXmlType = SqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlXml", throwOnError: true);
+            SqlStringType = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
+            SqlBooleanType = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlBoolean", throwOnError: true);
+            SqlBytesType = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlBytes", throwOnError: true);
+            SqlDoubleType = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlDouble", throwOnError: true);
+            SqlInt32Type = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlInt32", throwOnError: true);
+            SqlXmlType = SqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlXml", throwOnError: true);
 
             // Create type conversion delegates to SQL Server types
             sqlBytesFromByteArray =
@@ -1217,7 +1217,7 @@ namespace System.Data.Entity.SqlServer
             DebugCheck.NotNull(spatialType);
             var dataParam = Expression.Parameter(typeof(TArg));
             var sridParam = Expression.Parameter(typeof(int));
-            var staticCtorMethod = spatialType.GetDeclaredMethod(methodName);
+            var staticCtorMethod = spatialType.GetOnlyDeclaredMethod(methodName);
             Debug.Assert(staticCtorMethod != null, "Could not find method '" + methodName + "' on type '" + spatialType.FullName + "'");
             Debug.Assert(
                 staticCtorMethod.GetParameters().Length == 2 && staticCtorMethod.GetParameters()[1].ParameterType == typeof(int),
@@ -1268,8 +1268,7 @@ namespace System.Data.Entity.SqlServer
         {
             // dataParam:byte[] => new SqlBytes(dataParam)
             Debug.Assert(sqlBytesType.Name == "SqlBytes", "byte[] argument used with non-SqlBytes static constructor method?");
-            var byteArrayCtor = sqlBytesType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null, new[] { toConvert.Type }, null);
+            var byteArrayCtor = sqlBytesType.GetDeclaredConstructor(toConvert.Type);
             Debug.Assert(byteArrayCtor != null, "SqlXml(System.IO.Stream) constructor not found?");
             Expression result = Expression.New(byteArrayCtor, toConvert);
             return result;
@@ -1279,12 +1278,10 @@ namespace System.Data.Entity.SqlServer
         {
             // dataParam:String => new SqlChars(new SqlString(dataParam))
             Debug.Assert(sqlCharsType.Name == "SqlChars", "String argument used with non-SqlChars static constructor method?");
-            var sqlString = sqlCharsType.Assembly.GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
-            var sqlCharsFromSqlStringCtor = sqlCharsType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null, new[] { sqlString }, null);
+            var sqlString = sqlCharsType.Assembly().GetType("System.Data.SqlTypes.SqlString", throwOnError: true);
+            var sqlCharsFromSqlStringCtor = sqlCharsType.GetDeclaredConstructor(sqlString);
             Debug.Assert(sqlCharsFromSqlStringCtor != null, "SqlXml(System.IO.Stream) constructor not found?");
-            var sqlStringFromStringCtor = sqlString.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
+            var sqlStringFromStringCtor = sqlString.GetDeclaredConstructor(typeof(string));
             Expression result = Expression.New(sqlCharsFromSqlStringCtor, Expression.New(sqlStringFromStringCtor, toConvert));
             return result;
         }
@@ -1293,8 +1290,7 @@ namespace System.Data.Entity.SqlServer
         {
             // dataParam:String => new SqlString(dataParam)
             Debug.Assert(sqlStringType.Name == "SqlString", "String argument used with non-SqlString static constructor method?");
-            var sqlStringFromStringCtor = sqlStringType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(string) }, null);
+            var sqlStringFromStringCtor = sqlStringType.GetDeclaredConstructor(typeof(string));
             Debug.Assert(sqlStringFromStringCtor != null);
             Expression result = Expression.Convert(Expression.New(sqlStringFromStringCtor, toConvert), typeof(object));
             return result;
@@ -1304,7 +1300,7 @@ namespace System.Data.Entity.SqlServer
         {
             // dataParam:Stream => new SqlXml(dataParam)
             Debug.Assert(sqlXmlType.Name == "SqlXml", "Stream argument used with non-SqlXml static constructor method?");
-            var readerCtor = sqlXmlType.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, new[] { toConvert.Type }, null);
+            var readerCtor = sqlXmlType.GetDeclaredConstructor(toConvert.Type);
             Debug.Assert(readerCtor != null, "SqlXml(System.Xml.XmlReader) constructor not found?");
             Expression result = Expression.New(readerCtor, toConvert);
             return result;

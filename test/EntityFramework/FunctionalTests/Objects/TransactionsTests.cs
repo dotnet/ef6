@@ -2059,7 +2059,7 @@ namespace System.Data.Entity.Objects
         private TransactionContext CreateTransactionContext()
         {
             var ctx = new TransactionContext(_entityConnectionString);
-            ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
+            ctx.MetadataWorkspace.LoadFromAssembly(GetType().Assembly());
 
             return ctx;
         }
@@ -2067,7 +2067,7 @@ namespace System.Data.Entity.Objects
         private TransactionContext CreateTransactionContext(EntityConnection connection)
         {
             var ctx = new TransactionContext(connection);
-            ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
+            ctx.MetadataWorkspace.LoadFromAssembly(GetType().Assembly());
 
             return ctx;
         }
@@ -2075,7 +2075,7 @@ namespace System.Data.Entity.Objects
         private ObjectContext CreateObjectContext()
         {
             var ctx = new ObjectContext(_entityConnectionString);
-            ctx.MetadataWorkspace.LoadFromAssembly(Assembly.GetExecutingAssembly());
+            ctx.MetadataWorkspace.LoadFromAssembly(GetType().Assembly());
 
             return ctx;
         }

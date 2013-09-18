@@ -573,7 +573,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             if (method.IsGenericMethodDefinition)
             {
                 genericArgumentOrdinals = method.GetGenericArguments()
-                                                .Where(t => t.IsGenericParameter)
+                                                .Where(t => t.IsGenericParameter())
                                                 .Select((t, i) => new KeyValuePair<Type, int>(t, i))
                                                 .ToDictionary(r => r.Key, r => r.Value);
             }
@@ -624,7 +624,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // always include the name (note: we omit the namespace/assembly; assuming type names do not collide)
             description.Append(type.Name);
 
-            if (type.IsGenericType)
+            if (type.IsGenericType())
             {
                 description.Append("<");
                 var first = true;

@@ -808,7 +808,7 @@ Imports System.Data.Entity.Migrations.Infrastructure
 Imports System.Resources
 
 Namespace Foo
-    <GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")>
+    <GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")>
     Public NotInheritable Partial Class Bar
         Implements IMigrationMetadata
     
@@ -961,7 +961,7 @@ Imports System.Data.Entity.Migrations.Infrastructure
 Imports System.Resources
 
 Namespace Foo
-    <GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")>
+    <GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")>
     Public NotInheritable Partial Class Bar
         Implements IMigrationMetadata
     
@@ -1103,7 +1103,7 @@ Imports System.Data.Entity.Migrations
 Imports System.Data.Entity.Migrations.Infrastructure
 Imports System.Resources
 
-<GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly.GetInformationalVersion() + @""")>
+<GeneratedCode(""EntityFramework.Migrations"", """ + typeof(DbContext).Assembly().GetInformationalVersion() + @""")>
 Public NotInheritable Partial Class Bar
     Implements IMigrationMetadata
 

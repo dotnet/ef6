@@ -8,7 +8,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Common;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.Utilities;
+    using System.Data.Entity.Functionals.Utilities;
     using System.IO;
     using System.Linq;
     using System.Linq.Expressions;
@@ -33,14 +33,14 @@ namespace System.Data.Entity.Migrations
                                   GenerateInMemory = true
                               };
 
-            options.ReferencedAssemblies.Add(typeof(string).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(Expression).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(DbMigrator).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(DbContext).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(DbConnection).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(Component).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(MigrationCompiler).Assembly.Location);
-            options.ReferencedAssemblies.Add(typeof(DbGeography).Assembly.Location);
+            options.ReferencedAssemblies.Add(typeof(string).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(Expression).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(DbMigrator).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(DbContext).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(DbConnection).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(Component).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(MigrationCompiler).Assembly().Location);
+            options.ReferencedAssemblies.Add(typeof(DbGeography).Assembly().Location);
 
             var embededResources = GenerateEmbeddedResources(scaffoldedMigrations, @namespace);
             foreach (var resource in embededResources)

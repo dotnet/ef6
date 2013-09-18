@@ -10,6 +10,7 @@
 
 namespace System.Data.Entity.Properties {
     using System;
+    using System.Data.Entity.Utilities;
     
     
     /// <summary>
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Properties {
         {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("System.Data.Entity.Properties.UnitTestResources", typeof(UnitTestResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("System.Data.Entity.Properties.UnitTestResources", typeof(UnitTestResources).Assembly());
                     resourceMan = temp;
                 }
                 return resourceMan;

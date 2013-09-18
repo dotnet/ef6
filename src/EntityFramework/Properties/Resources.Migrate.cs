@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Console.Resources
 {
     using System.CodeDom.Compiler;
+    using System.Data.Entity.Utilities;
     using System.Globalization;
     using System.Resources;
     using System.Threading;

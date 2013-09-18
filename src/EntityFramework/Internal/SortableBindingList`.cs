@@ -196,7 +196,7 @@ namespace System.Data.Entity.Internal
             private static bool CanSortWithIComparable(Type type)
             {
                 return type.GetInterface("IComparable") != null ||
-                       (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>));
+                       (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>));
             }
 
             // <summary>

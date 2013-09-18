@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Inverse_navigation_property_should_throw_when_self_inverse()
         {
-            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
+            var mockPropertyInfo = new MockPropertyInfo(typeof(AType1), "N");
             var navigationPropertyConfiguration = new NavigationPropertyConfiguration(mockPropertyInfo);
 
             Assert.Equal(
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_set_configuration_annotations()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
             var navigationProperty = new NavigationProperty("N", TypeUsage.Create(new EntityType("E", "N", DataSpace.CSpace)))
                                          {
                                              RelationshipType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)
@@ -45,7 +45,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_configure_ends()
         {
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"))
                                                       {
                                                           RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne,
                                                           InverseEndKind = RelationshipMultiplicity.Many
@@ -69,7 +69,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         public void Configure_should_configure_inverse()
         {
             var inverseMockPropertyInfo = new MockPropertyInfo();
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"))
                                                       {
                                                           InverseNavigationProperty = inverseMockPropertyInfo
                                                       };
@@ -101,9 +101,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_configure_constraint()
         {
-            var mockType = new MockType();
-            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "P");
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
+            var mockType = typeof(AType1);
+            var mockPropertyInfo = new MockPropertyInfo(typeof(AType1), "P");
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"))
                                                       {
                                                           Constraint =
                                                               new ForeignKeyConstraintConfiguration(new[] { mockPropertyInfo.Object })
@@ -136,8 +136,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Configure_should_configure_delete_action()
         {
-            var mockType = new MockType();
-            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"))
+            var mockType = typeof(AType1);
+            var navigationPropertyConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"))
                                                       {
                                                           DeleteAction = OperationAction.Cascade,
                                                       };
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration.ToTable("Foo");
 
-            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
+            var mockPropertyInfo = new MockPropertyInfo(typeof(AType1), "N");
 
             var navigationPropertyConfiguration
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
@@ -201,7 +201,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             functionConfiguration.HasName("Func");
             functionsConfiguration.Insert(functionConfiguration);
 
-            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N");
+            var mockPropertyInfo = new MockPropertyInfo(typeof(AType1), "N");
 
             var navigationPropertyConfiguration
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
@@ -252,13 +252,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N1"))
                       {
                           InverseEndKind = RelationshipMultiplicity.ZeroOrOne
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           RelationshipMultiplicity = RelationshipMultiplicity.Many
                       };
@@ -280,7 +280,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
-            var mockPropertyInfo = new MockPropertyInfo(new MockType(), "N1");
+            var mockPropertyInfo = new MockPropertyInfo(typeof(AType1), "N1");
             var navigationPropertyConfigurationA
                 = new NavigationPropertyConfiguration(mockPropertyInfo)
                       {
@@ -288,7 +288,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           InverseEndKind = RelationshipMultiplicity.Many,
                           InverseNavigationProperty = mockPropertyInfo
@@ -312,13 +312,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N1"))
                       {
                           DeleteAction = OperationAction.None
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           DeleteAction = OperationAction.Cascade
                       };
@@ -341,7 +341,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N1"))
                       {
                           Constraint = new ForeignKeyConstraintConfiguration(
                               new[]
@@ -351,7 +351,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                       };
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           Constraint = new ForeignKeyConstraintConfiguration(
                               new[]
@@ -380,7 +380,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration1 = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration1.ToTable("A");
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N1"))
                       {
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration1
                       };
@@ -388,7 +388,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             var manyToManyAssociationMappingConfiguration2 = new ManyToManyAssociationMappingConfiguration();
             manyToManyAssociationMappingConfiguration1.ToTable("B");
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           AssociationMappingConfiguration = manyToManyAssociationMappingConfiguration2
                       };
@@ -426,7 +426,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             functionsConfiguration2.Insert(functionConfiguration2);
 
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N1"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N1"))
                       {
                           ModificationStoredProceduresConfiguration = functionsConfiguration1
                       };
@@ -434,7 +434,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SetConfiguration(navigationPropertyConfigurationA);
 
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N2"))
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N2"))
                       {
                           ModificationStoredProceduresConfiguration = functionsConfiguration2
                       };
@@ -456,10 +456,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
             var navigationPropertyConfigurationA
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
             associationType.SetConfiguration(navigationPropertyConfigurationA);
             var navigationPropertyConfigurationB
-                = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+                = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             navigationPropertyConfigurationB.Configure(
                 new NavigationProperty("N", TypeUsage.Create(associationType.TargetEnd.GetEntityType()))
@@ -467,6 +467,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         RelationshipType = associationType
                     },
                 new EdmModel(DataSpace.CSpace), new EntityTypeConfiguration(typeof(object)));
+        }
+
+        public class AType1
+        {
         }
     }
 }

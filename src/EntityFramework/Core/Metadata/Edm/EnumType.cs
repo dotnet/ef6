@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 base(clrType.Name, clrType.NestingNamespace() ?? string.Empty, DataSpace.OSpace)
         {
             DebugCheck.NotNull(clrType);
-            Debug.Assert(clrType.IsEnum, "enum type expected");
+            Debug.Assert(clrType.IsEnum(), "enum type expected");
 
             ClrProviderManifest.Instance.TryGetPrimitiveType(clrType.GetEnumUnderlyingType(), out _underlyingType);
 

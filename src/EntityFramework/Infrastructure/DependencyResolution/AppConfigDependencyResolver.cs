@@ -146,7 +146,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             var providerTypeName = string.Format(
                     CultureInfo.InvariantCulture,
                     "System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089",
-                    new AssemblyName(typeof(DbContext).Assembly.FullName).Version);
+                    new AssemblyName(typeof(DbContext).Assembly().FullName).Version);
 
             var provider = _providerServicesFactory.TryGetInstance(providerTypeName);
 

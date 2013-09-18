@@ -234,7 +234,7 @@ namespace ProductivityApiTests
         }
 
         private static readonly Type _aspProxy =
-            typeof(ObjectContext).Assembly.GetType("System.Data.Entity.Core.Metadata.Edm.AspProxy");
+            typeof(ObjectContext).Assembly().GetType("System.Data.Entity.Core.Metadata.Edm.AspProxy");
 
         public void InvokeIsAspNetEnvironment()
         {

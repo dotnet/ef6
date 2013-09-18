@@ -5,6 +5,7 @@ namespace System.Data.Entity.Validation
     using System.Collections.Generic;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Validation
         {
             Debug.Assert(types.Length > 0 && types.Length <= 3);
 
-            var ctor = typeof(DbEntityValidationException).GetConstructor(types);
+            var ctor = typeof(DbEntityValidationException).GetDeclaredConstructor(types);
             Debug.Assert(ctor != null);
 
             var maxCtorParams = new object[]

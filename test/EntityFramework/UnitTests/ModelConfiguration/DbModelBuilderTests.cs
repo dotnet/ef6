@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration
         public void Build_should_not_throw_when_complex_type_ignored_then_configured()
         {
             var modelConfiguration = new ModelConfiguration();
-            var mockType = new MockType();
+            var mockType = typeof(AType1);
             modelConfiguration.Ignore(mockType);
             modelConfiguration.ComplexType(mockType);
             var modelBuilder = new DbModelBuilder();
@@ -189,7 +189,7 @@ namespace System.Data.Entity.ModelConfiguration
         public void Cloning_the_model_builder_clones_contained_types()
         {
             var builder = new DbModelBuilder(DbModelBuilderVersion.V4_1);
-            builder.ModelConfiguration.Entity(new MockType(), true);
+            builder.ModelConfiguration.Entity(typeof(AType1), true);
 
             Assert.Same(builder.ModelConfiguration, builder.ModelConfiguration);
             Assert.Same(builder.Conventions, builder.Conventions);
@@ -213,10 +213,8 @@ namespace System.Data.Entity.ModelConfiguration
 
         private void VerifyFieldCount<T>(int expectedCount)
         {
-            const BindingFlags bindingFlags =
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            var actualCount = typeof(T).GetRuntimeFields().Count(f => !f.IsStatic);
 
-            var actualCount = typeof(T).GetFields(bindingFlags).Count();
             if (expectedCount != actualCount)
             {
                 Assert.True(
@@ -366,7 +364,7 @@ namespace System.Data.Entity.ModelConfiguration
         {
             var configuration = new EntityTypeConfiguration(typeof(object));
 
-            var mockNavProp1 = new MockPropertyInfo(new MockType(), "Nav1");
+            var mockNavProp1 = new MockPropertyInfo(typeof(AType1), "Nav1");
             var navConfig1 = configuration.Navigation(mockNavProp1);
 
             var clone = configuration.Clone();
@@ -374,7 +372,7 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.True(clone.ConfiguredProperties.Contains(mockNavProp1));
             Assert.NotSame(navConfig1, clone.Navigation(mockNavProp1));
 
-            var mockNavProp2 = new MockPropertyInfo(new MockType(), "Nav2");
+            var mockNavProp2 = new MockPropertyInfo(typeof(AType1), "Nav2");
             configuration.Navigation(mockNavProp2);
 
             Assert.False(clone.ConfiguredProperties.Contains(mockNavProp2));
@@ -658,7 +656,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_property_information()
         {
-            var navProp = new MockPropertyInfo(new MockType(), "P1");
+            var navProp = new MockPropertyInfo(typeof(AType1), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             configuration.RelationshipMultiplicity = RelationshipMultiplicity.Many;
@@ -690,7 +688,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_constraint_information()
         {
-            var navProp = new MockPropertyInfo(new MockType(), "P1");
+            var navProp = new MockPropertyInfo(typeof(AType1), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             configuration.Constraint =
@@ -709,7 +707,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_association_mapping_configuration()
         {
-            var navProp = new MockPropertyInfo(new MockType(), "P1");
+            var navProp = new MockPropertyInfo(typeof(AType1), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             var mappingConfiguration = new ForeignKeyAssociationMappingConfiguration();
@@ -725,7 +723,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void Cloning_a_navigation_property_configuration_clones_its_function_mapping_configuration()
         {
-            var navProp = new MockPropertyInfo(new MockType(), "P1");
+            var navProp = new MockPropertyInfo(typeof(AType1), "P1");
             var configuration = new NavigationPropertyConfiguration(navProp);
 
             var functionsConfiguration = new ModificationStoredProceduresConfiguration();

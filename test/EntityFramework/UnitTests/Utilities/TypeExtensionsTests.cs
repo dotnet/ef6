@@ -13,6 +13,7 @@ namespace System.Data.Entity.Utilities
     using System.Data.Entity.Resources;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.Serialization;
     using Moq.Protected;
     using Xunit;
 
@@ -39,54 +40,57 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void IsValidStructuralType_should_return_false_for_generic_types()
             {
-                var mockType = new MockType();
-                mockType.SetupGet(t => t.IsGenericType).Returns(true);
+                Assert.False(typeof(AType1<AType2>).IsValidStructuralType());
+            }
 
-                Assert.False(mockType.Object.IsValidStructuralType());
+            public class AType1<T>
+            {
             }
 
             [Fact]
             public void IsValidStructuralType_should_return_false_for_generic_type_definitions()
             {
-                var mockType = new MockType();
-                mockType.SetupGet(t => t.IsGenericTypeDefinition).Returns(true);
-
-                Assert.False(mockType.Object.IsValidStructuralType());
+                Assert.False(typeof(AType1<>).IsValidStructuralType());
             }
 
             [Fact]
             public void IsValidStructuralType_should_return_false_for_arrays()
             {
-                var mockType = new MockType();
-                mockType.Protected().Setup<bool>("IsArrayImpl").Returns(true);
+                Assert.False(typeof(AType2[]).IsValidStructuralType());
+            }
 
-                Assert.False(mockType.Object.IsValidStructuralType());
+            public class AType2
+            {
             }
 
             [Fact]
             public void IsValidStructuralType_should_return_true_for_enums()
             {
-                var mockType = new MockType();
-                mockType.SetupGet(t => t.IsEnum).Returns(true);
+                Assert.False(typeof(AnEnum1).IsValidStructuralType());
+            }
 
-                Assert.True(mockType.Object.IsValidStructuralType());
+            public enum AnEnum1
+            {
             }
 
             [Fact]
             public void IsValidStructuralType_should_return_false_for_value_types()
             {
-                var mockType = new MockType();
-                mockType.Protected().Setup<bool>("IsValueTypeImpl").Returns(true);
+                Assert.False(typeof(AType3).IsValidStructuralType());
+            }
 
-                Assert.False(mockType.Object.IsValidStructuralType());
+            public struct AType3
+            {
             }
 
             [Fact]
             public void IsValidStructuralType_should_return_false_for_interfaces()
             {
-                var mockType = new MockType().TypeAttributes(TypeAttributes.Interface);
+                Assert.False(typeof(AnInterface1).IsValidStructuralType());
+            }
 
-                Assert.False(mockType.Object.IsValidStructuralType());
+            public interface AnInterface1
+            {
             }
 
             [Fact]
@@ -98,10 +102,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void IsValidStructuralType_should_return_true_for_nested_types()
             {
-                var mockType = new MockType();
-                mockType.SetupGet(t => t.DeclaringType).Returns(typeof(object));
-
-                Assert.True(mockType.Object.IsValidStructuralType());
+                Assert.True(typeof(AType2).IsValidStructuralType());
             }
         }
 
@@ -457,12 +458,12 @@ namespace System.Data.Entity.Utilities
 
             public class NewMethods
             {
-                public virtual new bool Equals(object obj)
+                public new virtual bool Equals(object obj)
                 {
                     return base.Equals(obj);
                 }
 
-                public virtual new int GetHashCode()
+                public new virtual int GetHashCode()
                 {
                     return base.GetHashCode();
                 }
@@ -596,11 +597,33 @@ namespace System.Data.Entity.Utilities
             }
         }
 
+        public class IsNotPublic
+        {
+            [Fact]
+            public void Returns_false_for_normal_public_types_and_true_for_internal_types()
+            {
+                Assert.False(typeof(NormalPublicClass).IsNotPublic());
+                Assert.True(typeof(NormalInternalClass).IsNotPublic());
+            }
+
+            [Fact]
+            public void Returns_false_for_public_types_nested_to_any_level_in_public_types()
+            {
+                Assert.False(typeof(NormalPublicClass.NestedPublicClass).IsNotPublic());
+                Assert.False(typeof(NormalPublicClass.NestedPublicClass.DoubleNestedPublicClass).IsNotPublic());
+            }
+
+            [Fact]
+            public void Returns_true_for_internal_or_pseudo_public_types_nested_at_some_level_in_an_internal_type()
+            {
+                Assert.True(typeof(NormalInternalClass.NestedPseudoPublicClass).IsNotPublic());
+                Assert.True(typeof(NormalInternalClass.NestedPseudoPublicClass.DoubleNestedPseudoPublicClass).IsNotPublic());
+                Assert.True(typeof(NormalInternalClass.NestedPseudoPublicClass.NestedInternalClass).IsNotPublic());
+            }
+        }
+
         public class GetDeclaredMethod
         {
-            private static readonly Type[] _params1 = new[] { typeof(Random) };
-            private static readonly Type[] _params2 = new[] { typeof(Random), typeof(int) };
-            private static readonly Type[] _params3 = new[] { typeof(int), typeof(Random) };
             private static readonly object[] _args1 = new object[] { new Random() };
             private static readonly object[] _args2 = new object[] { new Random(), 1 };
             private static readonly object[] _args3 = new object[] { 1, new Random() };
@@ -608,43 +631,43 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Types_method_finds_public_static_method_only_with_matching_parameters()
             {
-                Assert.Equal(1, typeof(Queen).GetDeclaredMethod("Brian", Type.EmptyTypes).Invoke(null, null));
-                Assert.Equal(2, typeof(Queen).GetDeclaredMethod("Brian", _params1).Invoke(null, _args1));
-                Assert.Equal(3, typeof(Queen).GetDeclaredMethod("Brian", _params2).Invoke(null, _args2));
-                Assert.Equal(4, typeof(Queen).GetDeclaredMethod("Brian", _params3).Invoke(null, _args3));
+                Assert.Equal(1, typeof(Queen).GetDeclaredMethod("Brian").Invoke(null, null));
+                Assert.Equal(2, typeof(Queen).GetDeclaredMethod("Brian", typeof(Random)).Invoke(null, _args1));
+                Assert.Equal(3, typeof(Queen).GetDeclaredMethod("Brian", typeof(Random), typeof(int)).Invoke(null, _args2));
+                Assert.Equal(4, typeof(Queen).GetDeclaredMethod("Brian", typeof(int), typeof(Random)).Invoke(null, _args3));
             }
 
             [Fact]
             public void Types_method_finds_non_public_static_method_only_with_matching_parameters()
             {
-                Assert.Equal(5, typeof(Queen).GetDeclaredMethod("Freddie", Type.EmptyTypes).Invoke(null, null));
-                Assert.Equal(6, typeof(Queen).GetDeclaredMethod("Freddie", _params1).Invoke(null, _args1));
-                Assert.Equal(7, typeof(Queen).GetDeclaredMethod("Freddie", _params2).Invoke(null, _args2));
-                Assert.Equal(8, typeof(Queen).GetDeclaredMethod("Freddie", _params3).Invoke(null, _args3));
+                Assert.Equal(5, typeof(Queen).GetDeclaredMethod("Freddie").Invoke(null, null));
+                Assert.Equal(6, typeof(Queen).GetDeclaredMethod("Freddie", typeof(Random)).Invoke(null, _args1));
+                Assert.Equal(7, typeof(Queen).GetDeclaredMethod("Freddie", typeof(Random), typeof(int)).Invoke(null, _args2));
+                Assert.Equal(8, typeof(Queen).GetDeclaredMethod("Freddie", typeof(int), typeof(Random)).Invoke(null, _args3));
             }
 
             [Fact]
             public void Types_method_finds_public_instance_method_only_with_matching_parameters()
             {
-                Assert.Equal(9, typeof(Queen).GetDeclaredMethod("John", Type.EmptyTypes).Invoke(new Queen(), null));
-                Assert.Equal(10, typeof(Queen).GetDeclaredMethod("John", _params1).Invoke(new Queen(), _args1));
-                Assert.Equal(11, typeof(Queen).GetDeclaredMethod("John", _params2).Invoke(new Queen(), _args2));
-                Assert.Equal(12, typeof(Queen).GetDeclaredMethod("John", _params3).Invoke(new Queen(), _args3));
+                Assert.Equal(9, typeof(Queen).GetDeclaredMethod("John").Invoke(new Queen(), null));
+                Assert.Equal(10, typeof(Queen).GetDeclaredMethod("John", typeof(Random)).Invoke(new Queen(), _args1));
+                Assert.Equal(11, typeof(Queen).GetDeclaredMethod("John", typeof(Random), typeof(int)).Invoke(new Queen(), _args2));
+                Assert.Equal(12, typeof(Queen).GetDeclaredMethod("John", typeof(int), typeof(Random)).Invoke(new Queen(), _args3));
             }
 
             [Fact]
             public void Types_method_finds_non_public_instance_method_only_with_matching_parameters()
             {
-                Assert.Equal(13, typeof(Queen).GetDeclaredMethod("Roger", Type.EmptyTypes).Invoke(new Queen(), null));
-                Assert.Equal(14, typeof(Queen).GetDeclaredMethod("Roger", _params1).Invoke(new Queen(), _args1));
-                Assert.Equal(15, typeof(Queen).GetDeclaredMethod("Roger", _params2).Invoke(new Queen(), _args2));
-                Assert.Equal(16, typeof(Queen).GetDeclaredMethod("Roger", _params3).Invoke(new Queen(), _args3));
+                Assert.Equal(13, typeof(Queen).GetDeclaredMethod("Roger").Invoke(new Queen(), null));
+                Assert.Equal(14, typeof(Queen).GetDeclaredMethod("Roger", typeof(Random)).Invoke(new Queen(), _args1));
+                Assert.Equal(15, typeof(Queen).GetDeclaredMethod("Roger", typeof(Random), typeof(int)).Invoke(new Queen(), _args2));
+                Assert.Equal(16, typeof(Queen).GetDeclaredMethod("Roger", typeof(int), typeof(Random)).Invoke(new Queen(), _args3));
             }
 
             [Fact]
             public void Types_method_returns_null_for_method_that_is_not_found()
             {
-                Assert.Null(typeof(Queen).GetDeclaredMethod("Brian", new[] { typeof(int) }));
+                Assert.Null(typeof(Queen).GetDeclaredMethod("Brian", typeof(int)));
             }
 
             public class Queen
@@ -733,31 +756,31 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Name_only_method_finds_only_public_static_method_with_name()
             {
-                Assert.Equal(1, typeof(Beatles).GetDeclaredMethod("George").Invoke(null, null));
+                Assert.Equal(1, typeof(Beatles).GetOnlyDeclaredMethod("George").Invoke(null, null));
             }
 
             [Fact]
             public void Name_only_method_finds_only_non_public_static_method_with_name()
             {
-                Assert.Equal(2, typeof(Beatles).GetDeclaredMethod("Ringo").Invoke(null, _args1));
+                Assert.Equal(2, typeof(Beatles).GetOnlyDeclaredMethod("Ringo").Invoke(null, _args1));
             }
 
             [Fact]
             public void Name_only_method_finds_only_public_instance_method_with_name()
             {
-                Assert.Equal(3, typeof(Beatles).GetDeclaredMethod("John").Invoke(new Beatles(), _args2));
+                Assert.Equal(3, typeof(Beatles).GetOnlyDeclaredMethod("John").Invoke(new Beatles(), _args2));
             }
 
             [Fact]
             public void Name_only_method_finds_only_non_public_instance_method_with_name()
             {
-                Assert.Equal(4, typeof(Beatles).GetDeclaredMethod("James").Invoke(new Beatles(), _args3));
+                Assert.Equal(4, typeof(Beatles).GetOnlyDeclaredMethod("James").Invoke(new Beatles(), _args3));
             }
 
             [Fact]
             public void Name_only_method_returns_null_for_method_that_is_not_found()
             {
-                Assert.Null(typeof(Beatles).GetDeclaredMethod("Pete"));
+                Assert.Null(typeof(Beatles).GetOnlyDeclaredMethod("Pete"));
             }
 
             public class Beatles
@@ -786,72 +809,50 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Public_instance_only_method_does_not_find_public_static_methods()
             {
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", Type.EmptyTypes));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params1));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params2));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", _params3));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian"));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", typeof(Random)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", typeof(Random), typeof(int)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Brian", typeof(int), typeof(Random)));
             }
 
             [Fact]
             public void Public_instance_only_method_does_not_find_non_public_static_methods()
             {
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", Type.EmptyTypes));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params1));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params2));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", _params3));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie"));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", typeof(Random)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", typeof(Random), typeof(int)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Freddie", typeof(int), typeof(Random)));
             }
 
             [Fact]
             public void Public_instance_only_method_finds_public_instance_method_only_with_matching_parameters()
             {
-                Assert.Equal(9, typeof(Queen).GetPublicInstanceMethod("John", Type.EmptyTypes).Invoke(new Queen(), null));
-                Assert.Equal(10, typeof(Queen).GetPublicInstanceMethod("John", _params1).Invoke(new Queen(), _args1));
-                Assert.Equal(11, typeof(Queen).GetPublicInstanceMethod("John", _params2).Invoke(new Queen(), _args2));
-                Assert.Equal(12, typeof(Queen).GetPublicInstanceMethod("John", _params3).Invoke(new Queen(), _args3));
+                Assert.Equal(9, typeof(Queen).GetPublicInstanceMethod("John").Invoke(new Queen(), null));
+                Assert.Equal(10, typeof(Queen).GetPublicInstanceMethod("John", typeof(Random)).Invoke(new Queen(), _args1));
+                Assert.Equal(11, typeof(Queen).GetPublicInstanceMethod("John", typeof(Random), typeof(int)).Invoke(new Queen(), _args2));
+                Assert.Equal(12, typeof(Queen).GetPublicInstanceMethod("John", typeof(int), typeof(Random)).Invoke(new Queen(), _args3));
             }
 
             [Fact]
             public void Public_instance_only_method_does_not_finds_public_instance_methods()
             {
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", Type.EmptyTypes));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params1));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params2));
-                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", _params3));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger"));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", typeof(Random)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", typeof(Random), typeof(int)));
+                Assert.Null(typeof(Queen).GetPublicInstanceMethod("Roger", typeof(int), typeof(Random)));
             }
 
             [Fact]
             public void Public_instance_only_method_handles_inherited_overridden_and_new_methods()
             {
-                Assert.Equal(1, typeof(Deep).GetPublicInstanceMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(2, typeof(Deep).GetPublicInstanceMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(4, typeof(Deep).GetPublicInstanceMethod("Blackmore", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(7, typeof(Deep).GetPublicInstanceMethod("Lord", Type.EmptyTypes).Invoke(new Deep(), null));
+                Assert.Equal(1, typeof(Deep).GetPublicInstanceMethod("Gillan").Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetPublicInstanceMethod("Paice").Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Deep).GetPublicInstanceMethod("Blackmore").Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Deep).GetPublicInstanceMethod("Lord").Invoke(new Deep(), null));
             }
 
             [Fact]
             public void Types_method_only_returns_declared_methods()
-            {
-                Assert.Equal(1, typeof(Deep).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(2, typeof(Deep).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(3, typeof(Deep).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Null(typeof(Deep).GetDeclaredMethod("Blackmore", Type.EmptyTypes));
-                Assert.Null(typeof(Deep).GetDeclaredMethod("Lord", Type.EmptyTypes));
-
-                Assert.Equal(1, typeof(Purple).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore", Type.EmptyTypes).Invoke(new Deep(), null));
-                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord", Type.EmptyTypes).Invoke(new Deep(), null));
-
-                Assert.Equal(5, typeof(Purple).GetDeclaredMethod("Gillan", Type.EmptyTypes).Invoke(new Purple(), null));
-                Assert.Equal(6, typeof(Purple).GetDeclaredMethod("Paice", Type.EmptyTypes).Invoke(new Purple(), null));
-                Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover", Type.EmptyTypes).Invoke(new Purple(), null));
-                Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore", Type.EmptyTypes).Invoke(new Purple(), null));
-                Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord", Type.EmptyTypes).Invoke(new Purple(), null));
-            }
-
-            [Fact]
-            public void Name_only_method_only_returns_declared_methods()
             {
                 Assert.Equal(1, typeof(Deep).GetDeclaredMethod("Gillan").Invoke(new Deep(), null));
                 Assert.Equal(2, typeof(Deep).GetDeclaredMethod("Paice").Invoke(new Deep(), null));
@@ -870,6 +871,28 @@ namespace System.Data.Entity.Utilities
                 Assert.Equal(8, typeof(Purple).GetDeclaredMethod("Glover").Invoke(new Purple(), null));
                 Assert.Equal(4, typeof(Purple).GetDeclaredMethod("Blackmore").Invoke(new Purple(), null));
                 Assert.Equal(7, typeof(Purple).GetDeclaredMethod("Lord").Invoke(new Purple(), null));
+            }
+
+            [Fact]
+            public void Name_only_method_only_returns_declared_methods()
+            {
+                Assert.Equal(1, typeof(Deep).GetOnlyDeclaredMethod("Gillan").Invoke(new Deep(), null));
+                Assert.Equal(2, typeof(Deep).GetOnlyDeclaredMethod("Paice").Invoke(new Deep(), null));
+                Assert.Equal(3, typeof(Deep).GetOnlyDeclaredMethod("Glover").Invoke(new Deep(), null));
+                Assert.Null(typeof(Deep).GetOnlyDeclaredMethod("Blackmore"));
+                Assert.Null(typeof(Deep).GetOnlyDeclaredMethod("Lord"));
+
+                Assert.Equal(1, typeof(Purple).GetOnlyDeclaredMethod("Gillan").Invoke(new Deep(), null));
+                Assert.Equal(6, typeof(Purple).GetOnlyDeclaredMethod("Paice").Invoke(new Deep(), null));
+                Assert.Equal(8, typeof(Purple).GetOnlyDeclaredMethod("Glover").Invoke(new Deep(), null));
+                Assert.Equal(4, typeof(Purple).GetOnlyDeclaredMethod("Blackmore").Invoke(new Deep(), null));
+                Assert.Equal(7, typeof(Purple).GetOnlyDeclaredMethod("Lord").Invoke(new Deep(), null));
+
+                Assert.Equal(5, typeof(Purple).GetOnlyDeclaredMethod("Gillan").Invoke(new Purple(), null));
+                Assert.Equal(6, typeof(Purple).GetOnlyDeclaredMethod("Paice").Invoke(new Purple(), null));
+                Assert.Equal(8, typeof(Purple).GetOnlyDeclaredMethod("Glover").Invoke(new Purple(), null));
+                Assert.Equal(4, typeof(Purple).GetOnlyDeclaredMethod("Blackmore").Invoke(new Purple(), null));
+                Assert.Equal(7, typeof(Purple).GetOnlyDeclaredMethod("Lord").Invoke(new Purple(), null));
             }
 
             public class Deep : Purple
@@ -961,7 +984,26 @@ namespace System.Data.Entity.Utilities
             }
 
             [Fact]
-            public void GetDeclaredMethods_returns_all_methods()
+            public void GetRuntimeMethods_returns_all_methods()
+            {
+                Assert.Equal(22, typeof(Queen).GetRuntimeMethods().Count());
+                Assert.Equal(22, typeof(Queen).GetRuntimeMethods().Distinct().Count());
+                Assert.Equal(4, typeof(Queen).GetRuntimeMethods().Count(m => m.Name == "Brian"));
+                Assert.Equal(4, typeof(Queen).GetRuntimeMethods().Count(m => m.Name == "Roger"));
+                Assert.Equal(4, typeof(Queen).GetRuntimeMethods().Count(m => m.Name == "Freddie"));
+                Assert.Equal(4, typeof(Queen).GetRuntimeMethods().Count(m => m.Name == "John"));
+
+                Assert.Equal(12, typeof(Deep).GetRuntimeMethods().Count());
+                Assert.Equal(12, typeof(Deep).GetRuntimeMethods().Distinct().Count());
+                Assert.Equal(1, typeof(Deep).GetRuntimeMethods().Count(m => m.Name == "Gillan"));
+                Assert.Equal(2, typeof(Deep).GetRuntimeMethods().Count(m => m.Name == "Paice"));
+                Assert.Equal(1, typeof(Deep).GetRuntimeMethods().Count(m => m.Name == "Glover"));
+                Assert.Equal(1, typeof(Deep).GetRuntimeMethods().Count(m => m.Name == "Blackmore"));
+                Assert.Equal(1, typeof(Deep).GetRuntimeMethods().Count(m => m.Name == "Lord"));
+            }
+
+            [Fact]
+            public void GetDeclaredMethods_returns_all_declared_methods()
             {
                 Assert.Equal(16, typeof(Queen).GetDeclaredMethods().Count());
                 Assert.Equal(16, typeof(Queen).GetDeclaredMethods().Distinct().Count());
@@ -969,6 +1011,14 @@ namespace System.Data.Entity.Utilities
                 Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "Roger"));
                 Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "Freddie"));
                 Assert.Equal(4, typeof(Queen).GetDeclaredMethods().Count(m => m.Name == "John"));
+
+                Assert.Equal(3, typeof(Deep).GetDeclaredMethods().Count());
+                Assert.Equal(3, typeof(Deep).GetDeclaredMethods().Distinct().Count());
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethods().Count(m => m.Name == "Gillan"));
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethods().Count(m => m.Name == "Paice"));
+                Assert.Equal(1, typeof(Deep).GetDeclaredMethods().Count(m => m.Name == "Glover"));
+                Assert.Equal(0, typeof(Deep).GetDeclaredMethods().Count(m => m.Name == "Blackmore"));
+                Assert.Equal(0, typeof(Deep).GetDeclaredMethods().Count(m => m.Name == "Lord"));
             }
 
             [Fact]
@@ -985,6 +1035,93 @@ namespace System.Data.Entity.Utilities
                 Assert.Equal(
                     new[] { 4, 5, 8, 7, 6 },
                     typeof(Purple).GetDeclaredMethods().OrderBy(m => m.Name).Select(m => (int)m.Invoke(new Purple(), null)));
+            }
+
+            [Fact]
+            public void GetDeclaredConstructor_can_find_best_match()
+            {
+                Assert.Equal(new[] { "m1p1", "m1p2" }, GetMethod(m => true));
+                Assert.Equal(new[] { "m1p1", "m1p2" }, GetMethod(m => m.IsPrivate));
+                Assert.Equal(new[] { "m2p1", "m2p2" }, GetMethod(m => m.IsAssembly));
+                Assert.Equal(new[] { "m3p1", "m3p2" }, GetMethod(m => m.IsFamily));
+                Assert.Equal(new[] { "m4p1", "m4p2" }, GetMethod(m => m.IsFamilyOrAssembly));
+                Assert.Equal(new[] { "m5p1", "m5p2" }, GetMethod(m => m.IsPublic));
+            }
+
+            private static IEnumerable<string> GetMethod(Func<MethodInfo, bool> predicate)
+            {
+                return typeof(LotsOfOverloads).GetRuntimeMethod(
+                    "AMethod",
+                    predicate,
+                    new[] { typeof(ParamType1), typeof(ParamType2) },
+                    new[] { typeof(ParamType1), typeof(BaseType1) },
+                    new[] { typeof(ParamType1), typeof(BaseType2) },
+                    new[] { typeof(ParamType1), typeof(IInterface1) },
+                    new[] { typeof(ParamType1), typeof(object) },
+                    new[] { typeof(IInterface1), typeof(ParamType2) },
+                    new[] { typeof(IInterface1), typeof(BaseType1) },
+                    new[] { typeof(IInterface1), typeof(BaseType2) },
+                    new[] { typeof(IInterface1), typeof(IInterface1) },
+                    new[] { typeof(IInterface1), typeof(object) },
+                    new[] { typeof(IInterface2), typeof(ParamType2) },
+                    new[] { typeof(IInterface2), typeof(BaseType1) },
+                    new[] { typeof(IInterface2), typeof(BaseType2) },
+                    new[] { typeof(IInterface2), typeof(IInterface1) },
+                    new[] { typeof(IInterface2), typeof(object) },
+                    new[] { typeof(object), typeof(ParamType2) },
+                    new[] { typeof(object), typeof(BaseType1) },
+                    new[] { typeof(object), typeof(BaseType2) },
+                    new[] { typeof(object), typeof(IInterface1) },
+                    new[] { typeof(object), typeof(object) })
+                    .GetParameters()
+                    .Select(p => p.Name);
+            }
+
+            public class LotsOfOverloads
+            {
+                private void AMethod(ParamType1 m1p1, ParamType2 m1p2)
+                {
+                }
+
+                internal void AMethod(IInterface1 m2p1, BaseType1 m2p2)
+                {
+                }
+
+                protected void AMethod(object m3p1, IInterface1 m3p2)
+                {
+                }
+
+                protected internal void AMethod(ParamType1 m4p1, BaseType1 m4p2)
+                {
+                }
+
+                public void AMethod(object m5p1, object m5p2)
+                {
+                }
+            }
+
+            public class ParamType1 : IInterface1, IInterface2
+            {
+            }
+
+            public class ParamType2 : BaseType1
+            {
+            }
+
+            public class BaseType1 : BaseType2, IInterface1
+            {
+            }
+
+            public class BaseType2
+            {
+            }
+
+            public interface IInterface1
+            {
+            }
+
+            public interface IInterface2
+            {
             }
         }
 
@@ -1014,7 +1151,8 @@ namespace System.Data.Entity.Utilities
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("ANightIn").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("MySister").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("TinyTears").DeclaringType);
-                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(
+                    typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("SnowyInFSharpMinor").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("Seaweed").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("VertrauenII").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetDeclaredProperty("TalkToMe").DeclaringType);
@@ -1077,9 +1215,9 @@ namespace System.Data.Entity.Utilities
 
                 protected bool Equals(PropData other)
                 {
-                    return string.Equals(Name, other.Name) 
-                        && DeclaringType.Equals(other.DeclaringType) 
-                        && ReflectedType.Equals(other.ReflectedType);
+                    return string.Equals(Name, other.Name)
+                           && DeclaringType.Equals(other.DeclaringType)
+                           && ReflectedType.Equals(other.ReflectedType);
                 }
 
                 public override bool Equals(object obj)
@@ -1426,7 +1564,8 @@ namespace System.Data.Entity.Utilities
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("ANightIn").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("MySister").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("TinyTears").DeclaringType);
-                Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("SnowyInFSharpMinor").DeclaringType);
+                Assert.Same(
+                    typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("SnowyInFSharpMinor").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("Seaweed").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("VertrauenII").DeclaringType);
                 Assert.Same(typeof(TindersticksIIVinyl), typeof(TindersticksIIVinyl).GetInstanceProperty("TalkToMe").DeclaringType);
@@ -1522,8 +1661,17 @@ namespace System.Data.Entity.Utilities
                 public virtual int Seaweed { private get; set; }
                 public virtual int VertrauenII { get; protected set; }
                 public virtual int TalkToMe { protected get; set; }
-                public virtual int NoMoreAffairs { get { return 1995; } }
-                public virtual int Singing { set { } }
+
+                public virtual int NoMoreAffairs
+                {
+                    get { return 1995; }
+                }
+
+                public virtual int Singing
+                {
+                    set { }
+                }
+
                 public virtual int TravellingLight { get; set; }
                 public int CherryBlossoms { get; set; }
                 public int ShesGone { get; set; }
@@ -1537,17 +1685,35 @@ namespace System.Data.Entity.Utilities
                 internal override int ANightIn { get; set; }
                 private int MySister { get; set; }
                 protected override int TinyTears { get; set; }
-                public override int SnowyInFSharpMinor { get { return 1995; } }
-                public override int Seaweed {  set { } }
+
+                public override int SnowyInFSharpMinor
+                {
+                    get { return 1995; }
+                }
+
+                public override int Seaweed
+                {
+                    set { }
+                }
+
                 public override int VertrauenII { get; protected set; }
                 public override int TalkToMe { protected get; set; }
-                public override int NoMoreAffairs { get { return 1995; } }
-                public override int Singing { set { } }
+
+                public override int NoMoreAffairs
+                {
+                    get { return 1995; }
+                }
+
+                public override int Singing
+                {
+                    set { }
+                }
+
                 public new virtual int TravellingLight { get; set; }
                 public new virtual int CherryBlossoms { get; set; }
                 public new int ShesGone { get; set; }
                 public virtual int VertrauenIII { get; set; }
-                public static new int SleepySong { get; set; }
+                public new static int SleepySong { get; set; }
             }
 
             public class TindersticksIICd : TindersticksIIVinyl
@@ -1555,17 +1721,665 @@ namespace System.Data.Entity.Utilities
                 internal override int ANightIn { get; set; }
                 private int MySister { get; set; }
                 protected override int TinyTears { get; set; }
-                public override int SnowyInFSharpMinor { get { return 1995; }  }
-                public override int Seaweed { set { } }
+
+                public override int SnowyInFSharpMinor
+                {
+                    get { return 1995; }
+                }
+
+                public override int Seaweed
+                {
+                    set { }
+                }
+
                 public override int VertrauenII { get; protected set; }
                 public override int TalkToMe { protected get; set; }
-                public override int NoMoreAffairs { get { return 1995; } }
-                public override int Singing { set { } }
+
+                public override int NoMoreAffairs
+                {
+                    get { return 1995; }
+                }
+
+                public override int Singing
+                {
+                    set { }
+                }
+
                 public override int TravellingLight { get; set; }
                 public override int CherryBlossoms { get; set; }
                 public override int Mistakes { get; set; }
                 public override int VertrauenIII { get; set; }
-                public static new int SleepySong { get; set; }
+                public new static int SleepySong { get; set; }
+            }
+        }
+
+        public class GetFieldsEtc
+        {
+            [Fact]
+            public void GetRuntimeFields_returns_all_fields()
+            {
+                Assert.Equal(
+                    new[] { "_a", "_e", "<I>k__BackingField", "B", "C", "D", "F", "G", "H" },
+                    typeof(Bell).GetRuntimeFields().Select(f => f.Name).OrderBy(n => n));
+
+                Assert.Equal(
+                    new[]
+                        {
+                            "_a", "_e", "_j", "_n", "<I>k__BackingField",
+                            "B", "B", "C", "C", "D", "D", "F", "G", "H", "K", "L", "M", "O", "P", "Q"
+                        },
+                    typeof(Stringer).GetRuntimeFields().Select(f => f.Name).OrderBy(n => n));
+            }
+
+            public class Stringer : Bell
+            {
+#pragma warning disable 169,108,114
+                private int _a;
+                internal int B;
+                protected int C;
+                public int D;
+
+                private static int _e;
+                internal static int F;
+                protected static int G;
+                public static int H;
+
+                private int I { get; set; }
+
+                private int _j;
+                internal int K;
+                protected int L;
+                public int M;
+
+                private static int _n;
+                internal static int O;
+                protected static int P;
+                public static int Q;
+#pragma warning restore 169,108,114
+            }
+
+            public class Bell
+            {
+#pragma warning disable 169
+                private int _a;
+                internal int B;
+                protected int C;
+                public int D;
+
+                private static int _e;
+                internal static int F;
+                protected static int G;
+                public static int H;
+
+                private int I { get; set; }
+#pragma warning restore 169
+            }
+        }
+
+        public class GetDeclaredConstructorsEtc
+        {
+            [Fact]
+            public void GetDeclaredConstructors_returns_all_constructors()
+            {
+                var constructors = typeof(Omar).GetDeclaredConstructors().ToList();
+
+                Assert.Equal(1, constructors.Count(c => c.IsStatic));
+
+                Assert.Equal(
+                    new[] { 0, 1, 2, 3, 4 },
+                    constructors.Where(c => !c.IsStatic).Select(c => c.GetParameters().Count()).OrderBy(c => c));
+
+                Assert.True(constructors.All(c => c.DeclaringType == typeof(Omar)));
+            }
+
+            [Fact]
+            public void GetDeclaredConstructor_returns_only_constructor_with_given_types()
+            {
+                Assert.Equal(0, typeof(Omar).GetDeclaredConstructor().GetParameters().Count());
+                Assert.Equal(0, typeof(Omar).GetDeclaredConstructor(new Type[0]).GetParameters().Count());
+                Assert.Equal(1, typeof(Omar).GetDeclaredConstructor(typeof(int)).GetParameters().Count());
+                Assert.Equal(2, typeof(Omar).GetDeclaredConstructor(typeof(int), typeof(int)).GetParameters().Count());
+                Assert.Equal(3, typeof(Omar).GetDeclaredConstructor(typeof(int), typeof(int), typeof(int)).GetParameters().Count());
+
+                Assert.Equal(
+                    4,
+                    typeof(Omar).GetDeclaredConstructor(typeof(int), typeof(int), typeof(int), typeof(int)).GetParameters().Count());
+            }
+
+            [Fact]
+            public void GetPublicConstructor_returns_only_public_constructors_with_given_types()
+            {
+                Assert.Null(typeof(Omar).GetPublicConstructor());
+                Assert.Null(typeof(Omar).GetPublicConstructor(new Type[0]));
+                Assert.Null(typeof(Omar).GetPublicConstructor(typeof(int)));
+                Assert.Null(typeof(Omar).GetPublicConstructor(typeof(int), typeof(int)));
+                Assert.Null(typeof(Omar).GetPublicConstructor(typeof(int), typeof(int), typeof(int)));
+
+                Assert.Equal(
+                    4,
+                    typeof(Omar).GetPublicConstructor(typeof(int), typeof(int), typeof(int), typeof(int)).GetParameters().Count());
+            }
+
+            public class Omar : Little
+            {
+                static Omar()
+                {
+                }
+
+                internal Omar()
+                {
+                }
+
+                private Omar(int _)
+                {
+                }
+
+                protected Omar(int _, int __)
+                {
+                }
+
+                protected internal Omar(int _, int __, int ___)
+                {
+                }
+
+                public Omar(int _, int __, int ___, int ____)
+                {
+                }
+            }
+
+            public class Little
+            {
+                static Little()
+                {
+                }
+
+                public Little()
+                {
+                }
+
+                protected internal Little(int _)
+                {
+                }
+
+                protected Little(int _, int __)
+                {
+                }
+
+                internal Little(int _, int __, int ___)
+                {
+                }
+
+                private Little(int _, int __, int ___, int ____)
+                {
+                }
+            }
+
+            [Fact]
+            public void GetDeclaredConstructor_can_find_best_match()
+            {
+                Assert.Equal(new[] { "c1p1", "c1p2" }, GetConstructor(c => true));
+                Assert.Equal(new[] { "c1p1", "c1p2" }, GetConstructor(c => c.IsPrivate));
+                Assert.Equal(new[] { "c2p1", "c2p2" }, GetConstructor(c => c.IsAssembly));
+                Assert.Equal(new[] { "c3p1", "c3p2" }, GetConstructor(c => c.IsFamily));
+                Assert.Equal(new[] { "c4p1", "c4p2" }, GetConstructor(c => c.IsFamilyOrAssembly));
+                Assert.Equal(new[] { "c5p1", "c5p2" }, GetConstructor(c => c.IsPublic));
+            }
+
+            private static IEnumerable<string> GetConstructor(Func<ConstructorInfo, bool> predicate)
+            {
+                return typeof(WithConstructors).GetDeclaredConstructor(
+                    predicate,
+                    new[] { typeof(ParamType1), typeof(ParamType2) },
+                    new[] { typeof(ParamType1), typeof(BaseType1) },
+                    new[] { typeof(ParamType1), typeof(BaseType2) },
+                    new[] { typeof(ParamType1), typeof(IInterface1) },
+                    new[] { typeof(ParamType1), typeof(object) },
+                    new[] { typeof(IInterface1), typeof(ParamType2) },
+                    new[] { typeof(IInterface1), typeof(BaseType1) },
+                    new[] { typeof(IInterface1), typeof(BaseType2) },
+                    new[] { typeof(IInterface1), typeof(IInterface1) },
+                    new[] { typeof(IInterface1), typeof(object) },
+                    new[] { typeof(IInterface2), typeof(ParamType2) },
+                    new[] { typeof(IInterface2), typeof(BaseType1) },
+                    new[] { typeof(IInterface2), typeof(BaseType2) },
+                    new[] { typeof(IInterface2), typeof(IInterface1) },
+                    new[] { typeof(IInterface2), typeof(object) },
+                    new[] { typeof(object), typeof(ParamType2) },
+                    new[] { typeof(object), typeof(BaseType1) },
+                    new[] { typeof(object), typeof(BaseType2) },
+                    new[] { typeof(object), typeof(IInterface1) },
+                    new[] { typeof(object), typeof(object) })
+                    .GetParameters()
+                    .Select(p => p.Name);
+            }
+
+            public class WithConstructors
+            {
+                private WithConstructors(ParamType1 c1p1, ParamType2 c1p2)
+                {
+                }
+
+                internal WithConstructors(IInterface1 c2p1, BaseType1 c2p2)
+                {
+                }
+
+                protected WithConstructors(object c3p1, IInterface1 c3p2)
+                {
+                }
+
+                protected internal WithConstructors(ParamType1 c4p1, BaseType1 c4p2)
+                {
+                }
+
+                public WithConstructors(object c5p1, object c5p2)
+                {
+                }
+            }
+
+            public class ParamType1 : IInterface1, IInterface2
+            {
+            }
+
+            public class ParamType2 : BaseType1
+            {
+            }
+
+            public class BaseType1 : BaseType2, IInterface1
+            {
+            }
+
+            public class BaseType2
+            {
+            }
+
+            public interface IInterface1
+            {
+            }
+
+            public interface IInterface2
+            {
+            }
+        }
+
+        public class IsSubclassOf
+        {
+            [Fact]
+            public void Returns_true_for_subclasses_only()
+            {
+                Assert.True(typeof(Alan).IsSubclassOf(typeof(Roger)));
+                Assert.True(typeof(Alan).IsSubclassOf(typeof(Davies)));
+                Assert.True(typeof(Alan).IsSubclassOf(typeof(object)));
+
+                Assert.False(typeof(Alan).IsSubclassOf(typeof(Alan)));
+                Assert.False(typeof(object).IsSubclassOf(typeof(Davies)));
+            }
+
+            public class Alan : Roger
+            {
+            }
+
+            public class Roger : Davies
+            {
+            }
+
+            public class Davies
+            {
+            }
+        }
+
+        public class Assembly
+        {
+            [Fact]
+            public void Returns_Assembly()
+            {
+                Assert.Equal("EntityFramework", typeof(DbContext).Assembly().GetName().Name);
+            }
+        }
+
+        public class BaseType
+        {
+            [Fact]
+            public void Returns_base_type()
+            {
+                Assert.Same(typeof(Roger), typeof(Alan).BaseType());
+                Assert.Same(typeof(Davies), typeof(Roger).BaseType());
+                Assert.Same(typeof(object), typeof(Davies).BaseType());
+                Assert.Null(typeof(object).BaseType());
+            }
+
+            public class Alan : Roger
+            {
+            }
+
+            public class Roger : Davies
+            {
+            }
+
+            public class Davies
+            {
+            }
+        }
+
+        public class IsGenericType
+        {
+            [Fact]
+            public void Returns_true_only_for_generic_types()
+            {
+                Assert.True(typeof(Fry<string>).IsGenericType());
+                Assert.False(typeof(Stephen).IsGenericType());
+                Assert.False(typeof(object).IsGenericType());
+                Assert.True(typeof(Fry<>).IsGenericType());
+            }
+
+            public class Fry<T>
+            {
+            }
+
+            public class Stephen : Fry<string>
+            {
+            }
+        }
+
+        public class IsGenericTypeDefinition
+        {
+            [Fact]
+            public void Returns_true_only_for_generic_type_definitions()
+            {
+                Assert.False(typeof(Fry<string>).IsGenericTypeDefinition());
+                Assert.False(typeof(Stephen).IsGenericTypeDefinition());
+                Assert.False(typeof(object).IsGenericTypeDefinition());
+                Assert.True(typeof(Fry<>).IsGenericTypeDefinition());
+            }
+
+            public class Fry<T>
+            {
+            }
+
+            public class Stephen : Fry<string>
+            {
+            }
+        }
+
+        public class Attributes
+        {
+            [Fact]
+            public void Returns_type_attributes()
+            {
+                Assert.Equal(
+                    TypeAttributes.AutoLayout | TypeAttributes.AnsiClass | TypeAttributes.Class | TypeAttributes.NestedAssembly
+                    | TypeAttributes.BeforeFieldInit,
+                    typeof(Michael).Attributes());
+
+                Assert.Equal(
+                    TypeAttributes.AutoLayout | TypeAttributes.AnsiClass | TypeAttributes.Class | TypeAttributes.NestedPrivate
+                    | TypeAttributes.SequentialLayout | TypeAttributes.Sealed | TypeAttributes.BeforeFieldInit,
+                    typeof(Palin).Attributes());
+            }
+
+            internal class Michael
+            {
+            }
+
+            private struct Palin
+            {
+            }
+        }
+
+        public class IsClass
+        {
+            [Fact]
+            public void Returns_true_only_for_non_value_types()
+            {
+                Assert.True(typeof(Michael).IsClass());
+                Assert.False(typeof(Palin).IsClass());
+                Assert.True(typeof(object).IsClass());
+                Assert.False(typeof(int).IsClass());
+            }
+
+            public class Michael
+            {
+            }
+
+            public struct Palin
+            {
+            }
+        }
+
+        public class IsInterface
+        {
+            [Fact]
+            public void Returns_true_only_for_interfaces()
+            {
+                Assert.False(typeof(Michael).IsInterface());
+                Assert.False(typeof(Palin).IsInterface());
+                Assert.True(typeof(IPython).IsInterface());
+            }
+
+            public class Michael : IPython
+            {
+            }
+
+            public struct Palin : IPython
+            {
+            }
+
+            public interface IPython
+            {
+            }
+        }
+
+        public class IsValueType
+        {
+            [Fact]
+            public void Returns_true_only_for_value_types()
+            {
+                Assert.False(typeof(Michael).IsValueType());
+                Assert.True(typeof(Palin).IsValueType());
+                Assert.False(typeof(object).IsValueType());
+                Assert.True(typeof(int).IsValueType());
+            }
+
+            public class Michael
+            {
+            }
+
+            public struct Palin
+            {
+            }
+        }
+
+        public class IsAbstract
+        {
+            [Fact]
+            public void Returns_true_for_abstract_types_including_interfaces()
+            {
+                Assert.False(typeof(John).IsAbstract());
+                Assert.True(typeof(Cleese).IsAbstract());
+                Assert.True(typeof(IPython).IsAbstract());
+            }
+
+            public class John : IPython
+            {
+            }
+
+            public abstract class Cleese : IPython
+            {
+            }
+
+            public interface IPython
+            {
+            }
+        }
+
+        public class IsSealed
+        {
+            [Fact]
+            public void Returns_true_only_for_sealed_types()
+            {
+                Assert.True(typeof(John).IsSealed());
+                Assert.False(typeof(Cleese).IsSealed());
+                Assert.False(typeof(IPython).IsSealed());
+            }
+
+            public sealed class John : IPython
+            {
+            }
+
+            public class Cleese : IPython
+            {
+            }
+
+            public interface IPython
+            {
+            }
+        }
+
+        public class IsEnum
+        {
+            [Fact]
+            public void Returns_true_only_for_enum_types()
+            {
+                Assert.True(typeof(John).IsSealed());
+                Assert.False(typeof(Cleese).IsSealed());
+                Assert.False(typeof(IPython).IsSealed());
+            }
+
+            public enum John
+            {
+            }
+
+            public class Cleese
+            {
+            }
+
+            public interface IPython
+            {
+            }
+        }
+
+        public class IsSerializable
+        {
+            [Fact]
+            public void Returns_true_only_for_serializable_types()
+            {
+                Assert.True(typeof(Michael).IsSerializable());
+                Assert.False(typeof(Palin).IsSerializable());
+
+                Assert.True(typeof(John).IsSerializable());
+                Assert.True(typeof(Clease).IsSerializable()); // Enum always serializable
+
+                Assert.True(typeof(Eric).IsSerializable());
+                Assert.False(typeof(Idle).IsSerializable());
+                
+                Assert.True(typeof(Graham).IsSerializable());
+                Assert.False(typeof(Chapman).IsSerializable()); // Just ISerializable not sufficient
+            }
+
+            [Serializable]
+            public class Michael
+            {
+            }
+
+            public class Palin
+            {
+            }
+
+            [Serializable]
+            public enum John
+            {
+            }
+
+            public enum Clease
+            {
+            }
+
+            [Serializable]
+            public struct Eric
+            {
+            }
+
+            public struct Idle
+            {
+            }
+
+            [Serializable]
+            public struct Graham : ISerializable
+            {
+                public void GetObjectData(SerializationInfo info, StreamingContext context)
+                {
+                }
+            }
+
+            public struct Chapman : ISerializable
+            {
+                public void GetObjectData(SerializationInfo info, StreamingContext context)
+                {
+                }
+            }
+        }
+
+        public class IsGenericParameter
+        {
+            [Fact]
+            public void Returns_true_only_for_generic_parameters()
+            {
+                Assert.True(typeof(Fry<>).GetGenericArguments().Single().IsGenericParameter());
+                Assert.False(typeof(Fry<string>).GetGenericArguments().Single().IsGenericParameter());
+            }
+
+            public class Fry<T>
+            {
+            }
+        }
+
+        public class ContainsGenericParameters
+        {
+            [Fact]
+            public void Returns_true_only_when_generic_parameters_exist()
+            {
+                Assert.True(typeof(Fry<>).ContainsGenericParameters());
+                Assert.False(typeof(Fry<string>).ContainsGenericParameters());
+                Assert.False(typeof(Stephen).ContainsGenericParameters());
+            }
+
+            public class Fry<T>
+            {
+            }
+
+            public class Stephen : Fry<string>
+            {
+            }
+        }
+
+        public class IsPrimitive
+        {
+            [Fact]
+            public void Returns_true_only_for_primitive_types()
+            {
+                Assert.False(typeof(Michael).IsPrimitive());
+                Assert.False(typeof(Palin).IsPrimitive());
+                Assert.False(typeof(John).IsPrimitive());
+                Assert.False(typeof(IClease).IsPrimitive());
+                Assert.False(typeof(object).IsPrimitive());
+                Assert.True(typeof(int).IsPrimitive());
+                Assert.False(typeof(string).IsPrimitive());
+                Assert.False(typeof(Guid).IsPrimitive());
+            }
+
+            public class Michael
+            {
+            }
+
+            public struct Palin
+            {
+            }
+
+            public enum John
+            {
+            }
+
+            public interface IClease
+            {
             }
         }
     }

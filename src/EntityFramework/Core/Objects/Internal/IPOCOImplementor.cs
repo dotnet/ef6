@@ -32,39 +32,39 @@ namespace System.Data.Entity.Core.Objects.Internal
         private HashSet<EdmMember> _relationshipMembers;
 
         internal static readonly MethodInfo EntityMemberChangingMethod = typeof(IEntityChangeTracker).GetDeclaredMethod(
-            "EntityMemberChanging", new[] { typeof(string) });
+            "EntityMemberChanging", typeof(string));
 
         internal static readonly MethodInfo EntityMemberChangedMethod = typeof(IEntityChangeTracker).GetDeclaredMethod(
-            "EntityMemberChanged", new[] { typeof(string) });
+            "EntityMemberChanged", typeof(string));
 
         internal static readonly MethodInfo CreateRelationshipManagerMethod = typeof(RelationshipManager).GetDeclaredMethod(
-            "Create", new[] { typeof(IEntityWithRelationships) });
+            "Create", typeof(IEntityWithRelationships));
 
         internal static readonly MethodInfo GetRelationshipManagerMethod =
             typeof(IEntityWithRelationships).GetDeclaredProperty("RelationshipManager").Getter();
 
         internal static readonly MethodInfo GetRelatedReferenceMethod = typeof(RelationshipManager).GetDeclaredMethod(
-            "GetRelatedReference", new[] { typeof(string), typeof(string) });
+            "GetRelatedReference", typeof(string), typeof(string));
 
         internal static readonly MethodInfo GetRelatedCollectionMethod = typeof(RelationshipManager).GetDeclaredMethod(
-            "GetRelatedCollection", new[] { typeof(string), typeof(string) });
+            "GetRelatedCollection", typeof(string), typeof(string));
 
         internal static readonly MethodInfo GetRelatedEndMethod = typeof(RelationshipManager).GetDeclaredMethod(
-            "GetRelatedEnd", new[] { typeof(string), typeof(string) });
+            "GetRelatedEnd", typeof(string), typeof(string));
 
         internal static readonly MethodInfo ObjectEqualsMethod = typeof(object).GetDeclaredMethod(
-            "Equals", new[] { typeof(object), typeof(object) });
+            "Equals", typeof(object), typeof(object));
 
         private static readonly ConstructorInfo _invalidOperationConstructorMethod =
-            typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
+            typeof(InvalidOperationException).GetDeclaredConstructor(typeof(string));
 
         internal static readonly MethodInfo GetEntityMethod = typeof(IEntityWrapper).GetDeclaredProperty("Entity").Getter();
-        internal static readonly MethodInfo InvokeMethod = typeof(Action<object>).GetDeclaredMethod("Invoke", new[] { typeof(object) });
+        internal static readonly MethodInfo InvokeMethod = typeof(Action<object>).GetDeclaredMethod("Invoke", typeof(object));
 
         internal static readonly MethodInfo FuncInvokeMethod = typeof(Func<object, object, bool>).GetDeclaredMethod(
-            "Invoke", new[] { typeof(object), typeof(object) });
+            "Invoke", typeof(object), typeof(object));
 
-        internal static readonly MethodInfo SetChangeTrackerMethod = typeof(IEntityWithChangeTracker).GetDeclaredMethod("SetChangeTracker");
+        internal static readonly MethodInfo SetChangeTrackerMethod = typeof(IEntityWithChangeTracker).GetOnlyDeclaredMethod("SetChangeTracker");
 
         public IPocoImplementor(EntityType ospaceEntityType)
         {
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                             if (multiplicity == RelationshipMultiplicity.Many)
                             {
-                                if (clrProperty.PropertyType.IsGenericType
+                                if (clrProperty.PropertyType.IsGenericType()
                                     &&
                                     clrProperty.PropertyType.GetGenericTypeDefinition() == typeof(ICollection<>))
                                 {
@@ -278,24 +278,15 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var propertyType = baseProperty.PropertyType;
 
                     if (propertyType == typeof(int)
-                        || // signed integer types
-                        propertyType == typeof(short)
-                        ||
-                        propertyType == typeof(Int64)
-                        ||
-                        propertyType == typeof(bool)
-                        || // boolean
-                        propertyType == typeof(byte)
-                        ||
-                        propertyType == typeof(UInt32)
-                        ||
-                        propertyType == typeof(UInt64)
-                        ||
-                        propertyType == typeof(float)
-                        ||
-                        propertyType == typeof(double)
-                        ||
-                        propertyType.IsEnum)
+                        || propertyType == typeof(short)
+                        || propertyType == typeof(Int64)
+                        || propertyType == typeof(bool)
+                        || propertyType == typeof(byte)
+                        || propertyType == typeof(UInt32)
+                        || propertyType == typeof(UInt64)
+                        || propertyType == typeof(float)
+                        || propertyType == typeof(double)
+                        || propertyType.IsEnum())
                     {
                         generator.Emit(OpCodes.Ldarg_0);
                         generator.Emit(OpCodes.Call, baseGetter);
@@ -315,7 +306,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     else
                     {
                         // Get the specific type's inequality method if it exists
-                        var op_inequality = propertyType.GetDeclaredMethod("op_Inequality", new[] { propertyType, propertyType });
+                        var op_inequality = propertyType.GetDeclaredMethod("op_Inequality", propertyType, propertyType);
                         if (op_inequality != null)
                         {
                             generator.Emit(OpCodes.Ldarg_0);
@@ -329,12 +320,12 @@ namespace System.Data.Entity.Core.Objects.Internal
                             // Use object inequality
                             generator.Emit(OpCodes.Ldarg_0);
                             generator.Emit(OpCodes.Call, baseGetter);
-                            if (propertyType.IsValueType)
+                            if (propertyType.IsValueType())
                             {
                                 generator.Emit(OpCodes.Box, propertyType);
                             }
                             generator.Emit(OpCodes.Ldarg_1);
-                            if (propertyType.IsValueType)
+                            if (propertyType.IsValueType())
                             {
                                 generator.Emit(OpCodes.Box, propertyType);
                             }
@@ -389,7 +380,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             var baseSetter = baseProperty.Setter();
             var methodAccess = baseSetter.Attributes & MethodAttributes.MemberAccessMask;
             var specificGetRelatedReference = GetRelatedReferenceMethod.MakeGenericMethod(baseProperty.PropertyType);
-            var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetDeclaredMethod(
+            var specificEntityReferenceSetValue = typeof(EntityReference<>).MakeGenericType(baseProperty.PropertyType).GetOnlyDeclaredMethod(
                 "set_Value");
 
             var setterBuilder = typeBuilder.DefineMethod(

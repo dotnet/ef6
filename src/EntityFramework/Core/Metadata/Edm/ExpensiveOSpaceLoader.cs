@@ -38,7 +38,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(entityClrType);
             DebugCheck.NotEmpty(relationshipName);
 
-            var typesInLoading = LoadTypesExpensiveWay(entityClrType.Assembly);
+            var typesInLoading = LoadTypesExpensiveWay(entityClrType.Assembly());
             if (typesInLoading != null)
             {
                 EdmType edmType;

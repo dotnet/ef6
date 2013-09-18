@@ -114,10 +114,7 @@ namespace System.Data.Entity.Internal
             Func<object> nonEntityFactory;
             if (!_nonEntityFactories.TryGetValue(_type, out nonEntityFactory))
             {
-                var factoryExpression =
-                    Expression.New(
-                        _type.GetConstructor(
-                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, Type.EmptyTypes, null));
+                var factoryExpression = Expression.New(_type.GetDeclaredConstructor());
                 nonEntityFactory = Expression.Lambda<Func<object>>(factoryExpression, null).Compile();
                 _nonEntityFactories.TryAdd(_type, nonEntityFactory);
             }

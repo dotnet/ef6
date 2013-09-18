@@ -41,7 +41,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _type = type;
             _cspaceNamespaceName = cspaceNamespaceName;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;
-            Abstract = type.IsAbstract;
+            Abstract = type.IsAbstract();
         }
 
         // <summary>

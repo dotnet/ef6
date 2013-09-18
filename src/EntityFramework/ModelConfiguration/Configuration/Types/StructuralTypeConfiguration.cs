@@ -49,7 +49,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                 return typeof(BinaryPropertyConfiguration);
             }
 
-            return (propertyType.IsValueType
+            return (propertyType.IsValueType()
                     || propertyType == typeof(DbGeography)
                     || propertyType == typeof(DbGeometry)
                    )

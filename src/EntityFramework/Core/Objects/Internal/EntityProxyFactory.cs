@@ -58,11 +58,11 @@ namespace System.Data.Entity.Core.Objects.Internal
         private static readonly HashSet<Assembly> _proxyRuntimeAssemblies = new HashSet<Assembly>();
 
         internal static readonly MethodInfo GetInterceptorDelegateMethod 
-            = typeof(LazyLoadBehavior).GetDeclaredMethod("GetInterceptorDelegate");
+            = typeof(LazyLoadBehavior).GetOnlyDeclaredMethod("GetInterceptorDelegate");
 
         private static ModuleBuilder GetDynamicModule(EntityType ospaceEntityType)
         {
-            var assembly = ospaceEntityType.ClrType.Assembly;
+            var assembly = ospaceEntityType.ClrType.Assembly();
             ModuleBuilder moduleBuilder;
             if (!_moduleBuilders.TryGetValue(assembly, out moduleBuilder))
             {
@@ -269,7 +269,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal static bool IsProxyType(Type type)
         {
             DebugCheck.NotNull(type);
-            return type != null && _proxyRuntimeAssemblies.Contains(type.Assembly);
+            return type != null && _proxyRuntimeAssemblies.Contains(type.Assembly());
         }
 
         // <summary>
@@ -391,7 +391,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 // Set the runtime assembly of the proxy types if it hasn't already been set.
                 // This is used by the IsProxyType method.
-                var typeAssembly = proxyType.Assembly;
+                var typeAssembly = proxyType.Assembly();
                 if (!_proxyRuntimeAssemblies.Contains(typeAssembly))
                 {
                     _proxyRuntimeAssemblies.Add(typeAssembly);
@@ -554,17 +554,14 @@ namespace System.Data.Entity.Core.Objects.Internal
             var clrType = ospaceEntityType.ClrType;
 
             if (!clrType.IsPublic()
-                || clrType.IsSealed
+                || clrType.IsSealed()
                 || typeof(IEntityWithRelationships).IsAssignableFrom(clrType)
                 || ospaceEntityType.Abstract)
             {
                 return false;
             }
 
-            var ctor =
-                clrType.GetConstructor(
-                    BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                    Type.EmptyTypes, null);
+            var ctor = clrType.GetDeclaredConstructor();
 
             return ctor != null && (((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Public) ||
                                     ((ctor.Attributes & MethodAttributes.MemberAccessMask) == MethodAttributes.Family) ||
@@ -694,8 +691,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     if (_typeBuilder == null)
                     {
                         var proxyTypeAttributes = TypeAttributes.Class | TypeAttributes.Public | TypeAttributes.Sealed;
-                        if ((BaseType.Attributes & TypeAttributes.Serializable)
-                            == TypeAttributes.Serializable)
+                        if ((BaseType.Attributes() & TypeAttributes.Serializable) == TypeAttributes.Serializable)
                         {
                             proxyTypeAttributes |= TypeAttributes.Serializable;
                         }
@@ -781,13 +777,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
 
             private static readonly ConstructorInfo _nonSerializedAttributeConstructor =
-                typeof(NonSerializedAttribute).GetConstructor(Type.EmptyTypes);
+                typeof(NonSerializedAttribute).GetDeclaredConstructor();
 
             private static readonly ConstructorInfo _ignoreDataMemberAttributeConstructor =
-                typeof(IgnoreDataMemberAttribute).GetConstructor(Type.EmptyTypes);
+                typeof(IgnoreDataMemberAttribute).GetDeclaredConstructor();
 
             private static readonly ConstructorInfo _xmlIgnoreAttributeConstructor =
-                typeof(XmlIgnoreAttribute).GetConstructor(Type.EmptyTypes);
+                typeof(XmlIgnoreAttribute).GetDeclaredConstructor();
 
             private static readonly ConstructorInfo _scriptIgnoreAttributeConstructor =
                 TryGetScriptIgnoreAttributeConstructor();
@@ -801,7 +797,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                     var scriptIgnoreAttributeType = scriptIgnoreAttributeAssembly.GetType(ScriptIgnoreAttributeTypeName);
                     if (scriptIgnoreAttributeType != null)
                     {
-                        return scriptIgnoreAttributeType.GetConstructor(Type.EmptyTypes);
+                        return scriptIgnoreAttributeType.GetDeclaredConstructor();
                     }
                 }
                 catch (Exception)

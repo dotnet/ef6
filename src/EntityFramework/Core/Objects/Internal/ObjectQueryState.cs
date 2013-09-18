@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <summary>
         // Generic MethodInfo used in the non-generic CreateQuery
         // </summary>
-        internal static readonly MethodInfo CreateObjectQueryMethod = typeof(ObjectQueryState).GetDeclaredMethod("CreateObjectQuery");
+        internal static readonly MethodInfo CreateObjectQueryMethod = typeof(ObjectQueryState).GetOnlyDeclaredMethod("CreateObjectQuery");
 
         // <summary>
         // The context of the ObjectQuery

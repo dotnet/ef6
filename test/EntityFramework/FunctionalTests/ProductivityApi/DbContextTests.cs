@@ -16,6 +16,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.TestHelpers;
@@ -562,7 +563,7 @@ namespace ProductivityApiTests
         {
             var context = new SimpleModelContextWithNoData("InvalidKeywordConnectionString");
             Assert.Throws<ArgumentException>(() => GetObjectContext(context)).ValidateMessage(
-                typeof(DbConnection).Assembly, "ADP_KeywordNotSupported", null);
+                typeof(DbConnection).Assembly(), "ADP_KeywordNotSupported", null);
         }
 
         [Fact]

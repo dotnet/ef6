@@ -21,13 +21,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             new Memoizer<Type, Func<object, IEntityWrapper>>(CreateWrapperDelegate, null);
 
         internal static readonly MethodInfo CreateWrapperDelegateTypedLightweightMethod 
-            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedLightweight");
+            = typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("CreateWrapperDelegateTypedLightweight");
 
         internal static readonly MethodInfo CreateWrapperDelegateTypedWithRelationshipsMethod
-            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedWithRelationships");
+            = typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("CreateWrapperDelegateTypedWithRelationships");
 
         internal static readonly MethodInfo CreateWrapperDelegateTypedWithoutRelationshipsMethod
-            = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedWithoutRelationships");
+            = typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("CreateWrapperDelegateTypedWithoutRelationships");
 
         // <summary>
         // Called to create a new wrapper outside of the normal materialization process.

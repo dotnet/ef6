@@ -258,7 +258,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                     var underlyingType = Helper.AsPrimitive(member.TypeUsage.EdmType);
                     clrEnumType = Record.GetFieldType(RecordOrdinal);
                     clrType = underlyingType.ClrEquivalentType;
-                    Debug.Assert(clrEnumType.IsEnum);
+                    Debug.Assert(clrEnumType.IsEnum());
                 }
                 else
                 {

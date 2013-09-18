@@ -483,7 +483,7 @@ namespace System.Data.Entity
                 new DatabaseInitializerTracker<FakeForDisirbcsiwn, DropCreateDatabaseAlways<FakeForDisirbcsiwn>>(databaseExists: false);
 
             var mockContextType = tracker.Context.GetType();
-            var initMethod = typeof(Database).GetDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
+            var initMethod = typeof(Database).GetOnlyDeclaredMethod("SetInitializer").MakeGenericMethod(mockContextType);
             initMethod.Invoke(null, new object[] { null });
 
             tracker.Context.Database.Initialize(force: true);

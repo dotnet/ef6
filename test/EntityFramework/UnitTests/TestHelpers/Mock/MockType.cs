@@ -24,8 +24,6 @@ namespace System.Data.Entity
         {
             SetupGet(t => t.Name).Returns(typeName);
             SetupGet(t => t.FullName).Returns(typeName);
-            SetupGet(t => t.BaseType).Returns(typeof(Object));
-            SetupGet(t => t.Assembly).Returns(typeof(object).Assembly);
             Setup(t => t.Equals(It.IsAny<object>())).Returns<Type>(t => ReferenceEquals(Object, t));
             Setup(t => t.ToString()).Returns(typeName);
             Setup(t => t.Namespace).Returns(@namespace);
@@ -51,14 +49,6 @@ namespace System.Data.Entity
             this.Protected()
                 .Setup<TypeAttributes>("GetAttributeFlagsImpl")
                 .Returns(typeAttributes);
-
-            return this;
-        }
-
-        public MockType BaseType(MockType mockBaseType)
-        {
-            SetupGet(t => t.BaseType).Returns(mockBaseType);
-            Setup(t => t.IsSubclassOf(mockBaseType)).Returns(true);
 
             return this;
         }

@@ -13,10 +13,10 @@ namespace System.Data.Entity.Utilities
         public void GetAccessibleTypes_returns_all_types_in_an_assembly_that_can_be_loaded_in_partial_trust()
         {
             // Verify that GetTypes causes a loader exception
-            Assert.Throws<ReflectionTypeLoadException>(() => typeof(PartialTrustAssemblyExtensionsTests).Assembly.GetTypes());
+            Assert.Throws<ReflectionTypeLoadException>(() => typeof(PartialTrustAssemblyExtensionsTests).Assembly().GetTypes());
 
             // Verify that GetAccessibleTypes handles this
-            var types = typeof(PartialTrustAssemblyExtensionsTests).Assembly.GetAccessibleTypes();
+            var types = typeof(PartialTrustAssemblyExtensionsTests).Assembly().GetAccessibleTypes();
             Assert.Contains(typeof(AssemblyExtensionsTests), types);
             Assert.False(types.Any(t => t == null));
         }

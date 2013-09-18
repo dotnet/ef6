@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         [Fact]
         public void DefaultTranslator_suggests_different_VB_method_signature_when_unsupported_method_is_use()
         {
-            var unsupportedMid = typeof(Microsoft.VisualBasic.Strings).GetDeclaredMethod("Mid", new[] { typeof(string), typeof(int) });
+            var unsupportedMid = typeof(Microsoft.VisualBasic.Strings).GetDeclaredMethod("Mid", typeof(string), typeof(int));
             var transalter = new ExpressionConverter.MethodCallTranslator.DefaultTranslator();
             var callExpression = Expression.Call(unsupportedMid, Expression.Constant("A"), Expression.Constant(1));
 
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         [Fact]
         public void DefaultTranslator_generates_normal_error_message_with_non_special_methods()
         {
-            var supportedMid = typeof(Microsoft.VisualBasic.Strings).GetDeclaredMethod("Mid", new[] { typeof(string), typeof(int), typeof(int) });
+            var supportedMid = typeof(Microsoft.VisualBasic.Strings).GetDeclaredMethod("Mid", typeof(string), typeof(int), typeof(int));
             var transalter = new ExpressionConverter.MethodCallTranslator.DefaultTranslator();
             var callExpression = Expression.Call(supportedMid, Expression.Constant("A"), Expression.Constant(1), Expression.Constant(1));
 
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void VBCanonicalFunctionDefaultTranslator_finds_all_expected_methods()
         {
             var methods = new ExpressionConverter.MethodCallTranslator.VBCanonicalFunctionDefaultTranslator(
-                typeof(Microsoft.VisualBasic.Strings).Assembly).Methods;
+                typeof(Microsoft.VisualBasic.Strings).Assembly()).Methods;
 
             Assert.Equal(11, methods.Count());
             Assert.True(methods.All(m => m != null));
@@ -225,7 +225,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void VBCanonicalFunctionRenameTranslator_finds_all_expected_methods()
         {
             var methods = new ExpressionConverter.MethodCallTranslator.VBCanonicalFunctionRenameTranslator(
-                typeof(Microsoft.VisualBasic.Strings).Assembly).Methods;
+                typeof(Microsoft.VisualBasic.Strings).Assembly()).Methods;
 
             Assert.Equal(4, methods.Count());
             Assert.True(methods.All(m => m != null));
@@ -235,7 +235,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void VBDatePartTranslator_finds_all_expected_methods()
         {
             var methods = new ExpressionConverter.MethodCallTranslator.VBDatePartTranslator(
-                typeof(Microsoft.VisualBasic.Strings).Assembly).Methods;
+                typeof(Microsoft.VisualBasic.Strings).Assembly()).Methods;
 
             Assert.Equal(1, methods.Count());
             Assert.True(methods.All(m => m != null));
@@ -263,7 +263,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         public void VBDateAndTimeNowTranslator_finds_all_expected_properties()
         {
             var properties = new ExpressionConverter.MemberAccessTranslator.VBDateAndTimeNowTranslator(
-                typeof(Microsoft.VisualBasic.DateAndTime).Assembly).Properties;
+                typeof(Microsoft.VisualBasic.DateAndTime).Assembly()).Properties;
 
             Assert.Equal(1, properties.Count());
             Assert.True(properties.All(p => p != null));

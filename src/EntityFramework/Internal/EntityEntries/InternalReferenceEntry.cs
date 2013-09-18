@@ -25,7 +25,7 @@ namespace System.Data.Entity.Internal
             new ConcurrentDictionary<Type, Action<IRelatedEnd, object>>();
 
         public static readonly MethodInfo SetValueOnEntityReferenceMethod
-            = typeof(InternalReferenceEntry).GetDeclaredMethod("SetValueOnEntityReference");
+            = typeof(InternalReferenceEntry).GetOnlyDeclaredMethod("SetValueOnEntityReference");
 
         // <summary>
         // Initializes a new instance of the <see cref="InternalReferenceEntry" /> class.

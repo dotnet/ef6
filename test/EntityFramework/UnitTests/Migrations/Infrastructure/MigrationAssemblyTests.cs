@@ -4,6 +4,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 {
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Model;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -191,76 +192,121 @@ namespace System.Data.Entity.Migrations.Infrastructure
         }
 
         [Fact]
+        public void MigrationIds_should_return_valid_migration()
+        {
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration1)), typeof(AMigration1).Namespace);
+
+            Assert.Equal(1, migrationAssembly.MigrationIds.Count());
+        }
+
+        public class AMigration1 : DbMigration, IMigrationMetadata
+        {
+            public override void Up()
+            {
+            }
+
+            public string Id { get { return "201108162311111_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
+        }
+
+        [Fact]
         public void MigrationIds_should_not_return_migration_when_not_subclass_of_db_migration()
         {
-            var mockType = new MockType("20110816231110_Migration", @namespace: "Migrations");
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration2)), typeof(AMigration2).Namespace);
 
             Assert.False(migrationAssembly.MigrationIds.Any());
+        }
+
+        public class AMigration2 : IMigrationMetadata
+        {
+            public void Up()
+            {
+            }
+
+            public string Id { get { return "201108162311111_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
         }
 
         [Fact]
         public void MigrationIds_should_not_return_migration_when_name_does_not_match_pattern()
         {
-            var mockType = new MockType("Z0110816231110_Migration", @namespace: "Migrations");
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration3)), typeof(AMigration3).Namespace);
 
             Assert.False(migrationAssembly.MigrationIds.Any());
+        }
+
+        public class AMigration3 : DbMigration, IMigrationMetadata
+        {
+            public override void Up()
+            {
+            }
+
+            public string Id { get { return "Z0110816231110_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
         }
 
         [Fact]
         public void MigrationIds_should_not_return_migration_when_no_default_ctor()
         {
-            var mockType = new MockType("20110816231110_Migration", hasDefaultCtor: false, @namespace: "Migrations");
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration4)), typeof(AMigration4).Namespace);
 
             Assert.False(migrationAssembly.MigrationIds.Any());
+        }
+
+        public class AMigration4 : DbMigration, IMigrationMetadata
+        {
+            public AMigration4(string _)
+            {
+            }
+
+            public override void Up()
+            {
+            }
+
+            public string Id { get { return "20110816231110_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
         }
 
         [Fact]
         public void MigrationIds_should_not_return_migration_when_abstract()
         {
-            var mockType
-                = new MockType("20110816231110_Migration", @namespace: "Migrations")
-                    .TypeAttributes(TypeAttributes.Abstract);
-
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration5)), typeof(AMigration5).Namespace);
 
             Assert.False(migrationAssembly.MigrationIds.Any());
         }
 
-        [Fact]
-        public void MigrationIds_should_not_return_migration_when_nested()
+        public abstract class AMigration5 : DbMigration, IMigrationMetadata
         {
-            var mockType = new MockType("20110816231110_Migration", @namespace: "Migrations");
-            mockType.SetupGet(t => t.DeclaringType).Returns(typeof(object));
+            public override void Up()
+            {
+            }
 
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
-
-            Assert.False(migrationAssembly.MigrationIds.Any());
+            public string Id { get { return "20110816231110_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
         }
 
         [Fact]
         public void MigrationIds_should_not_return_migration_when_generic()
         {
-            var mockType = new MockType("20110816231110_Migration", @namespace: "Migrations");
-            mockType.SetupGet(t => t.IsGenericType).Returns(true);
-
-            var mockAssembly = new MockAssembly(mockType);
-
-            var migrationAssembly = new MigrationAssembly(mockAssembly, mockType.Object.Namespace);
+            var migrationAssembly = new MigrationAssembly(new MockAssembly(typeof(AMigration6<>)), typeof(AMigration6<>).Namespace);
 
             Assert.False(migrationAssembly.MigrationIds.Any());
+        }
+
+        public class AMigration6<T> : DbMigration, IMigrationMetadata
+        {
+            public override void Up()
+            {
+            }
+
+            public string Id { get { return "201108162311111_Migration"; } }
+            public string Source { get; private set; }
+            public string Target { get; private set; }
         }
     }
 }

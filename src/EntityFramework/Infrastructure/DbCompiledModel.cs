@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure
 {
     using System.Collections.Concurrent;
+    using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
@@ -125,8 +126,7 @@ namespace System.Data.Entity.Infrastructure
             where TContext : ObjectContext
         {
             // Optimize for case where just ObjectContext (non-derived) is asked for.
-            if (typeof(TContext)
-                == typeof(ObjectContext))
+            if (typeof(TContext) == typeof(ObjectContext))
             {
                 return _objectContextConstructor;
             }
@@ -134,8 +134,20 @@ namespace System.Data.Entity.Infrastructure
             Func<EntityConnection, ObjectContext> constructorDelegate;
             if (!_contextConstructors.TryGetValue(typeof(TContext), out constructorDelegate))
             {
-                var constructor = typeof(TContext).GetConstructor(
-                    BindingFlags.Instance | BindingFlags.Public, null, new[] { typeof(EntityConnection) }, null);
+                // This is a reasonable non-ambiguous ordering of constructor lookups to preserve
+                // everything that worked with the older Reflection APIs. Some classes that previously
+                // would not have worked due to ambiguous constructor matches will now work since this
+                // is less error-prone than attempting to re-implement the .NET best matching algorithm.
+                var constructor = typeof(TContext).GetDeclaredConstructor(
+                    c => c.IsPublic,
+                    new[] { typeof(EntityConnection) },
+                    new[] { typeof(DbConnection) },
+                    new[] { typeof(IDbConnection) },
+                    new[] { typeof(IDisposable) },
+                    new[] { typeof(Component) },
+                    new[] { typeof(MarshalByRefObject) },
+                    new[] { typeof(object) });
+
                 if (constructor == null)
                 {
                     throw Error.DbModelBuilder_MissingRequiredCtor(typeof(TContext).Name);
@@ -145,7 +157,7 @@ namespace System.Data.Entity.Infrastructure
                 constructorDelegate =
                     Expression.Lambda<Func<EntityConnection, ObjectContext>>(
                         Expression.New(constructor, connectionParam), connectionParam).
-                               Compile();
+                        Compile();
 
                 _contextConstructors.TryAdd(typeof(TContext), constructorDelegate);
             }

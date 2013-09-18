@@ -16,7 +16,7 @@ namespace System.Data.Entity.Meta
         [Fact]
         public void All_functional_tests_implement_TestBase()
         {
-            var currentAssembly = Assembly.GetExecutingAssembly();
+            var currentAssembly = typeof(MetaTests).Assembly();
             var types = currentAssembly.GetTypes();
 
             foreach (var type in types)
@@ -54,7 +54,7 @@ namespace System.Data.Entity.Meta
         /// <returns> True if the type implements TestBase, false otherwise. </returns>
         private bool DoesTypeImplementTestBase(Type type)
         {           
-            var baseType = type.BaseType;
+            var baseType = type.BaseType();
 
             while (baseType != null)
             {
@@ -62,7 +62,7 @@ namespace System.Data.Entity.Meta
                 {
                     return true;
                 }
-                baseType = baseType.BaseType;
+                baseType = baseType.BaseType();
             }            
             return false;
         }

@@ -141,11 +141,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             DebugCheck.NotNull(workspace);
 
             // we require a default constructor
-            var constructor = type.GetConstructor(
-                BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance,
-                null, Type.EmptyTypes, null);
-            if (type.IsAbstract
-                || (null == constructor && !type.IsValueType))
+            var constructor = type.GetDeclaredConstructor();
+            if (type.IsAbstract()
+                || (null == constructor && !type.IsValueType()))
             {
                 throw new InvalidOperationException(Strings.ObjectContext_InvalidTypeForStoreQuery(type));
             }
@@ -157,7 +155,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             {
                 // for enums unwrap the type if nullable
                 var propertyUnderlyingType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-                var propType = propertyUnderlyingType.IsEnum ? propertyUnderlyingType.GetEnumUnderlyingType() : prop.PropertyType;
+                var propType = propertyUnderlyingType.IsEnum() ? propertyUnderlyingType.GetEnumUnderlyingType() : prop.PropertyType;
 
                 EdmType modelType;
                 int ordinal;

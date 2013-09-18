@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                 //     propertyValue is the value returned from the proxied type's property getter.
 
                 var interceptorType = typeof(Func<,,>).MakeGenericType(typeBuilder, baseProperty.PropertyType, typeof(bool));
-                var interceptorInvoke = TypeBuilder.GetMethod(interceptorType, typeof(Func<,,>).GetDeclaredMethod("Invoke"));
+                var interceptorInvoke = TypeBuilder.GetMethod(interceptorType, typeof(Func<,,>).GetOnlyDeclaredMethod("Invoke"));
                 var interceptorField = typeBuilder.DefineField(
                     GetInterceptorFieldName(baseProperty.Name), interceptorType, FieldAttributes.Private | FieldAttributes.Static);
 

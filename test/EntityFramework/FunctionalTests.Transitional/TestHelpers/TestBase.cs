@@ -13,6 +13,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.IO;
     using System.Reflection;
@@ -126,7 +127,7 @@ namespace System.Data.Entity
         /// </summary>
         public static Assembly EntityFrameworkAssembly
         {
-            get { return typeof(DbModelBuilder).Assembly; }
+            get { return typeof(DbModelBuilder).Assembly(); }
         }
 
         /// <summary>
@@ -134,7 +135,7 @@ namespace System.Data.Entity
         /// </summary>
         public static Assembly SystemComponentModelDataAnnotationsAssembly
         {
-            get { return typeof(ValidationAttribute).Assembly; }
+            get { return typeof(ValidationAttribute).Assembly(); }
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace System.Data.Entity
         /// </summary>
         public static Assembly EntityFrameworkSqlServerAssembly
         {
-            get { return typeof(SqlProviderServices).Assembly; }
+            get { return typeof(SqlProviderServices).Assembly(); }
         }
 
         /// <summary>

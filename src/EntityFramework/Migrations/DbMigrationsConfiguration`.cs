@@ -25,7 +25,7 @@ namespace System.Data.Entity.Migrations
         public DbMigrationsConfiguration()
         {
             ContextType = typeof(TContext);
-            MigrationsAssembly = GetType().Assembly;
+            MigrationsAssembly = GetType().Assembly();
             MigrationsNamespace = GetType().Namespace;
         }
 

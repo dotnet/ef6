@@ -16,7 +16,7 @@ namespace System.Data.Entity.Migrations.Utilities
             var exception =
                 Assert.Throws<MigrationsException>(
                     () => new MigrationsConfigurationFinder(
-                              new TypeFinder(typeof(ContextWithBadConfig).Assembly))
+                              new TypeFinder(typeof(ContextWithBadConfig).Assembly()))
                               .FindMigrationsConfiguration(typeof(ContextWithBadConfig), null));
 
             Assert.Equal(Strings.DbMigrationsConfiguration_RootedPath(@"\Test"), exception.Message);

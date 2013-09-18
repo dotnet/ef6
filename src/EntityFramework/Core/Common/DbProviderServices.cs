@@ -517,8 +517,7 @@ namespace System.Data.Entity.Core.Common
         {
             DebugCheck.NotEmpty(resourceName);
 
-            var executingAssembly = Assembly.GetExecutingAssembly();
-            var stream = executingAssembly.GetManifestResourceStream(resourceName);
+            var stream = typeof(DbProviderServices).Assembly().GetManifestResourceStream(resourceName);
 
             if (stream == null)
             {

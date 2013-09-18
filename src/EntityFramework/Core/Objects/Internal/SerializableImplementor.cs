@@ -24,18 +24,18 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly ConstructorInfo _serializationConstructor;
 
         internal static readonly MethodInfo GetTypeFromHandleMethod 
-            = typeof(Type).GetDeclaredMethod("GetTypeFromHandle", new[] { typeof(RuntimeTypeHandle) });
+            = typeof(Type).GetDeclaredMethod("GetTypeFromHandle", typeof(RuntimeTypeHandle));
         
         internal static readonly MethodInfo AddValueMethod 
-            = typeof(SerializationInfo).GetDeclaredMethod("AddValue", new[] { typeof(string), typeof(object), typeof(Type) });
+            = typeof(SerializationInfo).GetDeclaredMethod("AddValue", typeof(string), typeof(object), typeof(Type));
         
         internal static readonly MethodInfo GetValueMethod 
-            = typeof(SerializationInfo).GetDeclaredMethod("GetValue", new[] { typeof(string), typeof(Type) });
+            = typeof(SerializationInfo).GetDeclaredMethod("GetValue", typeof(string), typeof(Type));
 
         internal SerializableImplementor(EntityType ospaceEntityType)
         {
             _baseClrType = ospaceEntityType.ClrType;
-            _baseImplementsISerializable = _baseClrType.IsSerializable && typeof(ISerializable).IsAssignableFrom(_baseClrType);
+            _baseImplementsISerializable = _baseClrType.IsSerializable() && typeof(ISerializable).IsAssignableFrom(_baseClrType);
 
             if (_baseImplementsISerializable)
             {
@@ -52,14 +52,14 @@ namespace System.Data.Entity.Core.Objects.Internal
                     // Determine if proxied type provides the special serialization constructor.
                     // In order for the proxy class to properly support ISerializable, this constructor must not be private.
                     _serializationConstructor =
-                        _baseClrType.GetConstructor(
-                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
-                            new[] { typeof(SerializationInfo), typeof(StreamingContext) }, null);
+                        _baseClrType.GetDeclaredConstructor(
+                            c => c.IsPublic || c.IsFamily || c.IsFamilyOrAssembly,
+                            new[] { typeof(SerializationInfo), typeof(StreamingContext) },
+                            new[] { typeof(SerializationInfo), typeof(object) },
+                            new[] { typeof(object), typeof(StreamingContext) },
+                            new[] { typeof(object), typeof(object) });
 
-                    _canOverride = _serializationConstructor != null
-                                   &&
-                                   (_serializationConstructor.IsPublic || _serializationConstructor.IsFamily
-                                    || _serializationConstructor.IsFamilyOrAssembly);
+                    _canOverride = _serializationConstructor != null;
                 }
 
                 Debug.Assert(
@@ -104,7 +104,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 
                 proxyGetObjectData.SetCustomAttribute(
                     new CustomAttributeBuilder(
-                        typeof(SecurityCriticalAttribute).GetConstructor(Type.EmptyTypes), new object[0]));
+                        typeof(SecurityCriticalAttribute).GetDeclaredConstructor(), new object[0]));
 
                 {
                     var generator = proxyGetObjectData.GetILGenerator();

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Update
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.TestModels.GearsOfWarModel;
@@ -151,7 +152,7 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(hammerOfDawn);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly, "Update_ConstraintCycle", null);
+                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
@@ -223,7 +224,7 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(snub);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly, "Update_ConstraintCycle", null);
+                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
@@ -270,7 +271,7 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(snub);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly, "Update_ConstraintCycle", null);
+                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
@@ -413,7 +414,7 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(secretWeapon);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly, "Update_NullValue", null, "Specs");
+                      .ValidateMessage(typeof(DbContext).Assembly(), "Update_NullValue", null, "Specs");
             }
         }
 
@@ -434,7 +435,7 @@ namespace System.Data.Entity.Update
                 tag.Id = Guid.NewGuid();
 
                 Assert.Throws<InvalidOperationException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly, "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
+                      .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
             }
         }
 
@@ -455,7 +456,7 @@ namespace System.Data.Entity.Update
                 squad.Id = 20;
 
                 Assert.Throws<InvalidOperationException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly, "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
+                      .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
             }
         }
 
@@ -478,7 +479,7 @@ namespace System.Data.Entity.Update
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
                       .InnerException.InnerException.ValidateMessage(
-                          typeof(DbContext).Assembly,
+                          typeof(DbContext).Assembly(),
                           "Update_ModifyingIdentityColumn",
                           null,
                           "Identity",
@@ -503,7 +504,7 @@ namespace System.Data.Entity.Update
 
                     gnasher2.Name = "Sawed-off";
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -531,7 +532,7 @@ namespace System.Data.Entity.Update
 
                     context2.Weapons.Remove(troika2);
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -559,7 +560,7 @@ namespace System.Data.Entity.Update
 
                     troika2.Overheats = false;
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -580,7 +581,7 @@ namespace System.Data.Entity.Update
 
                     baird2.Rank = MilitaryRank.Private;
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -601,7 +602,7 @@ namespace System.Data.Entity.Update
 
                     context2.Gears.Remove(baird2);
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges()).InnerException
-                          .ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -626,7 +627,7 @@ namespace System.Data.Entity.Update
                     cole2.CityOfBirth = ephyra2;
 
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges())
-                          .InnerException.ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
@@ -650,7 +651,7 @@ namespace System.Data.Entity.Update
                     cole2.CityOfBirth = null;
 
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges())
-                          .InnerException.ValidateMessage(typeof(DbContext).Assembly, "Update_ConcurrencyError", null);
+                          .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }

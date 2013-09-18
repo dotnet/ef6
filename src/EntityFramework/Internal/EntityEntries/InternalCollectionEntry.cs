@@ -148,7 +148,7 @@ namespace System.Data.Entity.Internal
                         typeof(ICollection<>).MakeGenericType(elementType));
                 }
 
-                var factoryMethod = genericType.GetDeclaredMethod("Create", new[] { typeof(InternalCollectionEntry) });
+                var factoryMethod = genericType.GetDeclaredMethod("Create", typeof(InternalCollectionEntry));
                 factory =
                     (Func<InternalCollectionEntry, object>)
                     Delegate.CreateDelegate(typeof(Func<InternalCollectionEntry, object>), factoryMethod);

@@ -160,13 +160,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     return true;
                 }
                 // check if this is the visual basic assembly
-                if (s_visualBasicAssemblyFullName == methodInfo.DeclaringType.Assembly.FullName)
+                if (s_visualBasicAssemblyFullName == methodInfo.DeclaringType.Assembly().FullName)
                 {
                     lock (_vbInitializerLock)
                     {
                         if (!s_vbMethodsInitialized)
                         {
-                            InitializeVBMethods(methodInfo.DeclaringType.Assembly);
+                            InitializeVBMethods(methodInfo.DeclaringType.Assembly());
                             s_vbMethodsInitialized = true;
                         }
                         // try again
@@ -360,7 +360,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var declaringType = method.DeclaringType;
                     return ((method.IsPublic || (method.IsAssembly && (method.Name == "MergeAs" || method.Name == "IncludeSpan"))) &&
                             null != declaringType &&
-                            declaringType.IsGenericType &&
+                            declaringType.IsGenericType() &&
                             typeof(ObjectQuery<>) == declaringType.GetGenericTypeDefinition());
                 }
 
@@ -372,13 +372,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     {
                         var convertExpression = (UnaryExpression)queryExpression;
                         var argumentType = convertExpression.Operand.Type;
-                        if (argumentType.IsGenericType
+                        if (argumentType.IsGenericType()
                             &&
                             (typeof(IQueryable<>) == argumentType.GetGenericTypeDefinition()
                              || typeof(IOrderedQueryable<>) == argumentType.GetGenericTypeDefinition()))
                         {
                             Debug.Assert(
-                                convertExpression.Type.IsGenericType
+                                convertExpression.Type.IsGenericType()
                                 && typeof(ObjectQuery<>) == convertExpression.Type.GetGenericTypeDefinition(),
                                 "MethodCall with internal MergeAs/IncludeSpan method was not constructed by LINQ to Entities?");
                             queryExpression = convertExpression.Operand;
@@ -601,7 +601,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal override CqtExpression Translate(ExpressionConverter parent, MethodCallExpression call)
                 {
                     var unsupportedMethod = call.Method;
-                    if (unsupportedMethod.DeclaringType.Assembly.FullName == s_visualBasicAssemblyFullName
+                    if (unsupportedMethod.DeclaringType.Assembly().FullName == s_visualBasicAssemblyFullName
                         && unsupportedMethod.Name == "Mid"
                         && new[] { typeof(string), typeof(int) }.SequenceEqual(unsupportedMethod.GetParameters().Select(p => p.ParameterType)))
                     {
@@ -751,7 +751,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                         case BuiltInTypeKind.CollectionType:
                             {
                                 //Verify if this is a collection type (if so, recursively resolve)
-                                if (!clrReturnType.IsGenericType)
+                                if (!clrReturnType.IsGenericType())
                                 {
                                     throw new NotSupportedException(
                                         Strings.ELinq_DbFunctionAttributedFunctionWithWrongReturnType(
@@ -839,30 +839,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var result = new List<MethodInfo>
                         {
                             //Math functions
-                            typeof(Math).GetDeclaredMethod("Ceiling", new[] { typeof(decimal) }),
-                            typeof(Math).GetDeclaredMethod("Ceiling", new[] { typeof(double) }),
-                            typeof(Math).GetDeclaredMethod("Floor", new[] { typeof(decimal) }),
-                            typeof(Math).GetDeclaredMethod("Floor", new[] { typeof(double) }),
-                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(decimal) }),
-                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(double) }),
-                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(decimal), typeof(int) }),
-                            typeof(Math).GetDeclaredMethod("Round", new[] { typeof(double), typeof(int) }),
+                            typeof(Math).GetDeclaredMethod("Ceiling", typeof(decimal)),
+                            typeof(Math).GetDeclaredMethod("Ceiling", typeof(double)),
+                            typeof(Math).GetDeclaredMethod("Floor", typeof(decimal)),
+                            typeof(Math).GetDeclaredMethod("Floor", typeof(double)),
+                            typeof(Math).GetDeclaredMethod("Round", typeof(decimal)),
+                            typeof(Math).GetDeclaredMethod("Round", typeof(double)),
+                            typeof(Math).GetDeclaredMethod("Round", typeof(decimal), typeof(int)),
+                            typeof(Math).GetDeclaredMethod("Round", typeof(double), typeof(int)),
                             //Decimal functions
-                            typeof(Decimal).GetDeclaredMethod("Floor", new[] { typeof(decimal) }),
-                            typeof(Decimal).GetDeclaredMethod("Ceiling", new[] { typeof(decimal) }),
-                            typeof(Decimal).GetDeclaredMethod("Round", new[] { typeof(decimal) }),
-                            typeof(Decimal).GetDeclaredMethod("Round", new[] { typeof(decimal), typeof(int) }),
+                            typeof(Decimal).GetDeclaredMethod("Floor", typeof(decimal)),
+                            typeof(Decimal).GetDeclaredMethod("Ceiling", typeof(decimal)),
+                            typeof(Decimal).GetDeclaredMethod("Round", typeof(decimal)),
+                            typeof(Decimal).GetDeclaredMethod("Round", typeof(decimal), typeof(int)),
                             //String functions
-                            typeof(String).GetDeclaredMethod("Replace", new[] { typeof(String), typeof(String) }),
-                            typeof(String).GetDeclaredMethod("ToLower", new Type[0]),
-                            typeof(String).GetDeclaredMethod("ToUpper", new Type[0]),
-                            typeof(String).GetDeclaredMethod("Trim", new Type[0]),
+                            typeof(String).GetDeclaredMethod("Replace", typeof(String), typeof(String)),
+                            typeof(String).GetDeclaredMethod("ToLower"),
+                            typeof(String).GetDeclaredMethod("ToUpper"),
+                            typeof(String).GetDeclaredMethod("Trim"),
                         };
 
                     // Math.Abs
                     result.AddRange(
                         new[] { typeof(decimal), typeof(double), typeof(float), typeof(int), typeof(long), typeof(sbyte), typeof(short) }
-                            .Select(a => typeof(Math).GetDeclaredMethod("Abs", new[] { a })));
+                            .Select(a => typeof(Math).GetDeclaredMethod("Abs", a)));
 
                     return result;
                 }
@@ -942,10 +942,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(DbFunctions).GetDeclaredMethod(AsUnicode, new[] { typeof(string) });
+                        typeof(DbFunctions).GetDeclaredMethod(AsUnicode, typeof(string));
                     yield return
 #pragma warning disable 612,618
-                        typeof(EntityFunctions).GetDeclaredMethod(AsUnicode, new[] { typeof(string) });
+                        typeof(EntityFunctions).GetDeclaredMethod(AsUnicode, typeof(string));
 #pragma warning restore 612,618
                 }
             }
@@ -960,10 +960,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(DbFunctions).GetDeclaredMethod(AsNonUnicode, new[] { typeof(string) });
+                        typeof(DbFunctions).GetDeclaredMethod(AsNonUnicode, typeof(string));
                     yield return
 #pragma warning disable 612,618
-                        typeof(EntityFunctions).GetDeclaredMethod(AsNonUnicode, new[] { typeof(string) });
+                        typeof(EntityFunctions).GetDeclaredMethod(AsNonUnicode, typeof(string));
 #pragma warning restore 612,618
                 }
             }
@@ -975,8 +975,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal MathTruncateTranslator()
                     : base(new[]
                         {
-                            typeof(Math).GetDeclaredMethod("Truncate", new[] { typeof(decimal) }),
-                            typeof(Math).GetDeclaredMethod("Truncate", new[] { typeof(double) })
+                            typeof(Math).GetDeclaredMethod("Truncate", typeof(decimal)),
+                            typeof(Math).GetDeclaredMethod("Truncate", typeof(double))
                         })
                 {
                 }
@@ -998,7 +998,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal MathPowerTranslator()
                     : base(new[]
                         {
-                            typeof(Math).GetDeclaredMethod("Pow", new[] { typeof(double), typeof(double) })
+                            typeof(Math).GetDeclaredMethod("Pow", typeof(double), typeof(double))
                         })
                 {
                 }
@@ -1020,7 +1020,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 internal GuidNewGuidTranslator()
                     : base(new[]
                         {
-                            typeof(Guid).GetDeclaredMethod("NewGuid", Type.EmptyTypes)
+                            typeof(Guid).GetDeclaredMethod("NewGuid")
                             ,
                         })
                 {
@@ -1046,7 +1046,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Contains", new[] { typeof(string) });
+                        typeof(String).GetDeclaredMethod("Contains", typeof(string));
                 }
 
                 // Translation:
@@ -1081,7 +1081,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("IndexOf", new[] { typeof(string) });
+                        typeof(String).GetDeclaredMethod("IndexOf", typeof(string));
                 }
 
                 // Translation:
@@ -1107,7 +1107,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("StartsWith", new[] { typeof(string) });
+                        typeof(String).GetDeclaredMethod("StartsWith", typeof(string));
                 }
 
                 // Translation:
@@ -1142,7 +1142,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("EndsWith", new[] { typeof(string) });
+                        typeof(String).GetDeclaredMethod("EndsWith", typeof(string));
                 }
 
                 // Translation:
@@ -1181,9 +1181,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Substring", new[] { typeof(int) });
+                        typeof(String).GetDeclaredMethod("Substring", typeof(int));
                     yield return
-                        typeof(String).GetDeclaredMethod("Substring", new[] { typeof(int), typeof(int) });
+                        typeof(String).GetDeclaredMethod("Substring", typeof(int), typeof(int));
                 }
 
                 // Translation:
@@ -1225,9 +1225,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Remove", new[] { typeof(int) });
+                        typeof(String).GetDeclaredMethod("Remove", typeof(int));
                     yield return
-                        typeof(String).GetDeclaredMethod("Remove", new[] { typeof(int), typeof(int) });
+                        typeof(String).GetDeclaredMethod("Remove", typeof(int), typeof(int));
                 }
 
                 // Translation:
@@ -1316,7 +1316,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Insert", new[] { typeof(int), typeof(string) });
+                        typeof(String).GetDeclaredMethod("Insert", typeof(int), typeof(string));
                 }
 
                 // Translation:
@@ -1367,7 +1367,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("IsNullOrEmpty", new[] { typeof(string) });
+                        typeof(String).GetDeclaredMethod("IsNullOrEmpty", typeof(string));
                 }
 
                 // Translation:
@@ -1400,11 +1400,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string) });
+                        typeof(String).GetDeclaredMethod("Concat", typeof(string), typeof(string));
                     yield return
-                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string), typeof(string) });
+                        typeof(String).GetDeclaredMethod("Concat", typeof(string), typeof(string), typeof(string));
                     yield return
-                        typeof(String).GetDeclaredMethod("Concat", new[] { typeof(string), typeof(string), typeof(string), typeof(string) });
+                        typeof(String).GetDeclaredMethod("Concat", typeof(string), typeof(string), typeof(string), typeof(string));
                 }
 
                 // Translation:
@@ -1488,7 +1488,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("Trim", new[] { typeof(Char[]) });
+                        typeof(String).GetDeclaredMethod("Trim", typeof(Char[]));
                 }
             }
 
@@ -1502,7 +1502,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("TrimStart", new[] { typeof(Char[]) });
+                        typeof(String).GetDeclaredMethod("TrimStart", typeof(Char[]));
                 }
             }
 
@@ -1516,7 +1516,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 private static IEnumerable<MethodInfo> GetMethods()
                 {
                     yield return
-                        typeof(String).GetDeclaredMethod("TrimEnd", new[] { typeof(Char[]) });
+                        typeof(String).GetDeclaredMethod("TrimEnd", typeof(Char[]));
                 }
             }
 
@@ -1539,30 +1539,30 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     //Strings Types 
                     var stringsType = vbAssembly.GetType(s_stringsTypeFullName);
                     yield return
-                        stringsType.GetDeclaredMethod("Trim", new[] { typeof(string) });
+                        stringsType.GetDeclaredMethod("Trim", typeof(string));
                     yield return
-                        stringsType.GetDeclaredMethod("LTrim", new[] { typeof(string) });
+                        stringsType.GetDeclaredMethod("LTrim", typeof(string));
                     yield return
-                        stringsType.GetDeclaredMethod("RTrim", new[] { typeof(string) });
+                        stringsType.GetDeclaredMethod("RTrim", typeof(string));
                     yield return
-                        stringsType.GetDeclaredMethod("Left", new[] { typeof(string), typeof(int) });
+                        stringsType.GetDeclaredMethod("Left", typeof(string), typeof(int));
                     yield return
-                        stringsType.GetDeclaredMethod("Right", new[] { typeof(string), typeof(int) });
+                        stringsType.GetDeclaredMethod("Right", typeof(string), typeof(int));
 
                     //DateTimeType
                     var dateTimeType = vbAssembly.GetType(s_dateAndTimeTypeFullName);
                     yield return
-                        dateTimeType.GetDeclaredMethod("Year", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Year", typeof(DateTime));
                     yield return
-                        dateTimeType.GetDeclaredMethod("Month", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Month", typeof(DateTime));
                     yield return
-                        dateTimeType.GetDeclaredMethod("Day", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Day", typeof(DateTime));
                     yield return
-                        dateTimeType.GetDeclaredMethod("Hour", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Hour", typeof(DateTime));
                     yield return
-                        dateTimeType.GetDeclaredMethod("Minute", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Minute", typeof(DateTime));
                     yield return
-                        dateTimeType.GetDeclaredMethod("Second", new[] { typeof(DateTime) });
+                        dateTimeType.GetDeclaredMethod("Second", typeof(DateTime));
                 }
 
                 // Default translator for vb static method calls into canonical functions.
@@ -1642,7 +1642,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     var firstWeekOfYearEnum = vbAssembly.GetType(s_FirstWeekOfYearFullName);
 
                     yield return dateAndTimeType.GetDeclaredMethod(
-                        "DatePart", new[] { dateIntervalEnum, typeof(DateTime), firstDayOfWeekEnum, firstWeekOfYearEnum });
+                        "DatePart", dateIntervalEnum, typeof(DateTime), firstDayOfWeekEnum, firstWeekOfYearEnum);
                 }
 
                 // Translation:

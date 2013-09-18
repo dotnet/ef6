@@ -5,6 +5,7 @@ namespace ProductivityApiTests
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Linq;
@@ -59,7 +60,7 @@ namespace ProductivityApiTests
         public virtual IQueryable<SupplierWithLocation> SuppliersWithinRange(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly);
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly());
 
             return objectContext.CreateQuery<SupplierWithLocation>(
                 "[SpatialNorthwindContext].[SuppliersWithinRange](@miles, @location)",
@@ -77,7 +78,7 @@ namespace ProductivityApiTests
         public virtual IQueryable<SupplierWithLocation> SuppliersWithinRangeUsingPoint(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly);
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly());
 
             return
                 objectContext.CreateQuery<SupplierWithLocation>(
@@ -90,7 +91,7 @@ namespace ProductivityApiTests
         public virtual IQueryable<DbGeography> SupplierLocationsWithinRange(int? miles, DbGeography location)
         {
             var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly);
+            objectContext.MetadataWorkspace.LoadFromAssembly(typeof(SupplierWithLocation).Assembly());
 
             return objectContext.CreateQuery<DbGeography>(
                 "[SpatialNorthwindContext].[SupplierLocationsWithinRange](@miles, @location)",

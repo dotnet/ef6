@@ -555,7 +555,7 @@ namespace System.Data.Entity.SqlServer
         {
             if (value != null
                 && value != DBNull.Value
-                && Type.GetTypeCode(value.GetType()) == TypeCode.Object)
+                && value.GetType().IsClass())
             {
                 // If the parameter is being created based on an actual value (typically for constants found in DML expressions) then a DbGeography/DbGeometry
                 // value must be replaced by an an appropriate Microsoft.SqlServer.Types.SqlGeography/SqlGeometry instance. Since the DbGeography/DbGeometry

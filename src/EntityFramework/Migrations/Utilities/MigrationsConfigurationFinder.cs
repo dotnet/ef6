@@ -44,9 +44,9 @@ namespace System.Data.Entity.Migrations.Utilities
                 configurationTypeName,
                 types => types
                              .Where(
-                                 t => t.GetConstructor(Type.EmptyTypes) != null
-                                      && !t.IsAbstract
-                                      && !t.IsGenericType)
+                                 t => t.GetPublicConstructor() != null
+                                      && !t.IsAbstract()
+                                      && !t.IsGenericType())
                              .ToList(),
                 noType,
                 multipleTypes,

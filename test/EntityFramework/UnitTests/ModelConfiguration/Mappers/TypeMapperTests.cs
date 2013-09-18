@@ -9,6 +9,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -41,10 +42,9 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var mockModelConfiguration = new Mock<ModelConfiguration>();
             var typeMapper = new TypeMapper(new MappingContext(mockModelConfiguration.Object, new ConventionsConfiguration(), model));
-            var mockType = new MockType("Foo");
-            mockModelConfiguration.Setup(m => m.IsIgnoredType(mockType)).Returns(true);
+            mockModelConfiguration.Setup(m => m.IsIgnoredType(typeof(AType1))).Returns(true);
 
-            var entityType = typeMapper.MapEntityType(mockType);
+            var entityType = typeMapper.MapEntityType(typeof(AType1));
 
             Assert.Null(entityType);
         }
@@ -119,7 +119,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            Assert.NotSame(typeof(AType9).Assembly, typeof(Product).Assembly);
+            Assert.NotSame(typeof(AType9).Assembly(), typeof(Product).Assembly());
 
             typeMapper.MapEntityType(typeof(CType9));
 
@@ -149,7 +149,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                 .Returns(new Mock<StructuralTypeConfiguration>().Object);
             var model = new EdmModel(DataSpace.CSpace);
 
-            Assert.NotSame(typeof(AType9).Assembly, typeof(Product).Assembly);
+            Assert.NotSame(typeof(AType9).Assembly(), typeof(Product).Assembly());
 
             mockModelConfiguration.SetupGet(m => m.ConfiguredTypes).Returns(new[] { typeof(AType9) });
 
@@ -185,22 +185,20 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void MapEntityType_should_throw_for_new_type_if_enum_type_with_same_simple_name_already_used()
         {
             var model = new EdmModel(DataSpace.CSpace);
-
-            var mockType1 = new MockType("Foo");
-            var mockType2 = new MockType("Foo");
-
-            mockType1.SetupGet(t => t.IsEnum).Returns(true);
-            mockType1.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
-            mockType1.Setup(t => t.GetEnumNames()).Returns(new string[] { });
-            mockType1.Setup(t => t.GetEnumValues()).Returns(new int[] { });
-
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));
 
-            Assert.NotNull(typeMapper.MapEnumType(mockType1));
+            Assert.NotNull(typeMapper.MapEnumType(typeof(AnEnum1)));
 
             Assert.Equal(
-                Strings.SimpleNameCollision("Foo", "Foo", "Foo"),
-                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(mockType2)).Message);
+                Strings.SimpleNameCollision(typeof(Outer7.AnEnum1).FullName, typeof(AnEnum1).FullName, "AnEnum1"),
+                Assert.Throws<NotSupportedException>(() => typeMapper.MapEntityType(typeof(Outer7.AnEnum1))).Message);
+        }
+
+        public class Outer7
+        {
+            public class AnEnum1
+            {
+            }
         }
 
         [Fact]
@@ -460,21 +458,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void MapEnumType_should_set_namespace_when_provided_via_model_configuration()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var mockType = new MockType("Foo");
-
-            mockType.SetupGet(t => t.IsEnum).Returns(true);
-            mockType.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
-            mockType.Setup(t => t.GetEnumNames()).Returns(new string[] { });
-            mockType.Setup(t => t.GetEnumValues()).Returns(new int[] { });
-
             var modelConfiguration = new ModelConfiguration
                                          {
                                              ModelNamespace = "Bar"
                                          };
-
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            var enumType = typeMapper.MapEnumType(mockType);
+            var enumType = typeMapper.MapEnumType(typeof(AnEnum1));
 
             Assert.NotNull(enumType);
             Assert.Equal("Bar", enumType.NamespaceName);
@@ -484,21 +474,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         public void MapEnumType_should_create_enum_type_with_clr_type_name_and_add_to_model()
         {
             var model = new EdmModel(DataSpace.CSpace);
-            var mockType = new MockType("Foo");
-
-            mockType.SetupGet(t => t.IsEnum).Returns(true);
-            mockType.Setup(t => t.GetEnumUnderlyingType()).Returns(typeof(int));
-            mockType.Setup(t => t.GetEnumNames()).Returns(new string[] { });
-            mockType.Setup(t => t.GetEnumValues()).Returns(new int[] { });
-
             var modelConfiguration = new ModelConfiguration();
-
             var typeMapper = new TypeMapper(new MappingContext(modelConfiguration, new ConventionsConfiguration(), model));
 
-            var enumType = typeMapper.MapEnumType(mockType);
+            var enumType = typeMapper.MapEnumType(typeof(AnEnum1));
 
             Assert.NotNull(enumType);
-            Assert.Same(enumType, model.GetEnumType("Foo"));
+            Assert.Same(enumType, model.GetEnumType("AnEnum1"));
+        }
+
+        public enum AnEnum1
+        {
         }
 
         [Fact]

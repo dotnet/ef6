@@ -5,6 +5,7 @@ namespace System.Data.Entity.MetadataMapping
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using System.Xml.Linq;
@@ -15,9 +16,7 @@ namespace System.Data.Entity.MetadataMapping
         private static XDocument EnumCsdl()
         {
             return XDocument.Load(
-                Assembly
-                    .GetExecutingAssembly()
-                    .GetManifestResourceStream("System.Data.Entity.MetadataMapping.Enum.csdl"));
+                typeof(EnumOCMappingTests).Assembly().GetManifestResourceStream("System.Data.Entity.MetadataMapping.Enum.csdl"));
         }
 
         #region convention loader (POCO)
@@ -869,7 +868,7 @@ namespace System.Data.Entity.MetadataMapping
             // assembly can actually be an AssemblyBuilder. The following line ensures that we are 
             // using the actual assembly otherwise an Assert in ObjectItemAttributeAssemblyLoader.LoadType
             // will fire.
-            assembly = assembly.GetTypes().First().Assembly;
+            assembly = assembly.GetTypes().First().Assembly();
             var objectItemCollection = new ObjectItemCollection();
 
             if (isPOCO)

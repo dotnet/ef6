@@ -147,7 +147,7 @@ namespace System.Data.Entity.Query
                 exceptionThrown = true;
                 var innermostException = GetInnerMostException(e);
                 Assert.IsType<TException>(innermostException);
-                innermostException.ValidateMessage(typeof(DbContext).Assembly, resourceKey, null, isExactMatch, exceptionMessageParameters);
+                innermostException.ValidateMessage(typeof(DbContext).Assembly(), resourceKey, null, isExactMatch, exceptionMessageParameters);
             }
 
             Assert.True(exceptionThrown, "No excepion has been thrown.");

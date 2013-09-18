@@ -10,7 +10,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Will_cascade_should_set_correct_delete_action()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new ForeignKeyNavigationPropertyConfiguration(associationConfiguration).WillCascadeOnDelete();
 
@@ -20,11 +20,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Will_cascade_false_should_set_correct_delete_action()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new ForeignKeyNavigationPropertyConfiguration(associationConfiguration).WillCascadeOnDelete(false);
 
             Assert.Equal(OperationAction.None, associationConfiguration.DeleteAction);
+        }
+
+        public class AType1
+        {
         }
     }
 }

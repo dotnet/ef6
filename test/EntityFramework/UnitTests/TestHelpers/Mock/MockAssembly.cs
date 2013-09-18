@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using Moq;
@@ -13,14 +14,13 @@ namespace System.Data.Entity
             return mockAssembly.Object;
         }
 
-        public MockAssembly(params MockType[] types)
+        public MockAssembly(params Type[] types)
         {
-            foreach (var type in types)
-            {
-                type.SetupGet(t => t.Assembly).Returns(Object);
-            }
-
-            Setup(a => a.GetTypes()).Returns(types.Select(m => m.Object).ToArray());
+#if NET40
+            Setup(a => a.GetTypes()).Returns(types.ToArray());
+#else
+            Setup(a => a.DefinedTypes).Returns(types.Select(m => m.GetTypeInfo()).ToArray());
+#endif
         }
 
         public class ShimAssembly : Assembly

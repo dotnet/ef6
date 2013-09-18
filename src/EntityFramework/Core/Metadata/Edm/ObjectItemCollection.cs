@@ -130,13 +130,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             var result = false;
 
-            if (!MetadataAssemblyHelper.ShouldFilterAssembly(type.Assembly))
+            if (!MetadataAssemblyHelper.ShouldFilterAssembly(type.Assembly()))
             {
                 // InternalLoadFromAssembly will check _knownAssemblies
-                result = LoadAssemblyFromCache(type.Assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, null);
+                result = LoadAssemblyFromCache(type.Assembly(), false /*loadAllReferencedAssemblies*/, edmItemCollection, null);
             }
 
-            if (type.IsGenericType)
+            if (type.IsGenericType())
             {
                 // recursively load all generic types
                 // interesting code paths are ObjectQuery<Nullable<Int32>>, ObjectQuery<IEnumerable<Product>>

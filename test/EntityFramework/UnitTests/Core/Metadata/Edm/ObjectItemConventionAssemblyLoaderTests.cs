@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using Xunit;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             [Fact]
             public void ReferenceResolutions_delegates_to_the_loader()
             {
-                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly, new ObjectItemLoadingSessionData());
+                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly(), new ObjectItemLoadingSessionData());
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
                 Assert.NotNull(factory.ReferenceResolutions);
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var mockSession = new Mock<ObjectItemLoadingSessionData>();
                 mockSession.Setup(m => m.LoadMessageLogger).Returns(mockLogger.Object);
 
-                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly, mockSession.Object);
+                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly(), mockSession.Object);
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
@@ -52,7 +53,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var edmItemErrors = new List<EdmItemError>();
                 mockSession.Setup(m => m.EdmItemErrors).Returns(edmItemErrors);
 
-                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly, mockSession.Object);
+                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly(), mockSession.Object);
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             [Fact]
             public void TrackClosure_delegates_to_the_loader()
             {
-                var mockLoader = new Mock<ObjectItemConventionAssemblyLoader>(typeof(object).Assembly, new ObjectItemLoadingSessionData());
+                var mockLoader = new Mock<ObjectItemConventionAssemblyLoader>(typeof(object).Assembly(), new ObjectItemLoadingSessionData());
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(mockLoader.Object);
 
                 factory.TrackClosure(typeof(Random));
@@ -82,7 +83,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var dictionary = new Dictionary<EdmType, EdmType>();
                 mockSession.Setup(m => m.CspaceToOspace).Returns(dictionary);
 
-                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly, mockSession.Object);
+                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly(), mockSession.Object);
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
@@ -96,7 +97,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var dictionary = new Dictionary<string, EdmType>();
                 mockSession.Setup(m => m.TypesInLoading).Returns(dictionary);
 
-                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly, mockSession.Object);
+                var loader = new ObjectItemConventionAssemblyLoader(typeof(object).Assembly(), mockSession.Object);
 
                 var factory = new ObjectItemConventionAssemblyLoader.ConventionOSpaceTypeFactory(loader);
 
@@ -106,7 +107,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             [Fact]
             public void AddToTypesInAssembly_delegates_to_the_loader_cache_entry()
             {
-                var mockLoader = new Mock<ObjectItemConventionAssemblyLoader>(typeof(object).Assembly, new ObjectItemLoadingSessionData());
+                var mockLoader = new Mock<ObjectItemConventionAssemblyLoader>(typeof(object).Assembly(), new ObjectItemLoadingSessionData());
                 var cacheEntry = new MutableAssemblyCacheEntry();
                 mockLoader.Setup(m => m.CacheEntry).Returns(cacheEntry);
 

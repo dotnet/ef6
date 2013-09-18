@@ -37,9 +37,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 = (from t in migrationsAssembly.GetAccessibleTypes()
                    where t.IsSubclassOf(typeof(DbMigration))
                          && typeof(IMigrationMetadata).IsAssignableFrom(t)
-                         && t.GetConstructor(Type.EmptyTypes) != null
-                         && !t.IsAbstract
-                         && !t.IsGenericType
+                         && t.GetPublicConstructor() != null
+                         && !t.IsAbstract()
+                         && !t.IsGenericType()
                          && t.Namespace == migrationsNamespace
                    select (IMigrationMetadata)Activator.CreateInstance(t))
                     .Where(mm => !string.IsNullOrWhiteSpace(mm.Id) && mm.Id.IsValidMigrationId())

@@ -92,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 {
                     var isNullable = propertyType.TryUnwrapNullableType(out propertyType);
 
-                    if (propertyType.IsEnum)
+                    if (propertyType.IsEnum())
                     {
                         var enumType = _typeMapper.MapEnumType(propertyType);
 

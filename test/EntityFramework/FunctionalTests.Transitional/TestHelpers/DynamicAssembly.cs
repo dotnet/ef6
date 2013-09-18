@@ -79,7 +79,7 @@ namespace System.Data.Entity
             get { return _attributes; }
         }
 
-        private static readonly MethodInfo s_Entity = typeof(DbModelBuilder).GetPublicInstanceMethod("Entity", Type.EmptyTypes);
+        private static readonly MethodInfo s_Entity = typeof(DbModelBuilder).GetPublicInstanceMethod("Entity");
 
         public DbModelBuilder ToBuilder()
         {
@@ -260,7 +260,7 @@ namespace System.Data.Entity
                         break;
                 }
                 if (propertyInfo.PropertyType != null
-                    && propertyInfo.PropertyType.IsGenericTypeDefinition)
+                    && propertyInfo.PropertyType.IsGenericTypeDefinition())
                 {
                     propertyType = propertyInfo.PropertyType.MakeGenericType(propertyType);
                 }
@@ -410,7 +410,7 @@ namespace System.Data.Entity
                 == -1)
             {
                 return new CustomAttributeBuilder(
-                    typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
+                    typeof(DataMemberAttribute).GetDeclaredConstructor(),
                     new object[] { },
                     new PropertyInfo[] { },
                     new object[] { });
@@ -418,7 +418,7 @@ namespace System.Data.Entity
             else
             {
                 return new CustomAttributeBuilder(
-                    typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes),
+                    typeof(DataMemberAttribute).GetDeclaredConstructor(),
                     new object[] { },
                     new[] { typeof(DataMemberAttribute).GetDeclaredProperty("Order") },
                     new object[] { attribute.Order });
@@ -428,7 +428,7 @@ namespace System.Data.Entity
         public static CustomAttributeBuilder CreateCustom(EdmTypeAttribute attribute)
         {
             return new CustomAttributeBuilder(
-                attribute.GetType().GetConstructor(Type.EmptyTypes),
+                attribute.GetType().GetDeclaredConstructor(),
                     new object[0],
                     new PropertyInfo[] 
                     {
@@ -445,7 +445,7 @@ namespace System.Data.Entity
         public static CustomAttributeBuilder CreateCustom(EdmScalarPropertyAttribute attribute)
         {
             return new CustomAttributeBuilder(
-                attribute.GetType().GetConstructor(Type.EmptyTypes),
+                attribute.GetType().GetDeclaredConstructor(),
                     new object[0],
                     new PropertyInfo[] 
                     { 

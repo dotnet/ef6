@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Migrations.Utilities
 {
     using System.Configuration;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Linq;
     using Xunit;
@@ -28,7 +29,7 @@ namespace System.Data.Entity.Migrations.Utilities
                 try
                 {
                     var updatedConfiguration = File.ReadAllText(updatedConfigurationFile);
-                    var entityFrameworkAssemblyName = typeof(DbContext).Assembly.GetName();
+                    var entityFrameworkAssemblyName = typeof(DbContext).Assembly().GetName();
 
                     Assert.Equal(
                         @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -68,7 +69,7 @@ namespace System.Data.Entity.Migrations.Utilities
             try
             {
                 var updatedConfiguration = File.ReadAllText(updatedConfigurationFile);
-                var entityFrameworkAssemblyName = typeof(DbContext).Assembly.GetName();
+                var entityFrameworkAssemblyName = typeof(DbContext).Assembly().GetName();
 
                 Assert.Equal(
                     @"<?xml version=""1.0"" encoding=""utf-8""?>

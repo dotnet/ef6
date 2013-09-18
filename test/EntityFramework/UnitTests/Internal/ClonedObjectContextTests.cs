@@ -7,9 +7,11 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Internal.MockingProxies;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Reflection;
     using Moq;
+    using SimpleModel;
     using Xunit;
 
     public class ClonedObjectContextTests : TestBase
@@ -121,9 +123,9 @@ namespace System.Data.Entity.Internal
             new ClonedObjectContext(mockContext.Object, "Database=PinkyDinkyDo");
 
             mockContext.Verify(m => m.GetObjectItemCollection(), Times.Once());
-            mockClonedContext.Verify(m => m.LoadFromAssembly(It.Is<Assembly>(a => a.FullName == "ComplexType Assembly")));
-            mockClonedContext.Verify(m => m.LoadFromAssembly(It.Is<Assembly>(a => a.FullName == "EntityType Assembly")));
-            mockClonedContext.Verify(m => m.LoadFromAssembly(It.Is<Assembly>(a => a.FullName == "EnumType Assembly")));
+            mockClonedContext.Verify(m => m.LoadFromAssembly(typeof(object).Assembly()));
+            mockClonedContext.Verify(m => m.LoadFromAssembly(GetType().Assembly()));
+            mockClonedContext.Verify(m => m.LoadFromAssembly(typeof(ExtraEntity).Assembly()));
         }
 
         [Fact]
@@ -201,10 +203,9 @@ namespace System.Data.Entity.Internal
                         CreateFakePrimitiveType(),
                     });
 
-            // Ensure fake EDM types have fake CLR types and assemblies
-            SetupMockStructuralType<ComplexType>(mockContext);
-            SetupMockStructuralType<EntityType>(mockContext);
-            SetupMockEnumType(mockContext);
+            mockContext.Setup(m => m.GetClrType(It.IsAny<ComplexType>())).Returns(typeof(object));
+            mockContext.Setup(m => m.GetClrType(It.IsAny<EntityType>())).Returns(GetType());
+            mockContext.Setup(m => m.GetClrType(It.IsAny<EnumType>())).Returns(typeof(ExtraEntity));
 
             mockContext.Setup(m => m.CreateNew(It.IsAny<EntityConnectionProxy>())).Returns<EntityConnectionProxy>(
                 c =>
@@ -214,22 +215,6 @@ namespace System.Data.Entity.Internal
                     });
 
             return mockContext;
-        }
-
-        private void SetupMockStructuralType<TEdmType>(Mock<ObjectContextProxy> mockContext) where TEdmType : StructuralType
-        {
-            var mockClrType = new Mock<Type>();
-            mockClrType.Setup(m => m.Assembly).Returns(new FakeAssembly(typeof(TEdmType).Name + " Assembly"));
-
-            mockContext.Setup(m => m.GetClrType(It.IsAny<TEdmType>())).Returns(mockClrType.Object);
-        }
-
-        private void SetupMockEnumType(Mock<ObjectContextProxy> mockContext)
-        {
-            var mockClrType = new Mock<Type>();
-            mockClrType.Setup(m => m.Assembly).Returns(new FakeAssembly("EnumType Assembly"));
-
-            mockContext.Setup(m => m.GetClrType(It.IsAny<EnumType>())).Returns(mockClrType.Object);
         }
 
         private ComplexType CreateFakeComplexType()

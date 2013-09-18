@@ -116,7 +116,7 @@ namespace System.Data.Entity.Migrations
         {
             var migrationsConfiguration = CreateMigrationsConfiguration<TContext>();
 
-            migrationsConfiguration.MigrationsAssembly = typeof(TMigration).Assembly;
+            migrationsConfiguration.MigrationsAssembly = typeof(TMigration).Assembly();
 
             return new DbMigrator(migrationsConfiguration);
         }
@@ -399,7 +399,7 @@ namespace System.Data.Entity.Migrations
 
         protected HistoryOperation CreateInsertOperation(string contextKey, string migrationId, XDocument model)
         {
-            var productVersion = typeof(DbContext).Assembly
+            var productVersion = typeof(DbContext).Assembly()
                 .GetCustomAttributes<AssemblyInformationalVersionAttribute>()
                 .Single()
                 .InformationalVersion;

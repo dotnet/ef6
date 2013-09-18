@@ -218,7 +218,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 // Collect information...
                 Debug.Assert(
-                    ClrType.IsGenericType &&
+                    ClrType.IsGenericType() &&
                     typeof(IGrouping<,>).Equals(ClrType.GetGenericTypeDefinition()));
                 Debug.Assert(propertyTranslatorResults.Count == 2);
                 var keyType = ClrType.GetGenericArguments()[0];
@@ -237,7 +237,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 // Collect information...
                 Debug.Assert(
-                    ClrType.IsGenericType &&
+                    ClrType.IsGenericType() &&
                     typeof(IGrouping<,>).Equals(ClrType.GetGenericTypeDefinition()));
                 var keyType = ClrType.GetGenericArguments()[0];
                 var groupElementType = ClrType.GetGenericArguments()[1];
@@ -474,7 +474,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
 
             internal static readonly MethodInfo CreateEntityCollectionMethod =
-                typeof(EntityCollectionInitializerMetadata).GetDeclaredMethod("CreateEntityCollection");
+                typeof(EntityCollectionInitializerMetadata).GetOnlyDeclaredMethod("CreateEntityCollection");
 
             internal override Expression Emit(List<TranslatorResult> propertyTranslatorResults)
             {

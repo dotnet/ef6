@@ -26,7 +26,11 @@ namespace System.Data.Entity.Utilities
         {
             try
             {
+#if NET40
                 return assembly.GetTypes();
+#else
+                return assembly.DefinedTypes.Select(t => t.AsType());
+#endif
             }
             catch (ReflectionTypeLoadException ex)
             {

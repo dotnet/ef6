@@ -120,7 +120,7 @@ namespace System.Data.Entity.SqlServer
             if (providerValueType != expectedSpatialType)
             {
                 SqlSpatialServices otherServices;
-                if (TryGetSpatialServiceFromAssembly(providerValue.GetType().Assembly, out otherServices))
+                if (TryGetSpatialServiceFromAssembly(providerValue.GetType().Assembly(), out otherServices))
                 {
                     if (expectedSpatialType == SqlTypes.SqlGeographyType)
                     {

@@ -478,7 +478,7 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_creates_an_abstract_class_for_abstract_types_in_the_model()
         {
-            Assert.True(typeof(EmployeeMf).IsAbstract);
+            Assert.True(typeof(EmployeeMf).IsAbstract());
         }
 
         [Fact]
@@ -597,19 +597,19 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_can_create_non_public_complex_type()
         {
-            Assert.True(typeof(SiteInfoMf).IsNotPublic);
+            Assert.True(typeof(SiteInfoMf).IsNotPublic());
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_non_public_entity_type()
         {
-            Assert.True(typeof(MailRoomMf).IsNotPublic);
+            Assert.True(typeof(MailRoomMf).IsNotPublic());
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_non_public_context_type()
         {
-            Assert.True(typeof(AdvancedPatternsModelFirstContext).IsNotPublic);
+            Assert.True(typeof(AdvancedPatternsModelFirstContext).IsNotPublic());
         }
 
         [Fact]
@@ -671,14 +671,14 @@ namespace ProductivityApiTests
         [Fact]
         public void CSharp_DbContext_template_creates_a_derived_class_for_derived_types_in_the_model()
         {
-            Assert.True(typeof(CurrentEmployeeMf).BaseType == typeof(EmployeeMf));
+            Assert.True(typeof(CurrentEmployeeMf).BaseType() == typeof(EmployeeMf));
         }
 
         [Fact]
         public void CSharp_DbContext_template_can_create_private_non_virtual_function_import()
         {
-            Assert.True(typeof(MonsterModel).GetDeclaredMethod("FunctionImport1").IsPrivate);
-            Assert.False(typeof(MonsterModel).GetDeclaredMethod("FunctionImport1").IsVirtual);
+            Assert.True(typeof(MonsterModel).GetOnlyDeclaredMethod("FunctionImport1").IsPrivate);
+            Assert.False(typeof(MonsterModel).GetOnlyDeclaredMethod("FunctionImport1").IsVirtual);
         }
 
         [Fact]

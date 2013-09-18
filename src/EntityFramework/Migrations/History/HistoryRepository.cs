@@ -25,8 +25,7 @@ namespace System.Data.Entity.Migrations.History
 
     internal class HistoryRepository : RepositoryBase
     {
-        private static readonly string _productVersion
-            = Assembly.GetExecutingAssembly().GetInformationalVersion();
+        private static readonly string _productVersion = typeof(HistoryRepository).Assembly().GetInformationalVersion();
 
         public static readonly PropertyInfo MigrationIdProperty = typeof(HistoryRow).GetDeclaredProperty("MigrationId");
         public static readonly PropertyInfo ContextKeyProperty = typeof(HistoryRow).GetDeclaredProperty("ContextKey");
@@ -724,7 +723,7 @@ namespace System.Data.Entity.Migrations.History
                                     .RestrictTo(_migrationIdMaxLength),
                                 ContextKey = _contextKey,
                                 Model = new ModelCompressor().Compress(model),
-                                ProductVersion = Assembly.GetExecutingAssembly().GetInformationalVersion()
+                                ProductVersion = _productVersion
                             });
 
                     context.SaveChanges();

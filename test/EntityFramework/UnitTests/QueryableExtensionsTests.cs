@@ -2,11 +2,13 @@
 
 namespace System.Data.Entity
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.Linq;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -831,7 +833,7 @@ namespace System.Data.Entity
                     Assert.Throws<ArgumentException>(
                         () =>
                         new DbQuery<RootEntity>(new Mock<IInternalQuery<RootEntity>>().Object).Include(
-                            e => e.Level1Reference.GetType().Assembly)).Message);
+                            e => e.Level1Reference.GetType().Assembly())).Message);
             }
 
             [Fact]
@@ -944,6 +946,151 @@ namespace System.Data.Entity
                 var mockQueryable = new Mock<IIncludable>(MockBehavior.Strict);
                 IQueryable source = mockQueryable.Object;
                 var result = new Mock<IIncludable>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable2 : IQueryable
+            {
+                IIncludable2 Include(IComparable path);
+            }
+
+            [Fact]
+            public void Non_generic_IComparable_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable2>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable2>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable3 : IQueryable
+            {
+                IIncludable3 Include(ICloneable path);
+            }
+
+            [Fact]
+            public void Non_generic_ICloneable_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable3>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable3>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable4 : IQueryable
+            {
+                IIncludable4 Include(IComparable<string> path);
+            }
+
+            [Fact]
+            public void Non_generic_IComparable_string_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable4>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable4>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable5 : IQueryable
+            {
+                IIncludable5 Include(IEnumerable<char> path);
+            }
+
+            [Fact]
+            public void Non_generic_IEnumerable_char__Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable5>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable5>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable6 : IQueryable
+            {
+                IIncludable6 Include(IEnumerable path);
+            }
+
+            [Fact]
+            public void Non_generic_IEnumerable_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable6>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable6>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable7 : IQueryable
+            {
+                IIncludable7 Include(IEquatable<string> path);
+            }
+
+            [Fact]
+            public void Non_generic_IEquatable_string_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable7>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable7>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable8 : IQueryable
+            {
+                IIncludable8 Include(object path);
+            }
+
+            [Fact]
+            public void Non_generic_object_Include_on_IQueryable_with_Include_method_calls_that_method()
+            {
+                var mockQueryable = new Mock<IIncludable8>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable8>().Object;
+                mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
+
+                var afterInclude = source.Include("FakeRelationship");
+
+                Assert.Same(result, afterInclude);
+            }
+
+            public interface IIncludable9 : IQueryable
+            {
+                IIncludable9 Include(string path);
+                IIncludable9 Include(object path);
+            }
+
+            [Fact]
+            public void Non_generic_multi_method_Include_on_IQueryable_with_Include_method_calls_string_method()
+            {
+                var mockQueryable = new Mock<IIncludable9>(MockBehavior.Strict);
+                IQueryable source = mockQueryable.Object;
+                var result = new Mock<IIncludable9>().Object;
                 mockQueryable.Setup(i => i.Include("FakeRelationship")).Returns(result);
 
                 var afterInclude = source.Include("FakeRelationship");

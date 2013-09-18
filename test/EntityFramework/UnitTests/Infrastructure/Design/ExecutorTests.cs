@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure.Design
 {
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.SqlServer.Utilities;
     using System.IO;
     using System.Reflection;
     using Moq;
@@ -10,8 +11,8 @@ namespace System.Data.Entity.Infrastructure.Design
 
     public class ExecutorTests
     {
-        private static readonly string AssemblyFile = Path.GetFileName(
-            new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+        private static readonly string AssemblyFile
+            = Path.GetFileName(new Uri(typeof(ExecutorTests).Assembly().CodeBase).LocalPath);
 
         [Fact]
         public void GetProviderServicesInternal_returns_type_name()

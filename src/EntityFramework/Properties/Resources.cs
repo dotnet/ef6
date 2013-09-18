@@ -5,6 +5,7 @@ namespace System.Data.Entity.Resources
     using System.CodeDom.Compiler;
     using System.Globalization;
     using System.Resources;
+    using System.Reflection;
     using System.Threading;
 
     // <summary>
@@ -17076,7 +17077,12 @@ namespace System.Data.Entity.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.Properties.Resources", typeof(System.Data.Entity.DbContext).Assembly);
+                "System.Data.Entity.Properties.Resources",
+#if NET40
+                typeof(System.Data.Entity.DbContext).Assembly);
+#else
+                typeof(System.Data.Entity.DbContext).GetTypeInfo().Assembly);
+#endif
         }
 
         private static EntityRes GetLoader()

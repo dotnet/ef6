@@ -14,7 +14,7 @@ namespace System.Data.Entity
         {
             var providerTable =
                 (DataTable)
-                typeof(DbProviderFactories).GetDeclaredMethod("GetProviderTable").Invoke(null, null);
+                typeof(DbProviderFactories).GetOnlyDeclaredMethod("GetProviderTable").Invoke(null, null);
 
             var row = providerTable.NewRow();
             row["Name"] = "GenericProviderFactory";

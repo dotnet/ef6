@@ -14,7 +14,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_returns_type_with_given_name_if_specified()
         {
             Assert.IsType<DiscoverableConfig>(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMigrations).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMigrations).Assembly()))
                     .FindMigrationsConfiguration(null, typeof(DiscoverableConfig).FullName));
         }
 
@@ -22,7 +22,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_returns_single_matching_type_for_specific_context_if_no_type_name_is_specified()
         {
             Assert.IsType<DiscoverableConfig>(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMigrations).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMigrations).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithMigrations),
                         null));
@@ -40,7 +40,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_filters_generic_types()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithGenericConfig).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithGenericConfig).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithGenericConfig),
                         null));
@@ -58,7 +58,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_filters_abstract_types()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithAbstractConfig).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithAbstractConfig).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithAbstractConfig),
                         null));
@@ -76,7 +76,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_filters_types_without_a_parameterless_constructor()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConstructorConfig).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConstructorConfig).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithNoConstructorConfig),
                         null));
@@ -99,7 +99,7 @@ namespace System.Data.Entity.Migrations.Utilities
             Assert.Equal(
                 "EntityFramework.UnitTests Bad_Config_Type_Name",
                 Assert.Throws<InvalidOperationException>(
-                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly))
+                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly()))
                               .FindMigrationsConfiguration(
                                   typeof(ContextWithNoConfig),
                                   "Bad_Config_Type_Name",
@@ -110,7 +110,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_can_return_null_if_no_type_matching_name_is_found()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithNoConfig),
                         "Bad_Config_Type_Name"));
@@ -126,7 +126,7 @@ namespace System.Data.Entity.Migrations.Utilities
             Assert.Equal(
                 "EntityFramework.UnitTests MultipleConfig",
                 Assert.Throws<InvalidOperationException>(
-                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly))
+                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly()))
                               .FindMigrationsConfiguration(
                                   typeof(ContextWithMultipleConfigs),
                                   "MultipleConfig",
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_can_return_null_if_multiple_types_matching_name_are_found()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithMultipleConfigs),
                         "MultipleConfig"));
@@ -164,7 +164,7 @@ namespace System.Data.Entity.Migrations.Utilities
             Assert.Equal(
                 "EntityFramework.UnitTests",
                 Assert.Throws<InvalidOperationException>(
-                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly))
+                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly()))
                               .FindMigrationsConfiguration(
                                   typeof(ContextWithNoConfig),
                                   null,
@@ -175,7 +175,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_can_return_null_if_filter_returns_no_types()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithNoConfig).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithNoConfig),
                         null));
@@ -187,7 +187,7 @@ namespace System.Data.Entity.Migrations.Utilities
             Assert.Equal(
                 "MultipleConfig MultipleConfig EntityFramework.UnitTests",
                 Assert.Throws<InvalidOperationException>(
-                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly))
+                    () => new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly()))
                               .FindMigrationsConfiguration(
                                   typeof(ContextWithMultipleConfigs),
                                   null,
@@ -199,7 +199,7 @@ namespace System.Data.Entity.Migrations.Utilities
         public void FindMigrationsConfiguration_can_return_null_if_filter_returns_many_types()
         {
             Assert.Null(
-                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly))
+                new MigrationsConfigurationFinder(new TypeFinder(typeof(ContextWithMultipleConfigs).Assembly()))
                     .FindMigrationsConfiguration(
                         typeof(ContextWithMultipleConfigs),
                         null));
@@ -210,7 +210,7 @@ namespace System.Data.Entity.Migrations.Utilities
             var exception =
                 Assert.Throws<MigrationsException>(
                     () => new MigrationsConfigurationFinder(
-                              new TypeFinder(typeof(ContextWithBadConfig).Assembly))
+                              new TypeFinder(typeof(ContextWithBadConfig).Assembly()))
                               .FindMigrationsConfiguration(typeof(ContextWithBadConfig), null));
 
             Assert.Equal(Strings.DbMigrationsConfiguration_RootedPath(@"\Test"), exception.Message);

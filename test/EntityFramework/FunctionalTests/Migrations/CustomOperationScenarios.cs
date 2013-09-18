@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Migrations
 {
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Migrations.CustomOperations;
     using System.Data.Entity.Migrations.Infrastructure;
     using Xunit;
@@ -13,7 +14,7 @@ namespace System.Data.Entity.Migrations
         {
             var configuration = new DbMigrationsConfiguration<EmptyModel>
                 {
-                    MigrationsAssembly = typeof(CustomOperationMigration).Assembly,
+                    MigrationsAssembly = typeof(CustomOperationMigration).Assembly(),
                     MigrationsNamespace = typeof(CustomOperationMigration).Namespace
                 };
             configuration.SetSqlGenerator("System.Data.SqlClient", new CustomSqlGenerator());

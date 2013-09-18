@@ -256,7 +256,7 @@ namespace System.Data.Entity.Migrations.Design
             {
                 writer.WriteLine(
                     "<GeneratedCode(\"EntityFramework.Migrations\", \"{0}\")>",
-                    GetType().Assembly.GetInformationalVersion());
+                    GetType().Assembly().GetInformationalVersion());
             }
 
             writer.Write("Public ");

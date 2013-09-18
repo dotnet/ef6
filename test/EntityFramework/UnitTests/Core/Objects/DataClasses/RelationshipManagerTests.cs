@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.Utilities;
     using System.IO;
     using System.Reflection;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -188,7 +189,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         };
 
                     var mockLoader = new Mock<ExpensiveOSpaceLoader>();
-                    mockLoader.Setup(m => m.LoadTypesExpensiveWay(typeof(NavVirtual).Assembly))
+                    mockLoader.Setup(m => m.LoadTypesExpensiveWay(typeof(NavVirtual).Assembly()))
                               .Returns(edmTypes);
                     manager.SetExpensiveLoader(mockLoader.Object);
 

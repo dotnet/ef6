@@ -68,11 +68,11 @@ namespace System.Data.Entity.TestDoubles
 
         private static Type TryGetElementType(Type type)
         {
-            if (!type.IsGenericTypeDefinition)
+            if (!type.IsGenericTypeDefinition())
             {
                 var interfaceImpl = type.GetInterfaces()
                     .Union(new[] { type })
-                    .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                    .FirstOrDefault(t => t.IsGenericType() && t.GetGenericTypeDefinition() == typeof(IEnumerable<>));
 
                 if (interfaceImpl != null)
                 {

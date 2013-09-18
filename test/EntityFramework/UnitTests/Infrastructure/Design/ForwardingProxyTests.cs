@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Infrastructure.Design
 {
     using System.CodeDom.Compiler;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -34,7 +35,7 @@ namespace System.Data.Entity.Infrastructure.Design
             try
             {
                 var target = domain.CreateInstanceAndUnwrap(
-                    typeof(DummyType).Assembly.FullName,
+                    typeof(DummyType).Assembly().FullName,
                     typeof(DummyType).FullName,
                     false,
                     BindingFlags.Instance | BindingFlags.Public | BindingFlags.CreateInstance,

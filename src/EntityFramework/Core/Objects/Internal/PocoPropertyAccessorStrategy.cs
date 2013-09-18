@@ -18,10 +18,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
         internal static readonly MethodInfo AddToCollectionGeneric 
-            = typeof(PocoPropertyAccessorStrategy).GetDeclaredMethod("AddToCollection");
+            = typeof(PocoPropertyAccessorStrategy).GetOnlyDeclaredMethod("AddToCollection");
 
         internal static readonly MethodInfo RemoveFromCollectionGeneric 
-            = typeof(PocoPropertyAccessorStrategy).GetDeclaredMethod("RemoveFromCollection");
+            = typeof(PocoPropertyAccessorStrategy).GetOnlyDeclaredMethod("RemoveFromCollection");
 
         private readonly object _entity;
 

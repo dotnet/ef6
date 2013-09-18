@@ -158,7 +158,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     if (Helper.IsPrimitiveType(type.EdmType))
                     {
                         var nonNullableLinqType = TypeSystem.GetNonNullableType(linq.Type);
-                        if (nonNullableLinqType.IsEnum)
+                        if (nonNullableLinqType.IsEnum())
                         {
                             value = System.Convert.ChangeType(
                                 linq.Value, nonNullableLinqType.GetEnumUnderlyingType(), CultureInfo.InvariantCulture);
@@ -245,7 +245,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
             {
                 //If the type is generic, we try to match the generic property
                 var nonGenericPropertyInfo = propertyInfo;
-                if (propertyInfo.DeclaringType.IsGenericType)
+                if (propertyInfo.DeclaringType.IsGenericType())
                 {
                     try
                     {
@@ -271,13 +271,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
 
                 // check if this is the visual basic assembly
-                if (s_visualBasicAssemblyFullName == propertyInfo.DeclaringType.Assembly.FullName)
+                if (s_visualBasicAssemblyFullName == propertyInfo.DeclaringType.Assembly().FullName)
                 {
                     lock (_vbInitializerLock)
                     {
                         if (!_vbPropertiesInitialized)
                         {
-                            InitializeVBProperties(propertyInfo.DeclaringType.Assembly);
+                            InitializeVBProperties(propertyInfo.DeclaringType.Assembly());
                             _vbPropertiesInitialized = true;
                         }
                         // try again
@@ -393,7 +393,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 {
                     Debug.Assert(clrMember is PropertyInfo, "Navigation property was not a property; should not be allowed by metadata.");
                     var propertyType = ((PropertyInfo)clrMember).PropertyType;
-                    if (propertyType.IsGenericType
+                    if (propertyType.IsGenericType()
                         && propertyType.GetGenericTypeDefinition() == typeof(EntityCollection<>))
                     {
                         var collectionColumns =
@@ -520,7 +520,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
                 private static bool IsICollection(Type candidateType, out Type elementType)
                 {
-                    if (candidateType.IsGenericType
+                    if (candidateType.IsGenericType()
                         && candidateType.GetGenericTypeDefinition().Equals(typeof(ICollection<>)))
                     {
                         elementType = candidateType.GetGenericArguments()[0];

@@ -40,7 +40,7 @@ namespace System.Data.Entity.WrappingProvider
             MutableResolver.AddResolver<IDbProviderFactoryResolver>(
                 new SingletonDependencyResolver<IDbProviderFactoryResolver>(
                     (IDbProviderFactoryResolver)Activator.CreateInstance(
-                        typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "Net40DefaultDbProviderFactoryResolver"), nonPublic: true)));
+                        typeof(DbContext).Assembly().GetTypes().Single(t => t.Name == "Net40DefaultDbProviderFactoryResolver"), nonPublic: true)));
 
             Assert.Same(
                 SqlClientFactory.Instance,
@@ -262,15 +262,15 @@ namespace System.Data.Entity.WrappingProvider
 
             MutableResolver.AddResolver<DbProviderServices>(
                 (IDbDependencyResolver)Activator.CreateInstance(
-                    typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "DefaultProviderServicesResolver"), nonPublic: true));
+                    typeof(DbContext).Assembly().GetTypes().Single(t => t.Name == "DefaultProviderServicesResolver"), nonPublic: true));
 
             MutableResolver.AddResolver<DbProviderFactory>(
                 (IDbDependencyResolver)Activator.CreateInstance(
-                    typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "DefaultProviderFactoryResolver"), nonPublic: true));
+                    typeof(DbContext).Assembly().GetTypes().Single(t => t.Name == "DefaultProviderFactoryResolver"), nonPublic: true));
 
             MutableResolver.AddResolver<IProviderInvariantName>(
                 (IDbDependencyResolver)Activator.CreateInstance(
-                    typeof(DbContext).Assembly.GetTypes().Single(t => t.Name == "DefaultInvariantNameResolver"), nonPublic: true));
+                    typeof(DbContext).Assembly().GetTypes().Single(t => t.Name == "DefaultInvariantNameResolver"), nonPublic: true));
         }
     }
 }

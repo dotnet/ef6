@@ -3,7 +3,7 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using System.Reflection;
     using System.Xml;
@@ -21,11 +21,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
 
                 objectItemCollection.ExplicitLoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()), null);
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()), null);
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -36,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 objectItemCollection.OSpaceTypesLoaded = true;
 
                 objectItemCollection.ExplicitLoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()), null);
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()), null);
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
@@ -54,11 +54,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
 
                 objectItemCollection.ImplicitLoadAllReferencedAssemblies(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()));
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()));
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -69,7 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 objectItemCollection.OSpaceTypesLoaded = true;
 
                 objectItemCollection.ImplicitLoadAllReferencedAssemblies(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()));
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()));
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
@@ -91,7 +91,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -119,11 +119,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var mockKnownAssemblies = new Mock<KnownAssembliesSet>();
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
 
-                objectItemCollection.LoadFromAssembly(typeof(FactAttribute).Assembly);
+                objectItemCollection.LoadFromAssembly(typeof(FactAttribute).Assembly());
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -133,11 +133,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
 
                 objectItemCollection.LoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()));
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()));
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -147,11 +147,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
 
                 objectItemCollection.LoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()), s => { });
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()), s => { });
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(
-                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly, It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
+                    m => m.TryGetKnownAssembly(typeof(FactAttribute).Assembly(), It.IsAny<object>(), It.IsAny<EdmItemCollection>(), out _));
             }
 
             [Fact]
@@ -161,11 +161,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 var objectItemCollection = new ObjectItemCollection(mockKnownAssemblies.Object);
                 objectItemCollection.OSpaceTypesLoaded = true;
 
-                objectItemCollection.LoadFromAssembly(typeof(FactAttribute).Assembly);
+                objectItemCollection.LoadFromAssembly(typeof(FactAttribute).Assembly());
                 objectItemCollection.LoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()));
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()));
                 objectItemCollection.LoadFromAssembly(
-                    typeof(FactAttribute).Assembly, new EdmItemCollection(Enumerable.Empty<XmlReader>()), s => { });
+                    typeof(FactAttribute).Assembly(), new EdmItemCollection(Enumerable.Empty<XmlReader>()), s => { });
 
                 KnownAssemblyEntry _;
                 mockKnownAssemblies.Verify(

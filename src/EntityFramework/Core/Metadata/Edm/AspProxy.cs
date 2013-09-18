@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 var hostingEnvType = _webAssembly.GetType("System.Web.Hosting.HostingEnvironment", true);
 
-                var miMapPath = hostingEnvType.GetDeclaredMethod("MapPath", new[] { typeof(string) });
+                var miMapPath = hostingEnvType.GetDeclaredMethod("MapPath", typeof(string));
 
                 // Note:
                 //   1. If path is null, then the MapPath() method returns the full physical path to the directory 
@@ -242,7 +242,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 throw new InvalidOperationException(Strings.UnableToFindReflectedType(BUILD_MANAGER_TYPE_NAME, AspNetAssemblyName));
             }
 
-            return buildManager.GetDeclaredMethod("GetReferencedAssemblies", new Type[0]);
+            return buildManager.GetDeclaredMethod("GetReferencedAssemblies");
         }
     }
 }

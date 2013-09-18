@@ -2296,7 +2296,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 
             var properties = typeof(TInstance).GetInstanceProperties();
 
-            if (typeof(TInstance).BaseType != typeof(object)
+            if (typeof(TInstance).BaseType() != typeof(object)
                 || properties.Any(p => !p.IsPublic()))
             {
                 return null;
@@ -2329,7 +2329,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             constantOrNullExpression = null;
 
             var valueType = type;
-            if (type.IsGenericType
+            if (type.IsGenericType()
                 && typeof(Nullable<>).Equals(type.GetGenericTypeDefinition()))
             {
                 valueType = type.GetGenericArguments()[0];

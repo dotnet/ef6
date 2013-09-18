@@ -35,7 +35,7 @@ namespace System.Data.Entity.Internal
 
             _providerInfo = databaseMapping.ProviderInfo;
             _metadataWorkspace = databaseMapping.ToMetadataWorkspace();
-            _assemblies = databaseMapping.Model.GetClrTypes().Select(t => t.Assembly).Distinct().ToList();
+            _assemblies = databaseMapping.Model.GetClrTypes().Select(t => t.Assembly()).Distinct().ToList();
 
             Debug.Assert(databaseMapping.Model.Containers.Count() == 1, "Expecting Code First to create only one container.");
 

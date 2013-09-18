@@ -67,7 +67,7 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         internal static bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind resolvedPrimitiveTypeKind)
         {
             PrimitiveTypeKind? primitiveTypeKind = null;
-            if (!clrType.IsEnum) // Enums return the TypeCode of their underlying type
+            if (!clrType.IsEnum()) // Enums return the TypeCode of their underlying type
             {
                 // As an optimization, short-circuit when the provided type has a known type code.
                 switch (Type.GetTypeCode(clrType))

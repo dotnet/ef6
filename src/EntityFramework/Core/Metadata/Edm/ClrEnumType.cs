@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(clrType);
             DebugCheck.NotEmpty(cspaceNamespaceName);
             DebugCheck.NotEmpty(cspaceTypeName);
-            Debug.Assert(clrType.IsEnum, "enum type expected");
+            Debug.Assert(clrType.IsEnum(), "enum type expected");
 
             _type = clrType;
             _cspaceTypeName = cspaceNamespaceName + "." + cspaceTypeName;

@@ -250,7 +250,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         internal static MethodInfo GetIncludeMethod<TElementType>(ObjectQuery<TElementType> sourceQuery)
         {
-            return sourceQuery.GetType().GetDeclaredMethod("Include");
+            return sourceQuery.GetType().GetOnlyDeclaredMethod("Include");
         }
 
         // <summary>

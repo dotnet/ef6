@@ -87,7 +87,7 @@ namespace System.Data.Entity.Internal
                 return y == null;
             }
 
-            if (x.GetType().IsValueType
+            if (x.GetType().IsValueType()
                 && Equals(x, y))
             {
                 return true;
@@ -313,7 +313,7 @@ namespace System.Data.Entity.Internal
 
         #region Compiled delegates for accessing property getters and setters
 
-        public static readonly MethodInfo ConvertAndSetMethod = typeof(DbHelpers).GetDeclaredMethod("ConvertAndSet");
+        public static readonly MethodInfo ConvertAndSetMethod = typeof(DbHelpers).GetOnlyDeclaredMethod("ConvertAndSet");
 
         private static readonly ConcurrentDictionary<Type, IDictionary<string, Type>> _propertyTypes =
             new ConcurrentDictionary<Type, IDictionary<string, Type>>();
@@ -405,7 +405,7 @@ namespace System.Data.Entity.Internal
             object instance, object value, Action<object, object> setter, string propertyName, string typeName)
         {
             if (value == null
-                && typeof(T).IsValueType
+                && typeof(T).IsValueType()
                 && Nullable.GetUnderlyingType(typeof(T)) == null)
             {
                 throw Error.DbPropertyValues_CannotSetNullValue(propertyName, typeof(T).Name, typeName);

@@ -2536,7 +2536,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             var anonObject = new { A = 3, B = 4 };
 
             values = (List<KeyValuePair<string, int>>)typeof(DbExpressionBuilder)
-                .GetDeclaredMethod("TryGetAnonymousTypeValues")
+                .GetOnlyDeclaredMethod("TryGetAnonymousTypeValues")
                 .MakeGenericMethod(new[] { anonObject.GetType(), typeof(int) })
                 .Invoke(null, new object[] { anonObject });
 

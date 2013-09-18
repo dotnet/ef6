@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Query.LinqToEntities
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
@@ -41,7 +42,7 @@ namespace System.Data.Entity.Query.LinqToEntities
 
                 Assert.IsType<InvalidOperationException>(innerException);
                 innerException.ValidateMessage(
-                          typeof(DbContext).Assembly,
+                          typeof(DbContext).Assembly(),
                           "ObjectQuery_UnableToMaterializeArray",
                           null,
                           "System.Int32[]",
@@ -57,7 +58,7 @@ namespace System.Data.Entity.Query.LinqToEntities
                 var query = context.Runs.Select(r => new List<int> { });
                 Assert.Throws<NotSupportedException>(() => query.ToList()).
                        ValidateMessage(
-                           typeof(DbContext).Assembly,
+                           typeof(DbContext).Assembly(),
                            "ELinq_UnsupportedEnumerableType",
                            null,
                            "System.Collections.Generic.List`1[[System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]");

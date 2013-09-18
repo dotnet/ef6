@@ -148,7 +148,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             DebugCheck.NotNull(contextType);
             Debug.Assert(typeof(DbContext).IsAssignableFrom(contextType));
 
-            EnsureLoadedForAssembly(contextType.Assembly, contextType);
+            EnsureLoadedForAssembly(contextType.Assembly(), contextType);
         }
 
         public virtual void EnsureLoadedForAssembly(Assembly assemblyHint, Type contextTypeHint)
@@ -220,7 +220,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             // context assembly has already been checked for configurations, then avoid creating
             // and pushing a new configuration since it would be the same as the current one anyway.
             if (config == AppConfig.DefaultInstance
-                && (contextType == typeof(DbContext) || _knownAssemblies.ContainsKey(contextType.Assembly)))
+                && (contextType == typeof(DbContext) || _knownAssemblies.ContainsKey(contextType.Assembly())))
             {
                 return false;
             }

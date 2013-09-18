@@ -6,11 +6,12 @@ namespace System.Data.Entity
     using System.Collections.Generic;
     using System.Linq;
     using System.Data.Entity.Core.Objects.DataClasses;
+    using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Reflection;
     using System.Reflection.Emit;
     using System.Xml.Linq;
-    using System.Data.Entity.Core.Metadata.Edm;
 
     internal class CsdlToClrAssemblyConverter
     {
@@ -189,7 +190,7 @@ namespace System.Data.Entity
                     Type primitiveType;
                     if(_primitiveTypes.TryGetValue(propertyTypeName, out primitiveType))
                     {
-                        if (primitiveType.IsValueType && propertyIsNullable)
+                        if (primitiveType.IsValueType() && propertyIsNullable)
                         {
                             primitiveType = typeof(Nullable<>).MakeGenericType(primitiveType);
                         }
@@ -222,7 +223,7 @@ namespace System.Data.Entity
                                 var clrType = (Type)type;
                                 property.HasType(clrType);
 
-                                if (clrType.IsEnum)
+                                if (clrType.IsEnum())
                                 {
                                     AddScalarPropertyAttribute(propertyDefinition, property);
                                 }

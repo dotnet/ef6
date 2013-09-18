@@ -16,18 +16,18 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void GetInformationalVersion_returns_the_informational_version()
             {
-                Assert.True(typeof(DbMigrator).Assembly.GetInformationalVersion().StartsWith("6.1.0-alpha1"));
+                Assert.True(typeof(DbMigrator).Assembly().GetInformationalVersion().StartsWith("6.1.0-alpha1"));
             }
         }
 
         [Fact]
         public void Can_return_attributes_from_assembly()
         {
-            Assert.IsType<LaunderingAttribute>(GetType().Assembly.GetCustomAttributes<LaunderingAttribute>().Single());
+            Assert.IsType<LaunderingAttribute>(GetType().Assembly().GetCustomAttributes<LaunderingAttribute>().Single());
 
             Assert.Contains(
                 "LaunderingAttribute",
-                GetType().Assembly.GetCustomAttributes<Attribute>().Select(a => a.GetType().Name));
+                GetType().Assembly().GetCustomAttributes<Attribute>().Select(a => a.GetType().Name));
         }
 
 

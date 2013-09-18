@@ -8,6 +8,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Utilities;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Globalization;
@@ -403,7 +404,7 @@ namespace System.Data.Entity
             var ospaceType = ospaceTypes.Where(t => objectItemCollection.GetClrType(t) == clrType).FirstOrDefault();
             if (ospaceType == null)
             {
-                objectContext.MetadataWorkspace.LoadFromAssembly(clrType.Assembly);
+                objectContext.MetadataWorkspace.LoadFromAssembly(clrType.Assembly());
                 ospaceType = ospaceTypes.Where(t => objectItemCollection.GetClrType(t) == clrType).FirstOrDefault();
                 if (ospaceType == null)
                 {

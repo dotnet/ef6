@@ -80,7 +80,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(propertyInfo);
 
             var propertyType = propertyInfo.PropertyType;
-            var isNullable = propertyType.TryUnwrapNullableType(out propertyType) || !propertyType.IsValueType;
+            var isNullable = propertyType.TryUnwrapNullableType(out propertyType) || !propertyType.IsValueType();
 
             PrimitiveType primitiveType;
             if (propertyType.IsPrimitiveType(out primitiveType))
@@ -157,7 +157,7 @@ namespace System.Data.Entity.Utilities
 
             if (method != null)
             {
-                var nextType = method.DeclaringType.BaseType;
+                var nextType = method.DeclaringType.BaseType();
                 if (nextType != null && nextType != typeof(object))
                 {
                     var baseMethod = method.GetBaseDefinition();

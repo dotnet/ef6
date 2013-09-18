@@ -287,7 +287,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     && m.Arguments.Count == 1)
                 {
                     var declaringType = m.Method.DeclaringType;
-                    if (declaringType.IsGenericType
+                    if (declaringType.IsGenericType()
                         && declaringType.GetGenericTypeDefinition() == typeof(List<>))
                     {
                         // CODE(C#): List<T> x.Contains(y)
@@ -433,7 +433,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         }
 
         internal static readonly MethodInfo RelationalOperatorPlaceholderMethod =
-            typeof(LinqExpressionNormalizer).GetDeclaredMethod("RelationalOperatorPlaceholder");
+            typeof(LinqExpressionNormalizer).GetOnlyDeclaredMethod("RelationalOperatorPlaceholder");
 
         // <summary>
         // This method exists solely to support creation of valid relational operator LINQ expressions that are not natively supported

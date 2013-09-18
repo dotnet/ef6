@@ -17,13 +17,13 @@ namespace LazyUnicorns
             = new ConcurrentDictionary<Type, IList<Tuple<string, Func<DbCollectionEntry, object>>>>();
 
         private static readonly MethodInfo _factoryMethodInfo
-            = typeof(CachingCollectionInitializer).GetDeclaredMethod("CreateCollection");
+            = typeof(CachingCollectionInitializer).GetOnlyDeclaredMethod("CreateCollection");
 
         public virtual Type TryGetElementType(PropertyInfo collectionProperty)
         {
             // We can only replace properties that are declared as ICollection<T> and have a setter.
             var propertyType = collectionProperty.PropertyType;
-            if (propertyType.IsGenericType
+            if (propertyType.IsGenericType()
                 && propertyType.GetGenericTypeDefinition() == typeof(ICollection<>)
                 && collectionProperty.Setter() != null)
             {

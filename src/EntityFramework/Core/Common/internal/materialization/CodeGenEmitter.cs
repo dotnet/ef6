@@ -20,94 +20,90 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     {
         #region Static Reflection info used in emitters
 
-        internal static readonly MethodInfo CodeGenEmitter_BinaryEquals = typeof(CodeGenEmitter).GetDeclaredMethod("BinaryEquals");
-        internal static readonly MethodInfo CodeGenEmitter_CheckedConvert = typeof(CodeGenEmitter).GetDeclaredMethod("CheckedConvert");
-        internal static readonly MethodInfo CodeGenEmitter_Compile = typeof(CodeGenEmitter).GetDeclaredMethod("Compile", new[] { typeof(Expression) });
-        internal static readonly MethodInfo DbDataReader_GetValue = typeof(DbDataReader).GetDeclaredMethod("GetValue");
-        internal static readonly MethodInfo DbDataReader_GetString = typeof(DbDataReader).GetDeclaredMethod("GetString");
-        internal static readonly MethodInfo DbDataReader_GetInt16 = typeof(DbDataReader).GetDeclaredMethod("GetInt16");
-        internal static readonly MethodInfo DbDataReader_GetInt32 = typeof(DbDataReader).GetDeclaredMethod("GetInt32");
-        internal static readonly MethodInfo DbDataReader_GetInt64 = typeof(DbDataReader).GetDeclaredMethod("GetInt64");
-        internal static readonly MethodInfo DbDataReader_GetBoolean = typeof(DbDataReader).GetDeclaredMethod("GetBoolean");
-        internal static readonly MethodInfo DbDataReader_GetDecimal = typeof(DbDataReader).GetDeclaredMethod("GetDecimal");
-        internal static readonly MethodInfo DbDataReader_GetFloat = typeof(DbDataReader).GetDeclaredMethod("GetFloat");
-        internal static readonly MethodInfo DbDataReader_GetDouble = typeof(DbDataReader).GetDeclaredMethod("GetDouble");
-        internal static readonly MethodInfo DbDataReader_GetDateTime = typeof(DbDataReader).GetDeclaredMethod("GetDateTime");
-        internal static readonly MethodInfo DbDataReader_GetGuid = typeof(DbDataReader).GetDeclaredMethod("GetGuid");
-        internal static readonly MethodInfo DbDataReader_GetByte = typeof(DbDataReader).GetDeclaredMethod("GetByte");
-        internal static readonly MethodInfo DbDataReader_IsDBNull = typeof(DbDataReader).GetDeclaredMethod("IsDBNull");
+        internal static readonly MethodInfo CodeGenEmitter_BinaryEquals = typeof(CodeGenEmitter).GetOnlyDeclaredMethod("BinaryEquals");
+        internal static readonly MethodInfo CodeGenEmitter_CheckedConvert = typeof(CodeGenEmitter).GetOnlyDeclaredMethod("CheckedConvert");
+        internal static readonly MethodInfo CodeGenEmitter_Compile = typeof(CodeGenEmitter).GetDeclaredMethod("Compile", typeof(Expression));
+        internal static readonly MethodInfo DbDataReader_GetValue = typeof(DbDataReader).GetOnlyDeclaredMethod("GetValue");
+        internal static readonly MethodInfo DbDataReader_GetString = typeof(DbDataReader).GetOnlyDeclaredMethod("GetString");
+        internal static readonly MethodInfo DbDataReader_GetInt16 = typeof(DbDataReader).GetOnlyDeclaredMethod("GetInt16");
+        internal static readonly MethodInfo DbDataReader_GetInt32 = typeof(DbDataReader).GetOnlyDeclaredMethod("GetInt32");
+        internal static readonly MethodInfo DbDataReader_GetInt64 = typeof(DbDataReader).GetOnlyDeclaredMethod("GetInt64");
+        internal static readonly MethodInfo DbDataReader_GetBoolean = typeof(DbDataReader).GetOnlyDeclaredMethod("GetBoolean");
+        internal static readonly MethodInfo DbDataReader_GetDecimal = typeof(DbDataReader).GetOnlyDeclaredMethod("GetDecimal");
+        internal static readonly MethodInfo DbDataReader_GetFloat = typeof(DbDataReader).GetOnlyDeclaredMethod("GetFloat");
+        internal static readonly MethodInfo DbDataReader_GetDouble = typeof(DbDataReader).GetOnlyDeclaredMethod("GetDouble");
+        internal static readonly MethodInfo DbDataReader_GetDateTime = typeof(DbDataReader).GetOnlyDeclaredMethod("GetDateTime");
+        internal static readonly MethodInfo DbDataReader_GetGuid = typeof(DbDataReader).GetOnlyDeclaredMethod("GetGuid");
+        internal static readonly MethodInfo DbDataReader_GetByte = typeof(DbDataReader).GetOnlyDeclaredMethod("GetByte");
+        internal static readonly MethodInfo DbDataReader_IsDBNull = typeof(DbDataReader).GetOnlyDeclaredMethod("IsDBNull");
 
         internal static readonly ConstructorInfo EntityKey_ctor_SingleKey =
-            typeof(EntityKey).GetConstructor(
-                BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(EntitySet), typeof(object) }, null);
+            typeof(EntityKey).GetDeclaredConstructor(typeof(EntitySetBase), typeof(object));
 
         internal static readonly ConstructorInfo EntityKey_ctor_CompositeKey =
-            typeof(EntityKey).GetConstructor(
-                BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(EntitySet), typeof(object[]) }, null);
+            typeof(EntityKey).GetDeclaredConstructor(typeof(EntitySetBase), typeof(object[]));
 
         internal static readonly MethodInfo EntityWrapperFactory_GetEntityWithChangeTrackerStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetEntityWithChangeTrackerStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetEntityWithChangeTrackerStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetEntityWithKeyStrategyStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetEntityWithKeyStrategyStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetEntityWithKeyStrategyStrategyFunc");
 
-        internal static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetDeclaredMethod(
+        internal static readonly MethodInfo EntityProxyTypeInfo_SetEntityWrapper = typeof(EntityProxyTypeInfo).GetOnlyDeclaredMethod(
             "SetEntityWrapper");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetNullPropertyAccessorStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetNullPropertyAccessorStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetNullPropertyAccessorStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetPocoEntityKeyStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetPocoEntityKeyStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetPocoEntityKeyStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetPocoPropertyAccessorStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetPocoPropertyAccessorStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetPocoPropertyAccessorStrategyFunc");
 
         internal static readonly MethodInfo EntityWrapperFactory_GetSnapshotChangeTrackingStrategyFunc =
-            typeof(EntityWrapperFactory).GetDeclaredMethod("GetSnapshotChangeTrackingStrategyFunc");
+            typeof(EntityWrapperFactory).GetOnlyDeclaredMethod("GetSnapshotChangeTrackingStrategyFunc");
 
         internal static readonly PropertyInfo EntityWrapperFactory_NullWrapper = typeof(NullEntityWrapper).GetDeclaredProperty("NullWrapper");
 
         internal static readonly PropertyInfo IEntityWrapper_Entity = typeof(IEntityWrapper).GetDeclaredProperty("Entity");
 
         internal static readonly MethodInfo IEqualityComparerOfString_Equals = typeof(IEqualityComparer<string>).GetDeclaredMethod(
-            "Equals", new[] { typeof(string), typeof(string) });
+            "Equals", typeof(string), typeof(string));
 
-        internal static readonly ConstructorInfo MaterializedDataRecord_ctor = typeof(MaterializedDataRecord).GetConstructor(
-            BindingFlags.NonPublic | BindingFlags.Instance,
-            null, new[] { typeof(MetadataWorkspace), typeof(TypeUsage), typeof(object[]) },
-            null);
+        internal static readonly ConstructorInfo MaterializedDataRecord_ctor = typeof(MaterializedDataRecord).GetDeclaredConstructor(
+            typeof(MetadataWorkspace), typeof(TypeUsage), typeof(object[]));
 
-        internal static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetDeclaredMethod("GatherData");
-        internal static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetDeclaredMethod("SetNullRecord");
-        internal static readonly MethodInfo Shaper_Discriminate = typeof(Shaper).GetDeclaredMethod("Discriminate");
+        internal static readonly MethodInfo RecordState_GatherData = typeof(RecordState).GetOnlyDeclaredMethod("GatherData");
+        internal static readonly MethodInfo RecordState_SetNullRecord = typeof(RecordState).GetOnlyDeclaredMethod("SetNullRecord");
+        internal static readonly MethodInfo Shaper_Discriminate = typeof(Shaper).GetOnlyDeclaredMethod("Discriminate");
 
         internal static readonly MethodInfo Shaper_GetPropertyValueWithErrorHandling =
-            typeof(Shaper).GetDeclaredMethod("GetPropertyValueWithErrorHandling");
+            typeof(Shaper).GetOnlyDeclaredMethod("GetPropertyValueWithErrorHandling");
 
         internal static readonly MethodInfo Shaper_GetColumnValueWithErrorHandling =
-            typeof(Shaper).GetDeclaredMethod("GetColumnValueWithErrorHandling");
+            typeof(Shaper).GetOnlyDeclaredMethod("GetColumnValueWithErrorHandling");
 
-        internal static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetDeclaredMethod("GetGeographyColumnValue");
-        internal static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetDeclaredMethod("GetGeometryColumnValue");
+        internal static readonly MethodInfo Shaper_GetGeographyColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("GetGeographyColumnValue");
+        internal static readonly MethodInfo Shaper_GetGeometryColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("GetGeometryColumnValue");
 
         internal static readonly MethodInfo Shaper_GetSpatialColumnValueWithErrorHandling =
-            typeof(Shaper).GetDeclaredMethod("GetSpatialColumnValueWithErrorHandling");
+            typeof(Shaper).GetOnlyDeclaredMethod("GetSpatialColumnValueWithErrorHandling");
 
         internal static readonly MethodInfo Shaper_GetSpatialPropertyValueWithErrorHandling =
-            typeof(Shaper).GetDeclaredMethod("GetSpatialPropertyValueWithErrorHandling");
+            typeof(Shaper).GetOnlyDeclaredMethod("GetSpatialPropertyValueWithErrorHandling");
 
-        internal static readonly MethodInfo Shaper_HandleEntity = typeof(Shaper).GetDeclaredMethod("HandleEntity");
-        internal static readonly MethodInfo Shaper_HandleEntityAppendOnly = typeof(Shaper).GetDeclaredMethod("HandleEntityAppendOnly");
-        internal static readonly MethodInfo Shaper_HandleEntityNoTracking = typeof(Shaper).GetDeclaredMethod("HandleEntityNoTracking");
-        internal static readonly MethodInfo Shaper_HandleFullSpanCollection = typeof(Shaper).GetDeclaredMethod("HandleFullSpanCollection");
-        internal static readonly MethodInfo Shaper_HandleFullSpanElement = typeof(Shaper).GetDeclaredMethod("HandleFullSpanElement");
-        internal static readonly MethodInfo Shaper_HandleIEntityWithKey = typeof(Shaper).GetDeclaredMethod("HandleIEntityWithKey");
-        internal static readonly MethodInfo Shaper_HandleRelationshipSpan = typeof(Shaper).GetDeclaredMethod("HandleRelationshipSpan");
-        internal static readonly MethodInfo Shaper_SetColumnValue = typeof(Shaper).GetDeclaredMethod("SetColumnValue");
-        internal static readonly MethodInfo Shaper_SetEntityRecordInfo = typeof(Shaper).GetDeclaredMethod("SetEntityRecordInfo");
-        internal static readonly MethodInfo Shaper_SetState = typeof(Shaper).GetDeclaredMethod("SetState");
-        internal static readonly MethodInfo Shaper_SetStatePassthrough = typeof(Shaper).GetDeclaredMethod("SetStatePassthrough");
+        internal static readonly MethodInfo Shaper_HandleEntity = typeof(Shaper).GetOnlyDeclaredMethod("HandleEntity");
+        internal static readonly MethodInfo Shaper_HandleEntityAppendOnly = typeof(Shaper).GetOnlyDeclaredMethod("HandleEntityAppendOnly");
+        internal static readonly MethodInfo Shaper_HandleEntityNoTracking = typeof(Shaper).GetOnlyDeclaredMethod("HandleEntityNoTracking");
+        internal static readonly MethodInfo Shaper_HandleFullSpanCollection = typeof(Shaper).GetOnlyDeclaredMethod("HandleFullSpanCollection");
+        internal static readonly MethodInfo Shaper_HandleFullSpanElement = typeof(Shaper).GetOnlyDeclaredMethod("HandleFullSpanElement");
+        internal static readonly MethodInfo Shaper_HandleIEntityWithKey = typeof(Shaper).GetOnlyDeclaredMethod("HandleIEntityWithKey");
+        internal static readonly MethodInfo Shaper_HandleRelationshipSpan = typeof(Shaper).GetOnlyDeclaredMethod("HandleRelationshipSpan");
+        internal static readonly MethodInfo Shaper_SetColumnValue = typeof(Shaper).GetOnlyDeclaredMethod("SetColumnValue");
+        internal static readonly MethodInfo Shaper_SetEntityRecordInfo = typeof(Shaper).GetOnlyDeclaredMethod("SetEntityRecordInfo");
+        internal static readonly MethodInfo Shaper_SetState = typeof(Shaper).GetOnlyDeclaredMethod("SetState");
+        internal static readonly MethodInfo Shaper_SetStatePassthrough = typeof(Shaper).GetOnlyDeclaredMethod("SetStatePassthrough");
 
         #endregion
 
@@ -309,7 +305,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             MergeOption mergeOption, bool isProxy)
         {
             var result = Emit_EnsureType(input, requestedType); // Needed to ensure appropriate exception is thrown
-            if (!requestedType.IsClass)
+            if (!requestedType.IsClass())
             {
                 result = Emit_EnsureType(input, typeof(object));
             }
@@ -339,10 +335,8 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 // This is the case where all our interfaces are implemented by the entity and we are not creating a proxy.
                 // This is the case that absolutely must be kept fast.  It is a simple call to the wrapper constructor.
                 var genericType = typeof(LightweightEntityWrapper<>).MakeGenericType(actualType);
-                var ci = genericType.GetConstructor(
-                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                    new[] { actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type), typeof(bool) },
-                    null);
+                var ci = genericType.GetDeclaredConstructor(
+                    actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type), typeof(bool));
                 result = Expression.New(
                     ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
                     Expression.Constant(identityType, typeof(Type)), Expression.Constant(overridesEquals, typeof(bool)));
@@ -369,14 +363,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                                       ? typeof(EntityWrapperWithRelationships<>).MakeGenericType(actualType)
                                       : typeof(EntityWrapperWithoutRelationships<>).MakeGenericType(actualType);
 
-                var ci = genericType.GetConstructor(
-                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                    new[]
-                        {
-                            actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type),
-                            typeof(Func<object, IPropertyAccessorStrategy>), typeof(Func<object, IChangeTrackingStrategy>),
-                            typeof(Func<object, IEntityKeyStrategy>), typeof(bool)
-                        }, null);
+                var ci = genericType.GetDeclaredConstructor(
+                    actualType, typeof(EntityKey), typeof(EntitySet), typeof(ObjectContext), typeof(MergeOption), typeof(Type),
+                    typeof(Func<object, IPropertyAccessorStrategy>), typeof(Func<object, IChangeTrackingStrategy>),
+                    typeof(Func<object, IEntityKeyStrategy>), typeof(bool));
+             
                 result = Expression.New(
                     ci, input, keyReader, entitySetReader, Shaper_Context, Expression.Constant(mergeOption, typeof(MergeOption)),
                     Expression.Constant(identityType, typeof(Type)),
@@ -414,7 +405,7 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
                     // In the case of CompensatingCollection<T>, simply report IEnumerable<T> in the
                     // exception message because the user has no reason to know what the type represents.
-                    if (valueType.IsGenericType
+                    if (valueType.IsGenericType()
                         && valueType.GetGenericTypeDefinition() == typeof(CompensatingCollection<>))
                     {
                         valueType = typeof(IEnumerable<>).MakeGenericType(valueType.GetGenericArguments());

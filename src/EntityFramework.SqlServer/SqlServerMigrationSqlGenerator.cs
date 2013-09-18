@@ -1235,7 +1235,7 @@ namespace System.Data.Entity.SqlServer
         protected virtual string Generate(object defaultValue)
         {
             Check.NotNull(defaultValue, "defaultValue");
-            Debug.Assert(defaultValue.GetType().IsValueType);
+            Debug.Assert(defaultValue.GetType().IsValueType());
 
             return string.Format(CultureInfo.InvariantCulture, "{0}", defaultValue);
         }

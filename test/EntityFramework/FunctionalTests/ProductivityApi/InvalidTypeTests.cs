@@ -133,7 +133,7 @@ namespace ProductivityApiTests
             // Create a derived type in a new assembly
             var provider = new CSharpCodeProvider();
             var result = provider.CompileAssemblyFromSource(
-                new CompilerParameters(new[] { typeof(Category).Assembly.Location }),
+                new CompilerParameters(new[] { typeof(Category).Assembly().Location }),
                 "public class DerivedCategory : SimpleModel.Category { }");
 
             var derivedCategoryType = result.CompiledAssembly.GetTypes().Single();
@@ -160,7 +160,7 @@ namespace ProductivityApiTests
                     Assert.IsType<InvalidOperationException>(ex.InnerException);
                     new StringResourceVerifier(
                         new AssemblyResourceLookup(
-                            typeof(DbModelBuilder).Assembly,
+                            typeof(DbModelBuilder).Assembly(),
                             "System.Data.Entity.Properties.Resources"))
                         .VerifyMatch(
                             "DbSet_EntityTypeNotInModel", ex.InnerException.Message,

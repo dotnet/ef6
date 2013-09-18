@@ -39,9 +39,9 @@ namespace System.Data.Entity.Core.Objects
     {
         #region Private Static Members
 
-        internal static readonly MethodInfo MergeAsMethod = typeof(ObjectQuery<T>).GetDeclaredMethod("MergeAs");
+        internal static readonly MethodInfo MergeAsMethod = typeof(ObjectQuery<T>).GetOnlyDeclaredMethod("MergeAs");
 
-        internal static readonly MethodInfo IncludeSpanMethod = typeof(ObjectQuery<T>).GetDeclaredMethod("IncludeSpan");
+        internal static readonly MethodInfo IncludeSpanMethod = typeof(ObjectQuery<T>).GetOnlyDeclaredMethod("IncludeSpan");
 
         // <summary>
         // The default query name, which is used in query-building to refer to an

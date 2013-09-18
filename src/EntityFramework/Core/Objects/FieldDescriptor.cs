@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Objects
                 case BuiltInTypeKind.EnumType:
                     result = edmType.ClrType;
                     Facet nullable;
-                    if (result.IsValueType
+                    if (result.IsValueType()
                         &&
                         typeUsage.Facets.TryGetValue(DbProviderManifest.NullableFacetName, false, out nullable)
                         && ((bool)nullable.Value))

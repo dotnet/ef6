@@ -52,6 +52,7 @@ namespace <#= outputNamespace #>.Resources
     using System.CodeDom.Compiler;
     using System.Globalization;
     using System.Resources;
+    using System.Reflection;
     using System.Threading;
 
     // <summary>
@@ -152,7 +153,12 @@ namespace <#= outputNamespace #>.Resources
         private EntityRes()
         {
             resources = new ResourceManager(
-                "System.Data.Entity.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>", typeof(System.Data.Entity.DbContext).Assembly);
+                "System.Data.Entity.Properties.<#= Path.GetFileNameWithoutExtension(Host.TemplateFile) #>",
+#if NET40
+                typeof(System.Data.Entity.DbContext).Assembly);
+#else
+                typeof(System.Data.Entity.DbContext).GetTypeInfo().Assembly);
+#endif
         }
 
         private static EntityRes GetLoader()

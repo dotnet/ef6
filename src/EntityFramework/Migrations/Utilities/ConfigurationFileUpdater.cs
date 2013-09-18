@@ -19,7 +19,7 @@ namespace System.Data.Entity.Migrations.Utilities
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static ConfigurationFileUpdater()
         {
-            var executingAssemblyName = Assembly.GetExecutingAssembly().GetName();
+            var executingAssemblyName = typeof(ConfigurationFileUpdater).Assembly().GetName();
 
             _dependentAssemblyElement
                 = new XElement(

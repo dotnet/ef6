@@ -4,6 +4,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm.Services;
+    using System.Data.Entity.Utilities;
     using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
@@ -80,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Serialization
                 = "System.Data.Entity.ModelConfiguration.Edm.Serialization.Xsd.";
 
             var schemaSet = new XmlSchemaSet();
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = typeof(EdmxSerializerTests).Assembly();
 
             foreach (var schema in new[]
                                        {

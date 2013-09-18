@@ -38,7 +38,7 @@ namespace System.Data.Entity
 
             foreach (var @interface in typeUnderTest.Type.GetInterfaces())
             {
-                if (@interface.IsGenericType)
+                if (@interface.IsGenericType())
                 {
                     var genericDefinition = @interface.GetGenericTypeDefinition();
 

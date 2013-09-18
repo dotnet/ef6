@@ -3869,7 +3869,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(type, "type");
 
-            return EntityProxyFactory.IsProxyType(type) ? type.BaseType : type;
+            return EntityProxyFactory.IsProxyType(type) ? type.BaseType() : type;
         }
 
         /// <summary>Creates and returns an instance of the requested type .</summary>
@@ -4717,7 +4717,7 @@ namespace System.Data.Entity.Core.Objects
             CollectionColumnMap columnMap;
             // for enums that are not in the model we use the enum underlying type
             if (MetadataWorkspace.TryDetermineCSpaceModelType<TElement>(out modelEdmType)
-                || (unwrappedTElement.IsEnum &&
+                || (unwrappedTElement.IsEnum() &&
                     MetadataWorkspace.TryDetermineCSpaceModelType(unwrappedTElement.GetEnumUnderlyingType(), out modelEdmType)))
             {
                 if (entitySet != null
@@ -4936,7 +4936,7 @@ namespace System.Data.Entity.Core.Objects
 
             _contextTypesWithViewCacheInitialized.GetOrAdd(contextType, (t) =>
             {
-                var attributes = t.Assembly.GetCustomAttributes<DbMappingViewCacheTypeAttribute>().Where(a => a.ContextType == t);
+                var attributes = t.Assembly().GetCustomAttributes<DbMappingViewCacheTypeAttribute>().Where(a => a.ContextType == t);
 
                 var attributeCount = attributes.Count();
                 if (attributeCount > 1)
@@ -4978,7 +4978,7 @@ namespace System.Data.Entity.Core.Objects
                 // When the reader is closing, out/inout parameter values are set on the EntityParameter
                 // instance. Pass this value through to the corresponding ObjectParameter.
                 if (_entityParameter.Value != DBNull.Value
-                    && _objectParameter.MappableType.IsEnum)
+                    && _objectParameter.MappableType.IsEnum())
                 {
                     _objectParameter.Value = Enum.ToObject(_objectParameter.MappableType, _entityParameter.Value);
                 }

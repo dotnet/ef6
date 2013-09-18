@@ -85,8 +85,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 EdmType cspaceType;
                 if (TryGetCSpaceTypeMatch(type, out cspaceType))
                 {
-                    if (type.IsValueType
-                        && !type.IsEnum)
+                    if (type.IsValueType()
+                        && !type.IsEnum())
                     {
                         SessionData.LoadMessageLogger.LogLoadMessage(
                             Strings.Validator_OSpace_Convention_Struct(cspaceType.FullName, type.FullName), cspaceType);
@@ -171,11 +171,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         internal virtual void TrackClosure(Type type)
         {
-            if (SourceAssembly != type.Assembly
+            if (SourceAssembly != type.Assembly()
                 &&
-                !CacheEntry.ClosureAssemblies.Contains(type.Assembly)
+                !CacheEntry.ClosureAssemblies.Contains(type.Assembly())
                 &&
-                !(type.IsGenericType &&
+                !(type.IsGenericType() &&
                   (
                       EntityUtil.IsAnICollection(type) || // EntityCollection<>, List<>, ICollection<>
                       type.GetGenericTypeDefinition() == typeof(EntityReference<>) ||
@@ -184,10 +184,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                  )
                 )
             {
-                CacheEntry.ClosureAssemblies.Add(type.Assembly);
+                CacheEntry.ClosureAssemblies.Add(type.Assembly());
             }
 
-            if (type.IsGenericType)
+            if (type.IsGenericType())
             {
                 foreach (var genericArgument in type.GetGenericArguments())
                 {

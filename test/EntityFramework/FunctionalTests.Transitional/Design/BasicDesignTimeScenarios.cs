@@ -6,6 +6,7 @@ namespace System.Data.Entity.Design
     using System.Collections.Generic;
     using System.Data.Entity.Infrastructure.Design;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
@@ -63,9 +64,9 @@ namespace ConsoleApplication1
             Directory.CreateDirectory(_outputDirectory);
 
             var pathToEFAssembly = Path.Combine(_outputDirectory, "EntityFramework.dll");
-            File.Copy(new Uri(typeof(DbContext).Assembly.CodeBase).LocalPath, pathToEFAssembly);
+            File.Copy(new Uri(typeof(DbContext).Assembly().CodeBase).LocalPath, pathToEFAssembly);
             var pathToEFSqlAssembly = Path.Combine(_outputDirectory, "EntityFramework.SqlServer.dll");
-            File.Copy(new Uri(typeof(SqlProviderServices).Assembly.CodeBase).LocalPath, pathToEFSqlAssembly);
+            File.Copy(new Uri(typeof(SqlProviderServices).Assembly().CodeBase).LocalPath, pathToEFSqlAssembly);
             var pathToConfig = Path.Combine(_outputDirectory, "ConsoleApplication1.exe.config");
             File.WriteAllText(pathToConfig, Config);
 
@@ -129,7 +130,7 @@ namespace ConsoleApplication1
         private object CreateExecutor()
         {
             return _domain.CreateInstanceAndUnwrap(
-                typeof(Infrastructure.Design.Executor).Assembly.GetName().Name,
+                typeof(Infrastructure.Design.Executor).Assembly().GetName().Name,
                 typeof(Infrastructure.Design.Executor).FullName,
                 false,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.CreateInstance,
@@ -145,7 +146,7 @@ namespace ConsoleApplication1
             realArgs.AddRange(args);
 
             _domain.CreateInstance(
-                typeof(TOperation).Assembly.GetName().Name,
+                typeof(TOperation).Assembly().GetName().Name,
                 typeof(TOperation).FullName,
                 false,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.CreateInstance,

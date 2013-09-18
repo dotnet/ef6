@@ -134,32 +134,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var modelConfiguration = new ModelConfiguration();
 
-            var rootType = new MockType();
-            var middleType = new MockType().BaseType(rootType);
-            var leafType = new MockType().BaseType(middleType);
-
-            modelConfiguration.Entity(rootType).MapToStoredProcedures();
-            modelConfiguration.Entity(middleType);
-            modelConfiguration.Entity(leafType);
+            modelConfiguration.Entity(typeof(CType2)).MapToStoredProcedures();
+            modelConfiguration.Entity(typeof(BType2));
+            modelConfiguration.Entity(typeof(AType2));
 
             var model = new EdmModel(DataSpace.CSpace);
 
             var rootEntity = model.AddEntityType("Root");
-            rootEntity.Annotations.SetClrType(rootType);
+            rootEntity.Annotations.SetClrType(typeof(CType2));
 
             var middleEntity = model.AddEntityType("Middle");
-            middleEntity.Annotations.SetClrType(middleType);
+            middleEntity.Annotations.SetClrType(typeof(BType2));
             middleEntity.BaseType = rootEntity;
 
             var leafEntity = model.AddEntityType("Leaf");
-            leafEntity.Annotations.SetClrType(leafType);
+            leafEntity.Annotations.SetClrType(typeof(AType2));
             leafEntity.BaseType = middleEntity;
 
             modelConfiguration.Configure(model);
 
-            Assert.NotNull(modelConfiguration.Entity(rootType).ModificationStoredProceduresConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(middleType).ModificationStoredProceduresConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(leafType).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(typeof(CType2)).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(typeof(BType2)).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(typeof(AType2)).ModificationStoredProceduresConfiguration);
+        }
+
+        public class AType2 : AType1
+        {
+        }
+
+        public class BType2 : CType2
+        {
+        }
+
+        public class CType2
+        {
         }
 
         [Fact]
@@ -167,23 +175,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var modelConfiguration = new ModelConfiguration();
 
-            var baseType = new MockType("B");
-            var derivedType = new MockType("D").BaseType(baseType);
-
-            modelConfiguration.Entity(baseType);
-            modelConfiguration.Entity(derivedType).MapToStoredProcedures();
+            modelConfiguration.Entity(typeof(BType2));
+            modelConfiguration.Entity(typeof(AType2)).MapToStoredProcedures();
 
             var model = new EdmModel(DataSpace.CSpace);
 
             var baseEntity = model.AddEntityType("Base");
-            baseEntity.Annotations.SetClrType(baseType);
+            baseEntity.Annotations.SetClrType(typeof(BType2));
 
             var derivedEntity = model.AddEntityType("Derived");
-            derivedEntity.Annotations.SetClrType(derivedType);
+            derivedEntity.Annotations.SetClrType(typeof(AType2));
             derivedEntity.BaseType = baseEntity;
 
             Assert.Equal(
-                Strings.BaseTypeNotMappedToFunctions("B", "D"),
+                Strings.BaseTypeNotMappedToFunctions("BType2", "AType2"),
                 Assert.Throws<InvalidOperationException>(
                     () => modelConfiguration.Configure(model)).Message);
         }
@@ -193,26 +198,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             var modelConfiguration = new ModelConfiguration();
 
-            var baseType = new MockType("B");
-            var derivedType = new MockType("D").BaseType(baseType);
-
-            modelConfiguration.Entity(baseType);
-            modelConfiguration.Entity(derivedType).MapToStoredProcedures();
+            modelConfiguration.Entity(typeof(BType2));
+            modelConfiguration.Entity(typeof(CType2)).MapToStoredProcedures();
 
             var model = new EdmModel(DataSpace.CSpace);
 
             var baseEntity = model.AddEntityType("Base");
-            baseEntity.Annotations.SetClrType(baseType);
+            baseEntity.Annotations.SetClrType(typeof(BType2));
             baseEntity.Abstract = true;
 
             var derivedEntity = model.AddEntityType("Derived");
-            derivedEntity.Annotations.SetClrType(derivedType);
+            derivedEntity.Annotations.SetClrType(typeof(CType2));
             derivedEntity.BaseType = baseEntity;
 
             modelConfiguration.Configure(model);
 
-            Assert.NotNull(modelConfiguration.Entity(baseType).ModificationStoredProceduresConfiguration);
-            Assert.NotNull(modelConfiguration.Entity(derivedType).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(typeof(BType2)).ModificationStoredProceduresConfiguration);
+            Assert.NotNull(modelConfiguration.Entity(typeof(CType2)).ModificationStoredProceduresConfiguration);
         }
 
         [Fact]

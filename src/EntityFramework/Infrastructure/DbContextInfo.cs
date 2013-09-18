@@ -374,7 +374,7 @@ namespace System.Data.Entity.Infrastructure
 
         private Func<DbContext> CreateActivator()
         {
-            var constructor = _contextType.GetConstructor(Type.EmptyTypes);
+            var constructor = _contextType.GetPublicConstructor();
 
             if (constructor != null)
             {
@@ -382,8 +382,8 @@ namespace System.Data.Entity.Infrastructure
             }
 
             var factoryType
-                = (from t in _contextType.Assembly.GetAccessibleTypes()
-                   where t.IsClass && typeof(IDbContextFactory<>).MakeGenericType(_contextType).IsAssignableFrom(t)
+                = (from t in _contextType.Assembly().GetAccessibleTypes()
+                   where t.IsClass() && typeof(IDbContextFactory<>).MakeGenericType(_contextType).IsAssignableFrom(t)
                    select t).FirstOrDefault();
 
             if (factoryType == null)
@@ -391,7 +391,7 @@ namespace System.Data.Entity.Infrastructure
                 return null;
             }
 
-            if (factoryType.GetConstructor(Type.EmptyTypes) == null)
+            if (factoryType.GetPublicConstructor() == null)
             {
                 throw Error.DbContextServices_MissingDefaultCtor(factoryType);
             }

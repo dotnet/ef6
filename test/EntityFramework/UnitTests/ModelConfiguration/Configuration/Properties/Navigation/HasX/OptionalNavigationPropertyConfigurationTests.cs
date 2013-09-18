@@ -11,7 +11,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void Ctor_should_set_source_end_kind_to_optional()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration);
 
@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_many_should_set_inverse_when_specified()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithMany(t => t.Ss);
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_many_should_set_target_end_kind_to_many()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithMany();
 
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_required_should_set_inverse_when_specified()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithRequired(t => t.S);
 
@@ -51,7 +51,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_required_should_set_target_end_kind_to_required()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithRequired();
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_optional_dependent_should_set_inverse_when_specified()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithOptionalDependent(t => t.S);
 
@@ -71,7 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_optional_principal_should_set_inverse_when_specified()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithOptionalPrincipal(t => t.S);
 
@@ -81,7 +81,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_optional_dependent_should_set_target_end_kind_to_optional()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithOptionalDependent();
 
@@ -91,11 +91,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         [Fact]
         public void With_optional_principal_should_set_target_end_kind_to_optional()
         {
-            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(new MockType(), "N"));
+            var associationConfiguration = new NavigationPropertyConfiguration(new MockPropertyInfo(typeof(AType1), "N"));
 
             new OptionalNavigationPropertyConfiguration<S, T>(associationConfiguration).WithOptionalPrincipal();
 
             Assert.Equal(RelationshipMultiplicity.ZeroOrOne, associationConfiguration.InverseEndKind);
+        }
+
+        public class AType1
+        {
         }
 
         private class S

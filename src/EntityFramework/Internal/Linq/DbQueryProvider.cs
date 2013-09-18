@@ -177,9 +177,7 @@ namespace System.Data.Entity.Internal.Linq
 
             var genericInternalQueryType = typeof(InternalQuery<>).MakeGenericType(
                 ((IQueryable)objectQuery).ElementType);
-            var constructor = genericInternalQueryType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, null,
-                new[] { typeof(InternalContext), typeof(ObjectQuery) }, null);
+            var constructor = genericInternalQueryType.GetDeclaredConstructor(typeof(InternalContext), typeof(ObjectQuery));
             return (IInternalQuery)constructor.Invoke(new object[] { _internalContext, objectQuery });
         }
 

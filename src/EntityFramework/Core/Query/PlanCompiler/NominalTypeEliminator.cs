@@ -1905,7 +1905,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 // For enums the value can be specified either as enum (e.g. Color.Yellow) or as a number.
                 // We need the numeric value only so if it was not specified as a number we need to cast it to the 
                 // underlying enum type.
-                var constValue = op.Value.GetType().IsEnum
+                var constValue = op.Value.GetType().IsEnum()
                                      ? Convert.ChangeType(
                                          op.Value, op.Value.GetType().GetEnumUnderlyingType(), CultureInfo.InvariantCulture)
                                      : op.Value;

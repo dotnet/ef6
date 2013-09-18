@@ -26,7 +26,7 @@ namespace System.Data.Entity.Internal
             new ConcurrentDictionary<Type, DbContextTypesInitializersPair>();
 
         // Used by the code below to create DbSet instances
-        public static readonly MethodInfo SetMethod = typeof(DbContext).GetDeclaredMethod("Set", Type.EmptyTypes);
+        public static readonly MethodInfo SetMethod = typeof(DbContext).GetDeclaredMethod("Set");
 
         private readonly DbContext _context;
 
@@ -206,13 +206,13 @@ namespace System.Data.Entity.Internal
             try
             {
                 var setInterface =
-                    (setType.IsGenericType && typeof(IDbSet<>).IsAssignableFrom(setType.GetGenericTypeDefinition()))
+                    (setType.IsGenericType() && typeof(IDbSet<>).IsAssignableFrom(setType.GetGenericTypeDefinition()))
                         ? setType
                         : setType.GetInterface(typeof(IDbSet<>).FullName);
 
                 // We need to make sure the type is fully specified otherwise we won't be able to add element to it.
                 if (setInterface != null
-                    && !setInterface.ContainsGenericParameters)
+                    && !setInterface.ContainsGenericParameters())
                 {
                     return setInterface.GetGenericArguments()[0];
                 }

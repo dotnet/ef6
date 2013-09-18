@@ -102,11 +102,8 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectViewDataType = _genericObjectViewQueryResultDataType.MakeGenericType(clrElementType);
 
-                var viewDataConstructor = objectViewDataType.GetConstructor(
-                    BindingFlags.Instance | BindingFlags.NonPublic,
-                    null,
-                    new[] { typeof(IEnumerable), typeof(ObjectContext), typeof(bool), typeof(EntitySet) },
-                    null);
+                var viewDataConstructor = objectViewDataType.GetDeclaredConstructor(
+                    typeof(IEnumerable), typeof(ObjectContext), typeof(bool), typeof(EntitySet));
 
                 Debug.Assert(
                     viewDataConstructor != null,
@@ -180,11 +177,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectViewDataType = _genericObjectViewEntityCollectionDataType.MakeGenericType(clrElementType, typeof(TElement));
 
-                var viewDataConstructor = objectViewDataType.GetConstructor(
-                    BindingFlags.Instance | BindingFlags.NonPublic,
-                    null,
-                    new[] { typeof(EntityCollection<TElement>) },
-                    null);
+                var viewDataConstructor = objectViewDataType.GetDeclaredConstructor(typeof(EntityCollection<TElement>));
 
                 Debug.Assert(
                     viewDataConstructor != null,
@@ -217,11 +210,7 @@ namespace System.Data.Entity.Core.Objects
             Debug.Assert(
                 viewDataInterfaces.Length == 1, "Could not find IObjectViewData<T> interface definition for ObjectViewQueryResultData<T>.");
 
-            var viewConstructor = objectViewType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.NonPublic,
-                null,
-                new[] { viewDataInterfaces[0], typeof(object) },
-                null);
+            var viewConstructor = objectViewType.GetDeclaredConstructor(viewDataInterfaces[0], typeof(object));
 
             Debug.Assert(viewConstructor != null, "ObjectView constructor not found. Please ensure constructor signature is correct.");
 

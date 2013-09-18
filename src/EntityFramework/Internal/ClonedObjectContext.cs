@@ -84,10 +84,10 @@ namespace System.Data.Entity.Internal
 
             var assemblies = objectItemCollection
                 .Where(i => i is EntityType || i is ComplexType)
-                .Select(i => source.GetClrType((StructuralType)i).Assembly)
+                .Select(i => source.GetClrType((StructuralType)i).Assembly())
                 .Union(
                     objectItemCollection.OfType<EnumType>()
-                                        .Select(i => source.GetClrType(i).Assembly))
+                                        .Select(i => source.GetClrType(i).Assembly()))
                 .Distinct();
 
             foreach (var assembly in assemblies)

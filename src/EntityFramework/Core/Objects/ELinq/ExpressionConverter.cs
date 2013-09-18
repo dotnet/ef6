@@ -570,8 +570,8 @@ namespace System.Data.Entity.Core.Objects.ELinq
             // An inlined ObjectQuery or an IOrderedQueryable expression being cast to IQueryable for use in a sequence method is a no-op.
             if (fromClrType != null
                 &&
-                fromClrType.IsGenericType
-                && toClrType.IsGenericType
+                fromClrType.IsGenericType()
+                && toClrType.IsGenericType()
                 &&
                 (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
                  || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
@@ -1094,7 +1094,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
             // Enum types are only supported for EDM V3 and higher, do not force loading
             // enum types for previous versions of EDM
-            if (nonNullableType.IsEnum && this.EdmItemCollection.EdmVersion < XmlConstants.EdmVersionForV3)
+            if (nonNullableType.IsEnum() && this.EdmItemCollection.EdmVersion < XmlConstants.EdmVersionForV3)
             {
                 nonNullableType = nonNullableType.GetEnumUnderlyingType();
             }
@@ -1129,7 +1129,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // Note that if the underlying type is not any of the EF primitive types we will fail with and InvalidCastException.
                 // This is consistent with what we would do when seeing a cast to a primitive type that is not a EF valid primitive 
                 // type (e.g. ulong).
-                if (nonNullableType.IsEnum
+                if (nonNullableType.IsEnum()
                     && ClrProviderManifest.TryGetPrimitiveTypeKind(nonNullableType.GetEnumUnderlyingType(), out primitiveTypeKind))
                 {
                     type = EdmProviderManifest.Instance.GetCanonicalModelTypeUsage(primitiveTypeKind);

@@ -8,6 +8,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Utilities;
     using System.Linq;
     using Moq;
     using SimpleModel;
@@ -223,15 +224,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null)).Returns(
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null)).Returns(
                     typeof(FakeConfiguration));
 
                 var manager = CreateManager(null, mockFinder);
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
                 Assert.IsType<FakeConfiguration>(manager.GetConfiguration().Owner);
             }
 
@@ -242,13 +243,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var manager = CreateManager(null, mockFinder);
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null)).Returns(
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null)).Returns(
                     typeof(FakeConfigurationWithEnsures));
 
                 manager.EnsureLoadedForContext(typeof(FakeContext));
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
                 Assert.IsType<FakeConfigurationWithEnsures>(manager.GetConfiguration().Owner);
             }
 
@@ -260,7 +261,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 CreateManager(null, mockFinder).EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null), Times.Never());
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null), Times.Never());
             }
 
             [Fact]
@@ -270,16 +271,16 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var manager = CreateManager(null, mockFinder);
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null), Times.Once());
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null), Times.Once());
 
                 manager.EnsureLoadedForContext(contextType);
 
                 // Finder has not been used again
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null), Times.Once());
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null), Times.Once());
             }
 
             [Fact]
@@ -306,11 +307,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var manager = CreateManager(null, mockFinder);
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
 
                 var mockInternalConfiguration = CreateMockInternalConfiguration();
                 manager.SetConfiguration(mockInternalConfiguration.Object);
@@ -327,11 +328,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var configuration = manager.GetConfiguration();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
 
                 Assert.Same(configuration, manager.GetConfiguration());
             }
@@ -346,12 +347,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var configuration = manager.GetConfiguration();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
 
                 Assert.Same(configuration, manager.GetConfiguration());
             }
@@ -365,8 +366,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null))
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null))
                           .Returns(configuration.Owner.GetType());
                 var manager = CreateManager(null, mockFinder);
 
@@ -374,7 +375,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
                 manager.EnsureLoadedForContext(contextType);
 
-                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null));
+                mockFinder.Verify(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null));
 
                 Assert.Same(configuration, manager.GetConfiguration());
             }
@@ -387,8 +388,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null))
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null))
                           .Returns(typeof(FakeConfiguration));
                 var manager = CreateManager(null, mockFinder);
 
@@ -407,8 +408,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 var mockFinder = new Mock<DbConfigurationFinder>();
                 var contextType = typeof(FakeContext);
 
-                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly, contextType, null)).Returns(contextType);
-                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly, contextType, null))
+                mockFinder.Setup(m => m.TryFindContextType(contextType.Assembly(), contextType, null)).Returns(contextType);
+                mockFinder.Setup(m => m.TryFindConfigurationType(contextType.Assembly(), contextType, null))
                           .Returns(configuration.GetType());
                 var manager = CreateManager(null, mockFinder);
 
@@ -512,7 +513,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             public void EnsureLoadedForAssembly_loads_configuration_from_assembly_if_none_was_previously_used()
             {
                 var mockFinder = new Mock<DbConfigurationFinder>();
-                var assembly = typeof(Random).Assembly;
+                var assembly = typeof(Random).Assembly();
 
                 mockFinder.Setup(m => m.TryFindConfigurationType(assembly, null, null)).Returns(typeof(FakeConfiguration));
 

@@ -3,7 +3,7 @@
 namespace ProductivityApiTests
 {
     using System.Data.Entity;
-    using System.Data.Entity.Design;
+    using System.Data.Entity.Functionals.Utilities;
     using System.IO;
     using FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns;
     using FunctionalTests.ProductivityApi.TemplateModels.CsMonsterModel;
@@ -14,7 +14,7 @@ namespace ProductivityApiTests
         {
             const string prefix = "System.Data.Entity.TestModels.TemplateModels.Schemas.";
             ResourceUtilities.CopyEmbeddedResourcesToCurrentDir(
-                typeof(TemplateTests).Assembly,
+                typeof(TemplateTests).Assembly(),
                 prefix,
                 /*overwrite*/ true,
                 "AdvancedPatterns.edmx",

@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Objects
     internal static class DelegateFactory
     {
         private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetDeclaredMethod(
-            "ThrowSetInvalidValue", new[] { typeof(object), typeof(Type), typeof(string), typeof(string) });
+            "ThrowSetInvalidValue", typeof(object), typeof(Type), typeof(string), typeof(string));
 
         // <summary>
         // For an OSpace ComplexType returns the delegate to construct the clr instance.
@@ -130,7 +130,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
 
-            if (setMethod.DeclaringType.IsValueType)
+            if (setMethod.DeclaringType.IsValueType())
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
@@ -152,9 +152,7 @@ namespace System.Data.Entity.Core.Objects
         internal static ConstructorInfo GetConstructorForType(Type type)
         {
             DebugCheck.NotNull(type);
-            var ci = type.GetConstructor(
-                BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null, Type.EmptyTypes,
-                null);
+            var ci = type.GetDeclaredConstructor();
             if (null == ci)
             {
                 throw new InvalidOperationException(Strings.CodeGen_ConstructorNoParameterless(type.FullName));
@@ -170,11 +168,9 @@ namespace System.Data.Entity.Core.Objects
         // <returns> Parameterless constructor for the specified type. </returns>
         internal static NewExpression GetNewExpressionForCollectionType(Type type)
         {
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(HashSet<>))
+            if (type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(HashSet<>))
             {
-                var constructor = type.GetConstructor(
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance, null,
-                    new[] { typeof(IEqualityComparer<>).MakeGenericType(type.GetGenericArguments()) }, null);
+                var constructor = type.GetDeclaredConstructor(typeof(IEqualityComparer<>).MakeGenericType(type.GetGenericArguments()));
                 return Expression.New(constructor, Expression.New(typeof(ObjectReferenceEqualityComparer)));
             }
             return Expression.New(GetConstructorForType(type));
@@ -216,7 +212,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
 
-            if (propertyInfo.DeclaringType.IsValueType)
+            if (propertyInfo.DeclaringType.IsValueType())
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
@@ -235,7 +231,7 @@ namespace System.Data.Entity.Core.Objects
             var entityParameter = Expression.Parameter(typeof(object), "entity");
             Expression getterExpression = Expression.Property(Expression.Convert(entityParameter, entityDeclaringType), propertyInfo);
 
-            if (propertyType.IsValueType)
+            if (propertyType.IsValueType())
             {
                 getterExpression = Expression.Convert(getterExpression, typeof(object));
             }
@@ -292,7 +288,7 @@ namespace System.Data.Entity.Core.Objects
 
             // allowNull comes from a model facet and if it is not possible for the property to allow nulls
             // then we switch this off even if the model has it switched on.
-            if (propertyType.IsValueType
+            if (propertyType.IsValueType()
                 && Nullable.GetUnderlyingType(propertyType) == null)
             {
                 allowNull = false;
@@ -338,7 +334,7 @@ namespace System.Data.Entity.Core.Objects
                 throw new InvalidOperationException(Strings.CodeGen_PropertyIsStatic);
             }
 
-            if (propertyInfoForSet.DeclaringType.IsValueType)
+            if (propertyInfoForSet.DeclaringType.IsValueType())
             {
                 throw new InvalidOperationException(Strings.CodeGen_PropertyDeclaringTypeIsValueType);
             }
@@ -374,12 +370,8 @@ namespace System.Data.Entity.Core.Objects
             var targetAccessor = MetadataHelper.GetNavigationPropertyAccessor(sourceEntityType, sourceMember, targetMember);
 
             var genericCreateRelatedEndMethod = typeof(DelegateFactory).GetDeclaredMethod(
-                "CreateGetRelatedEndMethod", 
-                new[]
-                    {
-                        typeof(AssociationEndMember), typeof(AssociationEndMember), typeof(NavigationPropertyAccessor),
-                        typeof(NavigationPropertyAccessor)
-                    });
+                "CreateGetRelatedEndMethod", typeof(AssociationEndMember), 
+                typeof(AssociationEndMember), typeof(NavigationPropertyAccessor), typeof(NavigationPropertyAccessor));
             Debug.Assert(genericCreateRelatedEndMethod != null, "Could not find method DelegateFactory.CreateGetRelatedEndMethod");
 
             var createRelatedEndMethod = genericCreateRelatedEndMethod.MakeGenericMethod(sourceEntityType.ClrType, targetEntityType.ClrType);

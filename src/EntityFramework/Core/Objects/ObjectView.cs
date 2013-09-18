@@ -68,7 +68,7 @@ namespace System.Data.Entity.Core.Objects
 
         private static bool IsElementTypeAbstract
         {
-            get { return typeof(TElement).IsAbstract; }
+            get { return typeof(TElement).IsAbstract(); }
         }
 
         #region ICancelAddNew implementation

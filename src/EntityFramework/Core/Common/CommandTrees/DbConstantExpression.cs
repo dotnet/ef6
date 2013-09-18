@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             DebugCheck.NotNull(value);
             Debug.Assert(TypeSemantics.IsScalarType(resultType), "DbConstantExpression must have a primitive or enum value");
             Debug.Assert(
-                !value.GetType().IsEnum || TypeSemantics.IsEnumerationType(resultType),
+                !value.GetType().IsEnum() || TypeSemantics.IsEnumerationType(resultType),
                 "value is an enum while the result type is not of enum type.");
             Debug.Assert(
                 Helper.AsPrimitive(resultType.EdmType).ClrEquivalentType
-                == (value.GetType().IsEnum ? value.GetType().GetEnumUnderlyingType() : value.GetType()),
+                == (value.GetType().IsEnum() ? value.GetType().GetEnumUnderlyingType() : value.GetType()),
                 "the type of the value has to match the result type (for enum types only underlying types are compared).");
 
             // binary values should be cloned before use

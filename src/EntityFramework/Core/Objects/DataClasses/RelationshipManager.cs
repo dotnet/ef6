@@ -704,7 +704,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 }
                 else
                 {
-                    var types = _expensiveLoader.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly);
+                    var types = _expensiveLoader.LoadTypesExpensiveWay(WrappedOwner.IdentityType.Assembly());
                     if (types != null)
                     {
                         types.TryGetValue(identityName, out entityType);
@@ -874,7 +874,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 if (associations == null)
                 {
                     // No metadata is available, attempt to load the metadata on the fly to retrieve the AssociationTypes
-                    associations = _expensiveLoader.GetAllRelationshipTypesExpensiveWay(entityClrType.Assembly);
+                    associations = _expensiveLoader.GetAllRelationshipTypesExpensiveWay(entityClrType.Assembly());
                 }
             }
 

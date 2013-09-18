@@ -91,8 +91,6 @@ namespace System.Data.Entity.Core
         // <returns> The type to instantiate, or null if we cannot find a supported type to instantiate </returns>
         internal static Type DetermineCollectionType(Type requestedType)
         {
-            const BindingFlags constructorBinding = BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance;
-
             var elementType = GetCollectionElementType(requestedType);
 
             if (requestedType.IsArray)
@@ -102,8 +100,8 @@ namespace System.Data.Entity.Core
                         requestedType, typeof(List<>).MakeGenericType(elementType)));
             }
 
-            if (!requestedType.IsAbstract
-                && requestedType.GetConstructor(constructorBinding, null, Type.EmptyTypes, null) != null)
+            if (!requestedType.IsAbstract()
+                && requestedType.GetPublicConstructor() != null)
             {
                 return requestedType;
             }
@@ -132,7 +130,7 @@ namespace System.Data.Entity.Core
         // </summary>
         internal static Type GetEntityIdentityType(Type entityType)
         {
-            return EntityProxyFactory.IsProxyType(entityType) ? entityType.BaseType : entityType;
+            return EntityProxyFactory.IsProxyType(entityType) ? entityType.BaseType() : entityType;
         }
 
         // <summary>
@@ -333,8 +331,8 @@ namespace System.Data.Entity.Core
         {
             DebugCheck.NotNull(valueType);
             DebugCheck.NotNull(destinationType);
-            if (destinationType.IsValueType
-                && destinationType.IsGenericType
+            if (destinationType.IsValueType()
+                && destinationType.IsGenericType()
                 && (typeof(Nullable<>) == destinationType.GetGenericTypeDefinition()))
             {
                 return new InvalidOperationException(

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity
 {
+    using System.Data.Entity.Functionals.Utilities;
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Security;
@@ -96,7 +97,7 @@ namespace System.Data.Entity
         {
             HandleDisposed();
 
-            return _domain.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName);
+            return _domain.CreateInstanceAndUnwrap(type.Assembly().FullName, type.FullName);
         }
 
         public void Dispose()

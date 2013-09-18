@@ -40,7 +40,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             // if one of the types is an enum while the other is not there is no match
             if (Helper.IsEnumType(cspaceType)
-                ^ type.IsEnum)
+                ^ type.IsEnum())
             {
                 LogLoadMessage(
                     Strings.Validator_OSpace_Convention_SSpaceOSpaceTypeMismatch(cspaceType.FullName, cspaceType.FullName),
@@ -63,7 +63,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool TryCreateEnumType(Type enumType, EnumType cspaceEnumType, out EdmType newOSpaceType)
         {
             DebugCheck.NotNull(enumType);
-            Debug.Assert(enumType.IsEnum, "enum type expected");
+            Debug.Assert(enumType.IsEnum(), "enum type expected");
             DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
 
@@ -104,16 +104,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             if (cspaceType.BaseType != null)
             {
-                if (TypesMatchByConvention(type.BaseType, cspaceType.BaseType))
+                if (TypesMatchByConvention(type.BaseType(), cspaceType.BaseType))
                 {
-                    TrackClosure(type.BaseType);
+                    TrackClosure(type.BaseType());
                     referenceResolutionListForCurrentType.Add(
                         () => ospaceType.BaseType = ResolveBaseType((StructuralType)cspaceType.BaseType, type));
                 }
                 else
                 {
                     var message = Strings.Validator_OSpace_Convention_BaseTypeIncompatible(
-                        type.BaseType.FullName, type.FullName, cspaceType.BaseType.FullName);
+                        type.BaseType().FullName, type.FullName, cspaceType.BaseType.FullName);
                     LogLoadMessage(message, cspaceType);
                     return false;
                 }
@@ -146,7 +146,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool UnderlyingEnumTypesMatch(Type enumType, EnumType cspaceEnumType)
         {
             DebugCheck.NotNull(enumType);
-            Debug.Assert(enumType.IsEnum, "expected enum OSpace type");
+            Debug.Assert(enumType.IsEnum(), "expected enum OSpace type");
             DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
 
@@ -177,7 +177,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private bool EnumMembersMatch(Type enumType, EnumType cspaceEnumType)
         {
             DebugCheck.NotNull(enumType);
-            Debug.Assert(enumType.IsEnum, "expected enum OSpace type");
+            Debug.Assert(enumType.IsEnum(), "expected enum OSpace type");
             DebugCheck.NotNull(cspaceEnumType);
             Debug.Assert(Helper.IsEnumType(cspaceEnumType), "Enum type expected");
             Debug.Assert(
@@ -369,7 +369,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         else
                         {
                             var message = Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
-                                clrProperty.Name, type.FullName, type.Assembly.FullName);
+                                clrProperty.Name, type.FullName, type.Assembly().FullName);
                             LogLoadMessage(message, cspaceType);
                             return false;
                         }
@@ -462,7 +462,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static bool NonPrimitiveMemberMatchesByConvention(PropertyInfo clrProperty, EdmMember cspaceMember)
         {
-            return !clrProperty.PropertyType.IsValueType && !clrProperty.PropertyType.IsAssignableFrom(typeof(string))
+            return !clrProperty.PropertyType.IsValueType() && !clrProperty.PropertyType.IsAssignableFrom(typeof(string))
                    && clrProperty.Name == cspaceMember.Name;
         }
 
@@ -552,7 +552,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     LogError(
                         Strings.Validator_OSpace_Convention_ScalarPropertyMissginGetterOrSetter(
-                            clrProperty.Name, type.FullName, type.Assembly.FullName),
+                            clrProperty.Name, type.FullName, type.Assembly().FullName),
                         cspaceProperty.TypeUsage.EdmType);
                 }
             }
@@ -582,7 +582,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // the property is nullable only if it is not a key and can actually be set to null (i.e. is not a value type or is a nullable value type)
             var nullableFacetValue = !isKeyMember
                                      &&
-                                     (!clrProperty.PropertyType.IsValueType || Nullable.GetUnderlyingType(clrProperty.PropertyType) != null);
+                                     (!clrProperty.PropertyType.IsValueType() || Nullable.GetUnderlyingType(clrProperty.PropertyType) != null);
 
             var ospaceProperty =
                 new EdmProperty(
