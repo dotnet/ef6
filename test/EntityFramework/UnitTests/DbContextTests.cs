@@ -81,66 +81,6 @@ namespace ProductivityApiUnitTests
     /// </summary>
     public class DbContextTests : TestBase
     {
-        public DbContextTests()
-        {
-            // Ensure the basic-auth test user exists
-
-            using (var connection = new SqlConnection(SimpleConnectionString("master")))
-            {
-                connection.Open();
-                if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
-                {
-                    var loginExists = ExecuteScalarReturnsOne(
-                        connection, 
-                        "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestUser'");                    
-
-                    if (!loginExists)
-                    {
-                        ExecuteNonQuery(connection, "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1'");
-                    }
-
-                    var userExists = ExecuteScalarReturnsOne(
-                        connection,
-                        "SELECT COUNT(*) FROM sys.sysusers WHERE name = N'EFTestUser'");
-
-                    if (!userExists)
-                    {
-                        ExecuteNonQuery(connection, "CREATE USER [EFTestUser] FROM LOGIN [EFTestUser]");
-                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'loginmanager', 'EFTestUser'");
-                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'dbmanager', 'EFTestUser'");
-                    }
-                }
-                else
-                {
-                    ExecuteNonQuery(
-                        connection, 
-@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
-BEGIN
-    CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
-    EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
-END");
-                }                
-            }
-        }
-
-        private static void ExecuteNonQuery(SqlConnection connection, string commandText)
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                command.ExecuteNonQuery();
-            }
-        }
-
-        private static bool ExecuteScalarReturnsOne(SqlConnection connection, string commandText)
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = commandText;
-                return (int)command.ExecuteScalar() == 1;
-            }
-        }
-
         #region Using EF connection string/EntityConnection in combination with DbCompiledModel
 
         private const string EntityConnectionString =
@@ -481,6 +421,7 @@ END");
         [Fact]
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_lazy_connection()
         {
+            EnsureEfTestUserExists();
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
@@ -505,6 +446,7 @@ END");
         [Fact]
         public void Can_initialize_database_when_using_secure_connection_string_with_sql_server_authentication_and_eager_connection()
         {
+            EnsureEfTestUserExists();
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
@@ -531,6 +473,7 @@ END");
         [Fact]
         public void Can_use_ddl_ops_when_using_secure_connection_string_with_sql_server_authentication_and_eager_context()
         {
+            EnsureEfTestUserExists();
             var connectionString
                 = SimpleConnectionStringWithCredentials<PersistSecurityInfoContext>(
                     "EFTestUser",
@@ -563,6 +506,64 @@ END");
             finally
             {
                 context.Database.Delete();
+            }
+        }
+
+        private void EnsureEfTestUserExists()
+        {
+            using (var connection = new SqlConnection(SimpleConnectionString("master")))
+            {
+                connection.Open();
+                if (DatabaseTestHelpers.IsSqlAzure(connection.ConnectionString))
+                {
+                    var loginExists = ExecuteScalarReturnsOne(
+                        connection,
+                        "SELECT COUNT(*) FROM sys.sql_logins WHERE name = N'EFTestUser'");
+
+                    if (!loginExists)
+                    {
+                        ExecuteNonQuery(connection, "CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1'");
+                    }
+
+                    var userExists = ExecuteScalarReturnsOne(
+                        connection,
+                        "SELECT COUNT(*) FROM sys.sysusers WHERE name = N'EFTestUser'");
+
+                    if (!userExists)
+                    {
+                        ExecuteNonQuery(connection, "CREATE USER [EFTestUser] FROM LOGIN [EFTestUser]");
+                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'loginmanager', 'EFTestUser'");
+                        ExecuteNonQuery(connection, "EXEC sp_addrolemember 'dbmanager', 'EFTestUser'");
+                    }
+                }
+                else
+                {
+                    ExecuteNonQuery(
+                        connection,
+@"IF NOT EXISTS (SELECT * FROM sys.server_principals WHERE name = N'EFTestUser')
+BEGIN
+    CREATE LOGIN [EFTestUser] WITH PASSWORD=N'Password1', DEFAULT_DATABASE=[master], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+    EXEC sys.sp_addsrvrolemember @loginame = N'EFTestUser', @rolename = N'sysadmin'
+END");
+                }
+            }
+        }
+
+        private static void ExecuteNonQuery(SqlConnection connection, string commandText)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private static bool ExecuteScalarReturnsOne(SqlConnection connection, string commandText)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = commandText;
+                return (int)command.ExecuteScalar() == 1;
             }
         }
 
