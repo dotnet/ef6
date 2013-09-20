@@ -11,12 +11,12 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_and_set_column_property()
         {
-            var column = new EdmProperty("C");
+            var column = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), column);
 
             Assert.Same(column, scalarPropertyMapping.Column);
-        
-            column = new EdmProperty("C'");
+
+            column = new EdmProperty("C'", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             scalarPropertyMapping.Column = column;
 
@@ -31,7 +31,7 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<ArgumentNullException>(
                     () => new ScalarPropertyMapping(
                               null,
-                              EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))).ParamName);
+                              new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })))).ParamName);
         }
 
         [Fact]
@@ -48,8 +48,8 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Cannot_create_mapping_for_non_primitive_or_non_enum_property()
         {
-            var modelProperty = EdmProperty.CreateComplex("p", new ComplexType());
-            var storeColumn = EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            var modelProperty = EdmProperty.CreateComplex("p", new ComplexType("CT"));
+            var storeColumn = new EdmProperty("c", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             Assert.Equal(
                 Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed,
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Mapping
         public void Cannot_create_mapping_for_non_primitive_store_column()
         {
             var modelProperty = EdmProperty.CreatePrimitive("p", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
-            var storeColumn = new EdmProperty("p", TypeUsage.CreateDefaultTypeUsage(new RowType()));
+            var storeColumn = new EdmProperty("p", TypeUsage.CreateDefaultTypeUsage(new RowType() { DataSpace = DataSpace.SSpace }));
 
             Assert.Equal(
                 Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed,

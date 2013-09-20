@@ -344,7 +344,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void WriteEntityContainerMappingElement_should_write_function_import_elements()
         {
-            var typeUsage =
+            var typeUsage = 
                 TypeUsage.CreateDefaultTypeUsage(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
 
             var complexTypeProperty1 = new EdmProperty("CTProperty1", typeUsage);
@@ -376,6 +376,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                     }
                         });
 
+            typeUsage = ProviderRegistry.Sql2008_ProviderManifest.GetStoreType(typeUsage);
             var rowTypeProperty1 = new EdmProperty("RTProperty1", typeUsage);
             var rowTypeProperty2 = new EdmProperty("RTProperty2", typeUsage);
             var rowType = new RowType(new[] { rowTypeProperty1, rowTypeProperty2 });

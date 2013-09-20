@@ -10,13 +10,13 @@ namespace System.Data.Entity.Core.Mapping
         [Fact]
         public void Can_get_and_set_column_property()
         {
-            var column1 = new EdmProperty("C");
+            var column1 = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var conditionPropertyMapping
                 = new ConditionPropertyMapping(null, column1, 42, null);
 
             Assert.Same(column1, conditionPropertyMapping.Column);
 
-            var column2 = new EdmProperty("C");
+            var column2 = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             conditionPropertyMapping.Column = column2;
 
@@ -27,7 +27,7 @@ namespace System.Data.Entity.Core.Mapping
         public void Can_get_and_set_Value()
         {
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C"), 42, null);
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
             
             Assert.Equal(42, conditionPropertyMapping.Value);
             Assert.Null(conditionPropertyMapping.IsNull);
@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
         public void Can_get_and_set_IsNull()
         {
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C"), null, false);
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), null, false);
 
             Assert.Null(conditionPropertyMapping.Value);
             Assert.False((bool)conditionPropertyMapping.IsNull);

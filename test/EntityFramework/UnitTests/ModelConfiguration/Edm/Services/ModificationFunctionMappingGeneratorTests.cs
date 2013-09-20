@@ -41,10 +41,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var storageMappingFragment = new MappingFragment(new EntitySet(), storageEntityTypeMapping, false);
             
             storageMappingFragment.AddColumnMapping(
-                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { intProperty }));
+                new ColumnMappingBuilder(new EdmProperty("C0", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { intProperty }));
 
             storageMappingFragment.AddColumnMapping(
-                new ColumnMappingBuilder(new EdmProperty("C1"), new[] { stringProperty }));
+                new ColumnMappingBuilder(new EdmProperty("C1", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { stringProperty }));
 
             storageEntityTypeMapping.AddFragment(storageMappingFragment);
 
@@ -127,10 +127,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var storageMappingFragment = new MappingFragment(new EntitySet(), storageEntityTypeMapping, false);
 
             storageMappingFragment.AddColumnMapping(
-                new ColumnMappingBuilder(new EdmProperty("C0"), new[] { intProperty }));
+                new ColumnMappingBuilder(new EdmProperty("C0", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { intProperty }));
 
             storageMappingFragment.AddColumnMapping(
-                new ColumnMappingBuilder(new EdmProperty("C1"), new[] { stringProperty }));
+                new ColumnMappingBuilder(new EdmProperty("C1", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { stringProperty }));
 
             storageEntityTypeMapping.AddFragment(storageMappingFragment);
 
@@ -236,10 +236,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                       };
 
             associationSetMapping.SourceEndMapping
-                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("FooId")));
+                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("FooId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
 
             associationSetMapping.TargetEndMapping
-                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("BarId")));
+                                 .AddProperty(new ScalarPropertyMapping(new EdmProperty("PK"), new EdmProperty("BarId", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }))));
 
             var functionMappingGenerator
                 = new ModificationFunctionMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest);

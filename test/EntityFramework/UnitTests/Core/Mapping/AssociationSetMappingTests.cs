@@ -108,7 +108,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(associationSetMapping.ColumnConditions);
 
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C"), 42, null);
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
 
             associationSetMapping.AddColumnCondition(conditionPropertyMapping);
 

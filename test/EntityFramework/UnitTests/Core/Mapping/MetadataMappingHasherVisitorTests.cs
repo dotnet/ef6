@@ -335,7 +335,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var typeUsage = TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             var property1 = new EdmProperty("A", typeUsage);
-            var property2 = new EdmProperty("B", typeUsage);
+            var property2 = new EdmProperty("B", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             PropertyMapping mapping = new ScalarPropertyMapping(property1, property2);
 
             Assert.Equal("ScalarProperty(Identity=A,ColumnIdentity=B)", 
@@ -371,7 +371,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var typeUsage = TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
             var property1 = new EdmProperty("A", typeUsage);
-            var property2 = new EdmProperty("B", typeUsage);
+            var property2 = new EdmProperty("B", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             PropertyMapping mapping = new ConditionPropertyMapping(property1, null, "V", null);
 

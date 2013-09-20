@@ -27,7 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var complexType = new ComplexType("C");
             var propertyMapping1
                 = new ColumnMappingBuilder(
-                    new EdmProperty("C"),
+                    new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })),
                     new[]
                         {
                             EdmProperty.CreateComplex("P1", complexType),
@@ -41,7 +41,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
 
             var propertyMapping2
                 = new ColumnMappingBuilder(
-                    new EdmProperty("C"),
+                    new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })),
                     new List<EdmProperty>
                         {
                             EdmProperty.CreateComplex("P3", complexType),

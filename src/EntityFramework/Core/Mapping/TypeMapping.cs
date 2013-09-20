@@ -48,8 +48,6 @@ namespace System.Data.Entity.Core.Mapping
         /// <param name="setMapping"> EntitySetBaseMapping that contains this type mapping </param>
         internal TypeMapping(EntitySetBaseMapping setMapping)
         {
-            DebugCheck.NotNull(setMapping);
-
             m_fragments = new List<MappingFragment>();
             m_setMapping = setMapping;
         }

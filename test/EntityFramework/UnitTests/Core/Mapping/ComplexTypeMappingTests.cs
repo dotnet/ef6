@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var complexType = new ComplexType();
             var complexTypeMapping = new ComplexTypeMapping(complexType);
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             Assert.Empty(complexTypeMapping.Properties);
 
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Core.Mapping
 
             complexTypeMapping.SetReadOnly();
 
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
@@ -84,7 +84,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             var complexType = new ComplexType();
             var complexTypeMapping = new ComplexTypeMapping(complexType);
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             complexTypeMapping.AddProperty(scalarPropertyMapping);
 

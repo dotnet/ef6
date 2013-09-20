@@ -23,7 +23,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
@@ -79,7 +79,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.Properties);
 
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             mappingFragment.AddProperty(scalarPropertyMapping);
 
@@ -103,7 +103,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var property = new EdmProperty("P");
 
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty, new[] { property });
@@ -155,7 +155,7 @@ namespace System.Data.Entity.Core.Mapping
                             new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
 
             var columnMappingBuilder =
-                new ColumnMappingBuilder(new EdmProperty("S"), new[] { new EdmProperty("S") });
+                new ColumnMappingBuilder(new EdmProperty("S", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { new EdmProperty("S") });
 
             mappingFragment.AddColumnMapping(columnMappingBuilder);
 
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var property = new EdmProperty("P");
 
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty, new[] { property });
@@ -207,9 +207,9 @@ namespace System.Data.Entity.Core.Mapping
 
             var property = new EdmProperty("P");
 
-            mappingFragment.AddColumnMapping(new ColumnMappingBuilder(new EdmProperty("C"), new[] { property }));
+            mappingFragment.AddColumnMapping(new ColumnMappingBuilder(new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { property }));
 
-            var columnProperty = new EdmProperty("C'");
+            var columnProperty = new EdmProperty("C'", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             var columnMappingBuilder = new ColumnMappingBuilder(columnProperty, new[] { property });
 
@@ -234,7 +234,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
@@ -267,7 +267,7 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(mappingFragment.ColumnMappings);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
             var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
@@ -298,11 +298,11 @@ namespace System.Data.Entity.Core.Mapping
             var property1 = EdmProperty.CreateComplex("P1", new ComplexType("CT"));
             var property2 = new EdmProperty("P2");
 
-            var columnMappingBuilder1 = new ColumnMappingBuilder(new EdmProperty("C"), new[] { property1, property2 });
+            var columnMappingBuilder1 = new ColumnMappingBuilder(new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), new[] { property1, property2 });
 
             mappingFragment.AddColumnMapping(columnMappingBuilder1);
 
-            var columnProperty = new EdmProperty("C");
+            var columnProperty = new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace }));
 
             var columnMappingBuilder2 = new ColumnMappingBuilder(columnProperty, new[] { property1, property2 });
 
@@ -372,7 +372,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(mappingFragment.ColumnConditions);
 
             var conditionPropertyMapping
-                = new ConditionPropertyMapping(null, new EdmProperty("C"), 42, null);
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
 
             mappingFragment.AddConditionProperty(conditionPropertyMapping);
 
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Core.Mapping
 
             mappingFragment.SetReadOnly();
 
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
@@ -414,7 +414,7 @@ namespace System.Data.Entity.Core.Mapping
                         new EntitySetMapping(
                             new EntitySet(),
                             new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
-            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             mappingFragment.AddProperty(scalarPropertyMapping);
 

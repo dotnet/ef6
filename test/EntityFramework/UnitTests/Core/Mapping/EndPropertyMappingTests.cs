@@ -16,8 +16,8 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Empty(endPropertyMapping.Properties);
 
-            var scalarPropertyMapping 
-                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+            var scalarPropertyMapping
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             endPropertyMapping.AddProperty(scalarPropertyMapping);
 
@@ -32,7 +32,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Empty(endPropertyMapping.Properties);
 
             var scalarPropertyMapping
-                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             endPropertyMapping.AddProperty(scalarPropertyMapping);
 
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping
             Assert.True(mapping.IsReadOnly);
 
             var scalarPropertyMapping
-                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
 
             Assert.Equal(
                 Strings.OperationOnReadOnlyItem,
@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Mapping
             var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
             var mapping = new EndPropertyMapping(associationEnd);
             var scalarPropertyMapping
-                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
             mapping.AddProperty(scalarPropertyMapping);
             mapping.SetReadOnly();
 
