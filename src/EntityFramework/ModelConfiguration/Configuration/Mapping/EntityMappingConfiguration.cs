@@ -413,13 +413,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             if (discriminatorColumn != null)
             {
                 var discriminator = fromFragment.ColumnConditions.SingleOrDefault(
-                    cc => cc.ColumnProperty == discriminatorColumn);
+                    cc => cc.Column == discriminatorColumn);
                 if (discriminator != null)
                 {
                     fromFragment.RemoveDefaultDiscriminatorAnnotation();
                     fromFragment.RemoveConditionProperty(discriminator);
-                    toFragment.AddDiscriminatorCondition(discriminator.ColumnProperty, discriminator.Value);
-                    toFragment.SetDefaultDiscriminator(discriminator.ColumnProperty);
+                    toFragment.AddDiscriminatorCondition(discriminator.Column, discriminator.Value);
+                    toFragment.SetDefaultDiscriminator(discriminator.Column);
                 }
             }
         }
@@ -823,10 +823,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 {
                     if (entityFragments.SelectMany(f => f.ColumnMappings).All(pm => pm.ColumnProperty != column)
                         &&
-                        entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.ColumnProperty != column)
+                        entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.Column != column)
                         &&
-                        associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column)
-                        && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column))
+                        associationMappings.SelectMany(am => am.SourceEndMapping.Properties).All(pm => pm.Column != column)
+                        && associationMappings.SelectMany(am => am.SourceEndMapping.Properties).All(pm => pm.Column != column))
                     {
                         // Remove table FKs that refer to this column, and then remove the column
                         ForeignKeyPrimitiveOperations.RemoveAllForeignKeyConstraintsForColumn(table, column);

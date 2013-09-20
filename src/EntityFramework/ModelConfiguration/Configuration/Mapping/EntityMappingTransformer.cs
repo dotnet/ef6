@@ -183,10 +183,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                            .Single(asm => asm.AssociationSet.ElementType == associationType);
 
                         var dependentTable = associationSetMapping.Table;
-                        var propertyMappings = associationSetMapping.SourceEndMapping.EndMember == end
-                                                   ? associationSetMapping.SourceEndMapping.PropertyMappings
-                                                   : associationSetMapping.TargetEndMapping.PropertyMappings;
-                        var dependentColumns = propertyMappings.Select(pm => pm.ColumnProperty);
+                        var propertyMappings = associationSetMapping.SourceEndMapping.AssociationEnd == end
+                                                   ? associationSetMapping.SourceEndMapping.Properties
+                                                   : associationSetMapping.TargetEndMapping.Properties;
+                        var dependentColumns = propertyMappings.Select(pm => pm.Column);
 
                         dependentTableInfos = new[]
                             {
@@ -539,9 +539,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 fragment.ColumnConditions.Each(
                     cc =>
                         {
-                            cc.ColumnProperty
+                            cc.Column
                                 = TableOperations.CopyColumnAndAnyConstraints(
-                                    database, fromTable, fragment.Table, cc.ColumnProperty, true, false);
+                                    database, fromTable, fragment.Table, cc.Column, true, false);
                         });
             }
         }
@@ -561,18 +561,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             var toTable = toSet.ElementType;
 
-            dependentMapping.PropertyMappings.Each(
+            dependentMapping.Properties.Each(
                 pm =>
                     {
-                        var oldColumn = pm.ColumnProperty;
+                        var oldColumn = pm.Column;
 
-                        pm.ColumnProperty
+                        pm.Column
                             = TableOperations.MoveColumnAndAnyConstraints(
                                 associationSetMapping.Table, toTable, oldColumn, useExistingColumns);
 
                         associationSetMapping.ColumnConditions
-                                             .Where(cc => cc.ColumnProperty == oldColumn)
-                                             .Each(cc => cc.ColumnProperty = pm.ColumnProperty);
+                                             .Where(cc => cc.Column == oldColumn)
+                                             .Each(cc => cc.Column = pm.Column);
                     });
 
             associationSetMapping.StoreEntitySet = toSet;
@@ -609,7 +609,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 if (dependentEnd.GetEntityType() == entityType)
                 {
                     var dependentMapping
-                        = dependentEnd == associationSetMapping.TargetEndMapping.EndMember
+                        = dependentEnd == associationSetMapping.TargetEndMapping.AssociationEnd
                               ? associationSetMapping.SourceEndMapping
                               : associationSetMapping.TargetEndMapping;
 
@@ -624,16 +624,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                               ? associationSetMapping.SourceEndMapping
                               : associationSetMapping.TargetEndMapping;
 
-                    principalMapping.PropertyMappings.Each(
+                    principalMapping.Properties.Each(
                         pm =>
                             {
-                                if (pm.ColumnProperty.DeclaringType != toTable)
+                                if (pm.Column.DeclaringType != toTable)
                                 {
-                                    pm.ColumnProperty
+                                    pm.Column
                                         = toTable.Properties.Single(
                                             p => string.Equals(
                                                 p.GetPreferredName(),
-                                                pm.ColumnProperty.GetPreferredName(),
+                                                pm.Column.GetPreferredName(),
                                                 StringComparison.Ordinal));
                                 }
                             });

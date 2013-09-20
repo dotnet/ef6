@@ -185,8 +185,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
 
-            associationSetMapping.SourceEndMapping.EndMember = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
-            associationSetMapping.SourceEndMapping.EndMember.SetClrPropertyInfo(mockPropertyInfo);
+            associationSetMapping.SourceEndMapping.AssociationEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
+            associationSetMapping.SourceEndMapping.AssociationEnd.SetClrPropertyInfo(mockPropertyInfo);
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 
@@ -238,7 +238,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
             associationSetMapping.AssociationSet.ElementType.SetConfiguration(navigationPropertyConfiguration);
 
-            associationSetMapping.SourceEndMapping.EndMember = associationType.SourceEnd;
+            associationSetMapping.SourceEndMapping.AssociationEnd = associationType.SourceEnd;
 
             navigationPropertyConfiguration.Configure(associationSetMapping, databaseMapping, ProviderRegistry.Sql2008_ProviderManifest);
 

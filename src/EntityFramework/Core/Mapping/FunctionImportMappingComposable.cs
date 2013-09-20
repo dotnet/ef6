@@ -397,7 +397,7 @@ namespace System.Data.Entity.Core.Mapping
             for (var i = 0; i < propertyMappings.Count; ++i)
             {
                 var propertyMapping = propertyMappings[i];
-                Debug.Assert(properties[i].EdmEquals(propertyMapping.EdmProperty), "properties[i].EdmEquals(propertyMapping.EdmProperty)");
+                Debug.Assert(properties[i].EdmEquals(propertyMapping.Property), "properties[i].EdmEquals(propertyMapping.Property)");
                 constructorArgs.Add(GeneratePropertyMappingView(propertyMapping, row));
             }
             // Return the structural type constructor.
@@ -415,8 +415,8 @@ namespace System.Data.Entity.Core.Mapping
 
         private static DbExpression GeneratePredicate(ConditionPropertyMapping condition, DbExpression row)
         {
-            Debug.Assert(condition.EdmProperty == null, "C-side conditions are not supported in function mappings.");
-            var columnRef = GenerateColumnRef(row, condition.ColumnProperty);
+            Debug.Assert(condition.Property == null, "C-side conditions are not supported in function mappings.");
+            var columnRef = GenerateColumnRef(row, condition.Column);
 
             if (condition.IsNull.HasValue)
             {
@@ -432,7 +432,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             Debug.Assert(mapping is ScalarPropertyMapping, "Complex property mapping is not supported in function imports.");
             var scalarPropertyMapping = (ScalarPropertyMapping)mapping;
-            return GenerateScalarPropertyMappingView(scalarPropertyMapping.EdmProperty, scalarPropertyMapping.ColumnProperty, row);
+            return GenerateScalarPropertyMappingView(scalarPropertyMapping.Property, scalarPropertyMapping.Column, row);
         }
 
         private static DbExpression GenerateScalarPropertyMappingView(EdmProperty edmProperty, EdmProperty columnProperty, DbExpression row)

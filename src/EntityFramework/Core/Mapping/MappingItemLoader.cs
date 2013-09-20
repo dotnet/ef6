@@ -2398,7 +2398,7 @@ namespace System.Data.Entity.Core.Mapping
                     keys = null;
                     return false;
                 }
-                keys[i] = mapping.ColumnProperty;
+                keys[i] = mapping.Column;
             }
             return true;
         }
@@ -2698,7 +2698,7 @@ namespace System.Data.Entity.Core.Mapping
                 errorFound ||
                 TypeHelpers.GetAllStructuralMembers(structuralType).Count == propertyMappings.Count &&
                 TypeHelpers.GetAllStructuralMembers(structuralType).Cast<EdmMember>().Zip(propertyMappings)
-                           .All(ppm => ppm.Key.EdmEquals(ppm.Value.EdmProperty)),
+                           .All(ppm => ppm.Key.EdmEquals(ppm.Value.Property)),
                 "propertyMappings order does not correspond to the order of properties in the structuredType.");
 
             return !errorFound;
@@ -3333,7 +3333,7 @@ namespace System.Data.Entity.Core.Mapping
             var endMapping =
                 new EndPropertyMapping()
                     {
-                        EndMember = end
+                        AssociationEnd = end
                     };
 
             nav.MoveToChild(XPathNodeType.Element);
@@ -3352,11 +3352,11 @@ namespace System.Data.Entity.Core.Mapping
                         {
                             //Make sure that the properties mapped as part of EndProperty maps are the key properties.
                             //If any other property is mapped, we should raise an error.
-                            if (!containerType.KeyMembers.Contains(scalarMap.EdmProperty))
+                            if (!containerType.KeyMembers.Contains(scalarMap.Property))
                             {
                                 var navLineInfo = (IXmlLineInfo)nav;
                                 AddToSchemaErrorsWithMemberInfo(
-                                    Strings.Mapping_InvalidContent_EndProperty, scalarMap.EdmProperty.Name,
+                                    Strings.Mapping_InvalidContent_EndProperty, scalarMap.Property.Name,
                                     MappingErrorCode.InvalidEdmMember, m_sourceLocation, navLineInfo, m_parsingErrors);
                                 return null;
                             }

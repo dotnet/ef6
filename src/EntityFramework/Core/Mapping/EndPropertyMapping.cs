@@ -52,6 +52,11 @@ namespace System.Data.Entity.Core.Mapping
         private AssociationEndMember _associationEnd;
 
         /// <summary>
+        /// List of property mappings that make up the End.
+        /// </summary>
+        private readonly List<ScalarPropertyMapping> _properties = new List<ScalarPropertyMapping>();
+
+        /// <summary>
         /// Creates an association end property mapping.
         /// </summary>
         /// <param name="associationEnd">An AssociationEndMember that specifies 
@@ -65,25 +70,6 @@ namespace System.Data.Entity.Core.Mapping
 
         internal EndPropertyMapping()
         {
-        }
-
-        /// <summary>
-        /// List of property mappings that make up the End.
-        /// </summary>
-        private readonly List<ScalarPropertyMapping> m_properties = new List<ScalarPropertyMapping>();
-
-        /// <summary>
-        /// Gets a ReadOnlyCollection of ScalarPropertyMapping that specifies the children 
-        /// of this association end property mapping.
-        /// </summary>
-        public ReadOnlyCollection<ScalarPropertyMapping> Properties
-        {
-            get { return new ReadOnlyCollection<ScalarPropertyMapping>(m_properties); }
-        }
-
-        internal IEnumerable<ScalarPropertyMapping> PropertyMappings
-        {
-            get { return m_properties; }
         }
 
         /// <summary>
@@ -103,12 +89,12 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// The relation end property Metadata object for which the mapping is represented.
+        /// Gets a ReadOnlyCollection of ScalarPropertyMapping that specifies the children 
+        /// of this association end property mapping.
         /// </summary>
-        internal RelationshipEndMember EndMember
+        public ReadOnlyCollection<ScalarPropertyMapping> Properties
         {
-            get { return AssociationEnd; }
-            set { AssociationEnd = (AssociationEndMember)value; }
+            get { return new ReadOnlyCollection<ScalarPropertyMapping>(_properties); }
         }
 
         /// <summary>
@@ -116,7 +102,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         internal IEnumerable<EdmMember> StoreProperties
         {
-            get { return PropertyMappings.Select(propertyMap => propertyMap.ColumnProperty); }
+            get { return Properties.Select(propertyMap => propertyMap.Column); }
         }
 
         /// <summary>
@@ -129,7 +115,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
 
-            m_properties.Add(propertyMapping);
+            _properties.Add(propertyMapping);
         }
 
         /// <summary>
@@ -142,7 +128,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
 
-            m_properties.Remove(propertyMapping);
+            _properties.Remove(propertyMapping);
         }
     }
 }

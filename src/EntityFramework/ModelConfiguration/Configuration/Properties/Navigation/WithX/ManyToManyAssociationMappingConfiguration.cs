@@ -118,15 +118,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             var sourceEndIsPrimaryConfiguration
                 = navigationProperty.IsSameAs(
-                    associationSetMapping.SourceEndMapping.EndMember.GetClrPropertyInfo());
+                    associationSetMapping.SourceEndMapping.AssociationEnd.GetClrPropertyInfo());
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _leftKeyColumnNames : _rightKeyColumnNames,
-                associationSetMapping.SourceEndMapping.PropertyMappings.ToList());
+                associationSetMapping.SourceEndMapping.Properties.ToList());
 
             ConfigureColumnNames(
                 sourceEndIsPrimaryConfiguration ? _rightKeyColumnNames : _leftKeyColumnNames,
-                associationSetMapping.TargetEndMapping.PropertyMappings.ToList());
+                associationSetMapping.TargetEndMapping.Properties.ToList());
         }
 
         private static void ConfigureColumnNames(
@@ -141,7 +141,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.IncorrectColumnCount(string.Join(", ", keyColumnNames));
             }
 
-            keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
+            keyColumnNames.Each((n, i) => propertyMappings[i].Column.Name = n);
         }
 
         /// <inheritdoc />

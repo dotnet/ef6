@@ -226,13 +226,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         asm.AssociationSet.TargetSet == entitySet))
                 {
                     var dependentMapping
-                        = asm.SourceEndMapping.EndMember == dependentEnd
+                        = asm.SourceEndMapping.AssociationEnd == dependentEnd
                               ? asm.TargetEndMapping
                               : asm.SourceEndMapping;
 
                     MarkColumnsAsNonNullableIfNoTableSharing(
                         entitySet, asm.Table, dependentEnd.GetEntityType(),
-                        dependentMapping.PropertyMappings.Select(pm => pm.ColumnProperty));
+                        dependentMapping.Properties.Select(pm => pm.Column));
                 }
             }
         }

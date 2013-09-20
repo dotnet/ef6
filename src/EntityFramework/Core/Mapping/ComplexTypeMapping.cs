@@ -142,7 +142,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
 
-            m_properties.Add(propertyMapping.EdmProperty.Name, propertyMapping);
+            m_properties.Add(propertyMapping.Property.Name, propertyMapping);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(propertyMapping, "propertyMapping");
             ThrowIfReadOnly();
 
-            m_properties.Remove(propertyMapping.EdmProperty.Name);
+            m_properties.Remove(propertyMapping.Property.Name);
         }
 
         /// <summary>
@@ -191,9 +191,9 @@ namespace System.Data.Entity.Core.Mapping
         {
             //Same Member can not have more than one Condition with in the 
             //same Complex Type.
-            var conditionMember = (conditionPropertyMap.EdmProperty != null)
-                                      ? conditionPropertyMap.EdmProperty
-                                      : conditionPropertyMap.ColumnProperty;
+            var conditionMember = (conditionPropertyMap.Property != null)
+                                      ? conditionPropertyMap.Property
+                                      : conditionPropertyMap.Column;
             Debug.Assert(conditionMember != null);
             if (!m_conditionProperties.ContainsKey(conditionMember))
             {

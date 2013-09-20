@@ -163,7 +163,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     if (baseTypeTableFragments.Any()
                         && baseTypeTableFragments
                                .SelectMany(etmf => etmf.ColumnConditions)
-                               .All(cc => cc.ColumnProperty != column))
+                               .All(cc => cc.Column != column))
                     {
                         return true;
                     }

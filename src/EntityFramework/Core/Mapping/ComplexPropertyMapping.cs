@@ -50,6 +50,11 @@ namespace System.Data.Entity.Core.Mapping
     public class ComplexPropertyMapping : PropertyMapping
     {
         /// <summary>
+        /// Set of type mappings that make up the EdmProperty mapping.
+        /// </summary>
+        private readonly List<ComplexTypeMapping> _typeMappings;
+
+        /// <summary>
         /// Construct a new Complex Property mapping object
         /// </summary>
         /// <param name="cdmMember"> The MemberMetadata object that represents this Complex member </param>
@@ -63,13 +68,8 @@ namespace System.Data.Entity.Core.Mapping
                 throw new ArgumentException(Strings.StorageComplexPropertyMapping_OnlyComplexPropertyAllowed, "property");
             }
 
-            m_typeMappings = new List<ComplexTypeMapping>();
+            _typeMappings = new List<ComplexTypeMapping>();
         }
-
-        /// <summary>
-        /// Set of type mappings that make up the EdmProperty mapping.
-        /// </summary>
-        private readonly List<ComplexTypeMapping> m_typeMappings;
 
         /// <summary>
         /// Gets a read only collections of type mappings corresponding to the 
@@ -77,7 +77,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public ReadOnlyCollection<ComplexTypeMapping> TypeMappings
         {
-            get { return new ReadOnlyCollection<ComplexTypeMapping>(m_typeMappings); }
+            get { return new ReadOnlyCollection<ComplexTypeMapping>(_typeMappings); }
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(typeMapping, "typeMapping");
             ThrowIfReadOnly();
 
-            m_typeMappings.Add(typeMapping);
+            _typeMappings.Add(typeMapping);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(typeMapping, "typeMapping");
             ThrowIfReadOnly();
 
-            m_typeMappings.Remove(typeMapping);
+            _typeMappings.Remove(typeMapping);
         }
     }
 }

@@ -180,8 +180,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     databaseMapping.Database.GetEntitySet(dependentTable));
 
             associationSetMapping.StoreEntitySet = databaseMapping.Database.GetEntitySet(dependentTable);
-            associationSetMapping.SourceEndMapping.EndMember = principalEnd;
-            associationSetMapping.TargetEndMapping.EndMember = dependentEnd;
+            associationSetMapping.SourceEndMapping.AssociationEnd = principalEnd;
+            associationSetMapping.TargetEndMapping.AssociationEnd = dependentEnd;
 
             return associationSetMapping;
         }
@@ -213,8 +213,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = new ForeignKeyBuilder(databaseMapping.Database, name)
                     {
                         PrincipalTable = principalTable,
-                        DeleteAction = associationEndMapping.EndMember.DeleteBehavior != OperationAction.None
-                                           ? associationEndMapping.EndMember.DeleteBehavior
+                        DeleteAction = associationEndMapping.AssociationEnd.DeleteBehavior != OperationAction.None
+                                           ? associationEndMapping.AssociationEnd.DeleteBehavior
                                            : OperationAction.None
                     };
 
@@ -266,8 +266,8 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 }
 
                 foreignKeyColumn.Nullable
-                    = associationEndMapping.EndMember.IsOptional()
-                      || (associationEndMapping.EndMember.IsRequired()
+                    = associationEndMapping.AssociationEnd.IsOptional()
+                      || (associationEndMapping.AssociationEnd.IsRequired()
                           && dependentEntityType.BaseType != null);
 
                 foreignKeyColumn.StoreGeneratedPattern = StoreGeneratedPattern.None;

@@ -359,7 +359,7 @@ namespace System.Data.Entity.Core.Mapping
             var entityType = new EntityType("ET", "N", DataSpace.CSpace);
             PropertyMapping mapping = new EndPropertyMapping()
             {
-                EndMember = new AssociationEndMember("AEM", entityType)
+                AssociationEnd = new AssociationEndMember("AEM", entityType)
             };
 
             Assert.Equal("EndProperty(Identity=AEM)",

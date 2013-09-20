@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Mapping
 
             var column2 = new EdmProperty("C");
 
-            conditionPropertyMapping.ColumnProperty = column2;
+            conditionPropertyMapping.Column = column2;
 
             Assert.Same(column2, conditionPropertyMapping.Column);
         }        

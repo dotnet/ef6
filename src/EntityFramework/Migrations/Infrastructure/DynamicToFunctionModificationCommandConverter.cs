@@ -274,9 +274,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                     from mf in etm.MappingFragments
                                     from pm in mf.Properties.OfType<ScalarPropertyMapping>()
                                     where
-                                        pm.ColumnProperty.EdmEquals(propertyExpression.Property)
-                                        && pm.ColumnProperty.DeclaringType.EdmEquals(propertyExpression.Property.DeclaringType)
-                                    select pm.EdmProperty)
+                                        pm.Column.EdmEquals(propertyExpression.Property)
+                                        && pm.Column.DeclaringType.EdmEquals(propertyExpression.Property.DeclaringType)
+                                       select pm.Property)
                                     .Contains(rb.Property))
                     select new KeyValuePair<string, DbExpression>(resultBinding.ColumnName, propertyExpression))
                     .ToList();
@@ -315,13 +315,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         from tm in asm.TypeMappings
                         from mf in tm.MappingFragments
                         from epm in mf.Properties.OfType<EndPropertyMapping>()
-                        from pm in epm.PropertyMappings
-                        where pm.ColumnProperty.EdmEquals(column)
-                              && pm.ColumnProperty.DeclaringType.EdmEquals(column.DeclaringType)
+                       from pm in epm.Properties
+                       where pm.Column.EdmEquals(column)
+                              && pm.Column.DeclaringType.EdmEquals(column.DeclaringType)
                         select new EdmMember[]
                                {
-                                   pm.EdmProperty,
-                                   epm.EndMember
+                                   pm.Property,
+                                   epm.AssociationEnd
                                })
                         .ToList();
 

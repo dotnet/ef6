@@ -146,22 +146,22 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
         {
             DebugCheck.NotNull(associationSetMapping);
 
-            foreach (var propertyMapping in associationSetMapping.SourceEndMapping.PropertyMappings)
+            foreach (var propertyMapping in associationSetMapping.SourceEndMapping.Properties)
             {
                 yield return
                     Tuple.Create(
                         new ModificationFunctionMemberPath(
-                            new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.SourceEndMapping.EndMember },
-                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
+                            new EdmMember[] { propertyMapping.Property, associationSetMapping.SourceEndMapping.AssociationEnd },
+                            associationSetMapping.AssociationSet), propertyMapping.Column);
             }
 
-            foreach (var propertyMapping in associationSetMapping.TargetEndMapping.PropertyMappings)
+            foreach (var propertyMapping in associationSetMapping.TargetEndMapping.Properties)
             {
                 yield return
                     Tuple.Create(
                         new ModificationFunctionMemberPath(
-                            new EdmMember[] { propertyMapping.EdmProperty, associationSetMapping.TargetEndMapping.EndMember },
-                            associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
+                            new EdmMember[] { propertyMapping.Property, associationSetMapping.TargetEndMapping.AssociationEnd },
+                            associationSetMapping.AssociationSet), propertyMapping.Column);
             }
         }
 
@@ -192,17 +192,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     || GetParents(entityType).Contains(dependentEntityType))
                 {
                     var endPropertyMapping
-                        = associationSetMapping.TargetEndMapping.EndMember != dependentEnd
+                        = associationSetMapping.TargetEndMapping.AssociationEnd != dependentEnd
                               ? associationSetMapping.TargetEndMapping
                               : associationSetMapping.SourceEndMapping;
 
-                    foreach (var propertyMapping in endPropertyMapping.PropertyMappings)
+                    foreach (var propertyMapping in endPropertyMapping.Properties)
                     {
                         yield return
                             Tuple.Create(
                                 new ModificationFunctionMemberPath(
-                                    new EdmMember[] { propertyMapping.EdmProperty, dependentEnd },
-                                    associationSetMapping.AssociationSet), propertyMapping.ColumnProperty);
+                                    new EdmMember[] { propertyMapping.Property, dependentEnd },
+                                    associationSetMapping.AssociationSet), propertyMapping.Column);
                     }
                 }
             }

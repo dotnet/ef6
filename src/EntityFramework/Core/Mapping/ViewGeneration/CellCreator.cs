@@ -387,14 +387,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
                 if (scalarPropMap != null)
                 {
-                    Debug.Assert(scalarPropMap.ColumnProperty != null, "ColumnMember for a Scalar Property can not be null");
+                    Debug.Assert(scalarPropMap.Column != null, "ColumnMember for a Scalar Property can not be null");
                     // Add an attribute node to node
 
-                    var cAttributeNode = new MemberPath(cNode, scalarPropMap.EdmProperty);
+                    var cAttributeNode = new MemberPath(cNode, scalarPropMap.Property);
                     // Add a column (attribute) node the sQuery
                     // unlike the C side, there is no nesting. Hence we
                     // did not need an internal node
-                    var sAttributeNode = new MemberPath(sRootExtent, scalarPropMap.ColumnProperty);
+                    var sAttributeNode = new MemberPath(sRootExtent, scalarPropMap.Column);
                     cSlots.Add(new MemberProjectedSlot(cAttributeNode));
                     sSlots.Add(new MemberProjectedSlot(sAttributeNode));
                 }
@@ -410,7 +410,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     foreach (var complexTypeMap in complexPropMap.TypeMappings)
                     {
                         // Create a node for the complex type property and call recursively
-                        var complexMemberNode = new MemberPath(cNode, complexPropMap.EdmProperty);
+                        var complexMemberNode = new MemberPath(cNode, complexPropMap.Property);
                         //Get the list of types that this type map represents
                         var allTypes = new Set<EdmType>();
                         // Gather a set of all explicit types for an entity
@@ -437,7 +437,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 if (associationEndPropertypMap != null)
                 {
                     // create join tree node representing this relation end
-                    var associationEndNode = new MemberPath(cNode, associationEndPropertypMap.EndMember);
+                    var associationEndNode = new MemberPath(cNode, associationEndPropertypMap.AssociationEnd);
                     // call recursively
                     ExtractProperties(
                         associationEndPropertypMap.Properties, associationEndNode, cSlots,
@@ -447,7 +447,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 //Check if the this is a condition and add it to the Where clause
                 if (conditionMap != null)
                 {
-                    if (conditionMap.ColumnProperty != null)
+                    if (conditionMap.Column != null)
                     {
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(sRootExtent, conditionMap);
@@ -456,7 +456,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                     }
                     else
                     {
-                        Debug.Assert(conditionMap.EdmProperty != null);
+                        Debug.Assert(conditionMap.Property != null);
                         //Produce a Condition Expression for the Condition Map.
                         var conditionExpression = GetConditionExpression(cNode, conditionMap);
                         //Add the condition expression to the exisiting C side Where clause using an "And"
@@ -473,7 +473,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private static BoolExpression GetConditionExpression(MemberPath member, ConditionPropertyMapping conditionMap)
         {
             //Get the member for which the condition is being specified
-            EdmMember conditionMember = (conditionMap.ColumnProperty != null) ? conditionMap.ColumnProperty : conditionMap.EdmProperty;
+            EdmMember conditionMember = (conditionMap.Column != null) ? conditionMap.Column : conditionMap.Property;
 
             var conditionMemberNode = new MemberPath(member, conditionMember);
             //Check if this is a IsNull condition

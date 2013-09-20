@@ -137,13 +137,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(endMapping);
 
             _xmlWriter.WriteStartElement(MslConstructs.EndPropertyMappingElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.EndPropertyMappingNameAttribute, endMapping.EndMember.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.EndPropertyMappingNameAttribute, endMapping.AssociationEnd.Name);
 
-            foreach (var propertyMapping in endMapping.PropertyMappings)
+            foreach (var propertyMapping in endMapping.Properties)
             {
                 WriteScalarPropertyElement(
-                    propertyMapping.EdmProperty,
-                    propertyMapping.ColumnProperty);
+                    propertyMapping.Property,
+                    propertyMapping.Column);
             }
 
             _xmlWriter.WriteEndElement();
@@ -434,7 +434,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             DebugCheck.NotNull(scalarPropertyMapping);
 
-            WriteScalarPropertyElement(scalarPropertyMapping.EdmProperty, scalarPropertyMapping.ColumnProperty);
+            WriteScalarPropertyElement(scalarPropertyMapping.Property, scalarPropertyMapping.Column);
         }
 
         private void WritePropertyMapping(ComplexPropertyMapping complexPropertyMapping)
@@ -442,10 +442,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(complexPropertyMapping);
 
             _xmlWriter.WriteStartElement(MslConstructs.ComplexPropertyElement);
-            _xmlWriter.WriteAttributeString(MslConstructs.ComplexPropertyNameAttribute, complexPropertyMapping.EdmProperty.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ComplexPropertyNameAttribute, complexPropertyMapping.Property.Name);
             _xmlWriter.WriteAttributeString(
                 MslConstructs.ComplexPropertyTypeNameAttribute,
-                _entityTypeNamespace + "." + complexPropertyMapping.EdmProperty.ComplexType.Name);
+                _entityTypeNamespace + "." + complexPropertyMapping.Property.ComplexType.Name);
 
             foreach (var propertyMapping in complexPropertyMapping.TypeMappings.Single().Properties)
             {
@@ -488,7 +488,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     _xmlWriter.WriteAttributeString(MslConstructs.ConditionValueAttribute, condition.Value.ToString());
                 }
             }
-            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.ColumnProperty.Name);
+            _xmlWriter.WriteAttributeString(MslConstructs.ConditionColumnNameAttribute, condition.Column.Name);
             _xmlWriter.WriteEndElement();
         }
 

@@ -420,7 +420,7 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(ComplexPropertyMapping complexPropertyMapping)
         {
-            Visit(complexPropertyMapping.EdmProperty);
+            Visit(complexPropertyMapping.Property);
             foreach (var mapping in GetSequence(complexPropertyMapping.TypeMappings, it => IdentityHelper.GetIdentity(it)))
             {
                 Visit(mapping);
@@ -429,14 +429,14 @@ namespace System.Data.Entity.Core.Mapping
 
         protected virtual void Visit(ConditionPropertyMapping conditionPropertyMapping)
         {
-            Visit(conditionPropertyMapping.ColumnProperty);
-            Visit(conditionPropertyMapping.EdmProperty);
+            Visit(conditionPropertyMapping.Column);
+            Visit(conditionPropertyMapping.Property);
         }
 
         protected virtual void Visit(ScalarPropertyMapping scalarPropertyMapping)
         {
-            Visit(scalarPropertyMapping.ColumnProperty);
-            Visit(scalarPropertyMapping.EdmProperty);
+            Visit(scalarPropertyMapping.Column);
+            Visit(scalarPropertyMapping.Property);
         }
 
         protected virtual void Visit(ComplexTypeMapping complexTypeMapping)
@@ -538,25 +538,25 @@ namespace System.Data.Entity.Core.Mapping
 
             public static string GetIdentity(ScalarPropertyMapping mapping)
             {
-                return "ScalarProperty(Identity=" + mapping.EdmProperty.Identity
-                    + ",ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
+                return "ScalarProperty(Identity=" + mapping.Property.Identity
+                    + ",ColumnIdentity=" + mapping.Column.Identity + ")";
             }
 
             public static string GetIdentity(ComplexPropertyMapping mapping)
             {
-                return "ComplexProperty(Identity=" + mapping.EdmProperty.Identity + ")";
+                return "ComplexProperty(Identity=" + mapping.Property.Identity + ")";
             }
 
             public static string GetIdentity(ConditionPropertyMapping mapping)
             {
-                return mapping.EdmProperty != null
-                    ? "ConditionProperty(Identity=" + mapping.EdmProperty.Identity + ")"
-                    : "ConditionProperty(ColumnIdentity=" + mapping.ColumnProperty.Identity + ")";
+                return mapping.Property != null
+                    ? "ConditionProperty(Identity=" + mapping.Property.Identity + ")"
+                    : "ConditionProperty(ColumnIdentity=" + mapping.Column.Identity + ")";
             }
 
             public static string GetIdentity(EndPropertyMapping mapping)
             {
-                return "EndProperty(Identity=" + mapping.EndMember.Identity + ")";
+                return "EndProperty(Identity=" + mapping.AssociationEnd.Identity + ")";
             }
         }
     }

@@ -300,12 +300,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                           SourceEndMapping
                               = new EndPropertyMapping
                                     {
-                                        EndMember = associationEndMember1
+                                        AssociationEnd = associationEndMember1
                                     },
                           TargetEndMapping
                               = new EndPropertyMapping
                                     {
-                                        EndMember = associationEndMember2
+                                        AssociationEnd = associationEndMember2
                                     },
                           ModificationFunctionMapping = new AssociationSetModificationFunctionMapping(
                               associationSet,

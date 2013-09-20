@@ -37,7 +37,7 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (_scalarPropertyMapping != null)
                 {
-                    _scalarPropertyMapping.ColumnProperty = _columnProperty;
+                    _scalarPropertyMapping.Column = _columnProperty;
                 }
             }
         }

@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Mapping
                     .MappingFragments
                     .SelectMany(m => m.AllProperties)
                     .OfType<EndPropertyMapping>()
-                    .Select(epm => epm.EndMember));
+                    .Select(epm => epm.AssociationEnd));
         }
 
         /// <summary>
@@ -935,22 +935,22 @@ namespace System.Data.Entity.Core.Mapping
 
                 //scalar property
                 if (scalarPropMapping != null
-                    && scalarPropMapping.EdmProperty != null)
+                    && scalarPropMapping.Property != null)
                 {
                     // (0) if a member is part of the key it is interesting
-                    if (MetadataHelper.IsPartOfEntityTypeKey(scalarPropMapping.EdmProperty))
+                    if (MetadataHelper.IsPartOfEntityTypeKey(scalarPropMapping.Property))
                     {
                         // For backwards compatibility we do return primary keys from the obsolete MetadataWorkspace.GetRequiredOriginalValueMembers() method
                         if (interestingMembersKind == InterestingMembersKind.RequiredOriginalValueMembers)
                         {
-                            interestingMembers.Add(scalarPropMapping.EdmProperty);
+                            interestingMembers.Add(scalarPropMapping.Property);
                         }
                     }
                     //(3) if a scalar property has Fixed concurrency mode then it is "interesting"
-                    else if (MetadataHelper.GetConcurrencyMode(scalarPropMapping.EdmProperty)
+                    else if (MetadataHelper.GetConcurrencyMode(scalarPropMapping.Property)
                              == ConcurrencyMode.Fixed)
                     {
-                        interestingMembers.Add(scalarPropMapping.EdmProperty);
+                        interestingMembers.Add(scalarPropMapping.Property);
                     }
                 }
                 else if (complexPropMapping != null)
@@ -959,18 +959,18 @@ namespace System.Data.Entity.Core.Mapping
                     // (3.1) The complex property or its one of its children has fixed concurrency mode
                     if (interestingMembersKind == InterestingMembersKind.PartialUpdate
                         ||
-                        MetadataHelper.GetConcurrencyMode(complexPropMapping.EdmProperty) == ConcurrencyMode.Fixed
+                        MetadataHelper.GetConcurrencyMode(complexPropMapping.Property) == ConcurrencyMode.Fixed
                         || HasFixedConcurrencyModeInAnyChildProperty(complexPropMapping))
                     {
-                        interestingMembers.Add(complexPropMapping.EdmProperty);
+                        interestingMembers.Add(complexPropMapping.Property);
                     }
                 }
                 else if (conditionMapping != null)
                 {
                     //(1) C-Side condition members are 'interesting'
-                    if (conditionMapping.EdmProperty != null)
+                    if (conditionMapping.Property != null)
                     {
-                        interestingMembers.Add(conditionMapping.EdmProperty);
+                        interestingMembers.Add(conditionMapping.Property);
                     }
                 }
             }
@@ -998,14 +998,14 @@ namespace System.Data.Entity.Core.Mapping
 
                 //scalar property and has Fixed CC mode
                 if (childScalarPropertyMapping != null
-                    && MetadataHelper.GetConcurrencyMode(childScalarPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed)
+                    && MetadataHelper.GetConcurrencyMode(childScalarPropertyMapping.Property) == ConcurrencyMode.Fixed)
                 {
                     return true;
                 }
                 // Complex Prop and sub-properties or itself has fixed CC mode
                 else if (childComplexPropertyMapping != null
                          &&
-                         (MetadataHelper.GetConcurrencyMode(childComplexPropertyMapping.EdmProperty) == ConcurrencyMode.Fixed
+                         (MetadataHelper.GetConcurrencyMode(childComplexPropertyMapping.Property) == ConcurrencyMode.Fixed
                           || HasFixedConcurrencyModeInAnyChildProperty(childComplexPropertyMapping)))
                 {
                     return true;

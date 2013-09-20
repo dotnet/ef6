@@ -51,7 +51,7 @@ namespace System.Data.Entity.Core.Mapping
             columnMappingBuilder.ColumnProperty = columnProperty2;
 
             Assert.Same(columnProperty2, columnMappingBuilder.ColumnProperty);
-            Assert.Same(columnProperty2, scalarPropertyMapping.ColumnProperty);
+            Assert.Same(columnProperty2, scalarPropertyMapping.Column);
         }
     }
 }

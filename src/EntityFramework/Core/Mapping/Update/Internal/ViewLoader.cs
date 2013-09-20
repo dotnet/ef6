@@ -356,9 +356,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 .OfType<ScalarPropertyMapping>())
             {
                 if (StoreGeneratedPattern.None
-                    != MetadataHelper.GetStoreGeneratedPattern(scalarPropertyMapping.ColumnProperty))
+                    != MetadataHelper.GetStoreGeneratedPattern(scalarPropertyMapping.Column))
                 {
-                    yield return scalarPropertyMapping.EdmProperty;
+                    yield return scalarPropertyMapping.Property;
                 }
             }
         }
@@ -371,11 +371,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             foreach (var conditionPropertyMapping in FlattenPropertyMappings(mappingFragment.AllProperties)
                 .OfType<ConditionPropertyMapping>())
             {
-                if (conditionPropertyMapping.ColumnProperty != null
+                if (conditionPropertyMapping.Column != null
                     &&
                     conditionPropertyMapping.IsNull.HasValue)
                 {
-                    yield return conditionPropertyMapping.ColumnProperty;
+                    yield return conditionPropertyMapping.Column;
                 }
             }
         }
@@ -388,9 +388,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             foreach (var scalarPropertyMapping in FlattenPropertyMappings(mappingFragment.AllProperties)
                 .OfType<ScalarPropertyMapping>())
             {
-                if (columns.Contains(scalarPropertyMapping.ColumnProperty))
+                if (columns.Contains(scalarPropertyMapping.Column))
                 {
-                    yield return scalarPropertyMapping.EdmProperty;
+                    yield return scalarPropertyMapping.Property;
                 }
             }
         }

@@ -214,12 +214,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             //Get the map for foreign key end
             var foreignKeyEndMap = GetForeignKeyEndMapFromAssocitionMap(colocatedAssociationSetMap);
             if (foreignKeyEndMap == null
-                || foreignKeyEndMap.EndMember.RelationshipMultiplicity == RelationshipMultiplicity.Many)
+                || foreignKeyEndMap.AssociationEnd.RelationshipMultiplicity == RelationshipMultiplicity.Many)
             {
                 return false;
             }
 
-            var toEnd = (AssociationEndMember)foreignKeyEndMap.EndMember;
+            var toEnd = (AssociationEndMember)foreignKeyEndMap.AssociationEnd;
             var fromEnd = MetadataHelper.GetOtherAssociationEnd(toEnd);
             var toEndEntityType = (EntityType)((RefType)(toEnd.TypeUsage.EdmType)).ElementType;
             var fromEndEntityType = (EntityType)(((RefType)fromEnd.TypeUsage.EdmType).ElementType);
@@ -235,12 +235,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             var toEndEntityKeyMemberPaths = new List<MemberPath>();
             foreach (EdmProperty edmProperty in toEndEntityType.KeyMembers)
             {
-                var scalarPropertyMaps = propertyMaps.Where(propMap => (propMap.EdmProperty.Equals(edmProperty)));
+                var scalarPropertyMaps = propertyMaps.Where(propMap => (propMap.Property.Equals(edmProperty)));
                 Debug.Assert(scalarPropertyMaps.Count() == 1, "Can't Map the same column multiple times in the same end");
                 var scalarPropertyMap = scalarPropertyMaps.First();
 
                 // Create SlotInfo for Freign Key member that needs to be projected.
-                var sSlot = new MemberProjectedSlot(new MemberPath(sRootNode, scalarPropertyMap.ColumnProperty));
+                var sSlot = new MemberProjectedSlot(new MemberPath(sRootNode, scalarPropertyMap.Column));
                 var endMemberKeyPath = new MemberPath(prefix, edmProperty);
                 toEndEntityKeyMemberPaths.Add(endMemberKeyPath);
                 foreignKeySlots.Add(new SlotInfo(true, true, sSlot, endMemberKeyPath));

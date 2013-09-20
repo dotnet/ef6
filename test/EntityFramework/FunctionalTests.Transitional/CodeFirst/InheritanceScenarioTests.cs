@@ -655,7 +655,7 @@ namespace FunctionalTests
             Assert.Equal(
                 "ITOffice_ITOfficeId",
                 databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).SourceEndMapping
-                               .PropertyMappings.ElementAt(0).ColumnProperty.Name);
+                               .Properties.ElementAt(0).Column.Name);
         }
 
         [Fact]

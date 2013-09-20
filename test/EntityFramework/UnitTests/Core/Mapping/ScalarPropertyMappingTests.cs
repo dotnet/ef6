@@ -18,7 +18,7 @@ namespace System.Data.Entity.Core.Mapping
         
             column = new EdmProperty("C'");
 
-            scalarPropertyMapping.ColumnProperty = column;
+            scalarPropertyMapping.Column = column;
 
             Assert.Same(column, scalarPropertyMapping.Column);
         }

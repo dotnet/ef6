@@ -114,8 +114,8 @@ namespace System.Data.Entity.Core.Mapping
 
             var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.Properties.Single();
 
-            Assert.Same(columnProperty, scalarPropertyMapping.ColumnProperty);
-            Assert.Same(property, scalarPropertyMapping.EdmProperty);
+            Assert.Same(columnProperty, scalarPropertyMapping.Column);
+            Assert.Same(property, scalarPropertyMapping.Property);
         }
 
         [Fact]
@@ -217,8 +217,8 @@ namespace System.Data.Entity.Core.Mapping
 
             var scalarPropertyMapping = (ScalarPropertyMapping)mappingFragment.Properties.Single();
 
-            Assert.Same(columnProperty, scalarPropertyMapping.ColumnProperty);
-            Assert.Same(property, scalarPropertyMapping.EdmProperty);
+            Assert.Same(columnProperty, scalarPropertyMapping.Column);
+            Assert.Same(property, scalarPropertyMapping.Property);
         }
 
         [Fact]
@@ -250,8 +250,8 @@ namespace System.Data.Entity.Core.Mapping
 
             var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.Properties.Single();
 
-            Assert.Same(columnProperty, scalarPropertyMapping.ColumnProperty);
-            Assert.Same(property2, scalarPropertyMapping.EdmProperty);
+            Assert.Same(columnProperty, scalarPropertyMapping.Column);
+            Assert.Same(property2, scalarPropertyMapping.Property);
         }
 
         [Fact]
@@ -314,8 +314,8 @@ namespace System.Data.Entity.Core.Mapping
 
             var scalarPropertyMapping = (ScalarPropertyMapping)typeMapping.Properties.Single();
 
-            Assert.Same(columnProperty, scalarPropertyMapping.ColumnProperty);
-            Assert.Same(property2, scalarPropertyMapping.EdmProperty);
+            Assert.Same(columnProperty, scalarPropertyMapping.Column);
+            Assert.Same(property2, scalarPropertyMapping.Property);
         }
 
         [Fact]

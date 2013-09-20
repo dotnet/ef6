@@ -14,14 +14,14 @@ namespace System.Data.Entity.Core.Mapping
         {
             var endPropertyMapping = new EndPropertyMapping();
 
-            Assert.Empty(endPropertyMapping.PropertyMappings);
+            Assert.Empty(endPropertyMapping.Properties);
 
             var scalarPropertyMapping 
                 = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C"));
 
             endPropertyMapping.AddProperty(scalarPropertyMapping);
 
-            Assert.Same(scalarPropertyMapping, endPropertyMapping.PropertyMappings.Single());
+            Assert.Same(scalarPropertyMapping, endPropertyMapping.Properties.Single());
         }
 
         [Fact]
@@ -48,12 +48,12 @@ namespace System.Data.Entity.Core.Mapping
         {
             var endPropertyMapping = new EndPropertyMapping();
 
-            Assert.Null(endPropertyMapping.EndMember);
+            Assert.Null(endPropertyMapping.AssociationEnd);
 
             var endMember = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
-            endPropertyMapping.EndMember = endMember;
+            endPropertyMapping.AssociationEnd = endMember;
 
-            Assert.Same(endMember, endPropertyMapping.EndMember);
+            Assert.Same(endMember, endPropertyMapping.AssociationEnd);
         }
 
         [Fact]

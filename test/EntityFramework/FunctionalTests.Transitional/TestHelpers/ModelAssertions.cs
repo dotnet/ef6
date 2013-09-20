@@ -466,7 +466,7 @@ namespace System.Data.Entity
             {
                 var con =
                     _fragment.ColumnConditions.Single(
-                        cc => String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal));
+                        cc => String.Equals(cc.Column.Name, column, StringComparison.Ordinal));
 
                 Xunit.Assert.True(Equals(con.Value, value) && con.IsNull == null);
 
@@ -478,7 +478,7 @@ namespace System.Data.Entity
                 Xunit.Assert.True(
                     _fragment.ColumnConditions.Any(
                         cc =>
-                        String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal) && cc.Value == null &&
+                        String.Equals(cc.Column.Name, column, StringComparison.Ordinal) && cc.Value == null &&
                         cc.IsNull == isNull));
 
                 return this;
@@ -495,7 +495,7 @@ namespace System.Data.Entity
             {
                 Xunit.Assert.True(
                     !_fragment.ColumnConditions.Any(
-                        cc => String.Equals(cc.ColumnProperty.Name, column, StringComparison.Ordinal)));
+                        cc => String.Equals(cc.Column.Name, column, StringComparison.Ordinal)));
 
                 return this;
             }

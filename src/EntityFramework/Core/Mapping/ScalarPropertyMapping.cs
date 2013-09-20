@@ -42,6 +42,12 @@ namespace System.Data.Entity.Core.Mapping
     public class ScalarPropertyMapping : PropertyMapping
     {
         /// <summary>
+        /// S-side member for which the scalar property is being mapped.
+        /// This will be interpreted by the view generation algorithm based on the context.
+        /// </summary>
+        private EdmProperty _column;
+
+        /// <summary>
         /// Creates a mapping between a simple property and a column.
         /// </summary>
         /// <param name="property">The property to be mapped.</param>
@@ -52,41 +58,31 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(property, "property");
             Check.NotNull(column, "column");
 
+            Debug.Assert(column.TypeUsage.EdmType.DataSpace == DataSpace.SSpace);
+
             if (!Helper.IsScalarType(property.TypeUsage.EdmType)
                 || !Helper.IsPrimitiveType(column.TypeUsage.EdmType))
             {
                 throw new ArgumentException(Strings.StorageScalarPropertyMapping_OnlyScalarPropertiesAllowed);
             }
 
-            m_columnMember = column;
+            _column = column;
         }
 
         /// <summary>
-        /// S-side member for which the scalar property is being mapped.
-        /// This will be interpreted by the view generation algorithm based on the context.
-        /// </summary>
-        private EdmProperty m_columnMember;
-
-        /// <summary>
-        /// Gets and EdmProperty that specifies the mapped column.
+        /// Gets an EdmProperty that specifies the mapped column.
         /// </summary>
         public EdmProperty Column
         {
-            get { return m_columnMember; }
-        }
+            get { return _column; }
 
-        /// <summary>
-        /// column name from which the sclar property is being mapped
-        /// </summary>
-        internal EdmProperty ColumnProperty
-        {
-            get { return m_columnMember; }
-            set
+            internal set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(value.TypeUsage.EdmType.DataSpace == DataSpace.SSpace);
                 Debug.Assert(!IsReadOnly);
 
-                m_columnMember = value;
+                _column = value;
             }
         }
     }

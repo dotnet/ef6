@@ -5,6 +5,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Mapping metadata for all types of property mappings.
@@ -41,45 +42,37 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class PropertyMapping : MappingItem
     {
+        /// <summary>
+        /// The EdmProperty being mapped.
+        /// </summary>
+        private EdmProperty _property;
+
+        internal PropertyMapping(EdmProperty property)
+        {
+            Debug.Assert(property == null || property.TypeUsage.EdmType.DataSpace == DataSpace.CSpace);
+
+            _property = property;
+        }
+
         internal PropertyMapping()
         {
         }
 
         /// <summary>
-        /// Construct a new EdmProperty mapping object
-        /// </summary>
-        /// <param name="cdmMember"> The PropertyMetadata object that represents the member for which mapping is being specified </param>
-        internal PropertyMapping(EdmProperty cdmMember)
-        {
-            m_cdmMember = cdmMember;
-        }
-
-        /// <summary>
-        /// EdmProperty metadata representing the Cdm member for which the mapping is specified.
-        /// </summary>
-        private EdmProperty m_cdmMember;
-
-        /// <summary>
-        /// The PropertyMetadata object that represents the member for which mapping is being specified
-        /// </summary>
-        internal EdmProperty EdmProperty
-        {
-            get { return Property; }
-        }
-
-        /// <summary>
         /// Gets an EdmProperty that specifies the mapped property.
         /// </summary>
-        public EdmProperty Property
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Property")]
+        public virtual EdmProperty Property
         {
-            get { return m_cdmMember; }
+            get { return _property; }
 
             internal set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(value.TypeUsage.EdmType.DataSpace == DataSpace.CSpace);
                 Debug.Assert(!IsReadOnly);
 
-                m_cdmMember = value;
+                _property = value;
             }
         }
     }

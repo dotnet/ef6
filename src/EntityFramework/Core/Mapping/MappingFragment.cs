@@ -107,7 +107,7 @@ namespace System.Data.Entity.Core.Mapping
                     = structuralTypeMapping
                         .Properties
                         .OfType<ComplexPropertyMapping>()
-                        .SingleOrDefault(pm => ReferenceEquals(pm.EdmProperty, property));
+                        .SingleOrDefault(pm => ReferenceEquals(pm.Property, property));
 
                 ComplexTypeMapping complexTypeMapping = null;
 
@@ -137,7 +137,7 @@ namespace System.Data.Entity.Core.Mapping
                 = structuralTypeMapping
                     .Properties
                     .OfType<ScalarPropertyMapping>()
-                    .SingleOrDefault(pm => ReferenceEquals(pm.EdmProperty, property));
+                    .SingleOrDefault(pm => ReferenceEquals(pm.Property, property));
 
             if (scalarPropertyMapping == null)
             {
@@ -150,7 +150,7 @@ namespace System.Data.Entity.Core.Mapping
             }
             else
             {
-                scalarPropertyMapping.ColumnProperty = columnMappingBuilder.ColumnProperty;
+                scalarPropertyMapping.Column = columnMappingBuilder.ColumnProperty;
             }
         }
 
@@ -178,7 +178,7 @@ namespace System.Data.Entity.Core.Mapping
             var propertyMapping
                 = structuralTypeMapping
                     .Properties
-                    .Single(pm => ReferenceEquals(pm.EdmProperty, propertyPath.First()));
+                    .Single(pm => ReferenceEquals(pm.Property, propertyPath.First()));
 
             if (propertyMapping is ScalarPropertyMapping)
             {
@@ -316,7 +316,7 @@ namespace System.Data.Entity.Core.Mapping
 
             foreach (var propertyMapping in propertyMappings)
             {
-                propertyPath.Add(propertyMapping.EdmProperty);
+                propertyPath.Add(propertyMapping.Property);
 
                 var storageComplexPropertyMapping
                     = propertyMapping as ComplexPropertyMapping;
@@ -339,12 +339,12 @@ namespace System.Data.Entity.Core.Mapping
                     if (storageScalarPropertyMapping != null)
                     {
                         yield return new ColumnMappingBuilder(
-                            storageScalarPropertyMapping.ColumnProperty,
+                            storageScalarPropertyMapping.Column,
                             propertyPath.ToList());
                     }
                 }
 
-                propertyPath.Remove(propertyMapping.EdmProperty);
+                propertyPath.Remove(propertyMapping.Property);
             }
         }
 
@@ -430,7 +430,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             DebugCheck.NotNull(condition);
 
-            var conditionMember = condition.EdmProperty ?? condition.ColumnProperty;
+            var conditionMember = condition.Property ?? condition.Column;
 
             m_conditionProperties.Remove(conditionMember);
         }
@@ -452,7 +452,7 @@ namespace System.Data.Entity.Core.Mapping
         {
             //Same Member can not have more than one Condition with in the 
             //same Mapping Fragment.
-            var conditionMember = conditionPropertyMap.EdmProperty ?? conditionPropertyMap.ColumnProperty;
+            var conditionMember = conditionPropertyMap.Property ?? conditionPropertyMap.Column;
 
             Debug.Assert(conditionMember != null);
 

@@ -101,7 +101,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             DebugCheck.NotNull(navigationProperty);
 
             // By convention source end contains the dependent column mappings
-            var propertyMappings = associationSetMapping.SourceEndMapping.PropertyMappings.ToList();
+            var propertyMappings = associationSetMapping.SourceEndMapping.Properties.ToList();
 
             if (_tableName != null)
             {
@@ -126,7 +126,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 {
                     var foreignKeyConstraint
                         = sourceTable.ForeignKeyBuilders
-                                     .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.ColumnProperty)));
+                                     .Single(fk => fk.DependentColumns.SequenceEqual(propertyMappings.Select(pm => pm.Column)));
 
                     sourceTable.RemoveForeignKey(foreignKeyConstraint);
                     targetTable.AddForeignKey(foreignKeyConstraint);
@@ -156,7 +156,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 throw Error.IncorrectColumnCount(string.Join(", ", _keyColumnNames));
             }
 
-            _keyColumnNames.Each((n, i) => propertyMappings[i].ColumnProperty.Name = n);
+            _keyColumnNames.Each((n, i) => propertyMappings[i].Column.Name = n);
         }
 
         /// <inheritdoc />
