@@ -15,21 +15,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class ComplexType : StructuralType
     {
-        /// <summary>
-        /// Initializes a new instance of Complex Type with the given properties
-        /// </summary>
-        /// <param name="name"> The name of the complex type </param>
-        /// <param name="namespaceName"> The namespace name of the type </param>
-        /// <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
-        /// <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
+        // <summary>
+        // Initializes a new instance of Complex Type with the given properties
+        // </summary>
+        // <param name="name"> The name of the complex type </param>
+        // <param name="namespaceName"> The namespace name of the type </param>
+        // <param name="dataSpace"> dataSpace in which this ComplexType belongs to </param>
+        // <exception cref="System.ArgumentNullException">If either name, namespace or version arguments are null</exception>
         internal ComplexType(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of Complex Type - required for bootstraping code
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of Complex Type - required for bootstraping code
+        // </summary>
         internal ComplexType()
         {
             // No initialization of item attributes in here, it's used as a pass thru in the case for delay population
@@ -74,13 +74,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validates a EdmMember object to determine if it can be added to this type's
-        /// Members collection. If this method returns without throwing, it is assumed
-        /// the member is valid.
-        /// </summary>
-        /// <param name="member"> The member to validate </param>
-        /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
+        // <summary>
+        // Validates a EdmMember object to determine if it can be added to this type's
+        // Members collection. If this method returns without throwing, it is assumed
+        // the member is valid.
+        // </summary>
+        // <param name="member"> The member to validate </param>
+        // <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
             Debug.Assert(
@@ -136,17 +136,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private readonly Type _type;
 
-        /// <summary>
-        /// cached dynamic method to construct a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to construct a CLR instance
+        // </summary>
         private Func<object> _constructor;
 
         private readonly string _cspaceTypeName;
 
-        /// <summary>
-        /// Initializes a new instance of Complex Type with properties from the type.
-        /// </summary>
-        /// <param name="clrType"> The CLR type to construct from </param>
+        // <summary>
+        // Initializes a new instance of Complex Type with properties from the type.
+        // </summary>
+        // <param name="clrType"> The CLR type to construct from </param>
         internal ClrComplexType(Type clrType, string cspaceNamespaceName, string cspaceTypeName)
             : base(Check.NotNull(clrType, "clrType").Name, clrType.NestingNamespace() ?? string.Empty,
                 DataSpace.OSpace)
@@ -167,9 +167,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type;
         }
 
-        /// <summary>
-        /// cached dynamic method to construct a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to construct a CLR instance
+        // </summary>
         internal Func<object> Constructor
         {
             get { return _constructor; }

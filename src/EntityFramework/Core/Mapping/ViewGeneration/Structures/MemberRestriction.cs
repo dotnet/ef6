@@ -12,35 +12,35 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using DomainTermExpr =
             System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
-    /// <summary>
-    /// An abstract class that denotes the boolean expression: "var in values".
-    /// An object of this type can be complete or incomplete.
-    /// An incomplete object is one whose domain was not created with all possible values.
-    /// Incomplete objects have a limited set of methods that can be called.
-    /// </summary>
+    // <summary>
+    // An abstract class that denotes the boolean expression: "var in values".
+    // An object of this type can be complete or incomplete.
+    // An incomplete object is one whose domain was not created with all possible values.
+    // Incomplete objects have a limited set of methods that can be called.
+    // </summary>
     internal abstract class MemberRestriction : BoolLiteral
     {
-        /// <summary>
-        /// Creates an incomplete member restriction with the meaning "<paramref name="slot" /> = <paramref name="value" />".
-        /// "Partial" means that the <see cref="Domain" /> in this restriction is partial - hence the operations on the restriction are limited.
-        /// </summary>
+        // <summary>
+        // Creates an incomplete member restriction with the meaning "<paramref name="slot" /> = <paramref name="value" />".
+        // "Partial" means that the <see cref="Domain" /> in this restriction is partial - hence the operations on the restriction are limited.
+        // </summary>
         protected MemberRestriction(MemberProjectedSlot slot, Constant value)
             : this(slot, new[] { value })
         {
         }
 
-        /// <summary>
-        /// Creates an incomplete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
-        /// </summary>
+        // <summary>
+        // Creates an incomplete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
+        // </summary>
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values)
         {
             m_restrictedMemberSlot = slot;
             m_domain = new Domain(values, values);
         }
 
-        /// <summary>
-        /// Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="domain" />".
-        /// </summary>
+        // <summary>
+        // Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="domain" />".
+        // </summary>
         protected MemberRestriction(MemberProjectedSlot slot, Domain domain)
         {
             m_restrictedMemberSlot = slot;
@@ -51,14 +51,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                                      "use the ConstantBool abstraction");
         }
 
-        /// <summary>
-        /// Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
-        /// </summary>
-        /// <param name="slot"> </param>
-        /// <param name="values"> </param>
-        /// <param name="possibleValues">
-        /// all the values that the <paramref name="slot" /> can take
-        /// </param>
+        // <summary>
+        // Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
+        // </summary>
+        // <param name="slot"> </param>
+        // <param name="values"> </param>
+        // <param name="possibleValues">
+        // all the values that the <paramref name="slot" /> can take
+        // </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : this(slot, new Domain(values, possibleValues))
@@ -75,26 +75,26 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_isComplete; }
         }
 
-        /// <summary>
-        /// Returns the variable in the member restriction.
-        /// </summary>
+        // <summary>
+        // Returns the variable in the member restriction.
+        // </summary>
         internal MemberProjectedSlot RestrictedMemberSlot
         {
             get { return m_restrictedMemberSlot; }
         }
 
-        /// <summary>
-        /// Returns the values that <see cref="RestrictedMemberSlot" /> is being checked for.
-        /// </summary>
+        // <summary>
+        // Returns the values that <see cref="RestrictedMemberSlot" /> is being checked for.
+        // </summary>
         internal Domain Domain
         {
             get { return m_domain; }
         }
 
-        /// <summary>
-        /// Returns a boolean expression that is domain-aware and ready for optimizations etc.
-        /// </summary>
-        /// <param name="domainMap"> Maps members to the values that each member can take; it can be null in which case the possible and actual values are the same. </param>
+        // <summary>
+        // Returns a boolean expression that is domain-aware and ready for optimizations etc.
+        // </summary>
+        // <param name="domainMap"> Maps members to the values that each member can take; it can be null in which case the possible and actual values are the same. </param>
         internal override DomainBoolExpr GetDomainBoolExpression(MemberDomainMap domainMap)
         {
             // Get the variable name from the slot's memberpath and the possible domain values from the slot
@@ -112,17 +112,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Creates a complete member restriction based on the existing restriction with possible values for the domain being given by
-        /// <paramref
-        ///     name="possibleValues" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Creates a complete member restriction based on the existing restriction with possible values for the domain being given by
+        // <paramref
+        //     name="possibleValues" />
+        // .
+        // </summary>
         internal abstract MemberRestriction CreateCompleteMemberRestriction(IEnumerable<Constant> possibleValues);
 
-        /// <summary>
-        /// See <see cref="BoolLiteral.GetRequiredSlots" />.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolLiteral.GetRequiredSlots" />.
+        // </summary>
         internal override void GetRequiredSlots(MemberProjectionIndex projectedSlotMap, bool[] requiredSlots)
         {
             // Simply get the slot for the variable var in "var in values"
@@ -131,9 +131,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             requiredSlots[slotNum] = true;
         }
 
-        /// <summary>
-        /// See <see cref="BoolLiteral.IsEqualTo" />. Member restriction can be incomplete for this operation.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolLiteral.IsEqualTo" />. Member restriction can be incomplete for this operation.
+        // </summary>
         protected override bool IsEqualTo(BoolLiteral right)
         {
             var rightRestriction = right as MemberRestriction;
@@ -153,9 +153,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return m_domain.IsEqualTo(rightRestriction.m_domain);
         }
 
-        /// <summary>
-        /// Member restriction can be incomplete for this operation.
-        /// </summary>
+        // <summary>
+        // Member restriction can be incomplete for this operation.
+        // </summary>
         public override int GetHashCode()
         {
             var result = ProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);
@@ -163,9 +163,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// See <see cref="BoolLiteral.IsIdentifierEqualTo" />. Member restriction can be incomplete for this operation.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolLiteral.IsIdentifierEqualTo" />. Member restriction can be incomplete for this operation.
+        // </summary>
         protected override bool IsIdentifierEqualTo(BoolLiteral right)
         {
             var rightOneOfConst = right as MemberRestriction;
@@ -180,9 +180,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return ProjectedSlot.EqualityComparer.Equals(m_restrictedMemberSlot, rightOneOfConst.m_restrictedMemberSlot);
         }
 
-        /// <summary>
-        /// See <see cref="BoolLiteral.GetIdentifierHash" />. Member restriction can be incomplete for this operation.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolLiteral.GetIdentifierHash" />. Member restriction can be incomplete for this operation.
+        // </summary>
         protected override int GetIdentifierHash()
         {
             var result = ProjectedSlot.EqualityComparer.GetHashCode(m_restrictedMemberSlot);

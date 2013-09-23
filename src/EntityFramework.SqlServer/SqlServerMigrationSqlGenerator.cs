@@ -1461,11 +1461,11 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Creates a shallow copy of the source CreateTableOperation and the associated
-        /// AddPrimaryKeyOperation but renames the table and the primary key in order
-        /// to avoid name conflicts with existing objects.
-        /// </summary>
+        // <summary>
+        // Creates a shallow copy of the source CreateTableOperation and the associated
+        // AddPrimaryKeyOperation but renames the table and the primary key in order
+        // to avoid name conflicts with existing objects.
+        // </summary>
         private static CreateTableOperation ResolveNameConflicts(CreateTableOperation source)
         {
             DebugCheck.NotNull(source);

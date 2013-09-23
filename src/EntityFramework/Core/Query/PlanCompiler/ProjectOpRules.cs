@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Linq;
 
-    /// <summary>
-    /// Transformation rules for ProjectOp
-    /// </summary>
+    // <summary>
+    // Transformation rules for ProjectOp
+    // </summary>
     internal static class ProjectOpRules
     {
         #region ProjectOverProject
@@ -24,15 +24,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessProjectOverProject);
 
-        /// <summary>
-        /// Converts a Project(Project(X, c1,...), d1,...) =>
-        /// Project(X, d1', d2'...)
-        /// where d1', d2' etc. are the "mapped" versions of d1, d2 etc.
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="projectNode"> Current ProjectOp node </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Converts a Project(Project(X, c1,...), d1,...) =>
+        // Project(X, d1', d2'...)
+        // where d1', d2' etc. are the "mapped" versions of d1, d2 etc.
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="projectNode"> Current ProjectOp node </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessProjectOverProject(RuleProcessingContext context, Node projectNode, out Node newNode)
         {
             newNode = projectNode;
@@ -103,17 +103,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(VarDefListOp.Pattern)),
                 ProcessProjectWithNoLocalDefinitions);
 
-        /// <summary>
-        /// Eliminate a ProjectOp that has no local definitions at all and
-        /// no external references, (ie) if Child1
-        /// of the ProjectOp (the VarDefListOp child) has no children, then the ProjectOp
-        /// is serving no useful purpose. Get rid of the ProjectOp, and replace it with its
-        /// child
-        /// </summary>
-        /// <param name="context"> rule processing context </param>
-        /// <param name="n"> current subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Eliminate a ProjectOp that has no local definitions at all and
+        // no external references, (ie) if Child1
+        // of the ProjectOp (the VarDefListOp child) has no children, then the ProjectOp
+        // is serving no useful purpose. Get rid of the ProjectOp, and replace it with its
+        // child
+        // </summary>
+        // <param name="context"> rule processing context </param>
+        // <param name="n"> current subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessProjectWithNoLocalDefinitions(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
@@ -138,18 +138,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly SimpleRule Rule_ProjectOpWithSimpleVarRedefinitions = new SimpleRule(
             OpType.Project, ProcessProjectWithSimpleVarRedefinitions);
 
-        /// <summary>
-        /// If the ProjectOp defines some computedVars, but those computedVars are simply
-        /// redefinitions of other Vars, then eliminate the computedVars.
-        /// Project(X, VarDefList(VarDef(cv1, VarRef(v1)), ...))
-        /// can be transformed into
-        /// Project(X, VarDefList(...))
-        /// where cv1 has now been replaced by v1
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="n"> current subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // If the ProjectOp defines some computedVars, but those computedVars are simply
+        // redefinitions of other Vars, then eliminate the computedVars.
+        // Project(X, VarDefList(VarDef(cv1, VarRef(v1)), ...))
+        // can be transformed into
+        // Project(X, VarDefList(...))
+        // where cv1 has now been replaced by v1
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="n"> current subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessProjectWithSimpleVarRedefinitions(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;
@@ -234,28 +234,28 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         internal static readonly SimpleRule Rule_ProjectOpWithNullSentinel = new SimpleRule(
             OpType.Project, ProcessProjectOpWithNullSentinel);
 
-        /// <summary>
-        /// Tries to remove null sentinel definitions by replacing them to vars that are guaranteed
-        /// to be non-nullable and of integer type, or with reference to other constants defined in the
-        /// same project. In particular,
-        /// - If based on the ancestors, the value of the null sentinel can be changed and the
-        /// input of the project has a var that is guaranteed to be non-nullable and
-        /// is of integer type, then the definitions of the vars defined as NullSentinels in the ProjectOp
-        /// are replaced with a reference to that var. I.eg:
-        /// Project(X, VarDefList(VarDef(ns_var, NullSentinel), ...))
-        /// can be transformed into
-        /// Project(X, VarDefList(VarDef(ns_var, VarRef(v))...))
-        /// where v is known to be non-nullable
-        /// - Else, if based on the ancestors, the value of the null sentinel can be changed and
-        /// the project already has definitions of other int constants, the definitions of the null sentinels
-        /// are removed and the respective vars are remapped to the var representing the constant.
-        /// - Else, the definitions of the all null sentinels except for one are removed, and the
-        /// the respective vars are remapped to the remaining null sentinel.
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="n"> current subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Tries to remove null sentinel definitions by replacing them to vars that are guaranteed
+        // to be non-nullable and of integer type, or with reference to other constants defined in the
+        // same project. In particular,
+        // - If based on the ancestors, the value of the null sentinel can be changed and the
+        // input of the project has a var that is guaranteed to be non-nullable and
+        // is of integer type, then the definitions of the vars defined as NullSentinels in the ProjectOp
+        // are replaced with a reference to that var. I.eg:
+        // Project(X, VarDefList(VarDef(ns_var, NullSentinel), ...))
+        // can be transformed into
+        // Project(X, VarDefList(VarDef(ns_var, VarRef(v))...))
+        // where v is known to be non-nullable
+        // - Else, if based on the ancestors, the value of the null sentinel can be changed and
+        // the project already has definitions of other int constants, the definitions of the null sentinels
+        // are removed and the respective vars are remapped to the var representing the constant.
+        // - Else, the definitions of the all null sentinels except for one are removed, and the
+        // the respective vars are remapped to the remaining null sentinel.
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="n"> current subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessProjectOpWithNullSentinel(RuleProcessingContext context, Node n, out Node newNode)
         {
             newNode = n;

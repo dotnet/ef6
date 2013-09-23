@@ -15,9 +15,9 @@ namespace System.Data.Entity.SqlServerCompact
 
         private static Assembly _rdp;
 
-        /// <summary>
-        /// Convinience method to load the type specific to Remote Provider
-        /// </summary>
+        // <summary>
+        // Convinience method to load the type specific to Remote Provider
+        // </summary>
         internal static Type GetRemoteProviderType(string typeName)
         {
             if (_isFirst)
@@ -46,18 +46,18 @@ namespace System.Data.Entity.SqlServerCompact
             return (null == _rdp) ? null : _rdp.GetType(typeName, false);
         }
 
-        /// <summary>
-        /// Compare whether the object obj is of the type typeName
-        /// </summary>
+        // <summary>
+        // Compare whether the object obj is of the type typeName
+        // </summary>
         internal static bool CompareObjectEqualsToType(Object obj, string typeName)
         {
             var type = GetRemoteProviderType(typeName);
             return (null != type && obj.GetType() == type);
         }
 
-        /// <summary>
-        /// Create an instance of the Remote Provider specific type
-        /// </summary>
+        // <summary>
+        // Create an instance of the Remote Provider specific type
+        // </summary>
         internal static object CreateRemoteProviderType(string typeName)
         {
             var type = GetRemoteProviderType(typeName);
@@ -72,19 +72,19 @@ namespace System.Data.Entity.SqlServerCompact
             throw ADP1.InvalidOperation(typeName);
         }
 
-        /// <summary>
-        /// Returns whether the Remote Provider is loaded or not.
-        /// </summary>
+        // <summary>
+        // Returns whether the Remote Provider is loaded or not.
+        // </summary>
         internal static bool IsRemoteProviderLoaded
         {
             get { return (null != _rdp); }
         }
 
-        /// <summary>
-        /// Use current assembly information to construct the full
-        /// assembly name for an assembly with name assemblyName.
-        /// This is called for Microsoft.SqlServerCe.Client.dll only.
-        /// </summary>
+        // <summary>
+        // Use current assembly information to construct the full
+        // assembly name for an assembly with name assemblyName.
+        // This is called for Microsoft.SqlServerCe.Client.dll only.
+        // </summary>
         private static string ConstructFullAssemblyName(string assemblyName)
         {
             DebugCheck.NotNull(assemblyName);

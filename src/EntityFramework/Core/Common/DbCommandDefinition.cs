@@ -15,13 +15,13 @@ namespace System.Data.Entity.Core.Common
     {
         private readonly ICloneable _prototype;
 
-        /// <summary>
-        /// Internal factory method to create the default Command Definition object
-        /// based on a prototype command. The prototype command is cloned
-        /// before the protected constructor is invoked
-        /// </summary>
-        /// <param name="prototype"> prototype DbCommand </param>
-        /// <returns> the DbCommandDefinition </returns>
+        // <summary>
+        // Internal factory method to create the default Command Definition object
+        // based on a prototype command. The prototype command is cloned
+        // before the protected constructor is invoked
+        // </summary>
+        // <param name="prototype"> prototype DbCommand </param>
+        // <returns> the DbCommandDefinition </returns>
         internal static DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
             Check.NotNull(prototype, "prototype");

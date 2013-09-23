@@ -61,9 +61,9 @@ namespace System.Data.Entity.Core
             SubscribeToSerializeObjectState();
         }
 
-        /// <summary>
-        /// Initializes a new instance EntityException with an ErrorContext instance and a given error message.
-        /// </summary>
+        // <summary>
+        // Initializes a new instance EntityException with an ErrorContext instance and a given error message.
+        // </summary>
         internal static EntitySqlException Create(ErrorContext errCtx, string errorMessage, Exception innerException)
         {
             return Create(
@@ -71,9 +71,9 @@ namespace System.Data.Entity.Core
                 innerException);
         }
 
-        /// <summary>
-        /// Initializes a new instance EntityException with contextual information to allow detailed error feedback.
-        /// </summary>
+        // <summary>
+        // Initializes a new instance EntityException with contextual information to allow detailed error feedback.
+        // </summary>
         internal static EntitySqlException Create(
             string commandText,
             string errorDescription,
@@ -92,9 +92,9 @@ namespace System.Data.Entity.Core
             return new EntitySqlException(errorMessage, errorDescription, errorContext, line, column, innerException);
         }
 
-        /// <summary>
-        /// core constructor
-        /// </summary>
+        // <summary>
+        // core constructor
+        // </summary>
         private EntitySqlException(
             string message, string errorDescription, string errorContext, int line, int column, Exception innerException)
             : base(message, innerException)
@@ -144,10 +144,10 @@ namespace System.Data.Entity.Core
             return FormatErrorContext(commandText, position, EntityRes.GenericSyntaxError, true, out lineNumber, out colNumber);
         }
 
-        /// <summary>
-        /// Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
-        /// Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
-        /// </summary>
+        // <summary>
+        // Returns error context in the format [[errorContextInfo, ]line ddd, column ddd].
+        // Returns empty string if errorPosition is less than 0 and errorContextInfo is not specified.
+        // </summary>
         internal static string FormatErrorContext(
             string commandText,
             int errorPosition,
@@ -221,9 +221,9 @@ namespace System.Data.Entity.Core
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns error message in the format: "error such and such[, near errorContext]."
-        /// </summary>
+        // <summary>
+        // Returns error message in the format: "error such and such[, near errorContext]."
+        // </summary>
         private static string FormatQueryError(string errorMessage, string errorContext)
         {
             //

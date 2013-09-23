@@ -18,9 +18,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Allows configuration to be performed for a model.
-    /// </summary>
+    // <summary>
+    // Allows configuration to be performed for a model.
+    // </summary>
     [SuppressMessage("Microsoft.Naming", "CA1724:TypeNamesShouldNotMatchNamespaces")]
     internal class ModelConfiguration : ConfigurationBase
     {
@@ -52,10 +52,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ModelConfiguration(this);
         }
 
-        /// <summary>
-        /// Gets a collection of types that have been configured in this model including
-        /// entity types, complex types, and ignored types.
-        /// </summary>
+        // <summary>
+        // Gets a collection of types that have been configured in this model including
+        // entity types, complex types, and ignored types.
+        // </summary>
         public virtual IEnumerable<Type> ConfiguredTypes
         {
             get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Union(_ignoredTypes); }
@@ -76,14 +76,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             get { return _entityConfigurations.Keys.Union(_complexTypeConfigurations.Keys).Except(_ignoredTypes).ToList(); }
         }
 
-        /// <summary>
-        /// Gets or sets the default schema name.
-        /// </summary>
+        // <summary>
+        // Gets or sets the default schema name.
+        // </summary>
         public string DefaultSchema { get; set; }
 
-        /// <summary>
-        /// Gets or sets the default model namespace.
-        /// </summary>
+        // <summary>
+        // Gets or sets the default model namespace.
+        // </summary>
         public string ModelNamespace { get; set; }
 
         internal virtual void Add(EntityTypeConfiguration entityTypeConfiguration)
@@ -126,17 +126,17 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             _complexTypeConfigurations.Add(complexTypeConfiguration.ClrType, complexTypeConfiguration);
         }
 
-        /// <summary>
-        /// Registers an entity type as part of the model and returns an object that can
-        /// be used to configure the entity. This method can be called multiple times
-        /// for the same entity to perform multiple configurations.
-        /// </summary>
-        /// <param name="entityType"> The type to be registered or configured. </param>
-        /// <returns> The configuration object for the specified entity type. </returns>
-        /// <remarks>
-        /// Types registered as an entity type may later be changed to a complex type by
-        /// the <see cref="ComplexTypeDiscoveryConvention" />.
-        /// </remarks>
+        // <summary>
+        // Registers an entity type as part of the model and returns an object that can
+        // be used to configure the entity. This method can be called multiple times
+        // for the same entity to perform multiple configurations.
+        // </summary>
+        // <param name="entityType"> The type to be registered or configured. </param>
+        // <returns> The configuration object for the specified entity type. </returns>
+        // <remarks>
+        // Types registered as an entity type may later be changed to a complex type by
+        // the <see cref="ComplexTypeDiscoveryConvention" />.
+        // </remarks>
         public virtual EntityTypeConfiguration Entity(Type entityType)
         {
             Check.NotNull(entityType, "entityType");
@@ -167,13 +167,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return entityTypeConfiguration;
         }
 
-        /// <summary>
-        /// Registers a type as a complex type in the model and returns an object that
-        /// can be used to configure the complex type. This method can be called
-        /// multiple times for the same type to perform multiple configurations.
-        /// </summary>
-        /// <param name="complexType"> The type to be registered or configured. </param>
-        /// <returns> The configuration object for the specified entity type. </returns>
+        // <summary>
+        // Registers a type as a complex type in the model and returns an object that
+        // can be used to configure the complex type. This method can be called
+        // multiple times for the same type to perform multiple configurations.
+        // </summary>
+        // <param name="complexType"> The type to be registered or configured. </param>
+        // <returns> The configuration object for the specified entity type. </returns>
         [SuppressMessage("Microsoft.Naming", "CA1719:ParameterNamesShouldNotMatchMemberNames", MessageId = "0#")]
         public virtual ComplexTypeConfiguration ComplexType(Type complexType)
         {
@@ -194,10 +194,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return complexTypeConfiguration;
         }
 
-        /// <summary>
-        /// Excludes a type from the model.
-        /// </summary>
-        /// <param name="type"> The type to be excluded. </param>
+        // <summary>
+        // Excludes a type from the model.
+        // </summary>
+        // <param name="type"> The type to be excluded. </param>
         public virtual void Ignore(Type type)
         {
             Check.NotNull(type, "type");
@@ -224,12 +224,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return null;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the specified type has been configured as a
-        /// complex type in the model.
-        /// </summary>
-        /// <param name="type"> The type to test. </param>
-        /// <returns> True if the type is a complex type; false otherwise. </returns>
+        // <summary>
+        // Gets a value indicating whether the specified type has been configured as a
+        // complex type in the model.
+        // </summary>
+        // <param name="type"> The type to test. </param>
+        // <returns> True if the type is a complex type; false otherwise. </returns>
         public virtual bool IsComplexType(Type type)
         {
             Check.NotNull(type, "type");
@@ -237,12 +237,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return _complexTypeConfigurations.ContainsKey(type);
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the specified type has been excluded from
-        /// the model.
-        /// </summary>
-        /// <param name="type"> The type to test. </param>
-        /// <returns> True if the type is excluded; false otherwise. </returns>
+        // <summary>
+        // Gets a value indicating whether the specified type has been excluded from
+        // the model.
+        // </summary>
+        // <param name="type"> The type to test. </param>
+        // <returns> True if the type is excluded; false otherwise. </returns>
         public virtual bool IsIgnoredType(Type type)
         {
             Check.NotNull(type, "type");
@@ -250,9 +250,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return _ignoredTypes.Contains(type);
         }
 
-        /// <summary>Gets the properties that have been configured in this model for a given type.</summary>
-        /// <returns>The properties that have been configured in this model.</returns>
-        /// <param name="type">The type to get configured properties for.</param>
+        // <summary>Gets the properties that have been configured in this model for a given type.</summary>
+        // <returns>The properties that have been configured in this model.</returns>
+        // <param name="type">The type to get configured properties for.</param>
         public virtual IEnumerable<PropertyInfo> GetConfiguredProperties(Type type)
         {
             Check.NotNull(type, "type");
@@ -264,10 +264,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                        : Enumerable.Empty<PropertyInfo>();
         }
 
-        /// <summary>Gets a value indicating whether the specified property is excluded from the model.</summary>
-        /// <returns>true if the property  is excluded; otherwise, false.</returns>
-        /// <param name="type">The type that the property belongs to.</param>
-        /// <param name="propertyInfo">The property to be checked.</param>
+        // <summary>Gets a value indicating whether the specified property is excluded from the model.</summary>
+        // <returns>true if the property  is excluded; otherwise, false.</returns>
+        // <param name="type">The type that the property belongs to.</param>
+        // <param name="propertyInfo">The property to be checked.</param>
         public virtual bool IsIgnoredProperty(Type type, PropertyInfo propertyInfo)
         {
             Check.NotNull(type, "type");
@@ -636,10 +636,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return entityConfigurationsSortedByInheritance;
         }
 
-        /// <summary>
-        /// Initializes configurations in the ModelConfiguration so that configuration data
-        /// is in a single place
-        /// </summary>
+        // <summary>
+        // Initializes configurations in the ModelConfiguration so that configuration data
+        // is in a single place
+        // </summary>
         internal void NormalizeConfigurations()
         {
             DiscoverIndirectlyConfiguredComplexTypes();

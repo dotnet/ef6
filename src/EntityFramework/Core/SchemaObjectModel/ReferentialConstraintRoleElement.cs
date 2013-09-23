@@ -8,18 +8,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an role element in referential constraint element.
-    /// </summary>
+    // <summary>
+    // Represents an role element in referential constraint element.
+    // </summary>
     internal sealed class ReferentialConstraintRoleElement : SchemaElement
     {
         private List<PropertyRefElement> _roleProperties;
         private IRelationshipEnd _end;
 
-        /// <summary>
-        /// Constructs an EntityContainerAssociationSetEnd
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainerAssociationSetEnd
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public ReferentialConstraintRoleElement(ReferentialConstraint parentElement)
             : base(parentElement)
         {
@@ -82,9 +82,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Name = roleName;
         }
 
-        /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
-        /// </summary>
+        // <summary>
+        // Used during the resolve phase to resolve the type name to the object that represents that type
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             Debug.Assert(!String.IsNullOrEmpty(Name), "RoleName should never be empty");

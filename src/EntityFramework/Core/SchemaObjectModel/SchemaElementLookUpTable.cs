@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Summary description for SchemaElementLookUpTable.
-    /// </summary>
+    // <summary>
+    // Summary description for SchemaElementLookUpTable.
+    // </summary>
     internal sealed class SchemaElementLookUpTable<T> : IEnumerable<T>, ISchemaElementLookUpTable<T>
         where T : SchemaElement
     {
@@ -73,11 +73,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return new SchemaElementLookUpTableEnumerator<S, T>(KeyToType, _keysInDefOrder);
         }
 
-        /// <summary>
-        /// Add the given type to the schema look up table. If there is an error, it
-        /// adds the error and returns false. otherwise, it adds the type to the lookuptable
-        /// and returns true
-        /// </summary>
+        // <summary>
+        // Add the given type to the schema look up table. If there is an error, it
+        // adds the error and returns false. otherwise, it adds the type to the lookuptable
+        // and returns true
+        // </summary>
         public AddErrorKind TryAdd(T type)
         {
             DebugCheck.NotNull(type);

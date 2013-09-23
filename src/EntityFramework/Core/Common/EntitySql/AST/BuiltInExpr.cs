@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    /// <summary>
-    /// Represents a builtin expression ast node.
-    /// </summary>
+    // <summary>
+    // Represents a builtin expression ast node.
+    // </summary>
     internal sealed class BuiltInExpr : Node
     {
         private BuiltInExpr(BuiltInKind kind, string name)

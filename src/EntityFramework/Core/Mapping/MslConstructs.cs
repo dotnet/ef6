@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Diagnostics;
 
-    /// <summary>
-    /// Defines all the string constrcuts defined in CS MSL specification
-    /// </summary>
+    // <summary>
+    // Defines all the string constrcuts defined in CS MSL specification
+    // </summary>
     internal static class MslConstructs
     {
         public static string GetMslNamespace(double version)

@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
-    /// </summary>
+    // <summary>
+    // Represents an OnDelete, OnCopy, OnSecure, OnLock or OnSerialize element
+    // </summary>
     internal sealed class OnOperation : SchemaElement
     {
         public OnOperation(RelationshipEnd parentElement, Operation operation)
@@ -18,14 +18,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Operation = operation;
         }
 
-        /// <summary>
-        /// The operation
-        /// </summary>
+        // <summary>
+        // The operation
+        // </summary>
         public Operation Operation { get; private set; }
 
-        /// <summary>
-        /// The action
-        /// </summary>
+        // <summary>
+        // The action
+        // </summary>
         public Action Action { get; private set; }
 
         protected override bool ProhibitAttribute(string namespaceUri, string localName)
@@ -58,10 +58,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// Handle the Action attribute
-        /// </summary>
-        /// <param name="reader"> reader positioned at Action attribute </param>
+        // <summary>
+        // Handle the Action attribute
+        // </summary>
+        // <param name="reader"> reader positioned at Action attribute </param>
         private void HandleActionAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -84,9 +84,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// the parent element.
-        /// </summary>
+        // <summary>
+        // the parent element.
+        // </summary>
         private new RelationshipEnd ParentElement
         {
             get { return (RelationshipEnd)base.ParentElement; }

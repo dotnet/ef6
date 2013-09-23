@@ -7,10 +7,10 @@ namespace System.Data.Entity.Core.Mapping
     using System.Globalization;
     using System.Security.Cryptography;
 
-    /// <summary>
-    /// This class keeps recomputing the hash and adding it to the front of the
-    /// builder when the length of the string gets too long
-    /// </summary>
+    // <summary>
+    // This class keeps recomputing the hash and adding it to the front of the
+    // builder when the length of the string gets too long
+    // </summary>
     internal class CompressingHashBuilder : StringHashBuilder
     {
         // this max comes from the value that Md5Hasher uses for a buffer size when it is reading
@@ -44,13 +44,13 @@ namespace System.Data.Entity.Core.Mapping
             CompressHash();
         }
 
-        /// <summary>
-        /// Several classes were renamed while creating the public mapping API. The old names were used 
-        /// in the process of computing a mapping hash value (see AppendObjectStartDump). To avoid hash 
-        /// value changes that invalidate pre-generated views, this method builds a dictionary that maps 
-        /// types to their original names, and it is used to lookup the old names when the hash value is
-        /// computed.
-        /// </summary>
+        // <summary>
+        // Several classes were renamed while creating the public mapping API. The old names were used 
+        // in the process of computing a mapping hash value (see AppendObjectStartDump). To avoid hash 
+        // value changes that invalidate pre-generated views, this method builds a dictionary that maps 
+        // types to their original names, and it is used to lookup the old names when the hash value is
+        // computed.
+        // </summary>
         private static Dictionary<Type, string> InitializeLegacyTypeNames()
         {
             var typeNames = new Dictionary<Type, string>();
@@ -79,9 +79,9 @@ namespace System.Data.Entity.Core.Mapping
             return typeNames;
         }
 
-        /// <summary>
-        /// add string like "typename Instance#1"
-        /// </summary>
+        // <summary>
+        // add string like "typename Instance#1"
+        // </summary>
         internal void AppendObjectStartDump(object o, int objectIndex)
         {
             base.Append(string.Empty.PadLeft(SpacesPerIndent * _indent, ' '));

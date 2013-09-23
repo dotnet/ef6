@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Objects
         private readonly LambdaExpression _query;
         private readonly Guid _cacheToken = Guid.NewGuid();
 
-        /// <summary>
-        /// Constructs a new compiled query instance which hosts the delegate returned to the user
-        /// (one of the Invoke overloads).
-        /// </summary>
-        /// <param name="query"> Compiled query expression. </param>
+        // <summary>
+        // Constructs a new compiled query instance which hosts the delegate returned to the user
+        // (one of the Invoke overloads).
+        // </summary>
+        // <param name="query"> Compiled query expression. </param>
         private CompiledQuery(LambdaExpression query)
         {
             DebugCheck.NotNull(query);
@@ -768,14 +768,14 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// This method is trying to distinguish between a set of types and a singleton type
-        /// It also has the restriction that to be a set of types, it must be assignable from ObjectQuery&lt;T&gt;
-        /// Otherwise we won't be able to cast our query to the set requested.
-        /// </summary>
-        /// <param name="resultType"> The type asked for as a result type. </param>
-        /// <param name="isSingleton"> Is it a set of a type. </param>
-        /// <returns> The element type to use </returns>
+        // <summary>
+        // This method is trying to distinguish between a set of types and a singleton type
+        // It also has the restriction that to be a set of types, it must be assignable from ObjectQuery&lt;T&gt;
+        // Otherwise we won't be able to cast our query to the set requested.
+        // </summary>
+        // <param name="resultType"> The type asked for as a result type. </param>
+        // <param name="isSingleton"> Is it a set of a type. </param>
+        // <returns> The element type to use </returns>
         private static Type GetElementType(Type resultType, out bool isSingleton)
         {
             var elementType = TypeSystem.GetElementType(resultType);

@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         ProjectionItemDefinition,
         FreeVar,
 
-        /// <summary>
-        /// Represents a group input scope entry that should no longer be referenced.
-        /// </summary>
+        // <summary>
+        // Represents a group input scope entry that should no longer be referenced.
+        // </summary>
         InvalidGroupInputRef
     }
 }

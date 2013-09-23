@@ -10,9 +10,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
     using System.Xml.Schema;
 
-    /// <summary>
-    /// Summary description for Utils.
-    /// </summary>
+    // <summary>
+    // Summary description for Utils.
+    // </summary>
     // make class internal when friend assemblies are available
     internal static class Utils
     {

@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// A constant that can be projected in a cell query.
-    /// </summary>
+    // <summary>
+    // A constant that can be projected in a cell query.
+    // </summary>
     internal sealed class ConstantProjectedSlot : ProjectedSlot
     {
-        /// <summary>
-        /// Creates a slot with constant value being <paramref name="value" />.
-        /// </summary>
+        // <summary>
+        // Creates a slot with constant value being <paramref name="value" />.
+        // </summary>
         internal ConstantProjectedSlot(Constant value)
         {
             DebugCheck.NotNull(value);
@@ -23,14 +23,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_constant = value;
         }
 
-        /// <summary>
-        /// The actual value.
-        /// </summary>
+        // <summary>
+        // The actual value.
+        // </summary>
         private readonly Constant m_constant;
 
-        /// <summary>
-        /// Returns the value stored in this constant.
-        /// </summary>
+        // <summary>
+        // Returns the value stored in this constant.
+        // </summary>
         internal Constant CellConstant
         {
             get { return m_constant; }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.ELinq
 {
@@ -11,18 +11,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
     internal sealed partial class ExpressionConverter
     {
-        /// <summary>
-        /// A context-sensitive DbExpression builder class that simulates order preservation
-        /// for operators (project, filter, oftype, skip and limit) that are not natively order
-        /// preserving. The builder simulates order preservation by 'lifting' order keys in
-        /// the expression tree. For instance, source.Sort(o).Where(f) is rewritten as
-        /// source.Where(f).Sort(o) since otherwise the sort keys would be ignored.
-        /// In general, the lifter works as follows:
-        /// - The input to the operator is matched against a series of patterns for intrinsically
-        /// ordered expressions.
-        /// - For each pattern, the lifter encodes the compensation required for each of the
-        /// lifting operators that can be applied.
-        /// </summary>
+        // <summary>
+        // A context-sensitive DbExpression builder class that simulates order preservation
+        // for operators (project, filter, oftype, skip and limit) that are not natively order
+        // preserving. The builder simulates order preservation by 'lifting' order keys in
+        // the expression tree. For instance, source.Sort(o).Where(f) is rewritten as
+        // source.Where(f).Sort(o) since otherwise the sort keys would be ignored.
+        // In general, the lifter works as follows:
+        // - The input to the operator is matched against a series of patterns for intrinsically
+        // ordered expressions.
+        // - For each pattern, the lifter encodes the compensation required for each of the
+        // lifting operators that can be applied.
+        // </summary>
         private sealed class OrderByLifter
         {
             private readonly AliasGenerator _aliasGenerator;
@@ -82,16 +82,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     _aliasGenerator = aliasGenerator;
                 }
 
-                /// <summary>
-                /// Returns a lifter instance which supports lifting the intrinsic order of the given
-                /// source expression across specific operations (filter, project, oftype, skip, and limit)
-                /// </summary>
-                /// <remarks>
-                /// Lifting only occurs for expressions that are ordered. Each of the nested
-                /// OrderByLifterBase class implementations represents one or two of the ordered patterns with
-                /// the exception of the PassthroughOrderByLifter. The latter class represents expressions
-                /// without intrinsic order that therefore require no lifting.
-                /// </remarks>
+                // <summary>
+                // Returns a lifter instance which supports lifting the intrinsic order of the given
+                // source expression across specific operations (filter, project, oftype, skip, and limit)
+                // </summary>
+                // <remarks>
+                // Lifting only occurs for expressions that are ordered. Each of the nested
+                // OrderByLifterBase class implementations represents one or two of the ordered patterns with
+                // the exception of the PassthroughOrderByLifter. The latter class represents expressions
+                // without intrinsic order that therefore require no lifting.
+                // </remarks>
                 internal static OrderByLifterBase GetLifter(DbExpression source, AliasGenerator aliasGenerator)
                 {
                     if (source.ExpressionKind
@@ -317,9 +317,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 #endregion
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Skip(k, o).Limit(k2)
-            /// </summary>
+            // <summary>
+            // Represents an expression of the form: source.Skip(k, o).Limit(k2)
+            // </summary>
             private class LimitSkipLifter : OrderByLifterBase
             {
                 private readonly DbLimitExpression _limit;
@@ -370,9 +370,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Sort(o).Limit(k)
-            /// </summary>
+            // <summary>
+            // Represents an expression of the form: source.Sort(o).Limit(k)
+            // </summary>
             private class LimitSortLifter : OrderByLifterBase
             {
                 private readonly DbLimitExpression _limit;
@@ -420,14 +420,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Skip(k, o).Limit(k2).Project(p)
-            /// </summary>
-            /// <remarks>
-            /// This class is also used to represent expressions of the form: source.Skip(k, o).Project(p).Limit(k).
-            /// As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
-            /// _limit exists in a particular position in the tree)
-            /// </remarks>
+            // <summary>
+            // Represents an expression of the form: source.Skip(k, o).Limit(k2).Project(p)
+            // </summary>
+            // <remarks>
+            // This class is also used to represent expressions of the form: source.Skip(k, o).Project(p).Limit(k).
+            // As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
+            // _limit exists in a particular position in the tree)
+            // </remarks>
             private class ProjectLimitSkipLifter : OrderByLifterBase
             {
                 private readonly DbProjectExpression _project;
@@ -522,14 +522,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Sort(o).Limit(k).Project(p)
-            /// </summary>
-            /// <remarks>
-            /// This class is also used to represent expressions of the form: source.Sort(o).Project(p).Limit(k).
-            /// As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
-            /// _limit exists in a particular position in the tree)
-            /// </remarks>
+            // <summary>
+            // Represents an expression of the form: source.Sort(o).Limit(k).Project(p)
+            // </summary>
+            // <remarks>
+            // This class is also used to represent expressions of the form: source.Sort(o).Project(p).Limit(k).
+            // As a result, the rewrites must be spelled out entirely (the implementation cannot assume that
+            // _limit exists in a particular position in the tree)
+            // </remarks>
             private class ProjectLimitSortLifter : OrderByLifterBase
             {
                 private readonly DbProjectExpression _project;
@@ -601,9 +601,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Skip(k, o).Project(p)
-            /// </summary>
+            // <summary>
+            // Represents an expression of the form: source.Skip(k, o).Project(p)
+            // </summary>
             private class ProjectSkipLifter : OrderByLifterBase
             {
                 private readonly DbProjectExpression _project;
@@ -657,9 +657,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Skip(k, o)
-            /// </summary>
+            // <summary>
+            // Represents an expression of the form: source.Skip(k, o)
+            // </summary>
             private class SkipLifter : OrderByLifterBase
             {
                 private readonly DbSkipExpression _skip;
@@ -707,9 +707,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression of the form: source.Sort(o).Project(p)
-            /// </summary>
+            // <summary>
+            // Represents an expression of the form: source.Sort(o).Project(p)
+            // </summary>
             private class ProjectSortLifter : OrderByLifterBase
             {
                 private readonly DbProjectExpression _project;
@@ -753,9 +753,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Represents an expression for which there is an explicit order by: source.Sort(o)
-            /// </summary>
+            // <summary>
+            // Represents an expression for which there is an explicit order by: source.Sort(o)
+            // </summary>
             private class SortLifter : OrderByLifterBase
             {
                 private readonly DbSortExpression _sort;
@@ -793,9 +793,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 }
             }
 
-            /// <summary>
-            /// Used for sources that do not have any intrinsic order.
-            /// </summary>
+            // <summary>
+            // Used for sources that do not have any intrinsic order.
+            // </summary>
             private class PassthroughOrderByLifter : OrderByLifterBase
             {
                 internal PassthroughOrderByLifter(DbExpression source, AliasGenerator aliasGenerator)

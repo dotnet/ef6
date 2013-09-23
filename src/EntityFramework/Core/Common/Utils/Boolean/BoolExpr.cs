@@ -7,48 +7,48 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Base type for Boolean expressions. Boolean expressions are immutable,
-    /// and value-comparable using Equals. Services include local simplification
-    /// and normalization to Conjunctive and Disjunctive Normal Forms.
-    /// </summary>
-    /// <remarks>
-    /// Comments use the following notation convention:
-    /// "A . B" means "A and B"
-    /// "A + B" means "A or B"
-    /// "!A" means "not A"
-    /// </remarks>
-    /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
+    // <summary>
+    // Base type for Boolean expressions. Boolean expressions are immutable,
+    // and value-comparable using Equals. Services include local simplification
+    // and normalization to Conjunctive and Disjunctive Normal Forms.
+    // </summary>
+    // <remarks>
+    // Comments use the following notation convention:
+    // "A . B" means "A and B"
+    // "A + B" means "A or B"
+    // "!A" means "not A"
+    // </remarks>
+    // <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal abstract class BoolExpr<T_Identifier> : IEquatable<BoolExpr<T_Identifier>>
     {
-        /// <summary>
-        /// Gets an enumeration value indicating the type of the expression node.
-        /// </summary>
+        // <summary>
+        // Gets an enumeration value indicating the type of the expression node.
+        // </summary>
         internal abstract ExprType ExprType { get; }
 
-        /// <summary>
-        /// Standard accept method invoking the appropriate method overload
-        /// in the given visitor.
-        /// </summary>
-        /// <typeparam name="T_Return"> T_Return is the return type for the visitor. </typeparam>
-        /// <param name="visitor"> Visitor implementation. </param>
-        /// <returns> Value computed for this node. </returns>
+        // <summary>
+        // Standard accept method invoking the appropriate method overload
+        // in the given visitor.
+        // </summary>
+        // <typeparam name="T_Return"> T_Return is the return type for the visitor. </typeparam>
+        // <param name="visitor"> Visitor implementation. </param>
+        // <returns> Value computed for this node. </returns>
         internal abstract T_Return Accept<T_Return>(Visitor<T_Identifier, T_Return> visitor);
 
-        /// <summary>
-        /// Invokes the Simplifier visitor on this expression tree.
-        /// Simplifications are purely local (see Simplifier class
-        /// for details).
-        /// </summary>
+        // <summary>
+        // Invokes the Simplifier visitor on this expression tree.
+        // Simplifications are purely local (see Simplifier class
+        // for details).
+        // </summary>
         internal BoolExpr<T_Identifier> Simplify()
         {
             return IdentifierService<T_Identifier>.Instance.LocalSimplify(this);
         }
 
-        /// <summary>
-        /// Expensive simplification that considers various permutations of the
-        /// expression (including Decision Diagram, DNF, and CNF translations)
-        /// </summary>
+        // <summary>
+        // Expensive simplification that considers various permutations of the
+        // expression (including Decision Diagram, DNF, and CNF translations)
+        // </summary>
         internal BoolExpr<T_Identifier> ExpensiveSimplify(out Converter<T_Identifier> converter)
         {
             var context = IdentifierService<T_Identifier>.Instance.CreateConversionContext();
@@ -103,36 +103,36 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             return result;
         }
 
-        /// <summary>
-        /// Returns all term expressions below this node.
-        /// </summary>
+        // <summary>
+        // Returns all term expressions below this node.
+        // </summary>
         internal List<TermExpr<T_Identifier>> GetTerms()
         {
             return LeafVisitor<T_Identifier>.GetTerms(this);
         }
 
-        /// <summary>
-        /// Counts terms in this expression.
-        /// </summary>
+        // <summary>
+        // Counts terms in this expression.
+        // </summary>
         internal int CountTerms()
         {
             return TermCounter<T_Identifier>.CountTerms(this);
         }
 
-        /// <summary>
-        /// Implicit cast from a value of type T to a TermExpr where
-        /// TermExpr.Value is set to the given value.
-        /// </summary>
-        /// <param name="value"> Value to wrap in term expression </param>
-        /// <returns> Term expression </returns>
+        // <summary>
+        // Implicit cast from a value of type T to a TermExpr where
+        // TermExpr.Value is set to the given value.
+        // </summary>
+        // <param name="value"> Value to wrap in term expression </param>
+        // <returns> Term expression </returns>
         public static implicit operator BoolExpr<T_Identifier>(T_Identifier value)
         {
             return new TermExpr<T_Identifier>(value);
         }
 
-        /// <summary>
-        /// Creates the negation of the current element.
-        /// </summary>
+        // <summary>
+        // Creates the negation of the current element.
+        // </summary>
         internal virtual BoolExpr<T_Identifier> MakeNegated()
         {
             return new NotExpr<T_Identifier>(this);

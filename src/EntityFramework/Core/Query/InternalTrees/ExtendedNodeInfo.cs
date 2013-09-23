@@ -5,19 +5,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// An ExtendedNodeInfo class adds additional information to a standard NodeInfo.
-    /// This class is usually applicable only to RelOps and PhysicalOps.
-    /// The ExtendedNodeInfo class has in addition to the information maintained by NodeInfo
-    /// the following
-    /// - a set of local definitions
-    /// - a set of definitions
-    /// - a set of keys
-    /// - a set of non-nullable definitions
-    /// - a set of non-nullable definitions that are visible at this node
-    /// NOTE: When adding a new member to track inforation, make sure to update the Clear method
-    /// in this class to set that member to the default value.
-    /// </summary>
+    // <summary>
+    // An ExtendedNodeInfo class adds additional information to a standard NodeInfo.
+    // This class is usually applicable only to RelOps and PhysicalOps.
+    // The ExtendedNodeInfo class has in addition to the information maintained by NodeInfo
+    // the following
+    // - a set of local definitions
+    // - a set of definitions
+    // - a set of keys
+    // - a set of non-nullable definitions
+    // - a set of non-nullable definitions that are visible at this node
+    // NOTE: When adding a new member to track inforation, make sure to update the Clear method
+    // in this class to set that member to the default value.
+    // </summary>
     internal class ExtendedNodeInfo : NodeInfo
     {
         #region private
@@ -62,9 +62,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_maxRows = RowCount.Unbounded;
         }
 
-        /// <summary>
-        /// Compute the hash value for this node
-        /// </summary>
+        // <summary>
+        // Compute the hash value for this node
+        // </summary>
         internal override void ComputeHashValue(Command cmd, Node n)
         {
             base.ComputeHashValue(cmd, n);
@@ -73,49 +73,49 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return;
         }
 
-        /// <summary>
-        /// Definitions made specifically by this node
-        /// </summary>
+        // <summary>
+        // Definitions made specifically by this node
+        // </summary>
         internal VarVec LocalDefinitions
         {
             get { return m_localDefinitions; }
         }
 
-        /// <summary>
-        /// All definitions visible as outputs of this node
-        /// </summary>
+        // <summary>
+        // All definitions visible as outputs of this node
+        // </summary>
         internal VarVec Definitions
         {
             get { return m_definitions; }
         }
 
-        /// <summary>
-        /// The keys for this node
-        /// </summary>
+        // <summary>
+        // The keys for this node
+        // </summary>
         internal KeyVec Keys
         {
             get { return m_keys; }
         }
 
-        /// <summary>
-        /// The definitions of vars that are guaranteed to be non-nullable when output from this node
-        /// </summary>
+        // <summary>
+        // The definitions of vars that are guaranteed to be non-nullable when output from this node
+        // </summary>
         internal VarVec NonNullableDefinitions
         {
             get { return m_nonNullableDefinitions; }
         }
 
-        /// <summary>
-        /// The definitions that come from the rel-op inputs of this node that are guaranteed to be non-nullable
-        /// </summary>
+        // <summary>
+        // The definitions that come from the rel-op inputs of this node that are guaranteed to be non-nullable
+        // </summary>
         internal VarVec NonNullableVisibleDefinitions
         {
             get { return m_nonNullableVisibleDefinitions; }
         }
 
-        /// <summary>
-        /// Min number of rows returned from this node
-        /// </summary>
+        // <summary>
+        // Min number of rows returned from this node
+        // </summary>
         internal RowCount MinRows
         {
             get { return m_minRows; }
@@ -126,9 +126,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Max rows returned from this node
-        /// </summary>
+        // <summary>
+        // Max rows returned from this node
+        // </summary>
         internal RowCount MaxRows
         {
             get { return m_maxRows; }
@@ -139,11 +139,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Set the rowcount for this node
-        /// </summary>
-        /// <param name="minRows"> min rows produced by this node </param>
-        /// <param name="maxRows"> max rows produced by this node </param>
+        // <summary>
+        // Set the rowcount for this node
+        // </summary>
+        // <param name="minRows"> min rows produced by this node </param>
+        // <param name="maxRows"> max rows produced by this node </param>
         internal void SetRowCount(RowCount minRows, RowCount maxRows)
         {
             m_minRows = minRows;
@@ -151,10 +151,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             ValidateRowCount();
         }
 
-        /// <summary>
-        /// Initialize the rowcounts for this node from the source node
-        /// </summary>
-        /// <param name="source"> nodeinfo of source </param>
+        // <summary>
+        // Initialize the rowcounts for this node from the source node
+        // </summary>
+        // <param name="source"> nodeinfo of source </param>
         internal void InitRowCountFrom(ExtendedNodeInfo source)
         {
             m_minRows = source.m_minRows;

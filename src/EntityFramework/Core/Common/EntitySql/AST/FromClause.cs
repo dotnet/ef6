@@ -2,24 +2,24 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    /// <summary>
-    /// Represents from clause.
-    /// </summary>
+    // <summary>
+    // Represents from clause.
+    // </summary>
     internal sealed class FromClause : Node
     {
         private readonly NodeList<FromClauseItem> _fromClauseItems;
 
-        /// <summary>
-        /// Initializes from clause.
-        /// </summary>
+        // <summary>
+        // Initializes from clause.
+        // </summary>
         internal FromClause(NodeList<FromClauseItem> fromClauseItems)
         {
             _fromClauseItems = fromClauseItems;
         }
 
-        /// <summary>
-        /// List of from clause items.
-        /// </summary>
+        // <summary>
+        // List of from clause items.
+        // </summary>
         internal NodeList<FromClauseItem> FromClauseItems
         {
             get { return _fromClauseItems; }

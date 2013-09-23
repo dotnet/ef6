@@ -2,10 +2,10 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    /// <summary>
-    /// Boolean expression that evaluates to true.
-    /// </summary>
-    /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
+    // <summary>
+    // Boolean expression that evaluates to true.
+    // </summary>
+    // <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal sealed class TrueExpr<T_Identifier> : BoolExpr<T_Identifier>
     {
         private static readonly TrueExpr<T_Identifier> _value = new TrueExpr<T_Identifier>();
@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
         }
 
-        /// <summary>
-        /// Gets the one instance of TrueExpr
-        /// </summary>
+        // <summary>
+        // Gets the one instance of TrueExpr
+        // </summary>
         internal static TrueExpr<T_Identifier> Value
         {
             get { return _value; }

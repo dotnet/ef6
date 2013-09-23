@@ -15,10 +15,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// Validates each mapping fragment/cell (Qc = Qs)
-    /// by unfolding update views in Qs and checking query equivalence
-    /// </summary>
+    // <summary>
+    // Validates each mapping fragment/cell (Qc = Qs)
+    // by unfolding update views in Qs and checking query equivalence
+    // </summary>
     internal class RewritingValidator
     {
         private readonly ViewgenContext _viewgenContext;
@@ -315,10 +315,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return result;
         }
 
-        /// <summary>
-        /// Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
-        /// appended to Cquery of c-side member that column m is mapped to
-        /// </summary>
+        // <summary>
+        // Given a LeftCellWrapper for the S-side fragment and a non-nullable colum m, return a CQuery with nullability condition
+        // appended to Cquery of c-side member that column m is mapped to
+        // </summary>
         private static FragmentQuery AddNullConditionOnCSideFragment(LeftCellWrapper wrapper, MemberPath member, MemberMaps memberMaps)
         {
             var projectedSlot = wrapper.GetCSideMappedSlotForSMember(member);
@@ -340,10 +340,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return FragmentQuery.Create(resultingExpr);
         }
 
-        /// <summary>
-        /// Checks whether non nullable S-side members are mapped to nullable C-query.
-        /// It is possible that C-side attribute is nullable but the fragment's C-query is not
-        /// </summary>
+        // <summary>
+        // Checks whether non nullable S-side members are mapped to nullable C-query.
+        // It is possible that C-side attribute is nullable but the fragment's C-query is not
+        // </summary>
         private void CheckConstraintsOnNonNullableMembers(LeftCellWrapper wrapper)
         {
             //For each non-condition member that has non-nullability constraint

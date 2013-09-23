@@ -10,21 +10,21 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Represents to the various Join nodes in the view: IJ, LOJ, FOJ.
-    /// </summary>
+    // <summary>
+    // Represents to the various Join nodes in the view: IJ, LOJ, FOJ.
+    // </summary>
     internal sealed class JoinCqlBlock : CqlBlock
     {
-        /// <summary>
-        /// Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (
-        /// <paramref
-        ///     name="children" />
-        /// ),
-        /// ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (
-        /// <paramref
-        ///     name="blockAliasNum" />
-        /// ).
-        /// </summary>
+        // <summary>
+        // Creates a join block (type given by <paramref name="opType" />) with SELECT (<paramref name="slotInfos" />), FROM (
+        // <paramref
+        //     name="children" />
+        // ),
+        // ON (<paramref name="onClauses" /> - one for each child except 0th), WHERE (true), AS (
+        // <paramref
+        //     name="blockAliasNum" />
+        // ).
+        // </summary>
         internal JoinCqlBlock(
             CellTreeOpType opType,
             SlotInfo[] slotInfos,
@@ -138,9 +138,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             return left.Select(row => GenerateProjectionCqt(row, false));
         }
 
-        /// <summary>
-        /// Represents a complete ON clause "slot1 == slot2 AND "slot3 == slot4" ... for two <see cref="JoinCqlBlock" />s.
-        /// </summary>
+        // <summary>
+        // Represents a complete ON clause "slot1 == slot2 AND "slot3 == slot4" ... for two <see cref="JoinCqlBlock" />s.
+        // </summary>
         internal sealed class OnClause : InternalBase
         {
             internal OnClause()
@@ -150,12 +150,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
 
             private readonly List<SingleClause> m_singleClauses;
 
-            /// <summary>
-            /// Adds an <see cref="SingleClause" /> element for a join of the form <paramref name="leftSlot" /> =
-            /// <paramref
-            ///     name="rightSlot" />
-            /// .
-            /// </summary>
+            // <summary>
+            // Adds an <see cref="SingleClause" /> element for a join of the form <paramref name="leftSlot" /> =
+            // <paramref
+            //     name="rightSlot" />
+            // .
+            // </summary>
             internal void Add(
                 QualifiedSlot leftSlot, MemberPath leftSlotOutputMember, QualifiedSlot rightSlot, MemberPath rightSlotOutputMember)
             {
@@ -163,9 +163,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 m_singleClauses.Add(singleClause);
             }
 
-            /// <summary>
-            /// Generates eSQL string of the form "LeftSlot1 = RightSlot1 AND LeftSlot2 = RightSlot2 AND ...
-            /// </summary>
+            // <summary>
+            // Generates eSQL string of the form "LeftSlot1 = RightSlot1 AND LeftSlot2 = RightSlot2 AND ...
+            // </summary>
             internal StringBuilder AsEsql(StringBuilder builder)
             {
                 var isFirst = true;
@@ -181,9 +181,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 return builder;
             }
 
-            /// <summary>
-            /// Generates CQT of the form "LeftSlot1 = RightSlot1 AND LeftSlot2 = RightSlot2 AND ...
-            /// </summary>
+            // <summary>
+            // Generates CQT of the form "LeftSlot1 = RightSlot1 AND LeftSlot2 = RightSlot2 AND ...
+            // </summary>
             internal DbExpression AsCqt(DbExpression leftRow, DbExpression rightRow)
             {
                 var cqt = m_singleClauses[0].AsCqt(leftRow, rightRow);
@@ -200,9 +200,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 StringUtil.ToSeparatedString(builder, m_singleClauses, " AND ");
             }
 
-            /// <summary>
-            /// Represents an expression between slots of the form: LeftSlot = RightSlot
-            /// </summary>
+            // <summary>
+            // Represents an expression between slots of the form: LeftSlot = RightSlot
+            // </summary>
             private sealed class SingleClause : InternalBase
             {
                 internal SingleClause(
@@ -219,9 +219,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                 private readonly QualifiedSlot m_rightSlot;
                 private readonly MemberPath m_rightSlotOutputMember;
 
-                /// <summary>
-                /// Generates eSQL string of the form "leftSlot = rightSlot".
-                /// </summary>
+                // <summary>
+                // Generates eSQL string of the form "leftSlot = rightSlot".
+                // </summary>
                 internal StringBuilder AsEsql(StringBuilder builder)
                 {
                     builder.Append(m_leftSlot.GetQualifiedCqlName(m_leftSlotOutputMember))
@@ -230,9 +230,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
                     return builder;
                 }
 
-                /// <summary>
-                /// Generates CQT of the form "leftSlot = rightSlot".
-                /// </summary>
+                // <summary>
+                // Generates CQT of the form "leftSlot = rightSlot".
+                // </summary>
                 internal DbExpression AsCqt(DbExpression leftRow, DbExpression rightRow)
                 {
                     return m_leftSlot.AsCqt(leftRow, m_leftSlotOutputMember).Equal(m_rightSlot.AsCqt(rightRow, m_rightSlotOutputMember));

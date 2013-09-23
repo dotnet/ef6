@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Transformation rules for ApplyOps - CrossApply, OuterApply
-    /// </summary>
+    // <summary>
+    // Transformation rules for ApplyOps - CrossApply, OuterApply
+    // </summary>
     internal static class ApplyOpRules
     {
         #region ApplyOverFilter
@@ -34,15 +34,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         new Node(LeafOp.Pattern))),
                 ProcessApplyOverFilter);
 
-        /// <summary>
-        /// Convert CrossApply(X, Filter(Y, p)) => InnerJoin(X, Y, p)
-        /// OuterApply(X, Filter(Y, p)) => LeftOuterJoin(X, Y, p)
-        /// if "Y" has no external references to X
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="applyNode"> Current ApplyOp </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Convert CrossApply(X, Filter(Y, p)) => InnerJoin(X, Y, p)
+        // OuterApply(X, Filter(Y, p)) => LeftOuterJoin(X, Y, p)
+        // if "Y" has no external references to X
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="applyNode"> Current ApplyOp </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessApplyOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -119,19 +119,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                                 new Node(NullSentinelOp.Pattern))))),
                 ProcessOuterApplyOverDummyProjectOverFilter);
 
-        /// <summary>
-        /// Convert OuterApply(X, Project(Filter(Y, p), constant)) =>
-        /// LeftOuterJoin(X, Project(Y, constant), p)
-        /// if "Y" has no external references to X
-        /// In an ideal world, we would be able to push the Project below the Filter,
-        /// and then have the normal ApplyOverFilter rule handle this - but that causes us
-        /// problems because we always try to pull up ProjectOp's as high as possible. Hence,
-        /// the special case for this rule
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="applyNode"> Current ApplyOp </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Convert OuterApply(X, Project(Filter(Y, p), constant)) =>
+        // LeftOuterJoin(X, Project(Y, constant), p)
+        // if "Y" has no external references to X
+        // In an ideal world, we would be able to push the Project below the Filter,
+        // and then have the normal ApplyOverFilter rule handle this - but that causes us
+        // problems because we always try to pull up ProjectOp's as high as possible. Hence,
+        // the special case for this rule
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="applyNode"> Current ApplyOp </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessOuterApplyOverDummyProjectOverFilter(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -259,14 +259,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         new Node(LeafOp.Pattern))),
                 ProcessCrossApplyOverProject);
 
-        /// <summary>
-        /// Converts a CrossApply(X, Project(Y, ...)) => Project(CrossApply(X, Y), ...)
-        /// where the projectVars are simply pulled up
-        /// </summary>
-        /// <param name="context"> RuleProcessing context </param>
-        /// <param name="applyNode"> The ApplyOp subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> Transfomation status </returns>
+        // <summary>
+        // Converts a CrossApply(X, Project(Y, ...)) => Project(CrossApply(X, Y), ...)
+        // where the projectVars are simply pulled up
+        // </summary>
+        // <param name="context"> RuleProcessing context </param>
+        // <param name="applyNode"> The ApplyOp subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> Transfomation status </returns>
         private static bool ProcessCrossApplyOverProject(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -301,37 +301,37 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         new Node(LeafOp.Pattern))),
                 ProcessOuterApplyOverProject);
 
-        /// <summary>
-        /// Converts a
-        /// OuterApply(X, Project(Y, ...))
-        /// =>
-        /// Project(OuterApply(X, Project(Y, ...)), ...) or
-        /// Project(OuterApply(X, Y), ...)
-        /// The second (simpler) form is used if a "sentinel" var can be located (ie)
-        /// some Var of Y that is guaranteed to be non-null. Otherwise, we create a
-        /// dummy ProjectNode as the right child of the Apply - which
-        /// simply projects out all the vars of the Y, and adds on a constant (say "1"). This
-        /// constant is now treated as the sentinel var
-        /// Then the existing ProjectOp is pulled up above the the outer-apply, but all the locally defined
-        /// Vars have their defining expressions now expressed as
-        /// case when sentinelVar is null then null else oldDefiningExpr end
-        /// where oldDefiningExpr represents the original defining expression
-        /// This allows us to get nulls for the appropriate columns when necessary.
-        /// Special cases.
-        /// * If the oldDefiningExpr is itself an internal constant equivalent to the null sentinel ("1"),
-        /// we simply project a ref to the null sentinel, no need for cast
-        /// * If the ProjectOp contained exactly one locally defined Var, and it was a constant, then
-        /// we simply return - we will be looping endlessly otherwise
-        /// * If the ProjectOp contained no local definitions, then we don't need to create the
-        /// dummy projectOp - we can simply pull up the Project
-        /// * If any of the defining expressions of the local definitions was simply a VarRefOp
-        /// referencing a Var that was defined by Y, then there is no need to add the case
-        /// expression for that.
-        /// </summary>
-        /// <param name="context"> RuleProcessing context </param>
-        /// <param name="applyNode"> The ApplyOp subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> Transfomation status </returns>
+        // <summary>
+        // Converts a
+        // OuterApply(X, Project(Y, ...))
+        // =>
+        // Project(OuterApply(X, Project(Y, ...)), ...) or
+        // Project(OuterApply(X, Y), ...)
+        // The second (simpler) form is used if a "sentinel" var can be located (ie)
+        // some Var of Y that is guaranteed to be non-null. Otherwise, we create a
+        // dummy ProjectNode as the right child of the Apply - which
+        // simply projects out all the vars of the Y, and adds on a constant (say "1"). This
+        // constant is now treated as the sentinel var
+        // Then the existing ProjectOp is pulled up above the the outer-apply, but all the locally defined
+        // Vars have their defining expressions now expressed as
+        // case when sentinelVar is null then null else oldDefiningExpr end
+        // where oldDefiningExpr represents the original defining expression
+        // This allows us to get nulls for the appropriate columns when necessary.
+        // Special cases.
+        // * If the oldDefiningExpr is itself an internal constant equivalent to the null sentinel ("1"),
+        // we simply project a ref to the null sentinel, no need for cast
+        // * If the ProjectOp contained exactly one locally defined Var, and it was a constant, then
+        // we simply return - we will be looping endlessly otherwise
+        // * If the ProjectOp contained no local definitions, then we don't need to create the
+        // dummy projectOp - we can simply pull up the Project
+        // * If any of the defining expressions of the local definitions was simply a VarRefOp
+        // referencing a Var that was defined by Y, then there is no need to add the case
+        // expression for that.
+        // </summary>
+        // <param name="context"> RuleProcessing context </param>
+        // <param name="applyNode"> The ApplyOp subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> Transfomation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "VarDefOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -461,15 +461,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessApplyOverAnything);
 
-        /// <summary>
-        /// Converts a CrossApply(X,Y) => CrossJoin(X,Y)
-        /// OuterApply(X,Y) => LeftOuterJoin(X, Y, true)
-        /// only if Y has no external references to X
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="applyNode"> The ApplyOp subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> the transformation status </returns>
+        // <summary>
+        // Converts a CrossApply(X,Y) => CrossJoin(X,Y)
+        // OuterApply(X,Y) => LeftOuterJoin(X, Y, true)
+        // only if Y has no external references to X
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="applyNode"> The ApplyOp subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> the transformation status </returns>
         private static bool ProcessApplyOverAnything(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             newNode = applyNode;
@@ -559,17 +559,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessApplyIntoScalarSubquery);
 
-        /// <summary>
-        /// Converts a Apply(X,Y) => Project(X, Y1), where Y1 is a scalar subquery version of Y
-        /// The transformation is valid only if all of the following conditions hold:
-        /// 1. Y produces only one output
-        /// 2. Y produces at most one row
-        /// 3. Y produces at least one row, or the Apply operator in question is an OuterApply
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="applyNode"> The ApplyOp subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> the transformation status </returns>
+        // <summary>
+        // Converts a Apply(X,Y) => Project(X, Y1), where Y1 is a scalar subquery version of Y
+        // The transformation is valid only if all of the following conditions hold:
+        // 1. Y produces only one output
+        // 2. Y produces at most one row
+        // 3. Y produces at least one row, or the Apply operator in question is an OuterApply
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="applyNode"> The ApplyOp subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> the transformation status </returns>
         private static bool ProcessApplyIntoScalarSubquery(RuleProcessingContext context, Node applyNode, out Node newNode)
         {
             var command = context.Command;
@@ -615,13 +615,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return true;
         }
 
-        /// <summary>
-        /// Determines whether an applyNode can be rewritten into a projection with a scalar subquery.
-        /// It can be done if all of the following conditions hold:
-        /// 1. The right child or the apply has only one output
-        /// 2. The right child of the apply produces at most one row
-        /// 3. The right child of the apply produces at least one row, or the Apply operator in question is an OuterApply
-        /// </summary>
+        // <summary>
+        // Determines whether an applyNode can be rewritten into a projection with a scalar subquery.
+        // It can be done if all of the following conditions hold:
+        // 1. The right child or the apply has only one output
+        // 2. The right child of the apply produces at most one row
+        // 3. The right child of the apply produces at least one row, or the Apply operator in question is an OuterApply
+        // </summary>
         private static bool CanRewriteApply(Node rightChild, ExtendedNodeInfo applyRightChildNodeInfo, OpType applyKind)
         {
             //Check whether it produces only one definition
@@ -656,10 +656,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return true;
         }
 
-        /// <summary>
-        /// A visitor that calculates the number of output columns for a subree
-        /// with a given root
-        /// </summary>
+        // <summary>
+        // A visitor that calculates the number of output columns for a subree
+        // with a given root
+        // </summary>
         internal class OutputCountVisitor : BasicOpVisitorOfT<int>
         {
             #region Constructors
@@ -668,10 +668,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             #region Public Methods
 
-            /// <summary>
-            /// Calculates the number of output columns for the subree
-            /// rooted at the given node
-            /// </summary>
+            // <summary>
+            // Calculates the number of output columns for the subree
+            // rooted at the given node
+            // </summary>
             internal static int CountOutputs(Node node)
             {
                 var visitor = new OutputCountVisitor();
@@ -684,11 +684,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             #region Helpers
 
-            /// <summary>
-            /// Visitor for children. Simply visit all children,
-            /// and sum the number of their outputs.
-            /// </summary>
-            /// <param name="n"> Current node </param>
+            // <summary>
+            // Visitor for children. Simply visit all children,
+            // and sum the number of their outputs.
+            // </summary>
+            // <param name="n"> Current node </param>
             internal new int VisitChildren(Node n)
             {
                 var result = 0;
@@ -699,10 +699,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 return result;
             }
 
-            /// <summary>
-            /// A default processor for any node.
-            /// Returns the sum of the children outputs
-            /// </summary>
+            // <summary>
+            // A default processor for any node.
+            // Returns the sum of the children outputs
+            // </summary>
             protected override int VisitDefault(Node n)
             {
                 return VisitChildren(n);
@@ -714,9 +714,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             #region SetOp Visitors
 
-            /// <summary>
-            /// The number of outputs is same as for any of the inputs
-            /// </summary>
+            // <summary>
+            // The number of outputs is same as for any of the inputs
+            // </summary>
             protected override int VisitSetOp(SetOp op, Node n)
             {
                 return op.Outputs.Count;
@@ -724,33 +724,33 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             #endregion
 
-            /// <summary>
-            /// Distinct
-            /// </summary>
+            // <summary>
+            // Distinct
+            // </summary>
             public override int Visit(DistinctOp op, Node n)
             {
                 return op.Keys.Count;
             }
 
-            /// <summary>
-            /// FilterOp
-            /// </summary>
+            // <summary>
+            // FilterOp
+            // </summary>
             public override int Visit(FilterOp op, Node n)
             {
                 return VisitNode(n.Child0);
             }
 
-            /// <summary>
-            /// GroupByOp
-            /// </summary>
+            // <summary>
+            // GroupByOp
+            // </summary>
             public override int Visit(GroupByOp op, Node n)
             {
                 return op.Outputs.Count;
             }
 
-            /// <summary>
-            /// ProjectOp
-            /// </summary>
+            // <summary>
+            // ProjectOp
+            // </summary>
             public override int Visit(ProjectOp op, Node n)
             {
                 return op.Outputs.Count;
@@ -758,25 +758,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
             #region TableOps
 
-            /// <summary>
-            /// ScanTableOp
-            /// </summary>
+            // <summary>
+            // ScanTableOp
+            // </summary>
             public override int Visit(ScanTableOp op, Node n)
             {
                 return op.Table.Columns.Count;
             }
 
-            /// <summary>
-            /// SingleRowTableOp
-            /// </summary>
+            // <summary>
+            // SingleRowTableOp
+            // </summary>
             public override int Visit(SingleRowTableOp op, Node n)
             {
                 return 0;
             }
 
-            /// <summary>
-            /// Same as the input
-            /// </summary>
+            // <summary>
+            // Same as the input
+            // </summary>
             protected override int VisitSortOp(SortBaseOp op, Node n)
             {
                 return VisitNode(n.Child0);
@@ -789,12 +789,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             #endregion
         }
 
-        /// <summary>
-        /// A utility class that remaps a given var at its definition and also remaps all its references.
-        /// The given var is remapped to an arbitrary new var.
-        /// If the var is defined by a ScanTable, all the vars defined by that table and all their references
-        /// are remapped as well.
-        /// </summary>
+        // <summary>
+        // A utility class that remaps a given var at its definition and also remaps all its references.
+        // The given var is remapped to an arbitrary new var.
+        // If the var is defined by a ScanTable, all the vars defined by that table and all their references
+        // are remapped as well.
+        // </summary>
         internal class VarDefinitionRemapper : VarRemapper
         {
             private readonly Var m_oldVar;
@@ -805,21 +805,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_oldVar = oldVar;
             }
 
-            /// <summary>
-            /// Public entry point.
-            /// Remaps the subree rooted at the given tree
-            /// </summary>
+            // <summary>
+            // Public entry point.
+            // Remaps the subree rooted at the given tree
+            // </summary>
             internal static void RemapSubtree(Node root, Command command, Var oldVar)
             {
                 var remapper = new VarDefinitionRemapper(oldVar, command);
                 remapper.RemapSubtree(root);
             }
 
-            /// <summary>
-            /// Update vars in this subtree. Recompute the nodeinfo along the way
-            /// Unlike the base implementation, we want to visit the childrent, even if no vars are in the
-            /// remapping dictionary.
-            /// </summary>
+            // <summary>
+            // Update vars in this subtree. Recompute the nodeinfo along the way
+            // Unlike the base implementation, we want to visit the childrent, even if no vars are in the
+            // remapping dictionary.
+            // </summary>
             internal override void RemapSubtree(Node subTree)
             {
                 foreach (var chi in subTree.Children)
@@ -831,10 +831,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 m_command.RecomputeNodeInfo(subTree);
             }
 
-            /// <summary>
-            /// If the node defines the node that needs to be remapped,
-            /// it remaps it to a new var.
-            /// </summary>
+            // <summary>
+            // If the node defines the node that needs to be remapped,
+            // it remaps it to a new var.
+            // </summary>
             public override void Visit(VarDefOp op, Node n)
             {
                 if (op.Var == m_oldVar)
@@ -845,10 +845,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            /// <summary>
-            /// If the columnVars defined by the table contain the var that needs to be remapped
-            /// all the column vars produces by the table are remaped to new vars.
-            /// </summary>
+            // <summary>
+            // If the columnVars defined by the table contain the var that needs to be remapped
+            // all the column vars produces by the table are remaped to new vars.
+            // </summary>
             public override void Visit(ScanTableOp op, Node n)
             {
                 if (op.Table.Columns.Contains(m_oldVar))
@@ -863,10 +863,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            /// <summary>
-            /// The var that needs to be remapped may be produced by a set op,
-            /// in which case the varmaps need to be updated too.
-            /// </summary>
+            // <summary>
+            // The var that needs to be remapped may be produced by a set op,
+            // in which case the varmaps need to be updated too.
+            // </summary>
             protected override void VisitSetOp(SetOp op, Node n)
             {
                 base.VisitSetOp(op, n);
@@ -882,10 +882,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                 }
             }
 
-            /// <summary>
-            /// Replaces the entry in the varMap in which m_oldVar is a key
-            /// with an entry in which newVAr is the key and the value remains the same.
-            /// </summary>
+            // <summary>
+            // Replaces the entry in the varMap in which m_oldVar is a key
+            // with an entry in which newVAr is the key and the value remains the same.
+            // </summary>
             private void RemapVarMapKey(VarMap varMap, Var newVar)
             {
                 var value = varMap[m_oldVar];
@@ -910,14 +910,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         new Node(ConstantPredicateOp.Pattern))),
                 ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable);
 
-        /// <summary>
-        /// Convert a CrossApply(X, LeftOuterJoin(SingleRowTable, Y, on true))
-        /// into just OuterApply(X, Y)
-        /// </summary>
-        /// <param name="context"> rule processing context </param>
-        /// <param name="applyNode"> the apply node </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Convert a CrossApply(X, LeftOuterJoin(SingleRowTable, Y, on true))
+        // into just OuterApply(X, Y)
+        // </summary>
+        // <param name="context"> rule processing context </param>
+        // <param name="applyNode"> the apply node </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessCrossApplyOverLeftOuterJoinOverSingleRowTable(
             RuleProcessingContext context, Node applyNode, out Node newNode)
         {

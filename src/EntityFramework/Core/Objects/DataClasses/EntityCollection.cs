@@ -63,9 +63,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Events
         // ---------
 
-        /// <summary>
-        /// internal Event to notify changes in the collection.
-        /// </summary>
+        // <summary>
+        // internal Event to notify changes in the collection.
+        // </summary>
         // Dev notes -2
         // following statement is valid on current existing CLR: 
         // lets say Customer is an Entity, Array[Customer] is not Array[Entity]; it is not supported
@@ -288,11 +288,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Attach(new[] { EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext) }, false);
         }
 
-        /// <summary>
-        /// Requires: collection is null or contains related entities.
-        /// Loads related entities into the local collection.
-        /// </summary>
-        /// <param name="collection"> If null, retrieves entities from the server through a query; otherwise, loads the given collection </param>
+        // <summary>
+        // Requires: collection is null or contains related entities.
+        // Loads related entities into the local collection.
+        // </summary>
+        // <param name="collection"> If null, retrieves entities from the server through a query; otherwise, loads the given collection </param>
         internal virtual void Load(List<IEntityWrapper> collection, MergeOption mergeOption)
         {
             // Validate that the Load is possible
@@ -390,9 +390,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             Add(EntityWrapperFactory.WrapEntityUsingContext(item, ObjectContext));
         }
 
-        /// <summary>
-        /// Add the item to the underlying collection
-        /// </summary>
+        // <summary>
+        // Add the item to the underlying collection
+        // </summary>
         internal override void DisconnectedAdd(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -411,9 +411,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             OnAssociationChanged(CollectionChangeAction.Add, wrappedEntity.Entity);
         }
 
-        /// <summary>
-        /// Remove the item from the underlying collection
-        /// </summary>
+        // <summary>
+        // Remove the item from the underlying collection
+        // </summary>
         internal override bool DisconnectedRemove(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -565,7 +565,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <returns> True if the verify succeeded, False if the Add should no-op </returns>
+        // <returns> True if the verify succeeded, False if the Add should no-op </returns>
         internal override bool VerifyEntityForAdd(IEntityWrapper wrappedEntity, bool relationshipAlreadyExists)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -599,9 +599,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Remove from the RelatedEnd
-        /// </summary>
+        // <summary>
+        // Remove from the RelatedEnd
+        // </summary>
         internal override bool RemoveFromLocalCache(IEntityWrapper wrappedEntity, bool resetIsLoaded, bool preserveForeignKey)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -618,9 +618,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-        /// <summary>
-        /// Remove from the POCO collection
-        /// </summary>
+        // <summary>
+        // Remove from the POCO collection
+        // </summary>
         internal override bool RemoveFromObjectCache(IEntityWrapper wrappedEntity)
         {
             DebugCheck.NotNull(wrappedEntity);

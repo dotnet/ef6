@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents a projection item definition scope entry.
-    /// </summary>
+    // <summary>
+    // Represents a projection item definition scope entry.
+    // </summary>
     internal sealed class ProjectionItemDefinitionScopeEntry : ScopeEntry
     {
         private readonly DbExpression _expression;
@@ -26,10 +26,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
     }
 
-    /// <summary>
-    /// Represents a free variable scope entry.
-    /// Example: parameters of an inline function definition are free variables in the scope of the function definition.
-    /// </summary>
+    // <summary>
+    // Represents a free variable scope entry.
+    // Example: parameters of an inline function definition are free variables in the scope of the function definition.
+    // </summary>
     internal sealed class FreeVariableScopeEntry : ScopeEntry
     {
         private readonly DbVariableReferenceExpression _varRef;
@@ -46,59 +46,59 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
     }
 
-    /// <summary>
-    /// Represents a generic list of scopes.
-    /// </summary>
+    // <summary>
+    // Represents a generic list of scopes.
+    // </summary>
     internal sealed class ScopeManager
     {
         private readonly IEqualityComparer<string> _keyComparer;
         private readonly List<Scope> _scopes = new List<Scope>();
 
-        /// <summary>
-        /// Initialize scope manager using given key-string comparer.
-        /// </summary>
+        // <summary>
+        // Initialize scope manager using given key-string comparer.
+        // </summary>
         internal ScopeManager(IEqualityComparer<string> keyComparer)
         {
             _keyComparer = keyComparer;
         }
 
-        /// <summary>
-        /// Enter a new scope.
-        /// </summary>
+        // <summary>
+        // Enter a new scope.
+        // </summary>
         internal void EnterScope()
         {
             _scopes.Add(new Scope(_keyComparer));
         }
 
-        /// <summary>
-        /// Leave the current scope.
-        /// </summary>
+        // <summary>
+        // Leave the current scope.
+        // </summary>
         internal void LeaveScope()
         {
             Debug.Assert(CurrentScopeIndex >= 0);
             _scopes.RemoveAt(CurrentScopeIndex);
         }
 
-        /// <summary>
-        /// Return current scope index.
-        /// Outer scopes have smaller index values than inner scopes.
-        /// </summary>
+        // <summary>
+        // Return current scope index.
+        // Outer scopes have smaller index values than inner scopes.
+        // </summary>
         internal int CurrentScopeIndex
         {
             get { return _scopes.Count - 1; }
         }
 
-        /// <summary>
-        /// Return current scope.
-        /// </summary>
+        // <summary>
+        // Return current scope.
+        // </summary>
         internal Scope CurrentScope
         {
             get { return _scopes[CurrentScopeIndex]; }
         }
 
-        /// <summary>
-        /// Get a scope by the index.
-        /// </summary>
+        // <summary>
+        // Get a scope by the index.
+        // </summary>
         internal Scope GetScopeByIndex(int scopeIndex)
         {
             Debug.Assert(scopeIndex >= 0, "scopeIndex >= 0");
@@ -112,9 +112,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return _scopes[scopeIndex];
         }
 
-        /// <summary>
-        /// Rollback all scopes to the scope at the index.
-        /// </summary>
+        // <summary>
+        // Rollback all scopes to the scope at the index.
+        // </summary>
         internal void RollbackToScope(int scopeIndex)
         {
             //
@@ -145,9 +145,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             Debug.Assert(CurrentScopeIndex >= 0, "[POST] CurrentScopeIndex >= 0");
         }
 
-        /// <summary>
-        /// True if key exists in current scope.
-        /// </summary>
+        // <summary>
+        // True if key exists in current scope.
+        // </summary>
         internal bool IsInCurrentScope(string key)
         {
             return CurrentScope.Contains(key);

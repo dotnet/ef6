@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
@@ -7,28 +7,28 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Globalization;
     using System.Xml;
 
-    /// <summary>
-    /// Represents enum Member element from the CSDL.
-    /// </summary>
+    // <summary>
+    // Represents enum Member element from the CSDL.
+    // </summary>
     internal class SchemaEnumMember : SchemaElement
     {
-        /// <summary>
-        /// Value for this member.
-        /// </summary>
+        // <summary>
+        // Value for this member.
+        // </summary>
         private long? _value;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SchemaEnumMember" /> class.
-        /// </summary>
-        /// <param name="parentElement"> Parent element. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="SchemaEnumMember" /> class.
+        // </summary>
+        // <param name="parentElement"> Parent element. </param>
         public SchemaEnumMember(SchemaElement parentElement)
             : base(parentElement)
         {
         }
 
-        /// <summary>
-        /// Gets the value of this enum member. Possibly null if not specified in the CSDL.
-        /// </summary>
+        // <summary>
+        // Gets the value of this enum member. Possibly null if not specified in the CSDL.
+        // </summary>
         public long? Value
         {
             get { return _value; }
@@ -41,13 +41,13 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Generic handler for the Member element attributes
-        /// </summary>
-        /// <param name="reader"> Xml reader positioned on an attribute. </param>
-        /// <c>true</c>
-        /// if the attribute is a known attribute and was handled. Otherwise
-        /// <c>false</c>
+        // <summary>
+        // Generic handler for the Member element attributes
+        // </summary>
+        // <param name="reader"> Xml reader positioned on an attribute. </param>
+        // <c>true</c>
+        // if the attribute is a known attribute and was handled. Otherwise
+        // <c>false</c>
         protected override bool HandleAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -62,10 +62,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return handled;
         }
 
-        /// <summary>
-        /// Handler for the Member Value attribute.
-        /// </summary>
-        /// <param name="reader"> XmlReader positioned on the Member Value attribute. </param>
+        // <summary>
+        // Handler for the Member Value attribute.
+        // </summary>
+        // <param name="reader"> XmlReader positioned on the Member Value attribute. </param>
         private void HandleValueAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);

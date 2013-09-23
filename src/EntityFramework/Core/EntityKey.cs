@@ -63,21 +63,21 @@ namespace System.Data.Entity.Core
         [NonSerialized]
         private int _hashCode; // computed as needed
 
-        /// <summary>
-        /// A singleton EntityKey by which a read-only entity is identified.
-        /// </summary>
+        // <summary>
+        // A singleton EntityKey by which a read-only entity is identified.
+        // </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private static readonly EntityKey _noEntitySetKey = new EntityKey("NoEntitySetKey.NoEntitySetKey");
 
-        /// <summary>
-        /// Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
-        /// </summary>
+        // <summary>
+        // Returns a singleton EntityKey identifying an entity resulted from a failed TREAT.
+        // </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         private static readonly EntityKey _entityNotValidKey = new EntityKey("EntityNotValidKey.EntityNotValidKey");
 
-        /// <summary>
-        /// A dictionary of names so that singleton instances of names can be used
-        /// </summary>
+        // <summary>
+        // A dictionary of names so that singleton instances of names can be used
+        // </summary>
         private static readonly ConcurrentDictionary<string, string> NameLookup = new ConcurrentDictionary<string, string>();
 
         #region Public Constructors
@@ -180,11 +180,11 @@ namespace System.Data.Entity.Core
 
         #region Internal Constructors
 
-        /// <summary>
-        /// Constructs an EntityKey from an IExtendedDataRecord representing the entity.
-        /// </summary>
-        /// <param name="entitySet"> EntitySet of the entity </param>
-        /// <param name="record"> an IExtendedDataRecord that represents the entity </param>
+        // <summary>
+        // Constructs an EntityKey from an IExtendedDataRecord representing the entity.
+        // </summary>
+        // <param name="entitySet"> EntitySet of the entity </param>
+        // <param name="record"> an IExtendedDataRecord that represents the entity </param>
         internal EntityKey(EntitySet entitySet, IExtendedDataRecord record)
         {
             DebugCheck.NotNull(entitySet);
@@ -202,10 +202,10 @@ namespace System.Data.Entity.Core
             _isLocked = true;
         }
 
-        /// <summary>
-        /// Constructs an EntityKey from an IExtendedDataRecord representing the entity.
-        /// </summary>
-        /// <param name="qualifiedEntitySetName"> EntitySet of the entity </param>
+        // <summary>
+        // Constructs an EntityKey from an IExtendedDataRecord representing the entity.
+        // </summary>
+        // <param name="qualifiedEntitySetName"> EntitySet of the entity </param>
         internal EntityKey(string qualifiedEntitySetName)
         {
             DebugCheck.NotEmpty(qualifiedEntitySetName);
@@ -215,11 +215,11 @@ namespace System.Data.Entity.Core
             _isLocked = true;
         }
 
-        /// <summary>
-        /// Constructs a temporary EntityKey with the given EntitySet.
-        /// Temporary keys do not store key field names
-        /// </summary>
-        /// <param name="entitySet"> EntitySet of the entity </param>
+        // <summary>
+        // Constructs a temporary EntityKey with the given EntitySet.
+        // Temporary keys do not store key field names
+        // </summary>
+        // <param name="entitySet"> EntitySet of the entity </param>
         internal EntityKey(EntitySetBase entitySet)
         {
             DebugCheck.NotNull(entitySet);
@@ -232,13 +232,13 @@ namespace System.Data.Entity.Core
             _isLocked = true;
         }
 
-        /// <summary>
-        /// Constructor optimized for a singleton key.
-        /// SQLBUDT 478655: Performance optimization: Does no integrity checking on the key value.
-        /// SQLBUDT 523554: Performance optimization: Does no validate type of key members.
-        /// </summary>
-        /// <param name="entitySet"> EntitySet of the entity </param>
-        /// <param name="singletonKeyValue"> The single value that composes the entity's key, assumed to contain the correct type. </param>
+        // <summary>
+        // Constructor optimized for a singleton key.
+        // SQLBUDT 478655: Performance optimization: Does no integrity checking on the key value.
+        // SQLBUDT 523554: Performance optimization: Does no validate type of key members.
+        // </summary>
+        // <param name="entitySet"> EntitySet of the entity </param>
+        // <param name="singletonKeyValue"> The single value that composes the entity's key, assumed to contain the correct type. </param>
         internal EntityKey(EntitySetBase entitySet, object singletonKeyValue)
         {
             DebugCheck.NotNull(entitySet);
@@ -254,13 +254,13 @@ namespace System.Data.Entity.Core
             _isLocked = true;
         }
 
-        /// <summary>
-        /// Constructor optimized for a composite key.
-        /// SQLBUDT 478655: Performance optimization: Does no integrity checking on the key values.
-        /// SQLBUDT 523554: Performance optimization: Does no validate type of key members.
-        /// </summary>
-        /// <param name="entitySet"> EntitySet of the entity </param>
-        /// <param name="compositeKeyValues"> A list of the values (at least 2) that compose the entity's key, assumed to contain correct types. </param>
+        // <summary>
+        // Constructor optimized for a composite key.
+        // SQLBUDT 478655: Performance optimization: Does no integrity checking on the key values.
+        // SQLBUDT 523554: Performance optimization: Does no validate type of key members.
+        // </summary>
+        // <param name="entitySet"> EntitySet of the entity </param>
+        // <param name="compositeKeyValues"> A list of the values (at least 2) that compose the entity's key, assumed to contain correct types. </param>
         internal EntityKey(EntitySetBase entitySet, object[] compositeKeyValues)
         {
             DebugCheck.NotNull(entitySet);
@@ -578,13 +578,13 @@ namespace System.Data.Entity.Core
             return !InternalEquals(key1, key2, compareEntitySets: true);
         }
 
-        /// <summary>
-        /// Internal function to compare two keys by their values.
-        /// </summary>
-        /// <param name="key1"> a key to compare </param>
-        /// <param name="key2"> a key to compare </param>
-        /// <param name="compareEntitySets"> Entity sets are not significant for conceptual null keys </param>
-        /// <returns> true if the two keys are equal, false otherwise </returns>
+        // <summary>
+        // Internal function to compare two keys by their values.
+        // </summary>
+        // <param name="key1"> a key to compare </param>
+        // <param name="key2"> a key to compare </param>
+        // <param name="compareEntitySets"> Entity sets are not significant for conceptual null keys </param>
+        // <returns> true if the two keys are equal, false otherwise </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool InternalEquals(EntityKey key1, EntityKey key2, bool compareEntitySets)
         {
@@ -768,14 +768,14 @@ namespace System.Data.Entity.Core
 
         #endregion
 
-        /// <summary>
-        /// Returns an array of string/<see cref="DbExpression" /> pairs, one for each key value in this EntityKey,
-        /// where the string is the key member name and the DbExpression is the value in this EntityKey
-        /// for that key member, represented as a <see cref="DbConstantExpression" /> with the same result
-        /// type as the key member.
-        /// </summary>
-        /// <param name="entitySet"> The entity set to which this EntityKey refers; used to verify that this key has the required key members </param>
-        /// <returns> The name -> expression mappings for the key member values represented by this EntityKey </returns>
+        // <summary>
+        // Returns an array of string/<see cref="DbExpression" /> pairs, one for each key value in this EntityKey,
+        // where the string is the key member name and the DbExpression is the value in this EntityKey
+        // for that key member, represented as a <see cref="DbConstantExpression" /> with the same result
+        // type as the key member.
+        // </summary>
+        // <param name="entitySet"> The entity set to which this EntityKey refers; used to verify that this key has the required key members </param>
+        // <returns> The name -> expression mappings for the key member values represented by this EntityKey </returns>
         internal KeyValuePair<string, DbExpression>[] GetKeyValueExpressions(EntitySet entitySet)
         {
             Debug.Assert(!IsTemporary, "GetKeyValueExpressions doesn't make sense for temporary keys - they have no values.");
@@ -840,11 +840,11 @@ namespace System.Data.Entity.Core
             return keyColumns;
         }
 
-        /// <summary>
-        /// Returns a string representation of this EntityKey, for use in debugging.
-        /// Note that the returned string contains potentially sensitive information
-        /// (i.e., key values), and thus shouldn't be publicly exposed.
-        /// </summary>
+        // <summary>
+        // Returns a string representation of this EntityKey, for use in debugging.
+        // Note that the returned string contains potentially sensitive information
+        // (i.e., key values), and thus shouldn't be publicly exposed.
+        // </summary>
         internal string ConcatKeyValue()
         {
             var builder = new StringBuilder();
@@ -860,9 +860,9 @@ namespace System.Data.Entity.Core
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Returns the appropriate value for the given key name.
-        /// </summary>
+        // <summary>
+        // Returns the appropriate value for the given key name.
+        // </summary>
         internal object FindValueByName(string keyName)
         {
             Debug.Assert(!IsTemporary, "FindValueByName should not be called for temporary keys.");
@@ -963,13 +963,13 @@ namespace System.Data.Entity.Core
             _keyNames[i] = tokenizeStrings ? LookupSingletonName(keyValuePair.Key) : keyValuePair.Key;
         }
 
-        /// <summary>
-        /// Validates the record parameter passed to the EntityKey constructor,
-        /// and converts the data into the form required by EntityKey.  For singleton keys,
-        /// this is a single object.  For composite keys, this is an object array.
-        /// </summary>
-        /// <param name="entitySet"> the entity set metadata object which this key refers to </param>
-        /// <param name="record"> the parameter to validate </param>
+        // <summary>
+        // Validates the record parameter passed to the EntityKey constructor,
+        // and converts the data into the form required by EntityKey.  For singleton keys,
+        // this is a single object.  For composite keys, this is an object array.
+        // </summary>
+        // <param name="entitySet"> the entity set metadata object which this key refers to </param>
+        // <param name="record"> the parameter to validate </param>
         private void InitializeKeyValues(EntitySet entitySet, IExtendedDataRecord record)
         {
             DebugCheck.NotNull(entitySet);
@@ -1017,29 +1017,29 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        /// Verify that the types of the objects passed in to be used as keys actually match the types from the model.
-        /// This error is also caught when the entity is materialized and when the key value is set, at which time it
-        /// also throws ThrowSetInvalidValue().
-        /// SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
-        /// </summary>
-        /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
-        /// <param name="entitySet"> The EntitySet to validate against </param>
+        // <summary>
+        // Verify that the types of the objects passed in to be used as keys actually match the types from the model.
+        // This error is also caught when the entity is materialized and when the key value is set, at which time it
+        // also throws ThrowSetInvalidValue().
+        // SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
+        // </summary>
+        // <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
+        // <param name="entitySet"> The EntitySet to validate against </param>
         internal void ValidateEntityKey(MetadataWorkspace workspace, EntitySet entitySet)
         {
             ValidateEntityKey(workspace, entitySet, false, null);
         }
 
-        /// <summary>
-        /// Verify that the types of the objects passed in to be used as keys actually match the types from the model.
-        /// This error is also caught when the entity is materialized and when the key value is set, at which time it
-        /// also throws ThrowSetInvalidValue().
-        /// SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
-        /// </summary>
-        /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
-        /// <param name="entitySet"> The EntitySet to validate against </param>
-        /// <param name="isArgumentException"> Wether to throw ArgumentException or InvalidOperationException. </param>
-        /// <param name="argumentName"> Name of the argument in case of ArgumentException. </param>
+        // <summary>
+        // Verify that the types of the objects passed in to be used as keys actually match the types from the model.
+        // This error is also caught when the entity is materialized and when the key value is set, at which time it
+        // also throws ThrowSetInvalidValue().
+        // SQLBUDT 513838. This error is possible and should be caught at run time, not in an assertion.
+        // </summary>
+        // <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
+        // <param name="entitySet"> The EntitySet to validate against </param>
+        // <param name="isArgumentException"> Wether to throw ArgumentException or InvalidOperationException. </param>
+        // <param name="argumentName"> Name of the argument in case of ArgumentException. </param>
         internal void ValidateEntityKey(MetadataWorkspace workspace, EntitySet entitySet, bool isArgumentException, string argumentName)
         {
             if (entitySet != null)
@@ -1137,14 +1137,14 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        /// Validates whether type of the key matches the type of the key value.
-        /// </summary>
-        /// <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
-        /// <param name="keyMember"> Edm key member. </param>
-        /// <param name="keyValue"> The value of the key. </param>
-        /// <param name="isArgumentException"> Whether to throw ArgumentException or InvalidOperation exception if validation fails. </param>
-        /// <param name="argumentName"> Name of the argument to be used for ArgumentExceptions. </param>
+        // <summary>
+        // Validates whether type of the key matches the type of the key value.
+        // </summary>
+        // <param name="workspace"> MetadataWorkspace used to resolve and validate types of enum keys. </param>
+        // <param name="keyMember"> Edm key member. </param>
+        // <param name="keyValue"> The value of the key. </param>
+        // <param name="isArgumentException"> Whether to throw ArgumentException or InvalidOperation exception if validation fails. </param>
+        // <param name="argumentName"> Name of the argument to be used for ArgumentExceptions. </param>
         private static void ValidateTypeOfKeyValue(
             MetadataWorkspace workspace, EdmMember keyMember, object keyValue, bool isArgumentException, string argumentName)
         {
@@ -1214,12 +1214,12 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        /// Asserts that the "state" of the EntityKey is correct, by validating assumptions
-        /// based on whether the key is a singleton, composite, or temporary.
-        /// </summary>
-        /// <param name="entitySet"> </param>
-        /// <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
+        // <summary>
+        // Asserts that the "state" of the EntityKey is correct, by validating assumptions
+        // based on whether the key is a singleton, composite, or temporary.
+        // </summary>
+        // <param name="entitySet"> </param>
+        // <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [Conditional("DEBUG")]
         private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
@@ -1300,9 +1300,9 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        /// Dev Note: this must be called from within a _lock block on _nameLookup
-        /// </summary>
+        // <summary>
+        // Dev Note: this must be called from within a _lock block on _nameLookup
+        // </summary>
         internal static string LookupSingletonName(string name)
         {
             return string.IsNullOrEmpty(name) ? null : NameLookup.GetOrAdd(name, n => n);

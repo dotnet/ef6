@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             _cacheIdentity = cacheIdentity;
         }
 
-        /// <summary>
-        /// Determines equality of this key with respect to <paramref name="compareTo" />
-        /// </summary>
+        // <summary>
+        // Determines equality of this key with respect to <paramref name="compareTo" />
+        // </summary>
         public override bool Equals(object compareTo)
         {
             DebugCheck.NotNull(compareTo);
@@ -27,18 +27,18 @@ namespace System.Data.Entity.Core.Common.QueryCache
             return ((CompiledQueryCacheKey)compareTo)._cacheIdentity.Equals(_cacheIdentity);
         }
 
-        /// <summary>
-        /// Returns the hashcode for this cache key
-        /// </summary>
+        // <summary>
+        // Returns the hashcode for this cache key
+        // </summary>
         public override int GetHashCode()
         {
             return _cacheIdentity.GetHashCode();
         }
 
-        /// <summary>
-        /// Returns a string representation of the state of this cache key
-        /// </summary>
-        /// <returns> A string representation that includes query text, parameter information, include path information and merge option information about this cache key. </returns>
+        // <summary>
+        // Returns a string representation of the state of this cache key
+        // </summary>
+        // <returns> A string representation that includes query text, parameter information, include path information and merge option information about this cache key. </returns>
         public override string ToString()
         {
             return _cacheIdentity.ToString();

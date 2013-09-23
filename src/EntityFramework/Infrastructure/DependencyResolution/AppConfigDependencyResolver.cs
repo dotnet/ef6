@@ -11,9 +11,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Resolves dependencies from a config file.
-    /// </summary>
+    // <summary>
+    // Resolves dependencies from a config file.
+    // </summary>
     internal class AppConfigDependencyResolver : IDbDependencyResolver
     {
         private readonly AppConfig _appConfig;
@@ -29,9 +29,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
         private readonly ProviderServicesFactory _providerServicesFactory;
 
-        /// <summary>
-        /// For testing.
-        /// </summary>
+        // <summary>
+        // For testing.
+        // </summary>
         public AppConfigDependencyResolver()
         {
         }

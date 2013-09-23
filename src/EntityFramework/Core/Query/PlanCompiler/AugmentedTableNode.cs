@@ -4,14 +4,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// Additional information for a "Table" node
-    /// AugmentedTableNode - the augmentedTableNode is a subclass of AugmentedNode,
-    /// and represents a ScanTable node. In addition to the information above, this
-    /// class keeps track of all join edges that this node participates in,
-    /// whether this table has been eliminated, and finally, how high in the tree
-    /// this node is visible
-    /// </summary>
+    // <summary>
+    // Additional information for a "Table" node
+    // AugmentedTableNode - the augmentedTableNode is a subclass of AugmentedNode,
+    // and represents a ScanTable node. In addition to the information above, this
+    // class keeps track of all join edges that this node participates in,
+    // whether this table has been eliminated, and finally, how high in the tree
+    // this node is visible
+    // </summary>
     internal sealed class AugmentedTableNode : AugmentedNode
     {
         #region private state
@@ -30,11 +30,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region constructors
 
-        /// <summary>
-        /// Basic constructor
-        /// </summary>
-        /// <param name="id"> node id </param>
-        /// <param name="node"> scan table node </param>
+        // <summary>
+        // Basic constructor
+        // </summary>
+        // <param name="id"> node id </param>
+        // <param name="node"> scan table node </param>
         internal AugmentedTableNode(int id, Node node)
             : base(id, node)
         {
@@ -49,56 +49,56 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region public properties
 
-        /// <summary>
-        /// The Table
-        /// </summary>
+        // <summary>
+        // The Table
+        // </summary>
         internal Table Table
         {
             get { return m_table; }
         }
 
-        /// <summary>
-        /// The highest node (id) at which this table is visible
-        /// </summary>
+        // <summary>
+        // The highest node (id) at which this table is visible
+        // </summary>
         internal int LastVisibleId { get; set; }
 
-        /// <summary>
-        /// Has this table been eliminated
-        /// </summary>
+        // <summary>
+        // Has this table been eliminated
+        // </summary>
         internal bool IsEliminated
         {
             get { return m_replacementTable != this; }
         }
 
-        /// <summary>
-        /// The replacement table (if any) for this table
-        /// </summary>
+        // <summary>
+        // The replacement table (if any) for this table
+        // </summary>
         internal AugmentedTableNode ReplacementTable
         {
             get { return m_replacementTable; }
             set { m_replacementTable = value; }
         }
 
-        /// <summary>
-        /// New location for this table
-        /// </summary>
+        // <summary>
+        // New location for this table
+        // </summary>
         internal int NewLocationId
         {
             get { return m_newLocationId; }
             set { m_newLocationId = value; }
         }
 
-        /// <summary>
-        /// Has this table "moved" ?
-        /// </summary>
+        // <summary>
+        // Has this table "moved" ?
+        // </summary>
         internal bool IsMoved
         {
             get { return m_newLocationId != Id; }
         }
 
-        /// <summary>
-        /// Get the list of nullable columns (that require special handling)
-        /// </summary>
+        // <summary>
+        // Get the list of nullable columns (that require special handling)
+        // </summary>
         internal VarVec NullableColumns { get; set; }
 
         #endregion

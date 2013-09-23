@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Globalization;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an EntityContainer element.
-    /// </summary>
+    // <summary>
+    // Represents an EntityContainer element.
+    // </summary>
     [DebuggerDisplay("Name={Name}")]
     internal sealed class EntityContainer : SchemaType
     {
@@ -32,10 +32,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Constructors
 
-        /// <summary>
-        /// Constructs an EntityContainer
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainer
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainer(Schema parentElement)
             : base(parentElement)
         {
@@ -188,9 +188,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _unresolvedExtendedEntityContainerName = HandleUndottedNameAttribute(reader, _unresolvedExtendedEntityContainerName);
         }
 
-        /// <summary>
-        /// Resolves the names to element references.
-        /// </summary>
+        // <summary>
+        // Resolves the names to element references.
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             if (!_isAlreadyResolved)
@@ -244,9 +244,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Do all validation for this element here, and delegate to all sub elements
-        /// </summary>
+        // <summary>
+        // Do all validation for this element here, and delegate to all sub elements
+        // </summary>
         internal override void Validate()
         {
             // Now before we clone all the entity sets from the entity container that this entity container is extending,
@@ -294,12 +294,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Find the EntityContainerEntitySet in the same EntityContainer with the name from the extent
-        /// attribute
-        /// </summary>
-        /// <param name="name"> the name of the EntityContainerProperty to find </param>
-        /// <returns> The EntityContainerProperty it found or null if it fails to find it </returns>
+        // <summary>
+        // Find the EntityContainerEntitySet in the same EntityContainer with the name from the extent
+        // attribute
+        // </summary>
+        // <param name="name"> the name of the EntityContainerProperty to find </param>
+        // <returns> The EntityContainerProperty it found or null if it fails to find it </returns>
         internal EntityContainerEntitySet FindEntitySet(string name)
         {
             var current = this;
@@ -372,10 +372,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Validates that if there are more than one relationship set referring to the same type, each role of the relationship type
-        /// never refers to the same entity set
-        /// </summary>
+        // <summary>
+        // Validates that if there are more than one relationship set referring to the same type, each role of the relationship type
+        // never refers to the same entity set
+        // </summary>
         private void ValidateRelationshipSetHaveUniqueEnds()
         {
             // Contains the list of ends that have been visited and validated
@@ -448,10 +448,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// Return the fully qualified name for entity container. Since EntityContainer no longer lives in a schema,
-        /// the FQName should be same as that of the Name
-        /// </summary>
+        // <summary>
+        // Return the fully qualified name for entity container. Since EntityContainer no longer lives in a schema,
+        // the FQName should be same as that of the Name
+        // </summary>
         public override string FQName
         {
             get { return Name; }
@@ -462,10 +462,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return Name; }
         }
 
-        /// <summary>
-        /// Adds a child EntitySet's tableKey (Schema/Table combination) to the validation collection
-        /// This is used to validate that no child EntitySets share a Schema.Table combination
-        /// </summary>
+        // <summary>
+        // Adds a child EntitySet's tableKey (Schema/Table combination) to the validation collection
+        // This is used to validate that no child EntitySets share a Schema.Table combination
+        // </summary>
         private void CheckForDuplicateTableMapping(HashSet<string> tableKeys, EntityContainerEntitySet entitySet)
         {
             string schema;
@@ -518,10 +518,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Returns true if the given two ends are similar - the relationship type that this ends belongs to is the same
-        /// and the entity set refered by the ends are same and they have the same role name
-        /// </summary>
+        // <summary>
+        // Returns true if the given two ends are similar - the relationship type that this ends belongs to is the same
+        // and the entity set refered by the ends are same and they have the same role name
+        // </summary>
         private static bool AreRelationshipEndsEqual(EntityContainerRelationshipSetEnd left, EntityContainerRelationshipSetEnd right)
         {
             Debug.Assert(

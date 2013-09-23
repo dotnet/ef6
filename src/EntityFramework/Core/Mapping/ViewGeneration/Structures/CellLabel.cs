@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     // fragments or cells, e.g., line numbers, etc
     internal class CellLabel
     {
-        /// <summary>
-        /// Copy Constructor
-        /// </summary>
+        // <summary>
+        // Copy Constructor
+        // </summary>
         internal CellLabel(CellLabel source)
         {
             m_startLineNumber = source.m_startLineNumber;

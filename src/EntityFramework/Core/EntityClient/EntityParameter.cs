@@ -157,12 +157,12 @@ namespace System.Data.Entity.Core.EntityClient
             set { SetParameterNameWithValidation(value, "value"); }
         }
 
-        /// <summary>
-        /// Helper method to validate the parameter name; Ideally we'd only call this once, but
-        /// we have to put an argumentName on the Argument exception, and the property setter would
-        /// need "value" which confuses folks when they call the constructor that takes the value
-        /// of the parameter.  c'est la vie.
-        /// </summary>
+        // <summary>
+        // Helper method to validate the parameter name; Ideally we'd only call this once, but
+        // we have to put an argumentName on the Argument exception, and the property setter would
+        // need "value" which confuses folks when they call the constructor that takes the value
+        // of the parameter.  c'est la vie.
+        // </summary>
         private void SetParameterNameWithValidation(string parameterName, string argumentName)
         {
             if (!string.IsNullOrEmpty(parameterName)
@@ -322,57 +322,57 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Gets whether this collection has been changes since the last reset
-        /// </summary>
+        // <summary>
+        // Gets whether this collection has been changes since the last reset
+        // </summary>
         internal virtual bool IsDirty
         {
             get { return _isDirty; }
         }
 
-        /// <summary>
-        /// Indicates whether the DbType property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the DbType property has been set by the user;
+        // </summary>
         internal virtual bool IsDbTypeSpecified
         {
             get { return _dbType.HasValue; }
         }
 
-        /// <summary>
-        /// Indicates whether the Direction property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the Direction property has been set by the user;
+        // </summary>
         internal virtual bool IsDirectionSpecified
         {
             get { return _direction != 0; }
         }
 
-        /// <summary>
-        /// Indicates whether the IsNullable property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the IsNullable property has been set by the user;
+        // </summary>
         internal virtual bool IsIsNullableSpecified
         {
             get { return _isNullable.HasValue; }
         }
 
-        /// <summary>
-        /// Indicates whether the Precision property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the Precision property has been set by the user;
+        // </summary>
         internal virtual bool IsPrecisionSpecified
         {
             get { return _precision.HasValue; }
         }
 
-        /// <summary>
-        /// Indicates whether the Scale property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the Scale property has been set by the user;
+        // </summary>
         internal virtual bool IsScaleSpecified
         {
             get { return _scale.HasValue; }
         }
 
-        /// <summary>
-        /// Indicates whether the Size property has been set by the user;
-        /// </summary>
+        // <summary>
+        // Indicates whether the Size property has been set by the user;
+        // </summary>
         internal virtual bool IsSizeSpecified
         {
             get { return _size.HasValue; }
@@ -542,34 +542,34 @@ namespace System.Data.Entity.Core.EntityClient
             _dbType = null;
         }
 
-        /// <summary>
-        /// Marks that this parameter has been changed
-        /// </summary>
+        // <summary>
+        // Marks that this parameter has been changed
+        // </summary>
         private void PropertyChanging()
         {
             _isDirty = true;
         }
 
-        /// <summary>
-        /// Determines the size of the given object
-        /// </summary>
+        // <summary>
+        // Determines the size of the given object
+        // </summary>
         private static int ValueSize(object value)
         {
             return ValueSizeCore(value);
         }
 
-        /// <summary>
-        /// Clones this parameter object
-        /// </summary>
-        /// <returns> The new cloned object </returns>
+        // <summary>
+        // Clones this parameter object
+        // </summary>
+        // <returns> The new cloned object </returns>
         internal virtual EntityParameter Clone()
         {
             return new EntityParameter(this);
         }
 
-        /// <summary>
-        /// Clones this parameter object
-        /// </summary>
+        // <summary>
+        // Clones this parameter object
+        // </summary>
         private void CloneHelper(EntityParameter destination)
         {
             destination._value = _value;
@@ -589,13 +589,13 @@ namespace System.Data.Entity.Core.EntityClient
             destination._scale = _scale;
         }
 
-        /// <summary>
-        /// Get the type usage for this parameter in model terms.
-        /// </summary>
-        /// <returns> The type usage for this parameter </returns>
-        /// <remarks>
-        /// Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
-        /// </remarks>
+        // <summary>
+        // Get the type usage for this parameter in model terms.
+        // </summary>
+        // <returns> The type usage for this parameter </returns>
+        // <remarks>
+        // Because GetTypeUsage throws CommandValidationExceptions, it should only be called from EntityCommand during command execution
+        // </remarks>
         internal virtual TypeUsage GetTypeUsage()
         {
             TypeUsage typeUsage;
@@ -631,9 +631,9 @@ namespace System.Data.Entity.Core.EntityClient
             return typeUsage;
         }
 
-        /// <summary>
-        /// Reset the dirty flag on the collection
-        /// </summary>
+        // <summary>
+        // Reset the dirty flag on the collection
+        // </summary>
         internal virtual void ResetIsDirty()
         {
             _isDirty = false;

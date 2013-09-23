@@ -7,51 +7,51 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Information about a foreign-key constraint
-    /// </summary>
+    // <summary>
+    // Information about a foreign-key constraint
+    // </summary>
     internal class ForeignKeyConstraint
     {
         #region public surface
 
-        /// <summary>
-        /// Parent key properties
-        /// </summary>
+        // <summary>
+        // Parent key properties
+        // </summary>
         internal List<string> ParentKeys
         {
             get { return m_parentKeys; }
         }
 
-        /// <summary>
-        /// Child key properties
-        /// </summary>
+        // <summary>
+        // Child key properties
+        // </summary>
         internal List<string> ChildKeys
         {
             get { return m_childKeys; }
         }
 
-        /// <summary>
-        /// Get the parent-child pair
-        /// </summary>
+        // <summary>
+        // Get the parent-child pair
+        // </summary>
         internal ExtentPair Pair
         {
             get { return m_extentPair; }
         }
 
-        /// <summary>
-        /// Return the child rowcount
-        /// </summary>
+        // <summary>
+        // Return the child rowcount
+        // </summary>
         internal RelationshipMultiplicity ChildMultiplicity
         {
             get { return m_constraint.ToRole.RelationshipMultiplicity; }
         }
 
-        /// <summary>
-        /// Get the corresponding parent (key) property, for a specific child (foreign key) property
-        /// </summary>
-        /// <param name="childPropertyName"> child (foreign key) property name </param>
-        /// <param name="parentPropertyName"> corresponding parent property name </param>
-        /// <returns> true, if the parent property was found </returns>
+        // <summary>
+        // Get the corresponding parent (key) property, for a specific child (foreign key) property
+        // </summary>
+        // <param name="childPropertyName"> child (foreign key) property name </param>
+        // <param name="parentPropertyName"> corresponding parent property name </param>
+        // <returns> true, if the parent property was found </returns>
         internal bool GetParentProperty(string childPropertyName, out string parentPropertyName)
         {
             BuildKeyMap();
@@ -115,10 +115,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region private methods
 
-        /// <summary>
-        /// Build up an equivalence map of primary keys and foreign keys (ie) for each
-        /// foreign key column, identify the corresponding primary key property
-        /// </summary>
+        // <summary>
+        // Build up an equivalence map of primary keys and foreign keys (ie) for each
+        // foreign key column, identify the corresponding primary key property
+        // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void BuildKeyMap()

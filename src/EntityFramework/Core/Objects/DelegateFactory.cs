@@ -15,33 +15,33 @@ namespace System.Data.Entity.Core.Objects
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
-    /// </summary>
+    // <summary>
+    // CodeGenerator class: use expression trees to dynamically generate code to get/set properties.
+    // </summary>
     internal static class DelegateFactory
     {
         private static readonly MethodInfo _throwSetInvalidValue = typeof(EntityUtil).GetDeclaredMethod(
             "ThrowSetInvalidValue", new[] { typeof(object), typeof(Type), typeof(string), typeof(string) });
 
-        /// <summary>
-        /// For an OSpace ComplexType returns the delegate to construct the clr instance.
-        /// </summary>
+        // <summary>
+        // For an OSpace ComplexType returns the delegate to construct the clr instance.
+        // </summary>
         internal static Func<object> GetConstructorDelegateForType(ClrComplexType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
 
-        /// <summary>
-        /// For an OSpace EntityType returns the delegate to construct the clr instance.
-        /// </summary>
+        // <summary>
+        // For an OSpace EntityType returns the delegate to construct the clr instance.
+        // </summary>
         internal static Func<object> GetConstructorDelegateForType(ClrEntityType clrType)
         {
             return (clrType.Constructor ?? (clrType.Constructor = CreateConstructor(clrType.ClrType)));
         }
 
-        /// <summary>
-        /// for an OSpace property, get the property value from a clr instance
-        /// </summary>
+        // <summary>
+        // for an OSpace property, get the property value from a clr instance
+        // </summary>
         internal static object GetValue(EdmProperty property, object target)
         {
             var getter = GetGetterDelegateForProperty(property);
@@ -56,29 +56,29 @@ namespace System.Data.Entity.Core.Objects
                    ?? (property.ValueGetter = CreatePropertyGetter(property.EntityDeclaringType, property.PropertyInfo));
         }
 
-        /// <summary>
-        /// for an OSpace property, set the property value on a clr instance
-        /// </summary>
-        /// <exception cref="System.Data.ConstraintException">
-        /// If
-        /// <paramref name="value" />
-        /// is null for a non nullable property.
-        /// </exception>
-        /// <exception cref="System.InvalidOperationException">
-        /// Invalid cast of
-        /// <paramref name="value" />
-        /// to property type.
-        /// </exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
+        // <summary>
+        // for an OSpace property, set the property value on a clr instance
+        // </summary>
+        // <exception cref="System.Data.ConstraintException">
+        // If
+        // <paramref name="value" />
+        // is null for a non nullable property.
+        // </exception>
+        // <exception cref="System.InvalidOperationException">
+        // Invalid cast of
+        // <paramref name="value" />
+        // to property type.
+        // </exception>
+        // <exception cref="System.ArgumentOutOfRangeException">From generated enties via StructuralObject.SetValidValue.</exception>
         internal static void SetValue(EdmProperty property, object target, object value)
         {
             var setter = GetSetterDelegateForProperty(property);
             setter(target, value);
         }
 
-        /// <summary>
-        /// For an OSpace property, gets the delegate to set the property value on a clr instance.
-        /// </summary>
+        // <summary>
+        // For an OSpace property, gets the delegate to set the property value on a clr instance.
+        // </summary>
         internal static Action<object, object> GetSetterDelegateForProperty(EdmProperty property)
         {
             var setter = property.ValueSetter;
@@ -93,10 +93,10 @@ namespace System.Data.Entity.Core.Objects
             return setter;
         }
 
-        /// <summary>
-        /// Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to
-        /// call GetRelatedCollection or GetRelatedReference
-        /// </summary>
+        // <summary>
+        // Gets the related end instance for the source AssociationEndMember by creating a DynamicMethod to
+        // call GetRelatedCollection or GetRelatedReference
+        // </summary>
         internal static RelatedEnd GetRelatedEnd(
             RelationshipManager sourceRelationshipManager, AssociationEndMember sourceMember, AssociationEndMember targetMember,
             RelatedEnd existingRelatedEnd)
@@ -144,11 +144,11 @@ namespace System.Data.Entity.Core.Objects
                     Expression.Convert(targetParameter, navigationProperty.PropertyType)), entityParameter, targetParameter).Compile();
         }
 
-        /// <summary>
-        /// Gets a parameterless constructor for the specified type.
-        /// </summary>
-        /// <param name="type"> Type to get constructor for. </param>
-        /// <returns> Parameterless constructor for the specified type. </returns>
+        // <summary>
+        // Gets a parameterless constructor for the specified type.
+        // </summary>
+        // <param name="type"> Type to get constructor for. </param>
+        // <returns> Parameterless constructor for the specified type. </returns>
         internal static ConstructorInfo GetConstructorForType(Type type)
         {
             DebugCheck.NotNull(type);
@@ -162,12 +162,12 @@ namespace System.Data.Entity.Core.Objects
             return ci;
         }
 
-        /// <summary>
-        /// Gets a new expression that uses the parameterless constructor for the specified collection type.
-        /// For HashSet{T} will use ObjectReferenceEqualityComparer.
-        /// </summary>
-        /// <param name="type"> Type to get constructor for. </param>
-        /// <returns> Parameterless constructor for the specified type. </returns>
+        // <summary>
+        // Gets a new expression that uses the parameterless constructor for the specified collection type.
+        // For HashSet{T} will use ObjectReferenceEqualityComparer.
+        // </summary>
+        // <param name="type"> Type to get constructor for. </param>
+        // <returns> Parameterless constructor for the specified type. </returns>
         internal static NewExpression GetNewExpressionForCollectionType(Type type)
         {
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(HashSet<>))
@@ -180,10 +180,10 @@ namespace System.Data.Entity.Core.Objects
             return Expression.New(GetConstructorForType(type));
         }
 
-        /// <summary>
-        /// generate a delegate equivalent to
-        /// private object Constructor() { return new XClass(); }
-        /// </summary>
+        // <summary>
+        // generate a delegate equivalent to
+        // private object Constructor() { return new XClass(); }
+        // </summary>
         internal static Func<object> CreateConstructor(Type type)
         {
             DebugCheck.NotNull(type);
@@ -193,12 +193,12 @@ namespace System.Data.Entity.Core.Objects
             return Expression.Lambda<Func<object>>(Expression.New(type)).Compile();
         }
 
-        /// <summary>
-        /// generate a delegate equivalent to
-        /// private object MemberGetter(object target) { return target.PropertyX; }
-        /// or if the property is Nullable&lt;&gt; generate a delegate equivalent to
-        /// private object MemberGetter(object target) { Nullable&lt;X&gt; y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
-        /// </summary>
+        // <summary>
+        // generate a delegate equivalent to
+        // private object MemberGetter(object target) { return target.PropertyX; }
+        // or if the property is Nullable&lt;&gt; generate a delegate equivalent to
+        // private object MemberGetter(object target) { Nullable&lt;X&gt; y = target.PropertyX; return ((y.HasValue) ? y.Value : null); }
+        // </summary>
         internal static Func<object, object> CreatePropertyGetter(Type entityDeclaringType, PropertyInfo propertyInfo)
         {
             DebugCheck.NotNull(entityDeclaringType);
@@ -243,45 +243,45 @@ namespace System.Data.Entity.Core.Objects
             return Expression.Lambda<Func<object, object>>(getterExpression, entityParameter).Compile();
         }
 
-        /// <summary>
-        /// generate a delegate equivalent to
-        /// // if Property is Nullable value type
-        /// private void MemberSetter(object target, object value) {
-        /// if (AllowNull &amp;&amp; (null == value)) {
-        /// ((TargetType)target).PropertyName = default(PropertyType?);
-        /// return;
-        /// }
-        /// if (value is PropertyType) {
-        /// ((TargetType)target).PropertyName = new (PropertyType?)((PropertyType)value);
-        /// return;
-        /// }
-        /// ThrowInvalidValue(value, TargetType.Name, PropertyName);
-        /// return
-        /// }
-        /// // when PropertyType is a value type
-        /// private void MemberSetter(object target, object value) {
-        /// if (value is PropertyType) {
-        /// ((TargetType)target).PropertyName = (PropertyType)value;
-        /// return;
-        /// }
-        /// ThrowInvalidValue(value, TargetType.Name, PropertyName);
-        /// return
-        /// }
-        /// // when PropertyType is a reference type
-        /// private void MemberSetter(object target, object value) {
-        /// if ((AllowNull &amp;&amp; (null == value)) || (value is PropertyType)) {
-        /// ((TargetType)target).PropertyName = ((PropertyType)value);
-        /// return;
-        /// }
-        /// ThrowInvalidValue(value, TargetType.Name, PropertyName);
-        /// return
-        /// }
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException">
-        /// If the method is missing or static or has indexed parameters.
-        /// Or if the declaring type is a value type.
-        /// Or if the parameter type is a pointer.
-        /// </exception>
+        // <summary>
+        // generate a delegate equivalent to
+        // // if Property is Nullable value type
+        // private void MemberSetter(object target, object value) {
+        // if (AllowNull &amp;&amp; (null == value)) {
+        // ((TargetType)target).PropertyName = default(PropertyType?);
+        // return;
+        // }
+        // if (value is PropertyType) {
+        // ((TargetType)target).PropertyName = new (PropertyType?)((PropertyType)value);
+        // return;
+        // }
+        // ThrowInvalidValue(value, TargetType.Name, PropertyName);
+        // return
+        // }
+        // // when PropertyType is a value type
+        // private void MemberSetter(object target, object value) {
+        // if (value is PropertyType) {
+        // ((TargetType)target).PropertyName = (PropertyType)value;
+        // return;
+        // }
+        // ThrowInvalidValue(value, TargetType.Name, PropertyName);
+        // return
+        // }
+        // // when PropertyType is a reference type
+        // private void MemberSetter(object target, object value) {
+        // if ((AllowNull &amp;&amp; (null == value)) || (value is PropertyType)) {
+        // ((TargetType)target).PropertyName = ((PropertyType)value);
+        // return;
+        // }
+        // ThrowInvalidValue(value, TargetType.Name, PropertyName);
+        // return
+        // }
+        // </summary>
+        // <exception cref="System.InvalidOperationException">
+        // If the method is missing or static or has indexed parameters.
+        // Or if the declaring type is a value type.
+        // Or if the parameter type is a pointer.
+        // </exception>
         internal static Action<object, object> CreatePropertySetter(Type entityDeclaringType, PropertyInfo propertyInfo, bool allowNull)
         {
             var propertyInfoForSet = ValidateSetterProperty(propertyInfo);
@@ -356,12 +356,12 @@ namespace System.Data.Entity.Core.Objects
             return propertyInfoForSet;
         }
 
-        /// <summary>
-        /// Create delegate used to invoke either the GetRelatedReference or GetRelatedCollection generic method on the RelationshipManager.
-        /// </summary>
-        /// <param name="sourceMember"> source end of the relationship for the requested navigation </param>
-        /// <param name="targetMember"> target end of the relationship for the requested navigation </param>
-        /// <returns> Delegate that can be used to invoke the corresponding method. </returns>
+        // <summary>
+        // Create delegate used to invoke either the GetRelatedReference or GetRelatedCollection generic method on the RelationshipManager.
+        // </summary>
+        // <param name="sourceMember"> source end of the relationship for the requested navigation </param>
+        // <param name="targetMember"> target end of the relationship for the requested navigation </param>
+        // <returns> Delegate that can be used to invoke the corresponding method. </returns>
         private static Func<RelationshipManager, RelatedEnd, RelatedEnd> CreateGetRelatedEndMethod(
             AssociationEndMember sourceMember, AssociationEndMember targetMember)
         {

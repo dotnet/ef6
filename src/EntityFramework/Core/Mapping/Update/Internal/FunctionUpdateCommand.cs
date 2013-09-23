@@ -21,21 +21,21 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Threading.Tasks;
     using IEntityStateEntry = System.Data.Entity.Core.IEntityStateEntry;
 
-    /// <summary>
-    /// Aggregates information about a modification command delegated to a store function.
-    /// </summary>
+    // <summary>
+    // Aggregates information about a modification command delegated to a store function.
+    // </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal class FunctionUpdateCommand : UpdateCommand
     {
         #region Constructors
 
-        /// <summary>
-        /// Initialize a new function command. Initializes the command object.
-        /// </summary>
-        /// <param name="functionMapping"> Function mapping metadata </param>
-        /// <param name="translator"> Translator </param>
-        /// <param name="stateEntries"> State entries handled by this operation. </param>
-        /// <param name="stateEntry"> 'Root' state entry being handled by this function. </param>
+        // <summary>
+        // Initialize a new function command. Initializes the command object.
+        // </summary>
+        // <param name="functionMapping"> Function mapping metadata </param>
+        // <param name="translator"> Translator </param>
+        // <param name="stateEntries"> State entries handled by this operation. </param>
+        // <param name="stateEntry"> 'Root' state entry being handled by this function. </param>
         internal FunctionUpdateCommand(
             ModificationFunctionMapping functionMapping,
             UpdateTranslator translator,
@@ -68,36 +68,36 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private readonly ReadOnlyCollection<IEntityStateEntry> _stateEntries;
 
-        /// <summary>
-        /// Gets the store command wrapped by this command.
-        /// </summary>
+        // <summary>
+        // Gets the store command wrapped by this command.
+        // </summary>
         private readonly DbCommand _dbCommand;
 
-        /// <summary>
-        /// Gets map from identifiers (key component proxies) to parameters holding the actual
-        /// key values. Supports propagation of identifier values (fixup for server-gen keys)
-        /// </summary>
+        // <summary>
+        // Gets map from identifiers (key component proxies) to parameters holding the actual
+        // key values. Supports propagation of identifier values (fixup for server-gen keys)
+        // </summary>
         private List<KeyValuePair<int, DbParameter>> _inputIdentifiers;
 
-        /// <summary>
-        /// Gets map from identifiers (key component proxies) to column names producing the actual
-        /// key values. Supports propagation of identifier values (fixup for server-gen keys)
-        /// </summary>
+        // <summary>
+        // Gets map from identifiers (key component proxies) to column names producing the actual
+        // key values. Supports propagation of identifier values (fixup for server-gen keys)
+        // </summary>
         private Dictionary<int, string> _outputIdentifiers;
 
-        /// <summary>
-        /// Gets a reference to the rows affected output parameter for the stored procedure. May be null.
-        /// </summary>
+        // <summary>
+        // Gets a reference to the rows affected output parameter for the stored procedure. May be null.
+        // </summary>
         private DbParameter _rowsAffectedParameter;
 
         #endregion
 
         #region Properties
 
-        /// <summary>
-        /// Pairs for column names and propagator results (so that we can associate reader results with
-        /// the source records for server generated values).
-        /// </summary>
+        // <summary>
+        // Pairs for column names and propagator results (so that we can associate reader results with
+        // the source records for server generated values).
+        // </summary>
         protected virtual List<KeyValuePair<string, PropagatorResult>> ResultColumns { get; set; }
 
         internal override IEnumerable<int> InputIdentifiers
@@ -139,9 +139,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         #region Methods
 
-        /// <summary>
-        /// Gets state entries contributing to this function. Supports error reporting.
-        /// </summary>
+        // <summary>
+        // Gets state entries contributing to this function. Supports error reporting.
+        // </summary>
         internal override IList<IEntityStateEntry> GetStateEntries(UpdateTranslator translator)
         {
             return _stateEntries;
@@ -224,11 +224,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _outputIdentifiers[identifier] = columnName;
         }
 
-        /// <summary>
-        /// Sets all identifier input values (to support propagation of identifier values across relationship
-        /// boundaries).
-        /// </summary>
-        /// <param name="identifierValues"> Input values to set. </param>
+        // <summary>
+        // Sets all identifier input values (to support propagation of identifier values across relationship
+        // boundaries).
+        // </summary>
+        // <param name="identifierValues"> Input values to set. </param>
         internal virtual void SetInputIdentifiers(Dictionary<int, object> identifierValues)
         {
             if (null != _inputIdentifiers)
@@ -246,9 +246,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        /// <summary>
-        /// See comments in <see cref="UpdateCommand" />.
-        /// </summary>
+        // <summary>
+        // See comments in <see cref="UpdateCommand" />.
+        // </summary>
         internal override long Execute(
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
@@ -332,9 +332,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
 #if !NET40
 
-        /// <summary>
-        /// See comments in <see cref="UpdateCommand" />.
-        /// </summary>
+        // <summary>
+        // See comments in <see cref="UpdateCommand" />.
+        // </summary>
         internal override async Task<long> ExecuteAsync(
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
@@ -475,9 +475,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return columnOrdinal;
         }
 
-        /// <summary>
-        /// Gets modification operator corresponding to the given entity state.
-        /// </summary>
+        // <summary>
+        // Gets modification operator corresponding to the given entity state.
+        // </summary>
         private static ModificationOperator GetModificationOperator(EntityState state)
         {
             switch (state)

@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Data.Entity.Utilities;
     using System.Linq.Expressions;
 
-    /// <summary>
-    /// Class describing a LINQ parameter and its bound expression. For instance, in
-    /// products.Select(p => p.ID)
-    /// the 'products' query is the bound expression, and 'p' is the parameter.
-    /// </summary>
+    // <summary>
+    // Class describing a LINQ parameter and its bound expression. For instance, in
+    // products.Select(p => p.ID)
+    // the 'products' query is the bound expression, and 'p' is the parameter.
+    // </summary>
     internal sealed class Binding
     {
         internal Binding(Expression linqExpression, DbExpression cqtExpression)

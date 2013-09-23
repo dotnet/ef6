@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // where this store item collection is getting reused
         private readonly QueryCacheManager _queryCacheManager = QueryCacheManager.Create();
 
-        /// <summary>
-        /// For testing purposes only.
-        /// </summary>
+        // <summary>
+        // For testing purposes only.
+        // </summary>
         internal StoreItemCollection()
             : base(DataSpace.SSpace)
         {
@@ -67,14 +67,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             LoadProviderManifest(_providerManifest);
         }
 
-        /// <summary>
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        /// encountered during load as the out parameter errors.
-        /// </summary>
-        /// <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
-        /// <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
-        /// <param name="resolver"> </param>
-        /// <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
+        // <summary>
+        // constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        // encountered during load as the out parameter errors.
+        // </summary>
+        // <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
+        // <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
+        // <param name="resolver"> </param>
+        // <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private StoreItemCollection(
             IEnumerable<XmlReader> xmlReaders,
@@ -94,12 +94,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 out _cachedCTypeFunction);
         }
 
-        /// <summary>
-        /// constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
-        /// encountered during load as the out parameter errors.
-        /// </summary>
-        /// <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
-        /// <param name="filePaths"> the paths where the files can be found that match the xml readers collection </param>
+        // <summary>
+        // constructor that loads the metadata files from the specified xmlReaders, and returns the list of errors
+        // encountered during load as the out parameter errors.
+        // </summary>
+        // <param name="xmlReaders"> xmlReaders where the CDM schemas are loaded </param>
+        // <param name="filePaths"> the paths where the files can be found that match the xml readers collection </param>
         internal StoreItemCollection(
             IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> filePaths)
@@ -254,9 +254,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return loader.Errors;
         }
 
-        /// <summary>
-        /// Returns the query cache manager
-        /// </summary>
+        // <summary>
+        // Returns the query cache manager
+        // </summary>
         internal QueryCacheManager QueryCacheManager
         {
             get { return _queryCacheManager; }
@@ -313,11 +313,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _primitiveTypeMaps.GetTypes();
         }
 
-        /// <summary>
-        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
-        /// </summary>
-        /// <param name="primitiveTypeKind"> canonical primitive type </param>
-        /// <returns> The mapped scalar type </returns>
+        // <summary>
+        // Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        // </summary>
+        // <param name="primitiveTypeKind"> canonical primitive type </param>
+        // <returns> The mapped scalar type </returns>
         internal override PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             PrimitiveType type = null;
@@ -325,11 +325,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type;
         }
 
-        /// <summary>
-        /// checks if the schemaKey refers to the provider manifest schema key
-        /// and if true, loads the provider manifest
-        /// </summary>
-        /// <param name="storeManifest"> The store manifest </param>
+        // <summary>
+        // checks if the schemaKey refers to the provider manifest schema key
+        // and if true, loads the provider manifest
+        // </summary>
+        // <param name="storeManifest"> The store manifest </param>
         private void LoadProviderManifest(DbProviderManifest storeManifest)
         {
             foreach (var primitiveType in storeManifest.GetStoreTypes())
@@ -345,13 +345,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Get all the overloads of the function with the given name, this method is used for internal perspective
-        /// </summary>
-        /// <param name="functionName"> The full name of the function </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <returns> A collection of all the functions with the given name in the given data space </returns>
-        /// <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
+        // <summary>
+        // Get all the overloads of the function with the given name, this method is used for internal perspective
+        // </summary>
+        // <param name="functionName"> The full name of the function </param>
+        // <param name="ignoreCase"> true for case-insensitive lookup </param>
+        // <returns> A collection of all the functions with the given name in the given data space </returns>
+        // <exception cref="System.ArgumentNullException">Thrown if functionaName argument passed in is null</exception>
         internal ReadOnlyCollection<EdmFunction> GetCTypeFunctions(string functionName, bool ignoreCase)
         {
             ReadOnlyCollection<EdmFunction> functionOverloads;
@@ -386,9 +386,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _cachedCTypeFunction.Evaluate(sTypeFunction);
         }
 
-        /// <summary>
-        /// Convert the S type function parameters and returnType to C types.
-        /// </summary>
+        // <summary>
+        // Convert the S type function parameters and returnType to C types.
+        // </summary>
         private EdmFunction ConvertFunctionSignatureToCType(EdmFunction sTypeFunction)
         {
             Debug.Assert(sTypeFunction.DataSpace == DataSpace.SSpace, "sTypeFunction.DataSpace == Edm.DataSpace.SSpace");

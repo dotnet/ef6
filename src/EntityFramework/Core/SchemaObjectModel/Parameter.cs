@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Text;
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for StructuredProperty.
-    /// </summary>
+    // <summary>
+    // Summary description for StructuredProperty.
+    // </summary>
     internal class Parameter : FacetEnabledSchemaElement
     {
         #region Instance Fields

@@ -7,27 +7,27 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// Finds the record (Row) types that we're projecting out of the query, and
-    /// ensures that we mark them as needing a nullable sentinel, so when we
-    /// flatten them later we'll have one added.
-    /// </summary>
+    // <summary>
+    // Finds the record (Row) types that we're projecting out of the query, and
+    // ensures that we mark them as needing a nullable sentinel, so when we
+    // flatten them later we'll have one added.
+    // </summary>
     internal class StructuredTypeNullabilityAnalyzer : ColumnMapVisitor<HashSet<string>>
     {
         internal static StructuredTypeNullabilityAnalyzer Instance = new StructuredTypeNullabilityAnalyzer();
 
-        /// <summary>
-        /// VarRefColumnMap
-        /// </summary>
+        // <summary>
+        // VarRefColumnMap
+        // </summary>
         internal override void Visit(VarRefColumnMap columnMap, HashSet<string> typesNeedingNullSentinel)
         {
             AddTypeNeedingNullSentinel(typesNeedingNullSentinel, columnMap.Type);
             base.Visit(columnMap, typesNeedingNullSentinel);
         }
 
-        /// <summary>
-        /// Recursively add any Row types to the list of types needing a sentinel.
-        /// </summary>
+        // <summary>
+        // Recursively add any Row types to the list of types needing a sentinel.
+        // </summary>
         private static void AddTypeNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
         {
             if (TypeSemantics.IsCollectionType(typeUsage))
@@ -48,10 +48,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Marks the given typeUsage as needing a null sentinel.
-        /// Call this method instead of calling Add over the HashSet directly, to ensure consistency.
-        /// </summary>
+        // <summary>
+        // Marks the given typeUsage as needing a null sentinel.
+        // Call this method instead of calling Add over the HashSet directly, to ensure consistency.
+        // </summary>
         internal static void MarkAsNeedingNullSentinel(HashSet<string> typesNeedingNullSentinel, TypeUsage typeUsage)
         {
             typesNeedingNullSentinel.Add(typeUsage.EdmType.Identity);

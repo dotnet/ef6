@@ -64,10 +64,10 @@ namespace System.Data.Entity.Core.Common
 #endif
         }
 
-        /// <summary>
-        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        /// but with a different EntityKey instance.
-        /// </summary>
+        // <summary>
+        // Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        // but with a different EntityKey instance.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "entitySet")]
         internal EntityRecordInfo(DataRecordInfo info, EntityKey entityKey, EntitySet entitySet)
             : base(info)

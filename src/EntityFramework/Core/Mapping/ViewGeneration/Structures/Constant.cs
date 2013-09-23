@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    /// <summary>
-    /// This class denotes a constant that can be stored in multiconstants or projected in fields.
-    /// </summary>
+    // <summary>
+    // This class denotes a constant that can be stored in multiconstants or projected in fields.
+    // </summary>
     internal abstract class Constant : InternalBase
     {
         internal static readonly IEqualityComparer<Constant> EqualityComparer = new CellConstantComparer();
@@ -24,10 +24,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         internal static readonly Constant NotNull = new NegatedConstant(new[] { NullConstant.Instance });
         internal static readonly Constant Undefined = UndefinedConstant.Instance;
 
-        /// <summary>
-        /// Represents scalar constants within a finite set that are not specified explicitly in the domain.
-        /// Currently only used as a Sentinel node to prevent expression optimization
-        /// </summary>
+        // <summary>
+        // Represents scalar constants within a finite set that are not specified explicitly in the domain.
+        // Currently only used as a Sentinel node to prevent expression optimization
+        // </summary>
         internal static readonly Constant AllOtherConstants = AllOtherConstantsConstant.Instance;
 
         internal abstract bool IsNull();
@@ -36,26 +36,26 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         internal abstract bool IsUndefined();
 
-        /// <summary>
-        /// Returns true if this constant contains not null.
-        /// Implemented in <see cref="NegatedConstant" /> class, all other implementations return false.
-        /// </summary>
+        // <summary>
+        // Returns true if this constant contains not null.
+        // Implemented in <see cref="NegatedConstant" /> class, all other implementations return false.
+        // </summary>
         internal abstract bool HasNotNull();
 
-        /// <summary>
-        /// Generates eSQL for the constant expression.
-        /// </summary>
-        /// <param name="builder"> </param>
-        /// <param name="outputMember"> The member to which this constant is directed </param>
-        /// <param name="blockAlias"> </param>
+        // <summary>
+        // Generates eSQL for the constant expression.
+        // </summary>
+        // <param name="builder"> </param>
+        // <param name="outputMember"> The member to which this constant is directed </param>
+        // <param name="blockAlias"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal abstract StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias);
 
-        /// <summary>
-        /// Generates CQT for the constant expression.
-        /// </summary>
-        /// <param name="row"> The input row. </param>
-        /// <param name="outputMember"> The member to which this constant is directed </param>
+        // <summary>
+        // Generates CQT for the constant expression.
+        // </summary>
+        // <param name="row"> The input row. </param>
+        // <param name="outputMember"> The member to which this constant is directed </param>
         internal abstract DbExpression AsCqt(DbExpression row, MemberPath outputMember);
 
         public override bool Equals(object obj)
@@ -219,18 +219,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return false;
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
                 throw new NotSupportedException();
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
@@ -248,9 +248,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return ReferenceEquals(this, right);
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override string ToUserString()
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
@@ -291,18 +291,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return false;
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
                 throw new NotSupportedException();
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.
@@ -320,9 +320,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                 return ReferenceEquals(this, right);
             }
 
-            /// <summary>
-            /// Not supported in this class.
-            /// </summary>
+            // <summary>
+            // Not supported in this class.
+            // </summary>
             internal override string ToUserString()
             {
                 // This code should never be called. Throw to keep compiler happy and make debug easier if it does get called.

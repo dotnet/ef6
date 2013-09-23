@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -129,9 +129,9 @@ namespace System.Data.Entity.Core.EntityClient
         {
         }
 
-        /// <summary>
-        /// This constructor allows to skip the initialization code for testing purposes.
-        /// </summary>
+        // <summary>
+        // This constructor allows to skip the initialization code for testing purposes.
+        // </summary>
         internal EntityConnection(
             MetadataWorkspace workspace,
             DbConnection connection,
@@ -198,9 +198,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>Handles the event when the database connection state changes.</summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="stateChange">The data for the event.</param>
+        // <summary>Handles the event when the database connection state changes.</summary>
+        // <param name="sender">The source of the event.</param>
+        // <param name="stateChange">The data for the event.</param>
         internal virtual void StoreConnectionStateChangeHandler(Object sender, StateChangeEventArgs stateChange)
         {
             var newStoreConnectionState = stateChange.CurrentState;
@@ -339,9 +339,9 @@ namespace System.Data.Entity.Core.EntityClient
             _associatedContexts.Add(context);
         }
 
-        /// <summary>
-        /// Formats provider string to replace " with \" so it can be appended within quotation marks "..."
-        /// </summary>
+        // <summary>
+        // Formats provider string to replace " with \" so it can be appended within quotation marks "..."
+        // </summary>
         private static string FormatProviderString(string providerString)
         {
             return providerString.Trim().Replace("\"", "\\\"");
@@ -491,9 +491,9 @@ namespace System.Data.Entity.Core.EntityClient
             get { return EntityProviderFactory.Instance; }
         }
 
-        /// <summary>
-        /// Gets the DbProviderFactory for the underlying provider
-        /// </summary>
+        // <summary>
+        // Gets the DbProviderFactory for the underlying provider
+        // </summary>
         internal virtual DbProviderFactory StoreProviderFactory
         {
             get { return _providerFactory; }
@@ -540,9 +540,9 @@ namespace System.Data.Entity.Core.EntityClient
             return _metadataWorkspace;
         }
 
-        /// <summary>
-        /// Gets the current transaction that this connection is enlisted in
-        /// </summary>
+        // <summary>
+        // Gets the current transaction that this connection is enlisted in
+        // </summary>
         internal virtual EntityTransaction CurrentTransaction
         {
             get
@@ -558,9 +558,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Whether the user has enlisted in transaction using EnlistTransaction method
-        /// </summary>
+        // <summary>
+        // Whether the user has enlisted in transaction using EnlistTransaction method
+        // </summary>
         internal virtual bool EnlistedInUserTransaction
         {
             get
@@ -866,23 +866,23 @@ namespace System.Data.Entity.Core.EntityClient
             return _currentTransaction;
         }
 
-        /// <summary>
-        /// Enables the user to pass in a database transaction created outside of the Entity Framework
-        /// if you want the framework to execute commands within that external transaction.
-        /// Or pass in null to clear the Framework's knowledge of the current transaction.
-        /// </summary>
-        /// <returns>the EntityTransaction wrapping the DbTransaction or null if cleared</returns>
-        /// <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if the connection associated with the <see cref="Database" /> object is already enlisted in a
-        /// <see
-        ///     cref="System.Transactions.TransactionScope" />
-        /// transaction
-        /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if the connection associated with the <see cref="Database" /> object is already participating in a transaction
-        /// </exception>
-        /// <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
+        // <summary>
+        // Enables the user to pass in a database transaction created outside of the Entity Framework
+        // if you want the framework to execute commands within that external transaction.
+        // Or pass in null to clear the Framework's knowledge of the current transaction.
+        // </summary>
+        // <returns>the EntityTransaction wrapping the DbTransaction or null if cleared</returns>
+        // <exception cref="InvalidOperationException">Thrown if the transaction is already completed</exception>
+        // <exception cref="InvalidOperationException">
+        // Thrown if the connection associated with the <see cref="Database" /> object is already enlisted in a
+        // <see
+        //     cref="System.Transactions.TransactionScope" />
+        // transaction
+        // </exception>
+        // <exception cref="InvalidOperationException">
+        // Thrown if the connection associated with the <see cref="Database" /> object is already participating in a transaction
+        // </exception>
+        // <exception cref="InvalidOperationException">Thrown if the connection associated with the transaction does not match the Entity Framework's connection</exception>
         internal virtual EntityTransaction UseStoreTransaction(DbTransaction storeTransaction)
         {
             if (storeTransaction == null)
@@ -1023,18 +1023,18 @@ namespace System.Data.Entity.Core.EntityClient
             base.Dispose(disposing);
         }
 
-        /// <summary>
-        /// Clears the current DbTransaction for this connection
-        /// </summary>
+        // <summary>
+        // Clears the current DbTransaction for this connection
+        // </summary>
         internal virtual void ClearCurrentTransaction()
         {
             _currentTransaction = null;
         }
 
-        /// <summary>
-        /// Reinitialize this connection object to use the new connection string
-        /// </summary>
-        /// <param name="newConnectionString"> The new connection string </param>
+        // <summary>
+        // Reinitialize this connection object to use the new connection string
+        // </summary>
+        // <param name="newConnectionString"> The new connection string </param>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource as part of the connection string
         private void ChangeConnectionString(string newConnectionString)
         {
@@ -1153,19 +1153,19 @@ namespace System.Data.Entity.Core.EntityClient
             return keywordValue;
         }
 
-        /// <summary>
-        /// Clears the current DbTransaction and the transaction the user enlisted the connection in
-        /// with EnlistTransaction() method.
-        /// </summary>
+        // <summary>
+        // Clears the current DbTransaction and the transaction the user enlisted the connection in
+        // with EnlistTransaction() method.
+        // </summary>
         private void ClearTransactions()
         {
             ClearCurrentTransaction();
             ClearEnlistedTransaction();
         }
 
-        /// <summary>
-        /// Clears the transaction the user elinsted in using EnlistTransaction() method.
-        /// </summary>
+        // <summary>
+        // Clears the transaction the user elinsted in using EnlistTransaction() method.
+        // </summary>
         private void ClearEnlistedTransaction()
         {
             if (EnlistedInUserTransaction)
@@ -1176,24 +1176,24 @@ namespace System.Data.Entity.Core.EntityClient
             _enlistedTransaction = null;
         }
 
-        /// <summary>
-        /// Event handler invoked when the transaction has completed (either by committing or rolling back).
-        /// </summary>
-        /// <param name="sender"> The source of the event. </param>
-        /// <param name="e">
-        /// The <see cref="TransactionEventArgs" /> that contains the event data.
-        /// </param>
-        /// <remarks>
-        /// Note that to avoid threading issues we never reset the <see cref=" _enlistedTransaction" /> field here.
-        /// </remarks>
+        // <summary>
+        // Event handler invoked when the transaction has completed (either by committing or rolling back).
+        // </summary>
+        // <param name="sender"> The source of the event. </param>
+        // <param name="e">
+        // The <see cref="TransactionEventArgs" /> that contains the event data.
+        // </param>
+        // <remarks>
+        // Note that to avoid threading issues we never reset the <see cref=" _enlistedTransaction" /> field here.
+        // </remarks>
         private void EnlistedTransactionCompleted(object sender, TransactionEventArgs e)
         {
             e.Transaction.TransactionCompleted -= EnlistedTransactionCompleted;
         }
 
-        /// <summary>
-        /// Store-specific helper method invoked as part of Close()/Dispose().
-        /// </summary>
+        // <summary>
+        // Store-specific helper method invoked as part of Close()/Dispose().
+        // </summary>
         private void StoreCloseHelper()
         {
             try
@@ -1218,9 +1218,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Uses DbProviderFactory to create a DbConnection
-        /// </summary>
+        // <summary>
+        // Uses DbProviderFactory to create a DbConnection
+        // </summary>
         private static DbConnection GetStoreConnection(DbProviderFactory factory)
         {
             var storeConnection = factory.CreateConnection();

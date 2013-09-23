@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
-    /// <summary>
-    /// VertexLiteral pair, used for ConversionContext.GetSuccessors
-    /// </summary>
+    // <summary>
+    // VertexLiteral pair, used for ConversionContext.GetSuccessors
+    // </summary>
     internal sealed class LiteralVertexPair<T_Identifier>
     {
         internal readonly Vertex Vertex;

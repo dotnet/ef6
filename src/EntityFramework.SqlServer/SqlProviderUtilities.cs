@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.SqlServer
 {
@@ -8,10 +8,10 @@ namespace System.Data.Entity.SqlServer
 
     internal class SqlProviderUtilities
     {
-        /// <summary>
-        /// Requires that the given connection is of type  T.
-        /// Returns the connection or throws.
-        /// </summary>
+        // <summary>
+        // Requires that the given connection is of type  T.
+        // Returns the connection or throws.
+        // </summary>
         internal static SqlConnection GetRequiredSqlConnection(DbConnection connection)
         {
             var result = connection as SqlConnection;

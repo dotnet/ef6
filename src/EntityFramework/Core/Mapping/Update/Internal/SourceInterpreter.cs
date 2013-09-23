@@ -7,11 +7,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// This class determines the state entries contributing to an expression
-    /// propagated through an update mapping view (values in propagated expressions
-    /// remember where they come from)
-    /// </summary>
+    // <summary>
+    // This class determines the state entries contributing to an expression
+    // propagated through an update mapping view (values in propagated expressions
+    // remember where they come from)
+    // </summary>
     internal class SourceInterpreter
     {
         private SourceInterpreter(UpdateTranslator translator, EntitySet sourceTable)
@@ -25,13 +25,13 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly UpdateTranslator m_translator;
         private readonly EntitySet m_sourceTable;
 
-        /// <summary>
-        /// Finds all markup associated with the given source.
-        /// </summary>
-        /// <param name="source"> Source expression. Must not be null. </param>
-        /// <param name="translator"> Translator containing session information. </param>
-        /// <param name="sourceTable"> Table from which the exception was thrown (must not be null). </param>
-        /// <returns> Markup. </returns>
+        // <summary>
+        // Finds all markup associated with the given source.
+        // </summary>
+        // <param name="source"> Source expression. Must not be null. </param>
+        // <param name="translator"> Translator containing session information. </param>
+        // <param name="sourceTable"> Table from which the exception was thrown (must not be null). </param>
+        // <returns> Markup. </returns>
         internal static ReadOnlyCollection<IEntityStateEntry> GetAllStateEntries(
             PropagatorResult source, UpdateTranslator translator,
             EntitySet sourceTable)

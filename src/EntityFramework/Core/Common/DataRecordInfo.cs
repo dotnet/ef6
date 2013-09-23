@@ -80,9 +80,9 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        /// Construct FieldMetadata for structuralType.Members from TypeUsage
-        /// </summary>
+        // <summary>
+        // Construct FieldMetadata for structuralType.Members from TypeUsage
+        // </summary>
         internal DataRecordInfo(TypeUsage metadata)
         {
             DebugCheck.NotNull(metadata);
@@ -102,10 +102,10 @@ namespace System.Data.Entity.Core.Common
             _metadata = metadata;
         }
 
-        /// <summary>
-        /// Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
-        /// but with a different EntityKey instance.
-        /// </summary>
+        // <summary>
+        // Reusing TypeUsage and FieldMetadata from another EntityRecordInfo which has all the same info
+        // but with a different EntityKey instance.
+        // </summary>
         internal DataRecordInfo(DataRecordInfo recordInfo)
         {
             _fieldMetadata = recordInfo._fieldMetadata;

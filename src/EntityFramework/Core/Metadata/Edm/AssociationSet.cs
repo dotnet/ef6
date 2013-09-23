@@ -13,11 +13,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationSet : RelationshipSet
     {
-        /// <summary>
-        /// Initializes a new instance of AssocationSet with the given name and the association type
-        /// </summary>
-        /// <param name="name"> The name of the Assocation set </param>
-        /// <param name="associationType"> The association type of the entities that this associationship set type contains </param>
+        // <summary>
+        // Initializes a new instance of AssocationSet with the given name and the association type
+        // </summary>
+        // <param name="name"> The name of the Assocation set </param>
+        // <param name="associationType"> The association type of the entities that this associationship set type contains </param>
         internal AssociationSet(string name, AssociationType associationType)
             : base(name, null, null, null, associationType)
         {
@@ -152,9 +152,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.AssociationSet; }
         }
 
-        /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be readonly, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -164,9 +164,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Adds the given end to the collection of ends
-        /// </summary>
+        // <summary>
+        // Adds the given end to the collection of ends
+        // </summary>
         internal void AddAssociationSetEnd(AssociationSetEnd associationSetEnd)
         {
             AssociationSetEnds.Source.Add(associationSetEnd);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
@@ -7,13 +7,13 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Implementation of the IEntityWrapper interface that is used for non-null entities that do not implement
-    /// all of our standard interfaces: IEntityWithKey, IEntityWithRelationships, and IEntityWithChangeTracker, and
-    /// are not proxies.
-    /// Different strategies for dealing with these entities are defined by strategy objects that are set into the
-    /// wrapper at construction time.
-    /// </summary>
+    // <summary>
+    // Implementation of the IEntityWrapper interface that is used for non-null entities that do not implement
+    // all of our standard interfaces: IEntityWithKey, IEntityWithRelationships, and IEntityWithChangeTracker, and
+    // are not proxies.
+    // Different strategies for dealing with these entities are defined by strategy objects that are set into the
+    // wrapper at construction time.
+    // </summary>
     internal abstract class EntityWrapper<TEntity> : BaseEntityWrapper<TEntity>
         where TEntity : class
     {
@@ -22,15 +22,15 @@ namespace System.Data.Entity.Core.Objects.Internal
         private readonly IChangeTrackingStrategy _changeTrackingStrategy;
         private readonly IEntityKeyStrategy _keyStrategy;
 
-        /// <summary>
-        /// Constructs a wrapper for the given entity.
-        /// Note: use EntityWrapperFactory instead of calling this constructor directly.
-        /// </summary>
-        /// <param name="entity"> The entity to wrap </param>
-        /// <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
-        /// <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
-        /// <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
-        /// <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
+        // <summary>
+        // Constructs a wrapper for the given entity.
+        // Note: use EntityWrapperFactory instead of calling this constructor directly.
+        // </summary>
+        // <param name="entity"> The entity to wrap </param>
+        // <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
+        // <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
+        // <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
+        // <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
         protected EntityWrapper(
             TEntity entity, RelationshipManager relationshipManager,
             Func<object, IPropertyAccessorStrategy> propertyStrategy, Func<object, IChangeTrackingStrategy> changeTrackingStrategy,
@@ -49,23 +49,23 @@ namespace System.Data.Entity.Core.Objects.Internal
             Debug.Assert(_keyStrategy != null, "Key strategy cannot be null.");
         }
 
-        /// <summary>
-        /// Constructs a wrapper as part of the materialization process.  This constructor is only used
-        /// during materialization where it is known that the entity being wrapped is newly constructed.
-        /// This means that some checks are not performed that might be needed when thw wrapper is
-        /// created at other times, and information such as the identity type is passed in because
-        /// it is readily available in the materializer.
-        /// </summary>
-        /// <param name="entity"> The entity to wrap </param>
-        /// <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
-        /// <param name="key"> The entity's key </param>
-        /// <param name="set"> The entity set, or null if none is known </param>
-        /// <param name="context"> The context to which the entity should be attached </param>
-        /// <param name="mergeOption"> NoTracking for non-tracked entities, AppendOnly otherwise </param>
-        /// <param name="identityType"> The type of the entity ignoring any possible proxy type </param>
-        /// <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
-        /// <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
-        /// <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
+        // <summary>
+        // Constructs a wrapper as part of the materialization process.  This constructor is only used
+        // during materialization where it is known that the entity being wrapped is newly constructed.
+        // This means that some checks are not performed that might be needed when thw wrapper is
+        // created at other times, and information such as the identity type is passed in because
+        // it is readily available in the materializer.
+        // </summary>
+        // <param name="entity"> The entity to wrap </param>
+        // <param name="relationshipManager"> The RelationshipManager associated with the entity </param>
+        // <param name="key"> The entity's key </param>
+        // <param name="set"> The entity set, or null if none is known </param>
+        // <param name="context"> The context to which the entity should be attached </param>
+        // <param name="mergeOption"> NoTracking for non-tracked entities, AppendOnly otherwise </param>
+        // <param name="identityType"> The type of the entity ignoring any possible proxy type </param>
+        // <param name="propertyStrategy"> A delegate to create the property accesor strategy object </param>
+        // <param name="changeTrackingStrategy"> A delegate to create the change tracking strategy object </param>
+        // <param name="keyStrategy"> A delegate to create the entity key strategy object </param>
         protected EntityWrapper(
             TEntity entity, RelationshipManager relationshipManager, EntityKey key, EntitySet set, ObjectContext context,
             MergeOption mergeOption, Type identityType,

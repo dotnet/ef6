@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class that handles creation of cells from the meta data information.
-    /// </summary>
+    // <summary>
+    // A class that handles creation of cells from the meta data information.
+    // </summary>
     internal class CellCreator : InternalBase
     {
         // effects: Creates a cell creator object for an entity container's
@@ -67,16 +67,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return cells;
         }
 
-        /// <summary>
-        /// Boolean members have a closed domain and are enumerated when domains are established i.e. (T, F) instead of (notNull).
-        /// Query Rewriting is exercised over every domain of the condition member. If the member contains not_null condition
-        /// for example, it cannot generate a view for partitions (member=T), (Member=F). For this reason we need to expand the cells
-        /// in a predefined situation (below) to include sub-fragments mapping individual elements of the closed domain.
-        /// Enums (a planned feature) need to be handled in a similar fashion.
-        /// Find booleans that are projected with a not_null condition
-        /// Expand ALL cells where they are projected. Why? See Unit Test case NullabilityConditionOnBoolean5.es
-        /// Validation will fail because it will not be able to validate rewritings for partitions on the 'other' cells.
-        /// </summary>
+        // <summary>
+        // Boolean members have a closed domain and are enumerated when domains are established i.e. (T, F) instead of (notNull).
+        // Query Rewriting is exercised over every domain of the condition member. If the member contains not_null condition
+        // for example, it cannot generate a view for partitions (member=T), (Member=F). For this reason we need to expand the cells
+        // in a predefined situation (below) to include sub-fragments mapping individual elements of the closed domain.
+        // Enums (a planned feature) need to be handled in a similar fashion.
+        // Find booleans that are projected with a not_null condition
+        // Expand ALL cells where they are projected. Why? See Unit Test case NullabilityConditionOnBoolean5.es
+        // Validation will fail because it will not be able to validate rewritings for partitions on the 'other' cells.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ExpandCells(List<Cell> cells)
         {
@@ -176,13 +176,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        /// <summary>
-        /// Given a cell, a member and a boolean condition on that member, creates additional cell
-        /// which with the specified restriction on the member in addition to original condition.
-        /// e.i conjunction of original condition AND member in newCondition
-        /// Creation fails when the original condition contradicts new boolean condition
-        /// ViewTarget tells whether MemberPath is in Cquery or SQuery
-        /// </summary>
+        // <summary>
+        // Given a cell, a member and a boolean condition on that member, creates additional cell
+        // which with the specified restriction on the member in addition to original condition.
+        // e.i conjunction of original condition AND member in newCondition
+        // Creation fails when the original condition contradicts new boolean condition
+        // ViewTarget tells whether MemberPath is in Cquery or SQuery
+        // </summary>
         private bool TryCreateAdditionalCellWithCondition(
             Cell originalCell, MemberPath memberToExpand, bool conditionValue, ViewTarget viewTarget, out Cell result)
         {
@@ -466,10 +466,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        /// <summary>
-        /// Takes in a JoinTreeNode and a Contition Property Map and creates an BoolExpression
-        /// for the Condition Map.
-        /// </summary>
+        // <summary>
+        // Takes in a JoinTreeNode and a Contition Property Map and creates an BoolExpression
+        // for the Condition Map.
+        // </summary>
         private static BoolExpression GetConditionExpression(MemberPath member, ConditionPropertyMapping conditionMap)
         {
             //Get the member for which the condition is being specified

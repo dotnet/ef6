@@ -90,17 +90,17 @@ namespace System.Data.Entity.Infrastructure.MappingViews
             }
         }
 
-        /// <summary>
-        /// Gets the context type that is associated with the mapping view cache type.
-        /// </summary>
+        // <summary>
+        // Gets the context type that is associated with the mapping view cache type.
+        // </summary>
         internal Type ContextType
         {
             get { return _contextType; }
         }
 
-        /// <summary>
-        /// Gets the type that implements the mapping view cache.
-        /// </summary>
+        // <summary>
+        // Gets the type that implements the mapping view cache.
+        // </summary>
         internal Type CacheType
         {
             get { return _cacheType; }

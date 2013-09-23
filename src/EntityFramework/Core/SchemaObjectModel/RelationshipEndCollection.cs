@@ -9,26 +9,26 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// A collection of RelationshipEnds
-    /// </summary>
+    // <summary>
+    // A collection of RelationshipEnds
+    // </summary>
     internal sealed class RelationshipEndCollection : IList<IRelationshipEnd>
     {
         private Dictionary<string, IRelationshipEnd> _endLookup;
         private List<string> _keysInDefOrder;
 
-        /// <summary>
-        /// How many RelationshipEnds are in the collection
-        /// </summary>
+        // <summary>
+        // How many RelationshipEnds are in the collection
+        // </summary>
         public int Count
         {
             get { return KeysInDefOrder.Count; }
         }
 
-        /// <summary>
-        /// Add a relationship end
-        /// </summary>
-        /// <param name="end"> the end to add </param>
+        // <summary>
+        // Add a relationship end
+        // </summary>
+        // <param name="end"> the end to add </param>
         public void Add(IRelationshipEnd end)
         {
             DebugCheck.NotNull(end);
@@ -51,11 +51,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             KeysInDefOrder.Add(end.Name);
         }
 
-        /// <summary>
-        /// See if an end can be added to the collection
-        /// </summary>
-        /// <param name="end"> the end to add </param>
-        /// <returns> true if the end is valid, false otherwise </returns>
+        // <summary>
+        // See if an end can be added to the collection
+        // </summary>
+        // <param name="end"> the end to add </param>
+        // <returns> true if the end is valid, false otherwise </returns>
         private static bool IsEndValid(IRelationshipEnd end)
         {
             return !string.IsNullOrEmpty(end.Name);
@@ -74,11 +74,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// Remove a relationship end
-        /// </summary>
-        /// <param name="end"> the end to remove </param>
-        /// <returns> true if item was in list </returns>
+        // <summary>
+        // Remove a relationship end
+        // </summary>
+        // <param name="end"> the end to remove </param>
+        // <returns> true if item was in list </returns>
         public bool Remove(IRelationshipEnd end)
         {
             DebugCheck.NotNull(end);
@@ -94,21 +94,21 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return wasInList;
         }
 
-        /// <summary>
-        /// See if a relationship end is in the collection
-        /// </summary>
-        /// <param name="name"> the name of the end </param>
-        /// <returns> true if the end name is in the collection </returns>
+        // <summary>
+        // See if a relationship end is in the collection
+        // </summary>
+        // <param name="name"> the name of the end </param>
+        // <returns> true if the end name is in the collection </returns>
         public bool Contains(string name)
         {
             return EndLookup.ContainsKey(name);
         }
 
-        /// <summary>
-        /// See if a relationship end is in the collection
-        /// </summary>
-        /// <param name="end"> the name of the end </param>
-        /// <returns> true if the end is in the collection </returns>
+        // <summary>
+        // See if a relationship end is in the collection
+        // </summary>
+        // <param name="end"> the name of the end </param>
+        // <returns> true if the end is in the collection </returns>
         public bool Contains(IRelationshipEnd end)
         {
             DebugCheck.NotNull(end);
@@ -122,10 +122,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             set { throw new NotSupportedException(); }
         }
 
-        /// <summary>
-        /// get a typed enumerator for the collection
-        /// </summary>
-        /// <returns> the enumerator </returns>
+        // <summary>
+        // get a typed enumerator for the collection
+        // </summary>
+        // <returns> the enumerator </returns>
         public IEnumerator<IRelationshipEnd> GetEnumerator()
         {
             return new Enumerator(EndLookup, KeysInDefOrder);
@@ -136,18 +136,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return EndLookup.TryGetValue(name, out end);
         }
 
-        /// <summary>
-        /// get an un-typed enumerator for the collection
-        /// </summary>
-        /// <returns> the enumerator </returns>
+        // <summary>
+        // get an un-typed enumerator for the collection
+        // </summary>
+        // <returns> the enumerator </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return new Enumerator(EndLookup, KeysInDefOrder);
         }
 
-        /// <summary>
-        /// The data for the collection
-        /// </summary>
+        // <summary>
+        // The data for the collection
+        // </summary>
         private Dictionary<string, IRelationshipEnd> EndLookup
         {
             get
@@ -161,9 +161,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// the definition order collection
-        /// </summary>
+        // <summary>
+        // the definition order collection
+        // </summary>
         private List<string> KeysInDefOrder
         {
             get
@@ -177,57 +177,57 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// remove all elements from the collection
-        /// </summary>
+        // <summary>
+        // remove all elements from the collection
+        // </summary>
         public void Clear()
         {
             EndLookup.Clear();
             KeysInDefOrder.Clear();
         }
 
-        /// <summary>
-        /// can the collection be modified
-        /// </summary>
+        // <summary>
+        // can the collection be modified
+        // </summary>
         public bool IsReadOnly
         {
             get { return false; }
         }
 
-        /// <summary>
-        /// Not supported
-        /// </summary>
-        /// <param name="end"> the end </param>
-        /// <returns> nothing </returns>
+        // <summary>
+        // Not supported
+        // </summary>
+        // <param name="end"> the end </param>
+        // <returns> nothing </returns>
         int IList<IRelationshipEnd>.IndexOf(IRelationshipEnd end)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Not supported
-        /// </summary>
-        /// <param name="index"> the index </param>
-        /// <param name="end"> the end </param>
+        // <summary>
+        // Not supported
+        // </summary>
+        // <param name="index"> the index </param>
+        // <param name="end"> the end </param>
         void IList<IRelationshipEnd>.Insert(int index, IRelationshipEnd end)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Not supported
-        /// </summary>
-        /// <param name="index"> the index </param>
+        // <summary>
+        // Not supported
+        // </summary>
+        // <param name="index"> the index </param>
         void IList<IRelationshipEnd>.RemoveAt(int index)
         {
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// copy all elements to an array
-        /// </summary>
-        /// <param name="ends"> array to copy to </param>
-        /// <param name="index"> The zero-based index in array at which copying begins. </param>
+        // <summary>
+        // copy all elements to an array
+        // </summary>
+        // <param name="ends"> array to copy to </param>
+        // <param name="index"> The zero-based index in array at which copying begins. </param>
         public void CopyTo(IRelationshipEnd[] ends, int index)
         {
             Debug.Assert(ends.Length - index >= Count);
@@ -237,20 +237,20 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// enumerator for the RelationshipEnd collection
-        /// the ends as traversed in the order in which they were added
-        /// </summary>
+        // <summary>
+        // enumerator for the RelationshipEnd collection
+        // the ends as traversed in the order in which they were added
+        // </summary>
         private sealed class Enumerator : IEnumerator<IRelationshipEnd>
         {
             private List<string>.Enumerator _Enumerator;
             private readonly Dictionary<string, IRelationshipEnd> _Data;
 
-            /// <summary>
-            /// construct the enumerator
-            /// </summary>
-            /// <param name="data"> the real data </param>
-            /// <param name="keysInDefOrder"> the keys to the real data in inserted order </param>
+            // <summary>
+            // construct the enumerator
+            // </summary>
+            // <param name="data"> the real data </param>
+            // <param name="keysInDefOrder"> the keys to the real data in inserted order </param>
             public Enumerator(Dictionary<string, IRelationshipEnd> data, List<string> keysInDefOrder)
             {
                 DebugCheck.NotNull(data);
@@ -259,43 +259,43 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 _Data = data;
             }
 
-            /// <summary>
-            /// reset the enumerator
-            /// </summary>
+            // <summary>
+            // reset the enumerator
+            // </summary>
             public void Reset()
             {
                 // reset is implemented explicitly
                 ((IEnumerator)_Enumerator).Reset();
             }
 
-            /// <summary>
-            /// get current relationship end from the enumerator
-            /// </summary>
+            // <summary>
+            // get current relationship end from the enumerator
+            // </summary>
             public IRelationshipEnd Current
             {
                 get { return _Data[_Enumerator.Current]; }
             }
 
-            /// <summary>
-            /// get current relationship end from the enumerator
-            /// </summary>
+            // <summary>
+            // get current relationship end from the enumerator
+            // </summary>
             object IEnumerator.Current
             {
                 get { return _Data[_Enumerator.Current]; }
             }
 
-            /// <summary>
-            /// move to the next element in the collection
-            /// </summary>
-            /// <returns> true if there is a next, false if not </returns>
+            // <summary>
+            // move to the next element in the collection
+            // </summary>
+            // <returns> true if there is a next, false if not </returns>
             public bool MoveNext()
             {
                 return _Enumerator.MoveNext();
             }
 
-            /// <summary>
-            /// dispose of the enumerator
-            /// </summary>
+            // <summary>
+            // dispose of the enumerator
+            // </summary>
             public void Dispose()
             {
             }

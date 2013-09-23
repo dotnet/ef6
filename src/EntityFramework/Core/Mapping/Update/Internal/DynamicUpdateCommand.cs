@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
@@ -98,9 +98,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return false;
         }
 
-        /// <summary>
-        /// See comments in <see cref="UpdateCommand" />.
-        /// </summary>
+        // <summary>
+        // See comments in <see cref="UpdateCommand" />.
+        // </summary>
         internal override long Execute(
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues)
@@ -181,9 +181,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
 #if !NET40
 
-        /// <summary>
-        /// See comments in <see cref="UpdateCommand" />.
-        /// </summary>
+        // <summary>
+        // See comments in <see cref="UpdateCommand" />.
+        // </summary>
         internal override async Task<long> ExecuteAsync(
             Dictionary<int, object> identifierValues,
             List<KeyValuePair<PropagatorResult, object>> generatedValues, CancellationToken cancellationToken)
@@ -338,9 +338,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return result;
         }
 
-        /// <summary>
-        /// Creates a new list of modification clauses with the specified remapped clauses replaced.
-        /// </summary>
+        // <summary>
+        // Creates a new list of modification clauses with the specified remapped clauses replaced.
+        // </summary>
         private static List<DbModificationClause> ReplaceClauses(
             IList<DbModificationClause> originalClauses, Dictionary<DbSetClause, DbSetClause> mappings)
         {

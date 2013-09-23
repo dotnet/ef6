@@ -7,12 +7,12 @@ namespace System.Data.Entity.Infrastructure.Design
     using System.Runtime.Remoting.Messaging;
     using System.Runtime.Remoting.Proxies;
 
-    /// <summary>
-    /// This is a small piece of Remoting magic. It enables us to invoke methods on a
-    /// remote object without knowing its actual type. The only restriction is that the
-    /// names and shapes of the types and their members must be the same on each side of
-    /// the boundary.
-    /// </summary>
+    // <summary>
+    // This is a small piece of Remoting magic. It enables us to invoke methods on a
+    // remote object without knowing its actual type. The only restriction is that the
+    // names and shapes of the types and their members must be the same on each side of
+    // the boundary.
+    // </summary>
     internal class ForwardingProxy<T> : RealProxy
     {
         private readonly MarshalByRefObject _target;
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Infrastructure.Design
             _target = (MarshalByRefObject)target;
         }
 
-        /// <summary>
-        /// Intercepts method invocations on the object represented by the current instance
-        /// and forwards them to the target to finish processing.
-        /// </summary>
+        // <summary>
+        // Intercepts method invocations on the object represented by the current instance
+        // and forwards them to the target to finish processing.
+        // </summary>
         public override IMessage Invoke(IMessage msg)
         {
             DebugCheck.NotNull(msg);

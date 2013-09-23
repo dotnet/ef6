@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// A visitor that collects all group aggregates and the corresponding function aggregates
-    /// that are defined over them, referred to as 'candidate aggregates'. The candidate aggregates are aggregates
-    /// that have an argument that has the corresponding group aggregate as the only external reference
-    /// </summary>
+    // <summary>
+    // A visitor that collects all group aggregates and the corresponding function aggregates
+    // that are defined over them, referred to as 'candidate aggregates'. The candidate aggregates are aggregates
+    // that have an argument that has the corresponding group aggregate as the only external reference
+    // </summary>
     internal class GroupAggregateRefComputingVisitor : BasicOpVisitor
     {
         #region private state
@@ -23,10 +23,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region 'Public'
 
-        /// <summary>
-        /// Produces a list of all GroupAggregateVarInfos, each of which represents a single group aggregate
-        /// and it candidate function aggregates. It also produces a delegate that given a child node returns the parent node
-        /// </summary>
+        // <summary>
+        // Produces a list of all GroupAggregateVarInfos, each of which represents a single group aggregate
+        // and it candidate function aggregates. It also produces a delegate that given a child node returns the parent node
+        // </summary>
         internal static IEnumerable<GroupAggregateVarInfo> Process(Command itree, out TryGetValue tryGetParent)
         {
             var groupRefComputingVisitor = new GroupAggregateRefComputingVisitor(itree);
@@ -40,9 +40,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Private Constructor
 
-        /// <summary>
-        /// Private constructor
-        /// </summary>
+        // <summary>
+        // Private constructor
+        // </summary>
         private GroupAggregateRefComputingVisitor(Command itree)
         {
             _command = itree;
@@ -54,11 +54,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region AncillaryOps
 
-        /// <summary>
-        /// Determines whether the var or a property of the var (if the var is defined as a NewRecord)
-        /// is defined exclusively over a single group aggregate. If so, it registers it as such with the
-        /// group aggregate var info manager.
-        /// </summary>
+        // <summary>
+        // Determines whether the var or a property of the var (if the var is defined as a NewRecord)
+        // is defined exclusively over a single group aggregate. If so, it registers it as such with the
+        // group aggregate var info manager.
+        // </summary>
         public override void Visit(VarDefOp op, Node n)
         {
             VisitDefault(n);
@@ -94,9 +94,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region RelOp Visitors
 
-        /// <summary>
-        /// Registers the group aggregate var with the group aggregate var info manager
-        /// </summary>
+        // <summary>
+        // Registers the group aggregate var with the group aggregate var info manager
+        // </summary>
         public override void Visit(GroupByIntoOp op, Node n)
         {
             VisitGroupByOp(op, n);
@@ -116,12 +116,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// If the unnestOp's var is defined as a reference of a group aggregate var,
-        /// then the columns it produces should be registered too, but as 'unnested' references
-        /// </summary>
-        /// <param name="op"> the unnestOp </param>
-        /// <param name="n"> current subtree </param>
+        // <summary>
+        // If the unnestOp's var is defined as a reference of a group aggregate var,
+        // then the columns it produces should be registered too, but as 'unnested' references
+        // </summary>
+        // <param name="op"> the unnestOp </param>
+        // <param name="n"> current subtree </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(UnnestOp op, Node n)
@@ -140,11 +140,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region ScalarOps Visitors
 
-        /// <summary>
-        /// If the op is a collection aggregate function it checks whether its arguement can be translated over
-        /// a single group aggregate var. If so, it is tracked as a candidate to be pushed into that
-        /// group by into node.
-        /// </summary>
+        // <summary>
+        // If the op is a collection aggregate function it checks whether its arguement can be translated over
+        // a single group aggregate var. If so, it is tracked as a candidate to be pushed into that
+        // group by into node.
+        // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         public override void Visit(FunctionOp op, Node n)
@@ -173,10 +173,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #endregion
 
-        /// <summary>
-        /// Default visitor for nodes.
-        /// It tracks the child-parent relationship.
-        /// </summary>
+        // <summary>
+        // Default visitor for nodes.
+        // It tracks the child-parent relationship.
+        // </summary>
         protected override void VisitDefault(Node n)
         {
             VisitChildren(n);

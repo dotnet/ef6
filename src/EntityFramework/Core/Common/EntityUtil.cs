@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core
         internal const CompareOptions StringCompareOptions =
             CompareOptions.IgnoreKanaType | CompareOptions.IgnoreWidth | CompareOptions.IgnoreCase;
 
-        /// <summary>
-        /// Zips two enumerables together (e.g., given {1, 3, 5} and {2, 4, 6} returns {{1, 2}, {3, 4}, {5, 6}})
-        /// </summary>
+        // <summary>
+        // Zips two enumerables together (e.g., given {1, 3, 5} and {2, 4, 6} returns {{1, 2}, {3, 4}, {5, 6}})
+        // </summary>
         internal static IEnumerable<KeyValuePair<T1, T2>> Zip<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second)
         {
             if (null == first
@@ -50,19 +50,19 @@ namespace System.Data.Entity.Core
             }
         }
 
-        /// <summary>
-        /// Returns true if the type implements ICollection&lt;&gt;
-        /// </summary>
+        // <summary>
+        // Returns true if the type implements ICollection&lt;&gt;
+        // </summary>
         internal static bool IsAnICollection(Type type)
         {
             return typeof(ICollection<>).IsAssignableFrom(type.GetGenericTypeDefinition()) ||
                    type.GetInterface(typeof(ICollection<>).FullName) != null;
         }
 
-        /// <summary>
-        /// Helper method to determine the element type of the collection contained by the given property.
-        /// If an unambiguous element type cannot be found, then an InvalidOperationException is thrown.
-        /// </summary>
+        // <summary>
+        // Helper method to determine the element type of the collection contained by the given property.
+        // If an unambiguous element type cannot be found, then an InvalidOperationException is thrown.
+        // </summary>
         internal static Type GetCollectionElementType(Type propertyType)
         {
             var elementType = propertyType.TryGetElementType(typeof(ICollection<>));
@@ -76,19 +76,19 @@ namespace System.Data.Entity.Core
             return elementType;
         }
 
-        /// <summary>
-        /// This is used when we need to determine a concrete collection type given some type that may be
-        /// abstract or an interface.
-        /// </summary>
-        /// <remarks>
-        /// The rules are:
-        /// If the collection is defined as a concrete type with a publicly accessible parameterless constructor, then create an instance of that type
-        /// Else, if HashSet{T} can be assigned to the type, then use HashSet{T}
-        /// Else, if List{T} can be assigned to the type, then use List{T}
-        /// Else, throw a nice exception.
-        /// </remarks>
-        /// <param name="requestedType"> The type of collection that was requested </param>
-        /// <returns> The type to instantiate, or null if we cannot find a supported type to instantiate </returns>
+        // <summary>
+        // This is used when we need to determine a concrete collection type given some type that may be
+        // abstract or an interface.
+        // </summary>
+        // <remarks>
+        // The rules are:
+        // If the collection is defined as a concrete type with a publicly accessible parameterless constructor, then create an instance of that type
+        // Else, if HashSet{T} can be assigned to the type, then use HashSet{T}
+        // Else, if List{T} can be assigned to the type, then use List{T}
+        // Else, throw a nice exception.
+        // </remarks>
+        // <param name="requestedType"> The type of collection that was requested </param>
+        // <returns> The type to instantiate, or null if we cannot find a supported type to instantiate </returns>
         internal static Type DetermineCollectionType(Type requestedType)
         {
             const BindingFlags constructorBinding = BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance;
@@ -123,23 +123,23 @@ namespace System.Data.Entity.Core
             return null;
         }
 
-        /// <summary>
-        /// Returns the Type object that should be used to identify the type in the o-space
-        /// metadata.  This is normally just the type that is passed in, but if the type
-        /// is a proxy that we have generated, then its base type is returned instead.
-        /// This ensures that both proxy entities and normal entities are treated as the
-        /// same kind of entity in the metadata and places where the metadata is used.
-        /// </summary>
+        // <summary>
+        // Returns the Type object that should be used to identify the type in the o-space
+        // metadata.  This is normally just the type that is passed in, but if the type
+        // is a proxy that we have generated, then its base type is returned instead.
+        // This ensures that both proxy entities and normal entities are treated as the
+        // same kind of entity in the metadata and places where the metadata is used.
+        // </summary>
         internal static Type GetEntityIdentityType(Type entityType)
         {
             return EntityProxyFactory.IsProxyType(entityType) ? entityType.BaseType : entityType;
         }
 
-        /// <summary>
-        /// Provides a standard helper method for quoting identifiers
-        /// </summary>
-        /// <param name="identifier"> Identifier to be quoted. Does not validate that this identifier is valid. </param>
-        /// <returns> Quoted string </returns>
+        // <summary>
+        // Provides a standard helper method for quoting identifiers
+        // </summary>
+        // <param name="identifier"> Identifier to be quoted. Does not validate that this identifier is valid. </param>
+        // <returns> Quoted string </returns>
         internal static string QuoteIdentifier(string identifier)
         {
             DebugCheck.NotNull(identifier);
@@ -173,8 +173,8 @@ namespace System.Data.Entity.Core
         //
         // The Range 10,000-15,000 is reserved for tools
         //
-        /// You must never renumber these, because we rely upon them when
-        /// we get an exception report once we release the bits.
+        // You must never renumber these, because we rely upon them when
+        // we get an exception report once we release the bits.
         internal enum InternalErrorCode
         {
             WrongNumberOfKeys = 1000,
@@ -182,9 +182,9 @@ namespace System.Data.Entity.Core
             NestOverNest = 1002,
             ColumnCountMismatch = 1003,
 
-            /// <summary>
-            /// Some assertion failed
-            /// </summary>
+            // <summary>
+            // Some assertion failed
+            // </summary>
             AssertionFailed = 1004,
 
             UnknownVar = 1005,
@@ -199,55 +199,55 @@ namespace System.Data.Entity.Core
             InvalidParserState1 = 1015,
             InvalidParserState2 = 1016,
 
-            /// <summary>
-            /// Thrown when SQL gen produces parameters for anything other than a
-            /// modification command tree.
-            /// </summary>
+            // <summary>
+            // Thrown when SQL gen produces parameters for anything other than a
+            // modification command tree.
+            // </summary>
             SqlGenParametersNotPermitted = 1017,
             EntityKeyMissingKeyValue = 1018,
 
-            /// <summary>
-            /// Thrown when an invalid data request is presented to a PropagatorResult in
-            /// the update pipeline (confusing simple/complex values, missing key values, etc.).
-            /// </summary>
+            // <summary>
+            // Thrown when an invalid data request is presented to a PropagatorResult in
+            // the update pipeline (confusing simple/complex values, missing key values, etc.).
+            // </summary>
             UpdatePipelineResultRequestInvalid = 1019,
             InvalidStateEntry = 1020,
 
-            /// <summary>
-            /// Thrown when the update pipeline encounters an invalid PrimitiveTypeKind
-            /// during a cast.
-            /// </summary>
+            // <summary>
+            // Thrown when the update pipeline encounters an invalid PrimitiveTypeKind
+            // during a cast.
+            // </summary>
             InvalidPrimitiveTypeKind = 1021,
 
-            /// <summary>
-            /// Thrown when an unknown node type is encountered in ELinq expression translation.
-            /// </summary>
+            // <summary>
+            // Thrown when an unknown node type is encountered in ELinq expression translation.
+            // </summary>
             UnknownLinqNodeType = 1023,
 
-            /// <summary>
-            /// Thrown by result assembly upon encountering a collection column that does not use any columns
-            /// nor has a descriminated nested collection.
-            /// </summary>
+            // <summary>
+            // Thrown by result assembly upon encountering a collection column that does not use any columns
+            // nor has a descriminated nested collection.
+            // </summary>
             CollectionWithNoColumns = 1024,
 
-            /// <summary>
-            /// Thrown when a lambda expression argument has an unexpected node type.
-            /// </summary>
+            // <summary>
+            // Thrown when a lambda expression argument has an unexpected node type.
+            // </summary>
             UnexpectedLinqLambdaExpressionFormat = 1025,
 
-            /// <summary>
-            /// Thrown when a CommandTree is defined on a stored procedure EntityCommand instance.
-            /// </summary>
+            // <summary>
+            // Thrown when a CommandTree is defined on a stored procedure EntityCommand instance.
+            // </summary>
             CommandTreeOnStoredProcedureEntityCommand = 1026,
 
-            /// <summary>
-            /// Thrown when an operation in the BoolExpr library is exceeding anticipated complexity.
-            /// </summary>
+            // <summary>
+            // Thrown when an operation in the BoolExpr library is exceeding anticipated complexity.
+            // </summary>
             BoolExprAssert = 1027,
             // AttemptToGenerateDefinitionForFunctionWithoutDef = 1028,
-            /// <summary>
-            /// Thrown when type A is promotable to type B, but ranking algorithm fails to rank the promotion.
-            /// </summary>
+            // <summary>
+            // Thrown when type A is promotable to type B, but ranking algorithm fails to rank the promotion.
+            // </summary>
             FailedToGeneratePromotionRank = 1029,
         }
 

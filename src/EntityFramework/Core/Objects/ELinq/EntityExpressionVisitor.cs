@@ -6,9 +6,9 @@ namespace System.Linq.Expressions
     using System.Collections.ObjectModel;
     using System.Linq.Expressions.Internal;
 
-    /// <summary>
-    /// Visitor for LINQ expression trees.
-    /// </summary>
+    // <summary>
+    // Visitor for LINQ expression trees.
+    // </summary>
     internal abstract class EntityExpressionVisitor
     {
         internal const ExpressionType CustomExpression = (ExpressionType)(-1);

@@ -6,10 +6,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// This class wraps another <see cref="IDbDependencyResolver" /> such that the resolutions
-    /// made by that resolver are cached in a thread-safe manner.
-    /// </summary>
+    // <summary>
+    // This class wraps another <see cref="IDbDependencyResolver" /> such that the resolutions
+    // made by that resolver are cached in a thread-safe manner.
+    // </summary>
     internal class CachingDependencyResolver : IDbDependencyResolver
     {
         private readonly IDbDependencyResolver _underlyingResolver;

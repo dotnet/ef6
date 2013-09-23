@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Transformation rules for JoinOps
-    /// </summary>
+    // <summary>
+    // Transformation rules for JoinOps
+    // </summary>
     internal static class JoinOpRules
     {
         #region JoinOverProject
@@ -71,15 +71,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessJoinOverProject);
 
-        /// <summary>
-        /// CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
-        /// InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
-        /// LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="joinNode"> Current JoinOp tree to process </param>
-        /// <param name="newNode"> Transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // CrossJoin(Project(A), B) => Project(CrossJoin(A, B), modifiedvars)
+        // InnerJoin(Project(A), B, p) => Project(InnerJoin(A, B, p'), modifiedvars)
+        // LeftOuterJoin(Project(A), B, p) => Project(LeftOuterJoin(A, B, p'), modifiedvars)
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="joinNode"> Current JoinOp tree to process </param>
+        // <param name="newNode"> Transformed subtree </param>
+        // <returns> transformation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-LeftOuterJoin")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -255,19 +255,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessJoinOverFilter);
 
-        /// <summary>
-        /// CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
-        /// CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
-        /// InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
-        /// InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
-        /// LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
-        /// Note that the predicate on the right table in a left-outer-join cannot be pulled
-        /// up above the join.
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="joinNode"> Current JoinOp tree to process </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // CrossJoin(Filter(A,p), B) => Filter(CrossJoin(A, B), p)
+        // CrossJoin(A, Filter(B,p)) => Filter(CrossJoin(A, B), p)
+        // InnerJoin(Filter(A,p), B, c) => Filter(InnerJoin(A, B, c), p)
+        // InnerJoin(A, Filter(B,p), c) => Filter(InnerJoin(A, B, c), p)
+        // LeftOuterJoin(Filter(A,p), B, c) => Filter(LeftOuterJoin(A, B, c), p)
+        // Note that the predicate on the right table in a left-outer-join cannot be pulled
+        // up above the join.
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="joinNode"> Current JoinOp tree to process </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessJoinOverFilter(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;
@@ -365,14 +365,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessJoinOverSingleRowTable);
 
-        /// <summary>
-        /// Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
-        /// into just "X"
-        /// </summary>
-        /// <param name="context"> rule processing context </param>
-        /// <param name="joinNode"> the join node </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Convert a CrossJoin(SingleRowTable, X) or CrossJoin(X, SingleRowTable) or LeftOuterJoin(X, SingleRowTable)
+        // into just "X"
+        // </summary>
+        // <param name="context"> rule processing context </param>
+        // <param name="joinNode"> the join node </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessJoinOverSingleRowTable(RuleProcessingContext context, Node joinNode, out Node newNode)
         {
             newNode = joinNode;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -8,12 +8,12 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and
-    /// <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry{TEntity, TProperty}" />.
-    /// This internal class contains all the common implementation between the generic and non-generic
-    /// entry classes and also allows for a clean internal factoring without compromising the public API.
-    /// </summary>
+    // <summary>
+    // The internal class used to implement <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry" /> and
+    // <see cref="System.Data.Entity.Infrastructure.DbPropertyEntry{TEntity, TProperty}" />.
+    // This internal class contains all the common implementation between the generic and non-generic
+    // entry classes and also allows for a clean internal factoring without compromising the public API.
+    // </summary>
     internal abstract class InternalPropertyEntry : InternalMemberEntry
     {
         #region Fields and constructors
@@ -23,11 +23,11 @@ namespace System.Data.Entity.Internal
         private bool _setterIsCached;
         private Action<object, object> _setter;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InternalPropertyEntry" /> class.
-        /// </summary>
-        /// <param name="internalEntityEntry"> The internal entry. </param>
-        /// <param name="propertyMetadata"> The property info. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="InternalPropertyEntry" /> class.
+        // </summary>
+        // <param name="internalEntityEntry"> The internal entry. </param>
+        // <param name="propertyMetadata"> The property info. </param>
         protected InternalPropertyEntry(InternalEntityEntry internalEntityEntry, PropertyEntryMetadata propertyMetadata)
             : base(internalEntityEntry, propertyMetadata)
         {
@@ -38,81 +38,81 @@ namespace System.Data.Entity.Internal
 
         #region Parent property access
 
-        /// <summary>
-        /// Returns parent property, or null if this is a property on the top-level entity.
-        /// </summary>
+        // <summary>
+        // Returns parent property, or null if this is a property on the top-level entity.
+        // </summary>
         public abstract InternalPropertyEntry ParentPropertyEntry { get; }
 
         #endregion
 
         #region Abstract property access methods
 
-        /// <summary>
-        /// Gets the current values of the parent entity or complex property.
-        /// That is, the current values that contains the value for this property.
-        /// </summary>
-        /// <value> The parent current values. </value>
+        // <summary>
+        // Gets the current values of the parent entity or complex property.
+        // That is, the current values that contains the value for this property.
+        // </summary>
+        // <value> The parent current values. </value>
         public abstract InternalPropertyValues ParentCurrentValues { get; }
 
-        /// <summary>
-        /// Gets the original values of the parent entity or complex property.
-        /// That is, the original values that contains the value for this property.
-        /// </summary>
-        /// <value> The parent original values. </value>
+        // <summary>
+        // Gets the original values of the parent entity or complex property.
+        // That is, the original values that contains the value for this property.
+        // </summary>
+        // <value> The parent original values. </value>
         public abstract InternalPropertyValues ParentOriginalValues { get; }
 
-        /// <summary>
-        /// Creates a delegate that will get the value of this property.
-        /// </summary>
-        /// <returns> The delegate. </returns>
+        // <summary>
+        // Creates a delegate that will get the value of this property.
+        // </summary>
+        // <returns> The delegate. </returns>
         protected abstract Func<object, object> CreateGetter();
 
-        /// <summary>
-        /// Creates a delegate that will set the value of this property.
-        /// </summary>
-        /// <returns> The delegate. </returns>
+        // <summary>
+        // Creates a delegate that will set the value of this property.
+        // </summary>
+        // <returns> The delegate. </returns>
         protected abstract Action<object, object> CreateSetter();
 
-        /// <summary>
-        /// Returns true if the property of the entity that this property is ultimately part
-        /// of is set as modified.  If this is a property of an entity, then this method returns
-        /// true if the property is modified.  If this is a property of a complex object, then
-        /// this method returns true if the top-level complex property on the entity is modified.
-        /// </summary>
-        /// <returns> True if the entity property is modified. </returns>
+        // <summary>
+        // Returns true if the property of the entity that this property is ultimately part
+        // of is set as modified.  If this is a property of an entity, then this method returns
+        // true if the property is modified.  If this is a property of a complex object, then
+        // this method returns true if the top-level complex property on the entity is modified.
+        // </summary>
+        // <returns> True if the entity property is modified. </returns>
         public abstract bool EntityPropertyIsModified();
 
-        /// <summary>
-        /// Sets the property of the entity that this property is ultimately part of to modified.
-        /// If this is a property of an entity, then this method marks it as modified.
-        /// If this is a property of a complex object, then this method marks the top-level
-        /// complex property as modified.
-        /// </summary>
+        // <summary>
+        // Sets the property of the entity that this property is ultimately part of to modified.
+        // If this is a property of an entity, then this method marks it as modified.
+        // If this is a property of a complex object, then this method marks the top-level
+        // complex property as modified.
+        // </summary>
         public abstract void SetEntityPropertyModified();
 
-        /// <summary>
-        /// Rejects changes to this property.
-        /// If this is a property of a complex object, then this method rejects changes to the top-level
-        /// complex property.
-        /// </summary>
+        // <summary>
+        // Rejects changes to this property.
+        // If this is a property of a complex object, then this method rejects changes to the top-level
+        // complex property.
+        // </summary>
         public abstract void RejectEntityPropertyChanges();
 
-        /// <summary>
-        /// Walks the tree from a property of a complex property back up to the top-level
-        /// complex property and then checks whether or not DetectChanges still considers
-        /// the complex property to be modified. If it does not, then the complex property
-        /// is marked as Unchanged.
-        /// </summary>
+        // <summary>
+        // Walks the tree from a property of a complex property back up to the top-level
+        // complex property and then checks whether or not DetectChanges still considers
+        // the complex property to be modified. If it does not, then the complex property
+        // is marked as Unchanged.
+        // </summary>
         public abstract void UpdateComplexPropertyState();
 
         #endregion
 
         #region Current and Original values
 
-        /// <summary>
-        /// A delegate that reads the value of this property.
-        /// May be null if there is no way to set the value due to missing accessors on the type.
-        /// </summary>
+        // <summary>
+        // A delegate that reads the value of this property.
+        // May be null if there is no way to set the value due to missing accessors on the type.
+        // </summary>
         public Func<object, object> Getter
         {
             get
@@ -126,10 +126,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// A delegate that sets the value of this property.
-        /// May be null if there is no way to set the value due to missing accessors on the type.
-        /// </summary>
+        // <summary>
+        // A delegate that sets the value of this property.
+        // May be null if there is no way to set the value due to missing accessors on the type.
+        // </summary>
         public Action<object, object> Setter
         {
             get
@@ -143,10 +143,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Gets or sets the original value.
-        /// Note that complex properties are returned as objects, not property values.
-        /// </summary>
+        // <summary>
+        // Gets or sets the original value.
+        // Note that complex properties are returned as objects, not property values.
+        // </summary>
         public virtual object OriginalValue
         {
             get
@@ -181,13 +181,13 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Gets or sets the current value.
-        /// Note that complex properties are returned as objects, not property values.
-        /// Also, for complex properties, the object returned is the actual complex object from the entity
-        /// and setting the complex object causes the actual object passed to be set onto the entity.
-        /// </summary>
-        /// <value> The current value. </value>
+        // <summary>
+        // Gets or sets the current value.
+        // Note that complex properties are returned as objects, not property values.
+        // Also, for complex properties, the object returned is the actual complex object from the entity
+        // and setting the complex object causes the actual object passed to be set onto the entity.
+        // </summary>
+        // <value> The current value. </value>
         public override object CurrentValue
         {
             get
@@ -255,10 +255,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Throws if the user attempts to set a complex property to null.
-        /// </summary>
-        /// <param name="value"> The value. </param>
+        // <summary>
+        // Throws if the user attempts to set a complex property to null.
+        // </summary>
+        // <param name="value"> The value. </param>
         private void CheckNotSettingComplexPropertyToNull(object value)
         {
             if (value == null
@@ -268,11 +268,11 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Sets the given value directly onto the underlying entity object.
-        /// </summary>
-        /// <param name="value"> The value. </param>
-        /// <returns> True if the property had a setter that we could attempt to call; false if no setter was available. </returns>
+        // <summary>
+        // Sets the given value directly onto the underlying entity object.
+        // </summary>
+        // <param name="value"> The value. </param>
+        // <returns> True if the property had a setter that we could attempt to call; false if no setter was available. </returns>
         private bool SetCurrentValueOnClrObject(object value)
         {
             if (Setter == null)
@@ -295,12 +295,12 @@ namespace System.Data.Entity.Internal
             return true;
         }
 
-        /// <summary>
-        /// Sets the property value, potentially by setting individual nested values for a complex
-        /// property.
-        /// </summary>
-        /// <param name="internalValues"> </param>
-        /// <param name="value"> The value. </param>
+        // <summary>
+        // Sets the property value, potentially by setting individual nested values for a complex
+        // property.
+        // </summary>
+        // <param name="internalValues"> </param>
+        // <param name="value"> The value. </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void SetPropertyValueUsingValues(InternalPropertyValues internalValues, object value)
         {
@@ -330,17 +330,17 @@ namespace System.Data.Entity.Internal
 
         #region Nested complex properties
 
-        /// <summary>
-        /// Gets an internal object representing a scalar or complex property of this property,
-        /// which must be a mapped complex property.
-        /// This method is virtual to allow mocking.
-        /// </summary>
-        /// <param name="property"> The property. </param>
-        /// <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
-        /// <param name="requireComplex">
-        /// if set to <c>true</c> then the found property must be a complex property.
-        /// </param>
-        /// <returns> The entry. </returns>
+        // <summary>
+        // Gets an internal object representing a scalar or complex property of this property,
+        // which must be a mapped complex property.
+        // This method is virtual to allow mocking.
+        // </summary>
+        // <param name="property"> The property. </param>
+        // <param name="requestedType"> The type of object requested, which may be null or 'object' if any type can be accepted. </param>
+        // <param name="requireComplex">
+        // if set to <c>true</c> then the found property must be a complex property.
+        // </param>
+        // <returns> The entry. </returns>
         public virtual InternalPropertyEntry Property(
             string property, Type requestedType = null, bool requireComplex = false)
         {
@@ -356,9 +356,9 @@ namespace System.Data.Entity.Internal
 
         #region IsModified
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this property is modified.
-        /// </summary>
+        // <summary>
+        // Gets or sets a value indicating whether this property is modified.
+        // </summary>
         public virtual bool IsModified
         {
             get
@@ -394,13 +394,13 @@ namespace System.Data.Entity.Internal
 
         #region Handling entries for detached entities
 
-        /// <summary>
-        /// Validates that the owning entity entry is associated with an underlying
-        /// <see
-        ///     cref="System.Data.Entity.Core.Objects.ObjectStateEntry" />
-        /// and
-        /// is not just wrapping a non-attached entity.
-        /// </summary>
+        // <summary>
+        // Validates that the owning entity entry is associated with an underlying
+        // <see
+        //     cref="System.Data.Entity.Core.Objects.ObjectStateEntry" />
+        // and
+        // is not just wrapping a non-attached entity.
+        // </summary>
         private void ValidateNotDetachedAndInModel(string method)
         {
             if (!EntryMetadata.IsMapped)
@@ -420,10 +420,10 @@ namespace System.Data.Entity.Internal
 
         #region Property metadata access
 
-        /// <summary>
-        /// Gets the property metadata.
-        /// </summary>
-        /// <value> The property metadata. </value>
+        // <summary>
+        // Gets the property metadata.
+        // </summary>
+        // <value> The property metadata. </value>
         public new PropertyEntryMetadata EntryMetadata
         {
             get { return (PropertyEntryMetadata)base.EntryMetadata; }
@@ -433,23 +433,23 @@ namespace System.Data.Entity.Internal
 
         #region DbMemberEntry factory methods
 
-        /// <summary>
-        /// Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
-        /// The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry" /> or a subtype of it.
-        /// </summary>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a new non-generic <see cref="DbMemberEntry" /> backed by this internal entry.
+        // The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry" /> or a subtype of it.
+        // </summary>
+        // <returns> The new entry. </returns>
         public override DbMemberEntry CreateDbMemberEntry()
         {
             return EntryMetadata.IsComplex ? new DbComplexPropertyEntry(this) : new DbPropertyEntry(this);
         }
 
-        /// <summary>
-        /// Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
-        /// The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry{TEntity,TProperty}" /> or a subtype of it.
-        /// </summary>
-        /// <typeparam name="TEntity"> The type of the entity. </typeparam>
-        /// <typeparam name="TProperty"> The type of the property. </typeparam>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a new generic <see cref="DbMemberEntry{TEntity,TProperty}" /> backed by this internal entry.
+        // The runtime type of the DbMemberEntry created will be <see cref="DbPropertyEntry{TEntity,TProperty}" /> or a subtype of it.
+        // </summary>
+        // <typeparam name="TEntity"> The type of the entity. </typeparam>
+        // <typeparam name="TProperty"> The type of the property. </typeparam>
+        // <returns> The new entry. </returns>
         public override DbMemberEntry<TEntity, TProperty> CreateDbMemberEntry<TEntity, TProperty>()
         {
             return EntryMetadata.IsComplex

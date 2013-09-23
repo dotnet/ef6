@@ -51,11 +51,11 @@ namespace System.Data.Entity.Core.Common
         {
         }
 
-        /// <summary>
-        /// Constructs an EF provider that will use the given <see cref="IDbDependencyResolver" /> for
-        /// resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
-        /// </summary>
-        /// <param name="resolver"> The resolver to use. </param>
+        // <summary>
+        // Constructs an EF provider that will use the given <see cref="IDbDependencyResolver" /> for
+        // resolving EF dependencies such as the <see cref="DbSpatialServices" /> instance to use.
+        // </summary>
+        // <param name="resolver"> The resolver to use. </param>
         internal DbProviderServices(Func<IDbDependencyResolver> resolver)
             : this(resolver, new Lazy<DbCommandTreeDispatcher>(() => DbInterception.Dispatch.CommandTree))
         {
@@ -157,10 +157,10 @@ namespace System.Data.Entity.Core.Common
             DbProviderManifest providerManifest,
             DbCommandTree commandTree);
 
-        /// <summary>
-        /// Ensures that the data space of the specified command tree is the target (S-) space
-        /// </summary>
-        /// <param name="commandTree"> The command tree for which the data space should be validated </param>
+        // <summary>
+        // Ensures that the data space of the specified command tree is the target (S-) space
+        // </summary>
+        // <param name="commandTree"> The command tree for which the data space should be validated </param>
         internal virtual void ValidateDataSpace(DbCommandTree commandTree)
         {
             DebugCheck.NotNull(commandTree);
@@ -285,14 +285,14 @@ namespace System.Data.Entity.Core.Common
             return GetExecutionStrategy(connection, GetProviderFactory(connection));
         }
 
-        /// <summary>
-        /// Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
-        /// Uses MetadataWorkspace for faster lookup.
-        /// </summary>
-        /// <param name="connection">The database connection</param>
-        /// <returns>
-        /// A new instance of <see cref="DbExecutionStrategy" />
-        /// </returns>
+        // <summary>
+        // Gets the <see cref="IDbExecutionStrategy" /> that will be used to execute methods that use the specified connection.
+        // Uses MetadataWorkspace for faster lookup.
+        // </summary>
+        // <param name="connection">The database connection</param>
+        // <returns>
+        // A new instance of <see cref="DbExecutionStrategy" />
+        // </returns>
         internal static IDbExecutionStrategy GetExecutionStrategy(
             DbConnection connection,
             MetadataWorkspace metadataWorkspace)

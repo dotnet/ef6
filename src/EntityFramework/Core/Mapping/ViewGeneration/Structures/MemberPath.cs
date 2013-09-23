@@ -13,52 +13,52 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class that corresponds to a path in some extent, e.g., Person, Person.addr, Person.addr.state
-    /// Empty path represents path to the extent.
-    /// </summary>
+    // <summary>
+    // A class that corresponds to a path in some extent, e.g., Person, Person.addr, Person.addr.state
+    // Empty path represents path to the extent.
+    // </summary>
     internal sealed class MemberPath : InternalBase, IEquatable<MemberPath>
     {
-        /// <summary>
-        /// The base entity set.
-        /// </summary>
+        // <summary>
+        // The base entity set.
+        // </summary>
         private readonly EntitySetBase m_extent;
 
-        /// <summary>
-        /// List of members in the path.
-        /// </summary>
+        // <summary>
+        // List of members in the path.
+        // </summary>
         private readonly List<EdmMember> m_path;
 
         internal static readonly IEqualityComparer<MemberPath> EqualityComparer = new Comparer();
 
-        /// <summary>
-        /// Creates a member path that corresponds to <paramref name="path" /> in the <paramref name="extent" /> (or the extent itself).
-        /// </summary>
+        // <summary>
+        // Creates a member path that corresponds to <paramref name="path" /> in the <paramref name="extent" /> (or the extent itself).
+        // </summary>
         internal MemberPath(EntitySetBase extent, IEnumerable<EdmMember> path)
         {
             m_extent = extent;
             m_path = path.ToList();
         }
 
-        /// <summary>
-        /// Creates a member path that corresponds to the <paramref name="extent" />.
-        /// </summary>
+        // <summary>
+        // Creates a member path that corresponds to the <paramref name="extent" />.
+        // </summary>
         internal MemberPath(EntitySetBase extent)
             : this(extent, Enumerable.Empty<EdmMember>())
         {
         }
 
-        /// <summary>
-        /// Creates a path corresponding to <paramref name="extent" />.<paramref name="member" />
-        /// </summary>
+        // <summary>
+        // Creates a path corresponding to <paramref name="extent" />.<paramref name="member" />
+        // </summary>
         internal MemberPath(EntitySetBase extent, EdmMember member)
             : this(extent, Enumerable.Repeat(member, 1))
         {
         }
 
-        /// <summary>
-        /// Creates a member path corresponding to the path <paramref name="prefix" />.<paramref name="last" />
-        /// </summary>
+        // <summary>
+        // Creates a member path corresponding to the path <paramref name="prefix" />.<paramref name="last" />
+        // </summary>
         internal MemberPath(MemberPath prefix, EdmMember last)
         {
             m_extent = prefix.m_extent;
@@ -66,25 +66,25 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_path.Add(last);
         }
 
-        /// <summary>
-        /// Returns the first path item in a non-empty path, otherwise null.
-        /// </summary>
+        // <summary>
+        // Returns the first path item in a non-empty path, otherwise null.
+        // </summary>
         internal EdmMember RootEdmMember
         {
             get { return m_path.Count > 0 ? m_path[0] : null; }
         }
 
-        /// <summary>
-        /// Returns the last path item in a non-empty path, otherwise null.
-        /// </summary>
+        // <summary>
+        // Returns the last path item in a non-empty path, otherwise null.
+        // </summary>
         internal EdmMember LeafEdmMember
         {
             get { return m_path.Count > 0 ? m_path[m_path.Count - 1] : null; }
         }
 
-        /// <summary>
-        /// For non-empty paths returns name of the last path item, otherwise returns name of <see cref="Extent" />.
-        /// </summary>
+        // <summary>
+        // For non-empty paths returns name of the last path item, otherwise returns name of <see cref="Extent" />.
+        // </summary>
         internal string LeafName
         {
             get
@@ -100,9 +100,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Tells path represents a computed slot.
-        /// </summary>
+        // <summary>
+        // Tells path represents a computed slot.
+        // </summary>
         internal bool IsComputed
         {
             get
@@ -118,9 +118,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns the default value the slot represented by the path. If no default value is present, returns null.
-        /// </summary>
+        // <summary>
+        // Returns the default value the slot represented by the path. If no default value is present, returns null.
+        // </summary>
         internal object DefaultValue
         {
             get
@@ -138,9 +138,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns true if slot represented by the path is part of a key.
-        /// </summary>
+        // <summary>
+        // Returns true if slot represented by the path is part of a key.
+        // </summary>
         internal bool IsPartOfKey
         {
             get
@@ -153,9 +153,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns true if slot represented by the path is nullable.
-        /// </summary>
+        // <summary>
+        // Returns true if slot represented by the path is nullable.
+        // </summary>
         internal bool IsNullable
         {
             get
@@ -168,10 +168,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// If path corresponds to an entity set (empty path) or an association end (<see cref="Extent" /> is as association set, and path length is 1),
-        /// returns <see cref="EntitySet" /> associated with the value of the slot represented by this path, otherwise returns null.
-        /// </summary>
+        // <summary>
+        // If path corresponds to an entity set (empty path) or an association end (<see cref="Extent" /> is as association set, and path length is 1),
+        // returns <see cref="EntitySet" /> associated with the value of the slot represented by this path, otherwise returns null.
+        // </summary>
         internal EntitySet EntitySet
         {
             get
@@ -193,18 +193,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Extent of the path.
-        /// </summary>
+        // <summary>
+        // Extent of the path.
+        // </summary>
         internal EntitySetBase Extent
         {
             get { return m_extent; }
         }
 
-        /// <summary>
-        /// Returns the type of attribute denoted by the path.
-        /// For example, member type of Person.addr.zip would be integer. For extent, it is the element type.
-        /// </summary>
+        // <summary>
+        // Returns the type of attribute denoted by the path.
+        // For example, member type of Person.addr.zip would be integer. For extent, it is the element type.
+        // </summary>
         internal EdmType EdmType
         {
             get
@@ -220,9 +220,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns Cql field alias generated from the path items.
-        /// </summary>
+        // <summary>
+        // Returns Cql field alias generated from the path items.
+        // </summary>
         internal string CqlFieldAlias
         {
             get
@@ -239,12 +239,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns false iff the path is
-        /// * A descendant of some nullable property
-        /// * A descendant of an optional composition/collection
-        /// * A descendant of a property that does not belong to the basetype/rootype of its parent.
-        /// </summary>
+        // <summary>
+        // Returns false iff the path is
+        // * A descendant of some nullable property
+        // * A descendant of an optional composition/collection
+        // * A descendant of a property that does not belong to the basetype/rootype of its parent.
+        // </summary>
         internal bool IsAlwaysDefined(Dictionary<EntityType, Set<EntityType>> inheritanceGraph)
         {
             if (m_path.Count == 0)
@@ -335,9 +335,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return false;
         }
 
-        /// <summary>
-        /// Determines all the identifiers used in the path and adds them to <paramref name="identifiers" />.
-        /// </summary>
+        // <summary>
+        // Determines all the identifiers used in the path and adds them to <paramref name="identifiers" />.
+        // </summary>
         internal void GetIdentifiers(CqlIdentifiers identifiers)
         {
             // Get the extent name and extent type name
@@ -349,9 +349,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns true iff all members are nullable properties, i.e., if even one of them is non-nullable, returns false.
-        /// </summary>
+        // <summary>
+        // Returns true iff all members are nullable properties, i.e., if even one of them is non-nullable, returns false.
+        // </summary>
         internal static bool AreAllMembersNullable(IEnumerable<MemberPath> members)
         {
             foreach (var path in members)
@@ -368,13 +368,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return true;
         }
 
-        /// <summary>
-        /// Returns a string that has the list of properties in <paramref name="members" /> (i.e., just the last name) if
-        /// <paramref
-        ///     name="fullPath" />
-        /// is false.
-        /// Else the <paramref name="fullPath" /> is added.
-        /// </summary>
+        // <summary>
+        // Returns a string that has the list of properties in <paramref name="members" /> (i.e., just the last name) if
+        // <paramref
+        //     name="fullPath" />
+        // is false.
+        // Else the <paramref name="fullPath" /> is added.
+        // </summary>
         internal static string PropertiesToUserString(IEnumerable<MemberPath> members, bool fullPath)
         {
             var isFirst = true;
@@ -398,14 +398,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name
-        /// <paramref
-        ///     name="blockAlias" />
-        /// .path, e.g., T1.Address.Phone.Zip.
-        /// If a subcomponent belongs to subclass, generates a treat for it, e.g. "TREAT(T1 as Customer).Address".
-        /// Or even "TREAT(TREAT(T1 AS Customer).Address as USAddress).Zip".
-        /// </summary>
+        // <summary>
+        // Given a member path and an alias, returns an eSQL string correspondng to the fully-qualified name
+        // <paramref
+        //     name="blockAlias" />
+        // .path, e.g., T1.Address.Phone.Zip.
+        // If a subcomponent belongs to subclass, generates a treat for it, e.g. "TREAT(T1 as Customer).Address".
+        // Or even "TREAT(TREAT(T1 AS Customer).Address as USAddress).Zip".
+        // </summary>
         internal StringBuilder AsEsql(StringBuilder inputBuilder, string blockAlias)
         {
             // Due to the TREAT stuff, we cannot build incrementally.
@@ -539,9 +539,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return EqualityComparer.GetHashCode(this);
         }
 
-        /// <summary>
-        /// Returns true if the member denoted by the path corresponds to a scalar (primitive or enum).
-        /// </summary>
+        // <summary>
+        // Returns true if the member denoted by the path corresponds to a scalar (primitive or enum).
+        // </summary>
         internal bool IsScalarType()
         {
             return EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ||
@@ -599,9 +599,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Returns true if this path and <paramref name="path1" /> are equivalent on the C-side via a referential constraint.
-        /// </summary>
+        // <summary>
+        // Returns true if this path and <paramref name="path1" /> are equivalent on the C-side via a referential constraint.
+        // </summary>
         internal bool IsEquivalentViaRefConstraint(MemberPath path1)
         {
             var path0 = this;
@@ -696,16 +696,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Returns true if <paramref name="assocPath0" /> and <paramref name="assocPath1" /> are equivalent via a referential constraint in
-        /// <paramref
-        ///     name="assocSet" />
-        /// .
-        /// Requires: <paramref name="assocPath0" /> and <paramref name="assocPath1" /> correspond to paths in
-        /// <paramref
-        ///     name="assocSet" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Returns true if <paramref name="assocPath0" /> and <paramref name="assocPath1" /> are equivalent via a referential constraint in
+        // <paramref
+        //     name="assocSet" />
+        // .
+        // Requires: <paramref name="assocPath0" /> and <paramref name="assocPath1" /> correspond to paths in
+        // <paramref
+        //     name="assocSet" />
+        // .
+        // </summary>
         private static bool AreAssocationEndPathsEquivalentViaRefConstraint(
             MemberPath assocPath0,
             MemberPath assocPath1,
@@ -759,13 +759,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return foundConstraint;
         }
 
-        /// <summary>
-        /// Returns the member path corresponding to that field in the <paramref name="assocSet" />. E.g., given Address.pid, returns PersonAddress.Address.pid.
-        /// For self-associations, such as ManagerEmployee with referential constraints (and we have
-        /// [ManagerEmployee.Employee.mid, ManagerEmployee.Employee.eid, ManagerEmployee.Manager.mid]), given Employee.mid, returns
-        /// ManagerEmployee.Employee.mid or ManagerEmployee.Manager.mid
-        /// Note: the path need not correspond to a key field of an entity set <see cref="Extent" />.
-        /// </summary>
+        // <summary>
+        // Returns the member path corresponding to that field in the <paramref name="assocSet" />. E.g., given Address.pid, returns PersonAddress.Address.pid.
+        // For self-associations, such as ManagerEmployee with referential constraints (and we have
+        // [ManagerEmployee.Employee.mid, ManagerEmployee.Employee.eid, ManagerEmployee.Manager.mid]), given Employee.mid, returns
+        // ManagerEmployee.Employee.mid or ManagerEmployee.Manager.mid
+        // Note: the path need not correspond to a key field of an entity set <see cref="Extent" />.
+        // </summary>
         private MemberPath GetCorrespondingAssociationPath(AssociationSet assocSet)
         {
             Debug.Assert(Extent is EntitySet, "path must be in the context of an entity set");
@@ -787,9 +787,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// If member path identifies a relationship end, return its scope. Otherwise, returns null.
-        /// </summary>
+        // <summary>
+        // If member path identifies a relationship end, return its scope. Otherwise, returns null.
+        // </summary>
         internal EntitySet GetScopeOfRelationEnd()
         {
             if (m_path.Count == 0)
@@ -809,10 +809,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Returns a string of the form "a.b.c" that corresponds to the items in the path. This string can be used for tests or localization.
-        /// If <paramref name="forAlias" />=true, we return a string that is relevant for Cql aliases, else we return the exact path.
-        /// </summary>
+        // <summary>
+        // Returns a string of the form "a.b.c" that corresponds to the items in the path. This string can be used for tests or localization.
+        // If <paramref name="forAlias" />=true, we return a string that is relevant for Cql aliases, else we return the exact path.
+        // </summary>
         internal string PathToString(bool? forAlias)
         {
             var builder = new StringBuilder();
@@ -847,9 +847,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Returns a human-readable string corresponding to the path.
-        /// </summary>
+        // <summary>
+        // Returns a human-readable string corresponding to the path.
+        // </summary>
         internal override void ToCompactString(StringBuilder builder)
         {
             builder.Append(PathToString(false));

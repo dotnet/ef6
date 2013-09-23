@@ -2,34 +2,34 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    /// <summary>
-    /// Types of variable
-    /// </summary>
+    // <summary>
+    // Types of variable
+    // </summary>
     internal enum VarType
     {
-        /// <summary>
-        /// a parameter
-        /// </summary>
+        // <summary>
+        // a parameter
+        // </summary>
         Parameter,
 
-        /// <summary>
-        /// Column of a table
-        /// </summary>
+        // <summary>
+        // Column of a table
+        // </summary>
         Column,
 
-        /// <summary>
-        /// A Computed var
-        /// </summary>
+        // <summary>
+        // A Computed var
+        // </summary>
         Computed,
 
-        /// <summary>
-        /// Var for SetOps (Union, Intersect, Except)
-        /// </summary>
+        // <summary>
+        // Var for SetOps (Union, Intersect, Except)
+        // </summary>
         SetOp,
 
-        /// <summary>
-        /// NotValid
-        /// </summary>
+        // <summary>
+        // NotValid
+        // </summary>
         NotValid
     }
 }

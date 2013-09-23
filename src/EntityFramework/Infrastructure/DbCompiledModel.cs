@@ -35,17 +35,17 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly DbModelBuilder _cachedModelBuilder;
 
-        /// <summary>
-        /// For mocking.
-        /// </summary>
+        // <summary>
+        // For mocking.
+        // </summary>
         internal DbCompiledModel()
         {
         }
 
-        /// <summary>
-        /// Creates a model for the given EDM metadata model.
-        /// </summary>
-        /// <param name="model"> The EDM metadata model. </param>
+        // <summary>
+        // Creates a model for the given EDM metadata model.
+        // </summary>
+        // <param name="model"> The EDM metadata model. </param>
         internal DbCompiledModel(DbModel model)
         {
             DebugCheck.NotNull(model);
@@ -58,24 +58,24 @@ namespace System.Data.Entity.Infrastructure
 
         #region Model/database metadata
 
-        /// <summary>
-        /// A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
-        /// </summary>
+        // <summary>
+        // A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
+        // </summary>
         internal virtual DbModelBuilder CachedModelBuilder
         {
             get { return _cachedModelBuilder; }
         }
 
-        /// <summary>
-        /// The provider info (provider name and manifest token) that was used to create this model.
-        /// </summary>
+        // <summary>
+        // The provider info (provider name and manifest token) that was used to create this model.
+        // </summary>
         internal virtual DbProviderInfo ProviderInfo
         {
             get { return _workspace.ProviderInfo; }
         }
 
-        /// <summary> Gets the default schema of the model. </summary>
-        /// <returns> The default schema of the model. </returns>
+        // <summary> Gets the default schema of the model. </summary>
+        // <returns> The default schema of the model. </returns>
         internal string DefaultSchema
         {
             get { return CachedModelBuilder.ModelConfiguration.DefaultSchema; }
@@ -118,9 +118,9 @@ namespace System.Data.Entity.Infrastructure
             return context;
         }
 
-        /// <summary>
-        /// Gets a cached delegate (or creates a new one) used to call the constructor for the given derived ObjectContext type.
-        /// </summary>
+        // <summary>
+        // Gets a cached delegate (or creates a new one) used to call the constructor for the given derived ObjectContext type.
+        // </summary>
         internal static Func<EntityConnection, ObjectContext> GetConstructorDelegate<TContext>()
             where TContext : ObjectContext
         {

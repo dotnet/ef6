@@ -18,38 +18,38 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Globalization;
     using System.Linq;
 
-    /// <summary>
-    /// Implements Semantic Analysis and Conversion
-    /// Provides the translation service between an abstract syntax tree to a canonical command tree
-    /// For complete documentation of the language syntax and semantics, refer to http://sqlweb/default.asp?specDirId=764
-    /// The class was designed to be edmType system agnostic by delegating to a given SemanticResolver instance all edmType related services as well as to TypeHelper class, however
-    /// we rely on the assumption that metadata was pre-loaded and is relevant to the query.
-    /// </summary>
+    // <summary>
+    // Implements Semantic Analysis and Conversion
+    // Provides the translation service between an abstract syntax tree to a canonical command tree
+    // For complete documentation of the language syntax and semantics, refer to http://sqlweb/default.asp?specDirId=764
+    // The class was designed to be edmType system agnostic by delegating to a given SemanticResolver instance all edmType related services as well as to TypeHelper class, however
+    // we rely on the assumption that metadata was pre-loaded and is relevant to the query.
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class SemanticAnalyzer
     {
         private readonly SemanticResolver _sr;
 
-        /// <summary>
-        /// Initializes semantic analyzer
-        /// </summary>
-        /// <param name="sr"> initialized SemanticResolver instance for a given typespace/edmType system </param>
+        // <summary>
+        // Initializes semantic analyzer
+        // </summary>
+        // <param name="sr"> initialized SemanticResolver instance for a given typespace/edmType system </param>
         internal SemanticAnalyzer(SemanticResolver sr)
         {
             DebugCheck.NotNull(sr);
             _sr = sr;
         }
 
-        /// <summary>
-        /// Entry point to semantic analysis. Converts AST into a <see cref="DbCommandTree" />.
-        /// </summary>
-        /// <param name="astExpr"> ast command tree </param>
-        /// <remarks>
-        /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
-        /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
-        /// <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
-        /// </remarks>
-        /// <returns> ParseResult with a valid DbCommandTree </returns>
+        // <summary>
+        // Entry point to semantic analysis. Converts AST into a <see cref="DbCommandTree" />.
+        // </summary>
+        // <param name="astExpr"> ast command tree </param>
+        // <remarks>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
+        // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
+        // </remarks>
+        // <returns> ParseResult with a valid DbCommandTree </returns>
         internal ParseResult AnalyzeCommand(Node astExpr)
         {
             //
@@ -73,16 +73,16 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return parseResult;
         }
 
-        /// <summary>
-        /// Converts query command AST into a <see cref="DbExpression" />.
-        /// </summary>
-        /// <param name="astExpr"> ast command tree </param>
-        /// <remarks>
-        /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
-        /// <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
-        /// <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
-        /// </remarks>
-        /// <returns> DbExpression </returns>
+        // <summary>
+        // Converts query command AST into a <see cref="DbExpression" />.
+        // </summary>
+        // <param name="astExpr"> ast command tree </param>
+        // <remarks>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic or Semantic rules are violated and the query cannot be accepted</exception>
+        // <exception cref="System.Data.Entity.Core.MetadataException">Thrown when metadata related service requests fail</exception>
+        // <exception cref="System.Data.Entity.Core.MappingException">Thrown when mapping related service requests fail</exception>
+        // </remarks>
+        // <returns> DbExpression </returns>
         internal DbLambda AnalyzeQueryCommand(Node astExpr)
         {
             //
@@ -126,9 +126,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return astCommandExpr;
         }
 
-        /// <summary>
-        /// Converts namespace imports and adds them to the edmType resolver.
-        /// </summary>
+        // <summary>
+        // Converts namespace imports and adds them to the edmType resolver.
+        // </summary>
         private static void ConvertAndRegisterNamespaceImports(
             NodeList<NamespaceImport> nsImportList, ErrorContext cmdErrCtx, SemanticResolver sr)
         {
@@ -210,11 +210,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Dispatches/Converts statement expressions.
-        /// </summary>
-        /// <param name="astStatement"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Dispatches/Converts statement expressions.
+        // </summary>
+        // <param name="astStatement"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
@@ -240,11 +240,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private delegate ParseResult StatementConverter(Statement astExpr, SemanticResolver sr);
 
-        /// <summary>
-        /// Converts query statement AST to a <see cref="DbQueryCommandTree" />
-        /// </summary>
-        /// <param name="astStatement"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts query statement AST to a <see cref="DbQueryCommandTree" />
+        // </summary>
+        // <param name="astStatement"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
@@ -262,18 +262,18 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 functionDefs);
         }
 
-        /// <summary>
-        /// Converts the query statement to a normalized and validated <see cref="DbExpression" />.
-        /// This entry point to the semantic analysis phase is used when producing a
-        /// query command tree or producing only a <see cref="DbExpression" />.
-        /// </summary>
-        /// <param name="astStatement"> The query statement </param>
-        /// <param name="sr">
-        /// The <see cref="SemanticResolver" /> instance to use
-        /// </param>
-        /// <returns>
-        /// An instance of <see cref="DbExpression" /> , adjusted to handle 'inline' projections and validated to produce a result edmType appropriate for the root of a query command tree.
-        /// </returns>
+        // <summary>
+        // Converts the query statement to a normalized and validated <see cref="DbExpression" />.
+        // This entry point to the semantic analysis phase is used when producing a
+        // query command tree or producing only a <see cref="DbExpression" />.
+        // </summary>
+        // <param name="astStatement"> The query statement </param>
+        // <param name="sr">
+        // The <see cref="SemanticResolver" /> instance to use
+        // </param>
+        // <returns>
+        // An instance of <see cref="DbExpression" /> , adjusted to handle 'inline' projections and validated to produce a result edmType appropriate for the root of a query command tree.
+        // </returns>
         private static DbExpression ConvertQueryStatementToDbExpression(
             Statement astStatement, SemanticResolver sr, out List<FunctionDefinition> functionDefs)
         {
@@ -334,9 +334,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return converted;
         }
 
-        /// <summary>
-        /// Ensures that the result of a query expression is valid.
-        /// </summary>
+        // <summary>
+        // Ensures that the result of a query expression is valid.
+        // </summary>
         private static void ValidateQueryResultType(TypeUsage resultType, ErrorContext errCtx)
         {
             if (Helper.IsCollectionType(resultType.EdmType))
@@ -357,9 +357,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Converts query inline function defintions. Returns empty list in case of no definitions.
-        /// </summary>
+        // <summary>
+        // Converts query inline function defintions. Returns empty list in case of no definitions.
+        // </summary>
         private static List<FunctionDefinition> ConvertInlineFunctionDefinitions(
             NodeList<AST.FunctionDefinition> functionDefList, SemanticResolver sr)
         {
@@ -516,9 +516,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return DbExpressionBuilder.Lambda(body, functionInfo.Parameters);
         }
 
-        /// <summary>
-        /// Converts general expressions (AST.Node)
-        /// </summary>
+        // <summary>
+        // Converts general expressions (AST.Node)
+        // </summary>
         private static ExpressionResolution Convert(Node astExpr, SemanticResolver sr)
         {
             var converter = _astExprConverters[astExpr.GetType()];
@@ -530,12 +530,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return converter(astExpr, sr);
         }
 
-        /// <summary>
-        /// Converts general expressions (AST.Node) to a <see cref="ValueExpression" />.
-        /// Returns <see cref="ValueExpression.Value" />.
-        /// Throws if conversion resulted an a non <see cref="ValueExpression" /> resolution.
-        /// Throws if conversion resulted in the untyped null.
-        /// </summary>
+        // <summary>
+        // Converts general expressions (AST.Node) to a <see cref="ValueExpression" />.
+        // Returns <see cref="ValueExpression.Value" />.
+        // Throws if conversion resulted an a non <see cref="ValueExpression" /> resolution.
+        // Throws if conversion resulted in the untyped null.
+        // </summary>
         private static DbExpression ConvertValueExpression(Node astExpr, SemanticResolver sr)
         {
             var expr = ConvertValueExpressionAllowUntypedNulls(astExpr, sr);
@@ -548,12 +548,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return expr;
         }
 
-        /// <summary>
-        /// Converts general expressions (AST.Node) to a <see cref="ValueExpression" />.
-        /// Returns <see cref="ValueExpression.Value" />.
-        /// Returns null if expression is the untyped null.
-        /// Throws if conversion resulted an a non <see cref="ValueExpression" /> resolution.
-        /// </summary>
+        // <summary>
+        // Converts general expressions (AST.Node) to a <see cref="ValueExpression" />.
+        // Returns <see cref="ValueExpression.Value" />.
+        // Returns null if expression is the untyped null.
+        // Throws if conversion resulted an a non <see cref="ValueExpression" /> resolution.
+        // </summary>
         private static DbExpression ConvertValueExpressionAllowUntypedNulls(Node astExpr, SemanticResolver sr)
         {
             var resolution = Convert(astExpr, sr);
@@ -598,10 +598,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             throw EntitySqlException.Create(errCtx, errorMessage, null);
         }
 
-        /// <summary>
-        /// Converts left and right expressions. If any of them is the untyped null, derives the edmType and converts to a typed null.
-        /// Throws <see cref="EntitySqlException" /> if conversion is not possible.
-        /// </summary>
+        // <summary>
+        // Converts left and right expressions. If any of them is the untyped null, derives the edmType and converts to a typed null.
+        // Throws <see cref="EntitySqlException" /> if conversion is not possible.
+        // </summary>
         private static Pair<DbExpression, DbExpression> ConvertValueExpressionsWithUntypedNulls(
             Node leftAst,
             Node rightAst,
@@ -632,9 +632,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new Pair<DbExpression, DbExpression>(leftExpr, rightExpr);
         }
 
-        /// <summary>
-        /// Converts literal expression (AST.Literal)
-        /// </summary>
+        // <summary>
+        // Converts literal expression (AST.Literal)
+        // </summary>
         private static ExpressionResolution ConvertLiteral(Node expr, SemanticResolver sr)
         {
             var literal = (Literal)expr;
@@ -667,9 +667,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return literalTypeUsage;
         }
 
-        /// <summary>
-        /// Converts identifier expression (Identifier)
-        /// </summary>
+        // <summary>
+        // Converts identifier expression (Identifier)
+        // </summary>
         private static ExpressionResolution ConvertIdentifier(Node expr, SemanticResolver sr)
         {
             return ConvertIdentifier(((Identifier)expr), false /* leftHandSideOfMemberAccess */, sr);
@@ -680,9 +680,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return sr.ResolveSimpleName((identifier).Name, leftHandSideOfMemberAccess, identifier.ErrCtx);
         }
 
-        /// <summary>
-        /// Converts member access expression (AST.DotExpr)
-        /// </summary>
+        // <summary>
+        // Converts member access expression (AST.DotExpr)
+        // </summary>
         private static ExpressionResolution ConvertDotExpr(Node expr, SemanticResolver sr)
         {
             var dotExpr = (DotExpr)expr;
@@ -730,9 +730,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Converts paren expression (AST.ParenExpr)
-        /// </summary>
+        // <summary>
+        // Converts paren expression (AST.ParenExpr)
+        // </summary>
         private static ExpressionResolution ConvertParenExpr(Node astExpr, SemanticResolver sr)
         {
             var innerExpr = ((ParenExpr)astExpr).Expr;
@@ -746,9 +746,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts GROUPPARTITION expression (AST.GroupPartitionExpr).
-        /// </summary>
+        // <summary>
+        // Converts GROUPPARTITION expression (AST.GroupPartitionExpr).
+        // </summary>
         private static ExpressionResolution ConvertGroupPartitionExpr(Node astExpr, SemanticResolver sr)
         {
             var groupAggregateExpr = (GroupPartitionExpr)astExpr;
@@ -824,9 +824,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         #region ConvertMethodExpr implementation
 
-        /// <summary>
-        /// Converts invocation expression (AST.MethodExpr)
-        /// </summary>
+        // <summary>
+        // Converts invocation expression (AST.MethodExpr)
+        // </summary>
         private static ExpressionResolution ConvertMethodExpr(Node expr, SemanticResolver sr)
         {
             return ConvertMethodExpr((MethodExpr)expr, true /* includeInlineFunctions */, sr);
@@ -914,26 +914,26 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// If methodExpr.Expr is in the form of "Name1.Name2(...)" then ignore entity containers during resolution of the left expression
-        /// in the context of the invocation: "EntityContainer.EntitySet(...)" is not a valid expression and it should not shadow
-        /// a potentially valid interpretation as "Namespace.EntityType/Function(...)".
-        /// </summary>
+        // <summary>
+        // If methodExpr.Expr is in the form of "Name1.Name2(...)" then ignore entity containers during resolution of the left expression
+        // in the context of the invocation: "EntityContainer.EntitySet(...)" is not a valid expression and it should not shadow
+        // a potentially valid interpretation as "Namespace.EntityType/Function(...)".
+        // </summary>
         private static IDisposable ConvertMethodExpr_TryEnterIgnoreEntityContainerNameResolution(DotExpr leftExpr, SemanticResolver sr)
         {
             return leftExpr != null && leftExpr.Left is Identifier ? sr.EnterIgnoreEntityContainerNameResolution() : null;
         }
 
-        /// <summary>
-        /// If methodExpr.Expr is in the form of "Name1.Name2(...)"
-        /// and we are in the view generation mode
-        /// and schema version is less than V2
-        /// then ignore types in the resolution of Name1.
-        /// This is needed in order to support the following V1 case:
-        /// C-space edmType: AdventureWorks.Store
-        /// S-space edmType: [AdventureWorks.Store].Customer
-        /// query: select [AdventureWorks.Store].Customer(1, 2, 3) from ...
-        /// </summary>
+        // <summary>
+        // If methodExpr.Expr is in the form of "Name1.Name2(...)"
+        // and we are in the view generation mode
+        // and schema version is less than V2
+        // then ignore types in the resolution of Name1.
+        // This is needed in order to support the following V1 case:
+        // C-space edmType: AdventureWorks.Store
+        // S-space edmType: [AdventureWorks.Store].Customer
+        // query: select [AdventureWorks.Store].Customer(1, 2, 3) from ...
+        // </summary>
         private static IDisposable ConvertMethodExpr_TryEnterV1ViewGenBackwardCompatibilityResolution(DotExpr leftExpr, SemanticResolver sr)
         {
             if (leftExpr != null
@@ -956,12 +956,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return null;
         }
 
-        /// <summary>
-        /// Attempts to create a <see cref="ValueExpression" /> representing the inline function call.
-        /// Returns false if <paramref name="methodExpr" />.DistinctKind != <see see="AST.Method.DistinctKind" />.None.
-        /// Returns false if no one of the overloads matched the given arguments.
-        /// Throws if given arguments cause overload resolution ambiguity.
-        /// </summary>
+        // <summary>
+        // Attempts to create a <see cref="ValueExpression" /> representing the inline function call.
+        // Returns false if <paramref name="methodExpr" />.DistinctKind != <see see="AST.Method.DistinctKind" />.None.
+        // Returns false if no one of the overloads matched the given arguments.
+        // Throws if given arguments cause overload resolution ambiguity.
+        // </summary>
         private static bool TryConvertInlineFunctionCall(
             InlineFunctionGroup inlineFunctionGroup,
             MethodExpr methodExpr,
@@ -1149,15 +1149,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         #region ConvertAggregateFunctionInGroupScope implementation
 
-        /// <summary>
-        /// Converts group aggregates.
-        /// </summary>
-        /// <remarks>
-        /// This method converts group aggregates in two phases:
-        /// Phase 1 - it will resolve the actual inner (argument) expression and then anotate the ast node and add the resolved aggregate
-        /// to the scope
-        /// Phase 2 - if ast node was annotated, just extract the precomputed expression from the scope.
-        /// </remarks>
+        // <summary>
+        // Converts group aggregates.
+        // </summary>
+        // <remarks>
+        // This method converts group aggregates in two phases:
+        // Phase 1 - it will resolve the actual inner (argument) expression and then anotate the ast node and add the resolved aggregate
+        // to the scope
+        // Phase 2 - if ast node was annotated, just extract the precomputed expression from the scope.
+        // </remarks>
         private static DbExpression ConvertAggregateFunctionInGroupScope(
             MethodExpr methodExpr, MetadataFunctionGroup metadataFunctionGroup, SemanticResolver sr)
         {
@@ -1225,9 +1225,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             throw EntitySqlException.Create(errCtx, message, null);
         }
 
-        /// <summary>
-        /// Try to convert as pre resolved group aggregate.
-        /// </summary>
+        // <summary>
+        // Try to convert as pre resolved group aggregate.
+        // </summary>
         private static bool TryConvertAsResolvedGroupAggregate(
             GroupAggregateExpr groupAggregateExpr, SemanticResolver sr, out DbExpression converted)
         {
@@ -1266,14 +1266,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return true;
         }
 
-        /// <summary>
-        /// Try convert method expr in a group scope as a collection aggregate
-        /// </summary>
-        /// <param name="methodExpr"> </param>
-        /// <param name="metadataFunctionGroup"> </param>
-        /// <param name="sr"> </param>
-        /// <param name="argTypes"> argTypes are returned regardless of the function result </param>
-        /// <param name="converted"> </param>
+        // <summary>
+        // Try convert method expr in a group scope as a collection aggregate
+        // </summary>
+        // <param name="methodExpr"> </param>
+        // <param name="metadataFunctionGroup"> </param>
+        // <param name="sr"> </param>
+        // <param name="argTypes"> argTypes are returned regardless of the function result </param>
+        // <param name="converted"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryConvertAsCollectionFunction(
             MethodExpr methodExpr,
@@ -1427,10 +1427,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         #endregion ConvertAggregateFunctionInGroupScope implementation
 
-        /// <summary>
-        /// Creates <see cref="DbExpression" /> representing a new instance of the given edmType.
-        /// Validates and infers argument types.
-        /// </summary>
+        // <summary>
+        // Creates <see cref="DbExpression" /> representing a new instance of the given edmType.
+        // Validates and infers argument types.
+        // </summary>
         private static DbExpression CreateConstructorCallExpression(
             MethodExpr methodExpr,
             TypeUsage type,
@@ -1553,10 +1553,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return newInstance;
         }
 
-        /// <summary>
-        /// Creates <see cref="DbFunctionExpression" /> representing a model function call.
-        /// Validates overloads.
-        /// </summary>
+        // <summary>
+        // Creates <see cref="DbFunctionExpression" /> representing a model function call.
+        // Validates overloads.
+        // </summary>
         private static DbFunctionExpression CreateModelFunctionCallExpression(
             MethodExpr methodExpr,
             MetadataFunctionGroup metadataFunctionGroup,
@@ -1624,10 +1624,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return functionExpression;
         }
 
-        /// <summary>
-        /// Converts function call arguments into a list of <see cref="DbExpression" />s.
-        /// In case of no arguments returns an empty list.
-        /// </summary>
+        // <summary>
+        // Converts function call arguments into a list of <see cref="DbExpression" />s.
+        // In case of no arguments returns an empty list.
+        // </summary>
         private static List<DbExpression> ConvertFunctionArguments(
             NodeList<Node> astExprList, SemanticResolver sr, out List<TypeUsage> argTypes)
         {
@@ -1661,9 +1661,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         #endregion ConvertMethodExpr implementation
 
-        /// <summary>
-        /// Converts command parameter reference expression (AST.QueryParameter)
-        /// </summary>
+        // <summary>
+        // Converts command parameter reference expression (AST.QueryParameter)
+        // </summary>
         private static ExpressionResolution ConvertParameter(Node expr, SemanticResolver sr)
         {
             var parameter = (QueryParameter)expr;
@@ -1680,13 +1680,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(paramRef);
         }
 
-        /// <summary>
-        /// Converts WITH RELATIONSHIP (AST.RelshipNavigationExpr)
-        /// </summary>
-        /// <param name="relshipExpr"> the ast expression </param>
-        /// <param name="driverEntityType"> The entity that is being constructed for with this RELATIONSHIP clause is processed. </param>
-        /// <param name="sr"> the Semantic Resolver context </param>
-        /// <returns> a DbRelatedEntityRef instance </returns>
+        // <summary>
+        // Converts WITH RELATIONSHIP (AST.RelshipNavigationExpr)
+        // </summary>
+        // <param name="relshipExpr"> the ast expression </param>
+        // <param name="driverEntityType"> The entity that is being constructed for with this RELATIONSHIP clause is processed. </param>
+        // <param name="sr"> the Semantic Resolver context </param>
+        // <returns> a DbRelatedEntityRef instance </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static DbRelatedEntityRef ConvertRelatedEntityRef(
             RelshipNavigationExpr relshipExpr, EntityType driverEntityType, SemanticResolver sr)
@@ -1837,9 +1837,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return DbExpressionBuilder.CreateRelatedEntityRef(fromEnd, toEnd, targetEntityRef);
         }
 
-        /// <summary>
-        /// Converts relationship navigation expression (AST.RelshipNavigationExpr)
-        /// </summary>
+        // <summary>
+        // Converts relationship navigation expression (AST.RelshipNavigationExpr)
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static ExpressionResolution ConvertRelshipNavigationExpr(Node astExpr, SemanticResolver sr)
         {
@@ -1995,9 +1995,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts REF expression (AST.RefExpr)
-        /// </summary>
+        // <summary>
+        // Converts REF expression (AST.RefExpr)
+        // </summary>
         private static ExpressionResolution ConvertRefExpr(Node astExpr, SemanticResolver sr)
         {
             var refExpr = (RefExpr)astExpr;
@@ -2023,9 +2023,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts DEREF expression (AST.DerefExpr)
-        /// </summary>
+        // <summary>
+        // Converts DEREF expression (AST.DerefExpr)
+        // </summary>
         private static ExpressionResolution ConvertDeRefExpr(Node astExpr, SemanticResolver sr)
         {
             var deRefExpr = (DerefExpr)astExpr;
@@ -2053,9 +2053,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts CREATEREF expression (AST.CreateRefExpr)
-        /// </summary>
+        // <summary>
+        // Converts CREATEREF expression (AST.CreateRefExpr)
+        // </summary>
         private static ExpressionResolution ConvertCreateRefExpr(Node astExpr, SemanticResolver sr)
         {
             var createRefExpr = (CreateRefExpr)astExpr;
@@ -2154,9 +2154,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts KEY expression (AST.KeyExpr)
-        /// </summary>
+        // <summary>
+        // Converts KEY expression (AST.KeyExpr)
+        // </summary>
         private static ExpressionResolution ConvertKeyExpr(Node astExpr, SemanticResolver sr)
         {
             var keyExpr = (KeyExpr)astExpr;
@@ -2180,9 +2180,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Converts a builtin expression (AST.BuiltInExpr).
-        /// </summary>
+        // <summary>
+        // Converts a builtin expression (AST.BuiltInExpr).
+        // </summary>
         private static ExpressionResolution ConvertBuiltIn(Node astExpr, SemanticResolver sr)
         {
             var bltInExpr = (BuiltInExpr)astExpr;
@@ -2197,11 +2197,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(builtInConverter(bltInExpr, sr));
         }
 
-        /// <summary>
-        /// Converts Arithmetic Expressions Args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Arithmetic Expressions Args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertArithmeticArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2240,11 +2240,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return operands;
         }
 
-        /// <summary>
-        /// Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertPlusOperands(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2282,11 +2282,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return operands;
         }
 
-        /// <summary>
-        /// Converts Logical Expression Args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Logical Expression Args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertLogicalArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2330,11 +2330,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new Pair<DbExpression, DbExpression>(leftExpr, rightExpr);
         }
 
-        /// <summary>
-        /// Converts Equal Comparison Expression Args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Equal Comparison Expression Args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertEqualCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2362,11 +2362,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return compArgs;
         }
 
-        /// <summary>
-        /// Converts Order Comparison Expression Args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Order Comparison Expression Args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertOrderCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2391,11 +2391,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return compArgs;
         }
 
-        /// <summary>
-        /// Converts Set Expression Args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Set Expression Args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertSetArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2524,11 +2524,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new Pair<DbExpression, DbExpression>(leftExpr, rightExpr);
         }
 
-        /// <summary>
-        /// Converts Set 'IN' expression args
-        /// </summary>
-        /// <param name="astBuiltInExpr"> </param>
-        /// <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
+        // <summary>
+        // Converts Set 'IN' expression args
+        // </summary>
+        // <param name="astBuiltInExpr"> </param>
+        // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertInExprArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
@@ -2582,13 +2582,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Converts a edmType name.
-        /// Type name can be represented by
-        /// - AST.Identifier, such as "Product"
-        /// - AST.DotExpr, such as "Northwind.Product"
-        /// - AST.MethodExpr, such as "Edm.Decimal(10,4)", where "10" and "4" are edmType arguments.
-        /// </summary>
+        // <summary>
+        // Converts a edmType name.
+        // Type name can be represented by
+        // - AST.Identifier, such as "Product"
+        // - AST.DotExpr, such as "Northwind.Product"
+        // - AST.MethodExpr, such as "Edm.Decimal(10,4)", where "10" and "4" are edmType arguments.
+        // </summary>
         private static TypeUsage ConvertTypeName(Node typeName, SemanticResolver sr)
         {
             DebugCheck.NotNull(typeName);
@@ -2822,9 +2822,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return converted;
         }
 
-        /// <summary>
-        /// Converts row constructor expression (AST.RowConstructorExpr)
-        /// </summary>
+        // <summary>
+        // Converts row constructor expression (AST.RowConstructorExpr)
+        // </summary>
         private static ExpressionResolution ConvertRowConstructor(Node expr, SemanticResolver sr)
         {
             var rowExpr = (RowConstructorExpr)expr;
@@ -2866,9 +2866,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(TypeHelpers.CreateRowTypeUsage(rowColumns /* readOnly */).New(fieldExprs));
         }
 
-        /// <summary>
-        /// Converts multiset constructor expression (AST.MultisetConstructorExpr)
-        /// </summary>
+        // <summary>
+        // Converts multiset constructor expression (AST.MultisetConstructorExpr)
+        // </summary>
         private static ExpressionResolution ConvertMultisetConstructor(Node expr, SemanticResolver sr)
         {
             var msetCtor = (MultisetConstructorExpr)expr;
@@ -2923,9 +2923,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(TypeHelpers.CreateCollectionTypeUsage(commonType /* readOnly */).New(mSetExprs));
         }
 
-        /// <summary>
-        /// Converts case-when-then expression (AST.CaseExpr)
-        /// </summary>
+        // <summary>
+        // Converts case-when-then expression (AST.CaseExpr)
+        // </summary>
         private static ExpressionResolution ConvertCaseExpr(Node expr, SemanticResolver sr)
         {
             var caseExpr = (CaseExpr)expr;
@@ -3019,9 +3019,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(DbExpressionBuilder.Case(whenExprList, thenExprList, elseExpr));
         }
 
-        /// <summary>
-        /// Converts query expression (AST.QueryExpr)
-        /// </summary>
+        // <summary>
+        // Converts query expression (AST.QueryExpr)
+        // </summary>
         private static ExpressionResolution ConvertQueryExpr(Node expr, SemanticResolver sr)
         {
             var queryExpr = (QueryExpr)expr;
@@ -3113,9 +3113,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return new ValueExpression(converted);
         }
 
-        /// <summary>
-        /// Process Select Clause
-        /// </summary>
+        // <summary>
+        // Process Select Clause
+        // </summary>
         private static DbExpression ProcessSelectClause(
             DbExpressionBinding source, QueryExpr queryExpr, bool queryProjectionProcessed, SemanticResolver sr)
         {
@@ -3349,9 +3349,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Process FROM clause.
-        /// </summary>
+        // <summary>
+        // Process FROM clause.
+        // </summary>
         private static DbExpressionBinding ProcessFromClause(FromClause fromClause, SemanticResolver sr)
         {
             DbExpressionBinding fromBinding = null;
@@ -3390,10 +3390,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return fromBinding;
         }
 
-        /// <summary>
-        /// Process generic FROM clause item: aliasedExpr, JoinClauseItem or ApplyClauseItem.
-        /// Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with entries created by the clause item.
-        /// </summary>
+        // <summary>
+        // Process generic FROM clause item: aliasedExpr, JoinClauseItem or ApplyClauseItem.
+        // Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with entries created by the clause item.
+        // </summary>
         private static DbExpressionBinding ProcessFromClauseItem(
             FromClauseItem fromClauseItem, SemanticResolver sr, out List<SourceScopeEntry> scopeEntries)
         {
@@ -3422,10 +3422,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return fromItemBinding;
         }
 
-        /// <summary>
-        /// Process a simple FROM clause item.
-        /// Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with a single entry created for the clause item.
-        /// </summary>
+        // <summary>
+        // Process a simple FROM clause item.
+        // Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with a single entry created for the clause item.
+        // </summary>
         private static DbExpressionBinding ProcessAliasedFromClauseItem(
             AliasedExpr aliasedExpr, SemanticResolver sr, out List<SourceScopeEntry> scopeEntries)
         {
@@ -3484,10 +3484,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return aliasedBinding;
         }
 
-        /// <summary>
-        /// Process a JOIN clause item.
-        /// Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with a join-left and join-right entries created for the clause item.
-        /// </summary>
+        // <summary>
+        // Process a JOIN clause item.
+        // Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with a join-left and join-right entries created for the clause item.
+        // </summary>
         private static DbExpressionBinding ProcessJoinClauseItem(
             JoinClauseItem joinClause, SemanticResolver sr, out List<SourceScopeEntry> scopeEntries)
         {
@@ -3597,9 +3597,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return joinBinding;
         }
 
-        /// <summary>
-        /// Maps <see cref="AST.JoinKind" /> to <see cref="DbExpressionKind" />.
-        /// </summary>
+        // <summary>
+        // Maps <see cref="AST.JoinKind" /> to <see cref="DbExpressionKind" />.
+        // </summary>
         private static DbExpressionKind MapJoinKind(JoinKind joinKind)
         {
             Debug.Assert(joinKind != JoinKind.RightOuter, "joinKind != JoinKind.RightOuter");
@@ -3612,10 +3612,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 DbExpressionKind.LeftOuterJoin, DbExpressionKind.FullOuterJoin
             };
 
-        /// <summary>
-        /// Process an APPLY clause item.
-        /// Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with an apply-left and apply-right entries created for the clause item.
-        /// </summary>
+        // <summary>
+        // Process an APPLY clause item.
+        // Returns <see cref="DbExpressionBinding" /> and the <paramref name="scopeEntries" /> list with an apply-left and apply-right entries created for the clause item.
+        // </summary>
         private static DbExpressionBinding ProcessApplyClauseItem(
             ApplyClauseItem applyClause, SemanticResolver sr, out List<SourceScopeEntry> scopeEntries)
         {
@@ -3654,9 +3654,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return applyBinding;
         }
 
-        /// <summary>
-        /// Maps <see cref="AST.ApplyKind" /> to <see cref="DbExpressionKind" />.
-        /// </summary>
+        // <summary>
+        // Maps <see cref="AST.ApplyKind" /> to <see cref="DbExpressionKind" />.
+        // </summary>
         private static DbExpressionKind MapApplyKind(ApplyKind applyKind)
         {
             return _applyMap[(int)applyKind];
@@ -3664,9 +3664,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         private static readonly DbExpressionKind[] _applyMap = { DbExpressionKind.CrossApply, DbExpressionKind.OuterApply };
 
-        /// <summary>
-        /// Process WHERE clause.
-        /// </summary>
+        // <summary>
+        // Process WHERE clause.
+        // </summary>
         private static DbExpressionBinding ProcessWhereClause(DbExpressionBinding source, Node whereClause, SemanticResolver sr)
         {
             if (whereClause == null)
@@ -3676,9 +3676,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return ProcessWhereHavingClausePredicate(source, whereClause, whereClause.ErrCtx, "where", sr);
         }
 
-        /// <summary>
-        /// Process HAVING clause.
-        /// </summary>
+        // <summary>
+        // Process HAVING clause.
+        // </summary>
         private static DbExpressionBinding ProcessHavingClause(DbExpressionBinding source, HavingClause havingClause, SemanticResolver sr)
         {
             if (havingClause == null)
@@ -3688,9 +3688,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return ProcessWhereHavingClausePredicate(source, havingClause.HavingPredicate, havingClause.ErrCtx, "having", sr);
         }
 
-        /// <summary>
-        /// Process WHERE or HAVING clause predicate.
-        /// </summary>
+        // <summary>
+        // Process WHERE or HAVING clause predicate.
+        // </summary>
         private static DbExpressionBinding ProcessWhereHavingClausePredicate(
             DbExpressionBinding source, Node predicate, ErrorContext errCtx, string bindingNameTemplate, SemanticResolver sr)
         {
@@ -3739,9 +3739,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return whereBinding;
         }
 
-        /// <summary>
-        /// Process Group By Clause
-        /// </summary>
+        // <summary>
+        // Process Group By Clause
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
@@ -4296,12 +4296,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return groupBinding;
         }
 
-        /// <summary>
-        /// Generates the list of projections for GROUPPARTITION definitions.
-        /// All GROUPPARTITION definitions over the trivial projection of input are reduced to the value of groupAggregateVarRef,
-        /// only one projection item is created for such definitions.
-        /// Returns null if all GROUPPARTITION definitions are reduced to the value of groupAggregateVarRef.
-        /// </summary>
+        // <summary>
+        // Generates the list of projections for GROUPPARTITION definitions.
+        // All GROUPPARTITION definitions over the trivial projection of input are reduced to the value of groupAggregateVarRef,
+        // only one projection item is created for such definitions.
+        // Returns null if all GROUPPARTITION definitions are reduced to the value of groupAggregateVarRef.
+        // </summary>
         private static List<KeyValuePair<string, DbExpression>> ProcessGroupPartitionDefinitions(
             List<GroupAggregateInfo> groupAggregateInfos,
             DbVariableReferenceExpression groupAggregateVarRef,
@@ -4367,9 +4367,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return groupPartitionDefinitions;
         }
 
-        /// <summary>
-        /// Returns true if lambda accepts a collection variable and trivially projects out its elements.
-        /// </summary>
+        // <summary>
+        // Returns true if lambda accepts a collection variable and trivially projects out its elements.
+        // </summary>
         private static bool IsTrivialInputProjection(DbVariableReferenceExpression lambdaVariable, DbExpression lambdaBody)
         {
             if (lambdaBody.ExpressionKind
@@ -4443,17 +4443,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 GroupAggBasedKeyExpr = groupAggBasedKeyExpr;
             }
 
-            /// <summary>
-            /// The primary name of the group key. It is used to refer to the key from other expressions.
-            /// </summary>
+            // <summary>
+            // The primary name of the group key. It is used to refer to the key from other expressions.
+            // </summary>
             internal readonly string Name;
 
-            /// <summary>
-            /// Optional alternative name of the group key.
-            /// Used to support the following scenario:
-            /// SELECT Price, p.Price   FROM ... as p GROUP BY p.Price
-            /// In this case the group key Name is "Price" and the AlternativeName is "p.Price" as if it is coming as an escaped identifier.
-            /// </summary>
+            // <summary>
+            // Optional alternative name of the group key.
+            // Used to support the following scenario:
+            // SELECT Price, p.Price   FROM ... as p GROUP BY p.Price
+            // In this case the group key Name is "Price" and the AlternativeName is "p.Price" as if it is coming as an escaped identifier.
+            // </summary>
             internal string[] AlternativeName
             {
                 get { return _alternativeName; }
@@ -4475,9 +4475,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             internal readonly DbExpression GroupAggBasedKeyExpr;
         }
 
-        /// <summary>
-        /// Process ORDER BY clause.
-        /// </summary>
+        // <summary>
+        // Process ORDER BY clause.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static DbExpressionBinding ProcessOrderByClause(
             DbExpressionBinding source, QueryExpr queryExpr, out bool queryProjectionProcessed, SemanticResolver sr)
@@ -4754,13 +4754,13 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return sortBinding;
         }
 
-        /// <summary>
-        /// Convert "x in multiset(y1, y2, ..., yn)" into
-        /// x = y1 or x = y2 or x = y3 ...
-        /// </summary>
-        /// <param name="left"> left-expression (the probe) </param>
-        /// <param name="right"> right expression (the collection) </param>
-        /// <returns> Or tree of equality comparisons </returns>
+        // <summary>
+        // Convert "x in multiset(y1, y2, ..., yn)" into
+        // x = y1 or x = y2 or x = y3 ...
+        // </summary>
+        // <param name="left"> left-expression (the probe) </param>
+        // <param name="right"> right expression (the collection) </param>
+        // <returns> Or tree of equality comparisons </returns>
         private static DbExpression ConvertSimpleInExpression(DbExpression left, DbExpression right)
         {
             // Only handle cases when the right-side is a new instance expression

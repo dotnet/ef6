@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.ConfigFile
 {
@@ -6,9 +6,9 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// Represents a parameter to be passed to a method
-    /// </summary>
+    // <summary>
+    // Represents a parameter to be passed to a method
+    // </summary>
     internal class ParameterElement : ConfigurationElement
     {
         private const string ValueKey = "value";

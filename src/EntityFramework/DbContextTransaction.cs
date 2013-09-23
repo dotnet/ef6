@@ -23,10 +23,10 @@ namespace System.Data.Entity
         private bool _shouldCloseConnection;
         private bool _isDisposed;
 
-        /// <summary>
-        /// Constructs the DbContextTransaction object with the associated connection object
-        /// </summary>
-        /// <param name="connection">The EntityConnection object owning this transaction</param>
+        // <summary>
+        // Constructs the DbContextTransaction object with the associated connection object
+        // </summary>
+        // <param name="connection">The EntityConnection object owning this transaction</param>
         internal DbContextTransaction(EntityConnection connection)
         {
             DebugCheck.NotNull(connection);
@@ -35,12 +35,12 @@ namespace System.Data.Entity
             _entityTransaction = _connection.BeginTransaction();
         }
 
-        /// <summary>
-        /// Constructs the DbContextTransaction object with the associated connection object
-        /// and with the given isolation level
-        /// </summary>
-        /// <param name="connection">The EntityConnection object owning this transaction </param>
-        /// <param name="isolationLevel">The database isolation level with which the underlying store transaction will be created</param>
+        // <summary>
+        // Constructs the DbContextTransaction object with the associated connection object
+        // and with the given isolation level
+        // </summary>
+        // <param name="connection">The EntityConnection object owning this transaction </param>
+        // <param name="isolationLevel">The database isolation level with which the underlying store transaction will be created</param>
         internal DbContextTransaction(EntityConnection connection, IsolationLevel isolationLevel)
         {
             DebugCheck.NotNull(connection);

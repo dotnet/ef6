@@ -21,11 +21,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         {
         }
 
-        /// <summary>
-        /// Initializes a new command tree with a given metadata workspace.
-        /// </summary>
-        /// <param name="metadata"> The metadata workspace against which the command tree should operate. </param>
-        /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
+        // <summary>
+        // Initializes a new command tree with a given metadata workspace.
+        // </summary>
+        // <param name="metadata"> The metadata workspace against which the command tree should operate. </param>
+        // <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
         internal DbCommandTree(MetadataWorkspace metadata, DataSpace dataSpace)
         {
             // Ensure the metadata workspace is non-null
@@ -66,9 +66,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         public abstract DbCommandTreeKind CommandTreeKind { get; }
 
-        /// <summary>
-        /// Gets the name and type of each parameter declared on the command tree.
-        /// </summary>
+        // <summary>
+        // Gets the name and type of each parameter declared on the command tree.
+        // </summary>
         internal abstract IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters();
 
         /// <summary>

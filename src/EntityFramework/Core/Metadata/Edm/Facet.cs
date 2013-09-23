@@ -18,12 +18,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for constructing a Facet object with the facet description and a value
-        /// </summary>
-        /// <param name="facetDescription"> The object describing this facet </param>
-        /// <param name="value"> The value of the facet </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
+        // <summary>
+        // The constructor for constructing a Facet object with the facet description and a value
+        // </summary>
+        // <param name="facetDescription"> The object describing this facet </param>
+        // <param name="value"> The value of the facet </param>
+        // <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         private Facet(FacetDescription facetDescription, object value)
             : base(MetadataFlags.Readonly)
         {
@@ -33,26 +33,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _value = value;
         }
 
-        /// <summary>
-        /// Creates a Facet instance with the specified value for the given
-        /// facet description.
-        /// </summary>
-        /// <param name="facetDescription"> The object describing this facet </param>
-        /// <param name="value"> The value of the facet </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
+        // <summary>
+        // Creates a Facet instance with the specified value for the given
+        // facet description.
+        // </summary>
+        // <param name="facetDescription"> The object describing this facet </param>
+        // <param name="value"> The value of the facet </param>
+        // <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value)
         {
             return Create(facetDescription, value, false);
         }
 
-        /// <summary>
-        /// Creates a Facet instance with the specified value for the given
-        /// facet description.
-        /// </summary>
-        /// <param name="facetDescription"> The object describing this facet </param>
-        /// <param name="value"> The value of the facet </param>
-        /// <param name="bypassKnownValues"> true to bypass caching and known values; false otherwise. </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
+        // <summary>
+        // Creates a Facet instance with the specified value for the given
+        // facet description.
+        // </summary>
+        // <param name="facetDescription"> The object describing this facet </param>
+        // <param name="value"> The value of the facet </param>
+        // <param name="bypassKnownValues"> true to bypass caching and known values; false otherwise. </param>
+        // <exception cref="System.ArgumentNullException">Thrown if facetDescription argument is null</exception>
         internal static Facet Create(FacetDescription facetDescription, object value, bool bypassKnownValues)
         {
             DebugCheck.NotNull(facetDescription);
@@ -100,14 +100,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return result;
         }
 
-        /// <summary>
-        /// The object describing this facet.
-        /// </summary>
+        // <summary>
+        // The object describing this facet.
+        // </summary>
         private readonly FacetDescription _facetDescription;
 
-        /// <summary>
-        /// The value assigned to this facet.
-        /// </summary>
+        // <summary>
+        // The value assigned to this facet.
+        // </summary>
         private readonly object _value;
 
         /// <summary>
@@ -178,9 +178,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _value; }
         }
 
-        /// <summary>
-        /// Gets the identity for this item as a string
-        /// </summary>
+        // <summary>
+        // Gets the identity for this item as a string
+        // </summary>
         internal override string Identity
         {
             get { return _facetDescription.FacetName; }

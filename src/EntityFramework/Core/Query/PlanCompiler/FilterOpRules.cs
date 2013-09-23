@@ -6,30 +6,30 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Transformation rules for FilterOps
-    /// </summary>
+    // <summary>
+    // Transformation rules for FilterOps
+    // </summary>
     internal static class FilterOpRules
     {
         #region Helpers
 
-        /// <summary>
-        /// Split up a predicate into 2 parts - the pushdown and the non-pushdown predicate.
-        /// If the filter node has no external references *and* the "columns" parameter is null,
-        /// then the entire predicate can be pushed down
-        /// We then compute the set of valid column references - if the "columns" parameter
-        /// is non-null, this set is used. Otherwise, we get the definitions of the
-        /// input relop node of the filterOp, and use that.
-        /// We use this list of valid column references to identify which parts of the filter
-        /// predicate can be pushed down - only those parts of the predicate that do not
-        /// reference anything beyond these columns are considered for pushdown. The rest are
-        /// stuffed into the nonPushdownPredicate output parameter
-        /// </summary>
-        /// <param name="command"> Command object </param>
-        /// <param name="filterNode"> the FilterOp subtree </param>
-        /// <param name="columns"> (Optional) List of columns to consider for "pushdown" </param>
-        /// <param name="nonPushdownPredicateNode"> (output) Part of the predicate that cannot be pushed down </param>
-        /// <returns> part of the predicate that can be pushed down </returns>
+        // <summary>
+        // Split up a predicate into 2 parts - the pushdown and the non-pushdown predicate.
+        // If the filter node has no external references *and* the "columns" parameter is null,
+        // then the entire predicate can be pushed down
+        // We then compute the set of valid column references - if the "columns" parameter
+        // is non-null, this set is used. Otherwise, we get the definitions of the
+        // input relop node of the filterOp, and use that.
+        // We use this list of valid column references to identify which parts of the filter
+        // predicate can be pushed down - only those parts of the predicate that do not
+        // reference anything beyond these columns are considered for pushdown. The rest are
+        // stuffed into the nonPushdownPredicate output parameter
+        // </summary>
+        // <param name="command"> Command object </param>
+        // <param name="filterNode"> the FilterOp subtree </param>
+        // <param name="columns"> (Optional) List of columns to consider for "pushdown" </param>
+        // <param name="nonPushdownPredicateNode"> (output) Part of the predicate that cannot be pushed down </param>
+        // <returns> part of the predicate that can be pushed down </returns>
         private static Node GetPushdownPredicate(Command command, Node filterNode, VarVec columns, out Node nonPushdownPredicateNode)
         {
             var pushdownPredicateNode = filterNode.Child1;
@@ -70,13 +70,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverFilter);
 
-        /// <summary>
-        /// Convert Filter(Filter(X, p1), p2) => Filter(X, (p1 and p2))
-        /// </summary>
-        /// <param name="context"> rule processing context </param>
-        /// <param name="filterNode"> FilterOp node </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> transformed subtree </returns>
+        // <summary>
+        // Convert Filter(Filter(X, p1), p2) => Filter(X, (p1 and p2))
+        // </summary>
+        // <param name="context"> rule processing context </param>
+        // <param name="filterNode"> FilterOp node </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> transformed subtree </returns>
         private static bool ProcessFilterOverFilter(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             var newAndNode = context.Command.CreateNode(
@@ -102,13 +102,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverProject);
 
-        /// <summary>
-        /// Convert Filter(Project(X, ...), p) => Project(Filter(X, p'), ...)
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="filterNode"> FilterOp subtree </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> transformed subtree </returns>
+        // <summary>
+        // Convert Filter(Project(X, ...), p) => Project(Filter(X, p'), ...)
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="filterNode"> FilterOp subtree </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> transformed subtree </returns>
         private static bool ProcessFilterOverProject(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -196,16 +196,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverSetOp);
 
-        /// <summary>
-        /// Transform Filter(UnionAll(X1, X2), p) => UnionAll(Filter(X1, p1), Filter(X, p2))
-        /// Filter(Intersect(X1, X2), p) => Intersect(Filter(X1, p1), Filter(X2, p2))
-        /// Filter(Except(X1, X2), p) => Except(Filter(X1, p1), X2)
-        /// where p1 and p2 are the "mapped" versions of the predicate "p" for each branch
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="filterNode"> FilterOp subtree </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> true, if successful transformation </returns>
+        // <summary>
+        // Transform Filter(UnionAll(X1, X2), p) => UnionAll(Filter(X1, p1), Filter(X, p2))
+        // Filter(Intersect(X1, X2), p) => Intersect(Filter(X1, p1), Filter(X2, p2))
+        // Filter(Except(X1, X2), p) => Except(Filter(X1, p1), X2)
+        // where p1 and p2 are the "mapped" versions of the predicate "p" for each branch
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="filterNode"> FilterOp subtree </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> true, if successful transformation </returns>
         private static bool ProcessFilterOverSetOp(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -307,15 +307,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverDistinct);
 
-        /// <summary>
-        /// Transforms Filter(Distinct(x), p) => Filter(Distinct(Filter(X, p1), p2)
-        /// where p2 is the part of the filter that can be pushed down, while p1 represents
-        /// any external references
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="filterNode"> FilterOp subtree </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Transforms Filter(Distinct(x), p) => Filter(Distinct(Filter(X, p1), p2)
+        // where p2 is the part of the filter that can be pushed down, while p1 represents
+        // any external references
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="filterNode"> FilterOp subtree </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessFilterOverDistinct(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -369,18 +369,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverGroupBy);
 
-        /// <summary>
-        /// Transforms Filter(GroupBy(X, k1.., a1...), p) =>
-        /// Filter(GroupBy(Filter(X, p1'), k1..., a1...), p2)
-        /// p1 and p2 represent the parts of p that can and cannot be pushed down
-        /// respectively - specifically, p1 must only reference the key columns from
-        /// the GroupByOp.
-        /// "p1'" is the mapped version of "p1",
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="filterNode"> Current FilterOp subtree </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Transforms Filter(GroupBy(X, k1.., a1...), p) =>
+        // Filter(GroupBy(Filter(X, p1'), k1..., a1...), p2)
+        // p1 and p2 represent the parts of p that can and cannot be pushed down
+        // respectively - specifically, p1 must only reference the key columns from
+        // the GroupByOp.
+        // "p1'" is the mapped version of "p1",
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="filterNode"> Current FilterOp subtree </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessFilterOverGroupBy(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -481,13 +481,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverJoin);
 
-        /// <summary>
-        /// Transform Filter()
-        /// </summary>
-        /// <param name="context"> Rule Processing context </param>
-        /// <param name="filterNode"> Current FilterOp subtree </param>
-        /// <param name="newNode"> Modified subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Transform Filter()
+        // </summary>
+        // <param name="context"> Rule Processing context </param>
+        // <param name="filterNode"> Current FilterOp subtree </param>
+        // <param name="newNode"> Modified subtree </param>
+        // <returns> Transformation status </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "non-InnerJoin")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -642,15 +642,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessFilterOverOuterApply);
 
-        /// <summary>
-        /// Convert Filter(OuterApply(X,Y), p) into
-        /// Filter(CrossApply(X,Y), p)
-        /// if "p" is not null-preserving for Y (ie) "p" does not preserve null values from Y
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="filterNode"> Filter node </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Convert Filter(OuterApply(X,Y), p) into
+        // Filter(CrossApply(X,Y), p)
+        // if "p" is not null-preserving for Y (ie) "p" does not preserve null values from Y
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="filterNode"> Filter node </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessFilterOverOuterApply(RuleProcessingContext context, Node filterNode, out Node newNode)
         {
             newNode = filterNode;
@@ -689,16 +689,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(ConstantPredicateOp.Pattern)),
                 ProcessFilterWithConstantPredicate);
 
-        /// <summary>
-        /// Convert
-        /// Filter(X, true)  => X
-        /// Filter(X, false) => Project(Filter(SingleRowTableOp, ...), false)
-        /// where ... represent variables that are equivalent to the table columns
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="n"> Current subtree </param>
-        /// <param name="newNode"> modified subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Convert
+        // Filter(X, true)  => X
+        // Filter(X, false) => Project(Filter(SingleRowTableOp, ...), false)
+        // where ... represent variables that are equivalent to the table columns
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="n"> Current subtree </param>
+        // <param name="newNode"> modified subtree </param>
+        // <returns> transformation status </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private static bool ProcessFilterWithConstantPredicate(RuleProcessingContext context, Node n, out Node newNode)

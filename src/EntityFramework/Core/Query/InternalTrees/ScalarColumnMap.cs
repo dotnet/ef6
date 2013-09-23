@@ -6,22 +6,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Globalization;
 
-    /// <summary>
-    /// Column map for a scalar column - maps 1-1 with a column from a
-    /// row of the underlying reader
-    /// </summary>
+    // <summary>
+    // Column map for a scalar column - maps 1-1 with a column from a
+    // row of the underlying reader
+    // </summary>
     internal class ScalarColumnMap : SimpleColumnMap
     {
         private readonly int m_commandId;
         private readonly int m_columnPos;
 
-        /// <summary>
-        /// Basic constructor
-        /// </summary>
-        /// <param name="type"> datatype for this column </param>
-        /// <param name="name"> column name </param>
-        /// <param name="commandId"> Underlying command to locate this column </param>
-        /// <param name="columnPos"> Position in underlying reader </param>
+        // <summary>
+        // Basic constructor
+        // </summary>
+        // <param name="type"> datatype for this column </param>
+        // <param name="name"> column name </param>
+        // <param name="commandId"> Underlying command to locate this column </param>
+        // <param name="columnPos"> Position in underlying reader </param>
         internal ScalarColumnMap(TypeUsage type, string name, int commandId, int columnPos)
             : base(type, name)
         {
@@ -31,34 +31,34 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_columnPos = columnPos;
         }
 
-        /// <summary>
-        /// The command (reader, really) to get this column value from
-        /// </summary>
+        // <summary>
+        // The command (reader, really) to get this column value from
+        // </summary>
         internal int CommandId
         {
             get { return m_commandId; }
         }
 
-        /// <summary>
-        /// Column position within the reader of the command
-        /// </summary>
+        // <summary>
+        // Column position within the reader of the command
+        // </summary>
         internal int ColumnPos
         {
             get { return m_columnPos; }
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
             visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -66,9 +66,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Debugging support
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // </summary>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "S({0},{1})", CommandId, ColumnPos);

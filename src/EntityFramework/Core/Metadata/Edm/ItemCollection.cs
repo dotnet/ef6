@@ -24,9 +24,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The default constructor for ItemCollection
-        /// </summary>
+        // <summary>
+        // The default constructor for ItemCollection
+        // </summary>
         internal ItemCollection(DataSpace dataspace)
             : base(new MetadataCollection<GlobalItem>())
         {
@@ -45,9 +45,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _space; }
         }
 
-        /// <summary>
-        /// Return the function lookUpTable
-        /// </summary>
+        // <summary>
+        // Return the function lookUpTable
+        // </summary>
         internal Dictionary<string, ReadOnlyCollection<EdmFunction>> FunctionLookUpTable
         {
             get
@@ -62,14 +62,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Adds an item to the collection
-        /// </summary>
-        /// <param name="item"> The item to add to the list </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
-        /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the ItemCollection already contains an item with the same identity</exception>
+        // <summary>
+        // Adds an item to the collection
+        // </summary>
+        // <param name="item"> The item to add to the list </param>
+        // <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
+        // <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
+        // <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
+        // <exception cref="System.ArgumentException">Thrown if the ItemCollection already contains an item with the same identity</exception>
         internal void AddInternal(GlobalItem item)
         {
             Debug.Assert(item.IsReadOnly, "The item is not readonly, it should be by the time it is added to the item collection");
@@ -77,14 +77,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             base.Source.Add(item);
         }
 
-        /// <summary>
-        /// Adds a collection of items to the collection
-        /// </summary>
-        /// <param name="items"> The items to add to the list </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
-        /// <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
-        /// <exception cref="System.ArgumentException">Thrown if the ItemCollection already contains an item with the same identity</exception>
+        // <summary>
+        // Adds a collection of items to the collection
+        // </summary>
+        // <param name="items"> The items to add to the list </param>
+        // <exception cref="System.ArgumentNullException">Thrown if item argument is null</exception>
+        // <exception cref="System.InvalidOperationException">Thrown if the item passed in or the collection itself instance is in ReadOnly state</exception>
+        // <exception cref="System.ArgumentException">Thrown if the item that is being added already belongs to another ItemCollection</exception>
+        // <exception cref="System.ArgumentException">Thrown if the ItemCollection already contains an item with the same identity</exception>
         internal bool AtomicAddRange(List<GlobalItem> items)
         {
 #if DEBUG
@@ -362,17 +362,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return functionOverloads;
         }
 
-        /// <summary>
-        /// Gets the function as specified by the function key.
-        /// All parameters are assumed to be <see cref="ParameterMode.In" />.
-        /// </summary>
-        /// <param name="functionName"> Name of the function </param>
-        /// <param name="parameterTypes"> types of the parameters </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <param name="function"> The function that needs to be returned </param>
-        /// <returns> The function as specified in the function key or null </returns>
-        /// <exception cref="System.ArgumentNullException">if functionName or parameterTypes argument is null</exception>
-        /// <exception cref="System.ArgumentException">if no function is found with the given name or with given input parameters</exception>
+        // <summary>
+        // Gets the function as specified by the function key.
+        // All parameters are assumed to be <see cref="ParameterMode.In" />.
+        // </summary>
+        // <param name="functionName"> Name of the function </param>
+        // <param name="parameterTypes"> types of the parameters </param>
+        // <param name="ignoreCase"> true for case-insensitive lookup </param>
+        // <param name="function"> The function that needs to be returned </param>
+        // <returns> The function as specified in the function key or null </returns>
+        // <exception cref="System.ArgumentNullException">if functionName or parameterTypes argument is null</exception>
+        // <exception cref="System.ArgumentException">if no function is found with the given name or with given input parameters</exception>
         internal bool TryGetFunction(string functionName, TypeUsage[] parameterTypes, bool ignoreCase, out EdmFunction function)
         {
             Check.NotNull(functionName, "functionName");
@@ -453,25 +453,25 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
-        /// </summary>
-        /// <param name="primitiveTypeKind"> canonical primitive type </param>
-        /// <returns> The mapped scalar type </returns>
+        // <summary>
+        // Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        // </summary>
+        // <param name="primitiveTypeKind"> canonical primitive type </param>
+        // <returns> The mapped scalar type </returns>
         internal virtual PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             //The method needs to be overloaded on methods that support this
             throw Error.NotSupported();
         }
 
-        /// <summary>
-        /// Determines whether this item collection is equivalent to another. At present, we look only
-        /// at object reference equivalence. This is a somewhat reasonable approximation when caching
-        /// is enabled, because collections are identical when their source resources (including
-        /// provider) are known to be identical.
-        /// </summary>
-        /// <param name="other"> Collection to compare. </param>
-        /// <returns> true if the collections are equivalent; false otherwise </returns>
+        // <summary>
+        // Determines whether this item collection is equivalent to another. At present, we look only
+        // at object reference equivalence. This is a somewhat reasonable approximation when caching
+        // is enabled, because collections are identical when their source resources (including
+        // provider) are known to be identical.
+        // </summary>
+        // <param name="other"> Collection to compare. </param>
+        // <returns> true if the collections are equivalent; false otherwise </returns>
         internal virtual bool MetadataEquals(ItemCollection other)
         {
             return ReferenceEquals(this, other);

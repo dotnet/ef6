@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Represents an utility for creating anonymous IDisposable implementations.
-    /// </summary>
+    // <summary>
+    // Represents an utility for creating anonymous IDisposable implementations.
+    // </summary>
     internal class Disposer : IDisposable
     {
         private readonly Action _action;

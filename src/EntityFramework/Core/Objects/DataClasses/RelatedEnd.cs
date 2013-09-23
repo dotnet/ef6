@@ -31,9 +31,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Internal Constructors
         //-----------------
 
-        /// <summary>
-        /// The default constructor is required for some serialization scenarios with EntityReference.
-        /// </summary>
+        // <summary>
+        // The default constructor is required for some serialization scenarios with EntityReference.
+        // </summary>
         internal RelatedEnd()
         {
             _wrappedOwner = NullEntityWrapper.NullWrapper;
@@ -61,10 +61,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // These fields should not be changed once they have been initialized with non-null values, but they can't be read-only because there
         // are serialization scenarios where they have to be set after construction
 
-        /// <summary>
-        /// Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
-        /// field.  This field is retained only for compatibility with the serialization format introduced in v1.
-        /// </summary>
+        // <summary>
+        // Note that this field should no longer be used directly.  Instead, use the _wrappedOwner
+        // field.  This field is retained only for compatibility with the serialization format introduced in v1.
+        // </summary>
         [Obsolete]
         private IEntityWithRelationships _owner;
 
@@ -129,9 +129,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// internal event to notify change in collection
-        /// </summary>
+        // <summary>
+        // internal event to notify change in collection
+        // </summary>
         internal virtual event CollectionChangeEventHandler AssociationChangedForObjectView
         {
             // we fire this event only from EntityCollection, definitely not from EntityReference
@@ -154,14 +154,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// This class describes a relationship navigation from the
-        /// navigation property on one entity to another entity.
-        /// RelationshipNavigation uniquely identify a relationship type.
-        /// The RelationshipNavigation class is internal only, so this property is also internal.
-        /// See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
-        /// of the information contained in this RelationshipNavigation.
-        /// </summary>
+        // <summary>
+        // This class describes a relationship navigation from the
+        // navigation property on one entity to another entity.
+        // RelationshipNavigation uniquely identify a relationship type.
+        // The RelationshipNavigation class is internal only, so this property is also internal.
+        // See RelationshipName, SourceRoleName, and TargetRoleName for the public exposure
+        // of the information contained in this RelationshipNavigation.
+        // </summary>
         internal RelationshipNavigation RelationshipNavigation
         {
             get { return _navigation; }
@@ -306,21 +306,21 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// This is the query which represents the source of the
-        /// related end.  It is constructed on demand using the
-        /// _connection and _cache fields and a query string based on
-        /// the type of related end and the metadata passed into its
-        /// constructor indicating the particular EDM construct the
-        /// related end models. This method is called by both subclasses of this type
-        /// and those subclasses pass in their generic type parameter in order
-        /// to produce an ObjectQuery of the right type. This allows this common
-        /// functionality to be implemented here in the base class while still
-        /// allowing the base class to be non-generic.
-        /// </summary>
-        /// <param name="mergeOption"> MergeOption to use when creating the query </param>
-        /// <param name="hasResults"> Indicates whether the query can produce results. For instance, a lookup with null key values cannot produce results. </param>
-        /// <returns> The query loading related entities. </returns>
+        // <summary>
+        // This is the query which represents the source of the
+        // related end.  It is constructed on demand using the
+        // _connection and _cache fields and a query string based on
+        // the type of related end and the metadata passed into its
+        // constructor indicating the particular EDM construct the
+        // related end models. This method is called by both subclasses of this type
+        // and those subclasses pass in their generic type parameter in order
+        // to produce an ObjectQuery of the right type. This allows this common
+        // functionality to be implemented here in the base class while still
+        // allowing the base class to be non-generic.
+        // </summary>
+        // <param name="mergeOption"> MergeOption to use when creating the query </param>
+        // <param name="hasResults"> Indicates whether the query can produce results. For instance, a lookup with null key values cannot produce results. </param>
+        // <returns> The query loading related entities. </returns>
         internal ObjectQuery<TEntity> CreateSourceQuery<TEntity>(MergeOption mergeOption, out bool hasResults)
         {
             // must have a context
@@ -679,11 +679,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Validates that a call to Load has the correct conditions
-        /// This helps to reduce the complexity of the Load call (SQLBU 524128)
-        /// </summary>
-        /// <returns> See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller </returns>
+        // <summary>
+        // Validates that a call to Load has the correct conditions
+        // This helps to reduce the complexity of the Load call (SQLBU 524128)
+        // </summary>
+        // <returns> See RelatedEnd.CreateSourceQuery method. This is returned here so we can create it and validate the state before returning it to the caller </returns>
         internal virtual ObjectQuery<TEntity> ValidateLoad<TEntity>(MergeOption mergeOption, string relatedEndName, out bool hasResults)
         {
             var sourceQuery = CreateSourceQuery<TEntity>(mergeOption, out hasResults);
@@ -883,12 +883,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return true; }
         }
 
-        /// <summary>
-        /// Takes a list of related entities and merges them into the current collection.
-        /// </summary>
-        /// <param name="collection"> Entities to relate to the owner of this EntityCollection </param>
-        /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
-        /// <param name="setIsLoaded"> Indicates whether IsLoaded should be set to true after the Load is complete. Should be false in cases where we cannot guarantee that the set of entities is complete and matches the server, such as Attach. </param>
+        // <summary>
+        // Takes a list of related entities and merges them into the current collection.
+        // </summary>
+        // <param name="collection"> Entities to relate to the owner of this EntityCollection </param>
+        // <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
+        // <param name="setIsLoaded"> Indicates whether IsLoaded should be set to true after the Load is complete. Should be false in cases where we cannot guarantee that the set of entities is complete and matches the server, such as Attach. </param>
         internal virtual void Merge<TEntity>(IEnumerable<TEntity> collection, MergeOption mergeOption, bool setIsLoaded)
         {
             DebugCheck.NotNull(collection);
@@ -1359,26 +1359,26 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             OnAssociationChanged(CollectionChangeAction.Add, wrappedTarget.Entity);
         }
 
-        /// <summary>Adds the current RelatedEnd object to the navigation property if compatible.</summary>
-        /// <param name="otherRelatedEnd">The other related end.</param>
+        // <summary>Adds the current RelatedEnd object to the navigation property if compatible.</summary>
+        // <param name="otherRelatedEnd">The other related end.</param>
         internal virtual void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
         {
             // By default, always add
             AddToNavigationProperty(otherRelatedEnd.WrappedOwner);
         }
 
-        /// <summary>Specifies whether the cached foreign key is conceptual null.</summary>
-        /// <returns>true if the cached foreign key is conceptual null; otherwise, false.</returns>
+        // <summary>Specifies whether the cached foreign key is conceptual null.</summary>
+        // <returns>true if the cached foreign key is conceptual null; otherwise, false.</returns>
         internal virtual bool CachedForeignKeyIsConceptualNull()
         {
             // Only relevant for EntityReference
             return false;
         }
 
-        /// <summary>Updates the dependent end foreign keys.</summary>
-        /// <returns>The dependent end foreign keys.</returns>
-        /// <param name="targetRelatedEnd">The target related end.</param>
-        /// <param name="forceForeignKeyChanges">true to force foreign key changes; otherwise, false.</param>
+        // <summary>Updates the dependent end foreign keys.</summary>
+        // <returns>The dependent end foreign keys.</returns>
+        // <param name="targetRelatedEnd">The target related end.</param>
+        // <param name="forceForeignKeyChanges">true to force foreign key changes; otherwise, false.</param>
         internal virtual bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
         {
             Debug.Assert(!IsDependentEndOfReferentialConstraint(false), "Dependent end cannot be a collection.");
@@ -1386,8 +1386,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-        /// <summary>Verifies the detached key matches.</summary>
-        /// <param name="entityKey">The entity keys.</param>
+        // <summary>Verifies the detached key matches.</summary>
+        // <param name="entityKey">The entity keys.</param>
         internal virtual void VerifyDetachedKeyMatches(EntityKey entityKey)
         {
             // Only relevant to entity references
@@ -1696,10 +1696,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Returns true if this Related end represents the dependent of a Referential Constraint
-        /// </summary>
-        /// <param name="checkIdentifying"> If true then the method will only return true if the Referential Constraint is identifying </param>
+        // <summary>
+        // Returns true if this Related end represents the dependent of a Referential Constraint
+        // </summary>
+        // <param name="checkIdentifying"> If true then the method will only return true if the Referential Constraint is identifying </param>
         internal bool IsDependentEndOfReferentialConstraint(bool checkIdentifying)
         {
             if (null != _relationMetadata)
@@ -1733,9 +1733,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-        /// <summary>
-        /// Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
-        /// </summary>
+        // <summary>
+        // Check if current RelatedEnd is a Principal end of some Referential Constraint and if some of the "from" properties is not-nullable
+        // </summary>
         internal bool IsPrincipalEndOfReferentialConstraint()
         {
             if (null != _relationMetadata)
@@ -2454,9 +2454,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Set the context and load options so that Query can be constructed on demand.
-        /// </summary>
+        // <summary>
+        // Set the context and load options so that Query can be constructed on demand.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         internal void AttachContext(ObjectContext context, EntitySet entitySet, MergeOption mergeOption)
         {
@@ -2558,7 +2558,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>Validated the detached entity keys associated with the related end.</summary>
+        // <summary>Validated the detached entity keys associated with the related end.</summary>
         internal virtual void ValidateDetachedEntityKey()
         {
             // Only relevant for EntityReference
@@ -2594,9 +2594,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             relationshipSet = null;
         }
 
-        /// <summary>
-        /// Clear the source and context.
-        /// </summary>
+        // <summary>
+        // Clear the source and context.
+        // </summary>
         internal void DetachContext()
         {
             if (_context != null

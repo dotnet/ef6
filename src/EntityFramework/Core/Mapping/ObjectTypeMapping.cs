@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents the metadata for OCObjectMapping.
-    /// </summary>
+    // <summary>
+    // Represents the metadata for OCObjectMapping.
+    // </summary>
     internal class ObjectTypeMapping : Map
     {
-        /// <summary>
-        /// Construct a new ObjectTypeMapping object
-        /// </summary>
+        // <summary>
+        // Construct a new ObjectTypeMapping object
+        // </summary>
         internal ObjectTypeMapping(EdmType clrType, EdmType cdmType)
         {
             Debug.Assert(clrType.BuiltInTypeKind == cdmType.BuiltInTypeKind, "BuiltInTypeKind must be the same for both types");
@@ -43,55 +43,55 @@ namespace System.Data.Entity.Core.Mapping
         private static readonly Dictionary<string, ObjectMemberMapping> EmptyMemberMapping
             = new Dictionary<string, ObjectMemberMapping>(0);
 
-        /// <summary>
-        /// Gets the type kind for this item
-        /// </summary>
+        // <summary>
+        // Gets the type kind for this item
+        // </summary>
         public override BuiltInTypeKind BuiltInTypeKind
         {
             get { return BuiltInTypeKind.MetadataItem; }
         }
 
-        /// <summary>
-        /// The reference to the Clr type in Metadata
-        /// that participates in this mapping instance
-        /// </summary>
+        // <summary>
+        // The reference to the Clr type in Metadata
+        // that participates in this mapping instance
+        // </summary>
         internal EdmType ClrType
         {
             get { return m_clrType; }
         }
 
-        /// <summary>
-        /// The reference to the Cdm type in Metadata
-        /// that participates in this mapping instance
-        /// </summary>
+        // <summary>
+        // The reference to the Cdm type in Metadata
+        // that participates in this mapping instance
+        // </summary>
         internal override MetadataItem EdmItem
         {
             get { return EdmType; }
         }
 
-        /// <summary>
-        /// The reference to the Cdm type in Metadata
-        /// that participates in this mapping instance
-        /// </summary>
+        // <summary>
+        // The reference to the Cdm type in Metadata
+        // that participates in this mapping instance
+        // </summary>
         internal EdmType EdmType
         {
             get { return m_cdmType; }
         }
 
-        /// <summary>
-        /// Returns the Identity of ObjectTypeMapping.
-        /// The identity for an Object Type Map is the concatenation of
-        /// CLR Type Idntity + ':' + CDM Type Identity
-        /// </summary>
+        // <summary>
+        // Returns the Identity of ObjectTypeMapping.
+        // The identity for an Object Type Map is the concatenation of
+        // CLR Type Idntity + ':' + CDM Type Identity
+        // </summary>
         internal override string Identity
         {
             get { return identity; }
         }
 
-        /// <summary>
-        /// get a MemberMap for the member name specified
-        /// </summary>
-        /// <param name="propertyName"> the name of the CDM member for which map needs to be retrieved </param>
+        // <summary>
+        // get a MemberMap for the member name specified
+        // </summary>
+        // <param name="propertyName"> the name of the CDM member for which map needs to be retrieved </param>
         internal ObjectPropertyMapping GetPropertyMap(String propertyName)
         {
             var memberMapping = GetMemberMap(propertyName, false /*ignoreCase*/);
@@ -107,10 +107,10 @@ namespace System.Data.Entity.Core.Mapping
             return null;
         }
 
-        /// <summary>
-        /// Add a member mapping as a child of this object mapping
-        /// </summary>
-        /// <param name="memberMapping"> child property mapping to be added </param>
+        // <summary>
+        // Add a member mapping as a child of this object mapping
+        // </summary>
+        // <param name="memberMapping"> child property mapping to be added </param>
         internal void AddMemberMap(ObjectMemberMapping memberMapping)
         {
             Debug.Assert(
@@ -125,17 +125,17 @@ namespace System.Data.Entity.Core.Mapping
             m_memberMapping.Add(memberMapping.EdmMember.Name, memberMapping);
         }
 
-        /// <summary>
-        /// Returns the member map for the given clr member
-        /// </summary>
+        // <summary>
+        // Returns the member map for the given clr member
+        // </summary>
         internal ObjectMemberMapping GetMemberMapForClrMember(string clrMemberName, bool ignoreCase)
         {
             return GetMemberMap(clrMemberName, ignoreCase);
         }
 
-        /// <summary>
-        /// returns the member mapping for the given member
-        /// </summary>
+        // <summary>
+        // returns the member mapping for the given member
+        // </summary>
         private ObjectMemberMapping GetMemberMap(string propertyName, bool ignoreCase)
         {
             Check.NotEmpty(propertyName, "propertyName");
@@ -166,10 +166,10 @@ namespace System.Data.Entity.Core.Mapping
             return memberMapping;
         }
 
-        /// <summary>
-        /// Overriding System.Object.ToString to provide better String representation
-        /// for this type.
-        /// </summary>
+        // <summary>
+        // Overriding System.Object.ToString to provide better String representation
+        // for this type.
+        // </summary>
         public override string ToString()
         {
             return Identity;

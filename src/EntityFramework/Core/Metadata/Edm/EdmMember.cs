@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // for testing
         }
 
-        /// <summary>
-        /// Initializes a new instance of EdmMember class
-        /// </summary>
-        /// <param name="name"> name of the member </param>
-        /// <param name="memberTypeUsage"> type information containing info about member's type and its facet </param>
+        // <summary>
+        // Initializes a new instance of EdmMember class
+        // </summary>
+        // <param name="name"> name of the member </param>
+        // <param name="memberTypeUsage"> type information containing info about member's type and its facet </param>
         internal EdmMember(string name, TypeUsage memberTypeUsage)
         {
             Check.NotEmpty(name, "name");
@@ -41,9 +41,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Identity; }
         }
 
-        /// <summary>
-        /// Returns the identity of the member
-        /// </summary>
+        // <summary>
+        // Returns the identity of the member
+        // </summary>
         internal override string Identity
         {
             get { return _identity ?? Name; }
@@ -121,10 +121,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Name;
         }
 
-        /// <summary>
-        /// Sets the member to read only mode. Once this is done, there are no changes
-        /// that can be done to this class
-        /// </summary>
+        // <summary>
+        // Sets the member to read only mode. Once this is done, there are no changes
+        // that can be done to this class
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -145,9 +145,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Change the declaring type without doing fixup in the member collection
-        /// </summary>
+        // <summary>
+        // Change the declaring type without doing fixup in the member collection
+        // </summary>
         internal void ChangeDeclaringTypeWithoutCollectionFixup(StructuralType newDeclaringType)
         {
             _declaringType = newDeclaringType;

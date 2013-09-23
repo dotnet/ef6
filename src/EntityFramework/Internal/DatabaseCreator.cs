@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -10,9 +10,9 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Handles creating databases either using the core provider or the Migrations pipeline.
-    /// </summary>
+    // <summary>
+    // Handles creating databases either using the core provider or the Migrations pipeline.
+    // </summary>
     internal class DatabaseCreator
     {
         private readonly IDbDependencyResolver _resolver;
@@ -31,11 +31,11 @@ namespace System.Data.Entity.Internal
             _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
         }
 
-        /// <summary>
-        /// Creates a database using the core provider (i.e. ObjectContext.CreateDatabase) or
-        /// by using Code First Migrations <see cref="DbMigrator" /> to create an empty database
-        /// and the perform an automatic migration to the current model.
-        /// </summary>
+        // <summary>
+        // Creates a database using the core provider (i.e. ObjectContext.CreateDatabase) or
+        // by using Code First Migrations <see cref="DbMigrator" /> to create an empty database
+        // and the perform an automatic migration to the current model.
+        // </summary>
         public virtual void CreateDatabase(
             InternalContext internalContext,
             Func<DbMigrationsConfiguration, DbContext, MigratorBase> createMigrator,

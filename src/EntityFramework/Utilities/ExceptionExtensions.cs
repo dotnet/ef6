@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Utilities
 {
@@ -35,12 +35,12 @@ namespace System.Data.Entity.Utilities
                    type != typeof(EntitySqlException);
         }
 
-        /// <summary>
-        /// Determines whether the given exception requires additional context from the update pipeline (in other
-        /// words, whether the exception should be wrapped in an UpdateException).
-        /// </summary>
-        /// <param name="e"> Exception to test. </param>
-        /// <returns> true if exception should be wrapped; false otherwise </returns>
+        // <summary>
+        // Determines whether the given exception requires additional context from the update pipeline (in other
+        // words, whether the exception should be wrapped in an UpdateException).
+        // </summary>
+        // <param name="e"> Exception to test. </param>
+        // <returns> true if exception should be wrapped; false otherwise </returns>
         public static bool RequiresContext(this Exception e)
         {
             // if the exception isn't catchable, never wrap

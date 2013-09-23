@@ -28,9 +28,9 @@ namespace System.Data.Entity.Migrations.History
 
         internal static readonly Func<DbConnection, string, HistoryContext> DefaultFactory = (e, d) => new HistoryContext(e, d);
 
-        /// <summary>
-        /// For testing
-        /// </summary>
+        // <summary>
+        // For testing
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal HistoryContext()
         {

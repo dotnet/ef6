@@ -25,13 +25,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         private readonly Lazy<Properties.Primitive.LengthPropertyConfiguration> _lengthConfiguration;
         private readonly Lazy<Properties.Primitive.StringPropertyConfiguration> _stringConfiguration;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConventionPrimitivePropertyConfiguration" /> class.
-        /// </summary>
-        /// <param name="propertyInfo">
-        /// The <see cref="PropertyInfo" /> for this property
-        /// </param>
-        /// <param name="configuration"> The configuration object that this instance wraps. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="ConventionPrimitivePropertyConfiguration" /> class.
+        // </summary>
+        // <param name="propertyInfo">
+        // The <see cref="PropertyInfo" /> for this property
+        // </param>
+        // <param name="configuration"> The configuration object that this instance wraps. </param>
         internal ConventionPrimitivePropertyConfiguration(PropertyInfo propertyInfo, Func<Properties.Primitive.PrimitivePropertyConfiguration> configuration)
         {
             DebugCheck.NotNull(propertyInfo);

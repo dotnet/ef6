@@ -19,11 +19,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
-        /// </summary>
-        /// <param name="collection"> The metadata collection to wrap </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
+        // <summary>
+        // The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
+        // </summary>
+        // <param name="collection"> The metadata collection to wrap </param>
+        // <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
         internal ReadOnlyMetadataCollection(IList<T> collection)
             : base((collection as MetadataCollection<T>) ?? new MetadataCollection<T>(collection))
         {
@@ -37,10 +37,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
         public struct Enumerator : IEnumerator<T>
         {
-            /// <summary>
-            /// Constructor for the enumerator
-            /// </summary>
-            /// <param name="collection"> The collection that this enumerator should enumerate on </param>
+            // <summary>
+            // Constructor for the enumerator
+            // </summary>
+            // <param name="collection"> The collection that this enumerator should enumerate on </param>
             internal Enumerator(IList<T> collection)
             {
                 _parent = collection;
@@ -126,9 +126,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return (((MetadataCollection<T>)Items)[identity]); }
         }
 
-        /// <summary>
-        /// Returns the metadata collection over which this collection is the view
-        /// </summary>
+        // <summary>
+        // Returns the metadata collection over which this collection is the view
+        // </summary>
         internal MetadataCollection<T> Source
         {
             get { return (MetadataCollection<T>)Items; }

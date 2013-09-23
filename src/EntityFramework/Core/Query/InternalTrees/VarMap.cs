@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// Helps map one variable to the next.
-    /// </summary>
+    // <summary>
+    // Helps map one variable to the next.
+    // </summary>
     internal class VarMap : Dictionary<Var, Var>
     {
         #region public surfaces

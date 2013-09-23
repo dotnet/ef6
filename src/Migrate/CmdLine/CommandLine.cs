@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace CmdLine
 {
@@ -10,9 +10,9 @@ namespace CmdLine
     using System.Text;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// Class for parsing command line arguments
-    /// </summary>
+    // <summary>
+    // Class for parsing command line arguments
+    // </summary>
     internal static class CommandLine
     {
         #region Constants and Fields
@@ -31,12 +31,12 @@ namespace CmdLine
 
         internal const string ValueSeparatorGroup = "ValueSeparator";
 
-        /// <summary>
-        /// Expression for a switch with a value i.e. /S:Value or /S:Some Value
-        /// </summary>
-        /// <remarks>
-        /// This expression divides the token into groups
-        /// </remarks>
+        // <summary>
+        // Expression for a switch with a value i.e. /S:Value or /S:Some Value
+        // </summary>
+        // <remarks>
+        // This expression divides the token into groups
+        // </remarks>
         private const string TokenizeExpressionFormat =
             @"(?{0}i) # Case Sensitive Option
 # Capture the switch begin of string or preceeded by whitespace
@@ -244,10 +244,10 @@ namespace CmdLine
             parameter.SetValue(argument, cmd);
         }
 
-        /// <summary>
-        /// Returns a string with the case sensitive option
-        /// </summary>
-        /// <returns> null when case sensitive is on, "-" when it is off </returns>
+        // <summary>
+        // Returns a string with the case sensitive option
+        // </summary>
+        // <returns> null when case sensitive is on, "-" when it is off </returns>
         private static string GetCaseSensitiveOption()
         {
             return CaseSensitive ? null : "-";

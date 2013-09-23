@@ -134,12 +134,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return _configuration.Property(propertyExpression.GetComplexPropertyAccess());
         }
 
-        /// <summary>
-        /// Configures a property that is defined on this type as a navigation property.
-        /// </summary>
-        /// <typeparam name="TProperty"> The type of the property being configured. </typeparam>
-        /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
-        /// <returns> A configuration object that can be used to configure the property. </returns>
+        // <summary>
+        // Configures a property that is defined on this type as a navigation property.
+        // </summary>
+        // <typeparam name="TProperty"> The type of the property being configured. </typeparam>
+        // <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        // <returns> A configuration object that can be used to configure the property. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal ConventionNavigationPropertyConfiguration NavigationProperty<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {

@@ -13,30 +13,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
     using System.Xml;
 
-    /// <summary>
-    /// This class represents a collection of resources to be loaded from one
-    /// or more assemblies.
-    /// </summary>
+    // <summary>
+    // This class represents a collection of resources to be loaded from one
+    // or more assemblies.
+    // </summary>
     internal class MetadataArtifactLoaderCompositeResource : MetadataArtifactLoader
     {
-        /// <summary>
-        /// The list of metadata artifacts encapsulated by the composite.
-        /// </summary>
+        // <summary>
+        // The list of metadata artifacts encapsulated by the composite.
+        // </summary>
         private readonly ReadOnlyCollection<MetadataArtifactLoaderResource> _children;
 
         private readonly string _originalPath;
 
-        /// <summary>
-        /// This constructor expects to get the paths that have potential to turn into multiple
-        /// artifacts like
-        /// res://*/foo.csdl   -- could be multiple assemblies
-        /// res://MyAssembly/  -- could be multiple artifacts in the one assembly
-        /// </summary>
-        /// <param name="originalPath"> The path to the (collection of) resources </param>
-        /// <param name="assemblyName"> </param>
-        /// <param name="resourceName"> </param>
-        /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolver"> </param>
+        // <summary>
+        // This constructor expects to get the paths that have potential to turn into multiple
+        // artifacts like
+        // res://*/foo.csdl   -- could be multiple assemblies
+        // res://MyAssembly/  -- could be multiple artifacts in the one assembly
+        // </summary>
+        // <param name="originalPath"> The path to the (collection of) resources </param>
+        // <param name="assemblyName"> </param>
+        // <param name="resourceName"> </param>
+        // <param name="uriRegistry"> The global registry of URIs </param>
+        // <param name="resolver"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderCompositeResource(
             string originalPath, string assemblyName, string resourceName, ICollection<string> uriRegistry,
@@ -58,26 +58,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return true; }
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace, in the original, unexpanded
-        /// form.
-        /// </summary>
-        /// <remarks>
-        /// An assembly can embed any kind of artifact as a resource, so we simply
-        /// ignore the parameter and return the original assembly name in the URI.
-        /// </remarks>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace, in the original, unexpanded
+        // form.
+        // </summary>
+        // <remarks>
+        // An assembly can embed any kind of artifact as a resource, so we simply
+        // ignore the parameter and return the original assembly name in the URI.
+        // </remarks>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public override List<string> GetOriginalPaths(DataSpace spaceToGet)
         {
             return GetOriginalPaths();
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
             var list = new List<string>();
@@ -90,10 +90,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get paths to all artifacts
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get paths to all artifacts
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetPaths()
         {
             var list = new List<string>();
@@ -106,10 +106,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Aggregates all resource streams from the _children collection
-        /// </summary>
-        /// <returns> A List of XmlReader objects; cannot be null </returns>
+        // <summary>
+        // Aggregates all resource streams from the _children collection
+        // </summary>
+        // <returns> A List of XmlReader objects; cannot be null </returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
             var list = new List<XmlReader>();
@@ -122,11 +122,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get XmlReaders for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
-        /// <returns> A List of XmlReader objects </returns>
+        // <summary>
+        // Get XmlReaders for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
+        // <returns> A List of XmlReader objects </returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
             var list = new List<XmlReader>();
@@ -139,13 +139,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Load all resources from the assembly/assemblies identified in the resource path.
-        /// </summary>
-        /// <param name="assemblyName"> </param>
-        /// <param name="resourceName"> </param>
-        /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolver"> </param>
+        // <summary>
+        // Load all resources from the assembly/assemblies identified in the resource path.
+        // </summary>
+        // <param name="assemblyName"> </param>
+        // <param name="resourceName"> </param>
+        // <param name="uriRegistry"> The global registry of URIs </param>
+        // <param name="resolver"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static List<MetadataArtifactLoaderResource> LoadResources(
             string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
@@ -263,11 +263,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return !assembly.IsDynamic ? assembly.GetManifestResourceNames() : new string[0];
         }
 
-        /// <summary>
-        /// Load all resources from a specific assembly.
-        /// </summary>
-        /// <param name="assemblyName"> The full name identifying the assembly to load resources from </param>
-        /// <param name="resolver"> delegate for resolve the assembly </param>
+        // <summary>
+        // Load all resources from a specific assembly.
+        // </summary>
+        // <param name="assemblyName"> The full name identifying the assembly to load resources from </param>
+        // <param name="resolver"> delegate for resolve the assembly </param>
         private static Assembly ResolveAssemblyName(string assemblyName, MetadataArtifactAssemblyResolver resolver)
         {
             DebugCheck.NotNull(resolver);
@@ -336,13 +336,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Splits the supplied path into the assembly portion and the resource
-        /// part (if any)
-        /// </summary>
-        /// <param name="path"> The resource path to parse </param>
-        /// <param name="assemblyName"> </param>
-        /// <param name="resourceName"> </param>
+        // <summary>
+        // Splits the supplied path into the assembly portion and the resource
+        // part (if any)
+        // </summary>
+        // <param name="path"> The resource path to parse </param>
+        // <param name="assemblyName"> </param>
+        // <param name="resourceName"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void ParseResourcePath(string path, out string assemblyName, out string resourceName)
         {

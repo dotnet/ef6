@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Entity.Resources;
 
-    /// <summary>
-    /// Copied from System.Data.dll
-    /// </summary>
+    // <summary>
+    // Copied from System.Data.dll
+    // </summary>
     internal sealed class NameValuePair
     {
         private NameValuePair _next;

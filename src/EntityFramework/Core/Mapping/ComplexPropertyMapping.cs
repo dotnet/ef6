@@ -49,9 +49,9 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class ComplexPropertyMapping : PropertyMapping
     {
-        /// <summary>
-        /// Set of type mappings that make up the EdmProperty mapping.
-        /// </summary>
+        // <summary>
+        // Set of type mappings that make up the EdmProperty mapping.
+        // </summary>
         private readonly List<ComplexTypeMapping> _typeMappings;
 
         /// <summary>

@@ -192,11 +192,11 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
-        /// <summary>
-        /// Adds an object stub to the cache.
-        /// </summary>
-        /// <param name="entityKey"> the key of the object to add </param>
-        /// <param name="entitySet"> the entity set of the given object </param>
+        // <summary>
+        // Adds an object stub to the cache.
+        // </summary>
+        // <param name="entityKey"> the key of the object to add </param>
+        // <param name="entitySet"> the entity set of the given object </param>
         internal virtual EntityEntry AddKeyEntry(EntityKey entityKey, EntitySet entitySet)
         {
             DebugCheck.NotNull((object)entityKey);
@@ -222,12 +222,12 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// Validates that the proxy type being attached to the context matches the proxy type
-        /// that would be generated for the given CLR type for the currently loaded metadata.
-        /// This prevents a proxy for one set of metadata being incorrectly loaded into a context
-        /// which has different metadata.
-        /// </summary>
+        // <summary>
+        // Validates that the proxy type being attached to the context matches the proxy type
+        // that would be generated for the given CLR type for the currently loaded metadata.
+        // This prevents a proxy for one set of metadata being incorrectly loaded into a context
+        // which has different metadata.
+        // </summary>
         private void ValidateProxyType(IEntityWrapper wrappedEntity)
         {
             var identityType = wrappedEntity.IdentityType;
@@ -244,14 +244,14 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Adds an object to the ObjectStateManager.
-        /// </summary>
-        /// <param name="wrappedObject"> the object to add </param>
-        /// <param name="passedKey"> </param>
-        /// <param name="entitySet"> the entity set of the given object </param>
-        /// <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
-        /// <param name="isAdded"> Indicates whether the entity is added or unchanged. </param>
+        // <summary>
+        // Adds an object to the ObjectStateManager.
+        // </summary>
+        // <param name="wrappedObject"> the object to add </param>
+        // <param name="passedKey"> </param>
+        // <param name="entitySet"> the entity set of the given object </param>
+        // <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
+        // <param name="isAdded"> Indicates whether the entity is added or unchanged. </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual EntityEntry AddEntry(
             IEntityWrapper wrappedObject, EntityKey passedKey, EntitySet entitySet, string argumentName, bool isAdded)
@@ -419,11 +419,11 @@ namespace System.Data.Entity.Core.Objects
             RemoveForeignKeyFromIndex(newEntry.EntityKey);
         }
 
-        /// <summary>
-        /// Adds an entry to the index of foreign keys that reference entities that we don't yet know about.
-        /// </summary>
-        /// <param name="foreignKey"> The foreign key found in the entry </param>
-        /// <param name="entry"> The entry that contains the foreign key that was found </param>
+        // <summary>
+        // Adds an entry to the index of foreign keys that reference entities that we don't yet know about.
+        // </summary>
+        // <param name="foreignKey"> The foreign key found in the entry </param>
+        // <param name="entry"> The entry that contains the foreign key that was found </param>
         internal virtual void AddEntryContainingForeignKeyToIndex(EntityKey foreignKey, EntityEntry entry)
         {
             HashSet<EntityEntry> danglingEntries;
@@ -478,12 +478,12 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Removes an entry to the index of foreign keys that reference entities that we don't yet know about.
-        /// This is typically done when the entity is detached from the context.
-        /// </summary>
-        /// <param name="foreignKey"> The foreign key found in the entry </param>
-        /// <param name="entry"> The entry that contains the foreign key that was found </param>
+        // <summary>
+        // Removes an entry to the index of foreign keys that reference entities that we don't yet know about.
+        // This is typically done when the entity is detached from the context.
+        // </summary>
+        // <param name="foreignKey"> The foreign key found in the entry </param>
+        // <param name="entry"> The entry that contains the foreign key that was found </param>
         internal virtual void RemoveEntryFromForeignKeyIndex(EntityKey foreignKey, EntityEntry entry)
         {
             HashSet<EntityEntry> danglingEntries;
@@ -493,23 +493,23 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Removes the foreign key from the index of those keys that have been found in entries
-        /// but for which it was not possible to do fixup because the entity that the foreign key
-        /// referenced was not in the state manager.
-        /// </summary>
-        /// <param name="foreignKey"> The key to lookup and remove </param>
+        // <summary>
+        // Removes the foreign key from the index of those keys that have been found in entries
+        // but for which it was not possible to do fixup because the entity that the foreign key
+        // referenced was not in the state manager.
+        // </summary>
+        // <param name="foreignKey"> The key to lookup and remove </param>
         internal virtual void RemoveForeignKeyFromIndex(EntityKey foreignKey)
         {
             _danglingForeignKeys.Remove(foreignKey);
         }
 
-        /// <summary>
-        /// Gets all state entries that contain the given foreign key for which we have not performed
-        /// fixup because the state manager did not contain the entity to which the foreign key pointed.
-        /// </summary>
-        /// <param name="foreignKey"> The key to lookup </param>
-        /// <returns> The state entries that contain the key </returns>
+        // <summary>
+        // Gets all state entries that contain the given foreign key for which we have not performed
+        // fixup because the state manager did not contain the entity to which the foreign key pointed.
+        // </summary>
+        // <param name="foreignKey"> The key to lookup </param>
+        // <returns> The state entries that contain the key </returns>
         internal virtual IEnumerable<EntityEntry> GetNonFixedupEntriesContainingForeignKey(EntityKey foreignKey)
         {
             HashSet<EntityEntry> foundEntries;
@@ -522,15 +522,15 @@ namespace System.Data.Entity.Core.Objects
             return Enumerable.Empty<EntityEntry>();
         }
 
-        /// <summary>
-        /// Adds to index of currently tracked entities that have FK values that are conceptually
-        /// null but not actually null because the FK properties are not nullable.
-        /// If this index is non-empty in AcceptAllChanges or SaveChanges, then we throw.
-        /// If AcceptChanges is called on an entity and that entity is in the index, then
-        /// we will throw.
-        /// Note that the index is keyed by EntityEntry reference because it's only ever used
-        /// when we have the EntityEntry and this makes it slightly faster than using key lookup.
-        /// </summary>
+        // <summary>
+        // Adds to index of currently tracked entities that have FK values that are conceptually
+        // null but not actually null because the FK properties are not nullable.
+        // If this index is non-empty in AcceptAllChanges or SaveChanges, then we throw.
+        // If AcceptChanges is called on an entity and that entity is in the index, then
+        // we will throw.
+        // Note that the index is keyed by EntityEntry reference because it's only ever used
+        // when we have the EntityEntry and this makes it slightly faster than using key lookup.
+        // </summary>
         internal virtual void RememberEntryWithConceptualNull(EntityEntry entry)
         {
             if (_entriesWithConceptualNulls == null)
@@ -540,27 +540,27 @@ namespace System.Data.Entity.Core.Objects
             _entriesWithConceptualNulls.Add(entry);
         }
 
-        /// <summary>
-        /// Checks whether or not there is some entry in the context that has any conceptually but not
-        /// actually null FK values.
-        /// </summary>
+        // <summary>
+        // Checks whether or not there is some entry in the context that has any conceptually but not
+        // actually null FK values.
+        // </summary>
         internal virtual bool SomeEntryWithConceptualNullExists()
         {
             return _entriesWithConceptualNulls != null && _entriesWithConceptualNulls.Count != 0;
         }
 
-        /// <summary>
-        /// Checks whether the given entry has conceptually but not actually null FK values.
-        /// </summary>
+        // <summary>
+        // Checks whether the given entry has conceptually but not actually null FK values.
+        // </summary>
         internal virtual bool EntryHasConceptualNull(EntityEntry entry)
         {
             return _entriesWithConceptualNulls != null && _entriesWithConceptualNulls.Contains(entry);
         }
 
-        /// <summary>
-        /// Stops keeping track of an entity with conceptual nulls because the FK values have been
-        /// really set or because the entity is leaving the context or becoming deleted.
-        /// </summary>
+        // <summary>
+        // Stops keeping track of an entity with conceptual nulls because the FK values have been
+        // really set or because the entity is leaving the context or becoming deleted.
+        // </summary>
         internal virtual void ForgetEntryWithConceptualNull(EntityEntry entry, bool resetAllKeys)
         {
             if (!entry.IsKeyEntry
@@ -632,14 +632,14 @@ namespace System.Data.Entity.Core.Objects
             OnObjectStateManagerChanged(CollectionChangeAction.Add, keyEntry.Entity);
         }
 
-        /// <summary>
-        /// Upgrades an entity key entry in the cache to a a regular entity
-        /// </summary>
-        /// <param name="keyEntry"> the key entry that exists in the state manager </param>
-        /// <param name="wrappedEntity"> the object to add </param>
-        /// <param name="replacingEntry"> True if this promoted key entry is replacing an existing detached entry </param>
-        /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
-        /// <param name="keyEntryInitialized"> </param>
+        // <summary>
+        // Upgrades an entity key entry in the cache to a a regular entity
+        // </summary>
+        // <param name="keyEntry"> the key entry that exists in the state manager </param>
+        // <param name="wrappedEntity"> the object to add </param>
+        // <param name="replacingEntry"> True if this promoted key entry is replacing an existing detached entry </param>
+        // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
+        // <param name="keyEntryInitialized"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual void PromoteKeyEntry(
             EntityEntry keyEntry,
@@ -745,19 +745,19 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Performs non-generic collection or reference fixup between two entities
-        /// This method should only be used in scenarios where we are automatically hooking up relationships for
-        /// the user, and not in cases where they are manually setting relationships.
-        /// </summary>
-        /// <param name="mergeOption"> The MergeOption to use to decide how to resolve EntityReference conflicts </param>
-        /// <param name="wrappedSource"> The entity instance on the source side of the relationship </param>
-        /// <param name="sourceMember"> The AssociationEndMember that contains the metadata for the source entity </param>
-        /// <param name="wrappedTarget"> The entity instance on the source side of the relationship </param>
-        /// <param name="targetMember"> The AssociationEndMember that contains the metadata for the target entity </param>
-        /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
-        /// <param name="relationshipAlreadyExists"> Whether or not the relationship entry already exists in the cache for these entities </param>
-        /// <param name="inKeyEntryPromotion"> Whether this method is used in key entry promotion </param>
+        // <summary>
+        // Performs non-generic collection or reference fixup between two entities
+        // This method should only be used in scenarios where we are automatically hooking up relationships for
+        // the user, and not in cases where they are manually setting relationships.
+        // </summary>
+        // <param name="mergeOption"> The MergeOption to use to decide how to resolve EntityReference conflicts </param>
+        // <param name="wrappedSource"> The entity instance on the source side of the relationship </param>
+        // <param name="sourceMember"> The AssociationEndMember that contains the metadata for the source entity </param>
+        // <param name="wrappedTarget"> The entity instance on the source side of the relationship </param>
+        // <param name="targetMember"> The AssociationEndMember that contains the metadata for the target entity </param>
+        // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
+        // <param name="relationshipAlreadyExists"> Whether or not the relationship entry already exists in the cache for these entities </param>
+        // <param name="inKeyEntryPromotion"> Whether this method is used in key entry promotion </param>
         internal static void AddEntityToCollectionOrReference(
             MergeOption mergeOption,
             IEntityWrapper wrappedSource,
@@ -926,22 +926,22 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Updates the relationships between a given source entity and a collection of target entities.
-        /// Used for full span and related end Load methods, where the following may be true:
-        /// (a) both sides of each relationship are always full entities and not stubs
-        /// (b) there could be multiple entities to process at once
-        /// (c) NoTracking queries are possible.
-        /// Not used for relationship span because although some of the logic is similar, the above are not true.
-        /// </summary>
-        /// <param name="context"> ObjectContext to use to look up existing relationships. Using the context here instead of ObjectStateManager because for NoTracking queries we shouldn't even touch the state manager at all, so we don't want to access it until we know we are not using NoTracking. </param>
-        /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
-        /// <param name="associationSet"> AssociationSet for the relationships </param>
-        /// <param name="sourceMember"> Role of sourceEntity in associationSet </param>
-        /// <param name="wrappedSource"> Source entity in the relationship </param>
-        /// <param name="targetMember"> Role of each targetEntity in associationSet </param>
-        /// <param name="targets"> List of target entities to use to create relationships with sourceEntity </param>
-        /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
+        // <summary>
+        // Updates the relationships between a given source entity and a collection of target entities.
+        // Used for full span and related end Load methods, where the following may be true:
+        // (a) both sides of each relationship are always full entities and not stubs
+        // (b) there could be multiple entities to process at once
+        // (c) NoTracking queries are possible.
+        // Not used for relationship span because although some of the logic is similar, the above are not true.
+        // </summary>
+        // <param name="context"> ObjectContext to use to look up existing relationships. Using the context here instead of ObjectStateManager because for NoTracking queries we shouldn't even touch the state manager at all, so we don't want to access it until we know we are not using NoTracking. </param>
+        // <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
+        // <param name="associationSet"> AssociationSet for the relationships </param>
+        // <param name="sourceMember"> Role of sourceEntity in associationSet </param>
+        // <param name="wrappedSource"> Source entity in the relationship </param>
+        // <param name="targetMember"> Role of each targetEntity in associationSet </param>
+        // <param name="targets"> List of target entities to use to create relationships with sourceEntity </param>
+        // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
         internal virtual int UpdateRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
             IEntityWrapper wrappedSource, AssociationEndMember targetMember, IList targets, bool setIsLoaded)
@@ -1086,13 +1086,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Removes relationships if necessary when a query determines that the source entity has no relationships on the server
-        /// </summary>
-        /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
-        /// <param name="associationSet"> AssociationSet for the incoming relationship </param>
-        /// <param name="sourceKey"> EntityKey of the source entity in the relationship </param>
-        /// <param name="sourceMember"> Role of the source entity in the relationship </param>
+        // <summary>
+        // Removes relationships if necessary when a query determines that the source entity has no relationships on the server
+        // </summary>
+        // <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
+        // <param name="associationSet"> AssociationSet for the incoming relationship </param>
+        // <param name="sourceKey"> EntityKey of the source entity in the relationship </param>
+        // <param name="sourceMember"> Role of the source entity in the relationship </param>
         internal virtual void RemoveRelationships(
             MergeOption mergeOption, AssociationSet associationSet,
             EntityKey sourceKey, AssociationEndMember sourceMember)
@@ -1137,20 +1137,20 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Tries to updates one or more existing relationships for an entity, based on a given MergeOption and a target entity.
-        /// </summary>
-        /// <param name="context"> ObjectContext to use to look up existing relationships for sourceEntity </param>
-        /// <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
-        /// <param name="associationSet"> AssociationSet for the relationship we are looking for </param>
-        /// <param name="sourceMember"> AssociationEndMember for the source role of the relationship </param>
-        /// <param name="sourceKey"> EntityKey for the source entity in the relationship (passed here so we don't have to look it up again) </param>
-        /// <param name="wrappedSource"> Source entity in the relationship </param>
-        /// <param name="targetMember"> AssociationEndMember for the target role of the relationship </param>
-        /// <param name="targetKey"> EntityKey for the target entity in the relationship </param>
-        /// <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
-        /// <param name="newEntryState"> [out] EntityState to be used for in scenarios where we need to add a new relationship after this method has returned </param>
-        /// <returns> true if an existing relationship is found and updated, and no further action is needed false if either no relationship was found, or if one was found and updated, but a new one still needs to be added </returns>
+        // <summary>
+        // Tries to updates one or more existing relationships for an entity, based on a given MergeOption and a target entity.
+        // </summary>
+        // <param name="context"> ObjectContext to use to look up existing relationships for sourceEntity </param>
+        // <param name="mergeOption"> MergeOption to use when updating existing relationships </param>
+        // <param name="associationSet"> AssociationSet for the relationship we are looking for </param>
+        // <param name="sourceMember"> AssociationEndMember for the source role of the relationship </param>
+        // <param name="sourceKey"> EntityKey for the source entity in the relationship (passed here so we don't have to look it up again) </param>
+        // <param name="wrappedSource"> Source entity in the relationship </param>
+        // <param name="targetMember"> AssociationEndMember for the target role of the relationship </param>
+        // <param name="targetKey"> EntityKey for the target entity in the relationship </param>
+        // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
+        // <param name="newEntryState"> [out] EntityState to be used for in scenarios where we need to add a new relationship after this method has returned </param>
+        // <returns> true if an existing relationship is found and updated, and no further action is needed false if either no relationship was found, or if one was found and updated, but a new one still needs to be added </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal static bool TryUpdateExistingRelationships(
             ObjectContext context, MergeOption mergeOption, AssociationSet associationSet, AssociationEndMember sourceMember,
@@ -1406,10 +1406,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Attach entity in unchanged state (skip Added state, don't create temp key)
-        /// It is equal (but faster) to call AddEntry(); AcceptChanges().
-        /// </summary>
+        // <summary>
+        // Attach entity in unchanged state (skip Added state, don't create temp key)
+        // It is equal (but faster) to call AddEntry(); AcceptChanges().
+        // </summary>
         internal virtual EntityEntry AttachEntry(EntityKey entityKey, IEntityWrapper wrappedObject, EntitySet entitySet)
         {
             DebugCheck.NotNull(wrappedObject);
@@ -1448,14 +1448,14 @@ namespace System.Data.Entity.Core.Objects
             return newEntry;
         }
 
-        /// <summary>
-        /// Checks that the EntityKey attached to the given entity
-        /// appropriately matches the given entity.
-        /// </summary>
-        /// <param name="wrappedEntity"> The entity whose key must be verified </param>
-        /// <param name="entityKey"> </param>
-        /// <param name="entitySetForType"> The entity set corresponding to the type of the given entity. </param>
-        /// <param name="forAttach"> If true, then the exception message will reflect a bad key to attach, otherwise it will reflect a general inconsistency </param>
+        // <summary>
+        // Checks that the EntityKey attached to the given entity
+        // appropriately matches the given entity.
+        // </summary>
+        // <param name="wrappedEntity"> The entity whose key must be verified </param>
+        // <param name="entityKey"> </param>
+        // <param name="entitySetForType"> The entity set corresponding to the type of the given entity. </param>
+        // <param name="forAttach"> If true, then the exception message will reflect a bad key to attach, otherwise it will reflect a general inconsistency </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void CheckKeyMatchesEntity(IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySetForType, bool forAttach)
         {
@@ -1564,9 +1564,9 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// Adds the given relationship cache entry to the mapping from each of its endpoint keys.
-        /// </summary>
+        // <summary>
+        // Adds the given relationship cache entry to the mapping from each of its endpoint keys.
+        // </summary>
         private void AddRelationshipToLookup(RelationshipEntry relationship)
         {
             DebugCheck.NotNull(relationship);
@@ -1578,9 +1578,9 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Adds the given relationship cache entry to the mapping from the given endpoint key.
-        /// </summary>
+        // <summary>
+        // Adds the given relationship cache entry to the mapping from the given endpoint key.
+        // </summary>
         private void AddRelationshipEndToLookup(EntityKey key, RelationshipEntry relationship)
         {
             Debug.Assert(null != FindEntityEntry(key), "EntityEntry doesn't exist");
@@ -1590,9 +1590,9 @@ namespace System.Data.Entity.Core.Objects
             entry.AddRelationshipEnd(relationship);
         }
 
-        /// <summary>
-        /// Deletes the given relationship cache entry from the mapping from each of its endpoint keys.
-        /// </summary>
+        // <summary>
+        // Deletes the given relationship cache entry from the mapping from each of its endpoint keys.
+        // </summary>
         private void DeleteRelationshipFromLookup(RelationshipEntry relationship)
         {
             // The relationship is stored in the lookup indexed by both keys, so we need to remove it twice.
@@ -1603,9 +1603,9 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Deletes the given relationship cache entry from the mapping from the given endpoint key.
-        /// </summary>
+        // <summary>
+        // Deletes the given relationship cache entry from the mapping from the given endpoint key.
+        // </summary>
         private void DeleteRelationshipEndFromLookup(EntityKey key, RelationshipEntry relationship)
         {
             Debug.Assert(relationship.State != EntityState.Detached, "Cannot remove a detached cache entry.");
@@ -1640,10 +1640,10 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// DeleteRelationship
-        /// </summary>
-        /// <returns> The deleted entry </returns>
+        // <summary>
+        // DeleteRelationship
+        // </summary>
+        // <returns> The deleted entry </returns>
         internal virtual RelationshipEntry DeleteRelationship(
             RelationshipSet relationshipSet,
             KeyValuePair<string, EntityKey> roleAndKey1,
@@ -1657,9 +1657,9 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// DeleteKeyEntry
-        /// </summary>
+        // <summary>
+        // DeleteKeyEntry
+        // </summary>
         internal virtual void DeleteKeyEntry(EntityEntry keyEntry)
         {
             if (keyEntry != null
@@ -1669,18 +1669,18 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Finds all relationships with the given key at one end.
-        /// </summary>
+        // <summary>
+        // Finds all relationships with the given key at one end.
+        // </summary>
         internal virtual RelationshipEntry[] CopyOfRelationshipsByKey(EntityKey key)
         {
             return FindRelationshipsByKey(key).ToArray();
         }
 
-        /// <summary>
-        /// Finds all relationships with the given key at one end.
-        /// Do not use the list to add elements
-        /// </summary>
+        // <summary>
+        // Finds all relationships with the given key at one end.
+        // Do not use the list to add elements
+        // </summary>
         internal virtual EntityEntry.RelationshipEndEnumerable FindRelationshipsByKey(EntityKey key)
         {
             return new EntityEntry.RelationshipEndEnumerable(FindEntityEntry(key));
@@ -1759,9 +1759,9 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Find the ObjectStateEntry from _keylessEntityStore for an entity that doesn't implement IEntityWithKey.
-        /// </summary>
+        // <summary>
+        // Find the ObjectStateEntry from _keylessEntityStore for an entity that doesn't implement IEntityWithKey.
+        // </summary>
         private bool TryGetEntryFromKeylessStore(object entity, out EntityEntry entryRef)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -1812,10 +1812,10 @@ namespace System.Data.Entity.Core.Objects
             return GetObjectStateEntriesInternal(state);
         }
 
-        /// <summary>
-        /// Returns all CacheEntries in the given state.
-        /// </summary>
-        /// <exception cref="ArgumentException">if EntityState.Detached flag is set in state</exception>
+        // <summary>
+        // Returns all CacheEntries in the given state.
+        // </summary>
+        // <exception cref="ArgumentException">if EntityState.Detached flag is set in state</exception>
         IEnumerable<IEntityStateEntry> IEntityStateManager.GetEntityStateEntries(EntityState state)
         {
             Debug.Assert((EntityState.Detached & state) == 0, "Cannot get state entries for detached entities");
@@ -1998,15 +1998,15 @@ namespace System.Data.Entity.Core.Objects
 
         #region temporary (added state) to permanent (deleted, modified, unchanged state) EntityKey fixup
 
-        /// <summary>
-        /// Performs key-fixup on the given entry, by creating a (permanent) EntityKey
-        /// based on the current key values within the associated entity and fixing up
-        /// all associated relationship entries.
-        /// </summary>
-        /// <remarks>
-        /// Will promote EntityEntry.IsKeyEntry and leave in _unchangedStore
-        /// otherwise will move EntityEntry from _addedStore to _unchangedStore.
-        /// </remarks>
+        // <summary>
+        // Performs key-fixup on the given entry, by creating a (permanent) EntityKey
+        // based on the current key values within the associated entity and fixing up
+        // all associated relationship entries.
+        // </summary>
+        // <remarks>
+        // Will promote EntityEntry.IsKeyEntry and leave in _unchangedStore
+        // otherwise will move EntityEntry from _addedStore to _unchangedStore.
+        // </remarks>
         internal virtual void FixupKey(EntityEntry entry)
         {
             DebugCheck.NotNull(entry);
@@ -2114,9 +2114,9 @@ namespace System.Data.Entity.Core.Objects
             // FEATURE_CHANGE: once we support equality constraints (SQL PT DB 300002154), do recursive fixup.
         }
 
-        /// <summary>
-        /// Replaces permanent EntityKey with a temporary key.  Used in N-Tier API.
-        /// </summary>
+        // <summary>
+        // Replaces permanent EntityKey with a temporary key.  Used in N-Tier API.
+        // </summary>
         internal virtual void ReplaceKeyWithTemporaryKey(EntityEntry entry)
         {
             DebugCheck.NotNull(entry);
@@ -2157,12 +2157,12 @@ namespace System.Data.Entity.Core.Objects
             AddEntityEntryToDictionary(entry, EntityState.Added);
         }
 
-        /// <summary>
-        /// Resets the EntityKey for this entry.  This method is called
-        /// as part of temporary key fixup and permanent key un-fixup. This method is necessary because it is the only
-        /// scenario where we allow a new value to be set on a non-null EntityKey. This
-        /// is the only place where we should be setting and clearing _inRelationshipFixup.
-        /// </summary>
+        // <summary>
+        // Resets the EntityKey for this entry.  This method is called
+        // as part of temporary key fixup and permanent key un-fixup. This method is necessary because it is the only
+        // scenario where we allow a new value to be set on a non-null EntityKey. This
+        // is the only place where we should be setting and clearing _inRelationshipFixup.
+        // </summary>
         private void ResetEntityKey(EntityEntry entry, EntityKey value)
         {
             DebugCheck.NotNull((object)entry.EntityKey);
@@ -2528,11 +2528,11 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// Retrieve the corresponding IEntityStateEntry for the given EntityKey.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">if key is null</exception>
-        /// <exception cref="ArgumentException">if key is not found</exception>
+        // <summary>
+        // Retrieve the corresponding IEntityStateEntry for the given EntityKey.
+        // </summary>
+        // <exception cref="ArgumentNullException">if key is null</exception>
+        // <exception cref="ArgumentException">if key is not found</exception>
         IEntityStateEntry IEntityStateManager.GetEntityStateEntry(EntityKey key)
         {
             return GetEntityEntry(key);
@@ -2666,11 +2666,11 @@ namespace System.Data.Entity.Core.Objects
             return entry != null;
         }
 
-        /// <summary>
-        /// Retrieve the corresponding IEntityStateEntry for the given EntityKey.
-        /// </summary>
-        /// <returns> true if the corresponding IEntityStateEntry was found </returns>
-        /// <exception cref="ArgumentNullException">if key is null</exception>
+        // <summary>
+        // Retrieve the corresponding IEntityStateEntry for the given EntityKey.
+        // </summary>
+        // <returns> true if the corresponding IEntityStateEntry was found </returns>
+        // <exception cref="ArgumentNullException">if key is null</exception>
         bool IEntityStateManager.TryGetEntityStateEntry(EntityKey key, out IEntityStateEntry entry)
         {
             // Because the passed in IEntityStateEntry reference isn't necessarily an
@@ -2684,16 +2684,16 @@ namespace System.Data.Entity.Core.Objects
             return result;
         }
 
-        /// <summary>
-        /// Given a key that represents an entity on the dependent side of a FK, this method attempts to return the key of the
-        /// entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
-        /// the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
-        /// for it is built up from the foreign key values contained in the dependent entity.
-        /// </summary>
-        /// <param name="dependentKey"> The key of the dependent entity </param>
-        /// <param name="principalRole"> The role indicating the FK to navigate </param>
-        /// <param name="principalKey"> Set to the principal key or null on return </param>
-        /// <returns> True if the principal key was found or built; false if it could not be found or built </returns>
+        // <summary>
+        // Given a key that represents an entity on the dependent side of a FK, this method attempts to return the key of the
+        // entity on the principal side of the FK.  If the two entities both exist in the context, then the primary key of
+        // the principal entity is found and returned.  If the principal entity does not exist in the context, then a key
+        // for it is built up from the foreign key values contained in the dependent entity.
+        // </summary>
+        // <param name="dependentKey"> The key of the dependent entity </param>
+        // <param name="principalRole"> The role indicating the FK to navigate </param>
+        // <param name="principalKey"> Set to the principal key or null on return </param>
+        // <returns> True if the principal key was found or built; false if it could not be found or built </returns>
         bool IEntityStateManager.TryGetReferenceKey(EntityKey dependentKey, AssociationEndMember principalRole, out EntityKey principalKey)
         {
             EntityEntry dependentEntry;
@@ -2771,10 +2771,10 @@ namespace System.Data.Entity.Core.Objects
             return entry;
         }
 
-        /// <summary>
-        /// Retrieve the corresponding EntityEntry for the given entity.
-        /// Returns null if key is unavailable or passed entity is null.
-        /// </summary>
+        // <summary>
+        // Retrieve the corresponding EntityEntry for the given entity.
+        // Returns null if key is unavailable or passed entity is null.
+        // </summary>
         internal virtual EntityEntry FindEntityEntry(object entity)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -3057,10 +3057,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Removes the given cache entry from the appropriate dictionary, based on
-        /// the given state and whether or not the entry represents a relationship.
-        /// </summary>
+        // <summary>
+        // Removes the given cache entry from the appropriate dictionary, based on
+        // the given state and whether or not the entry represents a relationship.
+        // </summary>
         private void RemoveObjectStateEntryFromDictionary(RelationshipEntry entry, EntityState state)
         {
             // Determine the appropriate dictionary from which to remove the entry.
@@ -3103,10 +3103,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Removes the given cache entry from the appropriate dictionary, based on
-        /// the given state and whether or not the entry represents a relationship.
-        /// </summary>
+        // <summary>
+        // Removes the given cache entry from the appropriate dictionary, based on
+        // the given state and whether or not the entry represents a relationship.
+        // </summary>
         private void RemoveObjectStateEntryFromDictionary(EntityEntry entry, EntityState state)
         {
             Dictionary<EntityKey, EntityEntry> dictionaryContainingEntry = null;
@@ -3166,10 +3166,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// If a corresponding StateManagerTypeMetadata exists, it is returned.
-        /// Otherwise, a StateManagerTypeMetadata is created and cached.
-        /// </summary>
+        // <summary>
+        // If a corresponding StateManagerTypeMetadata exists, it is returned.
+        // Otherwise, a StateManagerTypeMetadata is created and cached.
+        // </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(Type entityType, EntitySet entitySet)
         {
             DebugCheck.NotNull(entityType);
@@ -3187,10 +3187,10 @@ namespace System.Data.Entity.Core.Objects
             return typeMetadata;
         }
 
-        /// <summary>
-        /// If a corresponding StateManagerTypeMetadata exists, it is returned.
-        /// Otherwise, a StateManagerTypeMetadata is created and cached.
-        /// </summary>
+        // <summary>
+        // If a corresponding StateManagerTypeMetadata exists, it is returned.
+        // Otherwise, a StateManagerTypeMetadata is created and cached.
+        // </summary>
         internal virtual StateManagerTypeMetadata GetOrAddStateManagerTypeMetadata(EdmType edmType)
         {
             DebugCheck.NotNull(edmType);
@@ -3209,10 +3209,10 @@ namespace System.Data.Entity.Core.Objects
             return typeMetadata;
         }
 
-        /// <summary>
-        /// Creates an instance of StateManagerTypeMetadata from the given EdmType and ObjectMapping,
-        /// and stores it in the metadata cache.  The new instance is returned.
-        /// </summary>
+        // <summary>
+        // Creates an instance of StateManagerTypeMetadata from the given EdmType and ObjectMapping,
+        // and stores it in the metadata cache.  The new instance is returned.
+        // </summary>
         private StateManagerTypeMetadata AddStateManagerTypeMetadata(EntitySet entitySet, ObjectTypeMapping mapping)
         {
             DebugCheck.NotNull(entitySet);
@@ -3257,9 +3257,9 @@ namespace System.Data.Entity.Core.Objects
             return typeMetadata;
         }
 
-        /// <summary>
-        /// Mark the ObjectStateManager as disposed
-        /// </summary>
+        // <summary>
+        // Mark the ObjectStateManager as disposed
+        // </summary>
         internal virtual void Dispose()
         {
             _isDisposed = true;
@@ -3270,13 +3270,13 @@ namespace System.Data.Entity.Core.Objects
             get { return _isDisposed; }
         }
 
-        /// <summary>
-        /// For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
-        /// and marks appropriate ObjectStateEntry as Modified.
-        /// For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
-        /// The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
-        /// and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
-        /// </summary>
+        // <summary>
+        // For every tracked entity which doesn't implement IEntityWithChangeTracker detect changes in the entity's property values
+        // and marks appropriate ObjectStateEntry as Modified.
+        // For every tracked entity which doesn't implement IEntityWithRelationships detect changes in its relationships.
+        // The method is used internally by ObjectContext.SaveChanges() but can be also used if user wants to detect changes
+        // and have ObjectStateEntries in appropriate state before the SaveChanges() method is called.
+        // </summary>
         internal virtual void DetectChanges()
         {
             var entries = GetEntityEntriesForDetectChanges();
@@ -4017,13 +4017,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Flag that is set when we are processing an FK setter for a full proxy.
-        /// This is used to determine whether or not we will attempt to call out into FK
-        /// setters and null references during fixup.
-        /// The value of this property is either null if the code is not executing an
-        /// FK setter, or points to the entity on which the FK setter has been called.
-        /// </summary>
+        // <summary>
+        // Flag that is set when we are processing an FK setter for a full proxy.
+        // This is used to determine whether or not we will attempt to call out into FK
+        // setters and null references during fixup.
+        // The value of this property is either null if the code is not executing an
+        // FK setter, or points to the entity on which the FK setter has been called.
+        // </summary>
         internal virtual object EntityInvokingFKSetter { get; set; }
     }
 }

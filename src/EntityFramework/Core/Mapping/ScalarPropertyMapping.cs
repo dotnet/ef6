@@ -41,10 +41,10 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class ScalarPropertyMapping : PropertyMapping
     {
-        /// <summary>
-        /// S-side member for which the scalar property is being mapped.
-        /// This will be interpreted by the view generation algorithm based on the context.
-        /// </summary>
+        // <summary>
+        // S-side member for which the scalar property is being mapped.
+        // This will be interpreted by the view generation algorithm based on the context.
+        // </summary>
         private EdmProperty _column;
 
         /// <summary>

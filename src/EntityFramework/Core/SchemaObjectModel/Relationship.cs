@@ -9,20 +9,20 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an Association element
-    /// </summary>
+    // <summary>
+    // Represents an Association element
+    // </summary>
     internal sealed class Relationship : SchemaType, IRelationship
     {
         private RelationshipEndCollection _ends;
         private List<ReferentialConstraint> _constraints;
         private bool _isForeignKey;
 
-        /// <summary>
-        /// Construct a Relationship object
-        /// </summary>
-        /// <param name="parent"> the parent </param>
-        /// <param name="kind"> the kind of relationship </param>
+        // <summary>
+        // Construct a Relationship object
+        // </summary>
+        // <param name="parent"> the parent </param>
+        // <param name="kind"> the kind of relationship </param>
         public Relationship(Schema parent, RelationshipKind kind)
             : base(parent)
         {
@@ -41,9 +41,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// List of Ends defined for this Association
-        /// </summary>
+        // <summary>
+        // List of Ends defined for this Association
+        // </summary>
         public IList<IRelationshipEnd> Ends
         {
             get
@@ -56,9 +56,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Returns the list of constraints on this relation
-        /// </summary>
+        // <summary>
+        // Returns the list of constraints on this relation
+        // </summary>
         public IList<ReferentialConstraint> Constraints
         {
             get
@@ -76,22 +76,22 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return _ends.TryGetEnd(roleName, out end);
         }
 
-        /// <summary>
-        /// Is this an Association
-        /// </summary>
+        // <summary>
+        // Is this an Association
+        // </summary>
         public RelationshipKind RelationshipKind { get; private set; }
 
-        /// <summary>
-        /// Is this a foreign key (aka foreign key) relationship?
-        /// </summary>
+        // <summary>
+        // Is this a foreign key (aka foreign key) relationship?
+        // </summary>
         public bool IsForeignKey
         {
             get { return _isForeignKey; }
         }
 
-        /// <summary>
-        /// do whole element validation
-        /// </summary>
+        // <summary>
+        // do whole element validation
+        // </summary>
         internal override void Validate()
         {
             base.Validate();
@@ -134,9 +134,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// do whole element resolution
-        /// </summary>
+        // <summary>
+        // do whole element resolution
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -171,10 +171,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// handle the End child element
-        /// </summary>
-        /// <param name="reader"> XmlReader positioned at the end element </param>
+        // <summary>
+        // handle the End child element
+        // </summary>
+        // <param name="reader"> XmlReader positioned at the end element </param>
         private void HandleEndElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -190,10 +190,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Ends.Add(end);
         }
 
-        /// <summary>
-        /// handle the constraint element
-        /// </summary>
-        /// <param name="reader"> XmlReader positioned at the constraint element </param>
+        // <summary>
+        // handle the constraint element
+        // </summary>
+        // <param name="reader"> XmlReader positioned at the constraint element </param>
         private void HandleConstraintElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);

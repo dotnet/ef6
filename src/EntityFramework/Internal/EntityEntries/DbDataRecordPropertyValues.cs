@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -6,10 +6,10 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// An implementation of <see cref="InternalPropertyValues" /> that is based on an existing
-    /// <see cref="DbUpdatableDataRecord" /> instance.
-    /// </summary>
+    // <summary>
+    // An implementation of <see cref="InternalPropertyValues" /> that is based on an existing
+    // <see cref="DbUpdatableDataRecord" /> instance.
+    // </summary>
     internal class DbDataRecordPropertyValues : InternalPropertyValues
     {
         #region Constructors and fields
@@ -17,15 +17,15 @@ namespace System.Data.Entity.Internal
         private readonly DbUpdatableDataRecord _dataRecord;
         private ISet<string> _names;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbDataRecordPropertyValues" /> class.
-        /// </summary>
-        /// <param name="internalContext"> The internal context. </param>
-        /// <param name="type"> The type. </param>
-        /// <param name="dataRecord"> The data record. </param>
-        /// <param name="isEntity">
-        /// If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.
-        /// </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbDataRecordPropertyValues" /> class.
+        // </summary>
+        // <param name="internalContext"> The internal context. </param>
+        // <param name="type"> The type. </param>
+        // <param name="dataRecord"> The data record. </param>
+        // <param name="isEntity">
+        // If set to <c>true</c> this is a dictionary for an entity, otherwise it is a dictionary for a complex object.
+        // </param>
         internal DbDataRecordPropertyValues(
             InternalContext internalContext, Type type, DbUpdatableDataRecord dataRecord, bool isEntity)
             : base(internalContext, type, isEntity)
@@ -39,11 +39,11 @@ namespace System.Data.Entity.Internal
 
         #region Implementation of abstract members from base
 
-        /// <summary>
-        /// Gets the dictionary item for a given property name.
-        /// </summary>
-        /// <param name="propertyName"> Name of the property. </param>
-        /// <returns> An item for the given name. </returns>
+        // <summary>
+        // Gets the dictionary item for a given property name.
+        // </summary>
+        // <param name="propertyName"> Name of the property. </param>
+        // <returns> An item for the given name. </returns>
         protected override IPropertyValuesItem GetItemImpl(string propertyName)
         {
             var ordinal = _dataRecord.GetOrdinal(propertyName);
@@ -63,10 +63,10 @@ namespace System.Data.Entity.Internal
             return new DbDataRecordPropertyValuesItem(_dataRecord, ordinal, value);
         }
 
-        /// <summary>
-        /// Gets the set of names of all properties in this dictionary as a read-only set.
-        /// </summary>
-        /// <value> The property names. </value>
+        // <summary>
+        // Gets the set of names of all properties in this dictionary as a read-only set.
+        // </summary>
+        // <value> The property names. </value>
         public override ISet<string> PropertyNames
         {
             get

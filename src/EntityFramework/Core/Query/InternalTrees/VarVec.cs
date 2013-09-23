@@ -7,21 +7,21 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// A VarVec is a compressed representation of a set of variables - with no duplicates
-    /// and no ordering
-    /// A VarVec should be used in many places where we expect a number of vars to be
-    /// passed around; and we don't care particularly about the ordering of the vars
-    /// This is obviously not suitable for representing sort keys, but is still
-    /// reasonable for representing group by keys, and a variety of others.
-    /// </summary>
+    // <summary>
+    // A VarVec is a compressed representation of a set of variables - with no duplicates
+    // and no ordering
+    // A VarVec should be used in many places where we expect a number of vars to be
+    // passed around; and we don't care particularly about the ordering of the vars
+    // This is obviously not suitable for representing sort keys, but is still
+    // reasonable for representing group by keys, and a variety of others.
+    // </summary>
     internal class VarVec : IEnumerable<Var>
     {
         #region Nested Classes
 
-        /// <summary>
-        /// A VarVec enumerator is a specialized enumerator for a VarVec.
-        /// </summary>
+        // <summary>
+        // A VarVec enumerator is a specialized enumerator for a VarVec.
+        // </summary>
         internal class VarVecEnumerator : IEnumerator<Var>, IDisposable
         {
             #region private state
@@ -34,9 +34,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             #region Constructors
 
-            /// <summary>
-            /// Constructs a new enumerator for the specified Vec
-            /// </summary>
+            // <summary>
+            // Constructs a new enumerator for the specified Vec
+            // </summary>
             internal VarVecEnumerator(VarVec vec)
             {
                 Init(vec);
@@ -46,9 +46,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             #region public surface
 
-            /// <summary>
-            /// Initialize the enumerator to enumerate over the supplied Vec
-            /// </summary>
+            // <summary>
+            // Initialize the enumerator to enumerate over the supplied Vec
+            // </summary>
             internal void Init(VarVec vec)
             {
                 m_position = -1;
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             #region IEnumerator<Var> Members
 
-            /// <summary>
-            /// Get the Var at the current position
-            /// </summary>
+            // <summary>
+            // Get the Var at the current position
+            // </summary>
             public Var Current
             {
                 get { return (m_position >= 0 && m_position < m_bitArray.Length) ? m_command.GetVar(m_position) : null; }
@@ -77,9 +77,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 get { return Current; }
             }
 
-            /// <summary>
-            /// Move to the next position
-            /// </summary>
+            // <summary>
+            // Move to the next position
+            // </summary>
             public bool MoveNext()
             {
                 m_position++;
@@ -93,9 +93,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 return false;
             }
 
-            /// <summary>
-            /// Reset enumerator to start off again
-            /// </summary>
+            // <summary>
+            // Reset enumerator to start off again
+            // </summary>
             public void Reset()
             {
                 m_position = -1;
@@ -105,9 +105,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
             #region IDisposable Members
 
-            /// <summary>
-            /// Dispose of the current enumerator - return it to the Command
-            /// </summary>
+            // <summary>
+            // Dispose of the current enumerator - return it to the Command
+            // </summary>
             public void Dispose()
             {
                 // Technically, calling GC.SuppressFinalize is not required because the class does not
@@ -142,10 +142,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_bitVector.Or(other.m_bitVector);
         }
 
-        /// <summary>
-        /// Computes (this Minus other) by performing (this And (Not(other)))
-        /// A temp VarVec is used and released at the end of the operation
-        /// </summary>
+        // <summary>
+        // Computes (this Minus other) by performing (this And (Not(other)))
+        // A temp VarVec is used and released at the end of the operation
+        // </summary>
         internal void Minus(VarVec other)
         {
             var tmp = m_command.CreateVarVec(other);
@@ -155,9 +155,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_command.ReleaseVarVec(tmp);
         }
 
-        /// <summary>
-        /// Does this have a non-zero overlap with the other vec
-        /// </summary>
+        // <summary>
+        // Does this have a non-zero overlap with the other vec
+        // </summary>
         internal bool Overlaps(VarVec other)
         {
             var otherCopy = m_command.CreateVarVec(other);
@@ -167,11 +167,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return overlaps;
         }
 
-        /// <summary>
-        /// Does this Vec include every var in the other vec?
-        /// Written this way deliberately under the assumption that "other"
-        /// is a relatively small vec
-        /// </summary>
+        // <summary>
+        // Does this Vec include every var in the other vec?
+        // Written this way deliberately under the assumption that "other"
+        // is a relatively small vec
+        // </summary>
         internal bool Subsumes(VarVec other)
         {
             for (var i = 0; i < other.m_bitVector.Length; i++)
@@ -210,9 +210,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// The enumerator pattern
-        /// </summary>
+        // <summary>
+        // The enumerator pattern
+        // </summary>
         public IEnumerator<Var> GetEnumerator()
         {
             return m_command.GetVarVecEnumerator(this);
@@ -223,9 +223,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return GetEnumerator();
         }
 
-        /// <summary>
-        /// Number of vars in this set
-        /// </summary>
+        // <summary>
+        // Number of vars in this set
+        // </summary>
         internal int Count
         {
             get
@@ -257,17 +257,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_bitVector.Set(v.Id, false);
         }
 
-        /// <summary>
-        /// Is this Vec empty?
-        /// </summary>
+        // <summary>
+        // Is this Vec empty?
+        // </summary>
         internal bool IsEmpty
         {
             get { return First == null; }
         }
 
-        /// <summary>
-        /// Get me the first var that is set
-        /// </summary>
+        // <summary>
+        // Get me the first var that is set
+        // </summary>
         internal Var First
         {
             get
@@ -280,12 +280,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Walk through the input varVec, replace any vars that have been "renamed" based
-        /// on the input varMap, and return the new VarVec
-        /// </summary>
-        /// <param name="varMap"> dictionary of renamed vars </param>
-        /// <returns> a new VarVec </returns>
+        // <summary>
+        // Walk through the input varVec, replace any vars that have been "renamed" based
+        // on the input varMap, and return the new VarVec
+        // </summary>
+        // <param name="varMap"> dictionary of renamed vars </param>
+        // <returns> a new VarVec </returns>
         internal VarVec Remap(Dictionary<Var, Var> varMap)
         {
             var newVec = m_command.CreateVarVec();
@@ -339,10 +339,10 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Debugging support
-        /// provide a string representation for debugging.
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // provide a string representation for debugging.
+        // </summary>
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -367,9 +367,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region Clone
 
-        /// <summary>
-        /// Create a clone of this vec
-        /// </summary>
+        // <summary>
+        // Create a clone of this vec
+        // </summary>
         public VarVec Clone()
         {
             var newVec = m_command.CreateVarVec();

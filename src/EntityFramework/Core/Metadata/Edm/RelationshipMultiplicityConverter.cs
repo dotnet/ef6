@@ -22,12 +22,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Gets a <see cref="RelationshipMultiplicity"/> from a string
-        /// </summary>
-        /// <param name="value"> string containing multiplicity definition </param>
-        /// <param name="multiplicity"> multiplicity value (-1 if there were errors) </param>
-        /// <returns> <c>true</c> if the string was parsable, <c>false</c> otherwise </returns>
+        // <summary>
+        // Gets a <see cref="RelationshipMultiplicity"/> from a string
+        // </summary>
+        // <param name="value"> string containing multiplicity definition </param>
+        // <param name="multiplicity"> multiplicity value (-1 if there were errors) </param>
+        // <returns> <c>true</c> if the string was parsable, <c>false</c> otherwise </returns>
         internal static bool TryParseMultiplicity(string value, out RelationshipMultiplicity multiplicity)
         {
             switch (value)

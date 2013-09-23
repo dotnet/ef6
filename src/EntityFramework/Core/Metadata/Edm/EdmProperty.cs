@@ -98,13 +98,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return property;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the property class
-        /// </summary>
-        /// <param name="name"> name of the property </param>
-        /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
+        // <summary>
+        // Initializes a new instance of the property class
+        // </summary>
+        // <param name="name"> name of the property </param>
+        // <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
+        // <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal EdmProperty(string name, TypeUsage typeUsage)
             : base(name, typeUsage)
         {
@@ -112,13 +112,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(typeUsage, "typeUsage");
         }
 
-        /// <summary>
-        /// Initializes a new OSpace instance of the property class
-        /// </summary>
-        /// <param name="name"> name of the property </param>
-        /// <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
-        /// <param name="propertyInfo"> for the property </param>
-        /// <param name="entityDeclaringType"> The declaring type of the entity containing the property </param>
+        // <summary>
+        // Initializes a new OSpace instance of the property class
+        // </summary>
+        // <param name="name"> name of the property </param>
+        // <param name="typeUsage"> TypeUsage object containing the property type and its facets </param>
+        // <param name="propertyInfo"> for the property </param>
+        // <param name="entityDeclaringType"> The declaring type of the entity containing the property </param>
         internal EdmProperty(string name, TypeUsage typeUsage, PropertyInfo propertyInfo, Type entityDeclaringType)
             : this(name, typeUsage)
         {
@@ -150,14 +150,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _entityDeclaringType; }
         }
 
-        /// <summary>
-        /// cached dynamic method to get the property value from a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to get the property value from a CLR instance
+        // </summary>
         private Func<object, object> _memberGetter;
 
-        /// <summary>
-        /// cached dynamic method to set a CLR property value on a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to set a CLR property value on a CLR instance
+        // </summary>
         private Action<object, object> _memberSetter;
 
         /// <summary>
@@ -232,9 +232,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return TypeUsage.Facets[DbProviderManifest.DefaultValueFacetName].Value; }
         }
 
-        /// <summary>
-        /// cached dynamic method to get the property value from a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to get the property value from a CLR instance
+        // </summary>
         internal Func<object, object> ValueGetter
         {
             get { return _memberGetter; }
@@ -246,9 +246,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// cached dynamic method to set a CLR property value on a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to set a CLR property value on a CLR instance
+        // </summary>
         internal Action<object, object> ValueSetter
         {
             get { return _memberSetter; }

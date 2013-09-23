@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
@@ -28,9 +28,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             Transform();
         }
 
-        /// <summary>
-        /// Populate the table mapping structure
-        /// </summary>
+        // <summary>
+        // Populate the table mapping structure
+        // </summary>
         private void Analyze()
         {
             _tableMappings = new Dictionary<EntityType, TableMapping>();
@@ -204,10 +204,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        /// <summary>
-        /// Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
-        /// when no base types share the the association set mapping's table
-        /// </summary>
+        // <summary>
+        // Sets nullability for association set mappings' foreign keys for 1:* and 1:0..1 associations
+        // when no base types share the the association set mapping's table
+        // </summary>
         private void ConfigureAssociationSetMappingForeignKeys(EntitySet entitySet)
         {
             foreach (var asm in _databaseMapping.EntityContainerMappings
@@ -254,9 +254,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        /// <summary>
-        /// Makes sure only the required property mappings are present
-        /// </summary>
+        // <summary>
+        // Makes sure only the required property mappings are present
+        // </summary>
         private static void ConfigureTypeMappings(
             TableMapping tableMapping,
             Dictionary<EntityType, EntityTypeMapping> rootMappings,
@@ -407,9 +407,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             return requiresIsTypeOf && HasConditions(tableMapping, entityType);
         }
 
-        /// <summary>
-        /// Determines if the table and entity type need mapping, and if not, removes the existing entity type mapping
-        /// </summary>
+        // <summary>
+        // Determines if the table and entity type need mapping, and if not, removes the existing entity type mapping
+        // </summary>
         private bool FindPropertyEntityTypeMapping(
             TableMapping tableMapping,
             EntitySet entitySet,

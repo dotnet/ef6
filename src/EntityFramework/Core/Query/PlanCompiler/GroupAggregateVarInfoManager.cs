@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// Manages refereces to groupAggregate variables.
-    /// </summary>
+    // <summary>
+    // Manages refereces to groupAggregate variables.
+    // </summary>
     internal class GroupAggregateVarInfoManager
     {
         #region Private state
@@ -23,18 +23,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Public Surface
 
-        /// <summary>
-        /// Get all the groupAggregateVarInfos
-        /// </summary>
+        // <summary>
+        // Get all the groupAggregateVarInfos
+        // </summary>
         internal IEnumerable<GroupAggregateVarInfo> GroupAggregateVarInfos
         {
             get { return _groupAggregateVarInfos; }
         }
 
-        /// <summary>
-        /// Add an entry that var is a computation represented by the computationTemplate
-        /// over the var represented by the given groupAggregateVarInfo
-        /// </summary>
+        // <summary>
+        // Add an entry that var is a computation represented by the computationTemplate
+        // over the var represented by the given groupAggregateVarInfo
+        // </summary>
         internal void Add(Var var, GroupAggregateVarInfo groupAggregateVarInfo, Node computationTemplate, bool isUnnested)
         {
             _groupAggregateVarRelatedVarToInfo.Add(
@@ -42,10 +42,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             _groupAggregateVarInfos.Add(groupAggregateVarInfo);
         }
 
-        /// <summary>
-        /// Add an entry that the given property of the given var is a computation represented
-        /// by the computationTemplate over the var represented by the given groupAggregateVarInfo
-        /// </summary>
+        // <summary>
+        // Add an entry that the given property of the given var is a computation represented
+        // by the computationTemplate over the var represented by the given groupAggregateVarInfo
+        // </summary>
         internal void Add(
             Var var, GroupAggregateVarInfo groupAggregateVarInfo, Node computationTemplate, bool isUnnested, EdmMember property)
         {
@@ -71,19 +71,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             _groupAggregateVarInfos.Add(groupAggregateVarInfo);
         }
 
-        /// <summary>
-        /// Gets the groupAggregateVarRefInfo representing the definition of the given var over
-        /// a group aggregate var if any.
-        /// </summary>
+        // <summary>
+        // Gets the groupAggregateVarRefInfo representing the definition of the given var over
+        // a group aggregate var if any.
+        // </summary>
         internal bool TryGetReferencedGroupAggregateVarInfo(Var var, out GroupAggregateVarRefInfo groupAggregateVarRefInfo)
         {
             return _groupAggregateVarRelatedVarToInfo.TryGetValue(var, out groupAggregateVarRefInfo);
         }
 
-        /// <summary>
-        /// Gets the groupAggregateVarRefInfo representing the definition of the given property of the given
-        /// var over a group aggregate var if any.
-        /// </summary>
+        // <summary>
+        // Gets the groupAggregateVarRefInfo representing the definition of the given property of the given
+        // var over a group aggregate var if any.
+        // </summary>
         internal bool TryGetReferencedGroupAggregateVarInfo(
             Var var, EdmMember property, out GroupAggregateVarRefInfo groupAggregateVarRefInfo)
         {

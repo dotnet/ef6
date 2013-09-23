@@ -10,18 +10,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Text;
 
-    /// <summary>
-    /// A class that represents leaf <see cref="CqlBlock" />s in the <see cref="CqlBlock" /> tree.
-    /// </summary>
+    // <summary>
+    // A class that represents leaf <see cref="CqlBlock" />s in the <see cref="CqlBlock" /> tree.
+    // </summary>
     internal sealed class ExtentCqlBlock : CqlBlock
     {
-        /// <summary>
-        /// Creates an cql block representing the <paramref name="extent" /> (the FROM part).
-        /// SELECT is given by <paramref name="slots" />, WHERE by <paramref name="whereClause" /> and AS by
-        /// <paramref
-        ///     name="blockAliasNum" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Creates an cql block representing the <paramref name="extent" /> (the FROM part).
+        // SELECT is given by <paramref name="slots" />, WHERE by <paramref name="whereClause" /> and AS by
+        // <paramref
+        //     name="blockAliasNum" />
+        // .
+        // </summary>
         internal ExtentCqlBlock(
             EntitySetBase extent,
             CellQuery.SelectDistinct selectDistinct,

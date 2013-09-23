@@ -7,20 +7,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Globalization;
 
-    /// <summary>
-    /// Represents a column map for a specific entity type
-    /// </summary>
+    // <summary>
+    // Represents a column map for a specific entity type
+    // </summary>
     internal class EntityColumnMap : TypedColumnMap
     {
         private readonly EntityIdentity m_entityIdentity;
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="type"> column datatype </param>
-        /// <param name="name"> column name </param>
-        /// <param name="properties"> list of properties </param>
-        /// <param name="entityIdentity"> entity identity information </param>
+        // <summary>
+        // constructor
+        // </summary>
+        // <param name="type"> column datatype </param>
+        // <param name="name"> column name </param>
+        // <param name="properties"> list of properties </param>
+        // <param name="entityIdentity"> entity identity information </param>
         internal EntityColumnMap(TypeUsage type, string name, ColumnMap[] properties, EntityIdentity entityIdentity)
             : base(type, name, properties)
         {
@@ -28,26 +28,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_entityIdentity = entityIdentity;
         }
 
-        /// <summary>
-        /// Get the entity identity information
-        /// </summary>
+        // <summary>
+        // Get the entity identity information
+        // </summary>
         internal EntityIdentity EntityIdentity
         {
             get { return m_entityIdentity; }
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
             visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -55,9 +55,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Debugging support
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // </summary>
         public override string ToString()
         {
             var str = String.Format(CultureInfo.InvariantCulture, "E{0}", base.ToString());

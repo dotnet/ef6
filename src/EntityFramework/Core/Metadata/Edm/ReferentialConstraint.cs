@@ -61,9 +61,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.ReferentialConstraint; }
         }
 
-        /// <summary>
-        /// Returns the identity for this constraint
-        /// </summary>
+        // <summary>
+        // Returns the identity for this constraint
+        // </summary>
         internal override string Identity
         {
             get { return FromRole.Name + "_" + ToRole.Name; }
@@ -194,9 +194,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return FromRole.Name + "_" + ToRole.Name;
         }
 
-        /// <summary>
-        /// Sets this item to be read-only, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be read-only, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)

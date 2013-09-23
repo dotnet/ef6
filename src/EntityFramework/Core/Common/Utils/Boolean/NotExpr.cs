@@ -5,15 +5,15 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Globalization;
     using System.Linq;
 
-    /// <summary>
-    /// A tree expression that evaluates to true iff. its (single) child evaluates to false.
-    /// </summary>
-    /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
+    // <summary>
+    // A tree expression that evaluates to true iff. its (single) child evaluates to false.
+    // </summary>
+    // <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal sealed class NotExpr<T_Identifier> : TreeExpr<T_Identifier>
     {
-        /// <summary>
-        /// Initialize a new Not expression with the given child.
-        /// </summary>
+        // <summary>
+        // Initialize a new Not expression with the given child.
+        // </summary>
         internal NotExpr(BoolExpr<T_Identifier> child)
             : base(new[] { child })
         {

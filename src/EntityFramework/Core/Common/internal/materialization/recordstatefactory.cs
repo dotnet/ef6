@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
@@ -7,80 +7,80 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics.CodeAnalysis;
     using System.Linq.Expressions;
 
-    /// <summary>
-    /// An immutable class used to generate new RecordStates, which are used
-    /// at runtime to produce value-layer (aka DataReader) results.
-    /// Contains static information collected by the Translator visitor.  The
-    /// expressions produced by the Translator are compiled.  The RecordStates
-    /// will refer to this object for all static information.
-    /// This class is cached in the query cache as part of the CoordinatorFactory.
-    /// </summary>
+    // <summary>
+    // An immutable class used to generate new RecordStates, which are used
+    // at runtime to produce value-layer (aka DataReader) results.
+    // Contains static information collected by the Translator visitor.  The
+    // expressions produced by the Translator are compiled.  The RecordStates
+    // will refer to this object for all static information.
+    // This class is cached in the query cache as part of the CoordinatorFactory.
+    // </summary>
     internal class RecordStateFactory
     {
         #region state
 
-        /// <summary>
-        /// Indicates which state slot in the Shaper.State is expected to hold the
-        /// value for this record state.  Each unique record shape has it's own state
-        /// slot.
-        /// </summary>
+        // <summary>
+        // Indicates which state slot in the Shaper.State is expected to hold the
+        // value for this record state.  Each unique record shape has it's own state
+        // slot.
+        // </summary>
         internal readonly int StateSlotNumber;
 
-        /// <summary>
-        /// How many column values we have to reserve space for in this record.
-        /// </summary>
+        // <summary>
+        // How many column values we have to reserve space for in this record.
+        // </summary>
         internal readonly int ColumnCount;
 
-        /// <summary>
-        /// The DataRecordInfo we must return for this record.  If the record represents
-        /// an entity, this will be used to construct a unique EntityRecordInfo with the
-        /// EntityKey and EntitySet for the entity.
-        /// </summary>
+        // <summary>
+        // The DataRecordInfo we must return for this record.  If the record represents
+        // an entity, this will be used to construct a unique EntityRecordInfo with the
+        // EntityKey and EntitySet for the entity.
+        // </summary>
         internal readonly DataRecordInfo DataRecordInfo;
 
-        /// <summary>
-        /// A function that will gather the data for the row and store it on the record state.
-        /// </summary>
+        // <summary>
+        // A function that will gather the data for the row and store it on the record state.
+        // </summary>
         internal readonly Func<Shaper, bool> GatherData;
 
-        /// <summary>
-        /// Collection of nested records for this record, such as a complex type that is
-        /// part of an entity.  This does not include records that are part of a nested
-        /// collection, however.
-        /// </summary>
+        // <summary>
+        // Collection of nested records for this record, such as a complex type that is
+        // part of an entity.  This does not include records that are part of a nested
+        // collection, however.
+        // </summary>
         internal readonly ReadOnlyCollection<RecordStateFactory> NestedRecordStateFactories;
 
-        /// <summary>
-        /// The name for each column.
-        /// </summary>
+        // <summary>
+        // The name for each column.
+        // </summary>
         internal readonly ReadOnlyCollection<string> ColumnNames;
 
-        /// <summary>
-        /// The type usage information for each column.
-        /// </summary>
+        // <summary>
+        // The type usage information for each column.
+        // </summary>
         internal readonly ReadOnlyCollection<TypeUsage> TypeUsages;
 
-        /// <summary>
-        /// Tracks which columns might need special handling (nested readers/records)
-        /// </summary>
+        // <summary>
+        // Tracks which columns might need special handling (nested readers/records)
+        // </summary>
         internal readonly ReadOnlyCollection<bool> IsColumnNested;
 
-        /// <summary>
-        /// Tracks whether there are ANY columns that need special handling.
-        /// </summary>
+        // <summary>
+        // Tracks whether there are ANY columns that need special handling.
+        // </summary>
         internal readonly bool HasNestedColumns;
 
-        /// <summary>
-        /// A helper class to make the translation from name->ordinal.
-        /// </summary>
+        // <summary>
+        // A helper class to make the translation from name->ordinal.
+        // </summary>
         internal readonly FieldNameLookup FieldNameLookup;
 
-        /// <summary>
-        /// Description of this RecordStateFactory, used for debugging only; while this
-        /// is not  needed in retail code, it is pretty important because it's the only
-        /// description we'll have once we compile the Expressions; debugging a problem
-        /// with retail bits would be pretty hard without this.
-        /// </summary>
+        // <summary>
+        // Description of this RecordStateFactory, used for debugging only; while this
+        // is not  needed in retail code, it is pretty important because it's the only
+        // description we'll have once we compile the Expressions; debugging a problem
+        // with retail bits would be pretty hard without this.
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private readonly string Description;
 
@@ -140,9 +140,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region "public" surface area
 
-        /// <summary>
-        /// It's GO time, create the record state.
-        /// </summary>
+        // <summary>
+        // It's GO time, create the record state.
+        // </summary>
         internal RecordState Create(CoordinatorFactory coordinatorFactory)
         {
             return new RecordState(this, coordinatorFactory);

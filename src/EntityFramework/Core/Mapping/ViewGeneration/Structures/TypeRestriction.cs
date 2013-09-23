@@ -14,40 +14,40 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using DomainBoolExpr =
         System.Data.Entity.Core.Common.Utils.Boolean.BoolExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
 
-    /// <summary>
-    /// A class that denotes the boolean expression: "varType in values".
-    /// See the comments in <see cref="MemberRestriction" /> for complete and incomplete restriction objects.
-    /// </summary>
+    // <summary>
+    // A class that denotes the boolean expression: "varType in values".
+    // See the comments in <see cref="MemberRestriction" /> for complete and incomplete restriction objects.
+    // </summary>
     internal class TypeRestriction : MemberRestriction
     {
-        /// <summary>
-        /// Creates an incomplete type restriction of the form "<paramref name="member" /> in <paramref name="values" />".
-        /// </summary>
+        // <summary>
+        // Creates an incomplete type restriction of the form "<paramref name="member" /> in <paramref name="values" />".
+        // </summary>
         internal TypeRestriction(MemberPath member, IEnumerable<EdmType> values)
             : base(new MemberProjectedSlot(member), CreateTypeConstants(values))
         {
         }
 
-        /// <summary>
-        /// Creates an incomplete type restriction of the form "<paramref name="member" /> = <paramref name="value" />".
-        /// </summary>
+        // <summary>
+        // Creates an incomplete type restriction of the form "<paramref name="member" /> = <paramref name="value" />".
+        // </summary>
         internal TypeRestriction(MemberPath member, Constant value)
             : base(new MemberProjectedSlot(member), value)
         {
             Debug.Assert(value is TypeConstant || value.IsNull(), "Type or NULL expected.");
         }
 
-        /// <summary>
-        /// Creates a complete type restriction of the form "<paramref name="slot" /> in <paramref name="domain" />".
-        /// </summary>
+        // <summary>
+        // Creates a complete type restriction of the form "<paramref name="slot" /> in <paramref name="domain" />".
+        // </summary>
         internal TypeRestriction(MemberProjectedSlot slot, Domain domain)
             : base(slot, domain)
         {
         }
 
-        /// <summary>
-        /// Requires: <see cref="MemberRestriction.IsComplete" /> is true.
-        /// </summary>
+        // <summary>
+        // Requires: <see cref="MemberRestriction.IsComplete" /> is true.
+        // </summary>
         internal override DomainBoolExpr FixRange(Set<Constant> range, MemberDomainMap memberDomainMap)
         {
             Debug.Assert(IsComplete, "Ranges are fixed only for complete type restrictions.");
@@ -200,12 +200,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return builder;
         }
 
-        /// <summary>
-        /// Given a list of <paramref name="types" /> (which can contain nulls), returns a corresponding list of
-        /// <see
-        ///     cref="TypeConstant" />
-        /// s for those types.
-        /// </summary>
+        // <summary>
+        // Given a list of <paramref name="types" /> (which can contain nulls), returns a corresponding list of
+        // <see
+        //     cref="TypeConstant" />
+        // s for those types.
+        // </summary>
         private static IEnumerable<Constant> CreateTypeConstants(IEnumerable<EdmType> types)
         {
             foreach (var type in types)

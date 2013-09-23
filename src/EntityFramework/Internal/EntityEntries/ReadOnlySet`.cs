@@ -6,21 +6,21 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.Data.Entity.Resources;
 
-    /// <summary>
-    /// An implementation of <see cref="ISet{T}" /> that wraps an existing set but makes
-    /// it read-only.
-    /// </summary>
+    // <summary>
+    // An implementation of <see cref="ISet{T}" /> that wraps an existing set but makes
+    // it read-only.
+    // </summary>
     internal class ReadOnlySet<T> : ISet<T>
     {
         #region Constructors and fields
 
         private readonly ISet<T> _set;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReadOnlySet{T}" /> class wrapped around
-        /// another existing set.
-        /// </summary>
-        /// <param name="set"> The existing set. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="ReadOnlySet{T}" /> class wrapped around
+        // another existing set.
+        // </summary>
+        // <param name="set"> The existing set. </param>
         public ReadOnlySet(ISet<T> set)
         {
             _set = set;

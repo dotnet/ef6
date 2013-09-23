@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
@@ -12,11 +12,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Class for representing a collection of items for the object layer.
-    /// Most of the implementation for actual maintenance of the collection is
-    /// done by ItemCollection
-    /// </summary>
+    // <summary>
+    // Class for representing a collection of items for the object layer.
+    // Most of the implementation for actual maintenance of the collection is
+    // done by ItemCollection
+    // </summary>
     internal sealed class ObjectItemAttributeAssemblyLoader : ObjectItemAssemblyLoader
     {
         // list of unresolved navigation properties
@@ -51,10 +51,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
-        /// then it loads from the cache
-        /// </summary>
+        // <summary>
+        // Loads the given assembly and all the other referencd assemblies in the cache. If the assembly was already present
+        // then it loads from the cache
+        // </summary>
         internal override void Load()
         {
             Debug.Assert(
@@ -72,10 +72,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SessionData.AssembliesLoaded.Add(SourceAssembly, CacheEntry);
         }
 
-        /// <summary>
-        /// Check to see if the type is already loaded - either in the typesInLoading, or ObjectItemCollection or
-        /// in the global cache
-        /// </summary>
+        // <summary>
+        // Check to see if the type is already loaded - either in the typesInLoading, or ObjectItemCollection or
+        // in the global cache
+        // </summary>
         private bool TryGetLoadedType(Type clrType, out EdmType edmType)
         {
             if (SessionData.TypesInLoading.TryGetValue(clrType.FullName, out edmType)
@@ -153,9 +153,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// Loads the set of types from the given assembly and adds it to the given list of types
-        /// </summary>
+        // <summary>
+        // Loads the set of types from the given assembly and adds it to the given list of types
+        // </summary>
         protected override void LoadTypesFromAssembly()
         {
             Debug.Assert(CacheEntry.TypesInAssembly.Count == 0);
@@ -196,9 +196,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// This method loads all the relationship type that this entity takes part in
-        /// </summary>
+        // <summary>
+        // This method loads all the relationship type that this entity takes part in
+        // </summary>
         private void LoadRelationshipTypes()
         {
             foreach (var roleAttribute in SourceAssembly.GetCustomAttributes<EdmRelationshipAttribute>())
@@ -268,10 +268,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             associationType.AddKeyMember(new AssociationEndMember(roleName, entityType.GetReferenceType(), multiplicity));
         }
 
-        /// <summary>
-        /// Load metadata of the given type - when you call this method, you should check and make sure that the type has
-        /// edm attribute. If it doesn't,we won't load the type and it will be returned as null
-        /// </summary>
+        // <summary>
+        // Load metadata of the given type - when you call this method, you should check and make sure that the type has
+        // edm attribute. If it doesn't,we won't load the type and it will be returned as null
+        // </summary>
         private void LoadType(Type clrType)
         {
             Debug.Assert(clrType.Assembly == SourceAssembly, "Why are we loading a type that is not in our assembly?");
@@ -459,10 +459,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return true;
         }
 
-        /// <summary>
-        /// Load all the property metadata of the given type
-        /// </summary>
-        /// <param name="structuralType"> The type where properties are loaded </param>
+        // <summary>
+        // Load all the property metadata of the given type
+        // </summary>
+        // <param name="structuralType"> The type where properties are loaded </param>
         private void LoadPropertiesFromType(StructuralType structuralType)
         {
             // Look at both public, internal, and private instanced properties declared at this type, inherited members
@@ -637,14 +637,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Load the property with scalar property attribute.
-        /// Note that we pass the CLR type in because in the case where the property is declared on a generic
-        /// base class the DeclaringType of propert won't work for us and we need the real entity type instead.
-        /// </summary>
-        /// <param name="clrType"> The CLR type of the entity </param>
-        /// <param name="property"> Metadata representing the property </param>
-        /// <param name="isEntityKeyProperty"> True if the property forms part of the entity's key </param>
+        // <summary>
+        // Load the property with scalar property attribute.
+        // Note that we pass the CLR type in because in the case where the property is declared on a generic
+        // base class the DeclaringType of propert won't work for us and we need the real entity type instead.
+        // </summary>
+        // <param name="clrType"> The CLR type of the entity </param>
+        // <param name="property"> Metadata representing the property </param>
+        // <param name="isEntityKeyProperty"> True if the property forms part of the entity's key </param>
         private EdmMember LoadScalarProperty(Type clrType, PropertyInfo property, out bool isEntityKeyProperty)
         {
             Debug.Assert(property.IsDefined(typeof(EdmScalarPropertyAttribute), false), "The property must have a scalar attribute");
@@ -686,11 +686,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return member;
         }
 
-        /// <summary>
-        /// Resolves enum type property.
-        /// </summary>
-        /// <param name="declaringType"> The type to add the declared property to. </param>
-        /// <param name="clrProperty"> Property to resolve. </param>
+        // <summary>
+        // Resolves enum type property.
+        // </summary>
+        // <param name="declaringType"> The type to add the declared property to. </param>
+        // <param name="clrProperty"> Property to resolve. </param>
         private void ResolveEnumTypeProperty(StructuralType declaringType, PropertyInfo clrProperty)
         {
             DebugCheck.NotNull(declaringType);

@@ -32,11 +32,11 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class EntitySetBaseMapping : MappingItem
     {
-        /// <summary>
-        /// Construct the new EntitySetBaseMapping object.
-        /// </summary>
-        /// <param name="extent"> Extent metadata object </param>
-        /// <param name="entityContainerMapping"> The EntityContainer mapping that contains this extent mapping </param>
+        // <summary>
+        // Construct the new EntitySetBaseMapping object.
+        // </summary>
+        // <param name="extent"> Extent metadata object </param>
+        // <param name="entityContainerMapping"> The EntityContainer mapping that contains this extent mapping </param>
         internal EntitySetBaseMapping(EntitySetBase extent, EntityContainerMapping entityContainerMapping)
         {
             m_entityContainerMapping = entityContainerMapping;
@@ -44,26 +44,26 @@ namespace System.Data.Entity.Core.Mapping
             m_typeMappings = new List<TypeMapping>();
         }
 
-        /// <summary>
-        /// The EntityContainer mapping that contains this extent mapping.
-        /// </summary>
+        // <summary>
+        // The EntityContainer mapping that contains this extent mapping.
+        // </summary>
         private readonly EntityContainerMapping m_entityContainerMapping;
 
-        /// <summary>
-        /// The extent for which this mapping represents.
-        /// </summary>
+        // <summary>
+        // The extent for which this mapping represents.
+        // </summary>
         private readonly EntitySetBase m_extent;
 
-        /// <summary>
-        /// Set of type mappings that make up the Set Mapping.
-        /// Unless this is a EntitySetMapping with inheritance,
-        /// you would have a single type mapping per set.
-        /// </summary>
+        // <summary>
+        // Set of type mappings that make up the Set Mapping.
+        // Unless this is a EntitySetMapping with inheritance,
+        // you would have a single type mapping per set.
+        // </summary>
         private readonly List<TypeMapping> m_typeMappings;
 
-        /// <summary>
-        /// Stores type-Specific user-defined QueryViews.
-        /// </summary>
+        // <summary>
+        // Stores type-Specific user-defined QueryViews.
+        // </summary>
         private readonly Dictionary<Triple, string> m_typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_entityContainerMapping; }
         }
 
-        /// <summary>
-        /// Whether the EntitySetBaseMapping has empty content
-        /// Returns true if there no table Mapping fragments
-        /// </summary>
+        // <summary>
+        // Whether the EntitySetBaseMapping has empty content
+        // Returns true if there no table Mapping fragments
+        // </summary>
         internal virtual bool HasNoContent
         {
             get
@@ -120,14 +120,14 @@ namespace System.Data.Entity.Core.Mapping
 
         internal string QueryView { get; set; }
 
-        /// <summary>
-        /// Line Number in MSL file where the Set Mapping Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Number in MSL file where the Set Mapping Element's Start Tag is present.
+        // </summary>
         internal int StartLineNumber { get; set; }
 
-        /// <summary>
-        /// Line Position in MSL file where the Set Mapping Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Position in MSL file where the Set Mapping Element's Start Tag is present.
+        // </summary>
         internal int StartLinePosition { get; set; }
 
         internal bool HasModificationFunctionMapping { get; set; }
@@ -154,10 +154,10 @@ namespace System.Data.Entity.Core.Mapping
             return m_typeSpecificQueryViews.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Stores a type-specific user-defiend QueryView so that it can be loaded
-        /// into StorageMappingItemCollection's view cache.
-        /// </summary>
+        // <summary>
+        // Stores a type-specific user-defiend QueryView so that it can be loaded
+        // into StorageMappingItemCollection's view cache.
+        // </summary>
         internal void AddTypeSpecificQueryView(Triple key, string viewString)
         {
             Debug.Assert(!m_typeSpecificQueryViews.ContainsKey(key), "Query View already present for the given Key");

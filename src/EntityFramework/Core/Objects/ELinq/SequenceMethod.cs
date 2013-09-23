@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Objects.ELinq
 {
-    /// <summary>
-    /// Enumeration of known extension methods
-    /// </summary>
+    // <summary>
+    // Enumeration of known extension methods
+    // </summary>
     internal enum SequenceMethod
     {
         Where,

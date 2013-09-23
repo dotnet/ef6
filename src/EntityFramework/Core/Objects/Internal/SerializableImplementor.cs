@@ -11,10 +11,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Runtime.Serialization;
     using System.Security;
 
-    /// <summary>
-    /// This class determines if the proxied type implements ISerializable with the special serialization constructor.
-    /// If it does, it adds the appropriate members to the proxy type.
-    /// </summary>
+    // <summary>
+    // This class determines if the proxied type implements ISerializable with the special serialization constructor.
+    // If it does, it adds the appropriate members to the proxy type.
+    // </summary>
     internal sealed class SerializableImplementor
     {
         private readonly Type _baseClrType;

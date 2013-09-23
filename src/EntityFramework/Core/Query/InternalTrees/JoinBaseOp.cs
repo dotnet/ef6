@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    /// <summary>
-    /// Base class for all Join operations
-    /// </summary>
+    // <summary>
+    // Base class for all Join operations
+    // </summary>
     internal abstract class JoinBaseOp : RelOp
     {
         #region constructors
@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public surface
 
-        /// <summary>
-        /// 3 children - left, right, pred
-        /// </summary>
+        // <summary>
+        // 3 children - left, right, pred
+        // </summary>
         internal override int Arity
         {
             get { return 3; }

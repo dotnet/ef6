@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
 {
@@ -3197,34 +3197,34 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             }
         }
 
-        /// <summary>
-        /// Used only by span rewriter, when a row could be specified as an argument
-        /// </summary>
+        // <summary>
+        // Used only by span rewriter, when a row could be specified as an argument
+        // </summary>
         internal static DbIsNullExpression CreateIsNullExpressionAllowingRowTypeArgument(DbExpression argument)
         {
             ValidateIsNull(argument, true);
             return new DbIsNullExpression(_booleanType, argument);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="DbElementExpression" /> that converts a single-member set with a single property
-        /// into a singleton.  The result type of the created <see cref="DbElementExpression" /> equals the result type
-        /// of the single property of the element of the argument.
-        /// This method should only be used when the argument is of a collection type with
-        /// element of structured type with only one property.
-        /// </summary>
-        /// <param name="argument"> An expression that specifies the input set. </param>
-        /// <returns> A DbElementExpression that represents the conversion of the single-member set argument to a singleton. </returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="argument" />
-        /// is null
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="argument" />
-        /// is associated with a different command tree,
-        /// or does not have a collection result type, or its element type is not a structured type
-        /// with only one property
-        /// </exception>
+        // <summary>
+        // Creates a new <see cref="DbElementExpression" /> that converts a single-member set with a single property
+        // into a singleton.  The result type of the created <see cref="DbElementExpression" /> equals the result type
+        // of the single property of the element of the argument.
+        // This method should only be used when the argument is of a collection type with
+        // element of structured type with only one property.
+        // </summary>
+        // <param name="argument"> An expression that specifies the input set. </param>
+        // <returns> A DbElementExpression that represents the conversion of the single-member set argument to a singleton. </returns>
+        // <exception cref="ArgumentNullException">
+        // <paramref name="argument" />
+        // is null
+        // </exception>
+        // <exception cref="ArgumentException">
+        // <paramref name="argument" />
+        // is associated with a different command tree,
+        // or does not have a collection result type, or its element type is not a structured type
+        // with only one property
+        // </exception>
         internal static DbElementExpression CreateElementExpressionUnwrapSingleProperty(DbExpression argument)
         {
             var resultType = ArgumentValidation.ValidateElement(argument);
@@ -3241,45 +3241,45 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return new DbElementExpression(resultType, argument, true);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
-        /// navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
-        /// must be declared by the same relationship type.
-        /// DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
-        /// to construct Entity instances that are capable of resolving relationship navigation operations based on
-        /// the provided DbRelatedEntityRefs without the need for additional navigation operations.
-        /// Note also that this factory method is not intended to be part of the public Command Tree API
-        /// since its intent is to support Entity constructors in view definitions that express information about
-        /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
-        /// </summary>
-        /// <param name="sourceEnd"> The relationship end from which navigation takes place </param>
-        /// <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
-        /// <param name="targetEntity"> An expression that produces a reference to the target entity (and must therefore have a Ref result type) </param>
+        // <summary>
+        // Creates a new <see cref="DbRelatedEntityRef" /> that describes how to satisfy the relationship
+        // navigation operation from <paramref name="sourceEnd" /> to <paramref name="targetEnd" />, which
+        // must be declared by the same relationship type.
+        // DbRelatedEntityRefs are used in conjuction with <see cref="DbNewInstanceExpression" />
+        // to construct Entity instances that are capable of resolving relationship navigation operations based on
+        // the provided DbRelatedEntityRefs without the need for additional navigation operations.
+        // Note also that this factory method is not intended to be part of the public Command Tree API
+        // since its intent is to support Entity constructors in view definitions that express information about
+        // related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
+        // </summary>
+        // <param name="sourceEnd"> The relationship end from which navigation takes place </param>
+        // <param name="targetEnd"> The relationship end to which navigation may be satisifed using the target entity ref </param>
+        // <param name="targetEntity"> An expression that produces a reference to the target entity (and must therefore have a Ref result type) </param>
         internal static DbRelatedEntityRef CreateRelatedEntityRef(
             RelationshipEndMember sourceEnd, RelationshipEndMember targetEnd, DbExpression targetEntity)
         {
             return new DbRelatedEntityRef(sourceEnd, targetEnd, targetEntity);
         }
 
-        /// <summary>
-        /// Creates a new <see cref="DbNewInstanceExpression" /> that constructs an instance of an Entity type
-        /// together with the specified information about Entities related to the newly constructed Entity by
-        /// relationship navigations where the target end has multiplicity of at most one.
-        /// Note that this factory method is not intended to be part of the public Command Tree API since its
-        /// intent is to support Entity constructors in view definitions that express information about
-        /// related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
-        /// </summary>
-        /// <param name="entityType"> The type of the Entity instance that is being constructed </param>
-        /// <param name="attributeValues"> Values for each (non-relationship) property of the Entity </param>
-        /// <param name="relationships">
-        /// A (possibly empty) list of <see cref="DbRelatedEntityRef" /> s that describe Entities that are related to the constructed Entity by various relationship types.
-        /// </param>
-        /// <returns>
-        /// A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see
-        /// <see
-        ///     cref="DbNewInstanceExpression.RelatedEntityReferences" />
-        /// collection.
-        /// </returns>
+        // <summary>
+        // Creates a new <see cref="DbNewInstanceExpression" /> that constructs an instance of an Entity type
+        // together with the specified information about Entities related to the newly constructed Entity by
+        // relationship navigations where the target end has multiplicity of at most one.
+        // Note that this factory method is not intended to be part of the public Command Tree API since its
+        // intent is to support Entity constructors in view definitions that express information about
+        // related Entities using the 'WITH RELATIONSHIP' clause in eSQL.
+        // </summary>
+        // <param name="entityType"> The type of the Entity instance that is being constructed </param>
+        // <param name="attributeValues"> Values for each (non-relationship) property of the Entity </param>
+        // <param name="relationships">
+        // A (possibly empty) list of <see cref="DbRelatedEntityRef" /> s that describe Entities that are related to the constructed Entity by various relationship types.
+        // </param>
+        // <returns>
+        // A new DbNewInstanceExpression that represents the construction of the Entity, and includes the specified related Entity information in the see
+        // <see
+        //     cref="DbNewInstanceExpression.RelatedEntityReferences" />
+        // collection.
+        // </returns>
         internal static DbNewInstanceExpression CreateNewEntityWithRelationshipsExpression(
             EntityType entityType, IList<DbExpression> attributeValues, IList<DbRelatedEntityRef> relationships)
         {
@@ -3290,13 +3290,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return new DbNewInstanceExpression(resultType, validAttributes, validRelatedRefs);
         }
 
-        /// <summary>
-        /// Same as <see cref="Navigate(DbExpression, RelationshipEndMember, RelationshipEndMember)" /> only allows the property type of
-        /// <paramref
-        ///     name="fromEnd" />
-        /// to be any type in the same type hierarchy as the result type of <paramref name="navigateFrom" />.
-        /// Only used by relationship span.
-        /// </summary>
+        // <summary>
+        // Same as <see cref="Navigate(DbExpression, RelationshipEndMember, RelationshipEndMember)" /> only allows the property type of
+        // <paramref
+        //     name="fromEnd" />
+        // to be any type in the same type hierarchy as the result type of <paramref name="navigateFrom" />.
+        // Only used by relationship span.
+        // </summary>
         internal static DbRelationshipNavigationExpression NavigateAllowingAllRelationshipsInSameTypeHierarchy(
             this DbExpression navigateFrom, RelationshipEndMember fromEnd, RelationshipEndMember toEnd)
         {
@@ -3327,11 +3327,11 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
             return TypeUsage.Create(TypeHelpers.CreateCollectionType(elementType));
         }
 
-        /// <summary>
-        /// Requires: non-null expression
-        /// Determines whether the expression is a constant negative integer value. Always returns
-        /// false for non-constant, non-integer expression instances.
-        /// </summary>
+        // <summary>
+        // Requires: non-null expression
+        // Determines whether the expression is a constant negative integer value. Always returns
+        // false for non-constant, non-integer expression instances.
+        // </summary>
         private static bool IsConstantNegativeInteger(DbExpression expression)
         {
             DebugCheck.NotNull(expression);

@@ -22,10 +22,10 @@ namespace System.Data.Entity.Infrastructure
         )]
     public class IncludeMetadataConvention : Convention
     {
-        /// <summary>
-        /// Adds metadata to the given model configuration.
-        /// </summary>
-        /// <param name="modelConfiguration"> The model configuration. </param>
+        // <summary>
+        // Adds metadata to the given model configuration.
+        // </summary>
+        // <param name="modelConfiguration"> The model configuration. </param>
         internal virtual void Apply(ModelConfiguration modelConfiguration)
         {
             Check.NotNull(modelConfiguration, "modelConfiguration");

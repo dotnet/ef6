@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.ConfigFile
 {
@@ -6,9 +6,9 @@ namespace System.Data.Entity.Internal.ConfigFile
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a series of parameters to pass to a method
-    /// </summary>
+    // <summary>
+    // Represents a series of parameters to pass to a method
+    // </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses")]
     internal class ParameterCollection : ConfigurationElementCollection
     {
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Internal.ConfigFile
                        .ToArray();
         }
 
-        /// <summary>
-        /// Adds a new parameter to the collection
-        /// Used for unit testing
-        /// </summary>
+        // <summary>
+        // Adds a new parameter to the collection
+        // Used for unit testing
+        // </summary>
         internal ParameterElement NewElement()
         {
             var element = CreateNewElement();

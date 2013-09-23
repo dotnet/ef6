@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -21,11 +21,11 @@ namespace System.Data.Entity.Infrastructure
     {
         #region Fields and constructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbUpdateConcurrencyException" /> class.
-        /// </summary>
-        /// <param name="context"> The context. </param>
-        /// <param name="innerException"> The inner exception. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbUpdateConcurrencyException" /> class.
+        // </summary>
+        // <param name="context"> The context. </param>
+        // <param name="innerException"> The inner exception. </param>
         internal DbUpdateConcurrencyException(InternalContext context, OptimisticConcurrencyException innerException)
             : base(context, innerException, involvesIndependentAssociations: false)
         {

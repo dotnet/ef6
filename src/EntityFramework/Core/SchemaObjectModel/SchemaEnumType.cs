@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
@@ -11,35 +11,35 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Linq;
     using System.Xml;
 
-    /// <summary>
-    /// Represents EnumType element from CSDL.
-    /// </summary>
+    // <summary>
+    // Represents EnumType element from CSDL.
+    // </summary>
     internal class SchemaEnumType : SchemaType
     {
-        /// <summary>
-        /// Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field)
-        /// </summary>
+        // <summary>
+        // Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field)
+        // </summary>
         private bool _isFlags;
 
-        /// <summary>
-        /// Underlying type of this enum type as read from the schema.
-        /// </summary>
+        // <summary>
+        // Underlying type of this enum type as read from the schema.
+        // </summary>
         private string _unresolvedUnderlyingTypeName;
 
-        /// <summary>
-        /// Resolved underlying type of this enum type.
-        /// </summary>
+        // <summary>
+        // Resolved underlying type of this enum type.
+        // </summary>
         private SchemaType _underlyingType;
 
-        /// <summary>
-        /// Members of this EnumType.
-        /// </summary>
+        // <summary>
+        // Members of this EnumType.
+        // </summary>
         private readonly IList<SchemaEnumMember> _enumMembers = new List<SchemaEnumMember>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SchemaEnumType" /> class.
-        /// </summary>
-        /// <param name="parentElement"> Parent element. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="SchemaEnumType" /> class.
+        // </summary>
+        // <param name="parentElement"> Parent element. </param>
         public SchemaEnumType(Schema parentElement)
             : base(parentElement)
         {
@@ -50,17 +50,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field)
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether the enum type is defined as flags (i.e. can be treated as a bit field)
+        // </summary>
         public bool IsFlags
         {
             get { return _isFlags; }
         }
 
-        /// <summary>
-        /// Returns underlying type for this enum.
-        /// </summary>
+        // <summary>
+        // Returns underlying type for this enum.
+        // </summary>
         public SchemaType UnderlyingType
         {
             get
@@ -71,21 +71,21 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Gets members for this EnumType.
-        /// </summary>
+        // <summary>
+        // Gets members for this EnumType.
+        // </summary>
         public IEnumerable<SchemaEnumMember> EnumMembers
         {
             get { return _enumMembers; }
         }
 
-        /// <summary>
-        /// Generic handler for the EnumType element child elements.
-        /// </summary>
-        /// <param name="reader"> Xml reader positioned on a child element. </param>
-        /// <returns>
-        /// <c>true</c> if the child element is a known element and was handled. Otherwise <c>false</c>
-        /// </returns>
+        // <summary>
+        // Generic handler for the EnumType element child elements.
+        // </summary>
+        // <param name="reader"> Xml reader positioned on a child element. </param>
+        // <returns>
+        // <c>true</c> if the child element is a known element and was handled. Otherwise <c>false</c>
+        // </returns>
         protected override bool HandleElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -117,13 +117,13 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// Generic handler for the EnumType element attributes
-        /// </summary>
-        /// <param name="reader"> Xml reader positioned on an attribute. </param>
-        /// <c>true</c>
-        /// if the attribute is a known attribute and was handled. Otherwise
-        /// <c>false</c>
+        // <summary>
+        // Generic handler for the EnumType element attributes
+        // </summary>
+        // <param name="reader"> Xml reader positioned on an attribute. </param>
+        // <c>true</c>
+        // if the attribute is a known attribute and was handled. Otherwise
+        // <c>false</c>
         protected override bool HandleAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -147,10 +147,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// Handler for the Member element.
-        /// </summary>
-        /// <param name="reader"> XmlReader positioned on the Member element. </param>
+        // <summary>
+        // Handler for the Member element.
+        // </summary>
+        // <param name="reader"> XmlReader positioned on the Member element. </param>
         private void HandleMemberElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -189,9 +189,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _enumMembers.Add(enumMember);
         }
 
-        /// <summary>
-        /// Resolves the underlying type.
-        /// </summary>
+        // <summary>
+        // Resolves the underlying type.
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal override void ResolveTopLevelNames()
         {
@@ -208,9 +208,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Validates the specified enumeration type as a whole.
-        /// </summary>
+        // <summary>
+        // Validates the specified enumeration type as a whole.
+        // </summary>
         internal override void Validate()
         {
             base.Validate();

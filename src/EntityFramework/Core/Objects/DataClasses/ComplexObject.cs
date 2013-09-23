@@ -22,12 +22,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         private StructuralObject _parent; // Object that contains this ComplexObject (can be Entity or ComplexObject)
         private string _parentPropertyName; // Property name for this type on the containing object
 
-        /// <summary>
-        /// Associate the ComplexType with an Entity or another ComplexObject
-        /// Parent may be an Entity or ComplexObject
-        /// </summary>
-        /// <param name="parent"> Object to be added to. </param>
-        /// <param name="parentPropertyName"> The property on the parent that reference the complex type. </param>
+        // <summary>
+        // Associate the ComplexType with an Entity or another ComplexObject
+        // Parent may be an Entity or ComplexObject
+        // </summary>
+        // <param name="parent"> Object to be added to. </param>
+        // <param name="parentPropertyName"> The property on the parent that reference the complex type. </param>
         internal void AttachToParent(
             StructuralObject parent,
             string parentPropertyName)
@@ -46,10 +46,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             _parentPropertyName = parentPropertyName;
         }
 
-        /// <summary>
-        /// Removes this instance from the parent it was attached to.
-        /// Parent may be an Entity or ComplexObject
-        /// </summary>
+        // <summary>
+        // Removes this instance from the parent it was attached to.
+        // Parent may be an Entity or ComplexObject
+        // </summary>
         internal void DetachFromParent()
         {
             // We will null out _parent and _parentPropertyName anyway, so if they are already null
@@ -94,12 +94,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _parent == null ? false : _parent.IsChangeTracked; }
         }
 
-        /// <summary>
-        /// This method is used to report all changes on this ComplexObject to its parent entity or ComplexObject
-        /// </summary>
-        /// <param name="entityMemberName"> Should be null in this method override. This is only relevant in Entity's implementation of this method, so it is unused here Instead of passing the most-derived property name up the hierarchy, we will always pass the current _parentPropertyName Once this gets up to the Entity, it will actually use the value that was passed in </param>
-        /// <param name="complexObject"> The instance of the object on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is used to report all changes on this ComplexObject to its parent entity or ComplexObject
+        // </summary>
+        // <param name="entityMemberName"> Should be null in this method override. This is only relevant in Entity's implementation of this method, so it is unused here Instead of passing the most-derived property name up the hierarchy, we will always pass the current _parentPropertyName Once this gets up to the Entity, it will actually use the value that was passed in </param>
+        // <param name="complexObject"> The instance of the object on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal override sealed void ReportComplexPropertyChanging(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
@@ -115,12 +115,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// This method is used to report all changes on this ComplexObject to its parent entity or ComplexObject
-        /// </summary>
-        /// <param name="entityMemberName"> Should be null in this method override. This is only relevant in Entity's implementation of this method, so it is unused here Instead of passing the most-derived property name up the hierarchy, we will always pass the current _parentPropertyName Once this gets up to the Entity, it will actually use the value that was passed in. </param>
-        /// <param name="complexObject"> The instance of the object on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is used to report all changes on this ComplexObject to its parent entity or ComplexObject
+        // </summary>
+        // <param name="entityMemberName"> Should be null in this method override. This is only relevant in Entity's implementation of this method, so it is unused here Instead of passing the most-derived property name up the hierarchy, we will always pass the current _parentPropertyName Once this gets up to the Entity, it will actually use the value that was passed in. </param>
+        // <param name="complexObject"> The instance of the object on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal override sealed void ReportComplexPropertyChanged(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {

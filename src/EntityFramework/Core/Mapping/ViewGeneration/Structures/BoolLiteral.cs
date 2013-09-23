@@ -13,25 +13,25 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             System.Data.Entity.Core.Common.Utils.Boolean.TermExpr<Common.Utils.Boolean.DomainConstraint<BoolLiteral, Constant>>;
     using DomainVariable = System.Data.Entity.Core.Common.Utils.Boolean.DomainVariable<BoolLiteral, Constant>;
 
-    /// <summary>
-    /// A class that ties up all the literals in boolean expressions.
-    /// Conditions represented by <see cref="BoolLiteral" />s need to be synchronized with <see cref="DomainConstraint" />s,
-    /// which may be modified upon calling <see cref="BoolExpression.ExpensiveSimplify" />. This is what the method
-    /// <see
-    ///     cref="BoolLiteral.FixRange" />
-    /// is used for.
-    /// </summary>
+    // <summary>
+    // A class that ties up all the literals in boolean expressions.
+    // Conditions represented by <see cref="BoolLiteral" />s need to be synchronized with <see cref="DomainConstraint" />s,
+    // which may be modified upon calling <see cref="BoolExpression.ExpensiveSimplify" />. This is what the method
+    // <see
+    //     cref="BoolLiteral.FixRange" />
+    // is used for.
+    // </summary>
     internal abstract class BoolLiteral : InternalBase
     {
         internal static readonly IEqualityComparer<BoolLiteral> EqualityComparer = new BoolLiteralComparer();
         internal static readonly IEqualityComparer<BoolLiteral> EqualityIdentifierComparer = new IdentifierComparer();
 
-        /// <summary>
-        /// Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
-        /// <paramref
-        ///     name="domain" />
-        /// ".
-        /// </summary>
+        // <summary>
+        // Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
+        // <paramref
+        //     name="domain" />
+        // ".
+        // </summary>
         internal static DomainTermExpr MakeTermExpression(BoolLiteral literal, IEnumerable<Constant> domain, IEnumerable<Constant> range)
         {
             var domainSet = new Set<Constant>(domain, Constant.EqualityComparer);
@@ -39,12 +39,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return MakeTermExpression(literal, domainSet, rangeSet);
         }
 
-        /// <summary>
-        /// Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
-        /// <paramref
-        ///     name="domain" />
-        /// ".
-        /// </summary>
+        // <summary>
+        // Creates a term expression of the form: "<paramref name="literal" /> in <paramref name="range" /> with all possible values being
+        // <paramref
+        //     name="domain" />
+        // ".
+        // </summary>
         internal static DomainTermExpr MakeTermExpression(BoolLiteral literal, Set<Constant> domain, Set<Constant> range)
         {
             domain.MakeReadOnly();
@@ -56,40 +56,40 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Fixes the range of the literal using the new values provided in <paramref name="range" /> and returns a boolean expression corresponding to the new value.
-        /// </summary>
+        // <summary>
+        // Fixes the range of the literal using the new values provided in <paramref name="range" /> and returns a boolean expression corresponding to the new value.
+        // </summary>
         internal abstract DomainBoolExpr FixRange(Set<Constant> range, MemberDomainMap memberDomainMap);
 
         internal abstract DomainBoolExpr GetDomainBoolExpression(MemberDomainMap domainMap);
 
-        /// <summary>
-        /// See <see cref="BoolExpression.RemapBool" />.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolExpression.RemapBool" />.
+        // </summary>
         internal abstract BoolLiteral RemapBool(Dictionary<MemberPath, MemberPath> remap);
 
-        /// <summary>
-        /// See <see cref="BoolExpression.GetRequiredSlots" />.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolExpression.GetRequiredSlots" />.
+        // </summary>
         internal abstract void GetRequiredSlots(MemberProjectionIndex projectedSlotMap, bool[] requiredSlots);
 
-        /// <summary>
-        /// See <see cref="BoolExpression.AsEsql" />.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolExpression.AsEsql" />.
+        // </summary>
         internal abstract StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull);
 
-        /// <summary>
-        /// See <see cref="BoolExpression.AsCqt" />.
-        /// </summary>
+        // <summary>
+        // See <see cref="BoolExpression.AsCqt" />.
+        // </summary>
         internal abstract DbExpression AsCqt(DbExpression row, bool skipIsNotNull);
 
         internal abstract StringBuilder AsUserString(StringBuilder builder, string blockAlias, bool skipIsNotNull);
 
         internal abstract StringBuilder AsNegatedUserString(StringBuilder builder, string blockAlias, bool skipIsNotNull);
 
-        /// <summary>
-        /// Checks if the identifier in this is the same as the one in <paramref name="right" />.
-        /// </summary>
+        // <summary>
+        // Checks if the identifier in this is the same as the one in <paramref name="right" />.
+        // </summary>
         protected virtual bool IsIdentifierEqualTo(BoolLiteral right)
         {
             return IsEqualTo(right);
@@ -97,17 +97,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         protected abstract bool IsEqualTo(BoolLiteral right);
 
-        /// <summary>
-        /// Get the hash code based on the identifier.
-        /// </summary>
+        // <summary>
+        // Get the hash code based on the identifier.
+        // </summary>
         protected virtual int GetIdentifierHash()
         {
             return GetHashCode();
         }
 
-        /// <summary>
-        /// This class compares boolean expressions.
-        /// </summary>
+        // <summary>
+        // This class compares boolean expressions.
+        // </summary>
         private sealed class BoolLiteralComparer : IEqualityComparer<BoolLiteral>
         {
             public bool Equals(BoolLiteral left, BoolLiteral right)
@@ -134,9 +134,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// This class compares just the identifier in boolean expressions.
-        /// </summary>
+        // <summary>
+        // This class compares just the identifier in boolean expressions.
+        // </summary>
         private sealed class IdentifierComparer : IEqualityComparer<BoolLiteral>
         {
             public bool Equals(BoolLiteral left, BoolLiteral right)

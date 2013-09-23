@@ -5,9 +5,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
 
-    /// <summary>
-    /// Used to configure a constraint on a navigation property.
-    /// </summary>
+    // <summary>
+    // Used to configure a constraint on a navigation property.
+    // </summary>
     internal abstract class ConstraintConfiguration
     {
         internal abstract ConstraintConfiguration Clone();
@@ -16,10 +16,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             AssociationType associationType, AssociationEndMember dependentEnd,
             EntityTypeConfiguration entityTypeConfiguration);
 
-        /// <summary>
-        /// Gets a value indicating whether the constraint has been fully specified
-        /// using the Code First Fluent API.
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether the constraint has been fully specified
+        // using the Code First Fluent API.
+        // </summary>
         public virtual bool IsFullySpecified
         {
             get { return true; }

@@ -5,18 +5,18 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents invocation expression: expr(...)
-    /// </summary>
+    // <summary>
+    // Represents invocation expression: expr(...)
+    // </summary>
     internal sealed class MethodExpr : GroupAggregateExpr
     {
         private readonly Node _expr;
         private readonly NodeList<Node> _args;
         private readonly NodeList<RelshipNavigationExpr> _relationships;
 
-        /// <summary>
-        /// Initializes method ast node.
-        /// </summary>
+        // <summary>
+        // Initializes method ast node.
+        // </summary>
         internal MethodExpr(
             Node expr,
             DistinctKind distinctKind,
@@ -25,9 +25,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         {
         }
 
-        /// <summary>
-        /// Intializes a method ast node with relationships.
-        /// </summary>
+        // <summary>
+        // Intializes a method ast node with relationships.
+        // </summary>
         internal MethodExpr(
             Node expr,
             DistinctKind distinctKind,
@@ -43,33 +43,33 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _relationships = relationships;
         }
 
-        /// <summary>
-        /// For the following expression: "a.b.c.Foo()", returns "a.b.c.Foo".
-        /// </summary>
+        // <summary>
+        // For the following expression: "a.b.c.Foo()", returns "a.b.c.Foo".
+        // </summary>
         internal Node Expr
         {
             get { return _expr; }
         }
 
-        /// <summary>
-        /// Argument list.
-        /// </summary>
+        // <summary>
+        // Argument list.
+        // </summary>
         internal NodeList<Node> Args
         {
             get { return _args; }
         }
 
-        /// <summary>
-        /// True if there are associated relationship expressions.
-        /// </summary>
+        // <summary>
+        // True if there are associated relationship expressions.
+        // </summary>
         internal bool HasRelationships
         {
             get { return null != _relationships && _relationships.Count > 0; }
         }
 
-        /// <summary>
-        /// Optional relationship list.
-        /// </summary>
+        // <summary>
+        // Optional relationship list.
+        // </summary>
         internal NodeList<RelshipNavigationExpr> Relationships
         {
             get { return _relationships; }

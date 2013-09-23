@@ -18,10 +18,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Reflection;
     using System.Threading;
 
-    /// <summary>
-    /// Facet encapsulating information necessary to initialize a LINQ projection
-    /// result.
-    /// </summary>
+    // <summary>
+    // Facet encapsulating information necessary to initialize a LINQ projection
+    // result.
+    // </summary>
     internal abstract class InitializerMetadata : IEquatable<InitializerMetadata>
     {
         internal readonly Type ClrType;
@@ -121,42 +121,42 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return ClrType.GetHashCode();
         }
 
-        /// <summary>
-        /// Requires: other has the same type as this and refers to the same CLR type
-        /// Determine whether this Metadata is compatible with the other based on record layout.
-        /// </summary>
+        // <summary>
+        // Requires: other has the same type as this and refers to the same CLR type
+        // Determine whether this Metadata is compatible with the other based on record layout.
+        // </summary>
         protected virtual bool IsStructurallyEquivalent(InitializerMetadata other)
         {
             return true;
         }
 
-        /// <summary>
-        /// Produces an expression initializing an instance of ClrType (given emitters for input
-        /// columns)
-        /// </summary>
+        // <summary>
+        // Produces an expression initializing an instance of ClrType (given emitters for input
+        // columns)
+        // </summary>
         internal abstract Expression Emit(List<TranslatorResult> propertyTranslatorResults);
 
-        /// <summary>
-        /// Yields expected types for input columns. Null values are returned for children
-        /// whose type is irrelevant to the initializer.
-        /// </summary>
+        // <summary>
+        // Yields expected types for input columns. Null values are returned for children
+        // whose type is irrelevant to the initializer.
+        // </summary>
         internal abstract IEnumerable<Type> GetChildTypes();
 
-        /// <summary>
-        /// return a list of propertyReader expressions from an array of translator results.
-        /// </summary>
+        // <summary>
+        // return a list of propertyReader expressions from an array of translator results.
+        // </summary>
         protected static List<Expression> GetPropertyReaders(List<TranslatorResult> propertyTranslatorResults)
         {
             var propertyReaders = propertyTranslatorResults.Select(s => s.UnwrappedExpression).ToList();
             return propertyReaders;
         }
 
-        /// <summary>
-        /// Implementation of IGrouping that can be initialized using the standard
-        /// initializer pattern supported by ELinq
-        /// </summary>
-        /// <typeparam name="K"> Type of key </typeparam>
-        /// <typeparam name="T"> Type of record </typeparam>
+        // <summary>
+        // Implementation of IGrouping that can be initialized using the standard
+        // initializer pattern supported by ELinq
+        // </summary>
+        // <typeparam name="K"> Type of key </typeparam>
+        // <typeparam name="T"> Type of record </typeparam>
         private class Grouping<K, T> : IGrouping<K, T>
         {
             public Grouping(K key, IEnumerable<T> group)
@@ -196,9 +196,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Metadata for grouping initializer.
-        /// </summary>
+        // <summary>
+        // Metadata for grouping initializer.
+        // </summary>
         private class GroupingInitializerMetadata : InitializerMetadata
         {
             internal GroupingInitializerMetadata(Type type)
@@ -249,9 +249,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Metadata for anonymous type materialization.
-        /// </summary>
+        // <summary>
+        // Metadata for anonymous type materialization.
+        // </summary>
         private class ProjectionNewMetadata : InitializerMetadata
         {
             internal ProjectionNewMetadata(NewExpression newExpression)
@@ -353,9 +353,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Metadata for standard projection initializers.
-        /// </summary>
+        // <summary>
+        // Metadata for standard projection initializers.
+        // </summary>
         private class ProjectionInitializerMetadata : InitializerMetadata
         {
             internal ProjectionInitializerMetadata(MemberInitExpression initExpression)
@@ -442,9 +442,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Metadata for entity collection initializer.
-        /// </summary>
+        // <summary>
+        // Metadata for entity collection initializer.
+        // </summary>
         internal class EntityCollectionInitializerMetadata : InitializerMetadata
         {
             internal EntityCollectionInitializerMetadata(Type type, NavigationProperty navigationProperty)
@@ -461,11 +461,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 get { return InitializerMetadataKind.EntityCollection; }
             }
 
-            /// <summary>
-            /// Make sure the other metadata instance generates the same property
-            /// (otherwise, we get incorrect behavior where multiple nav props return
-            /// the same type)
-            /// </summary>
+            // <summary>
+            // Make sure the other metadata instance generates the same property
+            // (otherwise, we get incorrect behavior where multiple nav props return
+            // the same type)
+            // </summary>
             protected override bool IsStructurallyEquivalent(InitializerMetadata other)
             {
                 // caller must ensure the type matches

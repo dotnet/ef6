@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Mapping
         error: true)]
     public abstract class EntityViewContainer
     {
-        /// <summary>
-        /// Returns the cached dictionary of (ExtentName,EsqlView)
-        /// </summary>
+        // <summary>
+        // Returns the cached dictionary of (ExtentName,EsqlView)
+        // </summary>
         internal IEnumerable<KeyValuePair<string, string>> ExtentViews
         {
             get

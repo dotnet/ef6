@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Typed ShaperFactory
-    /// </summary>
+    // <summary>
+    // Typed ShaperFactory
+    // </summary>
     internal class ShaperFactory<T> : ShaperFactory
     {
         private readonly int _stateCount;
@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         public Type[] ColumnTypes { get; private set; }
         public bool[] NullableColumns { get; private set; }
 
-        /// <summary>
-        /// Factory method to create the Shaper for Object Layer queries.
-        /// </summary>
+        // <summary>
+        // Factory method to create the Shaper for Object Layer queries.
+        // </summary>
         internal Shaper<T> Create(
             DbDataReader reader, ObjectContext context, MetadataWorkspace workspace, MergeOption mergeOption,
             bool readerOwned, bool streaming)

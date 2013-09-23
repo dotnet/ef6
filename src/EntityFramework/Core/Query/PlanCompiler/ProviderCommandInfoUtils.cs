@@ -10,21 +10,21 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Helper class for creating a ProviderCommandInfo given an Iqt Node.
-    /// </summary>
+    // <summary>
+    // Helper class for creating a ProviderCommandInfo given an Iqt Node.
+    // </summary>
     internal static class ProviderCommandInfoUtils
     {
         #region Public Methods
 
-        /// <summary>
-        /// Creates a ProviderCommandInfo for the given node.
-        /// This method should be called when the keys, foreign keys and sort keys are known ahead of time.
-        /// Typically it is used when the original command is factored into multiple commands.
-        /// </summary>
-        /// <param name="command"> The owning command, used for creating VarVecs, etc </param>
-        /// <param name="node"> The root of the sub-command for which a ProviderCommandInfo should be generated </param>
-        /// <returns> The resulting ProviderCommandInfo </returns>
+        // <summary>
+        // Creates a ProviderCommandInfo for the given node.
+        // This method should be called when the keys, foreign keys and sort keys are known ahead of time.
+        // Typically it is used when the original command is factored into multiple commands.
+        // </summary>
+        // <param name="command"> The owning command, used for creating VarVecs, etc </param>
+        // <param name="node"> The root of the sub-command for which a ProviderCommandInfo should be generated </param>
+        // <returns> The resulting ProviderCommandInfo </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "rowtype")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -54,12 +54,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Private Methods
 
-        /// <summary>
-        /// Build up a mapping from Vars to the corresponding property of the output row type
-        /// </summary>
-        /// <param name="projectOp"> the physical projectOp </param>
-        /// <param name="outputType"> output type </param>
-        /// <returns> a map from Vars to the output type member </returns>
+        // <summary>
+        // Build up a mapping from Vars to the corresponding property of the output row type
+        // </summary>
+        // <param name="projectOp"> the physical projectOp </param>
+        // <param name="outputType"> output type </param>
+        // <returns> a map from Vars to the output type member </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PhysicalProjectOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",

@@ -64,9 +64,9 @@ namespace System.Data.Entity.Core.Mapping
             get { return (AssociationSet)Set; }
         }
 
-        /// <summary>
-        /// Gets or sets function mapping information for this association set. May be null.
-        /// </summary>
+        // <summary>
+        // Gets or sets function mapping information for this association set. May be null.
+        // </summary>
         internal AssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
 
         /// <summary>

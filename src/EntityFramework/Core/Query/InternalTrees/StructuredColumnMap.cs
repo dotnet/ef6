@@ -7,19 +7,19 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// Represents a column map for a structured column
-    /// </summary>
+    // <summary>
+    // Represents a column map for a structured column
+    // </summary>
     internal abstract class StructuredColumnMap : ColumnMap
     {
         private readonly ColumnMap[] m_properties;
 
-        /// <summary>
-        /// Structured columnmap constructor
-        /// </summary>
-        /// <param name="type"> datatype for this column </param>
-        /// <param name="name"> column name </param>
-        /// <param name="properties"> list of properties </param>
+        // <summary>
+        // Structured columnmap constructor
+        // </summary>
+        // <param name="type"> datatype for this column </param>
+        // <param name="name"> column name </param>
+        // <param name="properties"> list of properties </param>
         internal StructuredColumnMap(TypeUsage type, string name, ColumnMap[] properties)
             : base(type, name)
         {
@@ -27,26 +27,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_properties = properties;
         }
 
-        /// <summary>
-        /// Get the null sentinel column, if any.  Virtual so only derived column map
-        /// types that can have NullSentinel have to provide storage, etc.
-        /// </summary>
+        // <summary>
+        // Get the null sentinel column, if any.  Virtual so only derived column map
+        // types that can have NullSentinel have to provide storage, etc.
+        // </summary>
         internal virtual SimpleColumnMap NullSentinel
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Get the list of properties that constitute this structured type
-        /// </summary>
+        // <summary>
+        // Get the list of properties that constitute this structured type
+        // </summary>
         internal ColumnMap[] Properties
         {
             get { return m_properties; }
         }
 
-        /// <summary>
-        /// Debugging support
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // </summary>
         public override string ToString()
         {
             var sb = new StringBuilder();

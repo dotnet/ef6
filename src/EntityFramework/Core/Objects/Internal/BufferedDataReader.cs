@@ -15,10 +15,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading.Tasks;
 #endif
 
-    /// <summary>
-    /// A wrapper over a <see cref="DbDataReader" /> that will consume and close the supplied reader
-    /// when <see cref="Initialize" /> is called.
-    /// </summary>
+    // <summary>
+    // A wrapper over a <see cref="DbDataReader" /> that will consume and close the supplied reader
+    // when <see cref="Initialize" /> is called.
+    // </summary>
     internal class BufferedDataReader : DbDataReader
     {
         private DbDataReader _underlyingReader;

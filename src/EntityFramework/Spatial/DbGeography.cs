@@ -411,10 +411,10 @@ namespace System.Data.Entity.Spatial
             return _spatialProvider.AsText(this);
         }
 
-        /// <summary>
-        /// Generates the well known text representation of this DbGeography value.  Includes Longitude, Latitude, Elevation (Z) and Measure (M) for points.
-        /// </summary>
-        /// <returns> A string containing the well known text representation of this DbGeography value. </returns>
+        // <summary>
+        // Generates the well known text representation of this DbGeography value.  Includes Longitude, Latitude, Elevation (Z) and Measure (M) for points.
+        // </summary>
+        // <returns> A string containing the well known text representation of this DbGeography value. </returns>
         internal string AsTextIncludingElevationAndMeasure()
         {
             return _spatialProvider.AsTextIncludingElevationAndMeasure(this);

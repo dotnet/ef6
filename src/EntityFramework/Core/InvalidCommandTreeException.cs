@@ -40,9 +40,9 @@ namespace System.Data.Entity.Core
         {
         }
 
-        /// <summary>
-        /// Constructs a new InvalidCommandTreeException from the specified serialization info and streaming context.
-        /// </summary>
+        // <summary>
+        // Constructs a new InvalidCommandTreeException from the specified serialization info and streaming context.
+        // </summary>
         private InvalidCommandTreeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

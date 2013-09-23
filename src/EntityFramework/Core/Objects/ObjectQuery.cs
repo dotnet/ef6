@@ -34,22 +34,22 @@ namespace System.Data.Entity.Core.Objects
         // Instance Fields
         // -----------------
 
-        /// <summary>
-        /// The underlying implementation of this ObjectQuery as provided by a concrete subclass
-        /// of ObjectQueryImplementation. Implementations currently exist for Entity-SQL- and Linq-to-Entities-based ObjectQueries.
-        /// </summary>
+        // <summary>
+        // The underlying implementation of this ObjectQuery as provided by a concrete subclass
+        // of ObjectQueryImplementation. Implementations currently exist for Entity-SQL- and Linq-to-Entities-based ObjectQueries.
+        // </summary>
         private readonly ObjectQueryState _state;
 
-        /// <summary>
-        /// The result type of the query - 'TResultType' expressed as an O-Space type usage. Cached here and
-        /// only instantiated if the <see cref="GetResultType" /> method is called.
-        /// </summary>
+        // <summary>
+        // The result type of the query - 'TResultType' expressed as an O-Space type usage. Cached here and
+        // only instantiated if the <see cref="GetResultType" /> method is called.
+        // </summary>
         private TypeUsage _resultType;
 
-        /// <summary>
-        /// Every instance of ObjectQuery get a unique instance of the provider. This helps propagate state information
-        /// using the provider through LINQ operators.
-        /// </summary>
+        // <summary>
+        // Every instance of ObjectQuery get a unique instance of the provider. This helps propagate state information
+        // using the provider through LINQ operators.
+        // </summary>
         private ObjectQueryProvider _provider;
 
         #endregion
@@ -60,11 +60,11 @@ namespace System.Data.Entity.Core.Objects
         // Internal Constructors
         // --------------------
 
-        /// <summary>
-        /// The common constructor.
-        /// </summary>
-        /// <param name="queryState"> The underlying implementation of this ObjectQuery </param>
-        /// <returns> A new ObjectQuery instance. </returns>
+        // <summary>
+        // The common constructor.
+        // </summary>
+        // <param name="queryState"> The underlying implementation of this ObjectQuery </param>
+        // <returns> A new ObjectQuery instance. </returns>
         internal ObjectQuery(ObjectQueryState queryState)
         {
             DebugCheck.NotNull(queryState);
@@ -73,9 +73,9 @@ namespace System.Data.Entity.Core.Objects
             _state = queryState;
         }
 
-        /// <summary>
-        /// For testing.
-        /// </summary>
+        // <summary>
+        // For testing.
+        // </summary>
         internal ObjectQuery()
         {
         }
@@ -84,17 +84,17 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Properties
 
-        /// <summary>
-        /// Gets an untyped instantiation of the underlying ObjectQueryState that implements this ObjectQuery.
-        /// </summary>
+        // <summary>
+        // Gets an untyped instantiation of the underlying ObjectQueryState that implements this ObjectQuery.
+        // </summary>
         internal ObjectQueryState QueryState
         {
             get { return _state; }
         }
 
-        /// <summary>
-        /// Gets the <see cref="ObjectQueryProvider" /> associated with this query instance.
-        /// </summary>
+        // <summary>
+        // Gets the <see cref="ObjectQueryProvider" /> associated with this query instance.
+        // </summary>
         internal virtual ObjectQueryProvider ObjectQueryProvider
         {
             get

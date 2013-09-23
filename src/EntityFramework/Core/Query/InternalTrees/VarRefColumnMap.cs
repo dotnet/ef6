@@ -6,17 +6,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Globalization;
 
-    /// <summary>
-    /// A VarRefColumnMap is our intermediate representation of a ColumnMap.
-    /// Eventually, this gets translated into a regular ColumnMap - during the CodeGen phase
-    /// </summary>
+    // <summary>
+    // A VarRefColumnMap is our intermediate representation of a ColumnMap.
+    // Eventually, this gets translated into a regular ColumnMap - during the CodeGen phase
+    // </summary>
     internal class VarRefColumnMap : SimpleColumnMap
     {
         #region Public Methods
 
-        /// <summary>
-        /// Get the Var that produces this column's value
-        /// </summary>
+        // <summary>
+        // Get the Var that produces this column's value
+        // </summary>
         internal Var Var
         {
             get { return m_var; }
@@ -26,12 +26,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region Constructors
 
-        /// <summary>
-        /// Simple constructor
-        /// </summary>
-        /// <param name="type"> datatype of this Var </param>
-        /// <param name="name"> the name of the column </param>
-        /// <param name="v"> the var producing the value for this column </param>
+        // <summary>
+        // Simple constructor
+        // </summary>
+        // <param name="type"> datatype of this Var </param>
+        // <param name="name"> the name of the column </param>
+        // <param name="v"> the var producing the value for this column </param>
         internal VarRefColumnMap(TypeUsage type, string name, Var v)
             : base(type, name)
         {
@@ -43,18 +43,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         {
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
             visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -62,9 +62,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Debugging support
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // </summary>
         public override string ToString()
         {
             return IsNamed ? Name : String.Format(CultureInfo.InvariantCulture, "{0}", m_var.Id);

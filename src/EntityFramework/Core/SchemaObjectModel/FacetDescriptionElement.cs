@@ -68,10 +68,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /////////////////////////////////////////////////////////////////////
         // Attribute Handlers
 
-        /// <summary>
-        /// Handler for the Minimum attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Minimum attribute </param>
+        // <summary>
+        // Handler for the Minimum attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Minimum attribute </param>
         protected void HandleMinimumAttribute(XmlReader reader)
         {
             var value = -1;
@@ -81,10 +81,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Handler for the Maximum attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Maximum attribute </param>
+        // <summary>
+        // Handler for the Maximum attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Maximum attribute </param>
         protected void HandleMaximumAttribute(XmlReader reader)
         {
             var value = -1;
@@ -94,16 +94,16 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Handler for the Default attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Default attribute </param>
+        // <summary>
+        // Handler for the Default attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Default attribute </param>
         protected abstract void HandleDefaultAttribute(XmlReader reader);
 
-        /// <summary>
-        /// Handler for the Constant attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Constant attribute </param>
+        // <summary>
+        // Handler for the Constant attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Constant attribute </param>
         protected void HandleConstantAttribute(XmlReader reader)
         {
             var value = false;

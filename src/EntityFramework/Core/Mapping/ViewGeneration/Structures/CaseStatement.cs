@@ -13,38 +13,38 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class to denote a case statement:
-    /// CASE
-    /// WHEN condition1 THEN value1
-    /// WHEN condition2 THEN value2
-    /// ...
-    /// END
-    /// </summary>
+    // <summary>
+    // A class to denote a case statement:
+    // CASE
+    // WHEN condition1 THEN value1
+    // WHEN condition2 THEN value2
+    // ...
+    // END
+    // </summary>
     internal sealed class CaseStatement : InternalBase
     {
-        /// <summary>
-        /// Creates a case statement for the <paramref name="memberPath" /> with no clauses.
-        /// </summary>
+        // <summary>
+        // Creates a case statement for the <paramref name="memberPath" /> with no clauses.
+        // </summary>
         internal CaseStatement(MemberPath memberPath)
         {
             m_memberPath = memberPath;
             m_clauses = new List<WhenThen>();
         }
 
-        /// <summary>
-        /// The field.
-        /// </summary>
+        // <summary>
+        // The field.
+        // </summary>
         private readonly MemberPath m_memberPath;
 
-        /// <summary>
-        /// All the WHEN THENs.
-        /// </summary>
+        // <summary>
+        // All the WHEN THENs.
+        // </summary>
         private List<WhenThen> m_clauses;
 
-        /// <summary>
-        /// Value for the else clause.
-        /// </summary>
+        // <summary>
+        // Value for the else clause.
+        // </summary>
         private ProjectedSlot m_elseValue;
 
         private bool m_simplified;
@@ -64,12 +64,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_elseValue; }
         }
 
-        /// <summary>
-        /// Recursively qualifies all <see cref="ProjectedSlot" />s and returns a new deeply qualified
-        /// <see
-        ///     cref="CaseStatement" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Recursively qualifies all <see cref="ProjectedSlot" />s and returns a new deeply qualified
+        // <see
+        //     cref="CaseStatement" />
+        // .
+        // </summary>
         internal CaseStatement DeepQualify(CqlBlock block)
         {
             // Go through the whenthens and else and make a new case statement with qualified slots as needed.
@@ -87,10 +87,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Adds an expression of the form "WHEN <paramref name="condition" /> THEN <paramref name="value" />".
-        /// This operation is not allowed after the <see cref="Simplify" /> call.
-        /// </summary>
+        // <summary>
+        // Adds an expression of the form "WHEN <paramref name="condition" /> THEN <paramref name="value" />".
+        // This operation is not allowed after the <see cref="Simplify" /> call.
+        // </summary>
         internal void AddWhenThen(BoolExpression condition, ProjectedSlot value)
         {
             Debug.Assert(!m_simplified, "Attempt to modify a simplified case statement");
@@ -100,9 +100,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_clauses.Add(new WhenThen(condition, value));
         }
 
-        /// <summary>
-        /// Returns true if the <see cref="CaseStatement" /> depends on (projects) its slot in THEN value or ELSE value.
-        /// </summary>
+        // <summary>
+        // Returns true if the <see cref="CaseStatement" /> depends on (projects) its slot in THEN value or ELSE value.
+        // </summary>
         internal bool DependsOnMemberValue
         {
             get
@@ -164,10 +164,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return false;
         }
 
-        /// <summary>
-        /// Simplifies the <see cref="CaseStatement" /> so that unnecessary WHEN/THENs for nulls/undefined values are eliminated.
-        /// Also, adds an ELSE clause if possible.
-        /// </summary>
+        // <summary>
+        // Simplifies the <see cref="CaseStatement" /> so that unnecessary WHEN/THENs for nulls/undefined values are eliminated.
+        // Also, adds an ELSE clause if possible.
+        // </summary>
         internal void Simplify()
         {
             if (m_simplified)
@@ -220,9 +220,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_simplified = true;
         }
 
-        /// <summary>
-        /// Generates eSQL for the current <see cref="CaseStatement" />.
-        /// </summary>
+        // <summary>
+        // Generates eSQL for the current <see cref="CaseStatement" />.
+        // </summary>
         internal StringBuilder AsEsql(
             StringBuilder builder, IEnumerable<WithRelationship> withRelationships, string blockAlias, int indentLevel)
         {
@@ -256,9 +256,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return builder;
         }
 
-        /// <summary>
-        /// Generates CQT for the current <see cref="CaseStatement" />.
-        /// </summary>
+        // <summary>
+        // Generates CQT for the current <see cref="CaseStatement" />.
+        // </summary>
         internal DbExpression AsCqt(DbExpression row, IEnumerable<WithRelationship> withRelationships)
         {
             // Generate the Case WHEN .. THEN ..., WHEN ... THEN ..., END
@@ -401,14 +401,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_memberPath.ToCompactString(builder);
         }
 
-        /// <summary>
-        /// A class that stores WHEN condition THEN value.
-        /// </summary>
+        // <summary>
+        // A class that stores WHEN condition THEN value.
+        // </summary>
         internal sealed class WhenThen : InternalBase
         {
-            /// <summary>
-            /// Creates WHEN condition THEN value.
-            /// </summary>
+            // <summary>
+            // Creates WHEN condition THEN value.
+            // </summary>
             internal WhenThen(BoolExpression condition, ProjectedSlot value)
             {
                 m_condition = condition;
@@ -418,17 +418,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             private readonly BoolExpression m_condition;
             private readonly ProjectedSlot m_value;
 
-            /// <summary>
-            /// Returns WHEN condition.
-            /// </summary>
+            // <summary>
+            // Returns WHEN condition.
+            // </summary>
             internal BoolExpression Condition
             {
                 get { return m_condition; }
             }
 
-            /// <summary>
-            /// Returns THEN value.
-            /// </summary>
+            // <summary>
+            // Returns THEN value.
+            // </summary>
             internal ProjectedSlot Value
             {
                 get { return m_value; }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 {
@@ -6,62 +6,62 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
 
-    /// <summary>
-    /// Provides a means of constructing Func&lt;DbExpression, bool&gt; 'patterns' for use with
-    /// <see
-    ///     cref="PatternMatchRule" />
-    /// s.
-    /// </summary>
+    // <summary>
+    // Provides a means of constructing Func&lt;DbExpression, bool&gt; 'patterns' for use with
+    // <see
+    //     cref="PatternMatchRule" />
+    // s.
+    // </summary>
     internal static class Patterns
     {
         #region Pattern Combinators
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff both <paramref name="pattern1" /> and <paramref name="pattern2" /> are matched. Does NOT return a pattern that matches
-        /// <see
-        ///     cref="DbAndExpression" />
-        /// . Use <see cref="MatchKind" /> with an argument of <see cref="DbExpressionKind.And" /> to match an AND expression
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff both <paramref name="pattern1" /> and <paramref name="pattern2" /> are matched. Does NOT return a pattern that matches
+        // <see
+        //     cref="DbAndExpression" />
+        // . Use <see cref="MatchKind" /> with an argument of <see cref="DbExpressionKind.And" /> to match an AND expression
+        // </summary>
         internal static Func<DbExpression, bool> And(Func<DbExpression, bool> pattern1, Func<DbExpression, bool> pattern2)
         {
             return (e => pattern1(e) && pattern2(e));
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff all of <paramref name="pattern1" />, <paramref name="pattern2" /> and
-        /// <paramref
-        ///     name="pattern3" />
-        /// are matched. Does NOT return a pattern that matches <see cref="DbAndExpression" />. Use
-        /// <see
-        ///     cref="MatchKind" />
-        /// with an argument of <see cref="DbExpressionKind.And" /> to match an AND expression
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff all of <paramref name="pattern1" />, <paramref name="pattern2" /> and
+        // <paramref
+        //     name="pattern3" />
+        // are matched. Does NOT return a pattern that matches <see cref="DbAndExpression" />. Use
+        // <see
+        //     cref="MatchKind" />
+        // with an argument of <see cref="DbExpressionKind.And" /> to match an AND expression
+        // </summary>
         internal static Func<DbExpression, bool> And(
             Func<DbExpression, bool> pattern1, Func<DbExpression, bool> pattern2, Func<DbExpression, bool> pattern3)
         {
             return (e => pattern1(e) && pattern2(e) && pattern3(e));
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched if either <paramref name="pattern1" /> or <paramref name="pattern2" /> are matched. Does NOT return a pattern that matches
-        /// <see
-        ///     cref="DbOrExpression" />
-        /// . Use <see cref="MatchKind" /> with an argument of <see cref="DbExpressionKind.Or" /> to match an OR expression
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched if either <paramref name="pattern1" /> or <paramref name="pattern2" /> are matched. Does NOT return a pattern that matches
+        // <see
+        //     cref="DbOrExpression" />
+        // . Use <see cref="MatchKind" /> with an argument of <see cref="DbExpressionKind.Or" /> to match an OR expression
+        // </summary>
         internal static Func<DbExpression, bool> Or(Func<DbExpression, bool> pattern1, Func<DbExpression, bool> pattern2)
         {
             return (e => pattern1(e) || pattern2(e));
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched if either <paramref name="pattern1" />, <paramref name="pattern2" /> or
-        /// <paramref
-        ///     name="pattern3" />
-        /// are matched. Does NOT return a pattern that matches <see cref="DbOrExpression" />. Use
-        /// <see
-        ///     cref="MatchKind" />
-        /// with an argument of <see cref="DbExpressionKind.Or" /> to match an OR expression
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched if either <paramref name="pattern1" />, <paramref name="pattern2" /> or
+        // <paramref
+        //     name="pattern3" />
+        // are matched. Does NOT return a pattern that matches <see cref="DbOrExpression" />. Use
+        // <see
+        //     cref="MatchKind" />
+        // with an argument of <see cref="DbExpressionKind.Or" /> to match an OR expression
+        // </summary>
         internal static Func<DbExpression, bool> Or(
             Func<DbExpression, bool> pattern1, Func<DbExpression, bool> pattern2, Func<DbExpression, bool> pattern3)
         {
@@ -82,17 +82,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         #region Constant Patterns
 
-        /// <summary>
-        /// Returns a pattern that will match any expression, returning <c>true</c> for any argument, including null.
-        /// </summary>
+        // <summary>
+        // Returns a pattern that will match any expression, returning <c>true</c> for any argument, including null.
+        // </summary>
         internal static Func<DbExpression, bool> AnyExpression
         {
             get { return (e => true); }
         }
 
-        /// <summary>
-        /// Returns a pattern that will match any collection of expressions, returning <c>true</c> for any argument, including a null or empty enumerable.
-        /// </summary>
+        // <summary>
+        // Returns a pattern that will match any collection of expressions, returning <c>true</c> for any argument, including a null or empty enumerable.
+        // </summary>
         internal static Func<IEnumerable<DbExpression>, bool> AnyExpressions
         {
             get { return (elems => true); }
@@ -109,25 +109,25 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         internal static Func<DbExpression, bool> MatchBooleanType { get { return (e => TypeSemantics.IsBooleanType(e.ResultType)); } }
 #endif
 
-        /// <summary>
-        /// Returns a pattern that is matched if the argument has a complex result type
-        /// </summary>
+        // <summary>
+        // Returns a pattern that is matched if the argument has a complex result type
+        // </summary>
         internal static Func<DbExpression, bool> MatchComplexType
         {
             get { return (e => TypeSemantics.IsComplexType(e.ResultType)); }
         }
 
-        /// <summary>
-        /// Returns a pattern that is matched if the argument has an entity result type
-        /// </summary>
+        // <summary>
+        // Returns a pattern that is matched if the argument has an entity result type
+        // </summary>
         internal static Func<DbExpression, bool> MatchEntityType
         {
             get { return (e => TypeSemantics.IsEntityType(e.ResultType)); }
         }
 
-        /// <summary>
-        /// Returns a pattern that is matched if the argument has a row result type
-        /// </summary>
+        // <summary>
+        // Returns a pattern that is matched if the argument has a row result type
+        // </summary>
         internal static Func<DbExpression, bool> MatchRowType
         {
             get { return (e => TypeSemantics.IsRowType(e.ResultType)); }
@@ -137,17 +137,17 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
 
         #region General Patterns
 
-        /// <summary>
-        /// Constructs a new pattern that will match an expression with the specified <see cref="DbExpressionKind" />.
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that will match an expression with the specified <see cref="DbExpressionKind" />.
+        // </summary>
         internal static Func<DbExpression, bool> MatchKind(DbExpressionKind kindToMatch)
         {
             return (e => e.ExpressionKind == kindToMatch);
         }
 
-        /// <summary>
-        /// Constructs a new pattern that will match iff the specified pattern argument is matched for all expressions in the collection argument.
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that will match iff the specified pattern argument is matched for all expressions in the collection argument.
+        // </summary>
         internal static Func<IEnumerable<DbExpression>, bool> MatchForAll(Func<DbExpression, bool> elementPattern)
         {
             return (elems => elems.FirstOrDefault(e => !elementPattern(e)) == null);
@@ -185,9 +185,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 #endif
 
-        /// <summary>
-        /// Returns a pattern that is matched if the argument expression is a <see cref="DbBinaryExpression" />
-        /// </summary>
+        // <summary>
+        // Returns a pattern that is matched if the argument expression is a <see cref="DbBinaryExpression" />
+        // </summary>
         internal static Func<DbExpression, bool> MatchBinary()
         {
             return (e => e is DbBinaryExpression);
@@ -203,12 +203,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
         }
 #endif
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff the argument expression is a <see cref="DbFilterExpression" /> with input and predicate subexpressions that match the corresponding
-        /// <paramref
-        ///     name="inputPattern" />
-        /// and <paramref name="predicatePattern" /> patterns
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff the argument expression is a <see cref="DbFilterExpression" /> with input and predicate subexpressions that match the corresponding
+        // <paramref
+        //     name="inputPattern" />
+        // and <paramref name="predicatePattern" /> patterns
+        // </summary>
         internal static Func<DbExpression, bool> MatchFilter(
             Func<DbExpression, bool> inputPattern, Func<DbExpression, bool> predicatePattern)
         {
@@ -227,12 +227,12 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 });
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff the argument expression is a <see cref="DbProjectExpression" /> with input and projection subexpressions that match the corresponding
-        /// <paramref
-        ///     name="inputPattern" />
-        /// and <paramref name="projectionPattern" /> patterns
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff the argument expression is a <see cref="DbProjectExpression" /> with input and projection subexpressions that match the corresponding
+        // <paramref
+        //     name="inputPattern" />
+        // and <paramref name="projectionPattern" /> patterns
+        // </summary>
         internal static Func<DbExpression, bool> MatchProject(
             Func<DbExpression, bool> inputPattern, Func<DbExpression, bool> projectionPattern)
         {
@@ -251,15 +251,15 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 });
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff the argument expression is a <see cref="DbCaseExpression" /> with 'when' and 'then' subexpression lists that match the specified
-        /// <paramref
-        ///     name="whenPattern" />
-        /// and <paramref name="thenPattern" /> collection patterns and an 'else' subexpression that matches the specified
-        /// <paramref
-        ///     name="elsePattern" />
-        /// expression pattern
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff the argument expression is a <see cref="DbCaseExpression" /> with 'when' and 'then' subexpression lists that match the specified
+        // <paramref
+        //     name="whenPattern" />
+        // and <paramref name="thenPattern" /> collection patterns and an 'else' subexpression that matches the specified
+        // <paramref
+        //     name="elsePattern" />
+        // expression pattern
+        // </summary>
         internal static Func<DbExpression, bool> MatchCase(
             Func<IEnumerable<DbExpression>, bool> whenPattern, Func<IEnumerable<DbExpression>, bool> thenPattern,
             Func<DbExpression, bool> elsePattern)
@@ -279,20 +279,20 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
                 });
         }
 
-        /// <summary>
-        /// Gets a pattern that is matched if the argument expression is a <see cref="DbCaseExpression" />. This property can be used instead of repeated calls to
-        /// <see
-        ///     cref="MatchKind" />
-        /// with an argument of <see cref="DbExpressionKind.Case" />
-        /// </summary>
+        // <summary>
+        // Gets a pattern that is matched if the argument expression is a <see cref="DbCaseExpression" />. This property can be used instead of repeated calls to
+        // <see
+        //     cref="MatchKind" />
+        // with an argument of <see cref="DbExpressionKind.Case" />
+        // </summary>
         internal static Func<DbExpression, bool> MatchNewInstance()
         {
             return (e => e.ExpressionKind == DbExpressionKind.NewInstance);
         }
 
-        /// <summary>
-        /// Constructs a new pattern that is matched iff the argument expression is a <see cref="DbNewInstanceExpression" /> with arguments that match the specified collection pattern
-        /// </summary>
+        // <summary>
+        // Constructs a new pattern that is matched iff the argument expression is a <see cref="DbNewInstanceExpression" /> with arguments that match the specified collection pattern
+        // </summary>
         internal static Func<DbExpression, bool> MatchNewInstance(Func<IEnumerable<DbExpression>, bool> argumentsPattern)
         {
             return (e =>

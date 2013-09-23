@@ -1,13 +1,13 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.ConfigFile
 {
     using System.Configuration;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Represents the configuration for a specific context type
-    /// </summary>
+    // <summary>
+    // Represents the configuration for a specific context type
+    // </summary>
     internal class ContextElement : ConfigurationElement
     {
         private const string TypeKey = "type";

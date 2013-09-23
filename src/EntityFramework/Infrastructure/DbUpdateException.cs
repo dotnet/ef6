@@ -29,11 +29,11 @@ namespace System.Data.Entity.Infrastructure
         [NonSerialized]
         private DbUpdateExceptionState _state;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbUpdateException" /> class.
-        /// </summary>
-        /// <param name="internalContext"> The internal context. </param>
-        /// <param name="innerException"> The inner exception. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbUpdateException" /> class.
+        // </summary>
+        // <param name="internalContext"> The internal context. </param>
+        // <param name="innerException"> The inner exception. </param>
         internal DbUpdateException(
             InternalContext internalContext, UpdateException innerException, bool involvesIndependentAssociations)
             : base(
@@ -114,29 +114,29 @@ namespace System.Data.Entity.Infrastructure
             SubscribeToSerializeObjectState();
         }
 
-        /// <summary>
-        /// Subscribes the SerializeObjectState event.
-        /// </summary>
+        // <summary>
+        // Subscribes the SerializeObjectState event.
+        // </summary>
         private void SubscribeToSerializeObjectState()
         {
             SerializeObjectState += (exception, eventArgs) => eventArgs.AddSerializedState(_state);
         }
 
-        /// <summary>
-        /// Holds exception state that will be serialized when the exception is serialized.
-        /// </summary>
+        // <summary>
+        // Holds exception state that will be serialized when the exception is serialized.
+        // </summary>
         [Serializable]
         private struct DbUpdateExceptionState : ISafeSerializationData
         {
-            /// <summary>
-            /// Gets or sets a value indicating whether the exception involved independent associations.
-            /// </summary>
+            // <summary>
+            // Gets or sets a value indicating whether the exception involved independent associations.
+            // </summary>
             public bool InvolvesIndependentAssociations { get; set; }
 
-            /// <summary>
-            /// Completes the deserialization.
-            /// </summary>
-            /// <param name="deserialized"> The deserialized object. </param>
+            // <summary>
+            // Completes the deserialization.
+            // </summary>
+            // <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)
             {
                 var updateException = (DbUpdateException)deserialized;

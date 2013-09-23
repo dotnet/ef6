@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -6,10 +6,10 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Represents a raw SQL query against the context for any type where the results are never
-    /// associated with an entity set and are never tracked.
-    /// </summary>
+    // <summary>
+    // Represents a raw SQL query against the context for any type where the results are never
+    // associated with an entity set and are never tracked.
+    // </summary>
     internal class InternalSqlNonSetQuery : InternalSqlQuery
     {
         #region Constructors and fields
@@ -17,14 +17,14 @@ namespace System.Data.Entity.Internal
         private readonly InternalContext _internalContext;
         private readonly Type _elementType;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InternalSqlNonSetQuery" /> class.
-        /// </summary>
-        /// <param name="internalContext"> The internal context. </param>
-        /// <param name="elementType"> Type of the element. </param>
-        /// <param name="sql"> The SQL. </param>
-        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
-        /// <param name="parameters"> The parameters. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="InternalSqlNonSetQuery" /> class.
+        // </summary>
+        // <param name="internalContext"> The internal context. </param>
+        // <param name="elementType"> Type of the element. </param>
+        // <param name="sql"> The SQL. </param>
+        // <param name="streaming"> Whether the query is streaming or buffering. </param>
+        // <param name="parameters"> The parameters. </param>
         internal InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, bool streaming, object[] parameters)
             : base(sql, streaming, parameters)
         {
@@ -39,10 +39,10 @@ namespace System.Data.Entity.Internal
 
         #region AsNoTracking
 
-        /// <summary>
-        /// Returns this query since it can never be a tracking query.
-        /// </summary>
-        /// <returns> This instance. </returns>
+        // <summary>
+        // Returns this query since it can never be a tracking query.
+        // </summary>
+        // <returns> This instance. </returns>
         public override InternalSqlQuery AsNoTracking()
         {
             return this;
@@ -52,7 +52,7 @@ namespace System.Data.Entity.Internal
 
         #region AsStreaming
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override InternalSqlQuery AsStreaming()
         {
             return Streaming
@@ -64,11 +64,11 @@ namespace System.Data.Entity.Internal
 
         #region IEnumerable implementation
 
-        /// <summary>
-        /// Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
-        /// database backing this context. The results are not materialized as entities or tracked.
-        /// </summary>
-        /// <returns> The query results. </returns>
+        // <summary>
+        // Returns an <see cref="IEnumerator" /> which when enumerated will execute the given SQL query against the
+        // database backing this context. The results are not materialized as entities or tracked.
+        // </summary>
+        // <returns> The query results. </returns>
         public override IEnumerator GetEnumerator()
         {
             return _internalContext.ExecuteSqlQuery(_elementType, Sql, Streaming, Parameters);
@@ -80,11 +80,11 @@ namespace System.Data.Entity.Internal
 
 #if !NET40
 
-        /// <summary>
-        /// Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
-        /// database backing this context. The results are not materialized as entities or tracked.
-        /// </summary>
-        /// <returns> The query results. </returns>
+        // <summary>
+        // Returns an <see cref="IDbAsyncEnumerator" /> which when enumerated will execute the given SQL query against the
+        // database backing this context. The results are not materialized as entities or tracked.
+        // </summary>
+        // <returns> The query results. </returns>
         public override IDbAsyncEnumerator GetAsyncEnumerator()
         {
             return _internalContext.ExecuteSqlQueryAsync(_elementType, Sql, Streaming, Parameters);

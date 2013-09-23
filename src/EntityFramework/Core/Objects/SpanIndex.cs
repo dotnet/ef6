@@ -7,17 +7,17 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// An index containing information about how the query was spanned
-    /// This helps to determine how to materialize the query result
-    /// </summary>
+    // <summary>
+    // An index containing information about how the query was spanned
+    // This helps to determine how to materialize the query result
+    // </summary>
     internal sealed class SpanIndex
     {
         #region Nested types
 
-        /// <summary>
-        /// Helper class to compare two RowTypes using EdmEquals instead of reference equality.
-        /// </summary>
+        // <summary>
+        // Helper class to compare two RowTypes using EdmEquals instead of reference equality.
+        // </summary>
         private sealed class RowTypeEqualityComparer : IEqualityComparer<RowType>
         {
             private RowTypeEqualityComparer()

@@ -17,10 +17,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract partial class MetadataItem
     {
-        /// <summary>
-        /// Implementing this internal constructor so that this class can't be derived
-        /// outside this assembly
-        /// </summary>
+        // <summary>
+        // Implementing this internal constructor so that this class can't be derived
+        // outside this assembly
+        // </summary>
         internal MetadataItem()
         {
             _annotations = new AnnotationCollection(this);
@@ -65,9 +65,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private MetadataCollection<MetadataProperty> _itemAttributes;
         private AnnotationCollection _annotations;
 
-        /// <summary>
-        /// Gets the currently assigned annotations.
-        /// </summary>
+        // <summary>
+        // Gets the currently assigned annotations.
+        // </summary>
         internal virtual ICollection<MetadataProperty> Annotations
         {
             get { return _annotations; }
@@ -128,9 +128,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 : false;
         }
 
-        /// <summary>
-        /// List of item attributes on this type
-        /// </summary>
+        // <summary>
+        // List of item attributes on this type
+        // </summary>
         internal MetadataCollection<MetadataProperty> RawMetadataProperties
         {
             get { return _itemAttributes; }
@@ -142,14 +142,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// </returns>
         public Documentation Documentation { get; set; }
 
-        /// <summary>
-        /// Identity of the item
-        /// </summary>
+        // <summary>
+        // Identity of the item
+        // </summary>
         internal abstract String Identity { get; }
 
-        /// <summary>
-        /// Just checks for identities to be equal
-        /// </summary>
+        // <summary>
+        // Just checks for identities to be equal
+        // </summary>
         internal virtual bool EdmEquals(MetadataItem item)
         {
             return ((null != item) &&
@@ -158,18 +158,18 @@ namespace System.Data.Entity.Core.Metadata.Edm
                       Identity == item.Identity)));
         }
 
-        /// <summary>
-        /// Returns true if this item is not-changeable. Otherwise returns false.
-        /// </summary>
+        // <summary>
+        // Returns true if this item is not-changeable. Otherwise returns false.
+        // </summary>
         internal bool IsReadOnly
         {
             get { return GetFlag(MetadataFlags.Readonly); }
         }
 
-        /// <summary>
-        /// Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
-        /// it can never be changed.
-        /// </summary>
+        // <summary>
+        // Validates the types and sets the readOnly property to true. Once the type is set to readOnly,
+        // it can never be changed.
+        // </summary>
         internal virtual void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -182,17 +182,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Builds identity string for this item. By default, the method calls the identity property.
-        /// </summary>
+        // <summary>
+        // Builds identity string for this item. By default, the method calls the identity property.
+        // </summary>
         internal virtual void BuildIdentity(StringBuilder builder)
         {
             builder.Append(Identity);
         }
 
-        /// <summary>
-        /// Adds the given metadata property to the metadata property collection
-        /// </summary>
+        // <summary>
+        // Adds the given metadata property to the metadata property collection
+        // </summary>
         internal void AddMetadataProperties(List<MetadataProperty> metadataProperties)
         {
             MetadataProperties.Source.AtomicAddRange(metadataProperties);

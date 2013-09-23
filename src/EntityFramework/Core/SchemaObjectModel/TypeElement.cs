@@ -9,10 +9,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// Responsible for parsing Type ProviderManifest
-    /// xml elements
-    /// </summary>
+    // <summary>
+    // Responsible for parsing Type ProviderManifest
+    // xml elements
+    // </summary>
     internal class TypeElement : SchemaType
     {
         private readonly PrimitiveType _primitiveType = new PrimitiveType();
@@ -91,10 +91,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /////////////////////////////////////////////////////////////////////
         // Element Handlers
 
-        /// <summary>
-        /// Handler for the Precision element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Precision element </param>
+        // <summary>
+        // Handler for the Precision element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Precision element </param>
         private void HandlePrecisionElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -104,10 +104,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the Scale element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Scale element </param>
+        // <summary>
+        // Handler for the Scale element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Scale element </param>
         private void HandleScaleElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -116,10 +116,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the MaxLength element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at MaxLength element </param>
+        // <summary>
+        // Handler for the MaxLength element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at MaxLength element </param>
         private void HandleMaxLengthElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -128,10 +128,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the Unicode element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Unicode element </param>
+        // <summary>
+        // Handler for the Unicode element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Unicode element </param>
         private void HandleUnicodeElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -140,10 +140,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the FixedLength element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at FixedLength element </param>
+        // <summary>
+        // Handler for the FixedLength element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at FixedLength element </param>
         private void HandleFixedLengthElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -152,10 +152,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the SRID element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at SRID element </param>
+        // <summary>
+        // Handler for the SRID element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at SRID element </param>
         private void HandleSridElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -164,10 +164,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _facetDescriptions.Add(facetDescription);
         }
 
-        /// <summary>
-        /// Handler for the IsStrict element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at SRID element </param>
+        // <summary>
+        // Handler for the IsStrict element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at SRID element </param>
         private void HandleIsStrictElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -179,10 +179,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         /////////////////////////////////////////////////////////////////////
         // Attribute Handlers
 
-        /// <summary>
-        /// Handler for the PrimitiveTypeKind attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Version attribute </param>
+        // <summary>
+        // Handler for the PrimitiveTypeKind attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Version attribute </param>
         private void HandlePrimitiveTypeKindAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);

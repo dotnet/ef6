@@ -200,29 +200,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _parameters.Source.Add(functionParameter);
         }
 
-        /// <summary>
-        /// Returns true if this is a C-space function and it has an eSQL body defined as DefiningExpression.
-        /// </summary>
+        // <summary>
+        // Returns true if this is a C-space function and it has an eSQL body defined as DefiningExpression.
+        // </summary>
         internal bool HasUserDefinedBody
         {
             get { return IsModelDefinedFunction && !String.IsNullOrEmpty(CommandTextAttribute); }
         }
 
-        /// <summary>
-        /// For function imports, optionally indicates the entity set to which the result is bound.
-        /// If the function import has multiple result sets, returns the entity set to which the first result is bound
-        /// </summary>
+        // <summary>
+        // For function imports, optionally indicates the entity set to which the result is bound.
+        // If the function import has multiple result sets, returns the entity set to which the first result is bound
+        // </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, false)]
         internal EntitySet EntitySet
         {
             get { return _entitySets.Count != 0 ? _entitySets[0] : null; }
         }
 
-        /// <summary>
-        /// For function imports, indicates the entity sets to which the return parameters are bound.
-        /// The number of elements in the collection matches the number of return parameters.
-        /// A null element in the collection indicates that the corresponding are not bound to an entity set.
-        /// </summary>
+        // <summary>
+        // For function imports, indicates the entity sets to which the return parameters are bound.
+        // The number of elements in the collection matches the number of return parameters.
+        // A null element in the collection indicates that the corresponding are not bound to an entity set.
+        // </summary>
         [MetadataProperty(BuiltInTypeKind.EntitySet, true)]
         internal ReadOnlyCollection<EntitySet> EntitySets
         {
@@ -380,9 +380,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be readonly, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -396,9 +396,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Builds function identity string in the form of "functionName (param1, param2, ... paramN)".
-        /// </summary>
+        // <summary>
+        // Builds function identity string in the form of "functionName (param1, param2, ... paramN)".
+        // </summary>
         internal override void BuildIdentity(StringBuilder builder)
         {
             // If we've already cached the identity, simply append it
@@ -416,13 +416,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 param => param.Mode);
         }
 
-        /// <summary>
-        /// Builds identity based on the functionName and parameter types. All parameters are assumed to be
-        /// <see
-        ///     cref="ParameterMode.In" />
-        /// .
-        /// Returns string in the form of "functionName (param1, param2, ... paramN)".
-        /// </summary>
+        // <summary>
+        // Builds identity based on the functionName and parameter types. All parameters are assumed to be
+        // <see
+        //     cref="ParameterMode.In" />
+        // .
+        // Returns string in the form of "functionName (param1, param2, ... paramN)".
+        // </summary>
         internal static string BuildIdentity(string functionName, IEnumerable<TypeUsage> functionParameters)
         {
             var identity = new StringBuilder();
@@ -437,10 +437,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return identity.ToString();
         }
 
-        /// <summary>
-        /// Builds identity based on the functionName and parameters metadata.
-        /// Returns string in the form of "functionName (param1, param2, ... paramN)".
-        /// </summary>
+        // <summary>
+        // Builds identity based on the functionName and parameters metadata.
+        // Returns string in the form of "functionName (param1, param2, ... paramN)".
+        // </summary>
         internal static void BuildIdentity<TParameterMetadata>(
             StringBuilder builder,
             string functionName,

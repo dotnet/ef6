@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Collections.Generic;
     using System.Globalization;
 
-    /// <summary>
-    /// Represents one instance of a table. Contains the table metadata
-    /// </summary>
+    // <summary>
+    // Represents one instance of a table. Contains the table metadata
+    // </summary>
     internal class Table
     {
         private readonly TableMD m_tableMetadata;
@@ -45,25 +45,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_referencedColumns = command.CreateVarVec(m_columns);
         }
 
-        /// <summary>
-        /// Metadata for the table instance
-        /// </summary>
+        // <summary>
+        // Metadata for the table instance
+        // </summary>
         internal TableMD TableMetadata
         {
             get { return m_tableMetadata; }
         }
 
-        /// <summary>
-        /// List of column references
-        /// </summary>
+        // <summary>
+        // List of column references
+        // </summary>
         internal VarList Columns
         {
             get { return m_columns; }
         }
 
-        /// <summary>
-        /// Get the list of all referenced columns.
-        /// </summary>
+        // <summary>
+        // Get the list of all referenced columns.
+        // </summary>
         internal VarVec ReferencedColumns
         {
             get { return m_referencedColumns; }
@@ -74,25 +74,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             get { return m_nonnullableColumns; }
         }
 
-        /// <summary>
-        /// List of keys
-        /// </summary>
+        // <summary>
+        // List of keys
+        // </summary>
         internal VarVec Keys
         {
             get { return m_keys; }
         }
 
-        /// <summary>
-        /// (internal) id for this table instance
-        /// </summary>
+        // <summary>
+        // (internal) id for this table instance
+        // </summary>
         internal int TableId
         {
             get { return m_tableId; }
         }
 
-        /// <summary>
-        /// String form - for debugging
-        /// </summary>
+        // <summary>
+        // String form - for debugging
+        // </summary>
         public override string ToString()
         {
             return String.Format(CultureInfo.InvariantCulture, "{0}::{1}", m_tableMetadata, TableId);

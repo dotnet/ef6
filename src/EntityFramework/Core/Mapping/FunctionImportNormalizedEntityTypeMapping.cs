@@ -36,21 +36,21 @@ namespace System.Data.Entity.Core.Mapping
             ComplementImpliedEntityTypes = (new BitArray(ImpliedEntityTypes)).Not();
         }
 
-        /// <summary>
-        /// Gets discriminator values aligned with DiscriminatorColumns of the parent FunctionImportMapping.
-        /// A null ValueCondition indicates 'anything goes'.
-        /// </summary>
+        // <summary>
+        // Gets discriminator values aligned with DiscriminatorColumns of the parent FunctionImportMapping.
+        // A null ValueCondition indicates 'anything goes'.
+        // </summary>
         internal readonly ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> ColumnConditions;
 
-        /// <summary>
-        /// Gets bit array with 'true' indicating the corresponding MappedEntityType of the parent
-        /// FunctionImportMapping is implied by this fragment.
-        /// </summary>
+        // <summary>
+        // Gets bit array with 'true' indicating the corresponding MappedEntityType of the parent
+        // FunctionImportMapping is implied by this fragment.
+        // </summary>
         internal readonly BitArray ImpliedEntityTypes;
 
-        /// <summary>
-        /// Gets the complement of the ImpliedEntityTypes BitArray.
-        /// </summary>
+        // <summary>
+        // Gets the complement of the ImpliedEntityTypes BitArray.
+        // </summary>
         internal readonly BitArray ComplementImpliedEntityTypes;
 
         public override string ToString()

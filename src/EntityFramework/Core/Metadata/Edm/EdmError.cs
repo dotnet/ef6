@@ -12,10 +12,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private readonly string _message;
 
-        /// <summary>
-        /// Constructs a EdmSchemaError object.
-        /// </summary>
-        /// <param name="message"> The explanation of the error. </param>
+        // <summary>
+        // Constructs a EdmSchemaError object.
+        // </summary>
+        // <param name="message"> The explanation of the error. </param>
         internal EdmError(string message)
         {
             Check.NotEmpty(message, "message");

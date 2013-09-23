@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// A LINQ expression corresponding to a query parameter.
-    /// </summary>
+    // <summary>
+    // A LINQ expression corresponding to a query parameter.
+    // </summary>
     internal sealed class QueryParameterExpression : Expression
     {
         private readonly DbParameterReferenceExpression _parameterReference;
@@ -35,9 +35,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
             _cachedDelegate = null;
         }
 
-        /// <summary>
-        /// Gets the current value of the parameter given (optional) compiled query arguments.
-        /// </summary>
+        // <summary>
+        // Gets the current value of the parameter given (optional) compiled query arguments.
+        // </summary>
         internal object EvaluateParameter(object[] arguments)
         {
             if (_cachedDelegate == null)
@@ -72,19 +72,19 @@ namespace System.Data.Entity.Core.Objects.ELinq
             }
         }
 
-        /// <summary>
-        /// Create QueryParameterExpression based on this one, but with the funcletized expression
-        /// wrapped by the given method
-        /// </summary>
+        // <summary>
+        // Create QueryParameterExpression based on this one, but with the funcletized expression
+        // wrapped by the given method
+        // </summary>
         internal QueryParameterExpression EscapeParameterForLike(Func<string, string> method)
         {
             Expression wrappedExpression = Invoke(Constant(method), _funcletizedExpression);
             return new QueryParameterExpression(_parameterReference, wrappedExpression, _compiledQueryParameters);
         }
 
-        /// <summary>
-        /// Gets the parameter reference for the parameter.
-        /// </summary>
+        // <summary>
+        // Gets the parameter reference for the parameter.
+        // </summary>
         internal DbParameterReferenceExpression ParameterReference
         {
             get { return _parameterReference; }

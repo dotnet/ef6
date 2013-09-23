@@ -20,10 +20,10 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Constructors
 
-        /// <summary>
-        /// This internal constructor creates a new query parameter collection and
-        /// initializes the internal parameter storage.
-        /// </summary>
+        // <summary>
+        // This internal constructor creates a new query parameter collection and
+        // initializes the internal parameter storage.
+        // </summary>
         internal ObjectParameterCollection(ClrPerspective perspective)
         {
             DebugCheck.NotNull(perspective);
@@ -40,25 +40,25 @@ namespace System.Data.Entity.Core.Objects
 
         #region Private Fields
 
-        /// <summary>
-        /// Can parameters be added or removed from this collection?
-        /// </summary>
+        // <summary>
+        // Can parameters be added or removed from this collection?
+        // </summary>
         private bool _locked;
 
-        /// <summary>
-        /// The internal storage for the query parameters in the collection.
-        /// </summary>
+        // <summary>
+        // The internal storage for the query parameters in the collection.
+        // </summary>
         private readonly List<ObjectParameter> _parameters;
 
-        /// <summary>
-        /// A CLR perspective necessary to do type-checking on parameters as they
-        /// are added to the collection.
-        /// </summary>
+        // <summary>
+        // A CLR perspective necessary to do type-checking on parameters as they
+        // are added to the collection.
+        // </summary>
         private readonly ClrPerspective _perspective;
 
-        /// <summary>
-        /// A string that can be used to represent the current state of this parameter collection in an ObjectQuery cache key.
-        /// </summary>
+        // <summary>
+        // A string that can be used to represent the current state of this parameter collection in an ObjectQuery cache key.
+        // </summary>
         private string _cacheKey;
 
         #endregion
@@ -279,12 +279,12 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Methods
 
-        /// <summary>
-        /// Retrieves a string that may be used to represent this parameter collection in an ObjectQuery cache key.
-        /// If this collection has not changed since the last call to this method, the same string instance is returned.
-        /// Note that this string is used by various ObjectQueryImplementations to version the parameter collection.
-        /// </summary>
-        /// <returns> A string that may be used to represent this parameter collection in an ObjectQuery cache key. </returns>
+        // <summary>
+        // Retrieves a string that may be used to represent this parameter collection in an ObjectQuery cache key.
+        // If this collection has not changed since the last call to this method, the same string instance is returned.
+        // Note that this string is used by various ObjectQueryImplementations to version the parameter collection.
+        // </summary>
+        // <returns> A string that may be used to represent this parameter collection in an ObjectQuery cache key. </returns>
         internal string GetCacheKey()
         {
             if (null == _cacheKey)
@@ -328,32 +328,32 @@ namespace System.Data.Entity.Core.Objects
             return _cacheKey;
         }
 
-        /// <summary>
-        /// Locks or unlocks this parameter collection, allowing its contents to be added to, removed from, or cleared.
-        /// Calling this method consecutively with the same value has no effect but does not throw an exception.
-        /// </summary>
-        /// <param name="isReadOnly">
-        /// If <c>true</c> , this parameter collection is now locked; otherwise it is unlocked
-        /// </param>
+        // <summary>
+        // Locks or unlocks this parameter collection, allowing its contents to be added to, removed from, or cleared.
+        // Calling this method consecutively with the same value has no effect but does not throw an exception.
+        // </summary>
+        // <param name="isReadOnly">
+        // If <c>true</c> , this parameter collection is now locked; otherwise it is unlocked
+        // </param>
         internal void SetReadOnly(bool isReadOnly)
         {
             _locked = isReadOnly;
         }
 
-        /// <summary>
-        /// Creates a new copy of the specified parameter collection containing copies of its element
-        /// <see
-        ///     cref="ObjectParameter" />
-        /// s.
-        /// If the specified argument is <c>null</c>, then <c>null</c> is returned.
-        /// </summary>
-        /// <param name="copyParams"> The parameter collection to copy </param>
-        /// <returns>
-        /// The new collection containing copies of <paramref name="copyParams" /> parameters, if
-        /// <paramref
-        ///     name="copyParams" />
-        /// is non-null; otherwise <c>null</c> .
-        /// </returns>
+        // <summary>
+        // Creates a new copy of the specified parameter collection containing copies of its element
+        // <see
+        //     cref="ObjectParameter" />
+        // s.
+        // If the specified argument is <c>null</c>, then <c>null</c> is returned.
+        // </summary>
+        // <param name="copyParams"> The parameter collection to copy </param>
+        // <returns>
+        // The new collection containing copies of <paramref name="copyParams" /> parameters, if
+        // <paramref
+        //     name="copyParams" />
+        // is non-null; otherwise <c>null</c> .
+        // </returns>
         internal static ObjectParameterCollection DeepCopy(ObjectParameterCollection copyParams)
         {
             if (null == copyParams)
@@ -374,11 +374,11 @@ namespace System.Data.Entity.Core.Objects
 
         #region Private Methods
 
-        /// <summary>
-        /// This private method checks for the existence of a given parameter object
-        /// by name by iterating through the list and comparing each parameter name
-        /// to the specified name. This is a case-insensitive lookup.
-        /// </summary>
+        // <summary>
+        // This private method checks for the existence of a given parameter object
+        // by name by iterating through the list and comparing each parameter name
+        // to the specified name. This is a case-insensitive lookup.
+        // </summary>
         private int IndexOf(string name)
         {
             var index = 0;
@@ -396,10 +396,10 @@ namespace System.Data.Entity.Core.Objects
             return -1;
         }
 
-        /// <summary>
-        /// This method successfully returns only if the parameter collection is not considered 'locked';
-        /// otherwise an <see cref="InvalidOperationException" /> is thrown.
-        /// </summary>
+        // <summary>
+        // This method successfully returns only if the parameter collection is not considered 'locked';
+        // otherwise an <see cref="InvalidOperationException" /> is thrown.
+        // </summary>
         private void CheckUnlocked()
         {
             if (_locked)

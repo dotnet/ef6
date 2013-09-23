@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Text;
     using System.Xml;
 
-    /// <summary>
-    /// class representing the Schema element in the schema
-    /// </summary>
+    // <summary>
+    // class representing the Schema element in the schema
+    // </summary>
     internal class CollectionTypeElement : ModelFunctionTypeElement
     {
         private ModelFunctionTypeElement _typeSubElement;

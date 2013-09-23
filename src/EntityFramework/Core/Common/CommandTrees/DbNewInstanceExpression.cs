@@ -84,10 +84,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return (_relatedEntityRefs != null); }
         }
 
-        /// <summary>
-        /// Gets the related entity references (if any) for an entity constructor.
-        /// May be null if no related entities were specified - use the <see cref="HasRelatedEntityReferences" /> property to determine this.
-        /// </summary>
+        // <summary>
+        // Gets the related entity references (if any) for an entity constructor.
+        // May be null if no related entities were specified - use the <see cref="HasRelatedEntityReferences" /> property to determine this.
+        // </summary>
         internal ReadOnlyCollection<DbRelatedEntityRef> RelatedEntityReferences
         {
             get { return _relatedEntityRefs; }

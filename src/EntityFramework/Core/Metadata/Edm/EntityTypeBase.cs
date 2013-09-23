@@ -16,13 +16,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private readonly ReadOnlyMetadataCollection<EdmMember> _keyMembers;
         private string[] _keyMemberNames;
 
-        /// <summary>
-        /// Initializes a new instance of Entity Type
-        /// </summary>
-        /// <param name="name"> name of the entity type </param>
-        /// <param name="namespaceName"> namespace of the entity type </param>
-        /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
+        // <summary>
+        // Initializes a new instance of Entity Type
+        // </summary>
+        // <param name="name"> name of the entity type </param>
+        // <param name="namespaceName"> namespace of the entity type </param>
+        // <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
+        // <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal EntityTypeBase(string name, string namespaceName, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
@@ -60,10 +60,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return new ReadOnlyMetadataCollection<EdmProperty>(KeyMembers.Cast<EdmProperty>().ToList()); }
         }
 
-        /// <summary>
-        /// Returns the list of the property names that form the key for this entity type
-        /// Perf Bug #529294: To cache the list of member names that form the key for the entity type
-        /// </summary>
+        // <summary>
+        // Returns the list of the property names that form the key for this entity type
+        // Perf Bug #529294: To cache the list of member names that form the key for the entity type
+        // </summary>
         internal virtual string[] KeyMemberNames
         {
             get
@@ -110,9 +110,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _keyMembers.Source.Add(member);
         }
 
-        /// <summary>
-        /// Makes this property readonly
-        /// </summary>
+        // <summary>
+        // Makes this property readonly
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -122,11 +122,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Checks for each property to be non-null and then adds it to the member collection
-        /// </summary>
-        /// <param name="members"> members for this type </param>
-        /// <param name="entityType"> the membersCollection to which the members should be added </param>
+        // <summary>
+        // Checks for each property to be non-null and then adds it to the member collection
+        // </summary>
+        // <param name="members"> members for this type </param>
+        // <param name="entityType"> the membersCollection to which the members should be added </param>
         internal static void CheckAndAddMembers(
             IEnumerable<EdmMember> members,
             EntityType entityType)
@@ -144,16 +144,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Checks for each key member to be non-null
-        /// also check for it to be present in the members collection
-        /// and then adds it to the KeyMembers collection.
-        /// Throw if the key member is not already in the members
-        /// collection. Cannot do much other than that as the
-        /// Key members is just an Ienumerable of the names
-        /// of the members.
-        /// </summary>
-        /// <param name="keyMembers"> the list of keys (member names) to be added for the given type </param>
+        // <summary>
+        // Checks for each key member to be non-null
+        // also check for it to be present in the members collection
+        // and then adds it to the KeyMembers collection.
+        // Throw if the key member is not already in the members
+        // collection. Cannot do much other than that as the
+        // Key members is just an Ienumerable of the names
+        // of the members.
+        // </summary>
+        // <param name="keyMembers"> the list of keys (member names) to be added for the given type </param>
         internal void CheckAndAddKeyMembers(IEnumerable<String> keyMembers)
         {
             foreach (var keyMember in keyMembers)

@@ -13,33 +13,33 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// DbDataRecord functionality for the bridge.
-    /// </summary>
+    // <summary>
+    // DbDataRecord functionality for the bridge.
+    // </summary>
     internal sealed class BridgeDataRecord : DbDataRecord, IExtendedDataRecord
     {
         #region state
 
-        /// <summary>
-        /// How deep down the hierarchy are we?
-        /// </summary>
+        // <summary>
+        // How deep down the hierarchy are we?
+        // </summary>
         internal readonly int Depth;
 
-        /// <summary>
-        /// Where the data comes from
-        /// </summary>
+        // <summary>
+        // Where the data comes from
+        // </summary>
         private readonly Shaper<RecordState> _shaper;
 
-        /// <summary>
-        /// The current record that we're responsible for; this will change from row to row
-        /// on the source data reader.  Will be set to null when parent the enumerator has
-        /// returned false.
-        /// </summary>
+        // <summary>
+        // The current record that we're responsible for; this will change from row to row
+        // on the source data reader.  Will be set to null when parent the enumerator has
+        // returned false.
+        // </summary>
         private RecordState _source;
 
-        /// <summary>
-        /// Current state of the record;
-        /// </summary>
+        // <summary>
+        // Current state of the record;
+        // </summary>
         private Status _status;
 
         private enum Status
@@ -49,31 +49,31 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             ClosedExplicitly = 2,
         };
 
-        /// <summary>
-        /// the column ordinal of the last column read, used to enforce sequential access
-        /// </summary>
+        // <summary>
+        // the column ordinal of the last column read, used to enforce sequential access
+        // </summary>
         private int _lastColumnRead;
 
-        /// <summary>
-        /// the last data offset of a read returned, used to enforce sequential access
-        /// </summary>
+        // <summary>
+        // the last data offset of a read returned, used to enforce sequential access
+        // </summary>
         private long _lastDataOffsetRead;
 
-        /// <summary>
-        /// the last ordinal that IsDBNull was called for; used to avoid re-reading the value;
-        /// </summary>
+        // <summary>
+        // the last ordinal that IsDBNull was called for; used to avoid re-reading the value;
+        // </summary>
         private int _lastOrdinalCheckedForNull;
 
-        /// <summary>
-        /// value, of the last column that IsDBNull was called for; used to avoid re-reading the value;
-        /// </summary>
+        // <summary>
+        // value, of the last column that IsDBNull was called for; used to avoid re-reading the value;
+        // </summary>
         private object _lastValueCheckedForNull;
 
-        /// <summary>
-        /// Set to the current data record when we hand them out.  (For data reader columns,
-        /// we use it's attached data record) The Close, GetValue and Read methods ensures
-        /// that this is implicitly closed when we move past it.
-        /// </summary>
+        // <summary>
+        // Set to the current data record when we hand them out.  (For data reader columns,
+        // we use it's attached data record) The Close, GetValue and Read methods ensures
+        // that this is implicitly closed when we move past it.
+        // </summary>
         private BridgeDataReader _currentNestedReader;
 
         private BridgeDataRecord _currentNestedRecord;
@@ -94,11 +94,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region state management
 
-        /// <summary>
-        /// Called by our owning datareader when it is explicitly closed; will
-        /// not be called for nested structures, they go through the ClosedImplicitly.
-        /// path instead.
-        /// </summary>
+        // <summary>
+        // Called by our owning datareader when it is explicitly closed; will
+        // not be called for nested structures, they go through the ClosedImplicitly.
+        // path instead.
+        // </summary>
         internal void CloseExplicitly()
         {
             Close(Status.ClosedExplicitly, CloseNestedObjectImplicitly);
@@ -106,12 +106,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="CloseExplicitly" />, which
-        /// is called by our owning datareader when it is explicitly closed; will
-        /// not be called for nested structures, they go through the ClosedImplicitly.
-        /// path instead.
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="CloseExplicitly" />, which
+        // is called by our owning datareader when it is explicitly closed; will
+        // not be called for nested structures, they go through the ClosedImplicitly.
+        // path instead.
+        // </summary>
         internal Task CloseExplicitlyAsync(CancellationToken cancellationToken)
         {
             return Close(Status.ClosedExplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
@@ -119,10 +119,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <summary>
-        /// Called by our parent object to ensure that we're marked as implicitly
-        /// closed;  will not be called for root level data readers.
-        /// </summary>
+        // <summary>
+        // Called by our parent object to ensure that we're marked as implicitly
+        // closed;  will not be called for root level data readers.
+        // </summary>
         internal void CloseImplicitly()
         {
             Close(Status.ClosedImplicitly, CloseNestedObjectImplicitly);
@@ -130,11 +130,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="CloseImplicitly" />, which
-        /// is called by our parent object to ensure that we're marked as implicitly
-        /// closed;  will not be called for root level data readers.
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="CloseImplicitly" />, which
+        // is called by our parent object to ensure that we're marked as implicitly
+        // closed;  will not be called for root level data readers.
+        // </summary>
         internal Task CloseImplicitlyAsync(CancellationToken cancellationToken)
         {
             return Close(Status.ClosedImplicitly, () => CloseNestedObjectImplicitlyAsync(cancellationToken));
@@ -149,9 +149,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return close();
         }
 
-        /// <summary>
-        /// Ensure that whatever column we're currently processing is implicitly closed;
-        /// </summary>
+        // <summary>
+        // Ensure that whatever column we're currently processing is implicitly closed;
+        // </summary>
         private object CloseNestedObjectImplicitly()
         {
             // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
@@ -176,10 +176,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="CloseNestedObjectImplicitly" />, which
-        /// Ensure that whatever column we're currently processing is implicitly closed;
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="CloseNestedObjectImplicitly" />, which
+        // Ensure that whatever column we're currently processing is implicitly closed;
+        // </summary>
         private async Task CloseNestedObjectImplicitlyAsync(CancellationToken cancellationToken)
         {
             // it would be nice to use Interlocked.Exchange to avoid multi-thread `race condition risk
@@ -202,9 +202,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <summary>
-        /// Should be called after each Read on the data reader.
-        /// </summary>
+        // <summary>
+        // Should be called after each Read on the data reader.
+        // </summary>
         internal void SetRecordSource(RecordState newSource, bool hasData)
         {
             Debug.Assert(null == _currentNestedRecord, "didn't close the nested record?");
@@ -234,9 +234,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region assertion helpers
 
-        /// <summary>
-        /// Ensures that the reader is actually open, and throws an exception if not
-        /// </summary>
+        // <summary>
+        // Ensures that the reader is actually open, and throws an exception if not
+        // </summary>
         private void AssertReaderIsOpen()
         {
             if (IsExplicitlyClosed)
@@ -249,9 +249,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// Helper method.
-        /// </summary>
+        // <summary>
+        // Helper method.
+        // </summary>
         private void AssertReaderIsOpenWithData()
         {
             AssertReaderIsOpen();
@@ -262,11 +262,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// Ensures that sequential access rules are being obeyed for non-array
-        /// getter methods, throws the appropriate exception if not.  Also ensures
-        /// that the last column and array offset is set appropriately.
-        /// </summary>
+        // <summary>
+        // Ensures that sequential access rules are being obeyed for non-array
+        // getter methods, throws the appropriate exception if not.  Also ensures
+        // that the last column and array offset is set appropriately.
+        // </summary>
         private void AssertSequentialAccess(int ordinal)
         {
             Debug.Assert(null != _source, "null _source?"); // we should have already called AssertReaderIsOpen.
@@ -290,11 +290,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             _lastDataOffsetRead = long.MaxValue;
         }
 
-        /// <summary>
-        /// Ensures that sequential access rules are being obeyed for array offset
-        /// getter methods, throws the appropriate exception if not.  Also ensures
-        /// that the last column and array offset is set appropriately.
-        /// </summary>
+        // <summary>
+        // Ensures that sequential access rules are being obeyed for array offset
+        // getter methods, throws the appropriate exception if not.  Also ensures
+        // that the last column and array offset is set appropriately.
+        // </summary>
         private void AssertSequentialAccess(int ordinal, long dataOffset, string methodName)
         {
             Debug.Assert(null != _source, "null _source?"); // we should have already called AssertReaderIsOpen.
@@ -332,9 +332,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// True when the record has data (SetRecordSource was called with true)
-        /// </summary>
+        // <summary>
+        // True when the record has data (SetRecordSource was called with true)
+        // </summary>
         internal bool HasData
         {
             get
@@ -344,30 +344,30 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// True so long as we haven't been closed either implicity or explictly
-        /// </summary>
+        // <summary>
+        // True so long as we haven't been closed either implicity or explictly
+        // </summary>
         internal bool IsClosed
         {
             get { return (_status != Status.Open); }
         }
 
-        /// <summary>
-        /// Determine whether we have been explicitly closed by our owning
-        /// data reader; only data records that are responsible for processing
-        /// data reader requests can be explicitly closed;
-        /// </summary>
+        // <summary>
+        // Determine whether we have been explicitly closed by our owning
+        // data reader; only data records that are responsible for processing
+        // data reader requests can be explicitly closed;
+        // </summary>
         internal bool IsExplicitlyClosed
         {
             get { return (_status == Status.ClosedExplicitly); }
         }
 
-        /// <summary>
-        /// Determine whether the parent data reader or record moved on from
-        /// where we can be considered open, (because the consumer of the
-        /// parent data reader/record called either the GetValue() or Read()
-        /// methods on the parent);
-        /// </summary>
+        // <summary>
+        // Determine whether the parent data reader or record moved on from
+        // where we can be considered open, (because the consumer of the
+        // parent data reader/record called either the GetValue() or Read()
+        // methods on the parent);
+        // </summary>
         internal bool IsImplicitlyClosed
         {
             get { return (_status == Status.ClosedImplicitly); }
@@ -377,9 +377,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region metadata properties and methods
 
-        /// <summary>
-        /// implementation of DbDataRecord.DataRecordInfo property
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.DataRecordInfo property
+        // </summary>
         public DataRecordInfo DataRecordInfo
         {
             get
@@ -390,9 +390,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.FieldCount property
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.FieldCount property
+        // </summary>
         public override int FieldCount
         {
             get
@@ -402,12 +402,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// Helper method to get the edm TypeUsage for the specified column;
-        /// If the column requested is a record, we'll pick up whatever the
-        /// current record says it is, otherwise we'll take whatever was stored
-        /// on our record state.
-        /// </summary>
+        // <summary>
+        // Helper method to get the edm TypeUsage for the specified column;
+        // If the column requested is a record, we'll pick up whatever the
+        // current record says it is, otherwise we'll take whatever was stored
+        // on our record state.
+        // </summary>
         private TypeUsage GetTypeUsage(int ordinal)
         {
             // Some folks are picky about the exception we throw
@@ -431,36 +431,36 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetDataTypeName() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetDataTypeName() method
+        // </summary>
         public override string GetDataTypeName(int ordinal)
         {
             AssertReaderIsOpenWithData();
             return GetTypeUsage(ordinal).ToString();
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetFieldType() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetFieldType() method
+        // </summary>
         public override Type GetFieldType(int ordinal)
         {
             AssertReaderIsOpenWithData();
             return BridgeDataReader.GetClrTypeFromTypeMetadata(GetTypeUsage(ordinal));
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetName() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetName() method
+        // </summary>
         public override string GetName(int ordinal)
         {
             AssertReaderIsOpen();
             return _source.GetName(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetOrdinal() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetOrdinal() method
+        // </summary>
         public override int GetOrdinal(string name)
         {
             AssertReaderIsOpen();
@@ -471,30 +471,30 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region general getter methods and indexer properties
 
-        /// <summary>
-        /// implementation for DbDataRecord[ordinal] indexer property
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord[ordinal] indexer property
+        // </summary>
         public override object this[int ordinal]
         {
             get { return GetValue(ordinal); }
         }
 
-        /// <summary>
-        /// implementation for DbDataRecord[name] indexer property
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord[name] indexer property
+        // </summary>
         public override object this[string name]
         {
             get { return GetValue(GetOrdinal(name)); }
         }
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetValue() method
-        /// This method is used by most of the column getters on this
-        /// class to retrieve the value from the source reader.  Therefore,
-        /// it asserts all the good things, like that the reader is open,
-        /// and that it has data, and that you're not trying to circumvent
-        /// sequential access requirements.
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetValue() method
+        // This method is used by most of the column getters on this
+        // class to retrieve the value from the source reader.  Therefore,
+        // it asserts all the good things, like that the reader is open,
+        // and that it has data, and that you're not trying to circumvent
+        // sequential access requirements.
+        // </summary>
         public override Object GetValue(int ordinal)
         {
             AssertReaderIsOpenWithData();
@@ -526,11 +526,11 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <summary>
-        /// For nested objects (records/readers) we have a bit more work to do; this
-        /// method extracts it all out from the main GetValue method so it doesn't
-        /// have to be so big.
-        /// </summary>
+        // <summary>
+        // For nested objects (records/readers) we have a bit more work to do; this
+        // method extracts it all out from the main GetValue method so it doesn't
+        // have to be so big.
+        // </summary>
         private object GetNestedObjectValue(object result)
         {
             if (result != DBNull.Value)
@@ -571,9 +571,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetValues() method
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetValues() method
+        // </summary>
         public override int GetValues(object[] values)
         {
             Check.NotNull(values, "values");
@@ -590,105 +590,105 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region simple scalar value getter methods
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetBoolean() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetBoolean() method
+        // </summary>
         public override bool GetBoolean(int ordinal)
         {
             return (bool)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetByte() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetByte() method
+        // </summary>
         public override byte GetByte(int ordinal)
         {
             return (byte)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetChar() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetChar() method
+        // </summary>
         public override char GetChar(int ordinal)
         {
             return (char)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetDateTime() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetDateTime() method
+        // </summary>
         public override DateTime GetDateTime(int ordinal)
         {
             return (DateTime)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetDecimal() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetDecimal() method
+        // </summary>
         public override Decimal GetDecimal(int ordinal)
         {
             return (Decimal)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetDouble() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetDouble() method
+        // </summary>
         public override double GetDouble(int ordinal)
         {
             return (double)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetFloat() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetFloat() method
+        // </summary>
         public override float GetFloat(int ordinal)
         {
             return (float)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetGuid() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetGuid() method
+        // </summary>
         public override Guid GetGuid(int ordinal)
         {
             return (Guid)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetInt16() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetInt16() method
+        // </summary>
         public override Int16 GetInt16(int ordinal)
         {
             return (Int16)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetInt32() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetInt32() method
+        // </summary>
         public override Int32 GetInt32(int ordinal)
         {
             return (Int32)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetInt64() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetInt64() method
+        // </summary>
         public override Int64 GetInt64(int ordinal)
         {
             return (Int64)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.GetString() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.GetString() method
+        // </summary>
         public override String GetString(int ordinal)
         {
             return (String)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation of DbDataRecord.IsDBNull() method
-        /// </summary>
+        // <summary>
+        // implementation of DbDataRecord.IsDBNull() method
+        // </summary>
         public override bool IsDBNull(int ordinal)
         {
             // This doesn't seem ideal, but the the problem is that I need 
@@ -722,9 +722,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region array scalar value getter methods
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetBytes() method
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetBytes() method
+        // </summary>
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
             AssertReaderIsOpenWithData();
@@ -739,9 +739,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetChars() method
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetChars() method
+        // </summary>
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
             AssertReaderIsOpenWithData();
@@ -760,25 +760,25 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region complex type getters
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetData() method
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetData() method
+        // </summary>
         protected override DbDataReader GetDbDataReader(int ordinal)
         {
             return (DbDataReader)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// implementation for DbDataRecord.GetDataRecord() method
-        /// </summary>
+        // <summary>
+        // implementation for DbDataRecord.GetDataRecord() method
+        // </summary>
         public DbDataRecord GetDataRecord(int ordinal)
         {
             return (DbDataRecord)GetValue(ordinal);
         }
 
-        /// <summary>
-        /// Used to return a nested result
-        /// </summary>
+        // <summary>
+        // Used to return a nested result
+        // </summary>
         public DbDataReader GetDataReader(int ordinal)
         {
             return GetDbDataReader(ordinal);

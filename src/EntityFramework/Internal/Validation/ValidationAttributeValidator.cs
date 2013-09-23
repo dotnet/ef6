@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.Validation
 {
@@ -9,31 +9,31 @@ namespace System.Data.Entity.Internal.Validation
     using System.Data.Entity.Validation;
     using System.Linq;
 
-    /// <summary>
-    /// Validates a property, complex property or an entity using validation attributes the property
-    /// or the complex/entity type is decorated with.
-    /// </summary>
-    /// <remarks>
-    /// Note that this class is used for validating primitive properties using attributes declared on the property
-    /// (property level validation) and complex properties and entities using attributes declared on the type
-    /// (type level validation).
-    /// </remarks>
+    // <summary>
+    // Validates a property, complex property or an entity using validation attributes the property
+    // or the complex/entity type is decorated with.
+    // </summary>
+    // <remarks>
+    // Note that this class is used for validating primitive properties using attributes declared on the property
+    // (property level validation) and complex properties and entities using attributes declared on the type
+    // (type level validation).
+    // </remarks>
     internal class ValidationAttributeValidator : IValidator
     {
-        /// <summary>
-        /// Display attribute used to specify the display name for a property or entity.
-        /// </summary>
+        // <summary>
+        // Display attribute used to specify the display name for a property or entity.
+        // </summary>
         private readonly DisplayAttribute _displayAttribute;
 
-        /// <summary>
-        /// Validation attribute used to validate a property or an entity.
-        /// </summary>
+        // <summary>
+        // Validation attribute used to validate a property or an entity.
+        // </summary>
         private readonly ValidationAttribute _validationAttribute;
 
-        /// <summary>
-        /// Creates an instance of <see cref="ValidationAttributeValidator" /> class.
-        /// </summary>
-        /// <param name="validationAttribute"> Validation attribute used to validate a property or an entity. </param>
+        // <summary>
+        // Creates an instance of <see cref="ValidationAttributeValidator" /> class.
+        // </summary>
+        // <param name="validationAttribute"> Validation attribute used to validate a property or an entity. </param>
         public ValidationAttributeValidator(ValidationAttribute validationAttribute, DisplayAttribute displayAttribute)
         {
             DebugCheck.NotNull(validationAttribute);
@@ -42,14 +42,14 @@ namespace System.Data.Entity.Internal.Validation
             _displayAttribute = displayAttribute;
         }
 
-        /// <summary>
-        /// Validates a property or an entity.
-        /// </summary>
-        /// <param name="entityValidationContext"> Validation context. Never null. </param>
-        /// <param name="property"> Property to validate. Null for entity validation. Not null for property validation. </param>
-        /// <returns>
-        /// Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors, never null.
-        /// </returns>
+        // <summary>
+        // Validates a property or an entity.
+        // </summary>
+        // <param name="entityValidationContext"> Validation context. Never null. </param>
+        // <param name="property"> Property to validate. Null for entity validation. Not null for property validation. </param>
+        // <returns>
+        // Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors, never null.
+        // </returns>
         public virtual IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {

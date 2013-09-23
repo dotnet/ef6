@@ -8,40 +8,40 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an End element in a relationship
-    /// </summary>
+    // <summary>
+    // Represents an End element in a relationship
+    // </summary>
     internal sealed class RelationshipEnd : SchemaElement, IRelationshipEnd
     {
         private string _unresolvedType;
         private RelationshipMultiplicity? _multiplicity;
         private List<OnOperation> _operations;
 
-        /// <summary>
-        /// construct a Relationship End
-        /// </summary>
+        // <summary>
+        // construct a Relationship End
+        // </summary>
         public RelationshipEnd(Relationship relationship)
             : base(relationship)
         {
         }
 
-        /// <summary>
-        /// Type of the End
-        /// </summary>
+        // <summary>
+        // Type of the End
+        // </summary>
         public SchemaEntityType Type { get; private set; }
 
-        /// <summary>
-        /// Multiplicity of the End
-        /// </summary>
+        // <summary>
+        // Multiplicity of the End
+        // </summary>
         public RelationshipMultiplicity? Multiplicity
         {
             get { return _multiplicity; }
             set { _multiplicity = value; }
         }
 
-        /// <summary>
-        /// The On&lt;Operation&gt;s defined for the End
-        /// </summary>
+        // <summary>
+        // The On&lt;Operation&gt;s defined for the End
+        // </summary>
         public ICollection<OnOperation> Operations
         {
             get
@@ -54,9 +54,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// do whole element resolution
-        /// </summary>
+        // <summary>
+        // do whole element resolution
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -105,9 +105,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Do simple validation across attributes
-        /// </summary>
+        // <summary>
+        // Do simple validation across attributes
+        // </summary>
         protected override void HandleAttributesComplete()
         {
             // set up the default name in before validating anythig that might want to display it in an error message;
@@ -174,10 +174,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// Handle the Type attribute
-        /// </summary>
-        /// <param name="reader"> reader positioned at Type attribute </param>
+        // <summary>
+        // Handle the Type attribute
+        // </summary>
+        // <param name="reader"> reader positioned at Type attribute </param>
         private void HandleTypeAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -191,10 +191,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _unresolvedType = type;
         }
 
-        /// <summary>
-        /// Handle the Multiplicity attribute
-        /// </summary>
-        /// <param name="reader"> reader positioned at Type attribute </param>
+        // <summary>
+        // Handle the Multiplicity attribute
+        // </summary>
+        // <param name="reader"> reader positioned at Type attribute </param>
         private void HandleMultiplicityAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -208,20 +208,20 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _multiplicity = multiplicity;
         }
 
-        /// <summary>
-        /// Handle an OnDelete element
-        /// </summary>
-        /// <param name="reader"> reader positioned at the element </param>
+        // <summary>
+        // Handle an OnDelete element
+        // </summary>
+        // <param name="reader"> reader positioned at the element </param>
         private void HandleOnDeleteElement(XmlReader reader)
         {
             HandleOnOperationElement(reader, Operation.Delete);
         }
 
-        /// <summary>
-        /// Handle an On&lt;Operation&gt; element
-        /// </summary>
-        /// <param name="reader"> reader positioned at the element </param>
-        /// <param name="operation"> the kind of operation being handled </param>
+        // <summary>
+        // Handle an On&lt;Operation&gt; element
+        // </summary>
+        // <param name="reader"> reader positioned at the element </param>
+        // <param name="operation"> the kind of operation being handled </param>
         private void HandleOnOperationElement(XmlReader reader, Operation operation)
         {
             DebugCheck.NotNull(reader);
@@ -239,9 +239,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _operations.Add(onOperation);
         }
 
-        /// <summary>
-        /// The parent element as an IRelationship
-        /// </summary>
+        // <summary>
+        // The parent element as an IRelationship
+        // </summary>
         internal new IRelationship ParentElement
         {
             get { return (IRelationship)(base.ParentElement); }

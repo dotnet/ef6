@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// Prints a command tree
-    /// </summary>
+    // <summary>
+    // Prints a command tree
+    // </summary>
     internal class ExpressionPrinter : TreePrinter
     {
         private readonly PrinterVisitor _visitor = new PrinterVisitor();

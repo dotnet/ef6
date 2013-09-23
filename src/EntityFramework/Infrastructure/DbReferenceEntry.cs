@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -18,13 +18,13 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly InternalReferenceEntry _internalReferenceEntry;
 
-        /// <summary>
-        /// Creates a <see cref="DbReferenceEntry" /> from information in the given <see cref="InternalReferenceEntry" />.
-        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
-        /// the type of member represented by the InternalCollectionEntry instance.
-        /// </summary>
-        /// <param name="internalReferenceEntry"> The internal reference entry. </param>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a <see cref="DbReferenceEntry" /> from information in the given <see cref="InternalReferenceEntry" />.
+        // Use this method in preference to the constructor since it may potentially create a subclass depending on
+        // the type of member represented by the InternalCollectionEntry instance.
+        // </summary>
+        // <param name="internalReferenceEntry"> The internal reference entry. </param>
+        // <returns> The new entry. </returns>
         internal static DbReferenceEntry Create(InternalReferenceEntry internalReferenceEntry)
         {
             DebugCheck.NotNull(internalReferenceEntry);
@@ -32,10 +32,10 @@ namespace System.Data.Entity.Infrastructure
             return (DbReferenceEntry)internalReferenceEntry.CreateDbMemberEntry();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbReferenceEntry" /> class.
-        /// </summary>
-        /// <param name="internalReferenceEntry"> The internal entry. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbReferenceEntry" /> class.
+        // </summary>
+        // <param name="internalReferenceEntry"> The internal entry. </param>
         internal DbReferenceEntry(InternalReferenceEntry internalReferenceEntry)
         {
             DebugCheck.NotNull(internalReferenceEntry);
@@ -175,10 +175,10 @@ namespace System.Data.Entity.Infrastructure
 
         #region InternalMemberEntry access
 
-        /// <summary>
-        /// Gets the <see cref="InternalReferenceEntry" /> backing this object as an <see cref="InternalMemberEntry" />.
-        /// </summary>
-        /// <value> The internal member entry. </value>
+        // <summary>
+        // Gets the <see cref="InternalReferenceEntry" /> backing this object as an <see cref="InternalMemberEntry" />.
+        // </summary>
+        // <value> The internal member entry. </value>
         internal override InternalMemberEntry InternalMemberEntry
         {
             get { return _internalReferenceEntry; }

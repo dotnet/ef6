@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
@@ -257,14 +257,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// validate the following negative scenarios:
-        /// ReturnType="Collection(EntityTypeA)"
-        /// ReturnType="Collection(EntityTypeA)" EntitySet="ESet.EType is not oftype EntityTypeA"
-        /// EntitySet="A"
-        /// ReturnType="Collection(ComplexTypeA)" EntitySet="something"
-        /// ReturnType="Collection(ComplexTypeA)", but the ComplexTypeA has a nested complexType property, this scenario will be handle in the runtime
-        /// </summary>
+        // <summary>
+        // validate the following negative scenarios:
+        // ReturnType="Collection(EntityTypeA)"
+        // ReturnType="Collection(EntityTypeA)" EntitySet="ESet.EType is not oftype EntityTypeA"
+        // EntitySet="A"
+        // ReturnType="Collection(ComplexTypeA)" EntitySet="something"
+        // ReturnType="Collection(ComplexTypeA)", but the ComplexTypeA has a nested complexType property, this scenario will be handle in the runtime
+        // </summary>
         private void ValidateFunctionImportReturnType(
             SchemaElement owner, SchemaType returnType, EntityContainerEntitySet entitySet, bool entitySetPathDefined)
         {

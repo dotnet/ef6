@@ -4,10 +4,10 @@ namespace System.Data.Entity.Infrastructure.Pluralization
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// This class provide service for both the singularization and pluralization, it takes the word pairs
-    /// in the ctor following the rules that the first one is singular and the second one is plural.
-    /// </summary>
+    // <summary>
+    // This class provide service for both the singularization and pluralization, it takes the word pairs
+    // in the ctor following the rules that the first one is singular and the second one is plural.
+    // </summary>
     internal class BidirectionalDictionary<TFirst, TSecond>
     {
         internal Dictionary<TFirst, TSecond> FirstToSecondDictionary { get; set; }

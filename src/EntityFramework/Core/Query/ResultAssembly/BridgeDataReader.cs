@@ -17,53 +17,53 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// DbDataReader functionality for the bridge.
-    /// </summary>
+    // <summary>
+    // DbDataReader functionality for the bridge.
+    // </summary>
     internal class BridgeDataReader : DbDataReader, IExtendedDataRecord
     {
         #region Private state
 
-        /// <summary>
-        /// Object that holds the state needed by the coordinator and the root enumerator
-        /// </summary>
+        // <summary>
+        // Object that holds the state needed by the coordinator and the root enumerator
+        // </summary>
         private Shaper<RecordState> _shaper;
 
-        /// <summary>
-        /// Enumerator over shapers for NextResult() calls.
-        /// Null for nested data readers (depth > 0);
-        /// </summary>
+        // <summary>
+        // Enumerator over shapers for NextResult() calls.
+        // Null for nested data readers (depth > 0);
+        // </summary>
         private IEnumerator<KeyValuePair<Shaper<RecordState>, CoordinatorFactory<RecordState>>> _nextResultShaperInfoEnumerator;
 
-        /// <summary>
-        /// The coordinator we're responsible for returning results for.
-        /// </summary>
+        // <summary>
+        // The coordinator we're responsible for returning results for.
+        // </summary>
         private CoordinatorFactory<RecordState> _coordinatorFactory;
 
-        /// <summary>
-        /// The default record (pre-read/past-end) state
-        /// </summary>
+        // <summary>
+        // The default record (pre-read/past-end) state
+        // </summary>
         private RecordState _defaultRecordState;
 
-        /// <summary>
-        /// We delegate to this on our getters, to avoid duplicate code.
-        /// </summary>
+        // <summary>
+        // We delegate to this on our getters, to avoid duplicate code.
+        // </summary>
         private BridgeDataRecord _dataRecord;
 
-        /// <summary>
-        /// Do we have a row to read?  Determined in the constructor and
-        /// should not be changed.
-        /// </summary>
+        // <summary>
+        // Do we have a row to read?  Determined in the constructor and
+        // should not be changed.
+        // </summary>
         private bool _hasRows;
 
-        /// <summary>
-        /// Set to true only when we've been closed through the Close() method
-        /// </summary>
+        // <summary>
+        // Set to true only when we've been closed through the Close() method
+        // </summary>
         private bool _isClosed;
 
-        /// <summary>
-        /// 0 if initialization hasn't been performed, 1 otherwise
-        /// </summary>
+        // <summary>
+        // 0 if initialization hasn't been performed, 1 otherwise
+        // </summary>
         private int _initialized;
 
         private readonly Action _initialize;
@@ -100,9 +100,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region Helpers
 
-        /// <summary>
-        /// Runs the initialization if it hasn't been run
-        /// </summary>
+        // <summary>
+        // Runs the initialization if it hasn't been run
+        // </summary>
         protected virtual void EnsureInitialized()
         {
             if (Interlocked.CompareExchange(ref _initialized, 1, 0) == 0)
@@ -113,10 +113,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="EnsureInitialized" />, which
-        /// runs the initialization if it hasn't been run
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="EnsureInitialized" />, which
+        // runs the initialization if it hasn't been run
+        // </summary>
         protected virtual Task EnsureInitializedAsync(CancellationToken cancellationToken)
         {
             return Interlocked.CompareExchange(ref _initialized, 1, 0) == 0
@@ -183,9 +183,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             Debug.Assert(null != _defaultRecordState, "no default?");
         }
 
-        /// <summary>
-        /// Ensures that the reader is actually open, and throws an exception if not
-        /// </summary>
+        // <summary>
+        // Ensures that the reader is actually open, and throws an exception if not
+        // </summary>
         private void AssertReaderIsOpen(string methodName)
         {
             if (IsClosed)
@@ -201,13 +201,13 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <summary>
-        /// Implicitly close this (nested) data reader; will be called whenever
-        /// the user has done a GetValue() or a Read() on a parent reader/record
-        /// to ensure that we consume all our results.  We do that because we
-        /// our design requires us to be positioned at the next nested reader's
-        /// first row.
-        /// </summary>
+        // <summary>
+        // Implicitly close this (nested) data reader; will be called whenever
+        // the user has done a GetValue() or a Read() on a parent reader/record
+        // to ensure that we consume all our results.  We do that because we
+        // our design requires us to be positioned at the next nested reader's
+        // first row.
+        // </summary>
         internal void CloseImplicitly()
         {
             EnsureInitialized();
@@ -217,14 +217,14 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="CloseImplicitly" />, which
-        /// implicitly closes this (nested) data reader; will be called whenever
-        /// the user has done a GetValue() or a ReadAsync() on a parent reader/record
-        /// to ensure that we consume all our results.  We do that because we
-        /// our design requires us to be positioned at the next nested reader's
-        /// first row.
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="CloseImplicitly" />, which
+        // implicitly closes this (nested) data reader; will be called whenever
+        // the user has done a GetValue() or a ReadAsync() on a parent reader/record
+        // to ensure that we consume all our results.  We do that because we
+        // our design requires us to be positioned at the next nested reader's
+        // first row.
+        // </summary>
         internal async Task CloseImplicitlyAsync(CancellationToken cancellationToken)
         {
             await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -234,9 +234,9 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <summary>
-        /// Reads to the end of the source enumerator provided
-        /// </summary>
+        // <summary>
+        // Reads to the end of the source enumerator provided
+        // </summary>
         private void Consume()
         {
             while (ReadInternal())
@@ -246,10 +246,10 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of <see cref="Consume" />, which
-        /// reads to the end of the source enumerator provided
-        /// </summary>
+        // <summary>
+        // An asynchronous version of <see cref="Consume" />, which
+        // reads to the end of the source enumerator provided
+        // </summary>
         private async Task ConsumeAsync(CancellationToken cancellationToken)
         {
             while (await ReadInternalAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
@@ -259,12 +259,12 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <summary>
-        /// Figure out the CLR type from the TypeMetadata object; For scalars,
-        /// we can get this from the metadata workspace, but for the rest, we
-        /// just guess at "Object".  You need to use the DataRecordInfo property
-        /// to get better information for those.
-        /// </summary>
+        // <summary>
+        // Figure out the CLR type from the TypeMetadata object; For scalars,
+        // we can get this from the metadata workspace, but for the rest, we
+        // just guess at "Object".  You need to use the DataRecordInfo property
+        // to get better information for those.
+        // </summary>
         internal static Type GetClrTypeFromTypeMetadata(TypeUsage typeUsage)
         {
             Type result;
@@ -304,7 +304,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region DbDataReader implementation
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override int Depth
         {
             get
@@ -315,7 +315,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool HasRows
         {
             get
@@ -326,7 +326,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool IsClosed
         {
             get
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override int RecordsAffected
         {
             get
@@ -360,7 +360,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override void Close()
         {
             EnsureInitialized();
@@ -396,7 +396,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override IEnumerator GetEnumerator()
         {
@@ -405,13 +405,13 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override DataTable GetSchemaTable()
         {
             throw new NotSupportedException(Strings.ADP_GetSchemaTableIsNotSupported);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool NextResult()
         {
             EnsureInitialized();
@@ -457,7 +457,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override async Task<bool> NextResultAsync(CancellationToken cancellationToken)
         {
             await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -503,7 +503,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool Read()
         {
             EnsureInitialized();
@@ -524,7 +524,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override async Task<bool> ReadAsync(CancellationToken cancellationToken)
         {
             await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -545,13 +545,13 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <summary>
-        /// Internal read method; does the work of advancing the root enumerator
-        /// as needed and determining whether it's current record is for our
-        /// coordinator. The public Read method does the assertions and such that
-        /// we don't want to do when we're called from internal methods to do things
-        /// like consume the rest of the reader's contents.
-        /// </summary>
+        // <summary>
+        // Internal read method; does the work of advancing the root enumerator
+        // as needed and determining whether it's current record is for our
+        // coordinator. The public Read method does the assertions and such that
+        // we don't want to do when we're called from internal methods to do things
+        // like consume the rest of the reader's contents.
+        // </summary>
         private bool ReadInternal()
         {
             var result = false;
@@ -631,7 +631,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override int FieldCount
         {
             get
@@ -651,7 +651,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override string GetDataTypeName(int ordinal)
         {
             EnsureInitialized();
@@ -668,7 +668,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Type GetFieldType(int ordinal)
         {
             EnsureInitialized();
@@ -685,7 +685,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override string GetName(int ordinal)
         {
             EnsureInitialized();
@@ -702,7 +702,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override int GetOrdinal(string name)
         {
             EnsureInitialized();
@@ -719,7 +719,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             return result;
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override Type GetProviderSpecificFieldType(int ordinal)
         {
@@ -732,7 +732,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         //
         ////////////////////////////////////////////////////////////////////////
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override object this[int ordinal]
         {
             get
@@ -742,7 +742,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override object this[string name]
         {
             get
@@ -753,21 +753,21 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override object GetProviderSpecificValue(int ordinal)
         {
             throw new NotSupportedException();
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         [EditorBrowsable(EditorBrowsableState.Never)]
         public override int GetProviderSpecificValues(object[] values)
         {
             throw new NotSupportedException();
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Object GetValue(int ordinal)
         {
             EnsureInitialized();
@@ -776,7 +776,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #if !NET40
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override async Task<T> GetFieldValueAsync<T>(int ordinal, CancellationToken cancellationToken)
         {
             await EnsureInitializedAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -785,119 +785,119 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
 #endif
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override int GetValues(object[] values)
         {
             EnsureInitialized();
             return _dataRecord.GetValues(values);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool GetBoolean(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetBoolean(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override byte GetByte(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetByte(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override char GetChar(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetChar(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override DateTime GetDateTime(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetDateTime(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Decimal GetDecimal(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetDecimal(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override double GetDouble(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetDouble(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override float GetFloat(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetFloat(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Guid GetGuid(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetGuid(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Int16 GetInt16(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetInt16(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Int32 GetInt32(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetInt32(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override Int64 GetInt64(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetInt64(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override String GetString(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetString(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override bool IsDBNull(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.IsDBNull(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
         {
             EnsureInitialized();
             return _dataRecord.GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
         {
             EnsureInitialized();
             return _dataRecord.GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         protected override DbDataReader GetDbDataReader(int ordinal)
         {
             EnsureInitialized();
@@ -908,7 +908,7 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
 
         #region IExtendedDataRecord implementation
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public DataRecordInfo DataRecordInfo
         {
             get
@@ -929,14 +929,14 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public DbDataRecord GetDataRecord(int ordinal)
         {
             EnsureInitialized();
             return _dataRecord.GetDataRecord(ordinal);
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public DbDataReader GetDataReader(int ordinal)
         {
             EnsureInitialized();

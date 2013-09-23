@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Query.ResultAssembly
 {
@@ -21,16 +21,16 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
             _translator = translator ?? new Translator();
         }
 
-        /// <summary>
-        /// The primary factory method to produce the BridgeDataReader; given a store data
-        /// reader and a column map, create the BridgeDataReader, hooking up the IteratorSources
-        /// and ResultColumn Hierarchy.  All construction of top level data readers go through
-        /// this method.
-        /// </summary>
-        /// <param name="storeDataReader"> </param>
-        /// <param name="columnMap"> column map of the first result set </param>
-        /// <param name="workspace"> </param>
-        /// <param name="nextResultColumnMaps"> enumerable of the column maps for NextResult() calls. </param>
+        // <summary>
+        // The primary factory method to produce the BridgeDataReader; given a store data
+        // reader and a column map, create the BridgeDataReader, hooking up the IteratorSources
+        // and ResultColumn Hierarchy.  All construction of top level data readers go through
+        // this method.
+        // </summary>
+        // <param name="storeDataReader"> </param>
+        // <param name="columnMap"> column map of the first result set </param>
+        // <param name="workspace"> </param>
+        // <param name="nextResultColumnMaps"> enumerable of the column maps for NextResult() calls. </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public virtual DbDataReader Create(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)

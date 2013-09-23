@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -6,13 +6,13 @@ namespace System.Data.Entity.Internal
     using System.Collections.Specialized;
     using System.Linq;
 
-    /// <summary>
-    /// Extends <see cref="SortableBindingList{T}" /> to create a sortable binding list that stays in
-    /// sync with an underlying <see cref="ObservableCollection{T}" />.  That is, when items are added
-    /// or removed from the binding list, they are added or removed from the ObservableCollecion, and
-    /// vice-versa.
-    /// </summary>
-    /// <typeparam name="T"> The list element type. </typeparam>
+    // <summary>
+    // Extends <see cref="SortableBindingList{T}" /> to create a sortable binding list that stays in
+    // sync with an underlying <see cref="ObservableCollection{T}" />.  That is, when items are added
+    // or removed from the binding list, they are added or removed from the ObservableCollecion, and
+    // vice-versa.
+    // </summary>
+    // <typeparam name="T"> The list element type. </typeparam>
     internal class ObservableBackedBindingList<T> : SortableBindingList<T>
     {
         #region Fields and constructors
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Internal
         private bool _inCollectionChanged;
         private bool _changingObservableCollection;
 
-        /// <summary>
-        /// Initializes a new instance of a binding list backed by the given <see cref="ObservableCollection{T}" />
-        /// </summary>
-        /// <param name="obervableCollection"> The obervable collection. </param>
+        // <summary>
+        // Initializes a new instance of a binding list backed by the given <see cref="ObservableCollection{T}" />
+        // </summary>
+        // <param name="obervableCollection"> The obervable collection. </param>
         public ObservableBackedBindingList(ObservableCollection<T> obervableCollection)
             : base(obervableCollection.ToList())
         {
@@ -40,10 +40,10 @@ namespace System.Data.Entity.Internal
 
         #region BindingList overrides
 
-        /// <summary>
-        /// Creates a new item to be added to the binding list.
-        /// </summary>
-        /// <returns> The new item. </returns>
+        // <summary>
+        // Creates a new item to be added to the binding list.
+        // </summary>
+        // <returns> The new item. </returns>
         protected override object AddNewCore()
         {
             _addingNewInstance = true;
@@ -51,10 +51,10 @@ namespace System.Data.Entity.Internal
             return _addNewInstance;
         }
 
-        /// <summary>
-        /// Cancels adding of a new item that was started with AddNew.
-        /// </summary>
-        /// <param name="itemIndex"> Index of the item. </param>
+        // <summary>
+        // Cancels adding of a new item that was started with AddNew.
+        // </summary>
+        // <param name="itemIndex"> Index of the item. </param>
         public override void CancelNew(int itemIndex)
         {
             if (itemIndex >= 0
@@ -68,9 +68,9 @@ namespace System.Data.Entity.Internal
             base.CancelNew(itemIndex);
         }
 
-        /// <summary>
-        /// Removes all items from the binding list and underlying ObservableCollection.
-        /// </summary>
+        // <summary>
+        // Removes all items from the binding list and underlying ObservableCollection.
+        // </summary>
         protected override void ClearItems()
         {
             foreach (var entity in Items)
@@ -80,10 +80,10 @@ namespace System.Data.Entity.Internal
             base.ClearItems();
         }
 
-        /// <summary>
-        /// Ends the process of adding a new item that was started with AddNew.
-        /// </summary>
-        /// <param name="itemIndex"> Index of the item. </param>
+        // <summary>
+        // Ends the process of adding a new item that was started with AddNew.
+        // </summary>
+        // <param name="itemIndex"> Index of the item. </param>
         public override void EndNew(int itemIndex)
         {
             if (itemIndex >= 0
@@ -97,11 +97,11 @@ namespace System.Data.Entity.Internal
             base.EndNew(itemIndex);
         }
 
-        /// <summary>
-        /// Inserts the item into the binding list at the given index.
-        /// </summary>
-        /// <param name="index"> The index. </param>
-        /// <param name="item"> The item. </param>
+        // <summary>
+        // Inserts the item into the binding list at the given index.
+        // </summary>
+        // <param name="index"> The index. </param>
+        // <param name="item"> The item. </param>
         protected override void InsertItem(int index, T item)
         {
             base.InsertItem(index, item);
@@ -113,10 +113,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Removes the item at the specified index.
-        /// </summary>
-        /// <param name="index"> The index. </param>
+        // <summary>
+        // Removes the item at the specified index.
+        // </summary>
+        // <param name="index"> The index. </param>
         protected override void RemoveItem(int index)
         {
             if (index >= 0
@@ -132,11 +132,11 @@ namespace System.Data.Entity.Internal
             base.RemoveItem(index);
         }
 
-        /// <summary>
-        /// Sets the item into the list at the given position.
-        /// </summary>
-        /// <param name="index"> The index to insert at. </param>
-        /// <param name="item"> The item. </param>
+        // <summary>
+        // Sets the item into the list at the given position.
+        // </summary>
+        // <param name="index"> The index to insert at. </param>
+        // <param name="item"> The item. </param>
         protected override void SetItem(int index, T item)
         {
             var entity = base[index];
@@ -165,11 +165,11 @@ namespace System.Data.Entity.Internal
 
         #region ObservaleCollection management
 
-        /// <summary>
-        /// Event handler to update the binding list when the underlying observable collection changes.
-        /// </summary>
-        /// <param name="sender"> The sender. </param>
-        /// <param name="e"> Data indicating how the collection has changed. </param>
+        // <summary>
+        // Event handler to update the binding list when the underlying observable collection changes.
+        // </summary>
+        // <param name="sender"> The sender. </param>
+        // <param name="e"> Data indicating how the collection has changed. </param>
         private void ObservableCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             // Don't try to change the binding list if the original change came from the binding list
@@ -216,10 +216,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Adds the item to the underlying observable collection.
-        /// </summary>
-        /// <param name="item"> The item. </param>
+        // <summary>
+        // Adds the item to the underlying observable collection.
+        // </summary>
+        // <param name="item"> The item. </param>
         private void AddToObservableCollection(T item)
         {
             // Don't try to change the ObervableCollection if the original change
@@ -241,10 +241,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Removes the item from the underlying from observable collection.
-        /// </summary>
-        /// <param name="item"> The item. </param>
+        // <summary>
+        // Removes the item from the underlying from observable collection.
+        // </summary>
+        // <param name="item"> The item. </param>
         private void RemoveFromObservableCollection(T item)
         {
             // Don't try to change the ObervableCollection if the original change

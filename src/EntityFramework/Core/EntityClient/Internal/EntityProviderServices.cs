@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient.Internal
 {
@@ -14,23 +14,23 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// The class for provider services of the entity client
-    /// </summary>
+    // <summary>
+    // The class for provider services of the entity client
+    // </summary>
     internal sealed class EntityProviderServices : DbProviderServices
     {
-        /// <summary>
-        /// Singleton object
-        /// </summary>
+        // <summary>
+        // Singleton object
+        // </summary>
         internal static readonly EntityProviderServices Instance = new EntityProviderServices();
 
-        /// <summary>
-        /// Create a Command Definition object, given the connection and command tree
-        /// </summary>
-        /// <param name="providerManifest"> </param>
-        /// <param name="commandTree"> command tree for the statement </param>
-        /// <returns> an executable command definition object </returns>
-        /// <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
+        // <summary>
+        // Create a Command Definition object, given the connection and command tree
+        // </summary>
+        // <param name="providerManifest"> </param>
+        // <param name="commandTree"> command tree for the statement </param>
+        // <returns> an executable command definition object </returns>
+        // <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
@@ -66,10 +66,10 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             return CreateCommandDefinition(storeMetadata.ProviderFactory, commandTree, interceptionContext);
         }
 
-        /// <summary>
-        /// Ensures that the data space of the specified command tree is the model (C-) space
-        /// </summary>
-        /// <param name="commandTree"> The command tree for which the data space should be validated </param>
+        // <summary>
+        // Ensures that the data space of the specified command tree is the model (C-) space
+        // </summary>
+        // <param name="commandTree"> The command tree for which the data space should be validated </param>
         internal override void ValidateDataSpace(DbCommandTree commandTree)
         {
             DebugCheck.NotNull(commandTree);
@@ -80,13 +80,13 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             }
         }
 
-        /// <summary>
-        /// Create a EntityCommandDefinition object based on the prototype command
-        /// This method is intended for provider writers to build a default command definition
-        /// from a command.
-        /// </summary>
-        /// <exception cref="ArgumentNullException">prototype argument must not be null</exception>
-        /// <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
+        // <summary>
+        // Create a EntityCommandDefinition object based on the prototype command
+        // This method is intended for provider writers to build a default command definition
+        // from a command.
+        // </summary>
+        // <exception cref="ArgumentNullException">prototype argument must not be null</exception>
+        // <exception cref="InvalidCastException">prototype argument must be a EntityCommand</exception>
         public override DbCommandDefinition CreateCommandDefinition(DbCommand prototype)
         {
             Check.NotNull(prototype, "prototype");

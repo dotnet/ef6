@@ -7,26 +7,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// The RuleProcessor helps apply a set of rules to a query tree
-    /// </summary>
+    // <summary>
+    // The RuleProcessor helps apply a set of rules to a query tree
+    // </summary>
     internal class RuleProcessor
     {
         #region private state
 
-        /// <summary>
-        /// A lookup table for rules.
-        /// The lookup table is an array indexed by OpType and each entry has a list of rules.
-        /// </summary>
+        // <summary>
+        // A lookup table for rules.
+        // The lookup table is an array indexed by OpType and each entry has a list of rules.
+        // </summary>
         private readonly Dictionary<SubTreeId, SubTreeId> m_processedNodeMap;
 
         #endregion
 
         #region constructors
 
-        /// <summary>
-        /// Initializes a new RuleProcessor
-        /// </summary>
+        // <summary>
+        // Initializes a new RuleProcessor
+        // </summary>
         internal RuleProcessor()
         {
             // Build up the accelerator tables
@@ -69,15 +69,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return false;
         }
 
-        /// <summary>
-        /// Apply rules to the current subtree in a bottom-up fashion.
-        /// </summary>
-        /// <param name="context"> Current rule processing context </param>
-        /// <param name="rules"> The look-up table with the rules to be applied </param>
-        /// <param name="subTreeRoot"> Current subtree </param>
-        /// <param name="parent"> Parent node </param>
-        /// <param name="childIndexInParent"> Index of this child within the parent </param>
-        /// <returns> the result of the transformation </returns>
+        // <summary>
+        // Apply rules to the current subtree in a bottom-up fashion.
+        // </summary>
+        // <param name="context"> Current rule processing context </param>
+        // <param name="rules"> The look-up table with the rules to be applied </param>
+        // <param name="subTreeRoot"> Current subtree </param>
+        // <param name="parent"> Parent node </param>
+        // <param name="childIndexInParent"> Index of this child within the parent </param>
+        // <returns> the result of the transformation </returns>
         private Node ApplyRulesToSubtree(
             RuleProcessingContext context,
             ReadOnlyCollection<ReadOnlyCollection<Rule>> rules,
@@ -155,13 +155,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// Apply a set of rules to the subtree
-        /// </summary>
-        /// <param name="context"> Rule processing context </param>
-        /// <param name="rules"> </param>
-        /// <param name="subTreeRoot"> current subtree </param>
-        /// <returns> transformed subtree </returns>
+        // <summary>
+        // Apply a set of rules to the subtree
+        // </summary>
+        // <param name="context"> Rule processing context </param>
+        // <param name="rules"> </param>
+        // <param name="subTreeRoot"> current subtree </param>
+        // <returns> transformed subtree </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node ApplyRulesToSubtree(
             RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<Rule>> rules, Node subTreeRoot)

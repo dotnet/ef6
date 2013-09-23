@@ -13,12 +13,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationEndMember : RelationshipEndMember
     {
-        /// <summary>
-        /// Initializes a new instance of AssociationEndMember
-        /// </summary>
-        /// <param name="name"> name of the association end member </param>
-        /// <param name="endRefType"> Ref type that this end refers to </param>
-        /// <param name="multiplicity"> multiplicity of the end </param>
+        // <summary>
+        // Initializes a new instance of AssociationEndMember
+        // </summary>
+        // <param name="name"> name of the association end member </param>
+        // <param name="endRefType"> Ref type that this end refers to </param>
+        // <param name="multiplicity"> multiplicity of the end </param>
         internal AssociationEndMember(
             string name,
             RefType endRefType,
@@ -48,9 +48,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private Func<RelationshipManager, RelatedEnd, RelatedEnd> _getRelatedEndMethod;
 
-        /// <summary>
-        /// cached dynamic method to set a CLR property value on a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to set a CLR property value on a CLR instance
+        // </summary>
         internal Func<RelationshipManager, RelatedEnd, RelatedEnd> GetRelatedEnd
         {
             get { return _getRelatedEndMethod; }

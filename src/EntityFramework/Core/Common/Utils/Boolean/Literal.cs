@@ -5,23 +5,23 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents a literal in a normal form expression of the form:
-    /// Term
-    /// or
-    /// !Term
-    /// </summary>
+    // <summary>
+    // Represents a literal in a normal form expression of the form:
+    // Term
+    // or
+    // !Term
+    // </summary>
     internal sealed class Literal<T_Identifier> : NormalFormNode<T_Identifier>,
                                                   IEquatable<Literal<T_Identifier>>
     {
         private readonly TermExpr<T_Identifier> _term;
         private readonly bool _isTermPositive;
 
-        /// <summary>
-        /// Initialize a new literal.
-        /// </summary>
-        /// <param name="term"> Term </param>
-        /// <param name="isTermPositive"> Sign of term </param>
+        // <summary>
+        // Initialize a new literal.
+        // </summary>
+        // <param name="term"> Term </param>
+        // <param name="isTermPositive"> Sign of term </param>
         internal Literal(TermExpr<T_Identifier> term, bool isTermPositive)
             : base(isTermPositive ? term : (BoolExpr<T_Identifier>)new NotExpr<T_Identifier>(term))
         {
@@ -30,26 +30,26 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             _isTermPositive = isTermPositive;
         }
 
-        /// <summary>
-        /// Gets literal term.
-        /// </summary>
+        // <summary>
+        // Gets literal term.
+        // </summary>
         internal TermExpr<T_Identifier> Term
         {
             get { return _term; }
         }
 
-        /// <summary>
-        /// Gets sign of term.
-        /// </summary>
+        // <summary>
+        // Gets sign of term.
+        // </summary>
         internal bool IsTermPositive
         {
             get { return _isTermPositive; }
         }
 
-        /// <summary>
-        /// Creates a negated version of this literal.
-        /// </summary>
-        /// <returns> !this </returns>
+        // <summary>
+        // Creates a negated version of this literal.
+        // </summary>
+        // <returns> !this </returns>
         internal Literal<T_Identifier> MakeNegated()
         {
             return IdentifierService<T_Identifier>.Instance.NegateLiteral(this);

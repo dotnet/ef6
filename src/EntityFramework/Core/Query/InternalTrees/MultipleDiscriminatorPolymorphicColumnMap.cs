@@ -10,18 +10,18 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// Represents a function import column map.
-    /// </summary>
+    // <summary>
+    // Represents a function import column map.
+    // </summary>
     internal class MultipleDiscriminatorPolymorphicColumnMap : TypedColumnMap
     {
         private readonly SimpleColumnMap[] m_typeDiscriminators;
         private readonly Dictionary<EntityType, TypedColumnMap> m_typeChoices;
         private readonly Func<object[], EntityType> m_discriminate;
 
-        /// <summary>
-        /// Internal constructor
-        /// </summary>
+        // <summary>
+        // Internal constructor
+        // </summary>
         internal MultipleDiscriminatorPolymorphicColumnMap(
             TypeUsage type,
             string name,
@@ -40,42 +40,42 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             m_discriminate = discriminate;
         }
 
-        /// <summary>
-        /// Get the type discriminator column
-        /// </summary>
+        // <summary>
+        // Get the type discriminator column
+        // </summary>
         internal SimpleColumnMap[] TypeDiscriminators
         {
             get { return m_typeDiscriminators; }
         }
 
-        /// <summary>
-        /// Get the type mapping
-        /// </summary>
+        // <summary>
+        // Get the type mapping
+        // </summary>
         internal Dictionary<EntityType, TypedColumnMap> TypeChoices
         {
             get { return m_typeChoices; }
         }
 
-        /// <summary>
-        /// Gets discriminator delegate
-        /// </summary>
+        // <summary>
+        // Gets discriminator delegate
+        // </summary>
         internal Func<object[], EntityType> Discriminate
         {
             get { return m_discriminate; }
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override void Accept<TArgType>(ColumnMapVisitor<TArgType> visitor, TArgType arg)
         {
             visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Visitor Design Pattern
-        /// </summary>
+        // <summary>
+        // Visitor Design Pattern
+        // </summary>
         [DebuggerNonUserCode]
         internal override TResultType Accept<TResultType, TArgType>(
             ColumnMapVisitorWithResults<TResultType, TArgType> visitor, TArgType arg)
@@ -83,9 +83,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return visitor.Visit(this, arg);
         }
 
-        /// <summary>
-        /// Debugging support
-        /// </summary>
+        // <summary>
+        // Debugging support
+        // </summary>
         public override string ToString()
         {
             var sb = new StringBuilder();

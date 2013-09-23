@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
@@ -17,13 +17,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             System.Data.Entity.Core.Common.Utils.Boolean.TermExpr
                 <Common.Utils.Boolean.DomainConstraint<Structures.BoolLiteral, Structures.Constant>>;
 
-    /// <summary>
-    /// Satisfiability test optimization.
-    /// This class extends FragmentQueryKB by adding the so-called chase functionality:
-    /// given an expression, the chase incorporates in this expression all the consequences derivable
-    /// from the knowledge base. The knowledge base is not needed for the satisfiability test after such a procedure.
-    /// This leads to better performance in many cases.
-    /// </summary>
+    // <summary>
+    // Satisfiability test optimization.
+    // This class extends FragmentQueryKB by adding the so-called chase functionality:
+    // given an expression, the chase incorporates in this expression all the consequences derivable
+    // from the knowledge base. The knowledge base is not needed for the satisfiability test after such a procedure.
+    // This leads to better performance in many cases.
+    // </summary>
     internal class FragmentQueryKBChaseSupport : FragmentQueryKB
     {
         // Index of facts derivable from conditions, maintained via the CacheImplications method
@@ -65,9 +65,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        /// <summary>
-        /// Returns KB rules which cannot be used for chasing.
-        /// </summary>
+        // <summary>
+        // Returns KB rules which cannot be used for chasing.
+        // </summary>
         internal DomainBoolExpr Residue
         {
             get { return new AndExpr<DomainConstraint>(ResidueInternal); }
@@ -98,12 +98,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             }
         }
 
-        /// <summary>
-        /// Retrieves all implications directly derivable from the atomic expression.
-        /// </summary>
-        /// <param name="expression">
-        /// Atomic expression to be extended with facts derivable from the knowledge base.
-        /// </param>
+        // <summary>
+        // Retrieves all implications directly derivable from the atomic expression.
+        // </summary>
+        // <param name="expression">
+        // Atomic expression to be extended with facts derivable from the knowledge base.
+        // </param>
         internal DomainBoolExpr Chase(DomainTermExpr expression)
         {
             DomainBoolExpr implication;
@@ -112,10 +112,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return new AndExpr<DomainConstraint>(expression, implication ?? TrueExpr<DomainConstraint>.Value);
         }
 
-        /// <summary>
-        /// Checks if the given expression is satisfiable in conjunction with this knowledge base.
-        /// </summary>
-        /// <param name="expression">Expression to be tested for satisfiability.</param>
+        // <summary>
+        // Checks if the given expression is satisfiable in conjunction with this knowledge base.
+        // </summary>
+        // <param name="expression">Expression to be tested for satisfiability.</param>
         internal bool IsSatisfiable(DomainBoolExpr expression)
         {
             var context = IdentifierService<DomainConstraint>.Instance.CreateConversionContext();
@@ -151,23 +151,23 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             return !new Converter<DomainConstraint>(fullExpression, context).Vertex.IsZero();
         }
 
-        /// <summary>
-        /// Retrieves all implications directly derivable from the expression.
-        /// </summary>
-        /// <param name="expression">
-        /// Expression to be extended with facts derivable from the knowledge base.
-        /// </param>
+        // <summary>
+        // Retrieves all implications directly derivable from the expression.
+        // </summary>
+        // <param name="expression">
+        // Expression to be extended with facts derivable from the knowledge base.
+        // </param>
         internal DomainBoolExpr Chase(DomainBoolExpr expression)
         {
             return _implications.Count == 0 ? expression : _chase.Chase(Normalizer.ToNnfAndSplitRange(expression));
         }
 
-        /// <summary>
-        /// Maintains a list of all implications derivable from the condition.
-        /// Implications are stored in the _implications dictionary
-        /// </summary>
-        /// <param name="condition"> Condition </param>
-        /// <param name="implies"> Entailed expression </param>
+        // <summary>
+        // Maintains a list of all implications derivable from the condition.
+        // Implications are stored in the _implications dictionary
+        // </summary>
+        // <param name="condition"> Condition </param>
+        // <param name="implies"> Entailed expression </param>
         private void CacheImplication(DomainBoolExpr condition, DomainBoolExpr implies)
         {
             var conditionDnf = Normalizer.ToDnf(condition, false);

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    /// <summary>
-    /// Describes modification function mappings for an association set.
-    /// </summary>
+    // <summary>
+    // Describes modification function mappings for an association set.
+    // </summary>
     internal sealed class AssociationSetModificationFunctionMapping : MappingItem
     {
         internal AssociationSetModificationFunctionMapping(
@@ -23,19 +23,19 @@ namespace System.Data.Entity.Core.Mapping
             InsertFunctionMapping = insertFunctionMapping;
         }
 
-        /// <summary>
-        /// Association set these functions handles.
-        /// </summary>
+        // <summary>
+        // Association set these functions handles.
+        // </summary>
         internal readonly AssociationSet AssociationSet;
 
-        /// <summary>
-        /// Delete function for this association set.
-        /// </summary>
+        // <summary>
+        // Delete function for this association set.
+        // </summary>
         internal readonly ModificationFunctionMapping DeleteFunctionMapping;
 
-        /// <summary>
-        /// Insert function for this association set.
-        /// </summary>
+        // <summary>
+        // Insert function for this association set.
+        // </summary>
         internal readonly ModificationFunctionMapping InsertFunctionMapping;
 
         public override string ToString()

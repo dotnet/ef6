@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
@@ -6,27 +6,27 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Resources;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an RelationshipSetEnd element.
-    /// </summary>
+    // <summary>
+    // Represents an RelationshipSetEnd element.
+    // </summary>
     internal class EntityContainerRelationshipSetEnd : SchemaElement
     {
         private IRelationshipEnd _relationshipEnd;
         private string _unresolvedEntitySetName;
         private EntityContainerEntitySet _entitySet;
 
-        /// <summary>
-        /// Constructs an EntityContainerRelationshipSetEnd
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainerRelationshipSetEnd
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerRelationshipSetEnd(EntityContainerRelationshipSet parentElement)
             : base(parentElement)
         {
         }
 
-        /// <summary>
-        /// the End in the parent’s Association that this element refers to
-        /// </summary>
+        // <summary>
+        // the End in the parent’s Association that this element refers to
+        // </summary>
         public IRelationshipEnd RelationshipEnd
         {
             get { return _relationshipEnd; }
@@ -69,10 +69,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// This is the method that is called when an EntitySet Attribute is encountered.
-        /// </summary>
-        /// <param name="reader"> The XmlRead positned at the extent attribute. </param>
+        // <summary>
+        // This is the method that is called when an EntitySet Attribute is encountered.
+        // </summary>
+        // <param name="reader"> The XmlRead positned at the extent attribute. </param>
         private void HandleEntitySetAttribute(XmlReader reader)
         {
             if (Schema.DataModel
@@ -88,9 +88,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
-        /// </summary>
+        // <summary>
+        // Used during the resolve phase to resolve the type name to the object that represents that type
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -107,9 +107,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Do all validation for this element here, and delegate to all sub elements
-        /// </summary>
+        // <summary>
+        // Do all validation for this element here, and delegate to all sub elements
+        // </summary>
         internal override void Validate()
         {
             base.Validate();
@@ -137,9 +137,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// The parent element as an EntityContainerProperty
-        /// </summary>
+        // <summary>
+        // The parent element as an EntityContainerProperty
+        // </summary>
         internal new EntityContainerRelationshipSet ParentElement
         {
             get { return (EntityContainerRelationshipSet)(base.ParentElement); }

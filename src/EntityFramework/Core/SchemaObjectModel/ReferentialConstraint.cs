@@ -8,26 +8,26 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics.CodeAnalysis;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an referential constraint on a relationship
-    /// </summary>
+    // <summary>
+    // Represents an referential constraint on a relationship
+    // </summary>
     internal sealed class ReferentialConstraint : SchemaElement
     {
         private const char KEY_DELIMITER = ' ';
         private ReferentialConstraintRoleElement _principalRole;
         private ReferentialConstraintRoleElement _dependentRole;
 
-        /// <summary>
-        /// construct a Referential constraint
-        /// </summary>
+        // <summary>
+        // construct a Referential constraint
+        // </summary>
         public ReferentialConstraint(Relationship relationship)
             : base(relationship)
         {
         }
 
-        /// <summary>
-        /// Validate this referential constraint
-        /// </summary>
+        // <summary>
+        // Validate this referential constraint
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Validate()
         {
@@ -258,10 +258,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// Resolves the given property names to the property in the item
-        /// Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
-        /// </summary>
+        // <summary>
+        // Resolves the given property names to the property in the item
+        // Also checks whether the properties form the key for the given type and whether all the properties are nullable or not
+        // </summary>
         private static void IsKeyProperty(
             ReferentialConstraintRoleElement roleElement, SchemaEntityType itemType,
             out bool isKeyProperty,
@@ -356,9 +356,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _principalRole.ResolveTopLevelNames();
         }
 
-        /// <summary>
-        /// The parent element as an IRelationship
-        /// </summary>
+        // <summary>
+        // The parent element as an IRelationship
+        // </summary>
         internal new IRelationship ParentElement
         {
             get { return (IRelationship)(base.ParentElement); }

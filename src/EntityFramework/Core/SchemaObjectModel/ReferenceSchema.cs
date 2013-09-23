@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for UsingElement.
-    /// </summary>
+    // <summary>
+    // Summary description for UsingElement.
+    // </summary>
     internal class UsingElement : SchemaElement
     {
         #region Instance Fields

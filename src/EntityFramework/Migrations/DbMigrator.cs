@@ -63,9 +63,9 @@ namespace System.Data.Entity.Migrations
         private MigrationSqlGenerator _sqlGenerator;
         private bool _emptyMigrationNeeded;
 
-        /// <summary>
-        /// For testing.
-        /// </summary>
+        // <summary>
+        // For testing.
+        // </summary>
         internal DbMigrator(DbContext usersContext = null, DbProviderFactory providerFactory = null)
             : base(null)
         {
@@ -1043,14 +1043,14 @@ namespace System.Data.Entity.Migrations
             return new DatabaseName(tableName, EdmModelExtensions.DefaultSchema).ToString();
         }
 
-        /// <summary>
-        /// Ensures that the database exists by creating an empty database if one does not
-        /// already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
-        /// throws an exception, then an attempt is made to clean up (delete) the new empty database.
-        /// This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
-        /// which can then cause problems for database initializers that check whether or not a database
-        /// exists.
-        /// </summary>
+        // <summary>
+        // Ensures that the database exists by creating an empty database if one does not
+        // already exist. If a new empty database is created but then the code in mustSucceedToKeepDatabase
+        // throws an exception, then an attempt is made to clean up (delete) the new empty database.
+        // This avoids leaving an empty database with no or incomplete metadata (e.g. MigrationHistory)
+        // which can then cause problems for database initializers that check whether or not a database
+        // exists.
+        // </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal override void EnsureDatabaseExists(Action mustSucceedToKeepDatabase)
         {

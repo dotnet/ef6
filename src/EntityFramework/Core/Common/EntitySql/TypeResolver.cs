@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Represents eSQL type and namespace name resolver.
-    /// </summary>
+    // <summary>
+    // Represents eSQL type and namespace name resolver.
+    // </summary>
     internal sealed class TypeResolver
     {
         private readonly Perspective _perspective;
@@ -19,17 +19,17 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly Dictionary<string, MetadataNamespace> _aliasedNamespaces;
         private readonly HashSet<MetadataNamespace> _namespaces;
 
-        /// <summary>
-        /// name -> list(overload)
-        /// </summary>
+        // <summary>
+        // name -> list(overload)
+        // </summary>
         private readonly Dictionary<string, List<InlineFunctionInfo>> _functionDefinitions;
 
         private bool _includeInlineFunctions;
         private bool _resolveLeftMostUnqualifiedNameAsNamespaceOnly;
 
-        /// <summary>
-        /// Initializes TypeResolver instance
-        /// </summary>
+        // <summary>
+        // Initializes TypeResolver instance
+        // </summary>
         internal TypeResolver(Perspective perspective, ParserOptions parserOptions)
         {
             DebugCheck.NotNull(perspective);
@@ -44,49 +44,49 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _resolveLeftMostUnqualifiedNameAsNamespaceOnly = false;
         }
 
-        /// <summary>
-        /// Returns perspective.
-        /// </summary>
+        // <summary>
+        // Returns perspective.
+        // </summary>
         internal Perspective Perspective
         {
             get { return _perspective; }
         }
 
-        /// <summary>
-        /// Returns namespace imports.
-        /// </summary>
+        // <summary>
+        // Returns namespace imports.
+        // </summary>
         internal ICollection<MetadataNamespace> NamespaceImports
         {
             get { return _namespaces; }
         }
 
-        /// <summary>
-        /// Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.String" />.
-        /// </summary>
+        // <summary>
+        // Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.String" />.
+        // </summary>
         internal static TypeUsage StringType
         {
             get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.String); }
         }
 
-        /// <summary>
-        /// Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.Boolean" />.
-        /// </summary>
+        // <summary>
+        // Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.Boolean" />.
+        // </summary>
         internal static TypeUsage BooleanType
         {
             get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Boolean); }
         }
 
-        /// <summary>
-        /// Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.Int64" />.
-        /// </summary>
+        // <summary>
+        // Returns <see cref="TypeUsage" /> for <see cref="PrimitiveTypeKind.Int64" />.
+        // </summary>
         internal static TypeUsage Int64Type
         {
             get { return MetadataWorkspace.GetCanonicalModelTypeUsage(PrimitiveTypeKind.Int64); }
         }
 
-        /// <summary>
-        /// Adds an aliased namespace import.
-        /// </summary>
+        // <summary>
+        // Adds an aliased namespace import.
+        // </summary>
         internal void AddAliasedNamespaceImport(string alias, MetadataNamespace @namespace, ErrorContext errCtx)
         {
             if (_aliasedNamespaces.ContainsKey(alias))
@@ -98,9 +98,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             _aliasedNamespaces.Add(alias, @namespace);
         }
 
-        /// <summary>
-        /// Adds a non-aliased namespace import.
-        /// </summary>
+        // <summary>
+        // Adds a non-aliased namespace import.
+        // </summary>
         internal void AddNamespaceImport(MetadataNamespace @namespace, ErrorContext errCtx)
         {
             if (_namespaces.Contains(@namespace))
@@ -114,9 +114,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 
         #region Inline function declarations
 
-        /// <summary>
-        /// Declares inline function in the query local metadata.
-        /// </summary>
+        // <summary>
+        // Declares inline function in the query local metadata.
+        // </summary>
         internal void DeclareInlineFunction(string name, InlineFunctionInfo functionInfo)
         {
             DebugCheck.NotEmpty(name);
@@ -423,9 +423,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             throw EntitySqlException.Create(errCtx, message, null);
         }
 
-        /// <summary>
-        /// Try get type from the model using the fully qualified name.
-        /// </summary>
+        // <summary>
+        // Try get type from the model using the fully qualified name.
+        // </summary>
         private bool TryGetTypeFromMetadata(string typeFullName, out MetadataType type)
         {
             TypeUsage typeUsage;
@@ -441,9 +441,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Try get function from the model using the fully qualified name.
-        /// </summary>
+        // <summary>
+        // Try get function from the model using the fully qualified name.
+        // </summary>
         internal bool TryGetFunctionFromMetadata(string namespaceName, string functionName, out MetadataFunctionGroup functionGroup)
         {
             IList<EdmFunction> functionMetadata;
@@ -460,9 +460,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Try get function from the local metadata using the fully qualified name.
-        /// </summary>
+        // <summary>
+        // Try get function from the local metadata using the fully qualified name.
+        // </summary>
         private bool TryGetInlineFunction(string functionName, out InlineFunctionGroup inlineFunctionGroup)
         {
             List<InlineFunctionInfo> inlineFunctionMetadata;
@@ -478,9 +478,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             }
         }
 
-        /// <summary>
-        /// Builds a dot-separated multipart identifier off the provided <paramref name="names" />.
-        /// </summary>
+        // <summary>
+        // Builds a dot-separated multipart identifier off the provided <paramref name="names" />.
+        // </summary>
         internal static string GetFullName(params string[] names)
         {
             DebugCheck.NotNull(names);

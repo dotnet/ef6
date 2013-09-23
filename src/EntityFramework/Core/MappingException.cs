@@ -39,9 +39,9 @@ namespace System.Data.Entity.Core
         {
         }
 
-        /// <summary>
-        /// constructor for deserialization
-        /// </summary>
+        // <summary>
+        // constructor for deserialization
+        // </summary>
         private MappingException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

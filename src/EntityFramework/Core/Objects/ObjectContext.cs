@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -253,9 +253,9 @@ namespace System.Data.Entity.Core.Objects
             InitializeMappingViewCacheFactory();
         }
 
-        /// <summary>
-        /// For testing porpoises only.
-        /// </summary>
+        // <summary>
+        // For testing porpoises only.
+        // </summary>
         internal ObjectContext(
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
             Translator translator = null,
@@ -350,9 +350,9 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// ClrPerspective based on the MetadataWorkspace.
-        /// </summary>
+        // <summary>
+        // ClrPerspective based on the MetadataWorkspace.
+        // </summary>
         internal ClrPerspective Perspective
         {
             get
@@ -403,15 +403,15 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Whether or not we are in the middle of materialization
-        /// Used to suppress operations such as lazy loading that are not allowed during materialization
-        /// </summary>
+        // <summary>
+        // Whether or not we are in the middle of materialization
+        // Used to suppress operations such as lazy loading that are not allowed during materialization
+        // </summary>
         internal bool InMaterialization { get; set; }
 
-        /// <summary>
-        /// Indicates whether there is an asynchronous method currently running that uses this instance
-        /// </summary>
+        // <summary>
+        // Indicates whether there is an asynchronous method currently running that uses this instance
+        // </summary>
         internal ThrowingMonitor AsyncMonitor
         {
             get { return _asyncMonitor; }
@@ -475,9 +475,9 @@ namespace System.Data.Entity.Core.Objects
             remove { _onSavingChanges -= value; }
         }
 
-        /// <summary>
-        /// A private helper function for the _savingChanges/SavingChanges event.
-        /// </summary>
+        // <summary>
+        // A private helper function for the _savingChanges/SavingChanges event.
+        // </summary>
         private void OnSavingChanges()
         {
             if (null != _onSavingChanges)
@@ -501,11 +501,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Returns true if any handlers for the ObjectMaterialized event exist.  This is
-        /// used for perf reasons to avoid collecting the information needed for the event
-        /// if there is no point in firing it.
-        /// </summary>
+        // <summary>
+        // Returns true if any handlers for the ObjectMaterialized event exist.  This is
+        // used for perf reasons to avoid collecting the information needed for the event
+        // if there is no point in firing it.
+        // </summary>
         internal bool OnMaterializedHasHandlers
         {
             get { return _onObjectMaterialized != null && _onObjectMaterialized.GetInvocationList().Length != 0; }
@@ -726,13 +726,13 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Adds an object to the cache without adding its related
-        /// entities.
-        /// </summary>
-        /// <param name="entitySet"> EntitySet for the Object to be added. </param>
-        /// <param name="wrappedEntity"> Object to be added. </param>
-        /// <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
+        // <summary>
+        // Adds an object to the cache without adding its related
+        // entities.
+        // </summary>
+        // <param name="entitySet"> EntitySet for the Object to be added. </param>
+        // <param name="wrappedEntity"> Object to be added. </param>
+        // <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
         internal void AddSingleObject(EntitySet entitySet, IEntityWrapper wrappedEntity, string argumentName)
         {
             DebugCheck.NotNull(entitySet);
@@ -1248,11 +1248,11 @@ namespace System.Data.Entity.Core.Objects
             AttachTo(null, entity);
         }
 
-        /// <summary>
-        /// Attaches single object to the cache without adding its related entities.
-        /// </summary>
-        /// <param name="wrappedEntity"> Entity to be attached. </param>
-        /// <param name="entitySet"> "Computed" entity set. </param>
+        // <summary>
+        // Attaches single object to the cache without adding its related entities.
+        // </summary>
+        // <param name="wrappedEntity"> Entity to be attached. </param>
+        // <param name="entitySet"> "Computed" entity set. </param>
         internal void AttachSingleObject(IEntityWrapper wrappedEntity, EntitySet entitySet)
         {
             DebugCheck.NotNull(wrappedEntity);
@@ -1354,10 +1354,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// When attaching we need to check that the entity is not already attached to a different context
-        /// before we wipe away that context.
-        /// </summary>
+        // <summary>
+        // When attaching we need to check that the entity is not already attached to a different context
+        // before we wipe away that context.
+        // </summary>
         private void VerifyContextForAddOrAttach(IEntityWrapper wrappedEntity)
         {
             if (wrappedEntity.Context != null
@@ -1495,11 +1495,11 @@ namespace System.Data.Entity.Core.Objects
             return new ObjectSet<TEntity>(entitySet, this);
         }
 
-        /// <summary>
-        /// Find the EntitySet in the default EntityContainer for the specified CLR type.
-        /// Must be a valid mapped entity type and must be mapped to exactly one EntitySet across all of the EntityContainers in the metadata for this context.
-        /// </summary>
-        /// <param name="entityCLRType"> CLR type to use for EntitySet lookup. </param>
+        // <summary>
+        // Find the EntitySet in the default EntityContainer for the specified CLR type.
+        // Must be a valid mapped entity type and must be mapped to exactly one EntitySet across all of the EntityContainers in the metadata for this context.
+        // </summary>
+        // <param name="entityCLRType"> CLR type to use for EntitySet lookup. </param>
         private EntitySet GetEntitySetForType(Type entityCLRType, string exceptionParameterName)
         {
             EntitySet entitySetForType = null;
@@ -1573,13 +1573,13 @@ namespace System.Data.Entity.Core.Objects
             return entitySet;
         }
 
-        /// <summary>
-        /// Finds an EntitySet with the specified name and verifies that its type matches the specified type.
-        /// </summary>
-        /// <param name="entitySetName"> Name of the EntitySet to find. Can be fully-qualified or unqualified if the DefaultContainerName is set </param>
-        /// <param name="entityCLRType"> Expected CLR type of the EntitySet. Must exactly match the type for the EntitySet, base types are not valid. </param>
-        /// <param name="exceptionParameterName"> Argument name to use if an exception occurs. </param>
-        /// <returns> EntitySet that was found in metadata with the specified parameters </returns>
+        // <summary>
+        // Finds an EntitySet with the specified name and verifies that its type matches the specified type.
+        // </summary>
+        // <param name="entitySetName"> Name of the EntitySet to find. Can be fully-qualified or unqualified if the DefaultContainerName is set </param>
+        // <param name="entityCLRType"> Expected CLR type of the EntitySet. Must exactly match the type for the EntitySet, base types are not valid. </param>
+        // <param name="exceptionParameterName"> Argument name to use if an exception occurs. </param>
+        // <returns> EntitySet that was found in metadata with the specified parameters </returns>
         private EntitySet GetEntitySetForNameAndType(string entitySetName, Type entityCLRType, string exceptionParameterName)
         {
             // Verify that the specified entitySetName exists in metadata
@@ -1599,13 +1599,13 @@ namespace System.Data.Entity.Core.Objects
 
         #region Connection Management
 
-        /// <summary>
-        /// Ensures that the connection is opened for an operation that requires an open connection to the store.
-        /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">
-        /// If the <see cref="ObjectContext" /> instance has been disposed.
-        /// </exception>
+        // <summary>
+        // Ensures that the connection is opened for an operation that requires an open connection to the store.
+        // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
+        // </summary>
+        // <exception cref="ObjectDisposedException">
+        // If the <see cref="ObjectContext" /> instance has been disposed.
+        // </exception>
         internal virtual void EnsureConnection()
         {
             if (Connection.State == ConnectionState.Broken)
@@ -1654,13 +1654,13 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        /// <summary>
-        /// Ensures that the connection is opened for an operation that requires an open connection to the store.
-        /// Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">
-        /// If the <see cref="ObjectContext" /> instance has been disposed.
-        /// </exception>
+        // <summary>
+        // Ensures that the connection is opened for an operation that requires an open connection to the store.
+        // Calls to EnsureConnection MUST be matched with a single call to ReleaseConnection.
+        // </summary>
+        // <exception cref="ObjectDisposedException">
+        // If the <see cref="ObjectContext" /> instance has been disposed.
+        // </exception>
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
             if (Connection.State == ConnectionState.Broken)
@@ -1803,9 +1803,9 @@ namespace System.Data.Entity.Core.Objects
             return defaultValue;
         }
 
-        /// <summary>
-        /// Resets the state of connection management when the connection becomes closed.
-        /// </summary>
+        // <summary>
+        // Resets the state of connection management when the connection becomes closed.
+        // </summary>
         private void ConnectionStateChange(object sender, StateChangeEventArgs e)
         {
             if (e.CurrentState
@@ -1816,16 +1816,16 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Releases the connection, potentially closing the connection if no active operations
-        /// require the connection to be open. There should be a single ReleaseConnection call
-        /// for each EnsureConnection call.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">
-        /// If the
-        /// <see cref="ObjectContext" />
-        /// instance has been disposed.
-        /// </exception>
+        // <summary>
+        // Releases the connection, potentially closing the connection if no active operations
+        // require the connection to be open. There should be a single ReleaseConnection call
+        // for each EnsureConnection call.
+        // </summary>
+        // <exception cref="ObjectDisposedException">
+        // If the
+        // <see cref="ObjectContext" />
+        // instance has been disposed.
+        // </exception>
         internal virtual void ReleaseConnection()
         {
             if (_disposed)
@@ -1888,11 +1888,11 @@ namespace System.Data.Entity.Core.Objects
             return query;
         }
 
-        /// <summary>
-        /// Creates an EntityConnection from the given connection string.
-        /// </summary>
-        /// <param name="connectionString"> the connection string </param>
-        /// <returns> the newly created connection </returns>
+        // <summary>
+        // Creates an EntityConnection from the given connection string.
+        // </summary>
+        // <param name="connectionString"> the connection string </param>
+        // <returns> the newly created connection </returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names as part of ConnectionString which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For EntityConnection constructor. But the paths are not created in this method.
         private static EntityConnection CreateEntityConnection(string connectionString)
@@ -1905,15 +1905,15 @@ namespace System.Data.Entity.Core.Objects
             return connection;
         }
 
-        /// <summary>
-        /// Given an entity connection, returns a copy of its MetadataWorkspace. Ensure we get
-        /// all of the metadata item collections by priming the entity connection.
-        /// </summary>
-        /// <exception cref="ObjectDisposedException">
-        /// If the
-        /// <see cref="ObjectContext" />
-        /// instance has been disposed.
-        /// </exception>
+        // <summary>
+        // Given an entity connection, returns a copy of its MetadataWorkspace. Ensure we get
+        // all of the metadata item collections by priming the entity connection.
+        // </summary>
+        // <exception cref="ObjectDisposedException">
+        // If the
+        // <see cref="ObjectContext" />
+        // instance has been disposed.
+        // </exception>
         private MetadataWorkspace RetrieveMetadataWorkspaceFromConnection()
         {
             if (_disposed)
@@ -1942,11 +1942,11 @@ namespace System.Data.Entity.Core.Objects
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
         }
 
-        /// <summary>
-        /// Common DeleteObject method that is used by both ObjectContext.DeleteObject and ObjectSet.DeleteObject.
-        /// </summary>
-        /// <param name="entity"> Object to be deleted. </param>
-        /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
+        // <summary>
+        // Common DeleteObject method that is used by both ObjectContext.DeleteObject and ObjectSet.DeleteObject.
+        // </summary>
+        // <param name="entity"> Object to be deleted. </param>
+        // <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
         internal void DeleteObject(object entity, EntitySet expectedEntitySet)
         {
             DebugCheck.NotNull(entity);
@@ -2000,11 +2000,11 @@ namespace System.Data.Entity.Core.Objects
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
         }
 
-        /// <summary>
-        /// Common Detach method that is used by both ObjectContext.Detach and ObjectSet.Detach.
-        /// </summary>
-        /// <param name="entity"> Object to be detached. </param>
-        /// <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
+        // <summary>
+        // Common Detach method that is used by both ObjectContext.Detach and ObjectSet.Detach.
+        // </summary>
+        // <param name="entity"> Object to be detached. </param>
+        // <param name="expectedEntitySet"> EntitySet that the specified object is expected to be in. Null if the caller doesn't want to validate against a particular EntitySet. </param>
         internal void Detach(object entity, EntitySet expectedEntitySet)
         {
             DebugCheck.NotNull(entity);
@@ -2083,14 +2083,14 @@ namespace System.Data.Entity.Core.Objects
 
         #region GetEntitySet
 
-        /// <summary>
-        /// Returns the EntitySet with the given name from given container.
-        /// </summary>
-        /// <param name="entitySetName"> Name of entity set. </param>
-        /// <param name="entityContainerName"> Name of container. </param>
-        /// <returns> The appropriate EntitySet. </returns>
-        /// <exception cref="InvalidOperationException">The entity set could not be found for the given name.</exception>
-        /// <exception cref="InvalidOperationException">The entity container could not be found for the given name.</exception>
+        // <summary>
+        // Returns the EntitySet with the given name from given container.
+        // </summary>
+        // <param name="entitySetName"> Name of entity set. </param>
+        // <param name="entityContainerName"> Name of container. </param>
+        // <returns> The appropriate EntitySet. </returns>
+        // <exception cref="InvalidOperationException">The entity set could not be found for the given name.</exception>
+        // <exception cref="InvalidOperationException">The entity container could not be found for the given name.</exception>
         internal EntitySet GetEntitySet(string entitySetName, string entityContainerName)
         {
             DebugCheck.NotNull(entitySetName);
@@ -2161,11 +2161,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Validate that an EntitySet is compatible with a given entity instance's CLR type.
-        /// </summary>
-        /// <param name="entitySet"> an EntitySet </param>
-        /// <param name="entityType"> The CLR type of an entity instance </param>
+        // <summary>
+        // Validate that an EntitySet is compatible with a given entity instance's CLR type.
+        // </summary>
+        // <param name="entitySet"> an EntitySet </param>
+        // <param name="entityType"> The CLR type of an entity instance </param>
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private void ValidateEntitySet(EntitySet entitySet, Type entityType)
         {
@@ -2381,13 +2381,13 @@ namespace System.Data.Entity.Core.Objects
 
 #endif
 
-        /// <summary>
-        /// Validates that the given entity/key pair has an ObjectStateEntry
-        /// and that entry is not in the added state.
-        /// The entity is added to the entities dictionary, and checked for duplicates.
-        /// </summary>
-        /// <param name="entities"> on exit, entity is added to this dictionary. </param>
-        /// <param name="key"> </param>
+        // <summary>
+        // Validates that the given entity/key pair has an ObjectStateEntry
+        // and that entry is not in the added state.
+        // The entity is added to the entities dictionary, and checked for duplicates.
+        // </summary>
+        // <param name="entities"> on exit, entity is added to this dictionary. </param>
+        // <param name="key"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void RefreshCheck(
             Dictionary<EntityKey, EntityEntry> entities, EntityKey key)
@@ -3112,23 +3112,23 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion //SaveChanges
 
-        /// <summary>
-        /// Executes a function in a local transaction and returns the result.
-        /// </summary>
-        /// <remarks>
-        /// A local transaction is created only if there are no existing local nor ambient transactions.
-        /// This method will ensure that the connection is opened and release it if an exception is thrown.
-        /// The caller is responsible of releasing the connection if no exception is thrown, unless
-        /// <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
-        /// </remarks>
-        /// <typeparam name="T"> Type of the result. </typeparam>
-        /// <param name="func"> The function to invoke. </param>
-        /// <param name="executionStrategy"> The execution strategy used for this operation. </param>
-        /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
-        /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
-        /// <returns>
-        /// The result from invoking <paramref name="func" />.
-        /// </returns>
+        // <summary>
+        // Executes a function in a local transaction and returns the result.
+        // </summary>
+        // <remarks>
+        // A local transaction is created only if there are no existing local nor ambient transactions.
+        // This method will ensure that the connection is opened and release it if an exception is thrown.
+        // The caller is responsible of releasing the connection if no exception is thrown, unless
+        // <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
+        // </remarks>
+        // <typeparam name="T"> Type of the result. </typeparam>
+        // <param name="func"> The function to invoke. </param>
+        // <param name="executionStrategy"> The execution strategy used for this operation. </param>
+        // <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
+        // <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
+        // <returns>
+        // The result from invoking <paramref name="func" />.
+        // </returns>
         internal virtual T ExecuteInTransaction<T>(
             Func<T> func, IDbExecutionStrategy executionStrategy, bool startLocalTransaction, bool releaseConnectionOnSuccess)
         {
@@ -3198,25 +3198,25 @@ namespace System.Data.Entity.Core.Objects
 
 #if !NET40
 
-        /// <summary>
-        /// An asynchronous version of ExecuteStoreQuery, which
-        /// executes a function in a local transaction and returns the result.
-        /// </summary>
-        /// <remarks>
-        /// A local transaction is created only if there are no existing local nor ambient transactions.
-        /// This method will ensure that the connection is opened and release it if an exception is thrown.
-        /// The caller is responsible of releasing the connection if no exception is thrown, unless
-        /// <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
-        /// </remarks>
-        /// <typeparam name="T"> Type of the result. </typeparam>
-        /// <param name="func"> The function to invoke. </param>
-        /// <param name="executionStrategy"> The execution strategy used for this operation. </param>
-        /// <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
-        /// <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
-        /// <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
-        /// <returns>
-        /// A task containing the result from invoking <paramref name="func" />.
-        /// </returns>
+        // <summary>
+        // An asynchronous version of ExecuteStoreQuery, which
+        // executes a function in a local transaction and returns the result.
+        // </summary>
+        // <remarks>
+        // A local transaction is created only if there are no existing local nor ambient transactions.
+        // This method will ensure that the connection is opened and release it if an exception is thrown.
+        // The caller is responsible of releasing the connection if no exception is thrown, unless
+        // <paramref name="releaseConnectionOnSuccess" /> is set to <c>true</c>.
+        // </remarks>
+        // <typeparam name="T"> Type of the result. </typeparam>
+        // <param name="func"> The function to invoke. </param>
+        // <param name="executionStrategy"> The execution strategy used for this operation. </param>
+        // <param name="startLocalTransaction"> Whether should start a new local transaction when there's no existing one. </param>
+        // <param name="releaseConnectionOnSuccess"> Whether the connection will also be released when no exceptions are thrown. </param>
+        // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
+        // <returns>
+        // A task containing the result from invoking <paramref name="func" />.
+        // </returns>
         internal virtual async Task<T> ExecuteInTransactionAsync<T>(
             Func<Task<T>> func, IDbExecutionStrategy executionStrategy,
             bool startLocalTransaction, bool releaseConnectionOnSuccess, CancellationToken cancellationToken)
@@ -3642,9 +3642,9 @@ namespace System.Data.Entity.Core.Objects
                 entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.Streaming);
         }
 
-        /// <summary>
-        /// Get the materializer for the resultSetIndexth result set of storeReader.
-        /// </summary>
+        // <summary>
+        // Get the materializer for the resultSetIndexth result set of storeReader.
+        // </summary>
         internal ObjectResult<TElement> MaterializedDataRecord<TElement>(
             EntityCommand entityCommand, DbDataReader storeReader, int resultSetIndex, ReadOnlyCollection<EntitySet> entitySets,
             EdmType[] edmTypes, ShaperFactory<TElement> shaperFactory, MergeOption mergeOption, bool streaming)
@@ -4917,13 +4917,13 @@ namespace System.Data.Entity.Core.Objects
             return services.CreateDatabaseScript(targetProviderManifestToken, GetStoreItemCollection());
         }
 
-        /// <summary>
-        /// Attempts to retrieve an DbGeneratedViewCacheTypeAttribute specified at assembly level,
-        /// that associates the type of the context with an mapping view cache type. If one is found
-        /// this method initializes the mapping view cache factory for this context with a new 
-        /// instance of DefaultDbMappingViewCacheFactory.
-        /// </summary>
-        /// <param name="owner">A DbContext that owns this ObjectContext.</param>
+        // <summary>
+        // Attempts to retrieve an DbGeneratedViewCacheTypeAttribute specified at assembly level,
+        // that associates the type of the context with an mapping view cache type. If one is found
+        // this method initializes the mapping view cache factory for this context with a new 
+        // instance of DefaultDbMappingViewCacheFactory.
+        // </summary>
+        // <param name="owner">A DbContext that owns this ObjectContext.</param>
         internal void InitializeMappingViewCacheFactory(DbContext owner = null)
         {
             var itemCollection = (StorageMappingItemCollection)
@@ -4961,9 +4961,9 @@ namespace System.Data.Entity.Core.Objects
 
         #region Nested types
 
-        /// <summary>
-        /// Supports binding EntityClient parameters to Object Services parameters.
-        /// </summary>
+        // <summary>
+        // Supports binding EntityClient parameters to Object Services parameters.
+        // </summary>
         private class ParameterBinder
         {
             private readonly EntityParameter _entityParameter;

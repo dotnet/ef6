@@ -9,10 +9,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract class GlobalItem : MetadataItem
     {
-        /// <summary>
-        /// Implementing this internal constructor so that this class can't be derived
-        /// outside this assembly
-        /// </summary>
+        // <summary>
+        // Implementing this internal constructor so that this class can't be derived
+        // outside this assembly
+        // </summary>
         internal GlobalItem()
         {
         }
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// Returns the DataSpace in which this type belongs to
-        /// </summary>
+        // <summary>
+        // Returns the DataSpace in which this type belongs to
+        // </summary>
         [MetadataProperty(typeof(DataSpace), false)]
         internal virtual DataSpace DataSpace
         {

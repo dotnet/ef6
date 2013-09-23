@@ -10,20 +10,20 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.Data.Entity.SqlServerCompact.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Class generating SQL for a DML command tree.
-    /// </summary>
+    // <summary>
+    // Class generating SQL for a DML command tree.
+    // </summary>
     internal static class DmlSqlGenerator
     {
         private const int CommandTextBuilderInitialCapacity = 256;
         private const string StoreGeneratedPatternString = "StoreGeneratedPattern";
         private const string RowversionString = "rowversion";
 
-        /// <summary>
-        /// This method is added as a part of the fix for bug 13533
-        /// In this method we try to see from the command tree whether there is any
-        /// updatable column(Property) available on the table(EntityType)
-        /// </summary>
+        // <summary>
+        // This method is added as a part of the fix for bug 13533
+        // In this method we try to see from the command tree whether there is any
+        // updatable column(Property) available on the table(EntityType)
+        // </summary>
         private static bool GetUpdatableColumn(DbUpdateCommandTree tree, out string updatableColumnName)
         {
             var result = false;
@@ -294,22 +294,22 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return SqlGenerator.QuoteIdentifier(member.Name);
         }
 
-        /// <summary>
-        /// Generates SQL fragment returning server-generated values.
-        /// Requires: translator knows about member values so that we can figure out
-        /// how to construct the key predicate.
-        /// <code>Sample SQL:
-        /// 
-        ///     select IdentityValue
-        ///     from MyTable
-        ///     where IdentityValue = @@identity 
-        /// 
-        ///     NOTE: not scope_identity() because we don't support it.</code>
-        /// </summary>
-        /// <param name="commandText"> Builder containing command text </param>
-        /// <param name="tree"> Modification command tree </param>
-        /// <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
-        /// <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
+        // <summary>
+        // Generates SQL fragment returning server-generated values.
+        // Requires: translator knows about member values so that we can figure out
+        // how to construct the key predicate.
+        // <code>Sample SQL:
+        // 
+        //     select IdentityValue
+        //     from MyTable
+        //     where IdentityValue = @@identity 
+        // 
+        //     NOTE: not scope_identity() because we don't support it.</code>
+        // </summary>
+        // <param name="commandText"> Builder containing command text </param>
+        // <param name="tree"> Modification command tree </param>
+        // <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
+        // <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
         private static void GenerateReturningSql(
             SqlStringBuilder commandText,
             DbModificationCommandTree tree,
@@ -403,10 +403,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return false;
         }
 
-        /// <summary>
-        /// Lightweight expression translator for DML expression trees, which have constrained
-        /// scope and support.
-        /// </summary>
+        // <summary>
+        // Lightweight expression translator for DML expression trees, which have constrained
+        // scope and support.
+        // </summary>
         internal class ExpressionTranslator : BasicExpressionVisitor
         {
             private static readonly AliasGenerator _parameterNames = new AliasGenerator("@", 1000);
@@ -420,20 +420,20 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             private readonly bool _isLocalProvider;
             private readonly bool _createParameters;
 
-            /// <summary>
-            /// For testing.
-            /// </summary>
+            // <summary>
+            // For testing.
+            // </summary>
             internal ExpressionTranslator()
             {
             }
 
-            /// <summary>
-            /// Initialize a new expression translator populating the given string builder
-            /// with command text. Command text builder and command tree must not be null.
-            /// </summary>
-            /// <param name="commandText"> Command text with which to populate commands </param>
-            /// <param name="commandTree"> Command tree generating SQL </param>
-            /// <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
+            // <summary>
+            // Initialize a new expression translator populating the given string builder
+            // with command text. Command text builder and command tree must not be null.
+            // </summary>
+            // <param name="commandText"> Command text with which to populate commands </param>
+            // <param name="commandTree"> Command tree generating SQL </param>
+            // <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
             internal ExpressionTranslator(
                 SqlStringBuilder commandText,
                 DbModificationCommandTree commandTree,
@@ -508,13 +508,13 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                 RegisterMemberValue(expression.Left, expression.Right);
             }
 
-            /// <summary>
-            /// Call this method to register a property value pair so the translator "remembers"
-            /// the values for members of the row being modified. These values can then be used
-            /// to form a predicate for server-generation (based on the key of the row)
-            /// </summary>
-            /// <param name="propertyExpression"> DbExpression containing the column reference (property expression). </param>
-            /// <param name="value"> DbExpression containing the value of the column. </param>
+            // <summary>
+            // Call this method to register a property value pair so the translator "remembers"
+            // the values for members of the row being modified. These values can then be used
+            // to form a predicate for server-generation (based on the key of the row)
+            // </summary>
+            // <param name="propertyExpression"> DbExpression containing the column reference (property expression). </param>
+            // <param name="value"> DbExpression containing the value of the column. </param>
             internal void RegisterMemberValue(DbExpression propertyExpression, DbExpression value)
             {
                 if (null != _memberValues)

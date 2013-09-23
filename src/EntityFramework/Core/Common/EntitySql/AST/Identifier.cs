@@ -5,17 +5,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Resources;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents an identifier ast node.
-    /// </summary>
+    // <summary>
+    // Represents an identifier ast node.
+    // </summary>
     internal sealed class Identifier : Node
     {
         private readonly string _name;
         private readonly bool _isEscaped;
 
-        /// <summary>
-        /// Initializes identifier.
-        /// </summary>
+        // <summary>
+        // Initializes identifier.
+        // </summary>
         internal Identifier(string name, bool isEscaped, string query, int inputPos)
             : base(query, inputPos)
         {
@@ -48,17 +48,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _isEscaped = isEscaped;
         }
 
-        /// <summary>
-        /// Returns identifier name (without escaping chars).
-        /// </summary>
+        // <summary>
+        // Returns identifier name (without escaping chars).
+        // </summary>
         internal string Name
         {
             get { return _name; }
         }
 
-        /// <summary>
-        /// True if an identifier is escaped.
-        /// </summary>
+        // <summary>
+        // True if an identifier is escaped.
+        // </summary>
         internal bool IsEscaped
         {
             get { return _isEscaped; }

@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    /// <summary>
-    /// Defines literal value kind, including the eSQL untyped NULL.
-    /// </summary>
+    // <summary>
+    // Defines literal value kind, including the eSQL untyped NULL.
+    // </summary>
     internal enum LiteralKind
     {
         Number,

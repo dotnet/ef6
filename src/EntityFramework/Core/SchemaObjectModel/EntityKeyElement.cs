@@ -8,17 +8,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an Key element in an EntityType element.
-    /// </summary>
+    // <summary>
+    // Represents an Key element in an EntityType element.
+    // </summary>
     internal sealed class EntityKeyElement : SchemaElement
     {
         private List<PropertyRefElement> _keyProperties;
 
-        /// <summary>
-        /// Constructs an EntityContainerAssociationSetEnd
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainerAssociationSetEnd
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public EntityKeyElement(SchemaEntityType parentElement)
             : base(parentElement)
         {
@@ -63,9 +63,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             KeyProperties.Add(property);
         }
 
-        /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
-        /// </summary>
+        // <summary>
+        // Used during the resolve phase to resolve the type name to the object that represents that type
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             Debug.Assert(_keyProperties != null, "xsd should have verified that there should be atleast one property ref element");
@@ -80,9 +80,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Validate all the key properties
-        /// </summary>
+        // <summary>
+        // Validate all the key properties
+        // </summary>
         internal override void Validate()
         {
             Debug.Assert(_keyProperties != null, "xsd should have verified that there should be atleast one property ref element");

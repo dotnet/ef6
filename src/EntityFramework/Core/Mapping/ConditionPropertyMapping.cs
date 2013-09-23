@@ -44,14 +44,14 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class ConditionPropertyMapping : PropertyMapping
     {
-        /// <summary>
-        /// Column EdmMember for which the condition is specified.
-        /// </summary>
+        // <summary>
+        // Column EdmMember for which the condition is specified.
+        // </summary>
         private EdmProperty _column;
 
-        /// <summary>
-        /// Value for the condition thats being mapped.
-        /// </summary>
+        // <summary>
+        // Value for the condition thats being mapped.
+        // </summary>
         private readonly object _value;
 
         private readonly bool? _isNull;
@@ -84,9 +84,9 @@ namespace System.Data.Entity.Core.Mapping
             _isNull = isNull;
         }
 
-        /// <summary>
-        /// Construct a new condition Property mapping object
-        /// </summary>
+        // <summary>
+        // Construct a new condition Property mapping object
+        // </summary>
         internal ConditionPropertyMapping(
             EdmProperty property, EdmProperty column
             , object value, bool? isNull)
@@ -106,17 +106,17 @@ namespace System.Data.Entity.Core.Mapping
             _isNull = isNull;
         }
 
-        /// <summary>
-        /// Value for the condition
-        /// </summary>
+        // <summary>
+        // Value for the condition
+        // </summary>
         internal object Value
         {
             get { return _value; }
         }
 
-        /// <summary>
-        /// Whether the property is being mapped to Null or NotNull
-        /// </summary>
+        // <summary>
+        // Whether the property is being mapped to Null or NotNull
+        // </summary>
         internal bool? IsNull
         {
             get { return _isNull; }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
     internal class OcAssemblyCache
     {
-        /// <summary>
-        /// cache for loaded assembly
-        /// </summary>
+        // <summary>
+        // cache for loaded assembly
+        // </summary>
         private readonly Dictionary<Assembly, ImmutableAssemblyCacheEntry> _conventionalOcCache;
 
         internal OcAssemblyCache()
@@ -17,20 +17,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _conventionalOcCache = new Dictionary<Assembly, ImmutableAssemblyCacheEntry>();
         }
 
-        /// <summary>
-        /// Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
-        /// this method doesn't provide any locking mechanism.
-        /// </summary>
+        // <summary>
+        // Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
+        // this method doesn't provide any locking mechanism.
+        // </summary>
         internal bool TryGetConventionalOcCacheFromAssemblyCache(Assembly assemblyToLookup, out ImmutableAssemblyCacheEntry cacheEntry)
         {
             cacheEntry = null;
             return _conventionalOcCache.TryGetValue(assemblyToLookup, out cacheEntry);
         }
 
-        /// <summary>
-        /// Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
-        /// this method doesn't provide any locking mechanism.
-        /// </summary>
+        // <summary>
+        // Please do NOT call this method outside of AssemblyCache. Since AssemblyCache maintain the lock,
+        // this method doesn't provide any locking mechanism.
+        // </summary>
         internal void AddAssemblyToOcCacheFromAssemblyCache(Assembly assembly, ImmutableAssemblyCacheEntry cacheEntry)
         {
             if (_conventionalOcCache.ContainsKey(assembly))

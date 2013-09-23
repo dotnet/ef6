@@ -100,10 +100,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return BuiltInTypeKind.MetadataItem; }
         }
 
-        /// <summary>
-        /// The Entity Container Metadata object on the C-side
-        /// for which the mapping is being represented.
-        /// </summary>
+        // <summary>
+        // The Entity Container Metadata object on the C-side
+        // for which the mapping is being represented.
+        // </summary>
         internal override MetadataItem EdmItem
         {
             get { return m_entityContainer; }
@@ -114,10 +114,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return identity; }
         }
 
-        /// <summary>
-        /// Indicates whether there are no Set mappings
-        /// in the container mapping.
-        /// </summary>
+        // <summary>
+        // Indicates whether there are no Set mappings
+        // in the container mapping.
+        // </summary>
         internal bool IsEmpty
         {
             get
@@ -127,10 +127,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Determine whether the container includes any views.
-        /// Returns true if there is at least one query or update view specified by the mapping.
-        /// </summary>
+        // <summary>
+        // Determine whether the container includes any views.
+        // Returns true if there is at least one query or update view specified by the mapping.
+        // </summary>
         internal bool HasViews
         {
             get
@@ -219,37 +219,37 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_entitySetMappings.Values.Concat(m_associationSetMappings.Values); }
         }
 
-        /// <summary>
-        /// Line Number in MSL file where the EntityContainer Mapping Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Number in MSL file where the EntityContainer Mapping Element's Start Tag is present.
+        // </summary>
         internal int StartLineNumber { get; set; }
 
-        /// <summary>
-        /// Line Position in MSL file where the EntityContainer Mapping Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Position in MSL file where the EntityContainer Mapping Element's Start Tag is present.
+        // </summary>
         internal int StartLinePosition { get; set; }
 
-        /// <summary>
-        /// Indicates whether to validate the mapping or not.
-        /// </summary>
+        // <summary>
+        // Indicates whether to validate the mapping or not.
+        // </summary>
         internal bool Validate
         {
             get { return m_validate; }
         }
 
-        /// <summary>
-        /// Indicates whether to generate the update views or not.
-        /// </summary>
+        // <summary>
+        // Indicates whether to generate the update views or not.
+        // </summary>
         internal bool GenerateUpdateViews
         {
             get { return m_generateUpdateViews; }
         }
 
-        /// <summary>
-        /// get an EntitySet mapping based upon the name of the entity set.
-        /// </summary>
-        /// ///
-        /// <param name="entitySetName"> the name of the entity set </param>
+        // <summary>
+        // get an EntitySet mapping based upon the name of the entity set.
+        // </summary>
+        // //
+        // <param name="entitySetName"> the name of the entity set </param>
         internal EntitySetBaseMapping GetEntitySetMapping(String entitySetName)
         {
             DebugCheck.NotNull(entitySetName);
@@ -259,11 +259,11 @@ namespace System.Data.Entity.Core.Mapping
             return setMapping;
         }
 
-        /// <summary>
-        /// Get a RelationShip set mapping based upon the name of the relationship set
-        /// </summary>
-        /// <param name="relationshipSetName"> the name of the relationship set </param>
-        /// <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
+        // <summary>
+        // Get a RelationShip set mapping based upon the name of the relationship set
+        // </summary>
+        // <param name="relationshipSetName"> the name of the relationship set </param>
+        // <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
         internal EntitySetBaseMapping GetRelationshipSetMapping(string relationshipSetName)
         {
             DebugCheck.NotNull(relationshipSetName);
@@ -272,10 +272,10 @@ namespace System.Data.Entity.Core.Mapping
             return setMapping;
         }
 
-        /// <summary>
-        /// Get a RelationShipSet mapping that has the passed in EntitySet as one of the ends and is mapped to the
-        /// table.
-        /// </summary>
+        // <summary>
+        // Get a RelationShipSet mapping that has the passed in EntitySet as one of the ends and is mapped to the
+        // table.
+        // </summary>
         internal IEnumerable<AssociationSetMapping> GetRelationshipSetMappingsFor(
             EntitySetBase edmEntitySet, EntitySetBase storeEntitySet)
         {
@@ -292,9 +292,9 @@ namespace System.Data.Entity.Core.Mapping
             return associationSetMappings;
         }
 
-        /// <summary>
-        /// Get a set mapping based upon the name of the set
-        /// </summary>
+        // <summary>
+        // Get a set mapping based upon the name of the set
+        // </summary>
         internal EntitySetBaseMapping GetSetMapping(string setName)
         {
             var setMap = GetEntitySetMapping(setName);
@@ -328,18 +328,18 @@ namespace System.Data.Entity.Core.Mapping
             m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
         }
 
-        /// <summary>
-        /// check whether the EntityContainerMapping contains
-        /// the map for the given AssociationSet
-        /// </summary>
+        // <summary>
+        // check whether the EntityContainerMapping contains
+        // the map for the given AssociationSet
+        // </summary>
         internal bool ContainsAssociationSetMapping(AssociationSet associationSet)
         {
             return m_associationSetMappings.ContainsKey(associationSet.Name);
         }
 
-        /// <summary>
-        /// Returns whether the Set Map for the given set has a query view or not
-        /// </summary>
+        // <summary>
+        // Returns whether the Set Map for the given set has a query view or not
+        // </summary>
         internal bool HasQueryViewForSetMap(string setName)
         {
             var set = GetSetMapping(setName);

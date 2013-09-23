@@ -9,15 +9,15 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     public class ObjectMaterializedEventArgs : EventArgs
     {
-        /// <summary>
-        /// The object that was materialized.
-        /// </summary>
+        // <summary>
+        // The object that was materialized.
+        // </summary>
         private readonly object _entity;
 
-        /// <summary>
-        /// Constructs new arguments for the ObjectMaterialized event.
-        /// </summary>
-        /// <param name="entity"> The object that has been materialized. </param>
+        // <summary>
+        // Constructs new arguments for the ObjectMaterialized event.
+        // </summary>
+        // <param name="entity"> The object that has been materialized. </param>
         internal ObjectMaterializedEventArgs(object entity)
         {
             _entity = entity;

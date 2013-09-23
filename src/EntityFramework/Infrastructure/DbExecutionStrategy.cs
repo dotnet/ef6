@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -30,29 +30,29 @@ namespace System.Data.Entity.Infrastructure
         private readonly int _maxRetryCount;
         private readonly TimeSpan _maxDelay;
 
-        /// <summary>
-        /// The default number of retry attempts, must be nonnegative.
-        /// </summary>
+        // <summary>
+        // The default number of retry attempts, must be nonnegative.
+        // </summary>
         private const int DefaultMaxRetryCount = 5;
 
-        /// <summary>
-        /// The default maximum random factor, must not be lesser than 1.
-        /// </summary>
+        // <summary>
+        // The default maximum random factor, must not be lesser than 1.
+        // </summary>
         private const double DefaultRandomFactor = 1.1;
 
-        /// <summary>
-        /// The default base for the exponential function used to compute the delay between retries, must be positive.
-        /// </summary>
+        // <summary>
+        // The default base for the exponential function used to compute the delay between retries, must be positive.
+        // </summary>
         private const double DefaultExponentialBase = 2;
 
-        /// <summary>
-        /// The default coefficient for the exponential function used to compute the delay between retries, must be nonnegative.
-        /// </summary>
+        // <summary>
+        // The default coefficient for the exponential function used to compute the delay between retries, must be nonnegative.
+        // </summary>
         private static readonly TimeSpan DefaultCoefficient = TimeSpan.FromSeconds(1);
 
-        /// <summary>
-        /// The default maximum time delay between retries, must be nonnegative.
-        /// </summary>
+        // <summary>
+        // The default maximum time delay between retries, must be nonnegative.
+        // </summary>
         private static readonly TimeSpan DefaultMaxDelay = TimeSpan.FromSeconds(30);
 
         /// <summary>

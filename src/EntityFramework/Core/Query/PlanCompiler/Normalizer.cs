@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// The normalizer performs transformations of the tree to bring it to a 'normalized' format
-    /// </summary>
+    // <summary>
+    // The normalizer performs transformations of the tree to bring it to a 'normalized' format
+    // </summary>
     internal class Normalizer : SubqueryTrackingVisitor
     {
         #region constructors
@@ -23,10 +23,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region public methods
 
-        /// <summary>
-        /// The driver routine.
-        /// </summary>
-        /// <param name="planCompilerState"> plan compiler state </param>
+        // <summary>
+        // The driver routine.
+        // </summary>
+        // <param name="planCompilerState"> plan compiler state </param>
         internal static void Process(PlanCompiler planCompilerState)
         {
             var normalizer = new Normalizer(planCompilerState);
@@ -50,9 +50,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region ScalarOps
 
-        /// <summary>
-        /// Translate Exists(X) into Exists(select 1 from X)
-        /// </summary>
+        // <summary>
+        // Translate Exists(X) into Exists(select 1 from X)
+        // </summary>
         public override Node Visit(ExistsOp op, Node n)
         {
             VisitChildren(n);
@@ -63,9 +63,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return n;
         }
 
-        /// <summary>
-        /// Build Project(select 1 from child).
-        /// </summary>
+        // <summary>
+        // Build Project(select 1 from child).
+        // </summary>
         private Node BuildDummyProjectForExists(Node child)
         {
             Var newVar;
@@ -76,12 +76,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return projectNode;
         }
 
-        /// <summary>
-        /// Build up an unnest above a scalar op node
-        /// X => unnest(X)
-        /// </summary>
-        /// <param name="collectionNode"> the scalarop collection node </param>
-        /// <returns> the unnest node </returns>
+        // <summary>
+        // Build up an unnest above a scalar op node
+        // X => unnest(X)
+        // </summary>
+        // <param name="collectionNode"> the scalarop collection node </param>
+        // <returns> the unnest node </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node BuildUnnest(Node collectionNode)
@@ -97,12 +97,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return unnestNode;
         }
 
-        /// <summary>
-        /// Converts the reference to a TVF as following: Collect(PhysicalProject(Unnest(Func)))
-        /// </summary>
-        /// <param name="op"> current function op </param>
-        /// <param name="n"> current function subtree </param>
-        /// <returns> the new expression that corresponds to the TVF </returns>
+        // <summary>
+        // Converts the reference to a TVF as following: Collect(PhysicalProject(Unnest(Func)))
+        // </summary>
+        // <param name="op"> current function op </param>
+        // <param name="n"> current function subtree </param>
+        // <returns> the new expression that corresponds to the TVF </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private Node VisitCollectionFunction(FunctionOp op, Node n)
@@ -119,22 +119,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return collectNode;
         }
 
-        /// <summary>
-        /// Converts a collection aggregate function count(X), where X is a collection into
-        /// two parts. Part A is a groupby subquery that looks like
-        /// GroupBy(Unnest(X), empty, count(y))
-        /// where "empty" describes the fact that the groupby has no keys, and y is an
-        /// element var of the Unnest
-        /// Part 2 is a VarRef that refers to the aggregate var for count(y) described above.
-        /// Logically, we would replace the entire functionOp by element(GroupBy...). However,
-        /// since we also want to translate element() into single-row-subqueries, we do this
-        /// here as well.
-        /// The function itself is replaced by the VarRef, and the GroupBy is added to the list
-        /// of scalar subqueries for the current relOp node on the stack
-        /// </summary>
-        /// <param name="op"> the functionOp for the collection agg </param>
-        /// <param name="n"> current subtree </param>
-        /// <returns> the VarRef node that should replace the function </returns>
+        // <summary>
+        // Converts a collection aggregate function count(X), where X is a collection into
+        // two parts. Part A is a groupby subquery that looks like
+        // GroupBy(Unnest(X), empty, count(y))
+        // where "empty" describes the fact that the groupby has no keys, and y is an
+        // element var of the Unnest
+        // Part 2 is a VarRef that refers to the aggregate var for count(y) described above.
+        // Logically, we would replace the entire functionOp by element(GroupBy...). However,
+        // since we also want to translate element() into single-row-subqueries, we do this
+        // here as well.
+        // The function itself is replaced by the VarRef, and the GroupBy is added to the list
+        // of scalar subqueries for the current relOp node on the stack
+        // </summary>
+        // <param name="op"> the functionOp for the collection agg </param>
+        // <param name="n"> current subtree </param>
+        // <returns> the VarRef node that should replace the function </returns>
         private Node VisitCollectionAggregateFunction(FunctionOp op, Node n)
         {
             TypeUsage softCastType = null;
@@ -181,12 +181,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return ret;
         }
 
-        /// <summary>
-        /// Pre-processing for a function. Does the default scalar op processing.
-        /// If the function returns a collection (TVF), the method converts this expression into
-        /// Collect(PhysicalProject(Unnest(Func))).
-        /// If the function is a collection aggregate, converts it into the corresponding group aggregate.
-        /// </summary>
+        // <summary>
+        // Pre-processing for a function. Does the default scalar op processing.
+        // If the function returns a collection (TVF), the method converts this expression into
+        // Collect(PhysicalProject(Unnest(Func))).
+        // If the function is a collection aggregate, converts it into the corresponding group aggregate.
+        // </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "functionOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -218,11 +218,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region RelOps
 
-        /// <summary>
-        /// Processing for all JoinOps
-        /// </summary>
-        /// <param name="op"> JoinOp </param>
-        /// <param name="n"> Current subtree </param>
+        // <summary>
+        // Processing for all JoinOps
+        // </summary>
+        // <param name="op"> JoinOp </param>
+        // <param name="n"> Current subtree </param>
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (base.ProcessJoinOp(n))

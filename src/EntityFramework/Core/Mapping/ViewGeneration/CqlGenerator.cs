@@ -11,16 +11,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// This class is responsible for generation of CQL after the cell merging process has been done.
-    /// </summary>
+    // <summary>
+    // This class is responsible for generation of CQL after the cell merging process has been done.
+    // </summary>
     internal sealed class CqlGenerator : InternalBase
     {
-        /// <summary>
-        /// Given the generated <paramref name="view" />, the <paramref name="caseStatements" /> for the multiconstant fields,
-        /// the <paramref name="projectedSlotMap" /> that maps different paths of the entityset (for which the view is being generated) to slot indexes in the view,
-        /// creates an object that is capable of generating the Cql for <paramref name="view" />.
-        /// </summary>
+        // <summary>
+        // Given the generated <paramref name="view" />, the <paramref name="caseStatements" /> for the multiconstant fields,
+        // the <paramref name="projectedSlotMap" /> that maps different paths of the entityset (for which the view is being generated) to slot indexes in the view,
+        // creates an object that is capable of generating the Cql for <paramref name="view" />.
+        // </summary>
         internal CqlGenerator(
             CellTreeNode view,
             Dictionary<MemberPath,
@@ -40,36 +40,36 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_mappingItemCollection = mappingItemCollection;
         }
 
-        /// <summary>
-        /// The generated view from the cells.
-        /// </summary>
+        // <summary>
+        // The generated view from the cells.
+        // </summary>
         private readonly CellTreeNode m_view;
 
-        /// <summary>
-        /// Case statements for the multiconstant fields.
-        /// </summary>
+        // <summary>
+        // Case statements for the multiconstant fields.
+        // </summary>
         private readonly Dictionary<MemberPath, CaseStatement> m_caseStatements;
 
-        /// <summary>
-        /// Mapping from member paths to slot indexes.
-        /// </summary>
+        // <summary>
+        // Mapping from member paths to slot indexes.
+        // </summary>
         private readonly MemberProjectionIndex m_projectedSlotMap;
 
-        /// <summary>
-        /// Number of booleans in the view, one per cell (from0, from1, etc...)
-        /// </summary>
+        // <summary>
+        // Number of booleans in the view, one per cell (from0, from1, etc...)
+        // </summary>
         private readonly int m_numBools;
 
-        /// <summary>
-        /// A counter used to generate aliases for blocks.
-        /// </summary>
+        // <summary>
+        // A counter used to generate aliases for blocks.
+        // </summary>
         private int m_currentBlockNum;
 
         private readonly BoolExpression m_topLevelWhereClause;
 
-        /// <summary>
-        /// Identifiers used in the Cql queries.
-        /// </summary>
+        // <summary>
+        // Identifiers used in the Cql queries.
+        // </summary>
         private readonly CqlIdentifiers m_identifiers;
 
         private readonly StorageMappingItemCollection m_mappingItemCollection;
@@ -79,9 +79,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             get { return m_projectedSlotMap.Count + m_numBools; }
         }
 
-        /// <summary>
-        /// Returns eSQL query that represents a query/update mapping view for the view information that was supplied in the constructor.
-        /// </summary>
+        // <summary>
+        // Returns eSQL query that represents a query/update mapping view for the view information that was supplied in the constructor.
+        // </summary>
         internal string GenerateEsql()
         {
             // Generate a CqlBlock tree and then convert that to eSQL.
@@ -94,9 +94,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Returns Cqtl query that represents a query/update mapping view for the view information that was supplied in the constructor.
-        /// </summary>
+        // <summary>
+        // Returns Cqtl query that represents a query/update mapping view for the view information that was supplied in the constructor.
+        // </summary>
         internal DbQueryCommandTree GenerateCqt()
         {
             // Generate a CqlBlock tree and then convert that to CQT.
@@ -109,9 +109,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, query);
         }
 
-        /// <summary>
-        /// Generates a <see cref="CqlBlock" /> tree that is capable of generating the actual Cql strings.
-        /// </summary>
+        // <summary>
+        // Generates a <see cref="CqlBlock" /> tree that is capable of generating the actual Cql strings.
+        // </summary>
         private CqlBlock GenerateCqlBlockTree()
         {
             // Essentially, we create a block for each CellTreeNode in the
@@ -176,13 +176,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return requiredSlots;
         }
 
-        /// <summary>
-        /// Given the <paramref name="viewBlock" /> tree, generates the case statement blocks on top of it (using
-        /// <see
-        ///     cref="m_caseStatements" />
-        /// ) and returns the resulting tree.
-        /// One block per case statement is generated. Generated blocks are nested, with the <paramref name="viewBlock" /> is the innermost input.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="viewBlock" /> tree, generates the case statement blocks on top of it (using
+        // <see
+        //     cref="m_caseStatements" />
+        // ) and returns the resulting tree.
+        // One block per case statement is generated. Generated blocks are nested, with the <paramref name="viewBlock" /> is the innermost input.
+        // </summary>
         private CqlBlock ConstructCaseBlocks(CqlBlock viewBlock, IEnumerable<WithRelationship> withRelationships)
         {
             // Get the 0th slot only, i.e., the extent
@@ -196,13 +196,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return result;
         }
 
-        /// <summary>
-        /// Given the <paramref name="viewBlock" /> tree generated by the cell merging process and the
-        /// <paramref
-        ///     name="parentRequiredSlots" />
-        /// ,
-        /// generates the block tree for the case statement at or past the startSlotNum, i.e., only for case statements that are beyond startSlotNum.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="viewBlock" /> tree generated by the cell merging process and the
+        // <paramref
+        //     name="parentRequiredSlots" />
+        // ,
+        // generates the block tree for the case statement at or past the startSlotNum, i.e., only for case statements that are beyond startSlotNum.
+        // </summary>
         private CqlBlock ConstructCaseBlocks(
             CqlBlock viewBlock, int startSlotNum, bool[] parentRequiredSlots, IEnumerable<WithRelationship> withRelationships)
         {
@@ -265,13 +265,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return result;
         }
 
-        /// <summary>
-        /// Given the slot (<paramref name="foundSlot" />) and its corresponding case statement (
-        /// <paramref
-        ///     name="thisCaseStatement" />
-        /// ),
-        /// generates the slotinfos for the cql block producing the case statement.
-        /// </summary>
+        // <summary>
+        // Given the slot (<paramref name="foundSlot" />) and its corresponding case statement (
+        // <paramref
+        //     name="thisCaseStatement" />
+        // ),
+        // generates the slotinfos for the cql block producing the case statement.
+        // </summary>
         private SlotInfo[] CreateSlotInfosForCaseStatement(
             bool[] parentRequiredSlots,
             int foundSlot,
@@ -326,12 +326,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return slotInfos;
         }
 
-        /// <summary>
-        /// Returns the next slot starting at <paramref name="startSlotNum" /> that is present in the
-        /// <see
-        ///     cref="m_caseStatements" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Returns the next slot starting at <paramref name="startSlotNum" /> that is present in the
+        // <see
+        //     cref="m_caseStatements" />
+        // .
+        // </summary>
         private int FindNextCaseStatementSlot(int startSlotNum, bool[] parentRequiredSlots, int numMembers)
         {
             var foundSlot = -1;
@@ -349,16 +349,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return foundSlot;
         }
 
-        /// <summary>
-        /// Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to constuct value at
-        /// <paramref
-        ///     name="caseMemberPath" />
-        /// ,
-        /// e.g., CPerson may need pid and name (say slots 2 and 5 - then bools[2] and bools[5] will be true.
-        /// </summary>
-        /// <param name="caseMemberPath">
-        /// must be part of <see cref="m_caseStatements" />
-        /// </param>
+        // <summary>
+        // Returns an array of size <see cref="TotalSlots" /> which indicates the slots that are needed to constuct value at
+        // <paramref
+        //     name="caseMemberPath" />
+        // ,
+        // e.g., CPerson may need pid and name (say slots 2 and 5 - then bools[2] and bools[5] will be true.
+        // </summary>
+        // <param name="caseMemberPath">
+        // must be part of <see cref="m_caseStatements" />
+        // </param>
         private void GetRequiredSlotsForCaseMember(MemberPath caseMemberPath, bool[] requiredSlots)
         {
             Debug.Assert(m_caseStatements.ContainsKey(caseMemberPath), "Constructing case for regular field?");
@@ -438,18 +438,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        /// <summary>
-        /// Given the <paramref name="slotNum" />, returns the output member path that this slot contributes/corresponds to in the extent view.
-        /// If the slot corresponds to one of the boolean variables, returns null.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="slotNum" />, returns the output member path that this slot contributes/corresponds to in the extent view.
+        // If the slot corresponds to one of the boolean variables, returns null.
+        // </summary>
         private MemberPath GetOutputMemberPath(int slotNum)
         {
             return m_projectedSlotMap.GetMemberPath(slotNum, TotalSlots - m_projectedSlotMap.Count);
         }
 
-        /// <summary>
-        /// Returns the slot index for the following member path: <paramref name="member" />.<paramref name="child" />, e.g., CPerson1.pid
-        /// </summary>
+        // <summary>
+        // Returns the slot index for the following member path: <paramref name="member" />.<paramref name="child" />, e.g., CPerson1.pid
+        // </summary>
         private int GetSlotIndex(MemberPath member, EdmMember child)
         {
             var fullMember = new MemberPath(member, child);

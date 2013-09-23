@@ -46,9 +46,9 @@ namespace System.Data.Entity.Core
             HResult = HResultCommandCompilation;
         }
 
-        /// <summary>
-        /// initializes a new instance EntityCommandCompilationException with a given SerializationInfo and StreamingContext
-        /// </summary>
+        // <summary>
+        // initializes a new instance EntityCommandCompilationException with a given SerializationInfo and StreamingContext
+        // </summary>
         private EntityCommandCompilationException(SerializationInfo serializationInfo, StreamingContext streamingContext)
             : base(serializationInfo, streamingContext)
         {

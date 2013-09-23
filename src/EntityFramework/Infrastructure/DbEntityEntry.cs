@@ -21,10 +21,10 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly InternalEntityEntry _internalEntityEntry;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbEntityEntry" /> class.
-        /// </summary>
-        /// <param name="internalEntityEntry"> The internal entry. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbEntityEntry" /> class.
+        // </summary>
+        // <param name="internalEntityEntry"> The internal entry. </param>
         internal DbEntityEntry(InternalEntityEntry internalEntityEntry)
         {
             DebugCheck.NotNull(internalEntityEntry);
@@ -310,9 +310,9 @@ namespace System.Data.Entity.Infrastructure
 
         #region InternalEntityEntry access
 
-        /// <summary>
-        /// Gets InternalEntityEntry object for this DbEntityEntry instance.
-        /// </summary>
+        // <summary>
+        // Gets InternalEntityEntry object for this DbEntityEntry instance.
+        // </summary>
         internal InternalEntityEntry InternalEntry
         {
             get { return _internalEntityEntry; }

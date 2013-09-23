@@ -145,21 +145,21 @@ namespace System.Data.Entity.ModelConfiguration.Edm
                    || (associationType.TargetEnd.IsRequired() && !associationType.SourceEnd.IsRequired());
         }
 
-        /// <summary>
-        /// Attempt to determine the principal and dependent ends of this association.
-        /// The following table illustrates the solution space.
-        /// Source | Target || Prin  | Dep   |
-        /// -------|--------||-------|-------|
-        /// 1      | 1      || -     | -     |
-        /// 1      | 0..1   || Sr    | Ta    |
-        /// 1      | *      || Sr    | Ta    |
-        /// 0..1   | 1      || Ta    | Sr    |
-        /// 0..1   | 0..1   || -     | -     |
-        /// 0..1   | *      || Sr    | Ta    |
-        /// *      | 1      || Ta    | Sr    |
-        /// *      | 0..1   || Ta    | Sr    |
-        /// *      | *      || -     | -     |
-        /// </summary>
+        // <summary>
+        // Attempt to determine the principal and dependent ends of this association.
+        // The following table illustrates the solution space.
+        // Source | Target || Prin  | Dep   |
+        // -------|--------||-------|-------|
+        // 1      | 1      || -     | -     |
+        // 1      | 0..1   || Sr    | Ta    |
+        // 1      | *      || Sr    | Ta    |
+        // 0..1   | 1      || Ta    | Sr    |
+        // 0..1   | 0..1   || -     | -     |
+        // 0..1   | *      || Sr    | Ta    |
+        // *      | 1      || Ta    | Sr    |
+        // *      | 0..1   || Ta    | Sr    |
+        // *      | *      || -     | -     |
+        // </summary>
         public static bool TryGuessPrincipalAndDependentEnds(
             this AssociationType associationType,
             out AssociationEndMember principalEnd,

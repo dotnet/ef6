@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Helper Class for EDM Metadata - this class contains all the helper methods
-    /// which needs access to internal methods. The other partial class contains all
-    /// helper methods which just uses public methods/properties. The reason why we
-    /// did this for allowing view gen to happen at compile time - all the helper
-    /// methods that view gen or mapping uses are in the other helper class. Rest of the
-    /// methods are in this class
-    /// </summary>
+    // <summary>
+    // Helper Class for EDM Metadata - this class contains all the helper methods
+    // which needs access to internal methods. The other partial class contains all
+    // helper methods which just uses public methods/properties. The reason why we
+    // did this for allowing view gen to happen at compile time - all the helper
+    // methods that view gen or mapping uses are in the other helper class. Rest of the
+    // methods are in this class
+    // </summary>
     internal static partial class Helper
     {
         // List of all the static empty list used all over the code
@@ -38,9 +38,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const char PeriodSymbol = '.';
         internal const char CommaSymbol = ',';
 
-        /// <summary>
-        /// Returns the single error message from the list of errors
-        /// </summary>
+        // <summary>
+        // Returns the single error message from the list of errors
+        // </summary>
         internal static string CombineErrorMessage(IEnumerable<EdmSchemaError> errors)
         {
             DebugCheck.NotNull(errors);
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Returns the single error message from the list of errors
-        /// </summary>
+        // <summary>
+        // Returns the single error message from the list of errors
+        // </summary>
         internal static string CombineErrorMessage(IEnumerable<EdmItemError> errors)
         {
             var sb = new StringBuilder(Environment.NewLine);
@@ -95,37 +95,37 @@ namespace System.Data.Entity.Core.Metadata.Edm
             yield break;
         }
 
-        /// <summary>
-        /// Returns a model (C-Space) typeusage for the given typeusage. if the type is already in c-space, it returns
-        /// the given typeusage. The typeUsage returned is created by invoking the provider service to map from provider
-        /// specific type to model type.
-        /// </summary>
-        /// <param name="typeUsage"> typeusage </param>
-        /// <returns> the respective Model (C-Space) typeusage </returns>
+        // <summary>
+        // Returns a model (C-Space) typeusage for the given typeusage. if the type is already in c-space, it returns
+        // the given typeusage. The typeUsage returned is created by invoking the provider service to map from provider
+        // specific type to model type.
+        // </summary>
+        // <param name="typeUsage"> typeusage </param>
+        // <returns> the respective Model (C-Space) typeusage </returns>
         internal static TypeUsage GetModelTypeUsage(TypeUsage typeUsage)
         {
             return typeUsage.ModelTypeUsage;
         }
 
-        /// <summary>
-        /// Returns a model (C-Space) typeusage for the given member typeusage. if the type is already in c-space, it returns
-        /// the given typeusage. The typeUsage returned is created by invoking the provider service to map from provider
-        /// specific type to model type.
-        /// </summary>
-        /// <param name="member"> EdmMember </param>
-        /// <returns> the respective Model (C-Space) typeusage </returns>
+        // <summary>
+        // Returns a model (C-Space) typeusage for the given member typeusage. if the type is already in c-space, it returns
+        // the given typeusage. The typeUsage returned is created by invoking the provider service to map from provider
+        // specific type to model type.
+        // </summary>
+        // <param name="member"> EdmMember </param>
+        // <returns> the respective Model (C-Space) typeusage </returns>
         internal static TypeUsage GetModelTypeUsage(EdmMember member)
         {
             return GetModelTypeUsage(member.TypeUsage);
         }
 
-        /// <summary>
-        /// Checks if the edm type in the cspace type usage maps to some sspace type (called it S1). If S1 is equivalent or
-        /// promotable to the store type in sspace type usage, then it creates a new type usage with S1 and copies all facets
-        /// if necessary
-        /// </summary>
-        /// <param name="edmProperty"> Edm property containing the cspace member type information </param>
-        /// <param name="columnProperty"> edm property containing the sspace member type information </param>
+        // <summary>
+        // Checks if the edm type in the cspace type usage maps to some sspace type (called it S1). If S1 is equivalent or
+        // promotable to the store type in sspace type usage, then it creates a new type usage with S1 and copies all facets
+        // if necessary
+        // </summary>
+        // <param name="edmProperty"> Edm property containing the cspace member type information </param>
+        // <param name="columnProperty"> edm property containing the sspace member type information </param>
         internal static TypeUsage ValidateAndConvertTypeUsage(
             EdmProperty edmProperty,
             EdmProperty columnProperty)
@@ -164,21 +164,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return null;
         }
 
-        /// <summary>
-        /// Validates whether cspace and sspace types are compatible.
-        /// </summary>
-        /// <param name="cspaceType"> Type in C-Space. Must be a primitive or enumeration type. </param>
-        /// <param name="storeType"> C-Space equivalent of S-space Type. Must be a primitive type. </param>
-        /// <returns>
-        /// <c>true</c> if the types are compatible. <c>false</c> otherwise.
-        /// </returns>
-        /// <remarks>
-        /// This methods validate whether cspace and sspace types are compatible. The types are
-        /// compatible if:
-        /// both are primitive and the cspace type is a subtype of sspace type
-        /// or
-        /// cspace type is an enumeration type whose underlying type is a subtype of sspace type.
-        /// </remarks>
+        // <summary>
+        // Validates whether cspace and sspace types are compatible.
+        // </summary>
+        // <param name="cspaceType"> Type in C-Space. Must be a primitive or enumeration type. </param>
+        // <param name="storeType"> C-Space equivalent of S-space Type. Must be a primitive type. </param>
+        // <returns>
+        // <c>true</c> if the types are compatible. <c>false</c> otherwise.
+        // </returns>
+        // <remarks>
+        // This methods validate whether cspace and sspace types are compatible. The types are
+        // compatible if:
+        // both are primitive and the cspace type is a subtype of sspace type
+        // or
+        // cspace type is an enumeration type whose underlying type is a subtype of sspace type.
+        // </remarks>
         private static bool ValidateScalarTypesAreCompatible(TypeUsage cspaceType, TypeUsage storeType)
         {
             DebugCheck.NotNull(cspaceType);

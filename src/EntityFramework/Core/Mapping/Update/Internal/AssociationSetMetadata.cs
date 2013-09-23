@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
@@ -7,43 +7,43 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
 
-    /// <summary>
-    /// Encapsulates information about ends of an association set needed to correctly
-    /// interpret updates.
-    /// </summary>
+    // <summary>
+    // Encapsulates information about ends of an association set needed to correctly
+    // interpret updates.
+    // </summary>
     internal sealed class AssociationSetMetadata
     {
-        /// <summary>
-        /// Gets association ends that must be modified if the association
-        /// is changed (e.g. the mapping of the association is conditioned
-        /// on some property of the end)
-        /// </summary>
+        // <summary>
+        // Gets association ends that must be modified if the association
+        // is changed (e.g. the mapping of the association is conditioned
+        // on some property of the end)
+        // </summary>
         internal readonly Set<AssociationEndMember> RequiredEnds;
 
-        /// <summary>
-        /// Gets association ends that may be implicitly modified as a result
-        /// of changes to the association (e.g. collocated entity with server
-        /// generated value)
-        /// </summary>
+        // <summary>
+        // Gets association ends that may be implicitly modified as a result
+        // of changes to the association (e.g. collocated entity with server
+        // generated value)
+        // </summary>
         internal readonly Set<AssociationEndMember> OptionalEnds;
 
-        /// <summary>
-        /// Gets association ends whose values may influence the association
-        /// (e.g. where there is a ReferentialIntegrity or "foreign key" constraint)
-        /// </summary>
+        // <summary>
+        // Gets association ends whose values may influence the association
+        // (e.g. where there is a ReferentialIntegrity or "foreign key" constraint)
+        // </summary>
         internal readonly Set<AssociationEndMember> IncludedValueEnds;
 
-        /// <summary>
-        /// true iff. there are interesting ends for this association set.
-        /// </summary>
+        // <summary>
+        // true iff. there are interesting ends for this association set.
+        // </summary>
         internal bool HasEnds
         {
             get { return 0 < RequiredEnds.Count || 0 < OptionalEnds.Count || 0 < IncludedValueEnds.Count; }
         }
 
-        /// <summary>
-        /// Initialize Metadata for an AssociationSet
-        /// </summary>
+        // <summary>
+        // Initialize Metadata for an AssociationSet
+        // </summary>
         internal AssociationSetMetadata(Set<EntitySet> affectedTables, AssociationSet associationSet, MetadataWorkspace workspace)
         {
             // If there is only 1 table, there can be no ambiguity about the "destination" of a relationship, so such
@@ -103,9 +103,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             FixSet(ref IncludedValueEnds);
         }
 
-        /// <summary>
-        /// Initialize given required ends.
-        /// </summary>
+        // <summary>
+        // Initialize given required ends.
+        // </summary>
         internal AssociationSetMetadata(IEnumerable<AssociationEndMember> requiredEnds)
         {
             if (requiredEnds.Any())

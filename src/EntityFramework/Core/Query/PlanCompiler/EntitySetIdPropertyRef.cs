@@ -2,20 +2,20 @@
 
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
-    /// <summary>
-    /// An EntitySetId propertyref represents the EntitySetId property for
-    /// an entity type or a ref type.
-    /// As with TypeId, this class is a singleton instance
-    /// </summary>
+    // <summary>
+    // An EntitySetId propertyref represents the EntitySetId property for
+    // an entity type or a ref type.
+    // As with TypeId, this class is a singleton instance
+    // </summary>
     internal class EntitySetIdPropertyRef : PropertyRef
     {
         private EntitySetIdPropertyRef()
         {
         }
 
-        /// <summary>
-        /// Gets the singleton instance
-        /// </summary>
+        // <summary>
+        // Gets the singleton instance
+        // </summary>
         internal static EntitySetIdPropertyRef Instance = new EntitySetIdPropertyRef();
 
         public override string ToString()

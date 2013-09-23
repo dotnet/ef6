@@ -13,27 +13,27 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// requires: for structural types, member values are ordinally aligned with the members of the
-    /// structural type.
-    /// Stores a 'row' (or element within a row) being propagated through the update pipeline, including
-    /// markup information and metadata. Internally, we maintain several different classes so that we only
-    /// store the necessary state.
-    /// - StructuralValue (complex types, entities, and association end keys): type and member values,
-    /// one version for modified structural values and one version for unmodified structural values
-    /// (a structural type is modified if its _type_ is changed, not its values
-    /// - SimpleValue (scalar value): flags to describe the state of the value (is it a concurrency value,
-    /// is it modified) and the value itself
-    /// - ServerGenSimpleValue: adds back-prop information to the above (record and position in record
-    /// so that we can set the value on back-prop)
-    /// - KeyValue: the originating IEntityStateEntry also travels with keys. These entries are used purely for
-    /// error reporting. We send them with keys so that every row containing an entity (which must also
-    /// contain the key) has enough context to recover the state entry.
-    /// </summary>
-    /// <remarks>
-    /// Not all memebers of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
-    /// is available only on simple types
-    /// </remarks>
+    // <summary>
+    // requires: for structural types, member values are ordinally aligned with the members of the
+    // structural type.
+    // Stores a 'row' (or element within a row) being propagated through the update pipeline, including
+    // markup information and metadata. Internally, we maintain several different classes so that we only
+    // store the necessary state.
+    // - StructuralValue (complex types, entities, and association end keys): type and member values,
+    // one version for modified structural values and one version for unmodified structural values
+    // (a structural type is modified if its _type_ is changed, not its values
+    // - SimpleValue (scalar value): flags to describe the state of the value (is it a concurrency value,
+    // is it modified) and the value itself
+    // - ServerGenSimpleValue: adds back-prop information to the above (record and position in record
+    // so that we can set the value on back-prop)
+    // - KeyValue: the originating IEntityStateEntry also travels with keys. These entries are used purely for
+    // error reporting. We send them with keys so that every row containing an entity (which must also
+    // contain the key) has enough context to recover the state entry.
+    // </summary>
+    // <remarks>
+    // Not all memebers of a PropagatorResult are available for all specializations. For instance, GetSimpleValue
+    // is available only on simple types
+    // </remarks>
     internal abstract class PropagatorResult
     {
         #region Constructors
@@ -51,74 +51,74 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         #region Properties
 
-        /// <summary>
-        /// Gets a value indicating whether this result is null.
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether this result is null.
+        // </summary>
         internal abstract bool IsNull { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether this is a simple (scalar) or complex
-        /// structural) result.
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether this is a simple (scalar) or complex
+        // structural) result.
+        // </summary>
         internal abstract bool IsSimple { get; }
 
-        /// <summary>
-        /// Gets flags describing the behaviors for this element.
-        /// </summary>
+        // <summary>
+        // Gets flags describing the behaviors for this element.
+        // </summary>
         internal virtual PropagatorFlags PropagatorFlags
         {
             get { return PropagatorFlags.NoFlags; }
         }
 
-        /// <summary>
-        /// Gets all state entries from which this result originated. Only set for key
-        /// values (to ensure every row knows all of its source entries)
-        /// </summary>
+        // <summary>
+        // Gets all state entries from which this result originated. Only set for key
+        // values (to ensure every row knows all of its source entries)
+        // </summary>
         internal virtual IEntityStateEntry StateEntry
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Gets record from which this result originated. Only set for server generated
-        /// results (where the record needs to be synchronized).
-        /// </summary>
+        // <summary>
+        // Gets record from which this result originated. Only set for server generated
+        // results (where the record needs to be synchronized).
+        // </summary>
         internal virtual CurrentValueRecord Record
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Gets structural type for non simple results. Only available for entity and complex type
-        /// results.
-        /// </summary>
+        // <summary>
+        // Gets structural type for non simple results. Only available for entity and complex type
+        // results.
+        // </summary>
         internal virtual StructuralType StructuralType
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Gets the ordinal within the originating record for this result. Only set
-        /// for server generated results (otherwise, returns -1)
-        /// </summary>
+        // <summary>
+        // Gets the ordinal within the originating record for this result. Only set
+        // for server generated results (otherwise, returns -1)
+        // </summary>
         internal virtual int RecordOrdinal
         {
             get { return NullOrdinal; }
         }
 
-        /// <summary>
-        /// Gets the identifier for this entry if it is a server-gen key value (otherwise
-        /// returns -1)
-        /// </summary>
+        // <summary>
+        // Gets the identifier for this entry if it is a server-gen key value (otherwise
+        // returns -1)
+        // </summary>
         internal virtual int Identifier
         {
             get { return NullIdentifier; }
         }
 
-        /// <summary>
-        /// Where a single result corresponds to multiple key inputs, they are chained using this linked list.
-        /// By convention, the first entry in the chain is the 'dominant' entry (the principal key).
-        /// </summary>
+        // <summary>
+        // Where a single result corresponds to multiple key inputs, they are chained using this linked list.
+        // By convention, the first entry in the chain is the 'dominant' entry (the principal key).
+        // </summary>
         internal virtual PropagatorResult Next
         {
             get { return null; }
@@ -128,86 +128,86 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         #region Methods
 
-        /// <summary>
-        /// Returns simple value stored in this result. Only valid when <see cref="IsSimple" /> is
-        /// true.
-        /// </summary>
-        /// <returns> Concrete value. </returns>
+        // <summary>
+        // Returns simple value stored in this result. Only valid when <see cref="IsSimple" /> is
+        // true.
+        // </summary>
+        // <returns> Concrete value. </returns>
         internal virtual object GetSimpleValue()
         {
             throw EntityUtil.InternalError(
                 EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.GetSimpleValue");
         }
 
-        /// <summary>
-        /// Returns nested value. Only valid when <see cref="IsSimple" /> is false.
-        /// </summary>
-        /// <param name="ordinal"> Ordinal of value to return (ordinal based on type definition) </param>
-        /// <returns> Nested result. </returns>
+        // <summary>
+        // Returns nested value. Only valid when <see cref="IsSimple" /> is false.
+        // </summary>
+        // <param name="ordinal"> Ordinal of value to return (ordinal based on type definition) </param>
+        // <returns> Nested result. </returns>
         internal virtual PropagatorResult GetMemberValue(int ordinal)
         {
             throw EntityUtil.InternalError(
                 EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.GetMemberValue");
         }
 
-        /// <summary>
-        /// Returns nested value. Only valid when <see cref="IsSimple" /> is false.
-        /// </summary>
-        /// <param name="member"> Member for which to return a value </param>
-        /// <returns> Nested result. </returns>
+        // <summary>
+        // Returns nested value. Only valid when <see cref="IsSimple" /> is false.
+        // </summary>
+        // <param name="member"> Member for which to return a value </param>
+        // <returns> Nested result. </returns>
         internal PropagatorResult GetMemberValue(EdmMember member)
         {
             var ordinal = TypeHelpers.GetAllStructuralMembers(StructuralType).IndexOf(member);
             return GetMemberValue(ordinal);
         }
 
-        /// <summary>
-        /// Returns all structural values. Only valid when <see cref="IsSimple" /> is false.
-        /// </summary>
-        /// <returns> Values of all structural members. </returns>
+        // <summary>
+        // Returns all structural values. Only valid when <see cref="IsSimple" /> is false.
+        // </summary>
+        // <returns> Values of all structural members. </returns>
         internal virtual PropagatorResult[] GetMemberValues()
         {
             throw EntityUtil.InternalError(
                 EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.GetMembersValues");
         }
 
-        /// <summary>
-        /// Produces a replica of this propagator result with different flags.
-        /// </summary>
-        /// <param name="flags"> New flags for the result. </param>
-        /// <returns> This result with the given flags. </returns>
+        // <summary>
+        // Produces a replica of this propagator result with different flags.
+        // </summary>
+        // <param name="flags"> New flags for the result. </param>
+        // <returns> This result with the given flags. </returns>
         internal abstract PropagatorResult ReplicateResultWithNewFlags(PropagatorFlags flags);
 
-        /// <summary>
-        /// Copies this result replacing its value. Used for cast. Requires a simple result.
-        /// </summary>
-        /// <param name="value"> New value for result </param>
-        /// <returns> Copy of this result with new value. </returns>
+        // <summary>
+        // Copies this result replacing its value. Used for cast. Requires a simple result.
+        // </summary>
+        // <param name="value"> New value for result </param>
+        // <returns> Copy of this result with new value. </returns>
         internal virtual PropagatorResult ReplicateResultWithNewValue(object value)
         {
             throw EntityUtil.InternalError(
                 EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.ReplicateResultWithNewValue");
         }
 
-        /// <summary>
-        /// Replaces parts of the structured result.
-        /// </summary>
-        /// <param name="map"> A replace-with map applied to simple (i.e. not structural) values. </param>
-        /// <returns> Result with requested elements replaced. </returns>
+        // <summary>
+        // Replaces parts of the structured result.
+        // </summary>
+        // <param name="map"> A replace-with map applied to simple (i.e. not structural) values. </param>
+        // <returns> Result with requested elements replaced. </returns>
         internal abstract PropagatorResult Replace(Func<PropagatorResult, PropagatorResult> map);
 
-        /// <summary>
-        /// A result is merged with another when it is merged as part of an equi-join.
-        /// </summary>
-        /// <remarks>
-        /// In theory, this should only ever be called on two keys (since we only join on
-        /// keys). We throw in the base implementation, and override in KeyResult. By convention
-        /// the principal key is always the first result in the chain (in case of an RIC). In
-        /// addition, entity entries always appear before relationship entries.
-        /// </remarks>
-        /// <param name="keyManager"> </param>
-        /// <param name="other"> Result to merge with. </param>
-        /// <returns> Merged result. </returns>
+        // <summary>
+        // A result is merged with another when it is merged as part of an equi-join.
+        // </summary>
+        // <remarks>
+        // In theory, this should only ever be called on two keys (since we only join on
+        // keys). We throw in the base implementation, and override in KeyResult. By convention
+        // the principal key is always the first result in the chain (in case of an RIC). In
+        // addition, entity entries always appear before relationship entries.
+        // </remarks>
+        // <param name="keyManager"> </param>
+        // <param name="other"> Result to merge with. </param>
+        // <returns> Merged result. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual PropagatorResult Merge(KeyManager keyManager, PropagatorResult other)
         {
@@ -230,12 +230,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        /// <summary>
-        /// Aligns a value returned from the store with the expected type for the member.
-        /// </summary>
-        /// <param name="value"> Value to convert. </param>
-        /// <param name="member"> Metadata for the member being set. </param>
-        /// <returns> Converted return value </returns>
+        // <summary>
+        // Aligns a value returned from the store with the expected type for the member.
+        // </summary>
+        // <param name="value"> Value to convert. </param>
+        // <param name="member"> Metadata for the member being set. </param>
+        // <returns> Converted return value </returns>
         internal object AlignReturnValue(object value, EdmMember member)
         {
             if (DBNull.Value.Equals(value))

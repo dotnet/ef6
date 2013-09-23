@@ -83,10 +83,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return (EntitySet)Set; }
         }
 
-        /// <summary>
-        /// Whether the EntitySetMapping has empty content
-        /// Returns true if there are no Function Maps and no table Mapping fragments
-        /// </summary>
+        // <summary>
+        // Whether the EntitySetMapping has empty content
+        // Returns true if there are no Function Maps and no table Mapping fragments
+        // </summary>
         internal override bool HasNoContent
         {
             get
@@ -99,13 +99,13 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Requires:
-        /// - Function mapping refers to a sub-type of this entity set's element type
-        /// - Function mappings for types are not redundantly specified
-        /// Adds a new function mapping for this class.
-        /// </summary>
-        /// <param name="modificationFunctionMapping"> Function mapping to add. May not be null. </param>
+        // <summary>
+        // Requires:
+        // - Function mapping refers to a sub-type of this entity set's element type
+        // - Function mappings for types are not redundantly specified
+        // Adds a new function mapping for this class.
+        // </summary>
+        // <param name="modificationFunctionMapping"> Function mapping to add. May not be null. </param>
         internal void AddModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
             AssertModificationFunctionMappingInvariants(modificationFunctionMapping);

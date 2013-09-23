@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Migrations.Extensions
 {
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Migrations.Extensions
             return Path.Combine(fullPath, outputPath);
         }
 
-        /// <summary>
-        /// Gets the string abbreviation for the language of a VS project.
-        /// </summary>
+        // <summary>
+        // Gets the string abbreviation for the language of a VS project.
+        // </summary>
         public static string GetLanguage(this Project project)
         {
             DebugCheck.NotNull(project);
@@ -66,9 +66,9 @@ namespace System.Data.Entity.Migrations.Extensions
             return null;
         }
 
-        /// <summary>
-        /// Gets the root namespace configured for a VS project.
-        /// </summary>
+        // <summary>
+        // Gets the root namespace configured for a VS project.
+        // </summary>
         public static string GetRootNamespace(this Project project)
         {
             DebugCheck.NotNull(project);
@@ -268,13 +268,13 @@ namespace System.Data.Entity.Migrations.Extensions
             return (T)property.Value;
         }
 
-        /// <summary>
-        /// Gets all aggregate project type GUIDs for the given project.
-        /// Note that when running in Visual Studio app domain (which is how this code is used in
-        /// production) a shellVersion of 10 is fine because VS has binding redirects to cause the
-        /// latest version to be loaded. When running tests is may be desirable to explicitly pass
-        /// a different version. See CodePlex 467.
-        /// </summary>
+        // <summary>
+        // Gets all aggregate project type GUIDs for the given project.
+        // Note that when running in Visual Studio app domain (which is how this code is used in
+        // production) a shellVersion of 10 is fine because VS has binding redirects to cause the
+        // latest version to be loaded. When running tests is may be desirable to explicitly pass
+        // a different version. See CodePlex 467.
+        // </summary>
         public static IEnumerable<string> GetProjectTypes(this Project project, int shellVersion = 10)
         {
             DebugCheck.NotNull(project);

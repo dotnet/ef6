@@ -16,24 +16,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class PrimitiveType : SimpleType
     {
-        /// <summary>
-        /// Initializes a new instance of PrimitiveType
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of PrimitiveType
+        // </summary>
         internal PrimitiveType()
         {
             // No initialization of item attributes in here, it's used as a pass thru in the case for delay population
             // of item attributes
         }
 
-        /// <summary>
-        /// The constructor for PrimitiveType.  It takes the required information to identify this type.
-        /// </summary>
-        /// <param name="name"> The name of this type </param>
-        /// <param name="namespaceName"> The namespace name of this type </param>
-        /// <param name="dataSpace"> dataSpace in which this primitive type belongs to </param>
-        /// <param name="baseType"> The primitive type that this type is derived from </param>
-        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name, namespaceName, version, baseType or providerManifest arguments are null</exception>
+        // <summary>
+        // The constructor for PrimitiveType.  It takes the required information to identify this type.
+        // </summary>
+        // <param name="name"> The name of this type </param>
+        // <param name="namespaceName"> The namespace name of this type </param>
+        // <param name="dataSpace"> dataSpace in which this primitive type belongs to </param>
+        // <param name="baseType"> The primitive type that this type is derived from </param>
+        // <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name, namespaceName, version, baseType or providerManifest arguments are null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal PrimitiveType(
             string name,
@@ -51,12 +51,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Initialize(this, baseType.PrimitiveTypeKind, providerManifest);
         }
 
-        /// <summary>
-        /// The constructor for PrimitiveType, it takes in a CLR type containing the identity information
-        /// </summary>
-        /// <param name="clrType"> The CLR type object for this primitive type </param>
-        /// <param name="baseType"> The base type for this primitive type </param>
-        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
+        // <summary>
+        // The constructor for PrimitiveType, it takes in a CLR type containing the identity information
+        // </summary>
+        // <param name="clrType"> The CLR type object for this primitive type </param>
+        // <param name="baseType"> The base type for this primitive type </param>
+        // <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         internal PrimitiveType(
             Type clrType,
             PrimitiveType baseType,
@@ -108,10 +108,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal set { _primitiveTypeKind = value; }
         }
 
-        /// <summary>
-        /// Returns the ProviderManifest giving access to the Manifest that this type came from
-        /// </summary>
-        /// <returns> The types ProviderManifest value </returns>
+        // <summary>
+        // Returns the ProviderManifest giving access to the Manifest that this type came from
+        // </summary>
+        // <returns> The types ProviderManifest value </returns>
         internal DbProviderManifest ProviderManifest
         {
             get
@@ -222,12 +222,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return base.GetAssociatedFacetDescriptions().Concat(FacetDescriptions);
         }
 
-        /// <summary>
-        /// Perform initialization that's common across all constructors
-        /// </summary>
-        /// <param name="primitiveType"> The primitive type to initialize </param>
-        /// <param name="primitiveTypeKind"> The primitive type kind of this primitive type </param>
-        /// <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
+        // <summary>
+        // Perform initialization that's common across all constructors
+        // </summary>
+        // <param name="primitiveType"> The primitive type to initialize </param>
+        // <param name="primitiveTypeKind"> The primitive type kind of this primitive type </param>
+        // <param name="providerManifest"> The ProviderManifest of the provider of this type </param>
         internal static void Initialize(
             PrimitiveType primitiveType,
             PrimitiveTypeKind primitiveTypeKind,

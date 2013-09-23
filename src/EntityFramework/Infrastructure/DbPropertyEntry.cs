@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -15,13 +15,13 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly InternalPropertyEntry _internalPropertyEntry;
 
-        /// <summary>
-        /// Creates a <see cref="DbPropertyEntry" /> from information in the given <see cref="InternalPropertyEntry" />.
-        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
-        /// the type of member represented by the InternalCollectionEntry instance.
-        /// </summary>
-        /// <param name="internalPropertyEntry"> The internal property entry. </param>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a <see cref="DbPropertyEntry" /> from information in the given <see cref="InternalPropertyEntry" />.
+        // Use this method in preference to the constructor since it may potentially create a subclass depending on
+        // the type of member represented by the InternalCollectionEntry instance.
+        // </summary>
+        // <param name="internalPropertyEntry"> The internal property entry. </param>
+        // <returns> The new entry. </returns>
         internal static DbPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
         {
             DebugCheck.NotNull(internalPropertyEntry);
@@ -29,10 +29,10 @@ namespace System.Data.Entity.Infrastructure
             return (DbPropertyEntry)internalPropertyEntry.CreateDbMemberEntry();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbPropertyEntry" /> class.
-        /// </summary>
-        /// <param name="internalPropertyEntry"> The internal entry. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbPropertyEntry" /> class.
+        // </summary>
+        // <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbPropertyEntry(InternalPropertyEntry internalPropertyEntry)
         {
             DebugCheck.NotNull(internalPropertyEntry);
@@ -129,10 +129,10 @@ namespace System.Data.Entity.Infrastructure
 
         #region InternalMemberEntry access
 
-        /// <summary>
-        /// Gets the <see cref="InternalPropertyEntry" /> backing this object.
-        /// </summary>
-        /// <value> The internal member entry. </value>
+        // <summary>
+        // Gets the <see cref="InternalPropertyEntry" /> backing this object.
+        // </summary>
+        // <value> The internal member entry. </value>
         internal override InternalMemberEntry InternalMemberEntry
         {
             get { return _internalPropertyEntry; }

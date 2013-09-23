@@ -12,11 +12,11 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// Responsible for performing Relationship-span only rewrites over a Command Tree rooted
-    /// by the <see cref="Query" /> property. Virtual methods provide an opportunity for derived
-    /// classes to implement Full-span rewrites.
-    /// </summary>
+    // <summary>
+    // Responsible for performing Relationship-span only rewrites over a Command Tree rooted
+    // by the <see cref="Query" /> property. Virtual methods provide an opportunity for derived
+    // classes to implement Full-span rewrites.
+    // </summary>
     internal class ObjectSpanRewriter
     {
         internal static bool EntityTypeEquals(EntityTypeBase entityType1, EntityTypeBase entityType2)
@@ -77,15 +77,15 @@ namespace System.Data.Entity.Core.Objects.Internal
             return (spanInfo != null);
         }
 
-        /// <summary>
-        /// Constructs a new ObjectSpanRewriter that will attempt to apply spanning to the specified query
-        /// (represented as a DbExpression) when <see cref="RewriteQuery" /> is called.
-        /// </summary>
-        /// <param name="tree"> </param>
-        /// <param name="toRewrite">
-        /// A <see cref="DbExpression" /> representing the query to span.
-        /// </param>
-        /// <param name="aliasGenerator"> </param>
+        // <summary>
+        // Constructs a new ObjectSpanRewriter that will attempt to apply spanning to the specified query
+        // (represented as a DbExpression) when <see cref="RewriteQuery" /> is called.
+        // </summary>
+        // <param name="tree"> </param>
+        // <param name="toRewrite">
+        // A <see cref="DbExpression" /> representing the query to span.
+        // </param>
+        // <param name="aliasGenerator"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal ObjectSpanRewriter(DbCommandTree tree, DbExpression toRewrite, AliasGenerator aliasGenerator)
         {
@@ -96,48 +96,48 @@ namespace System.Data.Entity.Core.Objects.Internal
             _aliasGenerator = aliasGenerator;
         }
 
-        /// <summary>
-        /// Gets the metadata workspace the will be used to retrieve required metadata, for example association types.
-        /// </summary>
+        // <summary>
+        // Gets the metadata workspace the will be used to retrieve required metadata, for example association types.
+        // </summary>
         internal MetadataWorkspace Metadata
         {
             get { return _tree.MetadataWorkspace; }
         }
 
-        /// <summary>
-        /// Gets a DbExpression representing the query that should be spanned.
-        /// </summary>
+        // <summary>
+        // Gets a DbExpression representing the query that should be spanned.
+        // </summary>
         internal DbExpression Query
         {
             get { return _toRewrite; }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether relationship span is required (ObjectQuery sets this to 'false' for NoTracking queries).
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether relationship span is required (ObjectQuery sets this to 'false' for NoTracking queries).
+        // </summary>
         internal bool RelationshipSpan
         {
             get { return _relationshipSpan; }
             set { _relationshipSpan = value; }
         }
 
-        /// <summary>
-        /// Gets a dictionary that indicates, for a given result row type produced by a span rewrite,
-        /// which columns represent which association end members.
-        /// This dictionary is initially empty before <see cref="RewriteQuery" /> is called and will remain so
-        /// if no rewrites are required.
-        /// </summary>
+        // <summary>
+        // Gets a dictionary that indicates, for a given result row type produced by a span rewrite,
+        // which columns represent which association end members.
+        // This dictionary is initially empty before <see cref="RewriteQuery" /> is called and will remain so
+        // if no rewrites are required.
+        // </summary>
         internal SpanIndex SpanIndex
         {
             get { return _spanIndex; }
         }
 
-        /// <summary>
-        /// Main 'public' entry point called by ObjectQuery.
-        /// </summary>
-        /// <returns>
-        /// The rewritten version of <see cref="Query" /> if spanning was required; otherwise <c>null</c> .
-        /// </returns>
+        // <summary>
+        // Main 'public' entry point called by ObjectQuery.
+        // </summary>
+        // <returns>
+        // The rewritten version of <see cref="Query" /> if spanning was required; otherwise <c>null</c> .
+        // </returns>
         internal DbExpression RewriteQuery()
         {
             var retExpr = Rewrite(_toRewrite);
@@ -609,16 +609,16 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        /// <summary>
-        /// Gathers the applicable { from, to } relationship end pairings for the specified entity type.
-        /// Note that it is possible for both { x, y } and { y, x } - where x and y are relationship ends -
-        /// to be returned if the relationship is symmetric (in the sense that it has multiplicity of at
-        /// most one in each direction and the type of each end is Ref to the same Entity type, or a supertype).
-        /// </summary>
-        /// <param name="entityType"> The Entity type for which the applicable { from, to } end pairings should be retrieved. </param>
-        /// <returns>
-        /// A List of association end members pairings that describes the available { from, to } navigations for the specified Entity type that are valid for Relationship Span; or <c>null</c> if no such pairings exist.
-        /// </returns>
+        // <summary>
+        // Gathers the applicable { from, to } relationship end pairings for the specified entity type.
+        // Note that it is possible for both { x, y } and { y, x } - where x and y are relationship ends -
+        // to be returned if the relationship is symmetric (in the sense that it has multiplicity of at
+        // most one in each direction and the type of each end is Ref to the same Entity type, or a supertype).
+        // </summary>
+        // <param name="entityType"> The Entity type for which the applicable { from, to } end pairings should be retrieved. </param>
+        // <returns>
+        // A List of association end members pairings that describes the available { from, to } navigations for the specified Entity type that are valid for Relationship Span; or <c>null</c> if no such pairings exist.
+        // </returns>
         private List<KeyValuePair<AssociationEndMember, AssociationEndMember>> GetRelationshipSpanEnds(EntityType entityType)
         {
             // The list to be returned; initially null.
@@ -669,17 +669,17 @@ namespace System.Data.Entity.Core.Objects.Internal
             return retList;
         }
 
-        /// <summary>
-        /// Determines whether the specified { from, to } relationship end pairing represents a navigation that is
-        /// valid for a relationship span sourced by an instance of the specified entity type.
-        /// </summary>
-        /// <param name="compareType"> The Entity type which valid 'from' ends must reference (or a supertype of that Entity type) </param>
-        /// <param name="associationType"> The Association type to consider. </param>
-        /// <param name="fromEnd"> The candidate 'from' end, which will be checked based on the Entity type it references </param>
-        /// <param name="toEnd"> The candidate 'to' end, which will be checked base on the upper bound of its multiplicity </param>
-        /// <returns>
-        /// <c>True</c> if the end pairing represents a valid navigation from an instance of the specified entity type to an association end with a multiplicity upper bound of at most 1; otherwise <c>false</c>
-        /// </returns>
+        // <summary>
+        // Determines whether the specified { from, to } relationship end pairing represents a navigation that is
+        // valid for a relationship span sourced by an instance of the specified entity type.
+        // </summary>
+        // <param name="compareType"> The Entity type which valid 'from' ends must reference (or a supertype of that Entity type) </param>
+        // <param name="associationType"> The Association type to consider. </param>
+        // <param name="fromEnd"> The candidate 'from' end, which will be checked based on the Entity type it references </param>
+        // <param name="toEnd"> The candidate 'to' end, which will be checked base on the upper bound of its multiplicity </param>
+        // <returns>
+        // <c>True</c> if the end pairing represents a valid navigation from an instance of the specified entity type to an association end with a multiplicity upper bound of at most 1; otherwise <c>false</c>
+        // </returns>
         private static bool IsValidRelationshipSpan(
             EntityType compareType, AssociationType associationType, AssociationEndMember fromEnd, AssociationEndMember toEnd)
         {

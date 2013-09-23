@@ -15,11 +15,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// This resolver is always the last resolver in the internal resolver chain and is
-    /// responsible for providing the default service for each dependency or throwing an
-    /// exception if there is no reasonable default service.
-    /// </summary>
+    // <summary>
+    // This resolver is always the last resolver in the internal resolver chain and is
+    // responsible for providing the default service for each dependency or throwing an
+    // exception if there is no reasonable default service.
+    // </summary>
     internal class RootDependencyResolver : IDbDependencyResolver
     {
         private readonly ResolverChain _defaultResolvers = new ResolverChain();
@@ -67,7 +67,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             get { return _databaseInitializerResolver; }
         }
 
-        /// <inheritdoc />
+        // <inheritdoc />
         public virtual object GetService(Type type, object key)
         {
             return _defaultResolvers.GetService(type, key) ?? _resolvers.GetService(type, key);

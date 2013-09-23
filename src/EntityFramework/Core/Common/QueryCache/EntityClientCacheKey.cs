@@ -9,39 +9,39 @@ namespace System.Data.Entity.Core.Common.QueryCache
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Represents EntityCommand Cache key context
-    /// </summary>
+    // <summary>
+    // Represents EntityCommand Cache key context
+    // </summary>
     internal sealed class EntityClientCacheKey : QueryCacheKey
     {
-        /// <summary>
-        /// Stored procedure or command text?
-        /// </summary>
+        // <summary>
+        // Stored procedure or command text?
+        // </summary>
         private readonly CommandType _commandType;
 
-        /// <summary>
-        /// Entity Sql statement
-        /// </summary>
+        // <summary>
+        // Entity Sql statement
+        // </summary>
         private readonly string _eSqlStatement;
 
-        /// <summary>
-        /// parameter collection token
-        /// </summary>
+        // <summary>
+        // parameter collection token
+        // </summary>
         private readonly string _parametersToken;
 
-        /// <summary>
-        /// number of parameters
-        /// </summary>
+        // <summary>
+        // number of parameters
+        // </summary>
         private readonly int _parameterCount;
 
-        /// <summary>
-        /// Combined Hashcode based on field hashcodes
-        /// </summary>
+        // <summary>
+        // Combined Hashcode based on field hashcodes
+        // </summary>
         private readonly int _hashCode;
 
-        /// <summary>
-        /// Creates a new instance of EntityClientCacheKey given a entityCommand instance
-        /// </summary>
+        // <summary>
+        // Creates a new instance of EntityClientCacheKey given a entityCommand instance
+        // </summary>
         internal EntityClientCacheKey(EntityCommand entityCommand)
         {
             // Command Type
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                         _parametersToken.GetHashCode();
         }
 
-        /// <summary>
-        /// determines equality of two cache keys based on cache context values
-        /// </summary>
+        // <summary>
+        // determines equality of two cache keys based on cache context values
+        // </summary>
         public override bool Equals(object otherObject)
         {
             DebugCheck.NotNull(otherObject);
@@ -79,9 +79,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
                    Equals(otherEntityClientCacheKey._parametersToken, _parametersToken);
         }
 
-        /// <summary>
-        /// Returns Context Hash Code
-        /// </summary>
+        // <summary>
+        // Returns Context Hash Code
+        // </summary>
         public override int GetHashCode()
         {
             return _hashCode;
@@ -137,9 +137,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             return result;
         }
 
-        /// <summary>
-        /// Returns a string representation of the parameter list
-        /// </summary>
+        // <summary>
+        // Returns a string representation of the parameter list
+        // </summary>
         private static string GetParametersToken(EntityCommand entityCommand)
         {
             if (null == entityCommand.Parameters
@@ -185,9 +185,9 @@ namespace System.Data.Entity.Core.Common.QueryCache
             }
         }
 
-        /// <summary>
-        /// returns the composed cache key
-        /// </summary>
+        // <summary>
+        // returns the composed cache key
+        // </summary>
         public override string ToString()
         {
             return String.Join("|", new[] { Enum.GetName(typeof(CommandType), _commandType), _eSqlStatement, _parametersToken });

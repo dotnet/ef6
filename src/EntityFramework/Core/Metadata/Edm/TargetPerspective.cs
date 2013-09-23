@@ -5,16 +5,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Internal helper class for query
-    /// </summary>
+    // <summary>
+    // Internal helper class for query
+    // </summary>
     internal class TargetPerspective : Perspective
     {
-        /// <summary>
-        /// Creates a new instance of perspective class so that query can work
-        /// ignorant of all spaces
-        /// </summary>
-        /// <param name="metadataWorkspace"> runtime metadata container </param>
+        // <summary>
+        // Creates a new instance of perspective class so that query can work
+        // ignorant of all spaces
+        // </summary>
+        // <param name="metadataWorkspace"> runtime metadata container </param>
         internal TargetPerspective(MetadataWorkspace metadataWorkspace)
             : base(metadataWorkspace, TargetPerspectiveDataSpace)
         {
@@ -25,13 +25,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // TargetPerspective uses a ModelPerspective for a second lookup in type lookup
         private readonly ModelPerspective _modelPerspective;
 
-        /// <summary>
-        /// Look up a type in the target data space based upon the fullName
-        /// </summary>
-        /// <param name="fullName"> fullName </param>
-        /// <param name="ignoreCase"> true for case-insensitive lookup </param>
-        /// <param name="usage"> </param>
-        /// <returns> a list of types that have the specified full name but may differ by strong name </returns>
+        // <summary>
+        // Look up a type in the target data space based upon the fullName
+        // </summary>
+        // <param name="fullName"> fullName </param>
+        // <param name="ignoreCase"> true for case-insensitive lookup </param>
+        // <param name="usage"> </param>
+        // <returns> a list of types that have the specified full name but may differ by strong name </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetTypeByName(string fullName, bool ignoreCase, out TypeUsage usage)
         {
@@ -48,9 +48,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _modelPerspective.TryGetTypeByName(fullName, ignoreCase, out usage);
         }
 
-        /// <summary>
-        /// Returns the entity container in CSpace or SSpace
-        /// </summary>
+        // <summary>
+        // Returns the entity container in CSpace or SSpace
+        // </summary>
         internal override bool TryGetEntityContainer(string name, bool ignoreCase, out EntityContainer entityContainer)
         {
             if (!base.TryGetEntityContainer(name, ignoreCase, out entityContainer))

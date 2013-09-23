@@ -8,16 +8,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Metadata collection class supporting delay-loading of system item attributes and
-    /// extended attributes.
-    /// </summary>
+    // <summary>
+    // Metadata collection class supporting delay-loading of system item attributes and
+    // extended attributes.
+    // </summary>
     internal sealed class MetadataPropertyCollection : MetadataCollection<MetadataProperty>
     {
-        /// <summary>
-        /// Constructor taking item.
-        /// </summary>
-        /// <param name="item"> Item with which the collection is associated. </param>
+        // <summary>
+        // Constructor taking item.
+        // </summary>
+        // <param name="item"> Item with which the collection is associated. </param>
         internal MetadataPropertyCollection(MetadataItem item)
             : base(GetSystemMetadataProperties(item))
         {
@@ -42,16 +42,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _itemTypeMemoizer.Evaluate(clrType);
         }
 
-        /// <summary>
-        /// Encapsulates information about system item attributes for a particular item type.
-        /// </summary>
+        // <summary>
+        // Encapsulates information about system item attributes for a particular item type.
+        // </summary>
         private class ItemTypeInformation
         {
-            /// <summary>
-            /// Retrieves system attribute information for the given type.
-            /// Requires: type must derive from MetadataItem
-            /// </summary>
-            /// <param name="clrType"> Type </param>
+            // <summary>
+            // Retrieves system attribute information for the given type.
+            // Requires: type must derive from MetadataItem
+            // </summary>
+            // <param name="clrType"> Type </param>
             internal ItemTypeInformation(Type clrType)
             {
                 DebugCheck.NotNull(clrType);
@@ -86,17 +86,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Encapsulates information about a CLR property of an item class.
-        /// </summary>
+        // <summary>
+        // Encapsulates information about a CLR property of an item class.
+        // </summary>
         private class ItemPropertyInfo
         {
-            /// <summary>
-            /// Initialize information.
-            /// Requires: attribute must belong to the given property.
-            /// </summary>
-            /// <param name="propertyInfo"> Property referenced. </param>
-            /// <param name="attribute"> Attribute for the property. </param>
+            // <summary>
+            // Initialize information.
+            // Requires: attribute must belong to the given property.
+            // </summary>
+            // <param name="propertyInfo"> Property referenced. </param>
+            // <param name="attribute"> Attribute for the property. </param>
             internal ItemPropertyInfo(PropertyInfo propertyInfo, MetadataPropertyAttribute attribute)
             {
                 DebugCheck.NotNull(propertyInfo);
@@ -109,11 +109,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             private readonly MetadataPropertyAttribute _attribute;
             private readonly PropertyInfo _propertyInfo;
 
-            /// <summary>
-            /// Given an item, returns an instance of the item attribute described by this class.
-            /// </summary>
-            /// <param name="item"> Item from which to retrieve attribute. </param>
-            /// <returns> Item attribute. </returns>
+            // <summary>
+            // Given an item, returns an instance of the item attribute described by this class.
+            // </summary>
+            // <param name="item"> Item from which to retrieve attribute. </param>
+            // <returns> Item attribute. </returns>
             internal MetadataProperty GetMetadataProperty(MetadataItem item)
             {
                 return new MetadataProperty(

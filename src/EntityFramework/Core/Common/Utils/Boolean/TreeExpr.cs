@@ -6,22 +6,22 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Abstract base class for tree expressions (unary as in Not, n-ary
-    /// as in And or Or). Duplicate elements are trimmed at construction
-    /// time (algorithms applied to these trees rely on the assumption
-    /// of uniform children).
-    /// </summary>
-    /// <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
+    // <summary>
+    // Abstract base class for tree expressions (unary as in Not, n-ary
+    // as in And or Or). Duplicate elements are trimmed at construction
+    // time (algorithms applied to these trees rely on the assumption
+    // of uniform children).
+    // </summary>
+    // <typeparam name="T_Identifier"> The type of leaf term identifiers in this expression. </typeparam>
     internal abstract class TreeExpr<T_Identifier> : BoolExpr<T_Identifier>
     {
         private readonly Set<BoolExpr<T_Identifier>> _children;
         private readonly int _hashCode;
 
-        /// <summary>
-        /// Initialize a new tree expression with the given children.
-        /// </summary>
-        /// <param name="children"> Child expressions </param>
+        // <summary>
+        // Initialize a new tree expression with the given children.
+        // </summary>
+        // <param name="children"> Child expressions </param>
         protected TreeExpr(IEnumerable<BoolExpr<T_Identifier>> children)
         {
             DebugCheck.NotNull(children);
@@ -30,9 +30,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             _hashCode = _children.GetElementsHashCode();
         }
 
-        /// <summary>
-        /// Gets the children of this expression node.
-        /// </summary>
+        // <summary>
+        // Gets the children of this expression node.
+        // </summary>
         internal Set<BoolExpr<T_Identifier>> Children
         {
             get { return _children; }

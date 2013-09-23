@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// This class encapsulates "external" calls from view/MDF generation to other System.Data.Entity features.
-    /// </summary>
+    // <summary>
+    // This class encapsulates "external" calls from view/MDF generation to other System.Data.Entity features.
+    // </summary>
     internal static class ExternalCalls
     {
         internal static bool IsReservedKeyword(string name)
@@ -66,11 +66,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Utils
             return expr;
         }
 
-        /// <summary>
-        /// Compiles eSQL <paramref name="functionDefinition" /> and returns <see cref="DbLambda" />.
-        /// Guarantees type match of lambda variables and <paramref name="functionParameters" />.
-        /// Passes thru all excepions coming from <see cref="CqlQuery" />.
-        /// </summary>
+        // <summary>
+        // Compiles eSQL <paramref name="functionDefinition" /> and returns <see cref="DbLambda" />.
+        // Guarantees type match of lambda variables and <paramref name="functionParameters" />.
+        // Passes thru all excepions coming from <see cref="CqlQuery" />.
+        // </summary>
         internal static DbLambda CompileFunctionDefinition(
             string functionDefinition,
             IList<FunctionParameter> functionParameters,

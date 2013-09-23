@@ -4,22 +4,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a collection of property references
-    /// </summary>
+    // <summary>
+    // Represents a collection of property references
+    // </summary>
     internal class PropertyRefList
     {
         private readonly Dictionary<PropertyRef, PropertyRef> m_propertyReferences;
         private bool m_allProperties;
 
-        /// <summary>
-        /// Get something that represents "all" property references
-        /// </summary>
+        // <summary>
+        // Get something that represents "all" property references
+        // </summary>
         internal static PropertyRefList All = new PropertyRefList(true);
 
-        /// <summary>
-        /// Trivial constructor
-        /// </summary>
+        // <summary>
+        // Trivial constructor
+        // </summary>
         internal PropertyRefList()
             : this(false)
         {
@@ -42,10 +42,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_propertyReferences.Add(AllPropertyRef.Instance, AllPropertyRef.Instance);
         }
 
-        /// <summary>
-        /// Add a new property reference to this list
-        /// </summary>
-        /// <param name="property"> new property reference </param>
+        // <summary>
+        // Add a new property reference to this list
+        // </summary>
+        // <param name="property"> new property reference </param>
         internal void Add(PropertyRef property)
         {
             if (m_allProperties)
@@ -62,10 +62,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Append an existing list of property references to myself
-        /// </summary>
-        /// <param name="propertyRefs"> list of property references </param>
+        // <summary>
+        // Append an existing list of property references to myself
+        // </summary>
+        // <param name="propertyRefs"> list of property references </param>
         internal void Append(PropertyRefList propertyRefs)
         {
             if (m_allProperties)
@@ -78,18 +78,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Do I contain "all" properties?
-        /// </summary>
+        // <summary>
+        // Do I contain "all" properties?
+        // </summary>
         internal bool AllProperties
         {
             get { return m_allProperties; }
         }
 
-        /// <summary>
-        /// Create a clone of myself
-        /// </summary>
-        /// <returns> a clone of myself </returns>
+        // <summary>
+        // Create a clone of myself
+        // </summary>
+        // <returns> a clone of myself </returns>
         internal PropertyRefList Clone()
         {
             var newProps = new PropertyRefList(m_allProperties);
@@ -100,19 +100,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return newProps;
         }
 
-        /// <summary>
-        /// Do I contain the specifed property?
-        /// </summary>
-        /// <param name="p"> The property </param>
-        /// <returns> true, if I do </returns>
+        // <summary>
+        // Do I contain the specifed property?
+        // </summary>
+        // <param name="p"> The property </param>
+        // <returns> true, if I do </returns>
         internal bool Contains(PropertyRef p)
         {
             return m_allProperties || m_propertyReferences.ContainsKey(p);
         }
 
-        /// <summary>
-        /// Get the list of all properties
-        /// </summary>
+        // <summary>
+        // Get the list of all properties
+        // </summary>
         internal IEnumerable<PropertyRef> Properties
         {
             get { return m_propertyReferences.Keys; }

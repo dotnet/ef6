@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common.Utils
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Typed version of TrailingSpaceComparer.
-    /// </summary>
+    // <summary>
+    // Typed version of TrailingSpaceComparer.
+    // </summary>
     internal class TrailingSpaceStringComparer : IEqualityComparer<string>
     {
         internal static readonly TrailingSpaceStringComparer Instance = new TrailingSpaceStringComparer();

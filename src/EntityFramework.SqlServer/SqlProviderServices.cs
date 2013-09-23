@@ -53,9 +53,9 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         public const string ProviderInvariantName = "System.Data.SqlClient";
 
-        /// <summary>
-        /// Private constructor to ensure only Singleton instance is created.
-        /// </summary>
+        // <summary>
+        // Private constructor to ensure only Singleton instance is created.
+        // </summary>
         private SqlProviderServices()
         {
             AddDependencyResolver(new SingletonDependencyResolver<IDbConnectionFactory>(new SqlConnectionFactory()));
@@ -87,9 +87,9 @@ namespace System.Data.Entity.SqlServer
                     }));
         }
 
-        /// <summary>
-        /// Singleton object
-        /// </summary>
+        // <summary>
+        // Singleton object
+        // </summary>
         private static readonly SqlProviderServices _providerInstance = new SqlProviderServices();
 
         private static bool _truncateDecimalsToScale = true;
@@ -164,12 +164,12 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
-        /// <summary>
-        /// Create a SqlCommand object, given the provider manifest and command tree
-        /// </summary>
-        /// <param name="providerManifest"> provider manifest </param>
-        /// <param name="commandTree"> command tree for the statement </param>
-        /// <returns> a command object </returns>
+        // <summary>
+        // Create a SqlCommand object, given the provider manifest and command tree
+        // </summary>
+        // <param name="providerManifest"> provider manifest </param>
+        // <param name="commandTree"> command tree for the statement </param>
+        // <returns> a command object </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
@@ -425,9 +425,9 @@ namespace System.Data.Entity.SqlServer
             return tokenVersion >= SqlVersion.Sql10;
         }
 
-        /// <summary>
-        /// Creates a SqlParameter given a name, type, and direction
-        /// </summary>
+        // <summary>
+        // Creates a SqlParameter given a name, type, and direction
+        // </summary>
         internal static SqlParameter CreateSqlParameter(
             string name, TypeUsage type, ParameterMode mode, object value, bool preventTruncation, SqlVersion version)
         {
@@ -542,15 +542,15 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
-        /// Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
-        /// of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
-        /// <paramref name="value" />.
-        /// If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
-        /// CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
-        /// DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
-        /// </summary>
+        // <summary>
+        // Validates that the specified value is compatible with SqlParameter and if not, attempts to return an appropriate value that is.
+        // Currently only spatial values (DbGeography/DbGeometry) may not be directly usable with SqlParameter. For these types, an instance
+        // of the corresponding SQL Server CLR spatial UDT will be manufactured based on the spatial data contained in
+        // <paramref name="value" />.
+        // If <paramref name="value" /> is an instance of DbGeography/DbGeometry that was read from SQL Server by this provider, then the wrapped
+        // CLR UDT value is available via the ProviderValue property (see SqlSpatialServices for the full conversion process from instances of
+        // DbGeography/DbGeometry to instances of the CLR SqlGeography/SqlGeometry UDTs)
+        // </summary>
         internal static object EnsureSqlParameterValue(object value)
         {
             if (value != null
@@ -578,10 +578,10 @@ namespace System.Data.Entity.SqlServer
             return value;
         }
 
-        /// <summary>
-        /// Determines SqlDbType for the given primitive type. Extracts facet
-        /// information as well.
-        /// </summary>
+        // <summary>
+        // Determines SqlDbType for the given primitive type. Extracts facet
+        // information as well.
+        // </summary>
         private static SqlDbType GetSqlDbType(
             TypeUsage type, bool isOutParam, SqlVersion version, out int? size, out byte? precision, out byte? scale, out string udtName)
         {
@@ -681,10 +681,10 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Determines preferred value for SqlParameter.Size. Returns null
-        /// where there is no preference.
-        /// </summary>
+        // <summary>
+        // Determines preferred value for SqlParameter.Size. Returns null
+        // where there is no preference.
+        // </summary>
         private static int? GetParameterSize(TypeUsage type, bool isOutParam)
         {
             Facet maxLengthFacet;
@@ -769,21 +769,21 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
-        /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null or the maximum available precision to avoid truncation (which can occur
-        /// for output parameters).
-        /// </summary>
+        // <summary>
+        // Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        // returns null or the maximum available precision to avoid truncation (which can occur
+        // for output parameters).
+        // </summary>
         private static byte? GetKatmaiDateTimePrecision(TypeUsage type, bool isOutParam)
         {
             var defaultIfUndefined = isOutParam ? 7 : (byte?)null;
             return GetParameterPrecision(type, defaultIfUndefined);
         }
 
-        /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null.
-        /// </summary>
+        // <summary>
+        // Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        // returns null.
+        // </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
             byte precision;
@@ -797,10 +797,10 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        /// returns null.
-        /// </summary>
+        // <summary>
+        // Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        // returns null.
+        // </summary>
         private static byte? GetScale(TypeUsage type)
         {
             byte scale;
@@ -814,9 +814,9 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Chooses the appropriate SqlDbType for the given string type.
-        /// </summary>
+        // <summary>
+        // Chooses the appropriate SqlDbType for the given string type.
+        // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private static SqlDbType GetStringDbType(TypeUsage type)
         {
@@ -852,9 +852,9 @@ namespace System.Data.Entity.SqlServer
             return dbType;
         }
 
-        /// <summary>
-        /// Chooses the appropriate SqlDbType for the given binary type.
-        /// </summary>
+        // <summary>
+        // Chooses the appropriate SqlDbType for the given binary type.
+        // </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {
             Debug.Assert(
@@ -999,9 +999,9 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Get the Ldf name given the Mdf full name
-        /// </summary>
+        // <summary>
+        // Get the Ldf name given the Mdf full name
+        // </summary>
         private static string GetLdfFileName(string dataFileName)
         {
             string logFileName;
@@ -1010,10 +1010,10 @@ namespace System.Data.Entity.SqlServer
             return logFileName;
         }
 
-        /// <summary>
-        /// Generates database name based on the given mdfFileName.
-        /// The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
-        /// </summary>
+        // <summary>
+        // Generates database name based on the given mdfFileName.
+        // The logic is replicated from System.Web.DataAccess.SqlConnectionHelper
+        // </summary>
         private static string GenerateDatabaseName(string mdfFileName)
         {
             var toUpperFileName = mdfFileName.ToUpper(CultureInfo.InvariantCulture);
@@ -1036,9 +1036,9 @@ namespace System.Data.Entity.SqlServer
             return databaseName;
         }
 
-        /// <summary>
-        /// Get the full mdf file name given the attachDBFile value from the connection string
-        /// </summary>
+        // <summary>
+        // Get the full mdf file name given the attachDBFile value from the connection string
+        // </summary>
         private static string GetMdfFileName(string attachDBFile)
         {
             DebugCheck.NotEmpty(attachDBFile);

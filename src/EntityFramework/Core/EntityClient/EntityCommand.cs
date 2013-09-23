@@ -140,10 +140,10 @@ namespace System.Data.Entity.Core.EntityClient
             _transaction = transaction;
         }
 
-        /// <summary>
-        /// Internal constructor used by EntityCommandDefinition
-        /// </summary>
-        /// <param name="commandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
+        // <summary>
+        // Internal constructor used by EntityCommandDefinition
+        // </summary>
+        // <param name="commandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
         internal EntityCommand(EntityCommandDefinition commandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
             : this(context, factory)
         {
@@ -165,14 +165,14 @@ namespace System.Data.Entity.Core.EntityClient
             _isCommandDefinitionBased = true;
         }
 
-        /// <summary>
-        /// Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This
-        /// constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
-        /// </summary>
-        /// <param name="connection"> The connection against which this EntityCommand should execute </param>
-        /// <param name="entityCommandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
-        /// <param name="context"> </param>
-        /// <param name="factory"> </param>
+        // <summary>
+        // Constructs a new EntityCommand given a EntityConnection and an EntityCommandDefition. This
+        // constructor is used by ObjectQueryExecution plan to execute an ObjectQuery.
+        // </summary>
+        // <param name="connection"> The connection against which this EntityCommand should execute </param>
+        // <param name="entityCommandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
+        // <param name="context"> </param>
+        // <param name="factory"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntityCommand(
             EntityConnection connection, EntityCommandDefinition entityCommandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
@@ -677,9 +677,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Clear out any "compile" state
-        /// </summary>
+        // <summary>
+        // Clear out any "compile" state
+        // </summary>
         internal virtual void Unprepare()
         {
             _commandDefinition = null;
@@ -698,10 +698,10 @@ namespace System.Data.Entity.Core.EntityClient
             InnerPrepare();
         }
 
-        /// <summary>
-        /// Creates a prepared version of this command without regard to the current connection state.
-        /// Called by both <see cref="Prepare" /> and <see cref="ToTraceString" />.
-        /// </summary>
+        // <summary>
+        // Creates a prepared version of this command without regard to the current connection state.
+        // Called by both <see cref="Prepare" /> and <see cref="ToTraceString" />.
+        // </summary>
         private void InnerPrepare()
         {
             // Unprepare if the parameters have changed to force a reprepare
@@ -714,9 +714,9 @@ namespace System.Data.Entity.Core.EntityClient
             Debug.Assert(null != _commandDefinition, "_commandDefinition cannot be null");
         }
 
-        /// <summary>
-        /// Ensures we have the command tree, either the user passed us the tree, or an eSQL statement that we need to parse
-        /// </summary>
+        // <summary>
+        // Ensures we have the command tree, either the user passed us the tree, or an eSQL statement that we need to parse
+        // </summary>
         private DbCommandTree MakeCommandTree()
         {
             // We must have a connection before we come here
@@ -791,11 +791,11 @@ namespace System.Data.Entity.Core.EntityClient
             return CommandHelper.FindFunctionImport(_connection.GetMetadataWorkspace(), containerName, functionImportName);
         }
 
-        /// <summary>
-        /// Get the command definition for the command; will construct one if there is not already
-        /// one constructed, which means it will prepare the command on the client.
-        /// </summary>
-        /// <returns> the command definition </returns>
+        // <summary>
+        // Get the command definition for the command; will construct one if there is not already
+        // one constructed, which means it will prepare the command on the client.
+        // </summary>
+        // <returns> the command definition </returns>
         internal virtual EntityCommandDefinition GetCommandDefinition()
         {
             var entityCommandDefinition = _commandDefinition;
@@ -816,11 +816,11 @@ namespace System.Data.Entity.Core.EntityClient
             return entityCommandDefinition;
         }
 
-        /// <summary>
-        /// Given an entity command, returns the associated entity transaction and performs validation
-        /// to ensure the transaction is consistent.
-        /// </summary>
-        /// <returns> Entity transaction </returns>
+        // <summary>
+        // Given an entity command, returns the associated entity transaction and performs validation
+        // to ensure the transaction is consistent.
+        // </summary>
+        // <returns> Entity transaction </returns>
         internal virtual EntityTransaction ValidateAndGetEntityTransaction()
         {
             // Check to make sure that either the command has no transaction associated with it, or it
@@ -854,11 +854,11 @@ namespace System.Data.Entity.Core.EntityClient
             return string.Empty;
         }
 
-        /// <summary>
-        /// Gets an entitycommanddefinition from cache if a match is found for the given cache key.
-        /// </summary>
-        /// <param name="entityCommandDefinition"> out param. returns the entitycommanddefinition for a given cache key </param>
-        /// <returns> true if a match is found in cache, false otherwise </returns>
+        // <summary>
+        // Gets an entitycommanddefinition from cache if a match is found for the given cache key.
+        // </summary>
+        // <param name="entityCommandDefinition"> out param. returns the entitycommanddefinition for a given cache key </param>
+        // <returns> true if a match is found in cache, false otherwise </returns>
         private bool TryGetEntityCommandDefinitionFromQueryCache(out EntityCommandDefinition entityCommandDefinition)
         {
             Debug.Assert(null != _connection, "Connection must not be null at this point");
@@ -895,11 +895,11 @@ namespace System.Data.Entity.Core.EntityClient
             return true;
         }
 
-        /// <summary>
-        /// Creates a commandDefinition for the command, using the options specified.
-        /// Note: This method must not be side-effecting of the command
-        /// </summary>
-        /// <returns> the command definition </returns>
+        // <summary>
+        // Creates a commandDefinition for the command, using the options specified.
+        // Note: This method must not be side-effecting of the command
+        // </summary>
+        // <returns> the command definition </returns>
         private EntityCommandDefinition CreateCommandDefinition()
         {
             // Do the work only if we don't have a command tree yet
@@ -927,9 +927,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Checking the integrity of this command object to see if it's ready to be prepared or executed
-        /// </summary>
+        // <summary>
+        // Checking the integrity of this command object to see if it's ready to be prepared or executed
+        // </summary>
         private void CheckIfReadyToPrepare()
         {
             // Check that we have a connection
@@ -953,9 +953,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Checking if the command is still tied to a data reader, if so, then the reader must still be open and we throw
-        /// </summary>
+        // <summary>
+        // Checking if the command is still tied to a data reader, if so, then the reader must still be open and we throw
+        // </summary>
         private void ThrowIfDataReaderIsOpen()
         {
             if (_dataReader != null)
@@ -964,10 +964,10 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter
-        /// collection given by the user.
-        /// </summary>
+        // <summary>
+        // Returns a dictionary of parameter name and parameter typeusage in s-space from the entity parameter
+        // collection given by the user.
+        // </summary>
         internal virtual Dictionary<string, TypeUsage> GetParameterTypeUsage()
         {
             Debug.Assert(null != _parameters, "_parameters must not be null");
@@ -1019,9 +1019,9 @@ namespace System.Data.Entity.Core.EntityClient
             return queryParams;
         }
 
-        /// <summary>
-        /// Call only when the reader associated with this command is closing. Copies parameter values where necessary.
-        /// </summary>
+        // <summary>
+        // Call only when the reader associated with this command is closing. Copies parameter values where necessary.
+        // </summary>
         internal virtual void NotifyDataReaderClosing()
         {
             // Disassociating the data reader with this command
@@ -1038,10 +1038,10 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Tells the EntityCommand about the underlying store provider command in case it needs to pull parameter values
-        /// when the reader is closing.
-        /// </summary>
+        // <summary>
+        // Tells the EntityCommand about the underlying store provider command in case it needs to pull parameter values
+        // when the reader is closing.
+        // </summary>
         internal virtual void SetStoreProviderCommand(DbCommand storeProviderCommand)
         {
             _storeProviderCommand = storeProviderCommand;
@@ -1057,14 +1057,14 @@ namespace System.Data.Entity.Core.EntityClient
             OnDataReaderClosing(sender, e);
         }
 
-        /// <summary>
-        /// Event raised when the reader is closing.
-        /// </summary>
+        // <summary>
+        // Event raised when the reader is closing.
+        // </summary>
         internal event EventHandler OnDataReaderClosing;
 
-        /// <summary>
-        /// Class for test purposes only, used to abstract the creation of <see cref="EntityDataReader" /> object.
-        /// </summary>
+        // <summary>
+        // Class for test purposes only, used to abstract the creation of <see cref="EntityDataReader" /> object.
+        // </summary>
         internal class EntityDataReaderFactory
         {
             internal virtual EntityDataReader CreateEntityDataReader(

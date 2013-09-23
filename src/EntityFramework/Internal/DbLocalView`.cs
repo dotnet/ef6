@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -12,13 +12,13 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// A local (in-memory) view of the entities in a DbSet.
-    /// This view contains Added entities and does not contain Deleted entities.  The view extends
-    /// from <see cref="ObservableCollection{T}" /> and hooks up events between the collection and the
-    /// state manager to keep the view in sync.
-    /// </summary>
-    /// <typeparam name="TEntity"> The type of the entity. </typeparam>
+    // <summary>
+    // A local (in-memory) view of the entities in a DbSet.
+    // This view contains Added entities and does not contain Deleted entities.  The view extends
+    // from <see cref="ObservableCollection{T}" /> and hooks up events between the collection and the
+    // state manager to keep the view in sync.
+    // </summary>
+    // <typeparam name="TEntity"> The type of the entity. </typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
         Justification = "Name is intentional")]
     internal class DbLocalView<TEntity> : ObservableCollection<TEntity>, ICollection<TEntity>, IList
@@ -41,11 +41,11 @@ namespace System.Data.Entity.Internal
             collection.Each(Add);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbLocalView{TEntity}" /> class for entities
-        /// of the given generic type in the given internal context.
-        /// </summary>
-        /// <param name="internalContext"> The internal context. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbLocalView{TEntity}" /> class for entities
+        // of the given generic type in the given internal context.
+        // </summary>
+        // <param name="internalContext"> The internal context. </param>
         internal DbLocalView(InternalContext internalContext)
         {
             DebugCheck.NotNull(internalContext);
@@ -74,10 +74,10 @@ namespace System.Data.Entity.Internal
 
         #region BindingList
 
-        /// <summary>
-        /// Returns a cached binding list implementation backed by this ObservableCollection.
-        /// </summary>
-        /// <value> The binding list. </value>
+        // <summary>
+        // Returns a cached binding list implementation backed by this ObservableCollection.
+        // </summary>
+        // <value> The binding list. </value>
         internal ObservableBackedBindingList<TEntity> BindingList
         {
             get { return _bindingList ?? (_bindingList = new ObservableBackedBindingList<TEntity>(this)); }
@@ -87,14 +87,14 @@ namespace System.Data.Entity.Internal
 
         #region Change handlers
 
-        /// <summary>
-        /// Called by the <see cref="ObservableCollection{T}" /> base class when the collection changes.
-        /// This method looks at the change made to the collection and reflects those changes in the
-        /// state manager.
-        /// </summary>
-        /// <param name="e">
-        /// The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data.
-        /// </param>
+        // <summary>
+        // Called by the <see cref="ObservableCollection{T}" /> base class when the collection changes.
+        // This method looks at the change made to the collection and reflects those changes in the
+        // state manager.
+        // </summary>
+        // <param name="e">
+        // The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs" /> instance containing the event data.
+        // </param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             Debug.Assert(
@@ -134,14 +134,14 @@ namespace System.Data.Entity.Internal
             base.OnCollectionChanged(e);
         }
 
-        /// <summary>
-        /// Handles events from the state manager for entities entering, leaving, or being marked as deleted.
-        /// The local view is kept in sync with these changes.
-        /// </summary>
-        /// <param name="sender"> The sender. </param>
-        /// <param name="e">
-        /// The <see cref="System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data.
-        /// </param>
+        // <summary>
+        // Handles events from the state manager for entities entering, leaving, or being marked as deleted.
+        // The local view is kept in sync with these changes.
+        // </summary>
+        // <param name="sender"> The sender. </param>
+        // <param name="e">
+        // The <see cref="System.ComponentModel.CollectionChangeEventArgs" /> instance containing the event data.
+        // </param>
         private void StateManagerChangedHandler(object sender, CollectionChangeEventArgs e)
         {
             Debug.Assert(
@@ -178,22 +178,22 @@ namespace System.Data.Entity.Internal
 
         #region Overrides to make ObservableCollection work better with sets of entities
 
-        /// <summary>
-        /// Clears the items by calling remove on each item such that we get Remove events that
-        /// can be tracked back to the state manager, rather than a single Reset event that we
-        /// cannot deal with.
-        /// </summary>
+        // <summary>
+        // Clears the items by calling remove on each item such that we get Remove events that
+        // can be tracked back to the state manager, rather than a single Reset event that we
+        // cannot deal with.
+        // </summary>
         protected override void ClearItems()
         {
             new List<TEntity>(this).Each(t => Remove(t));
         }
 
-        /// <summary>
-        /// Adds a contains check to the base implementation of InsertItem since we can't support
-        /// duplicate entities in the set.
-        /// </summary>
-        /// <param name="index"> The index at which to insert. </param>
-        /// <param name="item"> The item to insert. </param>
+        // <summary>
+        // Adds a contains check to the base implementation of InsertItem since we can't support
+        // duplicate entities in the set.
+        // </summary>
+        // <param name="index"> The index at which to insert. </param>
+        // <param name="item"> The item to insert. </param>
         protected override void InsertItem(int index, TEntity item)
         {
             if (!Contains(item))
@@ -202,13 +202,13 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Determines whether an entity is in the set.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if <paramref name="item"/> is found in the set; otherwise, false.
-        /// </returns>
-        /// <param name="item"> The entity to locate in the set. The value can be null.</param>
+        // <summary>
+        // Determines whether an entity is in the set.
+        // </summary>
+        // <returns>
+        // <c>true</c> if <paramref name="item"/> is found in the set; otherwise, false.
+        // </returns>
+        // <param name="item"> The entity to locate in the set. The value can be null.</param>
         public new virtual bool Contains(TEntity item)
         {
             IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
@@ -222,14 +222,14 @@ namespace System.Data.Entity.Internal
             return false;
         }
 
-        /// <summary>
-        /// Removes the first occurrence of a specific entity object from the set.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c> if <paramref name="item"/> is successfully removed; otherwise, false.
-        /// This method also returns <c>false</c> if <paramref name="item"/> was not found in the set.
-        /// </returns>
-        /// <param name="item"> The entity to remove from the set. The value can be null.</param>
+        // <summary>
+        // Removes the first occurrence of a specific entity object from the set.
+        // </summary>
+        // <returns>
+        // <c>true</c> if <paramref name="item"/> is successfully removed; otherwise, false.
+        // This method also returns <c>false</c> if <paramref name="item"/> was not found in the set.
+        // </returns>
+        // <param name="item"> The entity to remove from the set. The value can be null.</param>
         public new virtual bool Remove(TEntity item)
         {
             IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
@@ -252,19 +252,19 @@ namespace System.Data.Entity.Internal
             return true;
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         bool ICollection<TEntity>.Contains(TEntity item)
         {
             return Contains(item);
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         bool ICollection<TEntity>.Remove(TEntity item)
         {
             return Remove(item);
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         bool IList.Contains(object value)
         {
             if (IsCompatibleObject(value))
@@ -277,7 +277,7 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         void IList.Remove(object value)
         {
             if (IsCompatibleObject(value))

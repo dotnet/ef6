@@ -36,9 +36,9 @@ namespace System.Data.Entity.Core.Mapping
             _updateFunctionMapping = updateFunctionMapping;
         }
 
-        /// <summary>
-        /// Gets (specific) entity type these functions handle.
-        /// </summary>
+        // <summary>
+        // Gets (specific) entity type these functions handle.
+        // </summary>
         internal readonly EntityType EntityType;
 
         /// <summary>

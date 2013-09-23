@@ -16,14 +16,14 @@ namespace System.Data.Entity.Core.Common.Utils
 
         #region String Conversion - Unsorted
 
-        /// <summary>
-        /// Converts an enumeration of values to a delimited string list.
-        /// </summary>
-        /// <typeparam name="T"> Type of elements to convert. </typeparam>
-        /// <param name="values"> Values. If null, returns empty string. </param>
-        /// <param name="converter"> Converter. If null, uses default invariant culture converter. </param>
-        /// <param name="delimiter"> Delimiter. If null, uses default (', ') </param>
-        /// <returns> Delimited list of values in string. </returns>
+        // <summary>
+        // Converts an enumeration of values to a delimited string list.
+        // </summary>
+        // <typeparam name="T"> Type of elements to convert. </typeparam>
+        // <param name="values"> Values. If null, returns empty string. </param>
+        // <param name="converter"> Converter. If null, uses default invariant culture converter. </param>
+        // <param name="delimiter"> Delimiter. If null, uses default (', ') </param>
+        // <returns> Delimited list of values in string. </returns>
         internal static string BuildDelimitedList<T>(IEnumerable<T> values, ToStringConverter<T> converter, string delimiter)
         {
             if (null == values)

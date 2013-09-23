@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Defines an entity wrapper that wraps an entity with a null value.
-    /// This is a singleton class for which the same instance is always returned
-    /// any time a wrapper around a null entity is requested.  Objects of this
-    /// type are immutable and mutable to allow this behavior to work correctly.
-    /// </summary>
+    // <summary>
+    // Defines an entity wrapper that wraps an entity with a null value.
+    // This is a singleton class for which the same instance is always returned
+    // any time a wrapper around a null entity is requested.  Objects of this
+    // type are immutable and mutable to allow this behavior to work correctly.
+    // </summary>
     internal class NullEntityWrapper : IEntityWrapper
     {
         private static readonly IEntityWrapper _nullWrapper = new NullEntityWrapper();
@@ -21,9 +21,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
         }
 
-        /// <summary>
-        /// The single instance of this class.
-        /// </summary>
+        // <summary>
+        // The single instance of this class.
+        // </summary>
         internal static IEntityWrapper NullWrapper
         {
             get { return _nullWrapper; }

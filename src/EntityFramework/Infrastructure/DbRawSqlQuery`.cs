@@ -31,10 +31,10 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly InternalSqlQuery _internalQuery;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbRawSqlQuery{TElement}" /> class.
-        /// </summary>
-        /// <param name="internalQuery"> The internal query. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbRawSqlQuery{TElement}" /> class.
+        // </summary>
+        // <param name="internalQuery"> The internal query. </param>
         internal DbRawSqlQuery(InternalSqlQuery internalQuery)
         {
             _internalQuery = internalQuery;
@@ -1343,10 +1343,10 @@ namespace System.Data.Entity.Infrastructure
 
         #region Access to internal query
 
-        /// <summary>
-        /// Gets the internal query.
-        /// </summary>
-        /// <value> The internal query. </value>
+        // <summary>
+        // Gets the internal query.
+        // </summary>
+        // <value> The internal query. </value>
         internal InternalSqlQuery InternalQuery
         {
             get { return _internalQuery; }

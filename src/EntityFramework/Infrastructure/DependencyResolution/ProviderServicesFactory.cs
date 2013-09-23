@@ -7,9 +7,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Utilities;
     using System.Reflection;
 
-    /// <summary>
-    /// Responsible for obtaining <see cref="DbProviderServices" /> Singleton instances.
-    /// </summary>
+    // <summary>
+    // Responsible for obtaining <see cref="DbProviderServices" /> Singleton instances.
+    // </summary>
     internal class ProviderServicesFactory
     {
         public virtual DbProviderServices TryGetInstance(string providerTypeName)

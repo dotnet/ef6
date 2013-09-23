@@ -8,9 +8,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration" />.
-    /// </summary>
+    // <summary>
+    // Searches types (usually obtained from an assembly) for different kinds of <see cref="DbConfiguration" />.
+    // </summary>
     internal class DbConfigurationFinder
     {
         public virtual Type TryFindConfigurationType(Type contextType, IEnumerable<Type> typesToSearch = null)

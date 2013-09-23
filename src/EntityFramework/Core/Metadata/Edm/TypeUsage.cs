@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for TypeUsage taking in a type
-        /// </summary>
-        /// <param name="edmType"> The type which the TypeUsage object describes </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
+        // <summary>
+        // The constructor for TypeUsage taking in a type
+        // </summary>
+        // <param name="edmType"> The type which the TypeUsage object describes </param>
+        // <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
         private TypeUsage(EdmType edmType)
             : base(MetadataFlags.Readonly)
         {
@@ -39,12 +39,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // that won't work. We should consider a way to change this
         }
 
-        /// <summary>
-        /// The constructor for TypeUsage taking in a type and a collection of facets
-        /// </summary>
-        /// <param name="edmType"> The type which the TypeUsage object describes </param>
-        /// <param name="facets"> The replacement collection of facets </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
+        // <summary>
+        // The constructor for TypeUsage taking in a type and a collection of facets
+        // </summary>
+        // <param name="edmType"> The type which the TypeUsage object describes </param>
+        // <param name="facets"> The replacement collection of facets </param>
+        // <exception cref="System.ArgumentNullException">Thrown if edmType argument is null</exception>
         private TypeUsage(EdmType edmType, IEnumerable<Facet> facets)
             : this(edmType)
         {
@@ -53,21 +53,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _facets = facetCollection.AsReadOnlyMetadataCollection();
         }
 
-        /// <summary>
-        /// Factory method for creating a TypeUsage with specified EdmType
-        /// </summary>
-        /// <param name="edmType"> EdmType for which to create a type usage </param>
-        /// <returns> new TypeUsage instance with default facet values </returns>
+        // <summary>
+        // Factory method for creating a TypeUsage with specified EdmType
+        // </summary>
+        // <param name="edmType"> EdmType for which to create a type usage </param>
+        // <returns> new TypeUsage instance with default facet values </returns>
         internal static TypeUsage Create(EdmType edmType)
         {
             return new TypeUsage(edmType);
         }
 
-        /// <summary>
-        /// Factory method for creating a TypeUsage with specified EdmType
-        /// </summary>
-        /// <param name="edmType"> EdmType for which to create a type usage </param>
-        /// <returns> new TypeUsage instance with default facet values </returns>
+        // <summary>
+        // Factory method for creating a TypeUsage with specified EdmType
+        // </summary>
+        // <param name="edmType"> EdmType for which to create a type usage </param>
+        // <returns> new TypeUsage instance with default facet values </returns>
         internal static TypeUsage Create(EdmType edmType, FacetValues values)
         {
             return new TypeUsage(
@@ -446,12 +446,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private ReadOnlyMetadataCollection<Facet> _facets;
         private string _identity;
 
-        /// <summary>
-        /// Set of facets that should be included in identity for TypeUsage
-        /// </summary>
-        /// <remarks>
-        /// keep this sorted for binary searching
-        /// </remarks>
+        // <summary>
+        // Set of facets that should be included in identity for TypeUsage
+        // </summary>
+        // <remarks>
+        // keep this sorted for binary searching
+        // </remarks>
         private static readonly string[] _identityFacets = new[]
             {
                 DbProviderManifest.DefaultValueFacetName,
@@ -642,9 +642,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             base.SetReadOnly();
         }
 
-        /// <summary>
-        /// returns the identity of the type usage
-        /// </summary>
+        // <summary>
+        // returns the identity of the type usage
+        // </summary>
         internal override String Identity
         {
             get
@@ -757,10 +757,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return EdmType.ToString();
         }
 
-        /// <summary>
-        /// EdmEquals override verifying the equivalence of all facets. Two facets are considered
-        /// equal if they have the same name and the same value (Object.Equals)
-        /// </summary>
+        // <summary>
+        // EdmEquals override verifying the equivalence of all facets. Two facets are considered
+        // equal if they have the same name and the same value (Object.Equals)
+        // </summary>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

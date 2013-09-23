@@ -9,18 +9,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an RelationshipSet element.
-    /// </summary>
+    // <summary>
+    // Represents an RelationshipSet element.
+    // </summary>
     internal abstract class EntityContainerRelationshipSet : SchemaElement
     {
         private IRelationship _relationship;
         private string _unresolvedRelationshipTypeName;
 
-        /// <summary>
-        /// Constructs an EntityContainerRelationshipSet
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainerRelationshipSet
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerRelationshipSet(EntityContainer parentElement)
             : base(parentElement)
         {
@@ -45,10 +45,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         protected abstract void AddEnd(IRelationshipEnd relationshipEnd, EntityContainerEntitySet entitySet);
         internal abstract IEnumerable<EntityContainerRelationshipSetEnd> Ends { get; }
 
-        /// <summary>
-        /// The method that is called when an Association attribute is encountered.
-        /// </summary>
-        /// <param name="reader"> An XmlReader positioned at the Association attribute. </param>
+        // <summary>
+        // The method that is called when an Association attribute is encountered.
+        // </summary>
+        // <param name="reader"> An XmlReader positioned at the Association attribute. </param>
         protected void HandleRelationshipTypeNameAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
-        /// </summary>
+        // <summary>
+        // Used during the resolve phase to resolve the type name to the object that represents that type
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -99,9 +99,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Do all validation for this element here, and delegate to all sub elements
-        /// </summary>
+        // <summary>
+        // Do all validation for this element here, and delegate to all sub elements
+        // </summary>
         internal override void Validate()
         {
             base.Validate();
@@ -140,9 +140,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             //    looks like no count validation needs to be done
         }
 
-        /// <summary>
-        /// Adds any ends that need to be infered
-        /// </summary>
+        // <summary>
+        // Adds any ends that need to be infered
+        // </summary>
         private void InferEnds()
         {
             Debug.Assert(Relationship != null);
@@ -161,11 +161,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// For the given relationship end, find the EntityContainer Property that will work for the extent
-        /// </summary>
-        /// <param name="relationshipEnd"> The relationship end of the RelationshipSet that needs and extent </param>
-        /// <returns> Null is none could be found, or the EntityContainerProperty that is the valid extent </returns>
+        // <summary>
+        // For the given relationship end, find the EntityContainer Property that will work for the extent
+        // </summary>
+        // <param name="relationshipEnd"> The relationship end of the RelationshipSet that needs and extent </param>
+        // <returns> Null is none could be found, or the EntityContainerProperty that is the valid extent </returns>
         private EntityContainerEntitySet InferEntitySet(IRelationshipEnd relationshipEnd)
         {
             DebugCheck.NotNull(relationshipEnd);
@@ -201,9 +201,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return null;
         }
 
-        /// <summary>
-        /// The parent element as an EntityContainer
-        /// </summary>
+        // <summary>
+        // The parent element as an EntityContainer
+        // </summary>
         internal new EntityContainer ParentElement
         {
             get { return (EntityContainer)(base.ParentElement); }

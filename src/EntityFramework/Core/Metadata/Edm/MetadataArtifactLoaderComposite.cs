@@ -8,26 +8,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// This class represents a super-collection (a collection of collections)
-    /// of artifact resources. Typically, this "meta-collection" would contain
-    /// artifacts represented as individual files, directories (which are in
-    /// turn collections of files), and embedded resources.
-    /// </summary>
-    /// <remarks>
-    /// This is the root class for access to all loader objects.
-    /// </remarks>
+    // <summary>
+    // This class represents a super-collection (a collection of collections)
+    // of artifact resources. Typically, this "meta-collection" would contain
+    // artifacts represented as individual files, directories (which are in
+    // turn collections of files), and embedded resources.
+    // </summary>
+    // <remarks>
+    // This is the root class for access to all loader objects.
+    // </remarks>
     internal class MetadataArtifactLoaderComposite : MetadataArtifactLoader, IEnumerable<MetadataArtifactLoader>
     {
-        /// <summary>
-        /// The list of loaders aggregated by the composite.
-        /// </summary>
+        // <summary>
+        // The list of loaders aggregated by the composite.
+        // </summary>
         private readonly ReadOnlyCollection<MetadataArtifactLoader> _children;
 
-        /// <summary>
-        /// Constructor - loads all resources into the _children collection
-        /// </summary>
-        /// <param name="children"> A list of collections to aggregate </param>
+        // <summary>
+        // Constructor - loads all resources into the _children collection
+        // </summary>
+        // <param name="children"> A list of collections to aggregate </param>
         public MetadataArtifactLoaderComposite(List<MetadataArtifactLoader> children)
         {
             DebugCheck.NotNull(children);
@@ -44,10 +44,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return true; }
         }
 
-        /// <summary>
-        /// Get the list of paths to all artifacts in the original, unexpanded form
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get the list of paths to all artifacts in the original, unexpanded form
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetOriginalPaths()
         {
             var list = new List<string>();
@@ -60,12 +60,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace, in the original, unexpanded
-        /// form
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace, in the original, unexpanded
+        // form
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public override List<string> GetOriginalPaths(DataSpace spaceToGet)
         {
             var list = new List<string>();
@@ -78,11 +78,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
             var list = new List<string>();
@@ -95,10 +95,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get paths to all artifacts
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get paths to all artifacts
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetPaths()
         {
             var list = new List<string>();
@@ -111,10 +111,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Aggregates all resource streams from the _children collection
-        /// </summary>
-        /// <returns> A List of XmlReader objects; cannot be null </returns>
+        // <summary>
+        // Aggregates all resource streams from the _children collection
+        // </summary>
+        // <returns> A List of XmlReader objects; cannot be null </returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
             var list = new List<XmlReader>();
@@ -127,11 +127,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get XmlReaders for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
-        /// <returns> A List of XmlReader objects </returns>
+        // <summary>
+        // Get XmlReaders for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
+        // <returns> A List of XmlReader objects </returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
             var list = new List<XmlReader>();

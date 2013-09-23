@@ -12,11 +12,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Runtime.Versioning;
     using System.Xml;
 
-    /// <summary>
-    /// This is the base class for the resource metadata artifact loader; derived
-    /// classes encapsulate a single resource as well as collections of resources,
-    /// along the lines of the Composite pattern.
-    /// </summary>
+    // <summary>
+    // This is the base class for the resource metadata artifact loader; derived
+    // classes encapsulate a single resource as well as collections of resources,
+    // along the lines of the Composite pattern.
+    // </summary>
     internal abstract class MetadataArtifactLoader
     {
         protected static readonly string resPathPrefix = @"res://";
@@ -24,30 +24,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
         protected static readonly string altPathSeparator = @"\";
         protected static readonly string wildcard = @"*";
 
-        /// <summary>
-        /// Read-only access to the resource/file path
-        /// </summary>
+        // <summary>
+        // Read-only access to the resource/file path
+        // </summary>
         public abstract string Path { get; }
 
-        /// <summary>
-        /// This enum is used to indicate the level of extension check to be perfoemed
-        /// on a metadata URI.
-        /// </summary>
+        // <summary>
+        // This enum is used to indicate the level of extension check to be perfoemed
+        // on a metadata URI.
+        // </summary>
         public enum ExtensionCheck
         {
-            /// <summary>
-            /// Do not perform any extension check
-            /// </summary>
+            // <summary>
+            // Do not perform any extension check
+            // </summary>
             None = 0,
 
-            /// <summary>
-            /// Check the extension against a specific value
-            /// </summary>
+            // <summary>
+            // Check the extension against a specific value
+            // </summary>
             Specific,
 
-            /// <summary>
-            /// Check the extension against the set of acceptable extensions
-            /// </summary>
+            // <summary>
+            // Check the extension against the set of acceptable extensions
+            // </summary>
             All
         }
 
@@ -62,17 +62,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Create(path, extensionCheck, validExtension, uriRegistry, new DefaultAssemblyResolver());
         }
 
-        /// <summary>
-        /// Factory method to create an artifact loader. This is where an appropriate
-        /// subclass of MetadataArtifactLoader is created, depending on the kind of
-        /// resource it will encapsulate.
-        /// </summary>
-        /// <param name="path"> The path to the resource(s) to be loaded </param>
-        /// <param name="extensionCheck"> Any URI extension checks to perform </param>
-        /// <param name="validExtension"> A specific extension for an artifact resource </param>
-        /// <param name="uriRegistry"> The global registry of URIs </param>
-        /// <param name="resolver"> </param>
-        /// <returns> A concrete instance of an artifact loader. </returns>
+        // <summary>
+        // Factory method to create an artifact loader. This is where an appropriate
+        // subclass of MetadataArtifactLoader is created, depending on the kind of
+        // resource it will encapsulate.
+        // </summary>
+        // <param name="path"> The path to the resource(s) to be loaded </param>
+        // <param name="extensionCheck"> Any URI extension checks to perform </param>
+        // <param name="validExtension"> A specific extension for an artifact resource </param>
+        // <param name="uriRegistry"> The global registry of URIs </param>
+        // <param name="resolver"> </param>
+        // <returns> A concrete instance of an artifact loader. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For CheckArtifactExtension method call. But the path is not created in this method.
@@ -123,23 +123,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             throw new MetadataException(Strings.InvalidMetadataPath);
         }
 
-        /// <summary>
-        /// Factory method to create an aggregating artifact loader, one that encapsulates
-        /// multiple collections.
-        /// </summary>
-        /// <param name="allCollections"> The list of collections to be aggregated </param>
-        /// <returns> A concrete instance of an artifact loader. </returns>
+        // <summary>
+        // Factory method to create an aggregating artifact loader, one that encapsulates
+        // multiple collections.
+        // </summary>
+        // <param name="allCollections"> The list of collections to be aggregated </param>
+        // <returns> A concrete instance of an artifact loader. </returns>
         public static MetadataArtifactLoader Create(List<MetadataArtifactLoader> allCollections)
         {
             return new MetadataArtifactLoaderComposite(allCollections);
         }
 
-        /// <summary>
-        /// Helper method that wraps a list of file paths in MetadataArtifactLoader instances.
-        /// </summary>
-        /// <param name="filePaths"> The list of file paths to wrap </param>
-        /// <param name="validExtension"> An acceptable extension for the file </param>
-        /// <returns> An instance of MetadataArtifactLoader </returns>
+        // <summary>
+        // Helper method that wraps a list of file paths in MetadataArtifactLoader instances.
+        // </summary>
+        // <param name="filePaths"> The list of file paths to wrap </param>
+        // <param name="validExtension"> An acceptable extension for the file </param>
+        // <returns> An instance of MetadataArtifactLoader </returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file names which are a Machine resource
         [ResourceConsumption(ResourceScope.Machine)]
         //For CreateCompositeFromFilePaths method call. But the path is not created in this method.
@@ -195,12 +195,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Create(loaders);
         }
 
-        /// <summary>
-        /// Helper method that wraps a collection of XmlReader objects in MetadataArtifactLoader
-        /// instances.
-        /// </summary>
-        /// <param name="xmlReaders"> The collection of XmlReader objects to wrap </param>
-        /// <returns> An instance of MetadataArtifactLoader </returns>
+        // <summary>
+        // Helper method that wraps a collection of XmlReader objects in MetadataArtifactLoader
+        // instances.
+        // </summary>
+        // <param name="xmlReaders"> The collection of XmlReader objects to wrap </param>
+        // <returns> An instance of MetadataArtifactLoader </returns>
         public static MetadataArtifactLoader CreateCompositeFromXmlReaders(IEnumerable<XmlReader> xmlReaders)
         {
             var loaders = new List<MetadataArtifactLoader>();
@@ -218,10 +218,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Create(loaders);
         }
 
-        /// <summary>
-        /// If the path doesn't have the right extension, throw
-        /// </summary>
-        /// <param name="path"> The path to the resource </param>
+        // <summary>
+        // If the path doesn't have the right extension, throw
+        // </summary>
+        // <param name="path"> The path to the resource </param>
         internal static void CheckArtifactExtension(string path, string validExtension)
         {
             DebugCheck.NotEmpty(path);
@@ -234,21 +234,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Get paths to all artifacts, in the original, unexpanded form
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get paths to all artifacts, in the original, unexpanded form
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public virtual List<string> GetOriginalPaths()
         {
             return new List<string>(new[] { Path });
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace, in the original, unexpanded
-        /// form
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace, in the original, unexpanded
+        // form
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public virtual List<string> GetOriginalPaths(DataSpace spaceToGet)
         {
             var list = new List<string>();
@@ -264,17 +264,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return false; }
         }
 
-        /// <summary>
-        /// Get paths to all artifacts
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get paths to all artifacts
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public abstract List<string> GetPaths();
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public abstract List<string> GetPaths(DataSpace spaceToGet);
 
         public List<XmlReader> GetReaders()
@@ -282,36 +282,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return GetReaders(null);
         }
 
-        /// <summary>
-        /// Get XmlReaders for all resources
-        /// </summary>
-        /// <returns> A List of XmlReaders for all resources </returns>
+        // <summary>
+        // Get XmlReaders for all resources
+        // </summary>
+        // <returns> A List of XmlReaders for all resources </returns>
         public abstract List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary);
 
-        /// <summary>
-        /// Get XmlReaders for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of XmlReader object </returns>
+        // <summary>
+        // Get XmlReaders for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of XmlReader object </returns>
         public abstract List<XmlReader> CreateReaders(DataSpace spaceToGet);
 
-        /// <summary>
-        /// Helper method to determine whether a given path to a resource
-        /// starts with the "res://" prefix.
-        /// </summary>
-        /// <param name="path"> The resource path to test. </param>
-        /// <returns> true if the path represents a resource location </returns>
+        // <summary>
+        // Helper method to determine whether a given path to a resource
+        // starts with the "res://" prefix.
+        // </summary>
+        // <param name="path"> The resource path to test. </param>
+        // <returns> true if the path represents a resource location </returns>
         internal static bool PathStartsWithResPrefix(string path)
         {
             return path.StartsWith(resPathPrefix, StringComparison.OrdinalIgnoreCase);
         }
 
-        /// <summary>
-        /// Helper method to determine whether a resource identifies a C-Space
-        /// artifact.
-        /// </summary>
-        /// <param name="resource"> The resource path </param>
-        /// <returns> true if the resource identifies a C-Space artifact </returns>
+        // <summary>
+        // Helper method to determine whether a resource identifies a C-Space
+        // artifact.
+        // </summary>
+        // <param name="resource"> The resource path </param>
+        // <returns> true if the resource identifies a C-Space artifact </returns>
         protected static bool IsCSpaceArtifact(string resource)
         {
             DebugCheck.NotEmpty(resource);
@@ -324,12 +324,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// Helper method to determine whether a resource identifies an S-Space
-        /// artifact.
-        /// </summary>
-        /// <param name="resource"> The resource path </param>
-        /// <returns> true if the resource identifies an S-Space artifact </returns>
+        // <summary>
+        // Helper method to determine whether a resource identifies an S-Space
+        // artifact.
+        // </summary>
+        // <param name="resource"> The resource path </param>
+        // <returns> true if the resource identifies an S-Space artifact </returns>
         protected static bool IsSSpaceArtifact(string resource)
         {
             DebugCheck.NotEmpty(resource);
@@ -342,12 +342,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// Helper method to determine whether a resource identifies a CS-Space
-        /// artifact.
-        /// </summary>
-        /// <param name="resource"> The resource path </param>
-        /// <returns> true if the resource identifies a CS-Space artifact </returns>
+        // <summary>
+        // Helper method to determine whether a resource identifies a CS-Space
+        // artifact.
+        // </summary>
+        // <param name="resource"> The resource path </param>
+        // <returns> true if the resource identifies a CS-Space artifact </returns>
         protected static bool IsCSSpaceArtifact(string resource)
         {
             DebugCheck.NotEmpty(resource);
@@ -379,11 +379,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return resource.Substring(pos);
         }
 
-        /// <summary>
-        /// Helper method to determine whether a resource identifies a valid artifact.
-        /// </summary>
-        /// <param name="resource"> The resource path </param>
-        /// <returns> true if the resource identifies a valid artifact </returns>
+        // <summary>
+        // Helper method to determine whether a resource identifies a valid artifact.
+        // </summary>
+        // <param name="resource"> The resource path </param>
+        // <returns> true if the resource identifies a valid artifact </returns>
         internal static bool IsValidArtifact(string resource)
         {
             DebugCheck.NotEmpty(resource);
@@ -400,13 +400,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// This helper method accepts a resource URI and a value from the DataSpace enum
-        /// and determines whether the resource identifies an artifact of that DataSpace.
-        /// </summary>
-        /// <param name="resource"> A URI to an artifact resource </param>
-        /// <param name="dataSpace"> A DataSpace enum value </param>
-        /// <returns> true if the resource identifies an artifact of the specified DataSpace </returns>
+        // <summary>
+        // This helper method accepts a resource URI and a value from the DataSpace enum
+        // and determines whether the resource identifies an artifact of that DataSpace.
+        // </summary>
+        // <param name="resource"> A URI to an artifact resource </param>
+        // <param name="dataSpace"> A DataSpace enum value </param>
+        // <returns> true if the resource identifies an artifact of the specified DataSpace </returns>
         protected static bool IsArtifactOfDataSpace(string resource, DataSpace dataSpace)
         {
             if (dataSpace == DataSpace.CSpace)
@@ -428,15 +428,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return false;
         }
 
-        /// <summary>
-        /// Normalize a file path:
-        /// 1. Add backslashes if given a drive letter.
-        /// 2. Resolve the '~' macro in a Web/ASP.NET environment.
-        /// 3. Expand the |DataDirectory| macro, if found in the argument.
-        /// 4. Convert relative paths into absolute paths.
-        /// </summary>
-        /// <param name="path"> the path to normalize </param>
-        /// <returns> The normalized file path </returns>
+        // <summary>
+        // Normalize a file path:
+        // 1. Add backslashes if given a drive letter.
+        // 2. Resolve the '~' macro in a Web/ASP.NET environment.
+        // 3. Expand the |DataDirectory| macro, if found in the argument.
+        // 4. Convert relative paths into absolute paths.
+        // </summary>
+        // <param name="path"> the path to normalize </param>
+        // <returns> The normalized file path </returns>
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For Path.GetFullPath method call. But the path is not created in this method.
         internal static string NormalizeFilePaths(string path)

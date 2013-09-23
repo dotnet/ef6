@@ -9,49 +9,49 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Manages a list suitable for data binding.
-    /// </summary>
-    /// <typeparam name="TElement"> The type of elements in the binding list. </typeparam>
-    /// <remarks>
-    /// <para> This class provides an implementation of IBindingList that exposes a list of elements to be bound, provides a mechanism to change the membership of the list, and events to notify interested objects when the membership of the list is modified or an element in the list is modified. </para>
-    /// <para> ObjectView relies on an object that implements IObjectViewData to manage the binding list. See the documentation for IObjectViewData for details. </para>
-    /// </remarks>
+    // <summary>
+    // Manages a list suitable for data binding.
+    // </summary>
+    // <typeparam name="TElement"> The type of elements in the binding list. </typeparam>
+    // <remarks>
+    // <para> This class provides an implementation of IBindingList that exposes a list of elements to be bound, provides a mechanism to change the membership of the list, and events to notify interested objects when the membership of the list is modified or an element in the list is modified. </para>
+    // <para> ObjectView relies on an object that implements IObjectViewData to manage the binding list. See the documentation for IObjectViewData for details. </para>
+    // </remarks>
     internal class ObjectView<TElement> : IBindingList, ICancelAddNew, IObjectView
     {
-        /// <summary>
-        /// Specifies whether events handled from an underlying collection or individual bound item
-        /// should result in list change events being fired from this IBindingList.
-        /// <b>True</b> to prevent events from being fired from this IBindingList;
-        /// otherwise <b>false</b> to allow events to propogate.
-        /// </summary>
+        // <summary>
+        // Specifies whether events handled from an underlying collection or individual bound item
+        // should result in list change events being fired from this IBindingList.
+        // <b>True</b> to prevent events from being fired from this IBindingList;
+        // otherwise <b>false</b> to allow events to propogate.
+        // </summary>
         private bool _suspendEvent;
 
         // Delegate for IBindingList.ListChanged event.
         private ListChangedEventHandler onListChanged;
 
-        /// <summary>
-        /// Object that listens for underlying collection or individual bound item changes,
-        /// and notifies this object when they occur.
-        /// </summary>
+        // <summary>
+        // Object that listens for underlying collection or individual bound item changes,
+        // and notifies this object when they occur.
+        // </summary>
         private readonly ObjectViewListener _listener;
 
-        /// <summary>
-        /// Index of last item added via a call to IBindingList.AddNew.
-        /// </summary>
+        // <summary>
+        // Index of last item added via a call to IBindingList.AddNew.
+        // </summary>
         private int _addNewIndex = -1;
 
-        /// <summary>
-        /// Object that maintains the underlying bound list,
-        /// and specifies the operations allowed on that list.
-        /// </summary>
+        // <summary>
+        // Object that maintains the underlying bound list,
+        // and specifies the operations allowed on that list.
+        // </summary>
         private readonly IObjectViewData<TElement> _viewData;
 
-        /// <summary>
-        /// Construct a new instance of ObjectView using the supplied IObjectViewData and event data source.
-        /// </summary>
-        /// <param name="viewData"> Object that maintains the underlying bound list, and specifies the operations allowed on that list. </param>
-        /// <param name="eventDataSource"> Event source to "attach" to in order to listen to collection and item changes. </param>
+        // <summary>
+        // Construct a new instance of ObjectView using the supplied IObjectViewData and event data source.
+        // </summary>
+        // <param name="viewData"> Object that maintains the underlying bound list, and specifies the operations allowed on that list. </param>
+        // <param name="eventDataSource"> Event source to "attach" to in order to listen to collection and item changes. </param>
         internal ObjectView(IObjectViewData<TElement> viewData, object eventDataSource)
         {
             _viewData = viewData;
@@ -73,11 +73,11 @@ namespace System.Data.Entity.Core.Objects
 
         #region ICancelAddNew implementation
 
-        /// <summary>
-        /// If a new item has been added to the list, and <paramref name="itemIndex" /> is the position of that item,
-        /// remove it from the list and cancel the add operation.
-        /// </summary>
-        /// <param name="itemIndex"> Index of item to be removed as a result of the cancellation of a previous addition. </param>
+        // <summary>
+        // If a new item has been added to the list, and <paramref name="itemIndex" /> is the position of that item,
+        // remove it from the list and cancel the add operation.
+        // </summary>
+        // <param name="itemIndex"> Index of item to be removed as a result of the cancellation of a previous addition. </param>
         void ICancelAddNew.CancelNew(int itemIndex)
         {
             if (_addNewIndex >= 0
@@ -108,10 +108,10 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// Commit a new item to the binding list.
-        /// </summary>
-        /// <param name="itemIndex"> Index of item to be committed. This index must match the index of the item created by the last call to IBindindList.AddNew; otherwise this method is a nop. </param>
+        // <summary>
+        // Commit a new item to the binding list.
+        // </summary>
+        // <param name="itemIndex"> Index of item to be committed. This index must match the index of the item created by the last call to IBindindList.AddNew; otherwise this method is a nop. </param>
         void ICancelAddNew.EndNew(int itemIndex)
         {
             if (_addNewIndex >= 0
@@ -227,15 +227,15 @@ namespace System.Data.Entity.Core.Objects
 
         #endregion
 
-        /// <summary>
-        /// Get item at the specified index.
-        /// </summary>
-        /// <param name="index"> The zero-based index of the element to get or set. </param>
-        /// <remarks>
-        /// This strongly-typed indexer is used by the data binding in WebForms and ASP.NET
-        /// to determine the Type of elements in the bound list.
-        /// The list of properties available for binding can then be determined from that element Type.
-        /// </remarks>
+        // <summary>
+        // Get item at the specified index.
+        // </summary>
+        // <param name="index"> The zero-based index of the element to get or set. </param>
+        // <remarks>
+        // This strongly-typed indexer is used by the data binding in WebForms and ASP.NET
+        // to determine the Type of elements in the bound list.
+        // The list of properties available for binding can then be determined from that element Type.
+        // </remarks>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "value")]
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "index")]
         public TElement this[int index]
@@ -456,11 +456,11 @@ namespace System.Data.Entity.Core.Objects
             OnListChanged(ListChangedType.ItemChanged, index /*newIndex*/, index /*oldIndex*/);
         }
 
-        /// <summary>
-        /// Handle a change in the underlying collection bound by this ObjectView.
-        /// </summary>
-        /// <param name="sender"> The source of the event. </param>
-        /// <param name="e"> Event arguments that specify the type of modification and the associated item. </param>
+        // <summary>
+        // Handle a change in the underlying collection bound by this ObjectView.
+        // </summary>
+        // <param name="sender"> The source of the event. </param>
+        // <param name="e"> Event arguments that specify the type of modification and the associated item. </param>
         void IObjectView.CollectionChanged(object sender, CollectionChangeEventArgs e)
         {
             // If there is a pending edit of a new item in the bound list (indicated by _addNewIndex >= 0)

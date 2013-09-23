@@ -15,10 +15,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific
-    /// <see cref="ObjectQuery" />
-    /// </summary>
+    // <summary>
+    // Represents the 'compiled' form of all elements (query + result assembly) required to execute a specific
+    // <see cref="ObjectQuery" />
+    // </summary>
     internal class ObjectQueryExecutionPlan
     {
         internal readonly DbCommandDefinition CommandDefinition;
@@ -28,14 +28,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal readonly MergeOption MergeOption;
         internal readonly IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> CompiledQueryParameters;
 
-        /// <summary>
-        /// If the query yields entities from a single entity set, the value is stored here.
-        /// </summary>
+        // <summary>
+        // If the query yields entities from a single entity set, the value is stored here.
+        // </summary>
         private readonly EntitySet _singleEntitySet;
 
-        /// <summary>
-        /// For testing purposes only. For anything else call <see cref="ObjectQueryExecutionPlanFactory.Prepare" />.
-        /// </summary>
+        // <summary>
+        // For testing purposes only. For anything else call <see cref="ObjectQueryExecutionPlanFactory.Prepare" />.
+        // </summary>
         public ObjectQueryExecutionPlan(
             DbCommandDefinition commandDefinition, ShaperFactory resultShaperFactory, TypeUsage resultType, MergeOption mergeOption,
             bool streaming, EntitySet singleEntitySet, IEnumerable<Tuple<ObjectParameter, QueryParameterExpression>> compiledQueryParameters)

@@ -14,13 +14,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class NavigationProperty : EdmMember
     {
-        /// <summary>
-        /// Initializes a new instance of the navigation property class
-        /// </summary>
-        /// <param name="name"> name of the navigation property </param>
-        /// <param name="typeUsage"> TypeUsage object containing the navigation property type and its facets </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
+        // <summary>
+        // Initializes a new instance of the navigation property class
+        // </summary>
+        // <param name="name"> name of the navigation property </param>
+        // <param name="typeUsage"> TypeUsage object containing the navigation property type and its facets </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
+        // <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal NavigationProperty(string name, TypeUsage typeUsage)
             : base(name, typeUsage)
         {
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string RelationshipTypeNamePropertyName = "RelationshipType";
         internal const string ToEndMemberNamePropertyName = "ToEndMember";
 
-        /// <summary>
-        /// cached dynamic methods to access the property values from a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic methods to access the property values from a CLR instance
+        // </summary>
         private readonly NavigationPropertyAccessor _accessor;
 
         /// <summary>Gets the relationship type that this navigation property operates on.</summary>

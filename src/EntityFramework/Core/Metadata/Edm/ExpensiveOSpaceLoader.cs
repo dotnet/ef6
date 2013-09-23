@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Reflection;
 
-    /// <summary>
-    /// This class is used for doing reverse-lookup of metadata when only a CLR type is known.
-    /// It should never be used for POCO or proxy types, but may still be called for types that inherit
-    /// from EntityObject.
-    /// </summary>
+    // <summary>
+    // This class is used for doing reverse-lookup of metadata when only a CLR type is known.
+    // It should never be used for POCO or proxy types, but may still be called for types that inherit
+    // from EntityObject.
+    // </summary>
     internal class ExpensiveOSpaceLoader
     {
         public virtual Dictionary<string, EdmType> LoadTypesExpensiveWay(Assembly assembly)

@@ -6,11 +6,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Represents an "edge" in the join graph.
-    /// A JoinEdge is a directed equijoin between the left and the right table. The equijoin
-    /// columns are represented by the LeftVars and the RightVars properties
-    /// </summary>
+    // <summary>
+    // Represents an "edge" in the join graph.
+    // A JoinEdge is a directed equijoin between the left and the right table. The equijoin
+    // columns are represented by the LeftVars and the RightVars properties
+    // </summary>
     internal class JoinEdge
     {
         #region private state
@@ -25,15 +25,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region constructors
 
-        /// <summary>
-        /// Internal constructor
-        /// </summary>
-        /// <param name="left"> the left table </param>
-        /// <param name="right"> the right table </param>
-        /// <param name="joinNode"> the owner join node </param>
-        /// <param name="joinKind"> the Join Kind </param>
-        /// <param name="leftVars"> list of equijoin columns of the left table </param>
-        /// <param name="rightVars"> equijoin columns of the right table </param>
+        // <summary>
+        // Internal constructor
+        // </summary>
+        // <param name="left"> the left table </param>
+        // <param name="right"> the right table </param>
+        // <param name="joinNode"> the owner join node </param>
+        // <param name="joinKind"> the Join Kind </param>
+        // <param name="leftVars"> list of equijoin columns of the left table </param>
+        // <param name="rightVars"> equijoin columns of the right table </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private JoinEdge(
@@ -54,64 +54,64 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region public apis
 
-        /// <summary>
-        /// The left table
-        /// </summary>
+        // <summary>
+        // The left table
+        // </summary>
         internal AugmentedTableNode Left
         {
             get { return m_left; }
         }
 
-        /// <summary>
-        /// The right table of the join
-        /// </summary>
+        // <summary>
+        // The right table of the join
+        // </summary>
         internal AugmentedTableNode Right
         {
             get { return m_right; }
         }
 
-        /// <summary>
-        /// The underlying join node, may be null
-        /// </summary>
+        // <summary>
+        // The underlying join node, may be null
+        // </summary>
         internal AugmentedJoinNode JoinNode
         {
             get { return m_joinNode; }
         }
 
-        /// <summary>
-        /// The join kind
-        /// </summary>
+        // <summary>
+        // The join kind
+        // </summary>
         internal JoinKind JoinKind { get; set; }
 
-        /// <summary>
-        /// Equijoin columns of the left table
-        /// </summary>
+        // <summary>
+        // Equijoin columns of the left table
+        // </summary>
         internal List<ColumnVar> LeftVars
         {
             get { return m_leftVars; }
         }
 
-        /// <summary>
-        /// Equijoin columns of the right table
-        /// </summary>
+        // <summary>
+        // Equijoin columns of the right table
+        // </summary>
         internal List<ColumnVar> RightVars
         {
             get { return m_rightVars; }
         }
 
-        /// <summary>
-        /// Is this join edge useless?
-        /// </summary>
+        // <summary>
+        // Is this join edge useless?
+        // </summary>
         internal bool IsEliminated
         {
             get { return Left.IsEliminated || Right.IsEliminated; }
         }
 
-        /// <summary>
-        /// Gets a flag that indicates whether elimination is restricted for this join edge.
-        /// Returns true if this is not a transitive join edge and one or both participating
-        /// tables are not visible at the join node, otherwise false.
-        /// </summary>
+        // <summary>
+        // Gets a flag that indicates whether elimination is restricted for this join edge.
+        // Returns true if this is not a transitive join edge and one or both participating
+        // tables are not visible at the join node, otherwise false.
+        // </summary>
         internal bool RestrictedElimination
         {
             get
@@ -122,15 +122,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Factory method
-        /// </summary>
-        /// <param name="left"> left table </param>
-        /// <param name="right"> right table </param>
-        /// <param name="joinNode"> the owner join node </param>
-        /// <param name="leftVar"> equijoin column of the left table </param>
-        /// <param name="rightVar"> equijoin column of the right table </param>
-        /// <returns> the new join edge </returns>
+        // <summary>
+        // Factory method
+        // </summary>
+        // <param name="left"> left table </param>
+        // <param name="right"> right table </param>
+        // <param name="joinNode"> the owner join node </param>
+        // <param name="leftVar"> equijoin column of the left table </param>
+        // <param name="rightVar"> equijoin column of the right table </param>
+        // <returns> the new join edge </returns>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static JoinEdge CreateJoinEdge(
@@ -154,15 +154,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return joinEdge;
         }
 
-        /// <summary>
-        /// Creates a transitively generated join edge
-        /// </summary>
-        /// <param name="left"> the left table </param>
-        /// <param name="right"> the right table </param>
-        /// <param name="joinKind"> the join kind </param>
-        /// <param name="leftVars"> left equijoin vars </param>
-        /// <param name="rightVars"> right equijoin vars </param>
-        /// <returns> the join edge </returns>
+        // <summary>
+        // Creates a transitively generated join edge
+        // </summary>
+        // <param name="left"> the left table </param>
+        // <param name="right"> the right table </param>
+        // <param name="joinKind"> the join kind </param>
+        // <param name="leftVars"> left equijoin vars </param>
+        // <param name="rightVars"> right equijoin vars </param>
+        // <returns> the join edge </returns>
         internal static JoinEdge CreateTransitiveJoinEdge(
             AugmentedTableNode left, AugmentedTableNode right, JoinKind joinKind,
             List<ColumnVar> leftVars, List<ColumnVar> rightVars)
@@ -171,13 +171,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return joinEdge;
         }
 
-        /// <summary>
-        /// Add a new "equi-join" condition to this edge
-        /// </summary>
-        /// <param name="joinNode"> join node producing this condition </param>
-        /// <param name="leftVar"> the left-side column </param>
-        /// <param name="rightVar"> the right-side column </param>
-        /// <returns> true, if this condition can be added </returns>
+        // <summary>
+        // Add a new "equi-join" condition to this edge
+        // </summary>
+        // <param name="joinNode"> join node producing this condition </param>
+        // <param name="leftVar"> the left-side column </param>
+        // <param name="rightVar"> the right-side column </param>
+        // <returns> true, if this condition can be added </returns>
         internal bool AddCondition(AugmentedJoinNode joinNode, ColumnVar leftVar, ColumnVar rightVar)
         {
             if (joinNode != m_joinNode)

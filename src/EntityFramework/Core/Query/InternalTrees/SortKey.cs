@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    /// <summary>
-    /// A Sortkey
-    /// </summary>
+    // <summary>
+    // A Sortkey
+    // </summary>
     internal class SortKey
     {
         #region private state
@@ -27,22 +27,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// The Var being sorted
-        /// </summary>
+        // <summary>
+        // The Var being sorted
+        // </summary>
         internal Var Var { get; set; }
 
-        /// <summary>
-        /// Is this a sort asc, or a sort desc
-        /// </summary>
+        // <summary>
+        // Is this a sort asc, or a sort desc
+        // </summary>
         internal bool AscendingSort
         {
             get { return m_asc; }
         }
 
-        /// <summary>
-        /// An optional collation (only for string types)
-        /// </summary>
+        // <summary>
+        // An optional collation (only for string types)
+        // </summary>
         internal string Collation
         {
             get { return m_collation; }

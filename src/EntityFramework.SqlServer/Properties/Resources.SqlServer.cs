@@ -7,449 +7,449 @@ namespace System.Data.Entity.SqlServer.Resources
     using System.Resources;
     using System.Threading;
 
-    /// <summary>
-    /// Strongly-typed and parameterized string resources.
-    /// </summary>
+    // <summary>
+    // Strongly-typed and parameterized string resources.
+    // </summary>
     [GeneratedCode("Resources.SqlServer.tt", "1.0.0.0")]
     internal static class Strings
     {
-        /// <summary>
-        /// A string like "The argument '{0}' cannot be null, empty or contain only white space."
-        /// </summary>
+        // <summary>
+        // A string like "The argument '{0}' cannot be null, empty or contain only white space."
+        // </summary>
         internal static string ArgumentIsNullOrWhitespace(object p0)
         {
             return EntityRes.GetString(EntityRes.ArgumentIsNullOrWhitespace, p0);
         }
 
-        /// <summary>
-        /// A string like "The specified DbGeography value could not be converted to a SQL Server compatible value."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbGeography value could not be converted to a SQL Server compatible value."
+        // </summary>
         internal static string SqlProvider_GeographyValueNotSqlCompatible
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_GeographyValueNotSqlCompatible); }
         }
 
-        /// <summary>
-        /// A string like "The specified DbGeometry value could not be converted to a SQL Server compatible value."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbGeometry value could not be converted to a SQL Server compatible value."
+        // </summary>
         internal static string SqlProvider_GeometryValueNotSqlCompatible
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_GeometryValueNotSqlCompatible); }
         }
 
-        /// <summary>
-        /// A string like "The provider returned null for the informationType '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "The provider returned null for the informationType '{0}'."
+        // </summary>
         internal static string ProviderReturnedNullForGetDbInformation(object p0)
         {
             return EntityRes.GetString(EntityRes.ProviderReturnedNullForGetDbInformation, p0);
         }
 
-        /// <summary>
-        /// A string like "The underlying provider does not support the type '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "The underlying provider does not support the type '{0}'."
+        // </summary>
         internal static string ProviderDoesNotSupportType(object p0)
         {
             return EntityRes.GetString(EntityRes.ProviderDoesNotSupportType, p0);
         }
 
-        /// <summary>
-        /// A string like "There is no store type corresponding to the conceptual side type '{0}' of primitive type '{1}'."
-        /// </summary>
+        // <summary>
+        // A string like "There is no store type corresponding to the conceptual side type '{0}' of primitive type '{1}'."
+        // </summary>
         internal static string NoStoreTypeForEdmType(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.NoStoreTypeForEdmType, p0, p1);
         }
 
-        /// <summary>
-        /// A string like "The provider manifest given is not of type '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "The provider manifest given is not of type '{0}'."
+        // </summary>
         internal static string Mapping_Provider_WrongManifestType(object p0)
         {
             return EntityRes.GetString(EntityRes.Mapping_Provider_WrongManifestType, p0);
         }
 
-        /// <summary>
-        /// A string like "Internal .NET Framework Data Provider error {0}."
-        /// </summary>
+        // <summary>
+        // A string like "Internal .NET Framework Data Provider error {0}."
+        // </summary>
         internal static string ADP_InternalProviderError(object p0)
         {
             return EntityRes.GetString(EntityRes.ADP_InternalProviderError, p0);
         }
 
-        /// <summary>
-        /// A string like "Could not determine storage version; a valid storage connection or a version hint is required."
-        /// </summary>
+        // <summary>
+        // A string like "Could not determine storage version; a valid storage connection or a version hint is required."
+        // </summary>
         internal static string UnableToDetermineStoreVersion
         {
             get { return EntityRes.GetString(EntityRes.UnableToDetermineStoreVersion); }
         }
 
-        /// <summary>
-        /// A string like "Spatial readers can only be produced from readers of type SqlDataReader. A reader of type {0} was provided."
-        /// </summary>
+        // <summary>
+        // A string like "Spatial readers can only be produced from readers of type SqlDataReader. A reader of type {0} was provided."
+        // </summary>
         internal static string SqlProvider_NeedSqlDataReader(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlProvider_NeedSqlDataReader, p0);
         }
 
-        /// <summary>
-        /// A string like "Spatial types and functions are only supported by SQL Server 2008 or later."
-        /// </summary>
+        // <summary>
+        // A string like "Spatial types and functions are only supported by SQL Server 2008 or later."
+        // </summary>
         internal static string SqlProvider_Sql2008RequiredForSpatial
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_Sql2008RequiredForSpatial); }
         }
 
-        /// <summary>
-        /// A string like "Spatial types and functions are not available for this provider because the assembly 'Microsoft.SqlServer.Types' version 10 or higher could not be found. "
-        /// </summary>
+        // <summary>
+        // A string like "Spatial types and functions are not available for this provider because the assembly 'Microsoft.SqlServer.Types' version 10 or higher could not be found. "
+        // </summary>
         internal static string SqlProvider_SqlTypesAssemblyNotFound
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_SqlTypesAssemblyNotFound); }
         }
 
-        /// <summary>
-        /// A string like "The database creation succeeded, but the creation of the database objects failed. The consequent attempt to drop the database also failed. See InnerException for details."
-        /// </summary>
+        // <summary>
+        // A string like "The database creation succeeded, but the creation of the database objects failed. The consequent attempt to drop the database also failed. See InnerException for details."
+        // </summary>
         internal static string SqlProvider_IncompleteCreateDatabase
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_IncompleteCreateDatabase); }
         }
 
-        /// <summary>
-        /// A string like "See InnerExceptions for details."
-        /// </summary>
+        // <summary>
+        // A string like "See InnerExceptions for details."
+        // </summary>
         internal static string SqlProvider_IncompleteCreateDatabaseAggregate
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_IncompleteCreateDatabaseAggregate); }
         }
 
-        /// <summary>
-        /// A string like "Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFileName."
-        /// </summary>
+        // <summary>
+        // A string like "Unable to complete operation. The supplied SqlConnection does not specify an initial catalog or AttachDBFileName."
+        // </summary>
         internal static string SqlProvider_DdlGeneration_MissingInitialCatalog
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_MissingInitialCatalog); }
         }
 
-        /// <summary>
-        /// A string like "Unable to delete the database. There is no database that corresponds to the given AttachDBFileName."
-        /// </summary>
+        // <summary>
+        // A string like "Unable to delete the database. There is no database that corresponds to the given AttachDBFileName."
+        // </summary>
         internal static string SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_CannotDeleteDatabaseNoInitialCatalog); }
         }
 
-        /// <summary>
-        /// A string like "A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFileName."
-        /// </summary>
+        // <summary>
+        // A string like "A connection to the specified database could not be opened. See InnerException for details. However, there is a database registered with the server that corresponds to the given AttachDbFileName."
+        // </summary>
         internal static string SqlProvider_DdlGeneration_CannotTellIfDatabaseExists
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_DdlGeneration_CannotTellIfDatabaseExists); }
         }
 
-        /// <summary>
-        /// A string like "This operation requires a connection to the 'master' database. Unable to create a connection to the 'master' database because the original database connection has been opened and credentials have been removed from the connection string. Supply an unopened connection."
-        /// </summary>
+        // <summary>
+        // A string like "This operation requires a connection to the 'master' database. Unable to create a connection to the 'master' database because the original database connection has been opened and credentials have been removed from the connection string. Supply an unopened connection."
+        // </summary>
         internal static string SqlProvider_CredentialsMissingForMasterConnection
         {
             get { return EntityRes.GetString(EntityRes.SqlProvider_CredentialsMissingForMasterConnection); }
         }
 
-        /// <summary>
-        /// A string like "Expected a geography value, found a value of type {0}."
-        /// </summary>
+        // <summary>
+        // A string like "Expected a geography value, found a value of type {0}."
+        // </summary>
         internal static string SqlProvider_InvalidGeographyColumn(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlProvider_InvalidGeographyColumn, p0);
         }
 
-        /// <summary>
-        /// A string like "Expected a geometry value, found a value of type {0}."
-        /// </summary>
+        // <summary>
+        // A string like "Expected a geometry value, found a value of type {0}."
+        // </summary>
         internal static string SqlProvider_InvalidGeometryColumn(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlProvider_InvalidGeometryColumn, p0);
         }
 
-        /// <summary>
-        /// A string like "The connection is not of type '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "The connection is not of type '{0}'."
+        // </summary>
         internal static string Mapping_Provider_WrongConnectionType(object p0)
         {
             return EntityRes.GetString(EntityRes.Mapping_Provider_WrongConnectionType, p0);
         }
 
-        /// <summary>
-        /// A string like "Store-generated keys are only supported for identity columns. More than one key column is marked as server generated in table '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "Store-generated keys are only supported for identity columns. More than one key column is marked as server generated in table '{0}'."
+        // </summary>
         internal static string Update_NotSupportedServerGenKey(object p0)
         {
             return EntityRes.GetString(EntityRes.Update_NotSupportedServerGenKey, p0);
         }
 
-        /// <summary>
-        /// A string like "Store-generated keys are only supported for identity columns. Key column '{0}' has type '{1}', which is not a valid type for an identity column."
-        /// </summary>
+        // <summary>
+        // A string like "Store-generated keys are only supported for identity columns. Key column '{0}' has type '{1}', which is not a valid type for an identity column."
+        // </summary>
         internal static string Update_NotSupportedIdentityType(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.Update_NotSupportedIdentityType, p0, p1);
         }
 
-        /// <summary>
-        /// A string like "Unable to update the EntitySet '{0}' because it has a DefiningQuery and no <{1}> element exists in the <{2}> element to support the current operation."
-        /// </summary>
+        // <summary>
+        // A string like "Unable to update the EntitySet '{0}' because it has a DefiningQuery and no <{1}> element exists in the <{2}> element to support the current operation."
+        // </summary>
         internal static string Update_SqlEntitySetWithoutDmlFunctions(object p0, object p1, object p2)
         {
             return EntityRes.GetString(EntityRes.Update_SqlEntitySetWithoutDmlFunctions, p0, p1, p2);
         }
 
-        /// <summary>
-        /// A string like "The expression '{0}' is of an unsupported type. "
-        /// </summary>
+        // <summary>
+        // A string like "The expression '{0}' is of an unsupported type. "
+        // </summary>
         internal static string Cqt_General_UnsupportedExpression(object p0)
         {
             return EntityRes.GetString(EntityRes.Cqt_General_UnsupportedExpression, p0);
         }
 
-        /// <summary>
-        /// A string like "The execution of this query requires the APPLY operator, which is not supported in versions of SQL Server earlier than SQL Server 2005."
-        /// </summary>
+        // <summary>
+        // A string like "The execution of this query requires the APPLY operator, which is not supported in versions of SQL Server earlier than SQL Server 2005."
+        // </summary>
         internal static string SqlGen_ApplyNotSupportedOnSql8
         {
             get { return EntityRes.GetString(EntityRes.SqlGen_ApplyNotSupportedOnSql8); }
         }
 
-        /// <summary>
-        /// A string like "Functions listed in the provider manifest that are attributed as NiladicFunction='true' cannot have parameter declarations."
-        /// </summary>
+        // <summary>
+        // A string like "Functions listed in the provider manifest that are attributed as NiladicFunction='true' cannot have parameter declarations."
+        // </summary>
         internal static string SqlGen_NiladicFunctionsCannotHaveParameters
         {
             get { return EntityRes.GetString(EntityRes.SqlGen_NiladicFunctionsCannotHaveParameters); }
         }
 
-        /// <summary>
-        /// A string like "The DATEPART argument to the '{0}.{1}' function must be a literal string."
-        /// </summary>
+        // <summary>
+        // A string like "The DATEPART argument to the '{0}.{1}' function must be a literal string."
+        // </summary>
         internal static string SqlGen_InvalidDatePartArgumentExpression(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.SqlGen_InvalidDatePartArgumentExpression, p0, p1);
         }
 
-        /// <summary>
-        /// A string like "'{0}' is not a valid value for the DATEPART argument in the '{1}.{2}' function."
-        /// </summary>
+        // <summary>
+        // A string like "'{0}' is not a valid value for the DATEPART argument in the '{1}.{2}' function."
+        // </summary>
         internal static string SqlGen_InvalidDatePartArgumentValue(object p0, object p1, object p2)
         {
             return EntityRes.GetString(EntityRes.SqlGen_InvalidDatePartArgumentValue, p0, p1, p2);
         }
 
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of NaN are not supported by SQL Server."
-        /// </summary>
+        // <summary>
+        // A string like "Constant expressions of type {0} with a value of NaN are not supported by SQL Server."
+        // </summary>
         internal static string SqlGen_TypedNaNNotSupported(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlGen_TypedNaNNotSupported, p0);
         }
 
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of {1}.PositiveInfinity are not supported by SQL Server."
-        /// </summary>
+        // <summary>
+        // A string like "Constant expressions of type {0} with a value of {1}.PositiveInfinity are not supported by SQL Server."
+        // </summary>
         internal static string SqlGen_TypedPositiveInfinityNotSupported(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.SqlGen_TypedPositiveInfinityNotSupported, p0, p1);
         }
 
-        /// <summary>
-        /// A string like "Constant expressions of type {0} with a value of {1}.NegativeInfinity are not supported by SQL Server."
-        /// </summary>
+        // <summary>
+        // A string like "Constant expressions of type {0} with a value of {1}.NegativeInfinity are not supported by SQL Server."
+        // </summary>
         internal static string SqlGen_TypedNegativeInfinityNotSupported(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.SqlGen_TypedNegativeInfinityNotSupported, p0, p1);
         }
 
-        /// <summary>
-        /// A string like "There is no store type that maps to the EDM type '{0}' on versions of SQL Server earlier than SQL Server 2008."
-        /// </summary>
+        // <summary>
+        // A string like "There is no store type that maps to the EDM type '{0}' on versions of SQL Server earlier than SQL Server 2008."
+        // </summary>
         internal static string SqlGen_PrimitiveTypeNotSupportedPriorSql10(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlGen_PrimitiveTypeNotSupportedPriorSql10, p0);
         }
 
-        /// <summary>
-        /// A string like "The EDM function '{0}' is not supported on versions of SQL Server earlier than SQL Server 2008."
-        /// </summary>
+        // <summary>
+        // A string like "The EDM function '{0}' is not supported on versions of SQL Server earlier than SQL Server 2008."
+        // </summary>
         internal static string SqlGen_CanonicalFunctionNotSupportedPriorSql10(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlGen_CanonicalFunctionNotSupportedPriorSql10, p0);
         }
 
-        /// <summary>
-        /// A string like "Parameters as arguments to a TOP sub-clause and a LIMIT sub-clause in a query, or a LimitExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
-        /// </summary>
+        // <summary>
+        // A string like "Parameters as arguments to a TOP sub-clause and a LIMIT sub-clause in a query, or a LimitExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
+        // </summary>
         internal static string SqlGen_ParameterForLimitNotSupportedOnSql8
         {
             get { return EntityRes.GetString(EntityRes.SqlGen_ParameterForLimitNotSupportedOnSql8); }
         }
 
-        /// <summary>
-        /// A string like "Parameters as arguments to a SKIP sub-clause in a query, or a SkipExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
-        /// </summary>
+        // <summary>
+        // A string like "Parameters as arguments to a SKIP sub-clause in a query, or a SkipExpression in a command tree, are not supported in versions of SQL Server earlier than SQL Server 2005."
+        // </summary>
         internal static string SqlGen_ParameterForSkipNotSupportedOnSql8
         {
             get { return EntityRes.GetString(EntityRes.SqlGen_ParameterForSkipNotSupportedOnSql8); }
         }
 
-        /// <summary>
-        /// A string like "The specified DbWellKnownGeographyValue does not contain either Well-Known Text or Well-Known Binary."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbWellKnownGeographyValue does not contain either Well-Known Text or Well-Known Binary."
+        // </summary>
         internal static string Spatial_WellKnownGeographyValueNotValid
         {
             get { return EntityRes.GetString(EntityRes.Spatial_WellKnownGeographyValueNotValid); }
         }
 
-        /// <summary>
-        /// A string like "The specified DbWellKnownGeometryValue does not contain either Well-Known Text or Well-Known Binary."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbWellKnownGeometryValue does not contain either Well-Known Text or Well-Known Binary."
+        // </summary>
         internal static string Spatial_WellKnownGeometryValueNotValid
         {
             get { return EntityRes.GetString(EntityRes.Spatial_WellKnownGeometryValueNotValid); }
         }
 
-        /// <summary>
-        /// A string like "The specified provider value is not compatible with this spatial services implementation. A value is required of type '{0}'."
-        /// </summary>
+        // <summary>
+        // A string like "The specified provider value is not compatible with this spatial services implementation. A value is required of type '{0}'."
+        // </summary>
         internal static string SqlSpatialServices_ProviderValueNotSqlType(object p0)
         {
             return EntityRes.GetString(EntityRes.SqlSpatialServices_ProviderValueNotSqlType, p0);
         }
 
-        /// <summary>
-        /// A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeography value."
-        /// </summary>
+        // <summary>
+        // A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeography value."
+        // </summary>
         internal static string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid
         {
             get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoSrid); }
         }
 
-        /// <summary>
-        /// A string like "The specified DbGeography value did not provide either Well-Known Binary or Well-Known Text."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbGeography value did not provide either Well-Known Binary or Well-Known Text."
+        // </summary>
         internal static string SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt
         {
             get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt); }
         }
 
-        /// <summary>
-        /// A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeometry value."
-        /// </summary>
+        // <summary>
+        // A string like "A Spatial Reference System Identifier (SRID) value could not be retrieved from the specified DbGeometry value."
+        // </summary>
         internal static string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid
         {
             get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid); }
         }
 
-        /// <summary>
-        /// A string like "The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text."
-        /// </summary>
+        // <summary>
+        // A string like "The specified DbGeometry value did not provide either Well-Known Binary or Well-Known Text."
+        // </summary>
         internal static string SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt
         {
             get { return EntityRes.GetString(EntityRes.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt); }
         }
 
-        /// <summary>
-        /// A string like "An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy."
-        /// </summary>
+        // <summary>
+        // A string like "An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy."
+        // </summary>
         internal static string TransientExceptionDetected
         {
             get { return EntityRes.GetString(EntityRes.TransientExceptionDetected); }
         }
 
-        /// <summary>
-        /// A string like "This function can only be invoked from LINQ to Entities."
-        /// </summary>
+        // <summary>
+        // A string like "This function can only be invoked from LINQ to Entities."
+        // </summary>
         internal static string ELinq_DbFunctionDirectCall
         {
             get { return EntityRes.GetString(EntityRes.ELinq_DbFunctionDirectCall); }
         }
 
-        /// <summary>
-        /// A string like "AutomaticMigration"
-        /// </summary>
+        // <summary>
+        // A string like "AutomaticMigration"
+        // </summary>
         internal static string AutomaticMigration
         {
             get { return EntityRes.GetString(EntityRes.AutomaticMigration); }
         }
 
-        /// <summary>
-        /// A string like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
-        /// </summary>
+        // <summary>
+        // A string like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
+        // </summary>
         internal static string InvalidDatabaseName(object p0)
         {
             return EntityRes.GetString(EntityRes.InvalidDatabaseName, p0);
         }
 
-        /// <summary>
-        /// A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
-        /// </summary>
+        // <summary>
+        // A string like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        // </summary>
         internal static string SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
         {
             return EntityRes.GetString(EntityRes.SqlServerMigrationSqlGenerator_UnknownOperation, p0, p1);
         }
     }
 
-    /// <summary>
-    /// Strongly-typed and parameterized exception factory.
-    /// </summary>
+    // <summary>
+    // Strongly-typed and parameterized exception factory.
+    // </summary>
     [GeneratedCode("Resources.SqlServer.tt", "1.0.0.0")]
     internal static class Error
     {
         
-        /// <summary>
-        /// ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
-        /// </summary>
+        // <summary>
+        // ArgumentException with message like "The database name '{0}' is invalid. Database names must be of the form [<schema_name>.]<object_name>."
+        // </summary>
         internal static Exception InvalidDatabaseName(object p0)
         {
             return new ArgumentException(Strings.InvalidDatabaseName(p0));
         }
         
-        /// <summary>
-        /// InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
-        /// </summary>
+        // <summary>
+        // InvalidOperationException with message like "The current migration SQL generator ({0}) is unable to generate SQL for operations of type '{1}'. Call SetSqlGenerator on your migrations configuration class to use a different SQL generator. To create a custom SQL generator that can handle this type of operation, add a new class that derives from {0} and override Generate(MigrationOperation)."
+        // </summary>
         internal static Exception SqlServerMigrationSqlGenerator_UnknownOperation(object p0, object p1)
         {
             return new InvalidOperationException(Strings.SqlServerMigrationSqlGenerator_UnknownOperation(p0, p1));
         }
-        /// <summary>
-        /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
-        /// </summary>
+        // <summary>
+        // The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+        // </summary>
         internal static Exception ArgumentOutOfRange(string paramName)
         {
             return new ArgumentOutOfRangeException(paramName);
         }
 
-        /// <summary>
-        /// The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
-        /// </summary>
+        // <summary>
+        // The exception that is thrown when the author has yet to implement the logic at this point in the program. This can act as an exception based TODO tag.
+        // </summary>
         internal static Exception NotImplemented()
         {
             return new NotImplementedException();
         }
 
-        /// <summary>
-        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to
-        /// read, seek, or write to a stream that does not support the invoked functionality.
-        /// </summary>
+        // <summary>
+        // The exception that is thrown when an invoked method is not supported, or when there is an attempt to
+        // read, seek, or write to a stream that does not support the invoked functionality.
+        // </summary>
         internal static Exception NotSupported()
         {
             return new NotSupportedException();
         }
     }
 
-    /// <summary>
-    /// AutoGenerated resource class. Usage:
-    /// string s = EntityRes.GetString(EntityRes.MyIdenfitier);
-    /// </summary>
+    // <summary>
+    // AutoGenerated resource class. Usage:
+    // string s = EntityRes.GetString(EntityRes.MyIdenfitier);
+    // </summary>
     [GeneratedCode("Resources.SqlServer.tt", "1.0.0.0")]
     internal sealed class EntityRes
     {

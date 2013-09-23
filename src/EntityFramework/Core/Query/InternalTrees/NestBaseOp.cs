@@ -4,34 +4,34 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Base class for Nest operations
-    /// </summary>
+    // <summary>
+    // Base class for Nest operations
+    // </summary>
     internal abstract class NestBaseOp : PhysicalOp
     {
         #region publics
 
-        /// <summary>
-        /// (Ordered) list of prefix sort keys (defines ordering of results)
-        /// </summary>
+        // <summary>
+        // (Ordered) list of prefix sort keys (defines ordering of results)
+        // </summary>
         internal List<SortKey> PrefixSortKeys
         {
             get { return m_prefixSortKeys; }
         }
 
-        /// <summary>
-        /// Outputs of the NestOp. Includes the Keys obviously, and one Var for each of
-        /// the collections produced. In addition, this may also include non-key vars
-        /// from the outer row
-        /// </summary>
+        // <summary>
+        // Outputs of the NestOp. Includes the Keys obviously, and one Var for each of
+        // the collections produced. In addition, this may also include non-key vars
+        // from the outer row
+        // </summary>
         internal VarVec Outputs
         {
             get { return m_outputs; }
         }
 
-        /// <summary>
-        /// Information about each collection managed by the NestOp
-        /// </summary>
+        // <summary>
+        // Information about each collection managed by the NestOp
+        // </summary>
         internal List<CollectionInfo> CollectionInfo
         {
             get { return m_collectionInfoList; }

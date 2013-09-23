@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.ELinq
 {
@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq;
     using System.Linq.Expressions;
 
-    /// <summary>
-    /// Models a compiled Linq to Entities ObjectQuery
-    /// </summary>
+    // <summary>
+    // Models a compiled Linq to Entities ObjectQuery
+    // </summary>
     internal sealed class CompiledELinqQueryState : ELinqQueryState
     {
         private readonly Guid _cacheToken;
@@ -23,16 +23,16 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private CompiledQueryCacheEntry _cacheEntry;
         private readonly ObjectQueryExecutionPlanFactory _objectQueryExecutionPlanFactory;
 
-        /// <summary>
-        /// Creates a new compiled query state instance
-        /// </summary>
-        /// <param name="elementType"> The element type of the new instance (the 'T' of the ObjectQuery &lt; T &gt; that the new state instance will back)" </param>
-        /// <param name="context"> The object context with which the new instance should be associated </param>
-        /// <param name="lambda">
-        /// The compiled query definition, as a <see cref="LambdaExpression" />
-        /// </param>
-        /// <param name="cacheToken"> The cache token to use when retrieving or storing the new instance's execution plan in the query cache </param>
-        /// <param name="parameterValues"> The values passed into the CompiledQuery delegate </param>
+        // <summary>
+        // Creates a new compiled query state instance
+        // </summary>
+        // <param name="elementType"> The element type of the new instance (the 'T' of the ObjectQuery &lt; T &gt; that the new state instance will back)" </param>
+        // <param name="context"> The object context with which the new instance should be associated </param>
+        // <param name="lambda">
+        // The compiled query definition, as a <see cref="LambdaExpression" />
+        // </param>
+        // <param name="cacheToken"> The cache token to use when retrieving or storing the new instance's execution plan in the query cache </param>
+        // <param name="parameterValues"> The values passed into the CompiledQuery delegate </param>
         internal CompiledELinqQueryState(
             Type elementType, ObjectContext context, LambdaExpression lambda, Guid cacheToken, object[] parameterValues,
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null)
@@ -178,14 +178,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return plan;
         }
 
-        /// <summary>
-        /// Overrides GetResultType and attempts to first retrieve the result type from the cache entry.
-        /// </summary>
-        /// <returns>
-        /// The query result type from this compiled query's cache entry, if possible; otherwise defers to
-        /// <see
-        ///     cref="ELinqQueryState.GetResultType" />
-        /// </returns>
+        // <summary>
+        // Overrides GetResultType and attempts to first retrieve the result type from the cache entry.
+        // </summary>
+        // <returns>
+        // The query result type from this compiled query's cache entry, if possible; otherwise defers to
+        // <see
+        //     cref="ELinqQueryState.GetResultType" />
+        // </returns>
         protected override TypeUsage GetResultType()
         {
             var cacheEntry = _cacheEntry;
@@ -199,21 +199,21 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return base.GetResultType();
         }
 
-        /// <summary>
-        /// Gets a LINQ expression that defines this query.
-        /// This is overridden to remove parameter references from the underlying expression,
-        /// producing an expression that contains the values of those parameters as <see cref="ConstantExpression" />s.
-        /// </summary>
+        // <summary>
+        // Gets a LINQ expression that defines this query.
+        // This is overridden to remove parameter references from the underlying expression,
+        // producing an expression that contains the values of those parameters as <see cref="ConstantExpression" />s.
+        // </summary>
         internal override Expression Expression
         {
             get { return CreateDonateableExpressionVisitor.Replace((LambdaExpression)base.Expression, ObjectContext, _parameterValues); }
         }
 
-        /// <summary>
-        /// Overrides CreateExpressionConverter to return a converter that uses a binding context based on the compiled query parameters,
-        /// rather than a default binding context.
-        /// </summary>
-        /// <returns> An expression converter appropriate for converting this compiled query state instance </returns>
+        // <summary>
+        // Overrides CreateExpressionConverter to return a converter that uses a binding context based on the compiled query parameters,
+        // rather than a default binding context.
+        // </summary>
+        // <returns> An expression converter appropriate for converting this compiled query state instance </returns>
         protected override ExpressionConverter CreateExpressionConverter()
         {
             var lambda = (LambdaExpression)base.Expression;
@@ -223,10 +223,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return new ExpressionConverter(funcletizer, lambda.Body);
         }
 
-        /// <summary>
-        /// Replaces ParameterExpresion with ConstantExpression
-        /// to make the expression usable as a donor expression
-        /// </summary>
+        // <summary>
+        // Replaces ParameterExpresion with ConstantExpression
+        // to make the expression usable as a donor expression
+        // </summary>
         private sealed class CreateDonateableExpressionVisitor : EntityExpressionVisitor
         {
             private readonly Dictionary<ParameterExpression, object> _parameterToValueLookup;

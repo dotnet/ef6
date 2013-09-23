@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration
 {
@@ -12,43 +12,43 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Describes top-level query mapping view projection of the form:
-    /// SELECT VALUE CASE
-    /// WHEN Discriminator = DiscriminatorValue1 THEN EntityType1(...)
-    /// WHEN Discriminator = DiscriminatorValue2 THEN EntityType2(...)
-    /// ...
-    /// Supports optimizing queries to leverage user supplied discriminator values
-    /// in TPH mappings rather than introducing our own. This avoids the need
-    /// to introduce a CASE statement in the store.
-    /// </summary>
+    // <summary>
+    // Describes top-level query mapping view projection of the form:
+    // SELECT VALUE CASE
+    // WHEN Discriminator = DiscriminatorValue1 THEN EntityType1(...)
+    // WHEN Discriminator = DiscriminatorValue2 THEN EntityType2(...)
+    // ...
+    // Supports optimizing queries to leverage user supplied discriminator values
+    // in TPH mappings rather than introducing our own. This avoids the need
+    // to introduce a CASE statement in the store.
+    // </summary>
     internal class DiscriminatorMap
     {
-        /// <summary>
-        /// Expression retrieving discriminator value from projection input.
-        /// </summary>
+        // <summary>
+        // Expression retrieving discriminator value from projection input.
+        // </summary>
         internal readonly DbPropertyExpression Discriminator;
 
-        /// <summary>
-        /// Map from discriminator values to implied entity type.
-        /// </summary>
+        // <summary>
+        // Map from discriminator values to implied entity type.
+        // </summary>
         internal readonly ReadOnlyCollection<KeyValuePair<object, EntityType>> TypeMap;
 
-        /// <summary>
-        /// Map from entity property to expression generating value for that property. Note that
-        /// the expression must be the same for all types in discriminator map.
-        /// </summary>
+        // <summary>
+        // Map from entity property to expression generating value for that property. Note that
+        // the expression must be the same for all types in discriminator map.
+        // </summary>
         internal readonly ReadOnlyCollection<KeyValuePair<EdmProperty, DbExpression>> PropertyMap;
 
-        /// <summary>
-        /// Map from entity relproperty to expression generating value for that property. Note that
-        /// the expression must be the same for all types in discriminator map.
-        /// </summary>
+        // <summary>
+        // Map from entity relproperty to expression generating value for that property. Note that
+        // the expression must be the same for all types in discriminator map.
+        // </summary>
         internal readonly ReadOnlyCollection<KeyValuePair<RelProperty, DbExpression>> RelPropertyMap;
 
-        /// <summary>
-        /// EntitySet to which the map applies.
-        /// </summary>
+        // <summary>
+        // EntitySet to which the map applies.
+        // </summary>
         internal readonly EntitySet EntitySet;
 
         private DiscriminatorMap(
@@ -65,9 +65,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             EntitySet = entitySet;
         }
 
-        /// <summary>
-        /// Determines whether the given query view matches the discriminator map pattern.
-        /// </summary>
+        // <summary>
+        // Determines whether the given query view matches the discriminator map pattern.
+        // </summary>
         internal static bool TryCreateDiscriminatorMap(EntitySet entitySet, DbExpression queryView, out DiscriminatorMap discriminatorMap)
         {
             discriminatorMap = null;
@@ -287,13 +287,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return true;
         }
 
-        /// <summary>
-        /// Utility method determining whether two expressions appearing within the same scope
-        /// are equivalent. May return false negatives, but no false positives. In other words,
-        /// x != y --> !ExpressionsCompatible(x, y)
-        /// but does not guarantee
-        /// x == y --> ExpressionsCompatible(x, y)
-        /// </summary>
+        // <summary>
+        // Utility method determining whether two expressions appearing within the same scope
+        // are equivalent. May return false negatives, but no false positives. In other words,
+        // x != y --> !ExpressionsCompatible(x, y)
+        // but does not guarantee
+        // x == y --> ExpressionsCompatible(x, y)
+        // </summary>
         private static bool ExpressionsCompatible(DbExpression x, DbExpression y)
         {
             if (x.ExpressionKind

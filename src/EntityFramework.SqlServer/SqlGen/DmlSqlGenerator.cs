@@ -14,9 +14,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
     using System.Globalization;
     using System.Linq;
 
-    /// <summary>
-    /// Class generating SQL for a DML command tree.
-    /// </summary>
+    // <summary>
+    // Class generating SQL for a DML command tree.
+    // </summary>
     internal static class DmlSqlGenerator
     {
         private const int CommandTextBuilderInitialCapacity = 256;
@@ -302,12 +302,12 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return columnType;
         }
 
-        /// <summary>
-        /// Determine whether we should use a generated values variable to return server generated values.
-        /// This is true when we're attempting to insert a row where the primary key is server generated
-        /// but is not an integer type (and therefore can't be used with scope_identity()). It is also true
-        /// where there is a compound server generated key.
-        /// </summary>
+        // <summary>
+        // Determine whether we should use a generated values variable to return server generated values.
+        // This is true when we're attempting to insert a row where the primary key is server generated
+        // but is not an integer type (and therefore can't be used with scope_identity()). It is also true
+        // where there is a compound server generated key.
+        // </summary>
         internal static bool UseGeneratedValuesVariable(DbInsertCommandTree tree, SqlVersion sqlVersion)
         {
             var useGeneratedValuesVariable = false;
@@ -353,39 +353,39 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return SqlGenerator.QuoteIdentifier(member.Name);
         }
 
-        /// <summary>
-        /// Generates SQL fragment returning server-generated values.
-        /// Requires: translator knows about member values so that we can figure out
-        /// how to construct the key predicate.
-        /// <code>Sample SQL:
-        /// 
-        ///     select IdentityValue
-        ///     from dbo.MyTable
-        ///     where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
-        /// 
-        ///     or
-        /// 
-        ///     select TimestampValue
-        ///     from dbo.MyTable
-        ///     where @@ROWCOUNT > 0 and Id = 1
-        /// 
-        ///     Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
-        /// 
-        ///     On SQL Server 2005 and up, we have an additional syntax used for non integer return types:
-        /// 
-        ///     declare @generatedValues table(ID uniqueidentifier)
-        ///     insert dbo.MyTable
-        ///     output ID into @generated_values
-        ///     values (...);
-        ///     select ID
-        ///     from @generatedValues as g join dbo.MyTable as t on g.ID = t.ID
-        ///     where @@ROWCOUNT > 0;</code>
-        /// </summary>
-        /// <param name="commandText"> Builder containing command text </param>
-        /// <param name="tree"> Modification command tree </param>
-        /// <param name="tableType"> Type of table. </param>
-        /// <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
-        /// <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
+        // <summary>
+        // Generates SQL fragment returning server-generated values.
+        // Requires: translator knows about member values so that we can figure out
+        // how to construct the key predicate.
+        // <code>Sample SQL:
+        // 
+        //     select IdentityValue
+        //     from dbo.MyTable
+        //     where @@ROWCOUNT > 0 and IdentityValue = scope_identity()
+        // 
+        //     or
+        // 
+        //     select TimestampValue
+        //     from dbo.MyTable
+        //     where @@ROWCOUNT > 0 and Id = 1
+        // 
+        //     Note that we filter on rowcount to ensure no rows are returned if no rows were modified.
+        // 
+        //     On SQL Server 2005 and up, we have an additional syntax used for non integer return types:
+        // 
+        //     declare @generatedValues table(ID uniqueidentifier)
+        //     insert dbo.MyTable
+        //     output ID into @generated_values
+        //     values (...);
+        //     select ID
+        //     from @generatedValues as g join dbo.MyTable as t on g.ID = t.ID
+        //     where @@ROWCOUNT > 0;</code>
+        // </summary>
+        // <param name="commandText"> Builder containing command text </param>
+        // <param name="tree"> Modification command tree </param>
+        // <param name="tableType"> Type of table. </param>
+        // <param name="translator"> Translator used to produce DML SQL statement for the tree </param>
+        // <param name="returning"> Returning expression. If null, the method returns immediately without producing a SELECT statement. </param>
         internal static void GenerateReturningSql(
             SqlStringBuilder commandText,
             DbModificationCommandTree tree,
@@ -526,10 +526,10 @@ namespace System.Data.Entity.SqlServer.SqlGen
             return false;
         }
 
-        /// <summary>
-        /// Lightweight expression translator for DML expression trees, which have constrained
-        /// scope and support.
-        /// </summary>
+        // <summary>
+        // Lightweight expression translator for DML expression trees, which have constrained
+        // scope and support.
+        // </summary>
         internal class ExpressionTranslator : BasicExpressionVisitor
         {
             private readonly SqlStringBuilder _commandText;
@@ -540,13 +540,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
             private readonly ICollection<EdmProperty> _localVariableBindings;
             private readonly bool _createParameters;
 
-            /// <summary>
-            /// Initialize a new expression translator populating the given string builder
-            /// with command text. Command text builder and command tree must not be null.
-            /// </summary>
-            /// <param name="commandText"> Command text with which to populate commands </param>
-            /// <param name="commandTree"> Command tree generating SQL </param>
-            /// <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
+            // <summary>
+            // Initialize a new expression translator populating the given string builder
+            // with command text. Command text builder and command tree must not be null.
+            // </summary>
+            // <param name="commandText"> Command text with which to populate commands </param>
+            // <param name="commandTree"> Command tree generating SQL </param>
+            // <param name="preserveMemberValues"> Indicates whether the translator should preserve member values while compiling t-SQL (only needed for server generation) </param>
             internal ExpressionTranslator(
                 SqlStringBuilder commandText,
                 DbModificationCommandTree commandTree,
@@ -631,13 +631,13 @@ namespace System.Data.Entity.SqlServer.SqlGen
                 RegisterMemberValue(expression.Left, expression.Right);
             }
 
-            /// <summary>
-            /// Call this method to register a property value pair so the translator "remembers"
-            /// the values for members of the row being modified. These values can then be used
-            /// to form a predicate for server-generation (based on the key of the row)
-            /// </summary>
-            /// <param name="propertyExpression"> DbExpression containing the column reference (property expression). </param>
-            /// <param name="value"> DbExpression containing the value of the column. </param>
+            // <summary>
+            // Call this method to register a property value pair so the translator "remembers"
+            // the values for members of the row being modified. These values can then be used
+            // to form a predicate for server-generation (based on the key of the row)
+            // </summary>
+            // <param name="propertyExpression"> DbExpression containing the column reference (property expression). </param>
+            // <param name="value"> DbExpression containing the value of the column. </param>
             internal void RegisterMemberValue(DbExpression propertyExpression, DbExpression value)
             {
                 if (_memberValues != null)

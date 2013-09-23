@@ -17,10 +17,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
 
     internal abstract class ViewgenGatekeeper : InternalBase
     {
-        /// <summary>
-        /// Entry point for View Generation
-        /// </summary>
-        /// <returns> Generated Views for EntitySets </returns>
+        // <summary>
+        // Entry point for View Generation
+        // </summary>
+        // <returns> Generated Views for EntitySets </returns>
         internal static ViewGenResults GenerateViewsFromMapping(EntityContainerMapping containerMapping, ConfigViewGenerator config)
         {
             DebugCheck.NotNull(containerMapping);
@@ -35,9 +35,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             return GenerateViewsFromCells(cells, config, identifiers, containerMapping);
         }
 
-        /// <summary>
-        /// Entry point for Type specific generation of Query Views
-        /// </summary>
+        // <summary>
+        // Entry point for Type specific generation of Query Views
+        // </summary>
         internal static ViewGenResults GenerateTypeSpecificQueryView(
             EntityContainerMapping containerMapping,
             ConfigViewGenerator config,

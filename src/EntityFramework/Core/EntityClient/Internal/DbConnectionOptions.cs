@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient.Internal
 {
@@ -19,9 +19,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         private readonly Dictionary<string, string> _parsetable = new Dictionary<string, string>();
         internal readonly NameValuePair KeyChain;
 
-        /// <summary>
-        /// For testing.
-        /// </summary>
+        // <summary>
+        // For testing.
+        // </summary>
         internal DbConnectionOptions()
         {
         }

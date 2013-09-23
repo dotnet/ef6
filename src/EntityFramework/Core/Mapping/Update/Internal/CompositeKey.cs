@@ -8,20 +8,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Represents a key composed of multiple parts.
-    /// </summary>
+    // <summary>
+    // Represents a key composed of multiple parts.
+    // </summary>
     internal class CompositeKey
     {
-        /// <summary>
-        /// Gets components of this composite key.
-        /// </summary>
+        // <summary>
+        // Gets components of this composite key.
+        // </summary>
         internal readonly PropagatorResult[] KeyComponents;
 
-        /// <summary>
-        /// Initialize a new composite key using the given constant values. Order is important.
-        /// </summary>
-        /// <param name="constants"> Key values. </param>
+        // <summary>
+        // Initialize a new composite key using the given constant values. Order is important.
+        // </summary>
+        // <param name="constants"> Key values. </param>
         internal CompositeKey(PropagatorResult[] constants)
         {
             DebugCheck.NotNull(constants);
@@ -29,20 +29,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             KeyComponents = constants;
         }
 
-        /// <summary>
-        /// Creates a key comparer operating in the context of the given translator.
-        /// </summary>
+        // <summary>
+        // Creates a key comparer operating in the context of the given translator.
+        // </summary>
         internal static IEqualityComparer<CompositeKey> CreateComparer(KeyManager keyManager)
         {
             return new CompositeKeyComparer(keyManager);
         }
 
-        /// <summary>
-        /// Creates a merged key instance where each key component contains both elements.
-        /// </summary>
-        /// <param name="keyManager"> </param>
-        /// <param name="other"> Must be a non-null compatible key (same number of components). </param>
-        /// <returns> Merged key. </returns>
+        // <summary>
+        // Creates a merged key instance where each key component contains both elements.
+        // </summary>
+        // <param name="keyManager"> </param>
+        // <param name="other"> Must be a non-null compatible key (same number of components). </param>
+        // <returns> Merged key. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal CompositeKey Merge(KeyManager keyManager, CompositeKey other)
         {
@@ -57,9 +57,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return new CompositeKey(mergedKeyValues);
         }
 
-        /// <summary>
-        /// Equality and comparison implementation for composite keys.
-        /// </summary>
+        // <summary>
+        // Equality and comparison implementation for composite keys.
+        // </summary>
         private class CompositeKeyComparer : IEqualityComparer<CompositeKey>
         {
             private readonly KeyManager _manager;

@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// Converts a BoolExpr to a Vertex within a solver.
-    /// </summary>
+    // <summary>
+    // Converts a BoolExpr to a Vertex within a solver.
+    // </summary>
     internal class ToDecisionDiagramConverter<T_Identifier> : Visitor<T_Identifier, Vertex>
     {
         private readonly ConversionContext<T_Identifier> _context;

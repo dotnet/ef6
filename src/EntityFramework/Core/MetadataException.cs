@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core
             HResult = HResultMetadata;
         }
 
-        /// <summary>
-        /// constructor for deserialization
-        /// </summary>
+        // <summary>
+        // constructor for deserialization
+        // </summary>
         private MetadataException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

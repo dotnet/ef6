@@ -7,18 +7,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// class representing the Schema element in the schema
-    /// </summary>
+    // <summary>
+    // class representing the Schema element in the schema
+    // </summary>
     internal sealed class ModelFunction : Function
     {
         private readonly TypeUsageBuilder _typeUsageBuilder;
 
         #region Public Methods
 
-        /// <summary>
-        /// ctor for a schema function
-        /// </summary>
+        // <summary>
+        // ctor for a schema function
+        // </summary>
         public ModelFunction(Schema parentElement)
             :
                 base(parentElement)

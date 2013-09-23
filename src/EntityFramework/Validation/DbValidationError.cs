@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Validation
 {
@@ -8,14 +8,14 @@ namespace System.Data.Entity.Validation
     [Serializable]
     public class DbValidationError
     {
-        /// <summary>
-        /// Name of the invalid property. Can be null (e.g. for entity level validations).
-        /// </summary>
+        // <summary>
+        // Name of the invalid property. Can be null (e.g. for entity level validations).
+        // </summary>
         private readonly string _propertyName;
 
-        /// <summary>
-        /// Validation error message.
-        /// </summary>
+        // <summary>
+        // Validation error message.
+        // </summary>
         private readonly string _errorMessage;
 
         /// <summary>

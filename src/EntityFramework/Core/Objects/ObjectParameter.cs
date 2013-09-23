@@ -23,11 +23,11 @@ namespace System.Data.Entity.Core.Objects
 
         #region ValidateParameterName
 
-        /// <summary>
-        /// This internal method uses regular expression matching to ensure that the
-        /// specified parameter name is valid. Parameter names must start with a letter,
-        /// and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
-        /// </summary>
+        // <summary>
+        // This internal method uses regular expression matching to ensure that the
+        // specified parameter name is valid. Parameter names must start with a letter,
+        // and may only contain letters (A-Z, a-z), numbers (0-9) and underscores (_).
+        // </summary>
         internal static bool ValidateParameterName(string name)
         {
             // Note: Parameter names must begin with a letter, and may contain only
@@ -112,12 +112,12 @@ namespace System.Data.Entity.Core.Objects
         // Copy Constructor
         // -------------------
 
-        /// <summary>
-        /// This constructor is used by <see cref="ShallowCopy" /> to create a new ObjectParameter
-        /// with field values taken from the field values of an existing ObjectParameter.
-        /// </summary>
-        /// <param name="template"> The existing ObjectParameter instance from which field values should be taken. </param>
-        /// <returns> A new ObjectParameter instance with the same field values as the specified ObjectParameter </returns>
+        // <summary>
+        // This constructor is used by <see cref="ShallowCopy" /> to create a new ObjectParameter
+        // with field values taken from the field values of an existing ObjectParameter.
+        // </summary>
+        // <param name="template"> The existing ObjectParameter instance from which field values should be taken. </param>
+        // <returns> A new ObjectParameter instance with the same field values as the specified ObjectParameter </returns>
         private ObjectParameter(ObjectParameter template)
         {
             DebugCheck.NotNull(template);
@@ -137,34 +137,34 @@ namespace System.Data.Entity.Core.Objects
         // Private Fields
         // --------------
 
-        /// <summary>
-        /// The name of the parameter. Cannot be null and is immutable.
-        /// </summary>
+        // <summary>
+        // The name of the parameter. Cannot be null and is immutable.
+        // </summary>
         private readonly string _name;
 
-        /// <summary>
-        /// The CLR type of the parameter. Cannot be null and is immutable.
-        /// </summary>
+        // <summary>
+        // The CLR type of the parameter. Cannot be null and is immutable.
+        // </summary>
         private readonly Type _type;
 
-        /// <summary>
-        /// The mappable CLR type of the parameter. Unless the parameter type is
-        /// Nullable, this type is equal to the parameter type. In the case of
-        /// Nullable parameters, this type is the underlying Nullable argument
-        /// type. Cannot be null and is immutable.
-        /// </summary>
+        // <summary>
+        // The mappable CLR type of the parameter. Unless the parameter type is
+        // Nullable, this type is equal to the parameter type. In the case of
+        // Nullable parameters, this type is the underlying Nullable argument
+        // type. Cannot be null and is immutable.
+        // </summary>
         private readonly Type _mappableType;
 
-        /// <summary>
-        /// Used to specify the exact metadata type of this parameter.
-        /// Typically null, can only be set using the internal <see cref="TypeUsage" /> property.
-        /// </summary>
+        // <summary>
+        // Used to specify the exact metadata type of this parameter.
+        // Typically null, can only be set using the internal <see cref="TypeUsage" /> property.
+        // </summary>
         private TypeUsage _effectiveType;
 
-        /// <summary>
-        /// The value of the parameter. Does not need to be bound until execution
-        /// time and can be modified at any time.
-        /// </summary>
+        // <summary>
+        // The value of the parameter. Does not need to be bound until execution
+        // time and can be modified at any time.
+        // </summary>
         private object _value;
 
         #endregion
@@ -208,10 +208,10 @@ namespace System.Data.Entity.Core.Objects
         // Internal Properties
         // -------------------
 
-        /// <summary>
-        /// Gets or sets a <see cref="TypeUsage" /> that specifies the exact
-        /// type of which the parameter value is considered an instance.
-        /// </summary>
+        // <summary>
+        // Gets or sets a <see cref="TypeUsage" /> that specifies the exact
+        // type of which the parameter value is considered an instance.
+        // </summary>
         internal TypeUsage TypeUsage
         {
             get { return _effectiveType; }
@@ -223,11 +223,11 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        /// <summary>
-        /// The mappable parameter type; this is primarily used to handle the case of
-        /// Nullable parameter types. For example, metadata knows nothing about 'int?',
-        /// only 'Int32'. For internal use only.
-        /// </summary>
+        // <summary>
+        // The mappable parameter type; this is primarily used to handle the case of
+        // Nullable parameter types. For example, metadata knows nothing about 'int?',
+        // only 'Int32'. For internal use only.
+        // </summary>
         internal Type MappableType
         {
             get { return _mappableType; }
@@ -241,20 +241,20 @@ namespace System.Data.Entity.Core.Objects
         // Internal Methods
         // ----------------
 
-        /// <summary>
-        /// Creates a new ObjectParameter instance with identical field values to this instance.
-        /// </summary>
-        /// <returns> The new ObjectParameter instance </returns>
+        // <summary>
+        // Creates a new ObjectParameter instance with identical field values to this instance.
+        // </summary>
+        // <returns> The new ObjectParameter instance </returns>
         internal ObjectParameter ShallowCopy()
         {
             return new ObjectParameter(this);
         }
 
-        /// <summary>
-        /// This internal method ensures that the specified type is a scalar
-        /// type supported by the underlying provider by ensuring that scalar
-        /// metadata for this type is retrievable.
-        /// </summary>
+        // <summary>
+        // This internal method ensures that the specified type is a scalar
+        // type supported by the underlying provider by ensuring that scalar
+        // metadata for this type is retrievable.
+        // </summary>
         internal bool ValidateParameterType(ClrPerspective perspective)
         {
             TypeUsage type;

@@ -13,10 +13,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
     internal partial class Propagator
     {
-        /// <summary>
-        /// Class generating default records for extents. Has a single external entry point, the
-        /// <see cref="CreatePlaceholder" /> static method.
-        /// </summary>
+        // <summary>
+        // Class generating default records for extents. Has a single external entry point, the
+        // <see cref="CreatePlaceholder" /> static method.
+        // </summary>
         internal class ExtentPlaceholderCreator
         {
             private static readonly Dictionary<PrimitiveTypeKind, object> _typeDefaultMap = InitializeTypeDefaultMap();
@@ -24,10 +24,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             private static readonly Lazy<Dictionary<PrimitiveTypeKind, object>> _spatialTypeDefaultMap =
                 new Lazy<Dictionary<PrimitiveTypeKind, object>>(InitializeSpatialTypeDefaultMap);
 
-            /// <summary>
-            /// Initializes a map from primitive scalar types in the C-Space to default values
-            /// used within the placeholder.
-            /// </summary>
+            // <summary>
+            // Initializes a map from primitive scalar types in the C-Space to default values
+            // used within the placeholder.
+            // </summary>
             private static Dictionary<PrimitiveTypeKind, object> InitializeTypeDefaultMap()
             {
                 var typeDefaultMap = new Dictionary<PrimitiveTypeKind, object>(
@@ -61,10 +61,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return typeDefaultMap;
             }
 
-            /// <summary>
-            /// Initializes a map from primitive spatial types in the C-Space to default values
-            /// used within the placeholder.
-            /// </summary>
+            // <summary>
+            // Initializes a map from primitive spatial types in the C-Space to default values
+            // used within the placeholder.
+            // </summary>
             private static Dictionary<PrimitiveTypeKind, object> InitializeSpatialTypeDefaultMap()
             {
                 var typeDefaultMap = new Dictionary<PrimitiveTypeKind, object>(
@@ -98,12 +98,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return typeDefaultMap;
             }
 
-            /// <summary>
-            /// Attempts to retrieve the the default value for the specified primitive type.
-            /// </summary>
-            /// <param name="primitiveType">A primitive type.</param>
-            /// <param name="defaultValue">The default value for the primitive type.</param>
-            /// <returns>true if a default value was found, false otherwise.</returns>
+            // <summary>
+            // Attempts to retrieve the the default value for the specified primitive type.
+            // </summary>
+            // <param name="primitiveType">A primitive type.</param>
+            // <param name="defaultValue">The default value for the primitive type.</param>
+            // <returns>true if a default value was found, false otherwise.</returns>
             private static bool TryGetDefaultValue(PrimitiveType primitiveType, out object defaultValue)
             {
                 var primitiveTypeKind = primitiveType.PrimitiveTypeKind;
@@ -113,17 +113,17 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                            : _typeDefaultMap.TryGetValue(primitiveTypeKind, out defaultValue);
             }
 
-            /// <summary>
-            /// Creates a record for an extent containing default values. Assumes the extent is either
-            /// a relationship set or an entity set.
-            /// </summary>
-            /// <remarks>
-            /// Each scalar value appearing in the record is a <see cref="DbConstantExpression" />. A placeholder is created by recursively
-            /// building a record, so an entity record type will return a new record (<see cref="DbNewInstanceExpression" />)
-            /// consisting of some recursively built record for each column in the type.
-            /// </remarks>
-            /// <param name="extent"> Extent </param>
-            /// <returns> A default record for the </returns>
+            // <summary>
+            // Creates a record for an extent containing default values. Assumes the extent is either
+            // a relationship set or an entity set.
+            // </summary>
+            // <remarks>
+            // Each scalar value appearing in the record is a <see cref="DbConstantExpression" />. A placeholder is created by recursively
+            // building a record, so an entity record type will return a new record (<see cref="DbNewInstanceExpression" />)
+            // consisting of some recursively built record for each column in the type.
+            // </remarks>
+            // <param name="extent"> Extent </param>
+            // <returns> A default record for the </returns>
             internal static PropagatorResult CreatePlaceholder(EntitySetBase extent)
             {
                 DebugCheck.NotNull(extent);
@@ -147,9 +147,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                         extent.Name, extent.GetType().Name));
             }
 
-            /// <summary>
-            /// Specialization of <see cref="CreatePlaceholder" /> for an entity set extent.
-            /// </summary>
+            // <summary>
+            // Specialization of <see cref="CreatePlaceholder" /> for an entity set extent.
+            // </summary>
             private PropagatorResult CreateEntitySetPlaceholder(EntitySet entitySet)
             {
                 DebugCheck.NotNull(entitySet);
@@ -167,9 +167,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return result;
             }
 
-            /// <summary>
-            /// Specialization of <see cref="CreatePlaceholder" /> for a relationship set extent.
-            /// </summary>
+            // <summary>
+            // Specialization of <see cref="CreatePlaceholder" /> for a relationship set extent.
+            // </summary>
             private PropagatorResult CreateAssociationSetPlaceholder(AssociationSet associationSet)
             {
                 DebugCheck.NotNull(associationSet);
@@ -202,11 +202,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return result;
             }
 
-            /// <summary>
-            /// Returns a placeholder for a specific metadata member.
-            /// </summary>
-            /// <param name="member"> EdmMember for which to produce a placeholder. </param>
-            /// <returns> Placeholder element for the given member. </returns>
+            // <summary>
+            // Returns a placeholder for a specific metadata member.
+            // </summary>
+            // <param name="member"> EdmMember for which to produce a placeholder. </param>
+            // <returns> Placeholder element for the given member. </returns>
             private PropagatorResult CreateMemberPlaceholder(EdmMember member)
             {
                 DebugCheck.NotNull(member);
@@ -214,11 +214,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return Visit(member);
             }
 
-            /// <summary>
-            /// Given default values for children members, produces a new default expression for the requested (parent) member.
-            /// </summary>
-            /// <param name="node"> Parent member </param>
-            /// <returns> Default value for parent member </returns>
+            // <summary>
+            // Given default values for children members, produces a new default expression for the requested (parent) member.
+            // </summary>
+            // <param name="node"> Parent member </param>
+            // <returns> Default value for parent member </returns>
             internal PropagatorResult Visit(EdmMember node)
             {
                 PropagatorResult result;

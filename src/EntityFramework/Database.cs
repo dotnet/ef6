@@ -37,10 +37,10 @@ namespace System.Data.Entity
         // The context that backs this instance.
         private readonly InternalContext _internalContext;
 
-        /// <summary>
-        /// Creates a Database backed by the given context.  This object can be used to create a database,
-        /// check for database existence, and delete a database.
-        /// </summary>
+        // <summary>
+        // Creates a Database backed by the given context.  This object can be used to create a database,
+        // check for database existence, and delete a database.
+        // </summary>
         internal Database(InternalContext internalContext)
         {
             DebugCheck.NotNull(internalContext);
@@ -349,27 +349,27 @@ namespace System.Data.Entity
             }
         }
 
-        /// <summary>
-        /// The actual connection factory that was set, rather than the one that is returned by the resolver,
-        /// which may have come from another source.
-        /// </summary>
+        // <summary>
+        // The actual connection factory that was set, rather than the one that is returned by the resolver,
+        // which may have come from another source.
+        // </summary>
         internal static IDbConnectionFactory SetDefaultConnectionFactory
         {
             get { return _defaultConnectionFactory.Value; }
         }
 
-        /// <summary>
-        /// Checks whether or not the DefaultConnectionFactory has been set to something other than its default value.
-        /// </summary>
+        // <summary>
+        // Checks whether or not the DefaultConnectionFactory has been set to something other than its default value.
+        // </summary>
         internal static bool DefaultConnectionFactoryChanged
         {
             get { return !ReferenceEquals(_defaultConnectionFactory, _defaultDefaultConnectionFactory); }
         }
 
-        /// <summary>
-        /// Resets the DefaultConnectionFactory to its initial value.
-        /// Currently, this method is only used by test code.
-        /// </summary>
+        // <summary>
+        // Resets the DefaultConnectionFactory to its initial value.
+        // Currently, this method is only used by test code.
+        // </summary>
         internal static void ResetDefaultConnectionFactory()
         {
             _defaultConnectionFactory = _defaultDefaultConnectionFactory;
@@ -379,13 +379,13 @@ namespace System.Data.Entity
 
         #region Database operations
 
-        /// <summary>
-        /// Performs the operation defined by the given delegate using the given lazy connection, ensuring
-        /// that the lazy connection is disposed after use.
-        /// </summary>
-        /// <param name="lazyConnection"> Information used to create a DbConnection. </param>
-        /// <param name="operation"> The operation to perform. </param>
-        /// <returns> The return value of the operation. </returns>
+        // <summary>
+        // Performs the operation defined by the given delegate using the given lazy connection, ensuring
+        // that the lazy connection is disposed after use.
+        // </summary>
+        // <param name="lazyConnection"> Information used to create a DbConnection. </param>
+        // <param name="operation"> The operation to perform. </param>
+        // <returns> The return value of the operation. </returns>
         private static bool PerformDatabaseOp(
             LazyInternalConnection lazyConnection, Func<ObjectContext, bool> operation)
         {
@@ -395,14 +395,14 @@ namespace System.Data.Entity
             }
         }
 
-        /// <summary>
-        /// Performs the operation defined by the given delegate against a connection.  The connection
-        /// is either the connection accessed from the context backing this object, or is obtained from
-        /// the connection information passed to one of the static methods.
-        /// </summary>
-        /// <param name="connection"> The connection to use. </param>
-        /// <param name="operation"> The operation to perform. </param>
-        /// <returns> The return value of the operation. </returns>
+        // <summary>
+        // Performs the operation defined by the given delegate against a connection.  The connection
+        // is either the connection accessed from the context backing this object, or is obtained from
+        // the connection information passed to one of the static methods.
+        // </summary>
+        // <param name="connection"> The connection to use. </param>
+        // <param name="operation"> The operation to perform. </param>
+        // <returns> The return value of the operation. </returns>
         private static bool PerformDatabaseOp(DbConnection connection, Func<ObjectContext, bool> operation)
         {
             using (var context = CreateEmptyObjectContext(connection))
@@ -411,11 +411,11 @@ namespace System.Data.Entity
             }
         }
 
-        /// <summary>
-        /// Returns an empty ObjectContext that can be used to perform delete/exists operations.
-        /// </summary>
-        /// <param name="connection"> The connection for which to create an ObjectContext. </param>
-        /// <returns> The empty context. </returns>
+        // <summary>
+        // Returns an empty ObjectContext that can be used to perform delete/exists operations.
+        // </summary>
+        // <param name="connection"> The connection for which to create an ObjectContext. </param>
+        // <returns> The empty context. </returns>
         private static ObjectContext CreateEmptyObjectContext(DbConnection connection)
         {
             // Unfortunately, we need to spin up an ObjectContext to do operations on the database

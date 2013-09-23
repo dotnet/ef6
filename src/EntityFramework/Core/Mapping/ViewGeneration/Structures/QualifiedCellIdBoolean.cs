@@ -7,15 +7,15 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// A class that denotes "block_alias.booleanVar", e.g., "T1._from2".
-    /// It is a subclass of <see cref="CellIdBoolean" /> with an added block alias.
-    /// </summary>
+    // <summary>
+    // A class that denotes "block_alias.booleanVar", e.g., "T1._from2".
+    // It is a subclass of <see cref="CellIdBoolean" /> with an added block alias.
+    // </summary>
     internal sealed class QualifiedCellIdBoolean : CellIdBoolean
     {
-        /// <summary>
-        /// Creates a boolean of the form "<paramref name="block" />.<paramref name="originalCellNum" />".
-        /// </summary>
+        // <summary>
+        // Creates a boolean of the form "<paramref name="block" />.<paramref name="originalCellNum" />".
+        // </summary>
         internal QualifiedCellIdBoolean(CqlBlock block, CqlIdentifiers identifiers, int originalCellNum)
             : base(identifiers, originalCellNum)
         {

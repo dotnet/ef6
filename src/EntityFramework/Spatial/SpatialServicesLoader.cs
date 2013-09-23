@@ -14,10 +14,10 @@ namespace System.Data.Entity.Spatial
             _resolver = resolver;
         }
 
-        /// <summary>
-        /// Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
-        /// fall back on using the SQL provider and if this is not available then the default provider.
-        /// </summary>
+        // <summary>
+        // Ask for a spatial provider. If one has been registered then we will use it, otherwise we will
+        // fall back on using the SQL provider and if this is not available then the default provider.
+        // </summary>
         public virtual DbSpatialServices LoadDefaultServices()
         {
             var spatialProvider = _resolver.GetService<DbSpatialServices>();

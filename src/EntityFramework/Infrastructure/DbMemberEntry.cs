@@ -21,13 +21,13 @@ namespace System.Data.Entity.Infrastructure
     {
         #region  Factory methods
 
-        /// <summary>
-        /// Creates a <see cref="DbMemberEntry" /> from information in the given <see cref="InternalMemberEntry" />.
-        /// This method will create an instance of the appropriate subclass depending on the metadata contained
-        /// in the InternalMemberEntry instance.
-        /// </summary>
-        /// <param name="internalMemberEntry"> The internal member entry. </param>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a <see cref="DbMemberEntry" /> from information in the given <see cref="InternalMemberEntry" />.
+        // This method will create an instance of the appropriate subclass depending on the metadata contained
+        // in the InternalMemberEntry instance.
+        // </summary>
+        // <param name="internalMemberEntry"> The internal member entry. </param>
+        // <returns> The new entry. </returns>
         internal static DbMemberEntry Create(InternalMemberEntry internalMemberEntry)
         {
             DebugCheck.NotNull(internalMemberEntry);
@@ -121,10 +121,10 @@ namespace System.Data.Entity.Infrastructure
 
         #region InternalMemberEntry access
 
-        /// <summary>
-        /// Gets the <see cref="InternalMemberEntry" /> backing this object.
-        /// </summary>
-        /// <value> The internal member entry. </value>
+        // <summary>
+        // Gets the <see cref="InternalMemberEntry" /> backing this object.
+        // </summary>
+        // <value> The internal member entry. </value>
         internal abstract InternalMemberEntry InternalMemberEntry { get; }
 
         #endregion

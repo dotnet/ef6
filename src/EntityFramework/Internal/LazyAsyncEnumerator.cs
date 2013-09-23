@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 
 #if !NET40
@@ -16,12 +16,12 @@ namespace System.Data.Entity.Internal
         private readonly Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> _getEnumeratorAsync;
         private volatile Task<IDbAsyncEnumerator<T>> _asyncEnumeratorTask;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
-        /// </summary>
-        /// <param name="getEnumeratorAsync">
-        /// Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null.
-        /// </param>
+        // <summary>
+        // Initializes a new instance of <see cref="LazyAsyncEnumerator{T}" />
+        // </summary>
+        // <param name="getEnumeratorAsync">
+        // Function that returns a Task containing the <see cref="IDbAsyncEnumerator{T}" /> . Should not return null.
+        // </param>
         public LazyAsyncEnumerator(Func<CancellationToken, Task<IDbAsyncEnumerator<T>>> getEnumeratorAsync)
         {
             DebugCheck.NotNull(getEnumeratorAsync);

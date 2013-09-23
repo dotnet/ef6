@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 {
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for Documentation.
-    /// </summary>
+    // <summary>
+    // Summary description for Documentation.
+    // </summary>
     internal sealed class TextElement : SchemaElement
     {
         #region Instance Fields

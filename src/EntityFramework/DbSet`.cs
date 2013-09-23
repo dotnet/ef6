@@ -32,10 +32,10 @@ namespace System.Data.Entity
 
         private readonly InternalSet<TEntity> _internalSet;
 
-        /// <summary>
-        /// Creates a new set that will be backed by the given <see cref="InternalSet{T}" />.
-        /// </summary>
-        /// <param name="internalSet"> The internal set. </param>
+        // <summary>
+        // Creates a new set that will be backed by the given <see cref="InternalSet{T}" />.
+        // </summary>
+        // <param name="internalSet"> The internal set. </param>
         internal DbSet(InternalSet<TEntity> internalSet)
             : base(internalSet)
         {
@@ -264,10 +264,10 @@ namespace System.Data.Entity
 
         #region IInternalSetAdapter
 
-        /// <summary>
-        /// Gets the underlying internal set.
-        /// </summary>
-        /// <value> The internal set. </value>
+        // <summary>
+        // Gets the underlying internal set.
+        // </summary>
+        // <value> The internal set. </value>
         IInternalSet IInternalSetAdapter.InternalSet
         {
             get { return _internalSet; }

@@ -9,13 +9,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class AssociationSetEnd : MetadataItem
     {
-        /// <summary>
-        /// Initializes a new instance of AssocationSetEnd
-        /// </summary>
-        /// <param name="entitySet"> Entity set that this end refers to </param>
-        /// <param name="parentSet"> The association set which this belongs to </param>
-        /// <param name="endMember"> The end member of the association set which this is an instance of </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if either the role,entitySet, parentSet or endMember arguments are null</exception>
+        // <summary>
+        // Initializes a new instance of AssocationSetEnd
+        // </summary>
+        // <param name="entitySet"> Entity set that this end refers to </param>
+        // <param name="parentSet"> The association set which this belongs to </param>
+        // <param name="endMember"> The end member of the association set which this is an instance of </param>
+        // <exception cref="System.ArgumentNullException">Thrown if either the role,entitySet, parentSet or endMember arguments are null</exception>
         internal AssociationSetEnd(EntitySet entitySet, AssociationSet parentSet, AssociationEndMember endMember)
         {
             _entitySet = Check.NotNull(entitySet, "entitySet");
@@ -109,9 +109,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _entitySet; }
         }
 
-        /// <summary>
-        /// Gets the identity of this item
-        /// </summary>
+        // <summary>
+        // Gets the identity of this item
+        // </summary>
         internal override string Identity
         {
             get { return Name; }
@@ -128,9 +128,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Name;
         }
 
-        /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be readonly, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)

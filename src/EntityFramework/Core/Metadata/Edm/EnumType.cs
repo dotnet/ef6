@@ -15,41 +15,41 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public class EnumType : SimpleType
     {
-        /// <summary>
-        /// A collection of enumeration members for this enumeration type
-        /// </summary>
+        // <summary>
+        // A collection of enumeration members for this enumeration type
+        // </summary>
         private readonly ReadOnlyMetadataCollection<EnumMember> _members =
             new ReadOnlyMetadataCollection<EnumMember>(new MetadataCollection<EnumMember>());
 
-        /// <summary>
-        /// Underlying type of this enumeration type.
-        /// </summary>
+        // <summary>
+        // Underlying type of this enumeration type.
+        // </summary>
         private PrimitiveType _underlyingType;
 
         private bool _isFlags;
 
-        /// <summary>
-        /// Initializes a new instance of the EnumType class. This default constructor is used for bootstraping
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of the EnumType class. This default constructor is used for bootstraping
+        // </summary>
         internal EnumType()
         {
             _underlyingType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
             _isFlags = false;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the EnumType class by using the specified <paramref name="name" />,
-        /// <paramref name="namespaceName" /> and <paramref name="isFlags" />.
-        /// </summary>
-        /// <param name="name"> The name of this enum type. </param>
-        /// <param name="namespaceName"> The namespace this enum type belongs to. </param>
-        /// <param name="underlyingType"> Underlying type of this enumeration type. </param>
-        /// <param name="isFlags"> Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field). </param>
-        /// <param name="dataSpace"> DataSpace this enum type lives in. Can be either CSpace or OSpace </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or namespace arguments are null</exception>
-        /// <remarks>
-        /// Note that enums live only in CSpace.
-        /// </remarks>
+        // <summary>
+        // Initializes a new instance of the EnumType class by using the specified <paramref name="name" />,
+        // <paramref name="namespaceName" /> and <paramref name="isFlags" />.
+        // </summary>
+        // <param name="name"> The name of this enum type. </param>
+        // <param name="namespaceName"> The namespace this enum type belongs to. </param>
+        // <param name="underlyingType"> Underlying type of this enumeration type. </param>
+        // <param name="isFlags"> Indicates whether the enum type is defined as flags (i.e. can be treated as a bit field). </param>
+        // <param name="dataSpace"> DataSpace this enum type lives in. Can be either CSpace or OSpace </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name or namespace arguments are null</exception>
+        // <remarks>
+        // Note that enums live only in CSpace.
+        // </remarks>
         internal EnumType(string name, string namespaceName, PrimitiveType underlyingType, bool isFlags, DataSpace dataSpace)
             : base(name, namespaceName, dataSpace)
         {
@@ -61,17 +61,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _underlyingType = underlyingType;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the EnumType class from CLR enumeration type.
-        /// </summary>
-        /// <param name="clrType"> CLR enumeration type to create EnumType from. </param>
-        /// <remarks>
-        /// Note that this method expects that the <paramref name="clrType" /> is a valid CLR enum type
-        /// whose underlying type is a valid EDM primitive type.
-        /// Ideally this constructor should be protected and internal (Family and Assembly modifier) but
-        /// C# does not support this. In order to not expose this constructor to everyone internal is the
-        /// only option.
-        /// </remarks>
+        // <summary>
+        // Initializes a new instance of the EnumType class from CLR enumeration type.
+        // </summary>
+        // <param name="clrType"> CLR enumeration type to create EnumType from. </param>
+        // <remarks>
+        // Note that this method expects that the <paramref name="clrType" /> is a valid CLR enum type
+        // whose underlying type is a valid EDM primitive type.
+        // Ideally this constructor should be protected and internal (Family and Assembly modifier) but
+        // C# does not support this. In order to not expose this constructor to everyone internal is the
+        // only option.
+        // </remarks>
         internal EnumType(Type clrType)
             :
                 base(clrType.Name, clrType.NestingNamespace() ?? string.Empty, DataSpace.OSpace)
@@ -137,9 +137,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be readonly, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)
@@ -149,10 +149,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Adds the specified member to the member collection
-        /// </summary>
-        /// <param name="enumMember"> Enumeration member to add to the member collection. </param>
+        // <summary>
+        // Adds the specified member to the member collection
+        // </summary>
+        // <param name="enumMember"> Enumeration member to add to the member collection. </param>
         internal void AddMember(EnumMember enumMember)
         {
             DebugCheck.NotNull(enumMember);

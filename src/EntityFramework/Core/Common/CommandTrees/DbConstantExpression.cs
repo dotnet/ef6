@@ -46,10 +46,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             }
         }
 
-        /// <summary>
-        /// Provides direct access to the constant value, even for byte[] constants.
-        /// </summary>
-        /// <returns> The object value contained by this constant expression, not a copy. </returns>
+        // <summary>
+        // Provides direct access to the constant value, even for byte[] constants.
+        // </summary>
+        // <returns> The object value contained by this constant expression, not a copy. </returns>
         internal object GetValue()
         {
             return _value;

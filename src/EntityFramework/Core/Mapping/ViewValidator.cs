@@ -13,19 +13,19 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// Verifies that only legal expressions exist in a user-defined query mapping view.
-    /// </summary>
+    // <summary>
+    // Verifies that only legal expressions exist in a user-defined query mapping view.
+    // </summary>
     internal static class ViewValidator
     {
-        /// <summary>
-        /// Determines whether the given view is valid.
-        /// </summary>
-        /// <param name="view"> Query view to validate. </param>
-        /// <param name="setMapping"> Mapping in which view is declared. </param>
-        /// <param name="elementType"> </param>
-        /// <param name="includeSubtypes"> </param>
-        /// <returns> Errors in view definition. </returns>
+        // <summary>
+        // Determines whether the given view is valid.
+        // </summary>
+        // <param name="view"> Query view to validate. </param>
+        // <param name="setMapping"> Mapping in which view is declared. </param>
+        // <param name="elementType"> </param>
+        // <param name="includeSubtypes"> </param>
+        // <returns> Errors in view definition. </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IEnumerable<EdmSchemaError> ValidateQueryView(
             DbQueryCommandTree view, EntitySetBaseMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
@@ -181,9 +181,9 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
-            /// <summary>
-            /// Retrieves all complex types that can be constructed as part of the view.
-            /// </summary>
+            // <summary>
+            // Retrieves all complex types that can be constructed as part of the view.
+            // </summary>
             private IEnumerable<ComplexType> GetComplexTypes()
             {
                 // Retrieve all top-level properties of entity types constructed in the view.
@@ -191,9 +191,9 @@ namespace System.Data.Entity.Core.Mapping
                 return GetComplexTypes(properties);
             }
 
-            /// <summary>
-            /// Recursively identify complex types.
-            /// </summary>
+            // <summary>
+            // Recursively identify complex types.
+            // </summary>
             private IEnumerable<ComplexType> GetComplexTypes(IEnumerable<EdmProperty> properties)
             {
                 // CONSIDER:: if complex type inheritance is supported, this will need to change
@@ -207,9 +207,9 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
-            /// <summary>
-            /// Gets all entity types in scope for this view.
-            /// </summary>
+            // <summary>
+            // Gets all entity types in scope for this view.
+            // </summary>
             private IEnumerable<EntityType> GetEntityTypes()
             {
                 if (_includeSubtypes)
@@ -290,11 +290,11 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// The visitor validates that the QueryView for an AssociationSet uses the same EntitySets when
-        /// creating the ends that were used in CSDL. Since the Query View is already validated, we can expect to
-        /// see only a very restricted set of expressions in the tree.
-        /// </summary>
+        // <summary>
+        // The visitor validates that the QueryView for an AssociationSet uses the same EntitySets when
+        // creating the ends that were used in CSDL. Since the Query View is already validated, we can expect to
+        // see only a very restricted set of expressions in the tree.
+        // </summary>
         private class AssociationSetViewValidator : DbExpressionVisitor<DbExpressionEntitySetInfo>
         {
             private readonly Stack<KeyValuePair<string, DbExpressionEntitySetInfo>> variableScopes =

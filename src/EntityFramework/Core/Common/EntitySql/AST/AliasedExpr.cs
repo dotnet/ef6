@@ -5,17 +5,17 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// AST node for an aliased expression.
-    /// </summary>
+    // <summary>
+    // AST node for an aliased expression.
+    // </summary>
     internal sealed class AliasedExpr : Node
     {
         private readonly Node _expr;
         private readonly Identifier _alias;
 
-        /// <summary>
-        /// Constructs an aliased expression node.
-        /// </summary>
+        // <summary>
+        // Constructs an aliased expression node.
+        // </summary>
         internal AliasedExpr(Node expr, Identifier alias)
         {
             DebugCheck.NotNull(expr);
@@ -32,9 +32,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _alias = alias;
         }
 
-        /// <summary>
-        /// Constructs an aliased expression node with null alias.
-        /// </summary>
+        // <summary>
+        // Constructs an aliased expression node with null alias.
+        // </summary>
         internal AliasedExpr(Node expr)
         {
             DebugCheck.NotNull(expr);
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             get { return _expr; }
         }
 
-        /// <summary>
-        /// Returns expression alias identifier, or null if not aliased.
-        /// </summary>
+        // <summary>
+        // Returns expression alias identifier, or null if not aliased.
+        // </summary>
         internal Identifier Alias
         {
             get { return _alias; }

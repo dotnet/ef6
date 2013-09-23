@@ -10,9 +10,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
     using System.Globalization;
 
-    /// <summary>
-    /// Describes the location of a member within an entity or association type structure.
-    /// </summary>
+    // <summary>
+    // Describes the location of a member within an entity or association type structure.
+    // </summary>
     internal sealed class ModificationFunctionMemberPath : MappingItem
     {
         internal ModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSetNavigation)
@@ -30,16 +30,16 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Gets the members in the path from the leaf (the member being bound)
-        /// to the Root of the structure.
-        /// </summary>
+        // <summary>
+        // Gets the members in the path from the leaf (the member being bound)
+        // to the Root of the structure.
+        // </summary>
         internal readonly ReadOnlyCollection<EdmMember> Members;
 
-        /// <summary>
-        /// Gets the association set to which we are navigating via this member. If the value
-        /// is null, this is not a navigation member path.
-        /// </summary>
+        // <summary>
+        // Gets the association set to which we are navigating via this member. If the value
+        // is null, this is not a navigation member path.
+        // </summary>
         internal readonly AssociationSetEnd AssociationSetEnd;
 
         public override string ToString()

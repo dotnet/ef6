@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Generic implementation of a ConversionContext
-    /// </summary>
+    // <summary>
+    // Generic implementation of a ConversionContext
+    // </summary>
     internal sealed class GenericConversionContext<T_Identifier> : ConversionContext<T_Identifier>
     {
         private readonly Dictionary<TermExpr<T_Identifier>, int> _variableMap = new Dictionary<TermExpr<T_Identifier>, int>();

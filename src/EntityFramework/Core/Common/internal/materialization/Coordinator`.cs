@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.Internal.Materialization
 {
@@ -8,18 +8,18 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Typed <see cref="Coordinator" />
-    /// </summary>
+    // <summary>
+    // Typed <see cref="Coordinator" />
+    // </summary>
     internal class Coordinator<T> : Coordinator
     {
         #region State
 
         internal readonly CoordinatorFactory<T> TypedCoordinatorFactory;
 
-        /// <summary>
-        /// Exposes the Current element that has been materialized (and is being populated) by this coordinator.
-        /// </summary>
+        // <summary>
+        // Exposes the Current element that has been materialized (and is being populated) by this coordinator.
+        // </summary>
         internal virtual T Current
         {
             get { return _current; }
@@ -27,27 +27,27 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         private T _current;
 
-        /// <summary>
-        /// For ObjectResult, aggregates all elements for in the nested collection handled by this coordinator.
-        /// </summary>
+        // <summary>
+        // For ObjectResult, aggregates all elements for in the nested collection handled by this coordinator.
+        // </summary>
         private ICollection<T> _elements;
 
-        /// <summary>
-        /// For ObjectResult, aggregates all elements as wrapped entities for in the nested collection handled by this coordinator.
-        /// </summary>
+        // <summary>
+        // For ObjectResult, aggregates all elements as wrapped entities for in the nested collection handled by this coordinator.
+        // </summary>
         private List<IEntityWrapper> _wrappedElements;
 
-        /// <summary>
-        /// Delegate called when the current nested collection has been consumed. This is necessary in Span
-        /// scenarios where an EntityCollection RelatedEnd is populated only when all related entities have
-        /// been materialized.  This version of the close handler works with wrapped entities.
-        /// </summary>
+        // <summary>
+        // Delegate called when the current nested collection has been consumed. This is necessary in Span
+        // scenarios where an EntityCollection RelatedEnd is populated only when all related entities have
+        // been materialized.  This version of the close handler works with wrapped entities.
+        // </summary>
         private Action<Shaper, List<IEntityWrapper>> _handleClose;
 
-        /// <summary>
-        /// For nested, object-layer coordinators we want to collect all the elements we find and handle them
-        /// when the root coordinator advances.  Otherwise we just want to return them as we find them.
-        /// </summary>
+        // <summary>
+        // For nested, object-layer coordinators we want to collect all the elements we find and handle them
+        // when the root coordinator advances.  Otherwise we just want to return them as we find them.
+        // </summary>
         private readonly bool IsUsingElementCollection;
 
         #endregion
@@ -149,19 +149,19 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Sets the delegate called when this collection is closed.  This close handler works on
-        /// a collection of wrapped entities, rather than on the raw entity objects.
-        /// </summary>
+        // <summary>
+        // Sets the delegate called when this collection is closed.  This close handler works on
+        // a collection of wrapped entities, rather than on the raw entity objects.
+        // </summary>
         internal void RegisterCloseHandler(Action<Shaper, List<IEntityWrapper>> closeHandler)
         {
             Debug.Assert(null == _handleClose, "more than one handler for a collection close 'event'");
             _handleClose = closeHandler;
         }
 
-        /// <summary>
-        /// Called when we're disposing the enumerator;
-        /// </summary>
+        // <summary>
+        // Called when we're disposing the enumerator;
+        // </summary>
         internal void SetCurrentToDefault()
         {
             _current = default(T);
@@ -174,9 +174,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // Code in this section is called from the delegates produced by the Translator.  It may  
         // not show up if you search using Find All References
 
-        /// <summary>
-        /// Returns a handle to the element aggregator for this nested collection.
-        /// </summary>
+        // <summary>
+        // Returns a handle to the element aggregator for this nested collection.
+        // </summary>
         private IEnumerable<T> GetElements()
         {
             return _elements;

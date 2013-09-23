@@ -34,9 +34,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 PrimitiveTypeKind.Int64
             };
 
-        /// <summary>
-        ///     Exposed internally for testing.
-        /// </summary>
+        // <summary>
+        //     Exposed internally for testing.
+        // </summary>
         public class ModelMetadata
         {
             public XDocument Model { get; set; }
@@ -93,9 +93,9 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return Diff(source, target, modificationCommandTreeGenerator, migrationSqlGenerator);
         }
 
-        /// <summary>
-        ///     For testing.
-        /// </summary>
+        // <summary>
+        //     For testing.
+        // </summary>
         public IEnumerable<MigrationOperation> Diff(
             ModelMetadata source,
             ModelMetadata target,

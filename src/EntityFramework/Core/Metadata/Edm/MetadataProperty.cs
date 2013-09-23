@@ -13,13 +13,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
-        /// </summary>
-        /// <param name="name"> The name of this MetadataProperty </param>
-        /// <param name="typeUsage"> The TypeUsage describing the type of this MetadataProperty </param>
-        /// <param name="value"> The value for this attribute </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if typeUsage argument is null</exception>
+        // <summary>
+        // The constructor for MetadataProperty taking in a name, a TypeUsage object, and a value for the attribute
+        // </summary>
+        // <param name="name"> The name of this MetadataProperty </param>
+        // <param name="typeUsage"> The TypeUsage describing the type of this MetadataProperty </param>
+        // <param name="value"> The value for this attribute </param>
+        // <exception cref="System.ArgumentNullException">Thrown if typeUsage argument is null</exception>
         internal MetadataProperty(string name, TypeUsage typeUsage, object value)
         {
             Check.NotNull(typeUsage, "typeUsage");
@@ -30,13 +30,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _propertyKind = PropertyKind.Extended;
         }
 
-        /// <summary>
-        /// The constructor for MetadataProperty taking in all the ingredients for creating TypeUsage and the actual value
-        /// </summary>
-        /// <param name="name"> The name of the attribute </param>
-        /// <param name="edmType"> The edm type of the attribute </param>
-        /// <param name="isCollectionType"> Whether the collection type of the given edm type should be used </param>
-        /// <param name="value"> The value of the attribute </param>
+        // <summary>
+        // The constructor for MetadataProperty taking in all the ingredients for creating TypeUsage and the actual value
+        // </summary>
+        // <param name="name"> The name of the attribute </param>
+        // <param name="edmType"> The edm type of the attribute </param>
+        // <param name="isCollectionType"> Whether the collection type of the given edm type should be used </param>
+        // <param name="value"> The value of the attribute </param>
         internal MetadataProperty(string name, EdmType edmType, bool isCollectionType, object value)
         {
             DebugCheck.NotNull(edmType);
@@ -82,9 +82,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return BuiltInTypeKind.MetadataProperty; }
         }
 
-        /// <summary>
-        /// Gets the identity of this item
-        /// </summary>
+        // <summary>
+        // Gets the identity of this item
+        // </summary>
         internal override string Identity
         {
             get { return Name; }
@@ -157,9 +157,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _typeUsage; }
         }
 
-        /// <summary>
-        /// Sets this item to be readonly, once this is set, the item will never be writable again.
-        /// </summary>
+        // <summary>
+        // Sets this item to be readonly, once this is set, the item will never be writable again.
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)

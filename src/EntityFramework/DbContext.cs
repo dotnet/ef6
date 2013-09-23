@@ -172,9 +172,9 @@ namespace System.Data.Entity
             DiscoverAndInitializeSets();
         }
 
-        /// <summary>
-        /// Initializes the internal context, discovers and initializes sets, and initializes from a model if one is provided.
-        /// </summary>
+        // <summary>
+        // Initializes the internal context, discovers and initializes sets, and initializes from a model if one is provided.
+        // </summary>
         private void InitializeLazyInternalContext(IInternalConnection internalConnection, DbCompiledModel model = null)
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
@@ -186,9 +186,9 @@ namespace System.Data.Entity
             DiscoverAndInitializeSets();
         }
 
-        /// <summary>
-        /// Discovers DbSets and initializes them.
-        /// </summary>
+        // <summary>
+        // Discovers DbSets and initializes them.
+        // </summary>
         private void DiscoverAndInitializeSets()
         {
             new DbSetDiscoveryService(this).InitializeSets();
@@ -217,10 +217,10 @@ namespace System.Data.Entity
         {
         }
 
-        /// <summary>
-        /// Internal method used to make the call to the real OnModelCreating method.
-        /// </summary>
-        /// <param name="modelBuilder"> The model builder. </param>
+        // <summary>
+        // Internal method used to make the call to the real OnModelCreating method.
+        // </summary>
+        // <param name="modelBuilder"> The model builder. </param>
         internal void CallOnModelCreating(DbModelBuilder modelBuilder)
         {
             OnModelCreating(modelBuilder);
@@ -416,11 +416,11 @@ namespace System.Data.Entity
             return entityEntry.InternalEntry.GetValidationResult(items);
         }
 
-        /// <summary>
-        /// Internal method that calls the protected ValidateEntity method.
-        /// </summary>
-        /// <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
-        /// <returns> Entity validation result. Possibly null when ValidateEntity is overridden. </returns>
+        // <summary>
+        // Internal method that calls the protected ValidateEntity method.
+        // </summary>
+        // <param name="entityEntry"> DbEntityEntry instance to be validated. </param>
+        // <returns> Entity validation result. Possibly null when ValidateEntity is overridden. </returns>
         internal virtual DbEntityValidationResult CallValidateEntity(DbEntityEntry entityEntry)
         {
             return ValidateEntity(entityEntry, new Dictionary<object, object>());
@@ -512,9 +512,9 @@ namespace System.Data.Entity
 
         #region InternalContext access
 
-        /// <summary>
-        /// Provides access to the underlying InternalContext for other parts of the internal design.
-        /// </summary>
+        // <summary>
+        // Provides access to the underlying InternalContext for other parts of the internal design.
+        // </summary>
         internal virtual InternalContext InternalContext
         {
             get { return _internalContext; }

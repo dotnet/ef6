@@ -7,18 +7,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
     internal abstract class Property : SchemaElement
     {
-        /// <summary>
-        /// Creates a Property object
-        /// </summary>
-        /// <param name="parentElement"> The parent element </param>
+        // <summary>
+        // Creates a Property object
+        // </summary>
+        // <param name="parentElement"> The parent element </param>
         internal Property(StructuredType parentElement)
             : base(parentElement)
         {
         }
 
-        /// <summary>
-        /// Gets the Type of the property
-        /// </summary>
+        // <summary>
+        // Gets the Type of the property
+        // </summary>
         public abstract SchemaType Type { get; }
 
         protected override bool HandleElement(XmlReader reader)

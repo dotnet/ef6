@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Validation
 {
@@ -14,15 +14,15 @@ namespace System.Data.Entity.Validation
     [Serializable]
     public class DbEntityValidationResult
     {
-        /// <summary>
-        /// Entity entry the results applies to. Never null.
-        /// </summary>
+        // <summary>
+        // Entity entry the results applies to. Never null.
+        // </summary>
         [NonSerialized]
         private readonly InternalEntityEntry _entry;
 
-        /// <summary>
-        /// List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
-        /// </summary>
+        // <summary>
+        // List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
+        // </summary>
         private readonly List<DbValidationError> _validationErrors;
 
         /// <summary>
@@ -41,13 +41,13 @@ namespace System.Data.Entity.Validation
             _validationErrors = validationErrors.ToList();
         }
 
-        /// <summary>
-        /// Creates an instance of <see cref="DbEntityValidationResult" /> class.
-        /// </summary>
-        /// <param name="entry"> Entity entry the results applies to. Never null. </param>
-        /// <param name="validationErrors">
-        /// List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
-        /// </param>
+        // <summary>
+        // Creates an instance of <see cref="DbEntityValidationResult" /> class.
+        // </summary>
+        // <param name="entry"> Entity entry the results applies to. Never null. </param>
+        // <param name="validationErrors">
+        // List of <see cref="DbValidationError" /> instances. Never null. Can be empty meaning the entity is valid.
+        // </param>
         internal DbEntityValidationResult(InternalEntityEntry entry, IEnumerable<DbValidationError> validationErrors)
         {
             DebugCheck.NotNull(entry);

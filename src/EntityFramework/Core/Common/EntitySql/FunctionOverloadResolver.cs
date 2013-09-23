@@ -10,15 +10,15 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// Represents function overload resolution mechanism, used by L2E and eSQL frontends.
-    /// </summary>
+    // <summary>
+    // Represents function overload resolution mechanism, used by L2E and eSQL frontends.
+    // </summary>
     internal static class FunctionOverloadResolver
     {
-        /// <summary>
-        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
-        /// </summary>
-        /// <returns> Funciton metadata </returns>
+        // <summary>
+        // Resolves <paramref name="argTypes" /> against the list of function signatures.
+        // </summary>
+        // <returns> Funciton metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -39,10 +39,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 out isAmbiguous);
         }
 
-        /// <summary>
-        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
-        /// </summary>
-        /// <returns> Funciton metadata </returns>
+        // <summary>
+        // Resolves <paramref name="argTypes" /> against the list of function signatures.
+        // </summary>
+        // <returns> Funciton metadata </returns>
         internal static EdmFunction ResolveFunctionOverloads(
             IList<EdmFunction> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -67,21 +67,21 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 out isAmbiguous);
         }
 
-        /// <summary>
-        /// Resolves <paramref name="argTypes" /> against the list of function signatures.
-        /// </summary>
-        /// <param name="functionsMetadata"> </param>
-        /// <param name="argTypes"> </param>
-        /// <param name="getSignatureParams"> function formal signature getter </param>
-        /// <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
-        /// <param name="getParameterMode"> ParameterMode getter for a signature param </param>
-        /// <param name="flattenArgumentType"> </param>
-        /// <param name="flattenParameterType"> </param>
-        /// <param name="isPromotableTo"> </param>
-        /// <param name="isStructurallyEqual"> </param>
-        /// <param name="isGroupAggregateFunction"> </param>
-        /// <param name="isAmbiguous"> </param>
-        /// <returns> Funciton metadata </returns>
+        // <summary>
+        // Resolves <paramref name="argTypes" /> against the list of function signatures.
+        // </summary>
+        // <param name="functionsMetadata"> </param>
+        // <param name="argTypes"> </param>
+        // <param name="getSignatureParams"> function formal signature getter </param>
+        // <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
+        // <param name="getParameterMode"> ParameterMode getter for a signature param </param>
+        // <param name="flattenArgumentType"> </param>
+        // <param name="flattenParameterType"> </param>
+        // <param name="isPromotableTo"> </param>
+        // <param name="isStructurallyEqual"> </param>
+        // <param name="isGroupAggregateFunction"> </param>
+        // <param name="isAmbiguous"> </param>
+        // <returns> Funciton metadata </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static TFunctionMetadata ResolveFunctionOverloads<TFunctionMetadata, TFunctionParameterMetadata>(
             IList<TFunctionMetadata> functionsMetadata,
@@ -188,21 +188,21 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return isAmbiguous ? null : bestCandidate;
         }
 
-        /// <summary>
-        /// Check promotability, returns true if argument list is promotable to the overload and overload was successfully ranked, otherwise false.
-        /// Ranks the overload parameter types against the argument list.
-        /// </summary>
-        /// <param name="argumentList"> list of argument types </param>
-        /// <param name="flatArgumentList"> flattened list of argument types </param>
-        /// <param name="overloadParamList"> list of overload parameter types </param>
-        /// <param name="getParameterTypeUsage"> TypeUsage getter for the overload parameters </param>
-        /// <param name="getParameterMode"> ParameterMode getter for the overload parameters </param>
-        /// <param name="flattenParameterType"> </param>
-        /// <param name="isPromotableTo"> </param>
-        /// <param name="isStructurallyEqual"> </param>
-        /// <param name="isGroupAggregateFunction"> </param>
-        /// <param name="totalRank"> returns total promotion rank of the overload, 0 if no arguments </param>
-        /// <param name="parameterRanks"> returns individual promotion ranks of the overload parameters, empty array if no arguments </param>
+        // <summary>
+        // Check promotability, returns true if argument list is promotable to the overload and overload was successfully ranked, otherwise false.
+        // Ranks the overload parameter types against the argument list.
+        // </summary>
+        // <param name="argumentList"> list of argument types </param>
+        // <param name="flatArgumentList"> flattened list of argument types </param>
+        // <param name="overloadParamList"> list of overload parameter types </param>
+        // <param name="getParameterTypeUsage"> TypeUsage getter for the overload parameters </param>
+        // <param name="getParameterMode"> ParameterMode getter for the overload parameters </param>
+        // <param name="flattenParameterType"> </param>
+        // <param name="isPromotableTo"> </param>
+        // <param name="isStructurallyEqual"> </param>
+        // <param name="isGroupAggregateFunction"> </param>
+        // <param name="totalRank"> returns total promotion rank of the overload, 0 if no arguments </param>
+        // <param name="parameterRanks"> returns individual promotion ranks of the overload parameters, empty array if no arguments </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryRankFunctionParameters<TFunctionParameterMetadata>(
             IList<TypeUsage> argumentList,
@@ -292,11 +292,11 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return true;
         }
 
-        /// <summary>
-        /// Ranks the <paramref name="fromType" /> -> <paramref name="toType" /> promotion.
-        /// Range of values: 0 to negative infinity, with 0 as the best rank (promotion to self).
-        /// <paramref name="fromType" /> must be promotable to <paramref name="toType" />, otherwise internal error is thrown.
-        /// </summary>
+        // <summary>
+        // Ranks the <paramref name="fromType" /> -> <paramref name="toType" /> promotion.
+        // Range of values: 0 to negative infinity, with 0 as the best rank (promotion to self).
+        // <paramref name="fromType" /> must be promotable to <paramref name="toType" />, otherwise internal error is thrown.
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPromotableTo")]
         private static int GetPromotionRank(
             TypeUsage fromType,

@@ -5,11 +5,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Represents a variable with finite domain, e.g., c in {1, 2, 3}
-    /// </summary>
-    /// <typeparam name="T_Variable"> Type of the identifier (c above -- it need not be int). </typeparam>
-    /// <typeparam name="T_Element"> Type of domain variables (int in the above example). </typeparam>
+    // <summary>
+    // Represents a variable with finite domain, e.g., c in {1, 2, 3}
+    // </summary>
+    // <typeparam name="T_Variable"> Type of the identifier (c above -- it need not be int). </typeparam>
+    // <typeparam name="T_Element"> Type of domain variables (int in the above example). </typeparam>
     internal class DomainVariable<T_Variable, T_Element>
     {
         private readonly T_Variable _identifier;
@@ -17,12 +17,12 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         private readonly int _hashCode;
         private readonly IEqualityComparer<T_Variable> _identifierComparer;
 
-        /// <summary>
-        /// Constructs a new domain variable.
-        /// </summary>
-        /// <param name="identifier"> Identifier </param>
-        /// <param name="domain"> Domain of variable. </param>
-        /// <param name="identifierComparer"> Comparer of identifier </param>
+        // <summary>
+        // Constructs a new domain variable.
+        // </summary>
+        // <param name="identifier"> Identifier </param>
+        // <param name="domain"> Domain of variable. </param>
+        // <param name="identifierComparer"> Comparer of identifier </param>
         internal DomainVariable(T_Variable identifier, Set<T_Element> domain, IEqualityComparer<T_Variable> identifierComparer)
         {
             DebugCheck.NotNull((object)identifier);
@@ -41,17 +41,17 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
         {
         }
 
-        /// <summary>
-        /// Gets the variable.
-        /// </summary>
+        // <summary>
+        // Gets the variable.
+        // </summary>
         internal T_Variable Identifier
         {
             get { return _identifier; }
         }
 
-        /// <summary>
-        /// Gets the domain of this variable.
-        /// </summary>
+        // <summary>
+        // Gets the domain of this variable.
+        // </summary>
         internal Set<T_Element> Domain
         {
             get { return _domain; }

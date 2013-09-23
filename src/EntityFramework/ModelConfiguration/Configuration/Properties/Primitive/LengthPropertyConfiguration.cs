@@ -5,40 +5,40 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Used to configure a property with length facets for an entity type or
-    /// complex type.
-    /// </summary>
+    // <summary>
+    // Used to configure a property with length facets for an entity type or
+    // complex type.
+    // </summary>
     internal abstract class LengthPropertyConfiguration : PrimitivePropertyConfiguration
     {
-        /// <summary>
-        /// Gets or sets a value indicating whether the property is fixed length.
-        /// </summary>
+        // <summary>
+        // Gets or sets a value indicating whether the property is fixed length.
+        // </summary>
         public bool? IsFixedLength { get; set; }
 
-        /// <summary>
-        /// Gets or sets the maximum length of the property.
-        /// </summary>
+        // <summary>
+        // Gets or sets the maximum length of the property.
+        // </summary>
         public int? MaxLength { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the property allows the maximum
-        /// length supported by the database provider.
-        /// </summary>
+        // <summary>
+        // Gets or sets a value indicating whether the property allows the maximum
+        // length supported by the database provider.
+        // </summary>
         public bool? IsMaxLength { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the LengthPropertyConfiguration class.
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of the LengthPropertyConfiguration class.
+        // </summary>
         protected LengthPropertyConfiguration()
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration" /> 
-        /// class with the same settings as another configuration.
-        /// </summary>
-        /// <param name="source">The configuration to copy settings from.</param>
+        // <summary>
+        // Initializes a new instance of the <see cref="T:System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive.LengthPropertyConfiguration" /> 
+        // class with the same settings as another configuration.
+        // </summary>
+        // <param name="source">The configuration to copy settings from.</param>
         protected LengthPropertyConfiguration(LengthPropertyConfiguration source)
             : base(source)
         {

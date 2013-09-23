@@ -22,10 +22,10 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             _singlePropertyUnwrapped = unwrapSingleProperty;
         }
 
-        /// <summary>
-        /// Is the result type of the element equal to the result type of the single property
-        /// of the element of its operand?
-        /// </summary>
+        // <summary>
+        // Is the result type of the element equal to the result type of the single property
+        // of the element of its operand?
+        // </summary>
         internal bool IsSinglePropertyUnwrapped
         {
             get { return _singlePropertyUnwrapped; }

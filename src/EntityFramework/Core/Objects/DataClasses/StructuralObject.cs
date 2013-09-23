@@ -159,31 +159,31 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return currentValue;
         }
 
-        /// <summary>
-        /// This method is called by a ComplexObject contained in this Entity
-        /// whenever a change is about to be made to a property of the
-        /// ComplexObject so that the change can be forwarded to the change tracker.
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
-        /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is called by a ComplexObject contained in this Entity
+        // whenever a change is about to be made to a property of the
+        // ComplexObject so that the change can be forwarded to the change tracker.
+        // </summary>
+        // <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
+        // <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal abstract void ReportComplexPropertyChanging(
             string entityMemberName, ComplexObject complexObject, string complexMemberName);
 
-        /// <summary>
-        /// This method is called by a ComplexObject contained in this Entity
-        /// whenever a change has been made to a property of the
-        /// ComplexObject so that the change can be forwarded to the change tracker.
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
-        /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is called by a ComplexObject contained in this Entity
+        // whenever a change has been made to a property of the
+        // ComplexObject so that the change can be forwarded to the change tracker.
+        // </summary>
+        // <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
+        // <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal abstract void ReportComplexPropertyChanged(
             string entityMemberName, ComplexObject complexObject, string complexMemberName);
 
-        /// <summary>
-        /// Determines whether the structural object is attached to a change tracker or not
-        /// </summary>
+        // <summary>
+        // Determines whether the structural object is attached to a change tracker or not
+        // </summary>
         internal abstract bool IsChangeTracked { get; }
 
         /// <summary>Determines whether the specified byte arrays contain identical values.</summary>

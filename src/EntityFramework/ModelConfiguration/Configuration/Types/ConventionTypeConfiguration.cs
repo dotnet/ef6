@@ -235,11 +235,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return new ConventionPrimitivePropertyConfiguration(propertyInfo, () => propertyConfiguration);
         }
 
-        /// <summary>
-        /// Configures a property that is defined on this type as a navigation property.
-        /// </summary>
-        /// <param name="propertyName"> The name of the property being configured. </param>
-        /// <returns> A configuration object that can be used to configure the property. </returns>
+        // <summary>
+        // Configures a property that is defined on this type as a navigation property.
+        // </summary>
+        // <param name="propertyName"> The name of the property being configured. </param>
+        // <returns> A configuration object that can be used to configure the property. </returns>
         internal ConventionNavigationPropertyConfiguration NavigationProperty(string propertyName)
         {
             Check.NotEmpty(propertyName, "propertyName");
@@ -253,11 +253,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return NavigationProperty(propertyInfo);
         }
 
-        /// <summary>
-        /// Configures a property that is defined on this type as a navigation property.
-        /// </summary>
-        /// <param name="propertyInfo"> The property being configured. </param>
-        /// <returns> A configuration object that can be used to configure the property. </returns>
+        // <summary>
+        // Configures a property that is defined on this type as a navigation property.
+        // </summary>
+        // <param name="propertyInfo"> The property being configured. </param>
+        // <returns> A configuration object that can be used to configure the property. </returns>
         internal ConventionNavigationPropertyConfiguration NavigationProperty(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");

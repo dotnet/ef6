@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Handles copying of operators
-    /// </summary>
+    // <summary>
+    // Handles copying of operators
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class OpCopier : BasicOpVisitorOfNode
     {
@@ -21,15 +21,15 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return Copy(cmd, n, out varMap);
         }
 
-        /// <summary>
-        /// Make a copy of the current node. Also return an ordered list of the new
-        /// Vars corresponding to the vars in "varList"
-        /// </summary>
-        /// <param name="cmd"> current command </param>
-        /// <param name="node"> the node to clone </param>
-        /// <param name="varList"> list of Vars </param>
-        /// <param name="newVarList"> list of "new" Vars </param>
-        /// <returns> the cloned node </returns>
+        // <summary>
+        // Make a copy of the current node. Also return an ordered list of the new
+        // Vars corresponding to the vars in "varList"
+        // </summary>
+        // <param name="cmd"> current command </param>
+        // <param name="node"> the node to clone </param>
+        // <param name="varList"> list of Vars </param>
+        // <param name="newVarList"> list of "new" Vars </param>
+        // <returns> the cloned node </returns>
         internal static Node Copy(Command cmd, Node node, VarList varList, out VarList newVarList)
         {
             VarMap varMap;
@@ -74,20 +74,20 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region Constructors (private)
 
-        /// <summary>
-        /// Constructor. Allows for cloning of nodes within the same command
-        /// </summary>
-        /// <param name="cmd"> The command </param>
+        // <summary>
+        // Constructor. Allows for cloning of nodes within the same command
+        // </summary>
+        // <param name="cmd"> The command </param>
         protected OpCopier(Command cmd)
             : this(cmd, cmd)
         {
         }
 
-        /// <summary>
-        /// Constructor. Allows for cloning of nodes across commands
-        /// </summary>
-        /// <param name="destCommand"> The Command to which Nodes to be cloned must belong </param>
-        /// <param name="sourceCommand"> The Command to which cloned Nodes will belong </param>
+        // <summary>
+        // Constructor. Allows for cloning of nodes across commands
+        // </summary>
+        // <param name="destCommand"> The Command to which Nodes to be cloned must belong </param>
+        // <param name="sourceCommand"> The Command to which cloned Nodes will belong </param>
         private OpCopier(Command destCommand, Command sourceCommand)
         {
             m_srcCmd = sourceCommand;
@@ -99,12 +99,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region Private State Management
 
-        /// <summary>
-        /// Get the "cloned" var for a given Var.
-        /// If no cloned var exists, return the input Var itself
-        /// </summary>
-        /// <param name="v"> The Var for which the cloned Var should be retrieved </param>
-        /// <returns> The cloned Var that corresponds to the specified Var if this OpCopier is cloning across two different Commands; otherwise it is safe to return the specified Var itself </returns>
+        // <summary>
+        // Get the "cloned" var for a given Var.
+        // If no cloned var exists, return the input Var itself
+        // </summary>
+        // <param name="v"> The Var for which the cloned Var should be retrieved </param>
+        // <returns> The cloned Var that corresponds to the specified Var if this OpCopier is cloning across two different Commands; otherwise it is safe to return the specified Var itself </returns>
         private Var GetMappedVar(Var v)
         {
             Var mappedVar;
@@ -132,22 +132,22 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return v;
         }
 
-        /// <summary>
-        /// Set the "cloned" var for a given Var
-        /// WARNING: If a mapping already exists, an exception is raised
-        /// </summary>
-        /// <param name="v"> The original Var </param>
-        /// <param name="mappedVar"> The cloned Var </param>
+        // <summary>
+        // Set the "cloned" var for a given Var
+        // WARNING: If a mapping already exists, an exception is raised
+        // </summary>
+        // <param name="v"> The original Var </param>
+        // <param name="mappedVar"> The cloned Var </param>
         private void SetMappedVar(Var v, Var mappedVar)
         {
             m_varMap.Add(v, mappedVar);
         }
 
-        /// <summary>
-        /// Maps columns of an existing table to those of the cloned table
-        /// </summary>
-        /// <param name="newTable"> The original Table </param>
-        /// <param name="oldTable"> The cloned Table </param>
+        // <summary>
+        // Maps columns of an existing table to those of the cloned table
+        // </summary>
+        // <param name="newTable"> The original Table </param>
+        // <param name="oldTable"> The cloned Table </param>
         private void MapTable(Table newTable, Table oldTable)
         {
             // Map the corresponding columns of the table
@@ -158,12 +158,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Produce the "mapped" Vars for each Var in the input sequence, while
-        /// preserving the original order
-        /// </summary>
-        /// <param name="vars"> input var sequence </param>
-        /// <returns> output mapped vars </returns>
+        // <summary>
+        // Produce the "mapped" Vars for each Var in the input sequence, while
+        // preserving the original order
+        // </summary>
+        // <param name="vars"> input var sequence </param>
+        // <returns> output mapped vars </returns>
         private IEnumerable<Var> MapVars(IEnumerable<Var> vars)
         {
             foreach (var v in vars)
@@ -173,36 +173,36 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Create a mapped varvec. A new varvec that "maps" all the Vars from
-        /// the original Varvec
-        /// </summary>
-        /// <param name="vars"> the varvec to clone </param>
-        /// <returns> a mapped varvec </returns>
+        // <summary>
+        // Create a mapped varvec. A new varvec that "maps" all the Vars from
+        // the original Varvec
+        // </summary>
+        // <param name="vars"> the varvec to clone </param>
+        // <returns> a mapped varvec </returns>
         private VarVec Copy(VarVec vars)
         {
             var newVarVec = m_destCmd.CreateVarVec(MapVars(vars));
             return newVarVec;
         }
 
-        /// <summary>
-        /// Create a mapped copy of the input VarList - each var from the input varlist
-        /// is represented by its mapped var (and in exactly the same order) in the output
-        /// varlist
-        /// </summary>
-        /// <param name="varList"> varList to map </param>
-        /// <returns> mapped varlist </returns>
+        // <summary>
+        // Create a mapped copy of the input VarList - each var from the input varlist
+        // is represented by its mapped var (and in exactly the same order) in the output
+        // varlist
+        // </summary>
+        // <param name="varList"> varList to map </param>
+        // <returns> mapped varlist </returns>
         private VarList Copy(VarList varList)
         {
             var newVarList = Command.CreateVarList(MapVars(varList));
             return newVarList;
         }
 
-        /// <summary>
-        /// Copies a sortkey
-        /// </summary>
-        /// <param name="sortKey"> The SortKey to clone </param>
-        /// <returns> A new SortKey that is a clone of sortKey </returns>
+        // <summary>
+        // Copies a sortkey
+        // </summary>
+        // <param name="sortKey"> The SortKey to clone </param>
+        // <returns> A new SortKey that is a clone of sortKey </returns>
         private SortKey Copy(SortKey sortKey)
         {
             return Command.CreateSortKey(
@@ -212,11 +212,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                 );
         }
 
-        /// <summary>
-        /// Copies a list of Sortkeys
-        /// </summary>
-        /// <param name="sortKeys"> The list of SortKeys </param>
-        /// <returns> A new list containing clones of the specified SortKeys </returns>
+        // <summary>
+        // Copies a list of Sortkeys
+        // </summary>
+        // <param name="sortKeys"> The list of SortKeys </param>
+        // <returns> A new list containing clones of the specified SortKeys </returns>
         private List<SortKey> Copy(List<SortKey> sortKeys)
         {
             var newSortKeys = new List<SortKey>();
@@ -231,21 +231,21 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region Visitor Helpers
 
-        /// <summary>
-        /// Simple wrapper for all copy operations
-        /// </summary>
-        /// <param name="n"> The Node to copy </param>
-        /// <returns> A new Node that is a copy of the specified Node </returns>
+        // <summary>
+        // Simple wrapper for all copy operations
+        // </summary>
+        // <param name="n"> The Node to copy </param>
+        // <returns> A new Node that is a copy of the specified Node </returns>
         protected Node CopyNode(Node n)
         {
             return n.Op.Accept(this, n);
         }
 
-        /// <summary>
-        /// Copies all the Child Nodes of the specified Node
-        /// </summary>
-        /// <param name="n"> The Node for which the child Nodes should be copied </param>
-        /// <returns> A new list containing copies of the specified Node's children </returns>
+        // <summary>
+        // Copies all the Child Nodes of the specified Node
+        // </summary>
+        // <param name="n"> The Node for which the child Nodes should be copied </param>
+        // <returns> A new list containing copies of the specified Node's children </returns>
         private List<Node> ProcessChildren(Node n)
         {
             var children = new List<Node>();
@@ -256,12 +256,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return children;
         }
 
-        /// <summary>
-        /// Creates a new Node with the specified Op as its Op and the result of visiting the specified Node's children as its children
-        /// </summary>
-        /// <param name="op"> The Op that the new Node should reference </param>
-        /// <param name="original"> The Node for which the children should be visited and the resulting cloned Nodes used as the children of the new Node returned by this method </param>
-        /// <returns> A new Node with the specified Op as its Op and the cloned child Nodes as its children </returns>
+        // <summary>
+        // Creates a new Node with the specified Op as its Op and the result of visiting the specified Node's children as its children
+        // </summary>
+        // <param name="op"> The Op that the new Node should reference </param>
+        // <param name="original"> The Node for which the children should be visited and the resulting cloned Nodes used as the children of the new Node returned by this method </param>
+        // <returns> A new Node with the specified Op as its Op and the cloned child Nodes as its children </returns>
         private Node CopyDefault(Op op, Node original)
         {
             return m_destCmd.CreateNode(op, ProcessChildren(original));
@@ -271,13 +271,13 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region IOpVisitor<Node> Members
 
-        /// <summary>
-        /// Default Visitor pattern method for unrecognized Ops
-        /// </summary>
-        /// <param name="op"> The unrecognized Op </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> This method always throws NotSupportedException </returns>
-        /// <exception cref="NotSupportedException">By design to indicate that the Op was not recognized and is therefore unsupported</exception>
+        // <summary>
+        // Default Visitor pattern method for unrecognized Ops
+        // </summary>
+        // <param name="op"> The unrecognized Op </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> This method always throws NotSupportedException </returns>
+        // <exception cref="NotSupportedException">By design to indicate that the Op was not recognized and is therefore unsupported</exception>
         public override Node Visit(Op op, Node n)
         {
             throw new NotSupportedException(Strings.Iqt_General_UnsupportedOp(op.GetType().FullName));
@@ -285,158 +285,158 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region ScalarOps
 
-        /// <summary>
-        /// Copies a ConstantOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ConstantOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ConstantOp op, Node n)
         {
             var newOp = m_destCmd.CreateConstantOp(op.Type, op.Value);
             return m_destCmd.CreateNode(newOp);
         }
 
-        /// <summary>
-        /// Copies a NullOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a NullOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(NullOp op, Node n)
         {
             return m_destCmd.CreateNode(m_destCmd.CreateNullOp(op.Type));
         }
 
-        /// <summary>
-        /// Copies a ConstantPredicateOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ConstantPredicateOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ConstantPredicateOp op, Node n)
         {
             return m_destCmd.CreateNode(m_destCmd.CreateConstantPredicateOp(op.Value));
         }
 
-        /// <summary>
-        /// Copies an InternalConstantOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies an InternalConstantOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(InternalConstantOp op, Node n)
         {
             var newOp = m_destCmd.CreateInternalConstantOp(op.Type, op.Value);
             return m_destCmd.CreateNode(newOp);
         }
 
-        /// <summary>
-        /// Copies a NullSentinelOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a NullSentinelOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(NullSentinelOp op, Node n)
         {
             var newOp = m_destCmd.CreateNullSentinelOp();
             return m_destCmd.CreateNode(newOp);
         }
 
-        /// <summary>
-        /// Copies a FunctionOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a FunctionOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(FunctionOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateFunctionOp(op.Function), n);
         }
 
-        /// <summary>
-        /// Copies a PropertyOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a PropertyOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(PropertyOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreatePropertyOp(op.PropertyInfo), n);
         }
 
-        /// <summary>
-        /// Copies a RelPropertyOp
-        /// </summary>
-        /// <param name="op"> the RelPropertyOp to copy </param>
-        /// <param name="n"> node tree corresponding to 'op' </param>
-        /// <returns> a copy of the node tree </returns>
+        // <summary>
+        // Copies a RelPropertyOp
+        // </summary>
+        // <param name="op"> the RelPropertyOp to copy </param>
+        // <param name="n"> node tree corresponding to 'op' </param>
+        // <returns> a copy of the node tree </returns>
         public override Node Visit(RelPropertyOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateRelPropertyOp(op.PropertyInfo), n);
         }
 
-        /// <summary>
-        /// Copies a CaseOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a CaseOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(CaseOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateCaseOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a ComparisonOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ComparisonOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ComparisonOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateComparisonOp(op.OpType), n);
         }
 
-        /// <summary>
-        /// Copies a like-op
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a like-op
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(LikeOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateLikeOp(), n);
         }
 
-        /// <summary>
-        /// Clone an aggregateop
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an aggregateop
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(AggregateOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateAggregateOp(op.AggFunc, op.IsDistinctAggregate), n);
         }
 
-        /// <summary>
-        /// Copies a type constructor
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a type constructor
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(NewInstanceOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateNewInstanceOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a NewEntityOp
-        /// </summary>
-        /// <param name="op"> the NewEntityOp to copy </param>
-        /// <param name="n"> node tree corresponding to the NewEntityOp </param>
-        /// <returns> a copy of the node tree </returns>
+        // <summary>
+        // Copies a NewEntityOp
+        // </summary>
+        // <param name="op"> the NewEntityOp to copy </param>
+        // <param name="n"> node tree corresponding to the NewEntityOp </param>
+        // <returns> a copy of the node tree </returns>
         public override Node Visit(NewEntityOp op, Node n)
         {
             NewEntityOp opCopy;
@@ -452,12 +452,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return CopyDefault(opCopy, n);
         }
 
-        /// <summary>
-        /// Copies a discriminated type constructor
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a discriminated type constructor
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(DiscriminatedNewEntityOp op, Node n)
         {
             return
@@ -465,45 +465,45 @@ namespace System.Data.Entity.Core.Query.InternalTrees
                     m_destCmd.CreateDiscriminatedNewEntityOp(op.Type, op.DiscriminatorMap, op.EntitySet, op.RelationshipProperties), n);
         }
 
-        /// <summary>
-        /// Copies a multiset constructor
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a multiset constructor
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(NewMultisetOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateNewMultisetOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a record constructor
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a record constructor
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(NewRecordOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateNewRecordOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a RefOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a RefOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(RefOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateRefOp(op.EntitySet, op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a VarRefOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a VarRefOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(VarRefOp op, Node n)
         {
             // Look up the newVar.
@@ -518,90 +518,90 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(m_destCmd.CreateVarRefOp(newVar));
         }
 
-        /// <summary>
-        /// Copies a ConditionalOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ConditionalOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ConditionalOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateConditionalOp(op.OpType), n);
         }
 
-        /// <summary>
-        /// Copies an ArithmeticOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies an ArithmeticOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ArithmeticOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateArithmeticOp(op.OpType, op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a TreatOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a TreatOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(TreatOp op, Node n)
         {
             var newTreatOp = op.IsFakeTreat ? m_destCmd.CreateFakeTreatOp(op.Type) : m_destCmd.CreateTreatOp(op.Type);
             return CopyDefault(newTreatOp, n);
         }
 
-        /// <summary>
-        /// Copies a CastOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a CastOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(CastOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateCastOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a SoftCastOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a SoftCastOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(SoftCastOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateSoftCastOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a DerefOp
-        /// </summary>
-        /// <param name="op"> the derefOp to copy </param>
-        /// <param name="n"> the subtree </param>
-        /// <returns> a copy of the subtree </returns>
+        // <summary>
+        // Copies a DerefOp
+        // </summary>
+        // <param name="op"> the derefOp to copy </param>
+        // <param name="n"> the subtree </param>
+        // <returns> a copy of the subtree </returns>
         public override Node Visit(DerefOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateDerefOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a NavigateOp
-        /// </summary>
-        /// <param name="op"> the NavigateOp </param>
-        /// <param name="n"> the subtree </param>
-        /// <returns> a copy of the subtree </returns>
+        // <summary>
+        // Copies a NavigateOp
+        // </summary>
+        // <param name="op"> the NavigateOp </param>
+        // <param name="n"> the subtree </param>
+        // <returns> a copy of the subtree </returns>
         public override Node Visit(NavigateOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateNavigateOp(op.Type, op.RelProperty), n);
         }
 
-        /// <summary>
-        /// Clone an IsOfOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an IsOfOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(IsOfOp op, Node n)
         {
             if (op.IsOfOnly)
@@ -614,56 +614,56 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             }
         }
 
-        /// <summary>
-        /// Clone an ExistsOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an ExistsOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ExistsOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateExistsOp(), n);
         }
 
-        /// <summary>
-        /// Clone an ElementOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an ElementOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ElementOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateElementOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a GetRefKeyOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a GetRefKeyOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(GetRefKeyOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateGetRefKeyOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a GetEntityRefOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a GetEntityRefOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(GetEntityRefOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateGetEntityRefOp(op.Type), n);
         }
 
-        /// <summary>
-        /// Copies a CollectOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a CollectOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(CollectOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateCollectOp(op.Type), n);
@@ -673,12 +673,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region RelOps
 
-        /// <summary>
-        /// Copies a ScanTableOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ScanTableOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ScanTableOp op, Node n)
         {
             // First create a new ScanTableOp based on the metadata of the existing Op
@@ -691,12 +691,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newScan);
         }
 
-        /// <summary>
-        /// Copies a ScanViewOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ScanViewOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ScanViewOp op, Node n)
         {
             // First create a new ScanViewOp based on the metadata of the existing Op
@@ -710,12 +710,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newScan, children);
         }
 
-        /// <summary>
-        /// Clone an UnnestOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an UnnestOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(UnnestOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -735,12 +735,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newUnnest, children);
         }
 
-        /// <summary>
-        /// Copies a ProjectOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a ProjectOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ProjectOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -756,23 +756,23 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newProject, children);
         }
 
-        /// <summary>
-        /// Copies a filterOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a filterOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(FilterOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateFilterOp(), n);
         }
 
-        /// <summary>
-        /// Copies a sort node
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a sort node
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(SortOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -788,12 +788,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newSortOp, children);
         }
 
-        /// <summary>
-        /// Copies a constrained sort node
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a constrained sort node
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ConstrainedSortOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -809,12 +809,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newSortOp, children);
         }
 
-        /// <summary>
-        /// Copies a group-by node
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a group-by node
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(GroupByOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -827,12 +827,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newGroupOp, children);
         }
 
-        /// <summary>
-        /// Copies a group by into node
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a group by into node
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(GroupByIntoOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -845,78 +845,78 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newGroupOp, children);
         }
 
-        /// <summary>
-        /// Copies a CrossJoinOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a CrossJoinOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(CrossJoinOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateCrossJoinOp(), n);
         }
 
-        /// <summary>
-        /// Copies an InnerJoinOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies an InnerJoinOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(InnerJoinOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateInnerJoinOp(), n);
         }
 
-        /// <summary>
-        /// Copies a LeftOuterJoinOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a LeftOuterJoinOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(LeftOuterJoinOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateLeftOuterJoinOp(), n);
         }
 
-        /// <summary>
-        /// Copies a FullOuterJoinOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a FullOuterJoinOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(FullOuterJoinOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateFullOuterJoinOp(), n);
         }
 
-        /// <summary>
-        /// Copies a crossApplyOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a crossApplyOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(CrossApplyOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateCrossApplyOp(), n);
         }
 
-        /// <summary>
-        /// Clone an OuterApplyOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Clone an OuterApplyOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(OuterApplyOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateOuterApplyOp(), n);
         }
 
-        /// <summary>
-        /// Common copy path for all SetOps
-        /// </summary>
-        /// <param name="op"> The SetOp to Copy (must be one of ExceptOp, IntersectOp, UnionAllOp) </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Common copy path for all SetOps
+        // </summary>
+        // <param name="op"> The SetOp to Copy (must be one of ExceptOp, IntersectOp, UnionAllOp) </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         private Node CopySetOp(SetOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -974,45 +974,45 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newSetOp, children);
         }
 
-        /// <summary>
-        /// Copies a UnionAllOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a UnionAllOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(UnionAllOp op, Node n)
         {
             return CopySetOp(op, n);
         }
 
-        /// <summary>
-        /// Copies an IntersectOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies an IntersectOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(IntersectOp op, Node n)
         {
             return CopySetOp(op, n);
         }
 
-        /// <summary>
-        /// Copies an ExceptOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies an ExceptOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(ExceptOp op, Node n)
         {
             return CopySetOp(op, n);
         }
 
-        /// <summary>
-        /// Copies a DistinctOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a DistinctOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(DistinctOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -1042,12 +1042,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region AncillaryOps
 
-        /// <summary>
-        /// Copies a VarDefOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a VarDefOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(VarDefOp op, Node n)
         {
             // First create a new Var
@@ -1058,12 +1058,12 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(m_destCmd.CreateVarDefOp(newVar), children);
         }
 
-        /// <summary>
-        /// Copies a VarDefListOp
-        /// </summary>
-        /// <param name="op"> The Op to Copy </param>
-        /// <param name="n"> The Node that references the Op </param>
-        /// <returns> A copy of the original Node that references a copy of the original Op </returns>
+        // <summary>
+        // Copies a VarDefListOp
+        // </summary>
+        // <param name="op"> The Op to Copy </param>
+        // <param name="n"> The Node that references the Op </param>
+        // <returns> A copy of the original Node that references a copy of the original Op </returns>
         public override Node Visit(VarDefListOp op, Node n)
         {
             return CopyDefault(m_destCmd.CreateVarDefListOp(), n);
@@ -1082,9 +1082,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return ColumnMapCopier.Copy(columnMap, m_varMap);
         }
 
-        /// <summary>
-        /// Copies a PhysicalProjectOp
-        /// </summary>
+        // <summary>
+        // Copies a PhysicalProjectOp
+        // </summary>
         public override Node Visit(PhysicalProjectOp op, Node n)
         {
             // Visit the Node's children and map their Vars
@@ -1152,17 +1152,17 @@ namespace System.Data.Entity.Core.Query.InternalTrees
             return m_destCmd.CreateNode(newOp, newChildren);
         }
 
-        /// <summary>
-        /// Copies a singleStreamNestOp
-        /// </summary>
+        // <summary>
+        // Copies a singleStreamNestOp
+        // </summary>
         public override Node Visit(SingleStreamNestOp op, Node n)
         {
             return VisitNestOp(n);
         }
 
-        /// <summary>
-        /// Copies a multiStreamNestOp
-        /// </summary>
+        // <summary>
+        // Copies a multiStreamNestOp
+        // </summary>
         public override Node Visit(MultiStreamNestOp op, Node n)
         {
             return VisitNestOp(n);

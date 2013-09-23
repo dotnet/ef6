@@ -14,33 +14,33 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// Typed Shaper. Includes logic to enumerate results and wraps the _rootCoordinator,
-    /// which includes materializer delegates for the root query collection.
-    /// </summary>
+    // <summary>
+    // Typed Shaper. Includes logic to enumerate results and wraps the _rootCoordinator,
+    // which includes materializer delegates for the root query collection.
+    // </summary>
     internal class Shaper<T> : Shaper
     {
         #region Private Fields
 
-        /// <summary>
-        /// Which type of query is this, object layer (true) or value layer (false)
-        /// </summary>
+        // <summary>
+        // Which type of query is this, object layer (true) or value layer (false)
+        // </summary>
         private readonly bool _isObjectQuery;
 
-        /// <summary>
-        /// Keeps track of whether we've completed processing or not.
-        /// </summary>
+        // <summary>
+        // Keeps track of whether we've completed processing or not.
+        // </summary>
         private bool _isActive;
 
-        /// <summary>
-        /// The enumerator we're using to read data; really only populated for value
-        /// layer queries.
-        /// </summary>
+        // <summary>
+        // The enumerator we're using to read data; really only populated for value
+        // layer queries.
+        // </summary>
         private IDbEnumerator<T> _rootEnumerator;
 
-        /// <summary>
-        /// Is the reader owned by the EF or was it supplied by the user?
-        /// </summary>
+        // <summary>
+        // Is the reader owned by the EF or was it supplied by the user?
+        // </summary>
         private readonly bool _readerOwned;
 
         #endregion
@@ -61,33 +61,33 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region "Public" Surface Area
 
-        /// <summary>
-        /// Events raised when the shaper has finished enumerating results. Useful for callback
-        /// to set parameter values.
-        /// </summary>
+        // <summary>
+        // Events raised when the shaper has finished enumerating results. Useful for callback
+        // to set parameter values.
+        // </summary>
         internal event EventHandler OnDone;
 
-        /// <summary>
-        /// Used to handle the read-ahead requirements of value-layer queries.  This
-        /// field indicates the status of the current value of the _rootEnumerator; when
-        /// a bridge data reader "accepts responsibility" for the current value, it sets
-        /// this to false.
-        /// </summary>
+        // <summary>
+        // Used to handle the read-ahead requirements of value-layer queries.  This
+        // field indicates the status of the current value of the _rootEnumerator; when
+        // a bridge data reader "accepts responsibility" for the current value, it sets
+        // this to false.
+        // </summary>
         internal bool DataWaiting { get; set; }
 
-        /// <summary>
-        /// Shapers and Coordinators work together in harmony to materialize the data
-        /// from the store; the shaper contains the state, the coordinator contains the
-        /// code.
-        /// </summary>
+        // <summary>
+        // Shapers and Coordinators work together in harmony to materialize the data
+        // from the store; the shaper contains the state, the coordinator contains the
+        // code.
+        // </summary>
         internal readonly Coordinator<T> RootCoordinator;
 
-        /// <summary>
-        /// The enumerator that the value-layer bridge will use to read data; all nested
-        /// data readers need to use the same enumerator, so we put it on the Shaper, since
-        /// that is something that all the nested data readers (and data records) have access
-        /// to -- it prevents us from having to pass two objects around.
-        /// </summary>
+        // <summary>
+        // The enumerator that the value-layer bridge will use to read data; all nested
+        // data readers need to use the same enumerator, so we put it on the Shaper, since
+        // that is something that all the nested data readers (and data records) have access
+        // to -- it prevents us from having to pass two objects around.
+        // </summary>
         internal IDbEnumerator<T> RootEnumerator
         {
             get
@@ -101,9 +101,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Initialize the RecordStateFactory objects in their StateSlots.
-        /// </summary>
+        // <summary>
+        // Initialize the RecordStateFactory objects in their StateSlots.
+        // </summary>
         private void InitializeRecordStates(CoordinatorFactory coordinatorFactory)
         {
             foreach (var recordStateFactory in coordinatorFactory.RecordStateFactories)
@@ -145,9 +145,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region Private Methods
 
-        /// <summary>
-        /// Called when enumeration of results has completed.
-        /// </summary>
+        // <summary>
+        // Called when enumeration of results has completed.
+        // </summary>
         private void Finally()
         {
             if (_isActive)
@@ -179,11 +179,11 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Reads the next row from the store. If there is a failure, throws an exception message
-        /// in some scenarios (note that we respond to failure rather than anticipate failure,
-        /// avoiding repeated checks in the inner materialization loop)
-        /// </summary>
+        // <summary>
+        // Reads the next row from the store. If there is a failure, throws an exception message
+        // in some scenarios (note that we respond to failure rather than anticipate failure,
+        // avoiding repeated checks in the inner materialization loop)
+        // </summary>
         private bool StoreRead()
         {
             bool readSucceeded;
@@ -235,9 +235,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Notify ObjectContext that we are about to start materializing an element
-        /// </summary>
+        // <summary>
+        // Notify ObjectContext that we are about to start materializing an element
+        // </summary>
         private void StartMaterializingElement()
         {
             if (Context != null)
@@ -247,9 +247,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Notify ObjectContext that we are finished materializing the element
-        /// </summary>
+        // <summary>
+        // Notify ObjectContext that we are finished materializing the element
+        // </summary>
         private void StopMaterializingElement()
         {
             if (Context != null)
@@ -263,9 +263,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region Simple Enumerator
 
-        /// <summary>
-        /// Optimized enumerator for queries not including nested results.
-        /// </summary>
+        // <summary>
+        // Optimized enumerator for queries not including nested results.
+        // </summary>
         private class SimpleEnumerator : IDbEnumerator<T>
         {
             private readonly Shaper<T> _shaper;
@@ -366,12 +366,12 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
         #region Nested Enumerator
 
-        /// <summary>
-        /// Enumerates (for each row in the input) an array of all coordinators producing new elements. The array
-        /// contains a position for each 'depth' in the result. A null value in any position indicates that no new
-        /// results were produced for the given row at the given depth. It is possible for a row to contain no
-        /// results for any row.
-        /// </summary>
+        // <summary>
+        // Enumerates (for each row in the input) an array of all coordinators producing new elements. The array
+        // contains a position for each 'depth' in the result. A null value in any position indicates that no new
+        // results were produced for the given row at the given depth. It is possible for a row to contain no
+        // results for any row.
+        // </summary>
         private class RowNestedResultEnumerator : IDbEnumerator<Coordinator[]>
         {
             private readonly Shaper<T> _shaper;
@@ -527,10 +527,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
             }
         }
 
-        /// <summary>
-        /// Wraps RowNestedResultEnumerator and yields results appropriate to an ObjectQuery instance. In particular,
-        /// root level elements (T) are returned only after aggregating all child elements.
-        /// </summary>
+        // <summary>
+        // Wraps RowNestedResultEnumerator and yields results appropriate to an ObjectQuery instance. In particular,
+        // root level elements (T) are returned only after aggregating all child elements.
+        // </summary>
         private class ObjectQueryNestedEnumerator : IDbEnumerator<T>
         {
             private readonly RowNestedResultEnumerator _rowEnumerator;
@@ -658,10 +658,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
 #endif
 
-            /// <summary>
-            /// Requires: the row is currently positioned at the start of an element.
-            /// Reads all rows in the element and sets up state for the next element (if any).
-            /// </summary>
+            // <summary>
+            // Requires: the row is currently positioned at the start of an element.
+            // Reads all rows in the element and sets up state for the next element (if any).
+            // </summary>
             private void ReadElement()
             {
                 // remember the element we're currently reading
@@ -706,10 +706,10 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
 
 #endif
 
-            /// <summary>
-            /// Reads rows until the start of a new element is found. If no element
-            /// is found before all rows are consumed, returns false.
-            /// </summary>
+            // <summary>
+            // Reads rows until the start of a new element is found. If no element
+            // is found before all rows are consumed, returns false.
+            // </summary>
             private bool TryReadToNextElement()
             {
                 while (_rowEnumerator.MoveNext())
@@ -745,52 +745,52 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
                 _rowEnumerator.Reset();
             }
 
-            /// <summary>
-            /// Describes the state of this enumerator with respect to the _rowEnumerator
-            /// it wraps.
-            /// </summary>
+            // <summary>
+            // Describes the state of this enumerator with respect to the _rowEnumerator
+            // it wraps.
+            // </summary>
             private enum State
             {
-                /// <summary>
-                /// No rows have been read yet
-                /// </summary>
+                // <summary>
+                // No rows have been read yet
+                // </summary>
                 Start,
 
-                /// <summary>
-                /// Positioned at the start of a new root element. The previous element must
-                /// be stored in _previousElement. We read ahead in this manner so that
-                /// the previous element is fully populated (all of its children loaded)
-                /// before returning.
-                /// </summary>
+                // <summary>
+                // Positioned at the start of a new root element. The previous element must
+                // be stored in _previousElement. We read ahead in this manner so that
+                // the previous element is fully populated (all of its children loaded)
+                // before returning.
+                // </summary>
                 Reading,
 
-                /// <summary>
-                /// Positioned past the end of the rows. The last element in the enumeration
-                /// has not yet been returned to the user however, and is stored in _previousElement.
-                /// </summary>
+                // <summary>
+                // Positioned past the end of the rows. The last element in the enumeration
+                // has not yet been returned to the user however, and is stored in _previousElement.
+                // </summary>
                 NoRowsLastElementPending,
 
-                /// <summary>
-                /// Positioned past the end of the rows. The last element has been returned to
-                /// the user.
-                /// </summary>
+                // <summary>
+                // Positioned past the end of the rows. The last element has been returned to
+                // the user.
+                // </summary>
                 NoRows,
             }
         }
 
-        /// <summary>
-        /// Wraps RowNestedResultEnumerator and yields results appropriate to an EntityReader instance. In particular,
-        /// yields RecordState whenever a new element becomes available at any depth in the result hierarchy.
-        /// </summary>
+        // <summary>
+        // Wraps RowNestedResultEnumerator and yields results appropriate to an EntityReader instance. In particular,
+        // yields RecordState whenever a new element becomes available at any depth in the result hierarchy.
+        // </summary>
         private class RecordStateEnumerator : IDbEnumerator<RecordState>
         {
             private readonly RowNestedResultEnumerator _rowEnumerator;
             private RecordState _current;
 
-            /// <summary>
-            /// Gets depth of coordinator we're currently consuming. If _depth == -1, it means we haven't started
-            /// to consume the next row yet.
-            /// </summary>
+            // <summary>
+            // Gets depth of coordinator we're currently consuming. If _depth == -1, it means we haven't started
+            // to consume the next row yet.
+            // </summary>
             private int _depth;
 
             private bool _readerConsumed;

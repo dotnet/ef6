@@ -10,9 +10,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// Static utility class. Replica of query\DLinq\TypeSystem.cs
-    /// </summary>
+    // <summary>
+    // Static utility class. Replica of query\DLinq\TypeSystem.cs
+    // </summary>
     internal static class TypeSystem
     {
         internal static readonly MethodInfo GetDefaultMethod = typeof(TypeSystem).GetDeclaredMethod("GetDefault");
@@ -129,13 +129,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return expression;
         }
 
-        /// <summary>
-        /// Resolves MemberInfo to a property or field.
-        /// </summary>
-        /// <param name="member"> Member to test. </param>
-        /// <param name="name"> Name of member. </param>
-        /// <param name="type"> Type of member. </param>
-        /// <returns> Given member normalized as a property or field. </returns>
+        // <summary>
+        // Resolves MemberInfo to a property or field.
+        // </summary>
+        // <param name="member"> Member to test. </param>
+        // <param name="name"> Name of member. </param>
+        // <param name="type"> Type of member. </param>
+        // <returns> Given member normalized as a property or field. </returns>
         internal static MemberInfo PropertyOrField(MemberInfo member, out string name, out Type type)
         {
             name = null;

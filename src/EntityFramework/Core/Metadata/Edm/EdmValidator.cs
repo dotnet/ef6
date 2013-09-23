@@ -8,21 +8,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Class for representing the validator
-    /// </summary>
+    // <summary>
+    // Class for representing the validator
+    // </summary>
     internal class EdmValidator
     {
-        /// <summary>
-        /// Gets or Sets whether the validator should skip readonly items
-        /// </summary>
+        // <summary>
+        // Gets or Sets whether the validator should skip readonly items
+        // </summary>
         internal bool SkipReadOnlyItems { get; set; }
 
-        /// <summary>
-        /// Validate a collection of items in a batch
-        /// </summary>
-        /// <param name="items"> A collection of items to validate </param>
-        /// <param name="ospaceErrors"> List of validation errors that were previously collected by the caller. if it encounters more errors, it adds them to this list of errors </param>
+        // <summary>
+        // Validate a collection of items in a batch
+        // </summary>
+        // <param name="items"> A collection of items to validate </param>
+        // <param name="ospaceErrors"> List of validation errors that were previously collected by the caller. if it encounters more errors, it adds them to this list of errors </param>
         public void Validate<T>(IEnumerable<T> items, List<EdmItemError> ospaceErrors)
             where T : EdmType // O-Space only supports EdmType
         {
@@ -38,19 +38,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Event hook to perform preprocessing on the validation error before it gets added to a list of errors
-        /// </summary>
-        /// <param name="e"> The event args for this event </param>
+        // <summary>
+        // Event hook to perform preprocessing on the validation error before it gets added to a list of errors
+        // </summary>
+        // <param name="e"> The event args for this event </param>
         protected virtual void OnValidationError(ValidationErrorEventArgs e)
         {
         }
 
-        /// <summary>
-        /// Invoke the event hook Add an error to the list
-        /// </summary>
-        /// <param name="errors"> The list of errors to add to </param>
-        /// <param name="newError"> The new error to add </param>
+        // <summary>
+        // Invoke the event hook Add an error to the list
+        // </summary>
+        // <param name="errors"> The list of errors to add to </param>
+        // <param name="newError"> The new error to add </param>
         private void AddError(List<EdmItemError> errors, EdmItemError newError)
         {
             // Create an event args object and call the event hook, the derived class may have changed
@@ -61,22 +61,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
             errors.Add(e.ValidationError);
         }
 
-        /// <summary>
-        /// Allows derived classes to perform additional validation
-        /// </summary>
-        /// <param name="item"> The item to perform additional validation </param>
-        /// <returns> A collection of errors </returns>
+        // <summary>
+        // Allows derived classes to perform additional validation
+        // </summary>
+        // <param name="item"> The item to perform additional validation </param>
+        // <returns> A collection of errors </returns>
         protected virtual IEnumerable<EdmItemError> CustomValidate(MetadataItem item)
         {
             return null;
         }
 
-        /// <summary>
-        /// Validate an item object
-        /// </summary>
-        /// <param name="item"> The item to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an item object
+        // </summary>
+        // <param name="item"> The item to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void InternalValidate(MetadataItem item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             DebugCheck.NotNull(item);
@@ -158,12 +158,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an CollectionType object
-        /// </summary>
-        /// <param name="item"> The CollectionType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an CollectionType object
+        // </summary>
+        // <param name="item"> The CollectionType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateCollectionType(CollectionType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateEdmType(item, errors, validatedItems);
@@ -185,23 +185,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an ComplexType object
-        /// </summary>
-        /// <param name="item"> The ComplexType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an ComplexType object
+        // </summary>
+        // <param name="item"> The ComplexType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateComplexType(ComplexType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateStructuralType(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an EdmType object
-        /// </summary>
-        /// <param name="item"> The EdmType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an EdmType object
+        // </summary>
+        // <param name="item"> The EdmType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         [SuppressMessage("Microsoft.Performance", "CA1820:TestForEmptyStringsUsingStringLength")]
         private void ValidateEdmType(EdmType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
@@ -228,12 +228,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an EntityType object
-        /// </summary>
-        /// <param name="item"> The EntityType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an EntityType object
+        // </summary>
+        // <param name="item"> The EntityType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateEntityType(EntityType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             // check the base EntityType has Keys
@@ -261,12 +261,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ValidateStructuralType(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an Facet object
-        /// </summary>
-        /// <param name="item"> The Facet object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an Facet object
+        // </summary>
+        // <param name="item"> The Facet object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateFacet(Facet item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateItem(item, errors, validatedItems);
@@ -288,12 +288,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an MetadataItem object
-        /// </summary>
-        /// <param name="item"> The MetadataItem object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an MetadataItem object
+        // </summary>
+        // <param name="item"> The MetadataItem object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateItem(MetadataItem item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             // In here, we look at RawMetadataProperties because it dynamically add MetadataProperties when you access the
@@ -307,12 +307,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an EdmMember object
-        /// </summary>
-        /// <param name="item"> The item object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an EdmMember object
+        // </summary>
+        // <param name="item"> The item object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateEdmMember(EdmMember item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateItem(item, errors, validatedItems);
@@ -342,12 +342,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an MetadataProperty object
-        /// </summary>
-        /// <param name="item"> The MetadataProperty object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an MetadataProperty object
+        // </summary>
+        // <param name="item"> The MetadataProperty object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateMetadataProperty(MetadataProperty item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             // Validate only for user added item attributes, for system attributes, we can skip validation
@@ -373,46 +373,46 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an NavigationProperty object
-        /// </summary>
-        /// <param name="item"> The NavigationProperty object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an NavigationProperty object
+        // </summary>
+        // <param name="item"> The NavigationProperty object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateNavigationProperty(NavigationProperty item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             // Continue to process the property to see if there are other errors. This allows the user to fix as much as possible at the same time.
             ValidateEdmMember(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an GetPrimitiveType object
-        /// </summary>
-        /// <param name="item"> The GetPrimitiveType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an GetPrimitiveType object
+        // </summary>
+        // <param name="item"> The GetPrimitiveType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidatePrimitiveType(PrimitiveType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateSimpleType(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an EdmProperty object
-        /// </summary>
-        /// <param name="item"> The EdmProperty object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an EdmProperty object
+        // </summary>
+        // <param name="item"> The EdmProperty object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateEdmProperty(EdmProperty item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateEdmMember(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an RefType object
-        /// </summary>
-        /// <param name="item"> The RefType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an RefType object
+        // </summary>
+        // <param name="item"> The RefType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateRefType(RefType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateEdmType(item, errors, validatedItems);
@@ -434,23 +434,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an SimpleType object
-        /// </summary>
-        /// <param name="item"> The SimpleType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an SimpleType object
+        // </summary>
+        // <param name="item"> The SimpleType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateSimpleType(SimpleType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateEdmType(item, errors, validatedItems);
         }
 
-        /// <summary>
-        /// Validate an StructuralType object
-        /// </summary>
-        /// <param name="item"> The StructuralType object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an StructuralType object
+        // </summary>
+        // <param name="item"> The StructuralType object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateStructuralType(StructuralType item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateEdmType(item, errors, validatedItems);
@@ -474,12 +474,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Validate an TypeUsage object
-        /// </summary>
-        /// <param name="item"> The TypeUsage object to validate </param>
-        /// <param name="errors"> An error collection for adding validation errors </param>
-        /// <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
+        // <summary>
+        // Validate an TypeUsage object
+        // </summary>
+        // <param name="item"> The TypeUsage object to validate </param>
+        // <param name="errors"> An error collection for adding validation errors </param>
+        // <param name="validatedItems"> A dictionary keeping track of items that have been validated </param>
         private void ValidateTypeUsage(TypeUsage item, List<EdmItemError> errors, HashSet<MetadataItem> validatedItems)
         {
             ValidateItem(item, errors, validatedItems);

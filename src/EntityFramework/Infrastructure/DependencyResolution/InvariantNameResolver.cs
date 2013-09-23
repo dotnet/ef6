@@ -42,9 +42,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             return null;
         }
 
-        /// <summary>
-        /// Used for testing.
-        /// </summary>
+        // <summary>
+        // Used for testing.
+        // </summary>
         public override bool Equals(object obj)
         {
             var other = (InvariantNameResolver)obj;
@@ -58,9 +58,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                    && _invariantName.Name == other._invariantName.Name;
         }
 
-        /// <summary>
-        /// Because Equals is overridden; not currently used.
-        /// </summary>
+        // <summary>
+        // Because Equals is overridden; not currently used.
+        // </summary>
         public override int GetHashCode()
         {
             return _invariantName.Name.GetHashCode();

@@ -7,14 +7,14 @@ namespace System.Data.Entity.SqlServer
 
     internal static class IDbSpatialValueExtensionMethods
     {
-        /// <summary>
-        /// Returns an instance of <see cref="IDbSpatialValue" /> that wraps the specified <see cref="DbGeography" /> value.
-        /// IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
-        /// </summary>
-        /// <param name="geographyValue"> The geography instance to wrap </param>
-        /// <returns>
-        /// An instance of <see cref="IDbSpatialValue" /> that wraps the specified geography value
-        /// </returns>
+        // <summary>
+        // Returns an instance of <see cref="IDbSpatialValue" /> that wraps the specified <see cref="DbGeography" /> value.
+        // IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
+        // </summary>
+        // <param name="geographyValue"> The geography instance to wrap </param>
+        // <returns>
+        // An instance of <see cref="IDbSpatialValue" /> that wraps the specified geography value
+        // </returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeography geographyValue)
         {
             DebugCheck.NotNull(geographyValue);
@@ -22,14 +22,14 @@ namespace System.Data.Entity.SqlServer
             return new DbGeographyAdapter(geographyValue);
         }
 
-        /// <summary>
-        /// Returns an instance of <see cref="IDbSpatialValue" /> that wraps the specified <see cref="DbGeometry" /> value.
-        /// IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
-        /// </summary>
-        /// <param name="geometryValue"> The geometry instance to wrap </param>
-        /// <returns>
-        /// An instance of <see cref="IDbSpatialValue" /> that wraps the specified geometry value
-        /// </returns>
+        // <summary>
+        // Returns an instance of <see cref="IDbSpatialValue" /> that wraps the specified <see cref="DbGeometry" /> value.
+        // IDbSpatialValue members are guaranteed not to throw the <see cref="NotImplementedException" />s caused by unimplemented members of their wrapped values.
+        // </summary>
+        // <param name="geometryValue"> The geometry instance to wrap </param>
+        // <returns>
+        // An instance of <see cref="IDbSpatialValue" /> that wraps the specified geometry value
+        // </returns>
         internal static IDbSpatialValue AsSpatialValue(this DbGeometry geometryValue)
         {
             DebugCheck.NotNull(geometryValue);

@@ -64,12 +64,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _loadAssemblyLock; }
         }
 
-        /// <summary>
-        /// The method loads the O-space metadata for all the referenced assemblies starting from the given assembly
-        /// in a recursive way.
-        /// The assembly should be from Assembly.GetCallingAssembly via one of our public API's.
-        /// </summary>
-        /// <param name="assembly"> assembly whose dependency list we are going to traverse </param>
+        // <summary>
+        // The method loads the O-space metadata for all the referenced assemblies starting from the given assembly
+        // in a recursive way.
+        // The assembly should be from Assembly.GetCallingAssembly via one of our public API's.
+        // </summary>
+        // <param name="assembly"> assembly whose dependency list we are going to traverse </param>
         internal void ImplicitLoadAllReferencedAssemblies(Assembly assembly, EdmItemCollection edmItemCollection)
         {
             if (!MetadataAssemblyHelper.ShouldFilterAssembly(assembly))
@@ -109,23 +109,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
             ExplicitLoadFromAssembly(assembly, edmItemCollection, null);
         }
 
-        /// <summary>
-        /// Explicit loading means that the user specifically asked us to load this assembly.
-        /// We won't do any filtering, they "know what they are doing"
-        /// </summary>
+        // <summary>
+        // Explicit loading means that the user specifically asked us to load this assembly.
+        // We won't do any filtering, they "know what they are doing"
+        // </summary>
         internal void ExplicitLoadFromAssembly(Assembly assembly, EdmItemCollection edmItemCollection, Action<String> logLoadMessage)
         {
             LoadAssemblyFromCache(assembly, false /*loadAllReferencedAssemblies*/, edmItemCollection, logLoadMessage);
         }
 
-        /// <summary>
-        /// Implicit loading means that we are trying to help the user find the right
-        /// assembly, but they didn't explicitly ask for it. Our Implicit rules require that
-        /// we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
-        /// Load metadata from the type's assembly.
-        /// </summary>
-        /// <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
-        /// <returns> true if the type and all its generic arguments are filtered out (did not attempt to load assembly) </returns>
+        // <summary>
+        // Implicit loading means that we are trying to help the user find the right
+        // assembly, but they didn't explicitly ask for it. Our Implicit rules require that
+        // we filter out assemblies with the Ecma or MicrosoftPublic PublicKeyToken on them
+        // Load metadata from the type's assembly.
+        // </summary>
+        // <param name="type"> The type's assembly is loaded into the OSpace ItemCollection </param>
+        // <returns> true if the type and all its generic arguments are filtered out (did not attempt to load assembly) </returns>
         internal bool ImplicitLoadAssemblyForType(Type type, EdmItemCollection edmItemCollection)
         {
             var result = false;
@@ -148,9 +148,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return result;
         }
 
-        /// <summary>
-        /// internal static method to get the relationship name
-        /// </summary>
+        // <summary>
+        // internal static method to get the relationship name
+        // </summary>
         internal AssociationType GetRelationshipType(string relationshipName)
         {
             AssociationType associationType;
@@ -332,12 +332,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return TryGetClrType((EdmType)objectSpaceType, out clrType);
         }
 
-        /// <summary>
-        /// A helper method returning the underlying CLR type for the specified OSpace Enum or Structural type argument.
-        /// If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
-        /// </summary>
-        /// <param name="objectSpaceType"> The OSpace type to look up </param>
-        /// <returns> The CLR type of the OSpace argument </returns>
+        // <summary>
+        // A helper method returning the underlying CLR type for the specified OSpace Enum or Structural type argument.
+        // If the DataSpace of the parameter is not OSpace, an ArgumentException is thrown.
+        // </summary>
+        // <param name="objectSpaceType"> The OSpace type to look up </param>
+        // <returns> The CLR type of the OSpace argument </returns>
         private static Type GetClrType(EdmType objectSpaceType)
         {
             Debug.Assert(
@@ -353,14 +353,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return clrType;
         }
 
-        /// <summary>
-        /// A helper method returning the underlying CLR type for the specified OSpace enum or structural type argument.
-        /// If the DataSpace of the parameter is not OSpace, the method returns false and sets
-        /// the out parameter to null.
-        /// </summary>
-        /// <param name="objectSpaceType"> The OSpace enum type to look up </param>
-        /// <param name="clrType"> The CLR enum type of the OSpace argument </param>
-        /// <returns> true on success, false on failure </returns>
+        // <summary>
+        // A helper method returning the underlying CLR type for the specified OSpace enum or structural type argument.
+        // If the DataSpace of the parameter is not OSpace, the method returns false and sets
+        // the out parameter to null.
+        // </summary>
+        // <param name="objectSpaceType"> The OSpace enum type to look up </param>
+        // <param name="clrType"> The CLR enum type of the OSpace argument </param>
+        // <returns> true on success, false on failure </returns>
         private static bool TryGetClrType(EdmType objectSpaceType, out Type clrType)
         {
             DebugCheck.NotNull(objectSpaceType);
@@ -392,11 +392,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return clrType != null;
         }
 
-        /// <summary>
-        /// Given the canonical primitive type, get the mapping primitive type in the given dataspace
-        /// </summary>
-        /// <param name="modelType"> canonical primitive type </param>
-        /// <returns> The mapped scalar type </returns>
+        // <summary>
+        // Given the canonical primitive type, get the mapping primitive type in the given dataspace
+        // </summary>
+        // <param name="modelType"> canonical primitive type </param>
+        // <returns> The mapped scalar type </returns>
         internal override PrimitiveType GetMappedPrimitiveType(PrimitiveTypeKind modelType)
         {
             if (Helper.IsGeometricTypeKind(modelType))
@@ -413,9 +413,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return type;
         }
 
-        /// <summary>
-        /// Get the OSpace type given the CSpace typename
-        /// </summary>
+        // <summary>
+        // Get the OSpace type given the CSpace typename
+        // </summary>
         internal bool TryGetOSpaceType(EdmType cspaceType, out EdmType edmType)
         {
             Debug.Assert(DataSpace.CSpace == cspaceType.DataSpace, "DataSpace should be CSpace");
@@ -431,11 +431,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return TryGetItem(cspaceType.Identity, out edmType);
         }
 
-        /// <summary>
-        /// Given the ospace type, returns the fullname of the mapped cspace type.
-        /// Today, since we allow non-default mapping between entity type and complex type,
-        /// this is only possible for entity and complex type.
-        /// </summary>
+        // <summary>
+        // Given the ospace type, returns the fullname of the mapped cspace type.
+        // Today, since we allow non-default mapping between entity type and complex type,
+        // this is only possible for entity and complex type.
+        // </summary>
         internal static string TryGetMappingCSpaceTypeIdentity(EdmType edmType)
         {
             Debug.Assert(DataSpace.OSpace == edmType.DataSpace, "DataSpace must be OSpace");

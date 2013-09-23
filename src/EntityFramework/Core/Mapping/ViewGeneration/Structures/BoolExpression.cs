@@ -255,9 +255,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Whether the boolean expression contains only OneOFTypeConst variables.
-        /// </summary>
+        // <summary>
+        // Whether the boolean expression contains only OneOFTypeConst variables.
+        // </summary>
         internal bool RepresentsAllTypeConditions
         {
             get { return MemberRestrictions.All(var => (var is TypeRestriction)); }
@@ -286,17 +286,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             RequiredSlotsVisitor.GetRequiredSlots(m_tree, projectedSlotMap, requiredSlots);
         }
 
-        /// <summary>
-        /// Given the <paramref name="blockAlias" /> for the block in which the expression resides, converts the expression into eSQL.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="blockAlias" /> for the block in which the expression resides, converts the expression into eSQL.
+        // </summary>
         internal StringBuilder AsEsql(StringBuilder builder, string blockAlias)
         {
             return AsEsqlVisitor.AsEsql(m_tree, builder, blockAlias);
         }
 
-        /// <summary>
-        /// Given the <paramref name="row" /> for the input, converts the expression into CQT.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="row" /> for the input, converts the expression into CQT.
+        // </summary>
         internal DbExpression AsCqt(DbExpression row)
         {
             return AsCqtVisitor.AsCqt(m_tree, row);

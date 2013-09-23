@@ -5,13 +5,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Collections.Generic;
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// This is a halper module for <see cref="JoinElimination" />
-    /// The VarRefManager keeps track of the child-parent relationships in order to be able
-    /// to decide whether a given var is referenced by children on right-side relatives of a given node.
-    /// It is used in JoinElimination when deciding whether it is possible to eliminate the child table participating
-    /// in a left-outer join when there is a 1 - 0..1 FK relationship.
-    /// </summary>
+    // <summary>
+    // This is a halper module for <see cref="JoinElimination" />
+    // The VarRefManager keeps track of the child-parent relationships in order to be able
+    // to decide whether a given var is referenced by children on right-side relatives of a given node.
+    // It is used in JoinElimination when deciding whether it is possible to eliminate the child table participating
+    // in a left-outer join when there is a 1 - 0..1 FK relationship.
+    // </summary>
     internal class VarRefManager
     {
         #region Internal State
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Constructor
 
-        /// <summary>
-        /// Constructs a new VarRefManager given a command.
-        /// </summary>
+        // <summary>
+        // Constructs a new VarRefManager given a command.
+        // </summary>
         internal VarRefManager(Command command)
         {
             m_nodeToParentMap = new Dictionary<Node, Node>();
@@ -41,9 +41,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Public Methods
 
-        /// <summary>
-        /// Tracks the information that the given node is a parent of its children (one level only)
-        /// </summary>
+        // <summary>
+        // Tracks the information that the given node is a parent of its children (one level only)
+        // </summary>
         internal void AddChildren(Node parent)
         {
             for (var i = 0; i < parent.Children.Count; i++)
@@ -54,14 +54,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Determines whether any var from a given list of keys is referenced by any of defining node's right relatives,
-        /// with the exception of the relatives brunching at the given targetJoinNode.
-        /// </summary>
-        /// <param name="keys"> A list of vars to check for </param>
-        /// <param name="definingNode"> The node considered to be the defining node </param>
-        /// <param name="targetJoinNode"> The relatives branching at this node are skipped </param>
-        /// <returns> False, only it can determine that not a single var from a given list of keys is referenced by any of defining node's right relatives, with the exception of the relatives brunching at the given targetJoinNode. </returns>
+        // <summary>
+        // Determines whether any var from a given list of keys is referenced by any of defining node's right relatives,
+        // with the exception of the relatives brunching at the given targetJoinNode.
+        // </summary>
+        // <param name="keys"> A list of vars to check for </param>
+        // <param name="definingNode"> The node considered to be the defining node </param>
+        // <param name="targetJoinNode"> The relatives branching at this node are skipped </param>
+        // <returns> False, only it can determine that not a single var from a given list of keys is referenced by any of defining node's right relatives, with the exception of the relatives brunching at the given targetJoinNode. </returns>
         internal bool HasKeyReferences(VarVec keys, Node definingNode, Node targetJoinNode)
         {
             var currentChild = definingNode;
@@ -96,15 +96,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Private Methods
 
-        /// <summary>
-        /// Checks whether the given node has references to any of the vars in the given VarVec.
-        /// It only checks the given node, not its children.
-        /// </summary>
-        /// <param name="node"> The node to check </param>
-        /// <param name="vars"> The list of vars to check for </param>
-        /// <param name="childIndex"> The index of the node's subree from which this var is coming. This is used for SetOp-s, to be able to locate the appropriate var map that will give the vars corresponding to the given once </param>
-        /// <param name="continueUp"> If the OpType of the node's Op is such that it 'hides' the input, i.e. the decision of whether the given vars are referenced can be made on this level, it returns true, false otherwise </param>
-        /// <returns> True if the given node has references to any of the vars in the given VarVec, false otherwise </returns>
+        // <summary>
+        // Checks whether the given node has references to any of the vars in the given VarVec.
+        // It only checks the given node, not its children.
+        // </summary>
+        // <param name="node"> The node to check </param>
+        // <param name="vars"> The list of vars to check for </param>
+        // <param name="childIndex"> The index of the node's subree from which this var is coming. This is used for SetOp-s, to be able to locate the appropriate var map that will give the vars corresponding to the given once </param>
+        // <param name="continueUp"> If the OpType of the node's Op is such that it 'hides' the input, i.e. the decision of whether the given vars are referenced can be made on this level, it returns true, false otherwise </param>
+        // <returns> True if the given node has references to any of the vars in the given VarVec, false otherwise </returns>
         private static bool HasVarReferencesShallow(Node node, VarVec vars, int childIndex, out bool continueUp)
         {
             switch (node.Op.OpType)
@@ -142,9 +142,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Does the gvien VarList overlap with the given VarVec
-        /// </summary>
+        // <summary>
+        // Does the gvien VarList overlap with the given VarVec
+        // </summary>
         private static bool HasVarReferences(VarList listToCheck, VarVec vars)
         {
             foreach (var var in vars)
@@ -157,17 +157,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return false;
         }
 
-        /// <summary>
-        /// Do the two given varVecs overlap
-        /// </summary>
+        // <summary>
+        // Do the two given varVecs overlap
+        // </summary>
         private static bool HasVarReferences(VarVec listToCheck, VarVec vars)
         {
             return listToCheck.Overlaps(vars);
         }
 
-        /// <summary>
-        /// Does the given list of sort keys contain a key with a var that is the given VarVec
-        /// </summary>
+        // <summary>
+        // Does the given list of sort keys contain a key with a var that is the given VarVec
+        // </summary>
         private static bool HasVarReferences(List<SortKey> listToCheck, VarVec vars)
         {
             foreach (var key in listToCheck)
@@ -180,10 +180,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return false;
         }
 
-        /// <summary>
-        /// Does the list of outputs of the given SetOp contain a var
-        /// from the given VarVec defined by the SetOp's child with the given index
-        /// </summary>
+        // <summary>
+        // Does the list of outputs of the given SetOp contain a var
+        // from the given VarVec defined by the SetOp's child with the given index
+        // </summary>
         private static bool HasVarReferences(SetOp op, VarVec vars, int index)
         {
             foreach (var var in op.VarMap[index].Values)

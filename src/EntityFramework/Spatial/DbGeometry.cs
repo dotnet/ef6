@@ -464,10 +464,10 @@ namespace System.Data.Entity.Spatial
             return _spatialProvider.AsText(this);
         }
 
-        /// <summary>
-        /// Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
-        /// </summary>
-        /// <returns> A string containing the well known text representation of this DbGeometry value. </returns>
+        // <summary>
+        // Generates the well known text representation of this DbGeometry value.  Includes X coordinate, Y coordinate, Elevation (Z) and Measure (M) for points.
+        // </summary>
+        // <returns> A string containing the well known text representation of this DbGeometry value. </returns>
         internal string AsTextIncludingElevationAndMeasure()
         {
             return _spatialProvider.AsTextIncludingElevationAndMeasure(this);

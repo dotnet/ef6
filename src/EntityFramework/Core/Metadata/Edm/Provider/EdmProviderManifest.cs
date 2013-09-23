@@ -14,14 +14,14 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
 
     internal class EdmProviderManifest : DbProviderManifest
     {
-        /// <summary>
-        /// The ConcurrencyMode Facet Name
-        /// </summary>
+        // <summary>
+        // The ConcurrencyMode Facet Name
+        // </summary>
         internal const string ConcurrencyModeFacetName = "ConcurrencyMode";
 
-        /// <summary>
-        /// The StoreGeneratedPattern Facet Name
-        /// </summary>
+        // <summary>
+        // The StoreGeneratedPattern Facet Name
+        // </summary>
         internal const string StoreGeneratedPatternFacetName = "StoreGeneratedPattern";
 
         private Dictionary<PrimitiveType, ReadOnlyCollection<FacetDescription>> _facetDescriptions;
@@ -34,52 +34,52 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         internal const byte MaximumDecimalPrecision = Byte.MaxValue;
         internal const byte MaximumDateTimePrecision = Byte.MaxValue;
 
-        /// <summary>
-        /// A private constructor to prevent other places from instantiating this class
-        /// </summary>
+        // <summary>
+        // A private constructor to prevent other places from instantiating this class
+        // </summary>
         private EdmProviderManifest()
         {
         }
 
-        /// <summary>
-        /// Gets the EDM provider manifest singleton instance
-        /// </summary>
+        // <summary>
+        // Gets the EDM provider manifest singleton instance
+        // </summary>
         internal static EdmProviderManifest Instance
         {
             get { return _instance; }
         }
 
-        /// <summary>
-        /// Returns the namespace used by this provider manifest
-        /// </summary>
+        // <summary>
+        // Returns the namespace used by this provider manifest
+        // </summary>
         public override string NamespaceName
         {
             get { return EdmConstants.EdmNamespace; }
         }
 
-        /// <summary>
-        /// Store version hint
-        /// </summary>
+        // <summary>
+        // Store version hint
+        // </summary>
         internal virtual string Token
         {
             // we shouldn't throw exception on properties
             get { return String.Empty; }
         }
 
-        /// <summary>
-        /// Returns the list of all the canonical functions
-        /// </summary>
+        // <summary>
+        // Returns the list of all the canonical functions
+        // </summary>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             InitializeCanonicalFunctions();
             return _functions;
         }
 
-        /// <summary>
-        /// Returns all the FacetDescriptions for a particular type
-        /// </summary>
-        /// <param name="type"> the type to return FacetDescriptions for. </param>
-        /// <returns> The FacetDescriptions for the type given. </returns>
+        // <summary>
+        // Returns all the FacetDescriptions for a particular type
+        // </summary>
+        // <param name="type"> the type to return FacetDescriptions for. </param>
+        // <returns> The FacetDescriptions for the type given. </returns>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
             Debug.Assert(type is PrimitiveType, "EdmProviderManifest.GetFacetDescriptions(): Argument is not a PrimitiveType");
@@ -95,20 +95,20 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             return Helper.EmptyFacetDescriptionEnumerable;
         }
 
-        /// <summary>
-        /// Returns a primitive type from this manifest having the specified primitive type kind
-        /// </summary>
-        /// <param name="primitiveTypeKind"> The value specifying the kind of primitive type to return </param>
-        /// <returns> A primitive type having the given primitive type kind </returns>
+        // <summary>
+        // Returns a primitive type from this manifest having the specified primitive type kind
+        // </summary>
+        // <param name="primitiveTypeKind"> The value specifying the kind of primitive type to return </param>
+        // <returns> A primitive type having the given primitive type kind </returns>
         public PrimitiveType GetPrimitiveType(PrimitiveTypeKind primitiveTypeKind)
         {
             InitializePrimitiveTypes();
             return _primitiveTypes[(int)primitiveTypeKind];
         }
 
-        /// <summary>
-        /// Boostrapping all the primitive types for the EDM Provider Manifest
-        /// </summary>
+        // <summary>
+        // Boostrapping all the primitive types for the EDM Provider Manifest
+        // </summary>
         private void InitializePrimitiveTypes()
         {
             if (_primitiveTypes != null)
@@ -238,13 +238,13 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             Interlocked.CompareExchange(ref _primitiveTypes, readOnlyTypes, null);
         }
 
-        /// <summary>
-        /// Initialize all the primitive type with the given primitive type kind and name
-        /// </summary>
-        /// <param name="primitiveType"> The primitive type to initialize </param>
-        /// <param name="primitiveTypeKind"> Type of the primitive type which is getting initialized </param>
-        /// <param name="name"> name of the built in type </param>
-        /// <param name="clrType"> the CLR Type of that maps to the EDM PrimitiveType </param>
+        // <summary>
+        // Initialize all the primitive type with the given primitive type kind and name
+        // </summary>
+        // <param name="primitiveType"> The primitive type to initialize </param>
+        // <param name="primitiveTypeKind"> Type of the primitive type which is getting initialized </param>
+        // <param name="name"> name of the built in type </param>
+        // <param name="clrType"> the CLR Type of that maps to the EDM PrimitiveType </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "clrType")]
         private void InitializePrimitiveType(
             PrimitiveType primitiveType,
@@ -266,9 +266,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             Debug.Assert(clrType == primitiveType.ClrEquivalentType, "ClrEquivalentType mismatch");
         }
 
-        /// <summary>
-        /// Boostrapping all the facet descriptions for the EDM Provider Manifest
-        /// </summary>
+        // <summary>
+        // Boostrapping all the facet descriptions for the EDM Provider Manifest
+        // </summary>
         private void InitializeFacetDescriptions()
         {
             if (_facetDescriptions != null)
@@ -540,9 +540,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             }
         }
 
-        /// <summary>
-        /// Boostrapping all the canonical functions for the EDM Provider Manifest
-        /// </summary>
+        // <summary>
+        // Boostrapping all the canonical functions for the EDM Provider Manifest
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1505:AvoidUnmaintainableCode")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void InitializeCanonicalFunctions()
@@ -895,9 +895,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             Interlocked.CompareExchange(ref _functions, readOnlyFunctions, null);
         }
 
-        /// <summary>
-        /// Returns the list of super-types for the given primitiveType
-        /// </summary>
+        // <summary>
+        // Returns the list of super-types for the given primitiveType
+        // </summary>
         internal ReadOnlyCollection<PrimitiveType> GetPromotionTypes(PrimitiveType primitiveType)
         {
             InitializePromotableTypes();
@@ -905,9 +905,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             return _promotionTypes[(int)primitiveType.PrimitiveTypeKind];
         }
 
-        /// <summary>
-        /// Initializes Promotion Type relation
-        /// </summary>
+        // <summary>
+        // Initializes Promotion Type relation
+        // </summary>
         private void InitializePromotableTypes()
         {
             if (null != _promotionTypes)
@@ -1037,9 +1037,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             return _canonicalModelTypes[(int)primitiveTypeKind];
         }
 
-        /// <summary>
-        /// Initializes Canonical Model Types
-        /// </summary>
+        // <summary>
+        // Initializes Canonical Model Types
+        // </summary>
         private void InitializeCanonicalModelTypes()
         {
             InitializePrimitiveTypes();
@@ -1056,10 +1056,10 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             Interlocked.CompareExchange(ref _canonicalModelTypes, canonicalTypes, null);
         }
 
-        /// <summary>
-        /// Returns all the primitive types supported by the provider manifest
-        /// </summary>
-        /// <returns> A collection of primitive types </returns>
+        // <summary>
+        // Returns all the primitive types supported by the provider manifest
+        // </summary>
+        // <returns> A collection of primitive types </returns>
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
             InitializePrimitiveTypes();
@@ -1094,12 +1094,12 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             }
         }
 
-        /// <summary>
-        /// Providers should override this to return information specific to their provider.
-        /// This method should never return null.
-        /// </summary>
-        /// <param name="informationType"> The name of the information to be retrieved. </param>
-        /// <returns> An XmlReader at the begining of the information requested. </returns>
+        // <summary>
+        // Providers should override this to return information specific to their provider.
+        // This method should never return null.
+        // </summary>
+        // <param name="informationType"> The name of the information to be retrieved. </param>
+        // <returns> An XmlReader at the begining of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             throw new NotImplementedException();

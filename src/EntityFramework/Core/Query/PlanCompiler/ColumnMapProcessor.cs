@@ -83,11 +83,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return null;
         }
 
-        /// <summary>
-        /// Creates a column map for a column
-        /// </summary>
-        /// <param name="type"> column datatype </param>
-        /// <param name="name"> column name </param>
+        // <summary>
+        // Creates a column map for a column
+        // </summary>
+        // <param name="type"> column datatype </param>
+        // <param name="name"> column name </param>
         private ColumnMap CreateColumnMap(md.TypeUsage type, string name)
         {
             // For simple types, create a simple column map
@@ -102,14 +102,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return CreateStructuralColumnMap(type, name);
         }
 
-        /// <summary>
-        /// Create a column map for a complextype column
-        /// </summary>
-        /// <param name="typeInfo"> Type information for the type </param>
-        /// <param name="name"> column name </param>
-        /// <param name="superTypeColumnMap"> Supertype info if any </param>
-        /// <param name="discriminatorMap"> Dictionary of typeidvalue->column map </param>
-        /// <param name="allMaps"> List of all maps </param>
+        // <summary>
+        // Create a column map for a complextype column
+        // </summary>
+        // <param name="typeInfo"> Type information for the type </param>
+        // <param name="name"> column name </param>
+        // <param name="superTypeColumnMap"> Supertype info if any </param>
+        // <param name="discriminatorMap"> Dictionary of typeidvalue->column map </param>
+        // <param name="allMaps"> List of all maps </param>
         private ComplexTypeColumnMap CreateComplexTypeColumnMap(
             TypeInfo typeInfo, string name, ComplexTypeColumnMap superTypeColumnMap,
             Dictionary<object, TypedColumnMap> discriminatorMap, List<TypedColumnMap> allMaps)
@@ -167,18 +167,18 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return columnMap;
         }
 
-        /// <summary>
-        /// Create a column map for an entitytype column.
-        /// Currently, the key columns are not duplicated (ie) they point into the
-        /// same locations as in the properties list.
-        /// Note: we also don't handle keys that are properties of nested fields
-        /// </summary>
-        /// <param name="typeInfo"> Type information for the type </param>
-        /// <param name="name"> column name </param>
-        /// <param name="superTypeColumnMap"> supertype information if any </param>
-        /// <param name="discriminatorMap"> Dictionary of typeid->column map information </param>
-        /// <param name="allMaps"> List of all column maps (including those without typeid) </param>
-        /// <param name="handleRelProperties"> should we handle rel-properties? </param>
+        // <summary>
+        // Create a column map for an entitytype column.
+        // Currently, the key columns are not duplicated (ie) they point into the
+        // same locations as in the properties list.
+        // Note: we also don't handle keys that are properties of nested fields
+        // </summary>
+        // <param name="typeInfo"> Type information for the type </param>
+        // <param name="name"> column name </param>
+        // <param name="superTypeColumnMap"> supertype information if any </param>
+        // <param name="discriminatorMap"> Dictionary of typeid->column map information </param>
+        // <param name="allMaps"> List of all column maps (including those without typeid) </param>
+        // <param name="handleRelProperties"> should we handle rel-properties? </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "keyColumnMap")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EntityType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -283,15 +283,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return columnMap;
         }
 
-        /// <summary>
-        /// Build up the list of columnmaps for the relproperties.
-        /// Assumption: rel-properties follow after ALL the regular properties of the
-        /// types in the type hierarchy.
-        /// For now, we're simply going to ignore the rel-property columnmaps - we're
-        /// just going to use this function to "drain" the corresponding vars
-        /// </summary>
-        /// <param name="typeInfo"> typeinfo for the entity type </param>
-        /// <param name="includeSupertypeRelProperties"> should we get rel-properties from our supertype instances </param>
+        // <summary>
+        // Build up the list of columnmaps for the relproperties.
+        // Assumption: rel-properties follow after ALL the regular properties of the
+        // types in the type hierarchy.
+        // For now, we're simply going to ignore the rel-property columnmaps - we're
+        // just going to use this function to "drain" the corresponding vars
+        // </summary>
+        // <param name="typeInfo"> typeinfo for the entity type </param>
+        // <param name="includeSupertypeRelProperties"> should we get rel-properties from our supertype instances </param>
         private void BuildRelPropertyColumnMaps(TypeInfo typeInfo, bool includeSupertypeRelProperties)
         {
             //
@@ -325,22 +325,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Create a column map for the entitysetid column
-        /// </summary>
+        // <summary>
+        // Create a column map for the entitysetid column
+        // </summary>
         private SimpleColumnMap CreateEntitySetIdColumnMap(md.EdmProperty prop)
         {
             return CreateSimpleColumnMap(md.Helper.GetModelTypeUsage(prop), c_EntitySetIdColumnName);
         }
 
-        /// <summary>
-        /// Creates a column map for a polymorphic type. This method first
-        /// creates column maps for each type that is a subtype of the input type,
-        /// and then creates a dictionary of typeid value -> column
-        /// Finally, a PolymorphicColumnMap is created with these pieces of information
-        /// </summary>
-        /// <param name="typeInfo"> Info about the type </param>
-        /// <param name="name"> column name </param>
+        // <summary>
+        // Creates a column map for a polymorphic type. This method first
+        // creates column maps for each type that is a subtype of the input type,
+        // and then creates a dictionary of typeid value -> column
+        // Finally, a PolymorphicColumnMap is created with these pieces of information
+        // </summary>
+        // <param name="typeInfo"> Info about the type </param>
+        // <param name="name"> column name </param>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private SimplePolymorphicColumnMap CreatePolymorphicColumnMap(TypeInfo typeInfo, string name)
@@ -397,12 +397,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return result;
         }
 
-        /// <summary>
-        /// Create a column map for a record type. Simply iterates through the
-        /// list of fields, and produces a column map for each field
-        /// </summary>
-        /// <param name="typeInfo"> Type information for the record type </param>
-        /// <param name="name"> column name </param>
+        // <summary>
+        // Create a column map for a record type. Simply iterates through the
+        // list of fields, and produces a column map for each field
+        // </summary>
+        // <param name="typeInfo"> Type information for the record type </param>
+        // <param name="name"> column name </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RowType")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -428,12 +428,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return result;
         }
 
-        /// <summary>
-        /// Create a column map for a ref type
-        /// </summary>
-        /// <param name="typeInfo"> Type information for the ref type </param>
-        /// <param name="name"> Name of the column </param>
-        /// <returns> Column map for the ref type </returns>
+        // <summary>
+        // Create a column map for a ref type
+        // </summary>
+        // <param name="typeInfo"> Type information for the ref type </param>
+        // <param name="name"> Name of the column </param>
+        // <returns> Column map for the ref type </returns>
         private RefColumnMap CreateRefColumnMap(TypeInfo typeInfo, string name)
         {
             SimpleColumnMap entitySetIdColumnMap = null;
@@ -461,14 +461,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return result;
         }
 
-        /// <summary>
-        /// Create a simple columnmap - applies only to scalar properties
-        /// (Temporarily, also for collections)
-        /// Simply picks up the next available column in the reader
-        /// </summary>
-        /// <param name="type"> Column type </param>
-        /// <param name="name"> column name </param>
-        /// <returns> Column map for this column </returns>
+        // <summary>
+        // Create a simple columnmap - applies only to scalar properties
+        // (Temporarily, also for collections)
+        // Simply picks up the next available column in the reader
+        // </summary>
+        // <param name="type"> Column type </param>
+        // <param name="name"> column name </param>
+        // <returns> Column map for this column </returns>
         private SimpleColumnMap CreateSimpleColumnMap(md.TypeUsage type, string name)
         {
             var newVar = GetNextVar();
@@ -476,19 +476,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return result;
         }
 
-        /// <summary>
-        /// Create a column map for the typeid column
-        /// </summary>
+        // <summary>
+        // Create a column map for the typeid column
+        // </summary>
         private SimpleColumnMap CreateTypeIdColumnMap(md.EdmProperty prop)
         {
             return CreateSimpleColumnMap(md.Helper.GetModelTypeUsage(prop), c_TypeIdColumnName);
         }
 
-        /// <summary>
-        /// Create a column map for a structural column - ref/complextype/entity/record
-        /// </summary>
-        /// <param name="type"> Type info for the type </param>
-        /// <param name="name"> column name </param>
+        // <summary>
+        // Create a column map for a structural column - ref/complextype/entity/record
+        // </summary>
+        // <param name="type"> Type info for the type </param>
+        // <param name="name"> column name </param>
         private ColumnMap CreateStructuralColumnMap(md.TypeUsage type, string name)
         {
             // Get our augmented type information for this type
@@ -527,12 +527,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             throw new NotSupportedException(type.Identity);
         }
 
-        /// <summary>
-        /// Build out an EntityIdentity structure - for use by EntityColumnMap and RefColumnMap
-        /// </summary>
-        /// <param name="entityType"> the entity type in question </param>
-        /// <param name="entitySetIdColumnMap"> column map for the entitysetid column </param>
-        /// <param name="keyColumnMaps"> column maps for the keys </param>
+        // <summary>
+        // Build out an EntityIdentity structure - for use by EntityColumnMap and RefColumnMap
+        // </summary>
+        // <param name="entityType"> the entity type in question </param>
+        // <param name="entitySetIdColumnMap"> column map for the entitysetid column </param>
+        // <param name="keyColumnMaps"> column maps for the keys </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "entitySet")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

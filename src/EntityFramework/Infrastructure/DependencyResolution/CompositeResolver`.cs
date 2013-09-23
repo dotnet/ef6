@@ -6,10 +6,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// Implements a Composite pattern for <see cref="IDbDependencyResolver" /> such that if the first
-    /// resolver can't resolve the dependency then the second resolver will be used.
-    /// </summary>
+    // <summary>
+    // Implements a Composite pattern for <see cref="IDbDependencyResolver" /> such that if the first
+    // resolver can't resolve the dependency then the second resolver will be used.
+    // </summary>
     internal class CompositeResolver<TFirst, TSecond> : IDbDependencyResolver
         where TFirst : class, IDbDependencyResolver
         where TSecond : class, IDbDependencyResolver

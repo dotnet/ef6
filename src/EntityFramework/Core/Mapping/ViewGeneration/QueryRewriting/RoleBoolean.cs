@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 {
@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
-    /// </summary>
+    // <summary>
+    // Denotes the fact that the key of the current tuple comes from a specific extent, or association role.
+    // </summary>
     internal sealed class RoleBoolean : TrueFalseLiteral
     {
         internal RoleBoolean(EntitySetBase extent)
@@ -26,18 +26,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         private readonly MetadataItem m_metadataItem;
 
-        /// <summary>
-        /// Not supported in this class.
-        /// </summary>
+        // <summary>
+        // Not supported in this class.
+        // </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, string blockAlias, bool skipIsNotNull)
         {
             Debug.Fail("Should not be called.");
             return null; // To keep the compiler happy
         }
 
-        /// <summary>
-        /// Not supported in this class.
-        /// </summary>
+        // <summary>
+        // Not supported in this class.
+        // </summary>
         internal override DbExpression AsCqt(DbExpression row, bool skipIsNotNull)
         {
             Debug.Fail("Should not be called.");

@@ -11,26 +11,26 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class that represents NOT(elements), e.g., NOT(1, 2, NULL), i.e., all values other than null, 1 and 2
-    /// </summary>
+    // <summary>
+    // A class that represents NOT(elements), e.g., NOT(1, 2, NULL), i.e., all values other than null, 1 and 2
+    // </summary>
     internal sealed class NegatedConstant : Constant
     {
-        /// <summary>
-        /// Creates a negated constant with the <paramref name="values" /> in it.
-        /// </summary>
-        /// <param name="values">
-        /// must have no <see cref=" NegatedConstant" /> items
-        /// </param>
+        // <summary>
+        // Creates a negated constant with the <paramref name="values" /> in it.
+        // </summary>
+        // <param name="values">
+        // must have no <see cref=" NegatedConstant" /> items
+        // </param>
         internal NegatedConstant(IEnumerable<Constant> values)
         {
             Debug.Assert(!values.Any(v => v is NegatedConstant), "Negated constant values must not contain another negated constant.");
             m_negatedDomain = new Set<Constant>(values, EqualityComparer);
         }
 
-        /// <summary>
-        /// e.g., NOT(1, 2, Undefined)
-        /// </summary>
+        // <summary>
+        // e.g., NOT(1, 2, Undefined)
+        // </summary>
         private readonly Set<Constant> m_negatedDomain;
 
         internal IEnumerable<Constant> Elements
@@ -38,9 +38,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_negatedDomain; }
         }
 
-        /// <summary>
-        /// Returns true if the negated constant contains <paramref name="constant" />.
-        /// </summary>
+        // <summary>
+        // Returns true if the negated constant contains <paramref name="constant" />.
+        // </summary>
         internal bool Contains(Constant constant)
         {
             return m_negatedDomain.Contains(constant);
@@ -68,9 +68,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return false;
         }
 
-        /// <summary>
-        /// Returns true if the negated constant contains <see cref="Constant.Null" />.
-        /// </summary>
+        // <summary>
+        // Returns true if the negated constant contains <see cref="Constant.Null" />.
+        // </summary>
         internal override bool HasNotNull()
         {
             return m_negatedDomain.Contains(Null);
@@ -97,18 +97,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return m_negatedDomain.SetEquals(rightNegatedConstant.m_negatedDomain);
         }
 
-        /// <summary>
-        /// Not supported in this class.
-        /// </summary>
+        // <summary>
+        // Not supported in this class.
+        // </summary>
         internal override StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias)
         {
             Debug.Fail("Should not be called.");
             return null; // To keep the compiler happy
         }
 
-        /// <summary>
-        /// Not supported in this class.
-        /// </summary>
+        // <summary>
+        // Not supported in this class.
+        // </summary>
         internal override DbExpression AsCqt(DbExpression row, MemberPath outputMember)
         {
             Debug.Fail("Should not be called.");
@@ -154,12 +154,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return ToStringHelper(builder, blockAlias, constants, outputMember, skipIsNotNull, true);
         }
 
-        /// <summary>
-        /// Given a set of positive <paramref name="constants" /> generates a simplified negated constant Cql expression.
-        /// Examples:
-        /// - 7, NOT(7, NULL) means NOT(NULL)
-        /// - 7, 8, NOT(7, 8, 9, 10) means NOT(9, 10)
-        /// </summary>
+        // <summary>
+        // Given a set of positive <paramref name="constants" /> generates a simplified negated constant Cql expression.
+        // Examples:
+        // - 7, NOT(7, NULL) means NOT(NULL)
+        // - 7, 8, NOT(7, 8, 9, 10) means NOT(9, 10)
+        // </summary>
         private void AsCql(
             Action trueLiteral, Action varIsNotNull, Action<Constant> varNotEqualsTo, IEnumerable<Constant> constants,
             MemberPath outputMember, bool skipIsNotNull)

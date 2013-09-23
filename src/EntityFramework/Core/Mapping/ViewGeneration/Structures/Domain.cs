@@ -93,9 +93,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             get { return m_domain.Count; }
         }
 
-        /// <summary>
-        /// Yields the set of all values in the domain.
-        /// </summary>
+        // <summary>
+        // Yields the set of all values in the domain.
+        // </summary>
         internal IEnumerable<Constant> Values
         {
             get { return m_domain; }
@@ -224,9 +224,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return negated != null && negated.Contains(Constant.Null);
         }
 
-        /// <summary>
-        /// Returns true if the domain contains the given Cell Constant
-        /// </summary>
+        // <summary>
+        // Returns true if the domain contains the given Cell Constant
+        // </summary>
         internal bool Contains(Constant constant)
         {
             return m_domain.Contains(constant);

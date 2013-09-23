@@ -42,24 +42,24 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class TypeMapping : MappingItem
     {
-        /// <summary>
-        /// Construct the new TypeMapping object.
-        /// </summary>
-        /// <param name="setMapping"> EntitySetBaseMapping that contains this type mapping </param>
+        // <summary>
+        // Construct the new TypeMapping object.
+        // </summary>
+        // <param name="setMapping"> EntitySetBaseMapping that contains this type mapping </param>
         internal TypeMapping(EntitySetBaseMapping setMapping)
         {
             m_fragments = new List<MappingFragment>();
             m_setMapping = setMapping;
         }
 
-        /// <summary>
-        /// ExtentMap that contains this type mapping.
-        /// </summary>
+        // <summary>
+        // ExtentMap that contains this type mapping.
+        // </summary>
         private readonly EntitySetBaseMapping m_setMapping;
 
-        /// <summary>
-        /// Set of fragments that make up the type Mapping.
-        /// </summary>
+        // <summary>
+        // Set of fragments that make up the type Mapping.
+        // </summary>
         private readonly List<MappingFragment> m_fragments;
 
         /// <summary>
@@ -75,15 +75,15 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_setMapping; }
         }
 
-        /// <summary>
-        /// a list of TypeMetadata that this mapping holds true for.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadata that this mapping holds true for.
+        // </summary>
         internal abstract ReadOnlyCollection<EntityTypeBase> Types { get; }
 
-        /// <summary>
-        /// a list of TypeMetadatas for which the mapping holds true for
-        /// not only the type specified but the sub-types of that type as well.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadatas for which the mapping holds true for
+        // not only the type specified but the sub-types of that type as well.
+        // </summary>
         internal abstract ReadOnlyCollection<EntityTypeBase> IsOfTypes { get; }
 
         /// <summary>

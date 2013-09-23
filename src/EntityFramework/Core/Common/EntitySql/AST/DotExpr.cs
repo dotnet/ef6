@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents dotExpr: expr.Identifier
-    /// </summary>
+    // <summary>
+    // Represents dotExpr: expr.Identifier
+    // </summary>
     internal sealed class DotExpr : Node
     {
         private readonly Node _leftExpr;
@@ -14,35 +14,35 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private bool? _isMultipartIdentifierComputed;
         private string[] _names;
 
-        /// <summary>
-        /// initializes
-        /// </summary>
+        // <summary>
+        // initializes
+        // </summary>
         internal DotExpr(Node leftExpr, Identifier id)
         {
             _leftExpr = leftExpr;
             _identifier = id;
         }
 
-        /// <summary>
-        /// For the following expression: "a.b.c.d", Left returns "a.b.c".
-        /// </summary>
+        // <summary>
+        // For the following expression: "a.b.c.d", Left returns "a.b.c".
+        // </summary>
         internal Node Left
         {
             get { return _leftExpr; }
         }
 
-        /// <summary>
-        /// For the following expression: "a.b.c.d", Identifier returns "d".
-        /// </summary>
+        // <summary>
+        // For the following expression: "a.b.c.d", Identifier returns "d".
+        // </summary>
         internal Identifier Identifier
         {
             get { return _identifier; }
         }
 
-        /// <summary>
-        /// Returns true if all parts of this expression are identifiers like in "a.b.c",
-        /// false for expressions like "FunctionCall().a.b.c".
-        /// </summary>
+        // <summary>
+        // Returns true if all parts of this expression are identifiers like in "a.b.c",
+        // false for expressions like "FunctionCall().a.b.c".
+        // </summary>
         internal bool IsMultipartIdentifier(out string[] names)
         {
             if (_isMultipartIdentifierComputed.HasValue)

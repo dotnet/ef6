@@ -19,9 +19,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Allows configuration to be performed for an entity type in a model.
-    /// </summary>
+    // <summary>
+    // Allows configuration to be performed for an entity type in a model.
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal class EntityTypeConfiguration : StructuralTypeConfiguration
     {
@@ -137,10 +137,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = true;
         }
 
-        /// <summary>
-        /// Configures the primary key property(s) for this entity type.
-        /// </summary>
-        /// <param name="propertyInfo"> The property to be used as the primary key. If the primary key is made up of multiple properties, call this method once for each of them. </param>
+        // <summary>
+        // Configures the primary key property(s) for this entity type.
+        // </summary>
+        // <param name="propertyInfo"> The property to be used as the primary key. If the primary key is made up of multiple properties, call this method once for each of them. </param>
         public void Key(PropertyInfo propertyInfo)
         {
             Check.NotNull(propertyInfo, "propertyInfo");
@@ -173,15 +173,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             _isKeyConfigured = false;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the name of the table has been configured.
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether the name of the table has been configured.
+        // </summary>
         public bool IsTableNameConfigured { get; private set; }
 
-        /// <summary>
-        /// True if this configuration can be replaced in the model configuration, false otherwise
-        /// This is only set to true for configurations that are registered automatically via the DbContext
-        /// </summary>
+        // <summary>
+        // True if this configuration can be replaced in the model configuration, false otherwise
+        // This is only set to true for configurations that are registered automatically via the DbContext
+        // </summary>
         internal bool IsReplaceable { get; set; }
 
         internal bool IsExplicitEntity { get; set; }
@@ -222,9 +222,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        /// <summary>
-        /// Gets or sets the entity set name to be used for this entity type.
-        /// </summary>
+        // <summary>
+        // Gets or sets the entity set name to be used for this entity type.
+        // </summary>
         public virtual string EntitySetName
         {
             get { return _entitySetName; }
@@ -241,9 +241,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             get { return base.ConfiguredProperties.Union(_navigationPropertyConfigurations.Keys); }
         }
 
-        /// <summary>
-        /// Gets the name of the table that this entity type is mapped to.
-        /// </summary>
+        // <summary>
+        // Gets the name of the table that this entity type is mapped to.
+        // </summary>
         public string TableName
         {
             get
@@ -257,9 +257,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             }
         }
 
-        /// <summary>
-        /// Gets the database schema of the table that this entity type is mapped to.
-        /// </summary>
+        // <summary>
+        // Gets the database schema of the table that this entity type is mapped to.
+        // </summary>
         public string SchemaName
         {
             get
@@ -283,10 +283,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             return _entityMappingConfigurations.First().TableName;
         }
 
-        /// <summary>
-        /// Configures the table name that this entity type is mapped to.
-        /// </summary>
-        /// <param name="tableName"> The name of the table. </param>
+        // <summary>
+        // Configures the table name that this entity type is mapped to.
+        // </summary>
+        // <param name="tableName"> The name of the table. </param>
         public void ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
@@ -294,11 +294,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             ToTable(tableName, null);
         }
 
-        /// <summary>
-        /// Configures the table name that this entity type is mapped to.
-        /// </summary>
-        /// <param name="tableName"> The name of the table. </param>
-        /// <param name="schemaName"> The database schema of the table. </param>
+        // <summary>
+        // Configures the table name that this entity type is mapped to.
+        // </summary>
+        // <param name="tableName"> The name of the table. </param>
+        // <param name="schemaName"> The database schema of the table. </param>
         public void ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");

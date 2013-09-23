@@ -83,19 +83,19 @@ namespace System.Data.Entity.Core.Mapping
             get { return _function; }
         }
 
-        /// <summary>
-        /// Gets bindings for function parameters.
-        /// </summary>
+        // <summary>
+        // Gets bindings for function parameters.
+        // </summary>
         internal readonly ReadOnlyCollection<ModificationFunctionParameterBinding> ParameterBindings;
 
-        /// <summary>
-        /// Gets all association set ends collocated in this mapping.
-        /// </summary>
+        // <summary>
+        // Gets all association set ends collocated in this mapping.
+        // </summary>
         internal readonly ReadOnlyCollection<AssociationSetEnd> CollocatedAssociationSetEnds;
 
-        /// <summary>
-        /// Gets bindings for the results of function evaluation.
-        /// </summary>
+        // <summary>
+        // Gets bindings for the results of function evaluation.
+        // </summary>
         internal readonly ReadOnlyCollection<ModificationFunctionResultBinding> ResultBindings;
 
         /// <summary>

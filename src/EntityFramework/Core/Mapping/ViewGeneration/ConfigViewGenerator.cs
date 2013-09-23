@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    /// <summary>
-    /// This class holds some configuration information for the view generation code.
-    /// </summary>
+    // <summary>
+    // This class holds some configuration information for the view generation code.
+    // </summary>
     internal sealed class ConfigViewGenerator : InternalBase
     {
         internal ConfigViewGenerator()
@@ -27,28 +27,28 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
         private readonly TimeSpan[] m_breakdownTimes;
         private readonly Stopwatch m_watch;
 
-        /// <summary>
-        /// To measure a single thing at a time.
-        /// </summary>
+        // <summary>
+        // To measure a single thing at a time.
+        // </summary>
         private readonly Stopwatch m_singleWatch;
 
-        /// <summary>
-        /// Perf op being measured.
-        /// </summary>
+        // <summary>
+        // Perf op being measured.
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         private PerfType m_singlePerfOp;
 
         private bool m_enableValidation = true;
         private bool m_generateUpdateViews = true;
 
-        /// <summary>
-        /// If true then view generation will produce eSQL, otherwise CQTs only.
-        /// </summary>
+        // <summary>
+        // If true then view generation will produce eSQL, otherwise CQTs only.
+        // </summary>
         internal bool GenerateEsql { get; set; }
 
-        /// <summary>
-        /// Callers can set elements in this list.
-        /// </summary>
+        // <summary>
+        // Callers can set elements in this list.
+        // </summary>
         internal TimeSpan[] BreakdownTimes
         {
             get { return m_breakdownTimes; }
@@ -100,9 +100,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             m_singlePerfOp = perfType;
         }
 
-        /// <summary>
-        /// Sets time for <paramref name="perfType" /> for the individual timer.
-        /// </summary>
+        // <summary>
+        // Sets time for <paramref name="perfType" /> for the individual timer.
+        // </summary>
         internal void StopSingleWatch(PerfType perfType)
         {
             Debug.Assert(m_singlePerfOp == perfType, "Started op for different activity " + m_singlePerfOp + " -- not " + perfType);
@@ -113,9 +113,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             BreakdownTimes[index] = BreakdownTimes[index].Add(timeElapsed);
         }
 
-        /// <summary>
-        /// Sets time for <paramref name="perfType" /> since the last call to <see cref="SetTimeForFinishedActivity" />.
-        /// </summary>
+        // <summary>
+        // Sets time for <paramref name="perfType" /> since the last call to <see cref="SetTimeForFinishedActivity" />.
+        // </summary>
         internal void SetTimeForFinishedActivity(PerfType perfType)
         {
             var timeElapsed = m_watch.Elapsed;

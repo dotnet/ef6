@@ -12,10 +12,10 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// Encapsulates metadata information relevant to update for records extracted from
-    /// the entity state manager, such as concurrency flags and key information.
-    /// </summary>
+    // <summary>
+    // Encapsulates metadata information relevant to update for records extracted from
+    // the entity state manager, such as concurrency flags and key information.
+    // </summary>
     internal class ExtractorMetadata
     {
         internal ExtractorMetadata(EntitySetBase entitySetBase, StructuralType type, UpdateTranslator translator)
@@ -99,20 +99,20 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         private readonly StructuralType m_type;
         private readonly UpdateTranslator m_translator;
 
-        /// <summary>
-        /// Requires: record must have correct type for this metadata instance.
-        /// Populates a new <see cref="PropagatorResult" /> object representing a member of a record matching the
-        /// type of this extractor. Given a record and a member, this method wraps the value of the member
-        /// in a PropagatorResult. This operation can be performed efficiently by this class, which knows
-        /// important stuff about the type being extracted.
-        /// </summary>
-        /// <param name="stateEntry"> state manager entry containing value (used for error reporting) </param>
-        /// <param name="record"> Record containing value (used to find the actual value) </param>
-        /// <param name="useCurrentValues"> Indicates whether we are reading current or original values. </param>
-        /// <param name="key"> Entity key for the state entry. Must be set for entity records. </param>
-        /// <param name="ordinal"> Ordinal of Member for which to retrieve a value. </param>
-        /// <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
-        /// <returns> Propagator result describing this member value. </returns>
+        // <summary>
+        // Requires: record must have correct type for this metadata instance.
+        // Populates a new <see cref="PropagatorResult" /> object representing a member of a record matching the
+        // type of this extractor. Given a record and a member, this method wraps the value of the member
+        // in a PropagatorResult. This operation can be performed efficiently by this class, which knows
+        // important stuff about the type being extracted.
+        // </summary>
+        // <param name="stateEntry"> state manager entry containing value (used for error reporting) </param>
+        // <param name="record"> Record containing value (used to find the actual value) </param>
+        // <param name="useCurrentValues"> Indicates whether we are reading current or original values. </param>
+        // <param name="key"> Entity key for the state entry. Must be set for entity records. </param>
+        // <param name="ordinal"> Ordinal of Member for which to retrieve a value. </param>
+        // <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
+        // <returns> Propagator result describing this member value. </returns>
         internal PropagatorResult RetrieveMember(
             IEntityStateEntry stateEntry, IExtendedDataRecord record, bool useCurrentValues,
             EntityKey key, int ordinal, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
@@ -280,16 +280,16 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        /// <summary>
-        /// Converts a record to a propagator result
-        /// </summary>
-        /// <param name="stateEntry"> state manager entry containing the record </param>
-        /// <param name="isModified"> Indicates whether the root element is modified (i.e., whether the type has changed) </param>
-        /// <param name="record"> Record to convert </param>
-        /// <param name="useCurrentValues"> Indicates whether we are retrieving current or original values. </param>
-        /// <param name="translator"> Translator for session context; registers new metadata for the record type if none exists </param>
-        /// <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
-        /// <returns> Result corresponding to the given record </returns>
+        // <summary>
+        // Converts a record to a propagator result
+        // </summary>
+        // <param name="stateEntry"> state manager entry containing the record </param>
+        // <param name="isModified"> Indicates whether the root element is modified (i.e., whether the type has changed) </param>
+        // <param name="record"> Record to convert </param>
+        // <param name="useCurrentValues"> Indicates whether we are retrieving current or original values. </param>
+        // <param name="translator"> Translator for session context; registers new metadata for the record type if none exists </param>
+        // <param name="modifiedPropertiesBehavior"> Indicates how to determine whether a property is modified. </param>
+        // <returns> Result corresponding to the given record </returns>
         internal static PropagatorResult ExtractResultFromRecord(
             IEntityStateEntry stateEntry, bool isModified, IExtendedDataRecord record,
             bool useCurrentValues, UpdateTranslator translator, ModifiedPropertiesBehavior modifiedPropertiesBehavior)
@@ -311,51 +311,51 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
         private class MemberInformation
         {
-            /// <summary>
-            /// Gets ordinal of the member.
-            /// </summary>
+            // <summary>
+            // Gets ordinal of the member.
+            // </summary>
             internal readonly int Ordinal;
 
-            /// <summary>
-            /// Gets key ordinal for primary key member (null if not a primary key).
-            /// </summary>
+            // <summary>
+            // Gets key ordinal for primary key member (null if not a primary key).
+            // </summary>
             internal readonly int? EntityKeyOrdinal;
 
-            /// <summary>
-            /// Gets propagator flags for the member, excluding the 'Preserve' flag
-            /// which can only be set in context.
-            /// </summary>
+            // <summary>
+            // Gets propagator flags for the member, excluding the 'Preserve' flag
+            // which can only be set in context.
+            // </summary>
             internal readonly PropagatorFlags Flags;
 
-            /// <summary>
-            /// Indicates whether this is a key member.
-            /// </summary>
+            // <summary>
+            // Indicates whether this is a key member.
+            // </summary>
             internal bool IsKeyMember
             {
                 get { return PropagatorFlags.Key == (Flags & PropagatorFlags.Key); }
             }
 
-            /// <summary>
-            /// Indicates whether this is a foreign key member.
-            /// </summary>
+            // <summary>
+            // Indicates whether this is a foreign key member.
+            // </summary>
             internal bool IsForeignKeyMember
             {
                 get { return PropagatorFlags.ForeignKey == (Flags & PropagatorFlags.ForeignKey); }
             }
 
-            /// <summary>
-            /// Indicates whether this value is server generated.
-            /// </summary>
+            // <summary>
+            // Indicates whether this value is server generated.
+            // </summary>
             internal readonly bool IsServerGenerated;
 
-            /// <summary>
-            /// Indicates whether non-null values are supported for this member.
-            /// </summary>
+            // <summary>
+            // Indicates whether non-null values are supported for this member.
+            // </summary>
             internal readonly bool CheckIsNotNull;
 
-            /// <summary>
-            /// Gets the member described by this wrapper.
-            /// </summary>
+            // <summary>
+            // Gets the member described by this wrapper.
+            // </summary>
             [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
             internal readonly EdmMember Member;
 

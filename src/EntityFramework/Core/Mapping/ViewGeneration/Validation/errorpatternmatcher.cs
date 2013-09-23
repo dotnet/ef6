@@ -68,9 +68,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return false;
         }
 
-        /// <summary>
-        /// Finds Types (possibly without any members) that have no mapping specified
-        /// </summary>
+        // <summary>
+        // Finds Types (possibly without any members) that have no mapping specified
+        // </summary>
         private void MatchMissingMappingErrors()
         {
             if (m_viewgenContext.ViewTarget
@@ -172,11 +172,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return false;
         }
 
-        /// <summary>
-        /// Finds errors related to splitting Conditions
-        /// 1. Condition value is repeated across multiple types
-        /// 2. A Column/attribute is mapped but also used as a condition
-        /// </summary>
+        // <summary>
+        // Finds errors related to splitting Conditions
+        // 1. Condition value is repeated across multiple types
+        // 2. A Column/attribute is mapped but also used as a condition
+        // </summary>
         private void MatchConditionErrors()
         {
             var leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
@@ -304,10 +304,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return ((MemberProjectedSlot)leftCellQuery.ProjectedSlotAt(firstProjectedPosition)).MemberPath;
         }
 
-        /// <summary>
-        /// When we are dealing with an update view, this method
-        /// finds out if the given Table is mapped to different EntitySets
-        /// </summary>
+        // <summary>
+        // When we are dealing with an update view, this method
+        // finds out if the given Table is mapped to different EntitySets
+        // </summary>
         private void MatchSplitErrors()
         {
             var leftCellWrappers = m_viewgenContext.AllWrappersForExtent;
@@ -344,12 +344,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        /// <summary>
-        /// Finds out whether fragments (partitions) violate constraints that would produce an invalid mapping.
-        /// We compare equality/disjointness/containment for all 2-combinations of fragments.
-        /// Error is reported if given relationship on S side is not maintained on the C side.
-        /// If we know nothing about S-side then any relationship on C side is valid.
-        /// </summary>
+        // <summary>
+        // Finds out whether fragments (partitions) violate constraints that would produce an invalid mapping.
+        // We compare equality/disjointness/containment for all 2-combinations of fragments.
+        // Error is reported if given relationship on S side is not maintained on the C side.
+        // If we know nothing about S-side then any relationship on C side is valid.
+        // </summary>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void MatchPartitionErrors()
         {
@@ -638,10 +638,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             } //end looping over every 2-combination of fragment
         }
 
-        /// <summary>
-        /// Gets the types on the Edm side mapped in this fragment wrapper.
-        /// It also returns an out parameter indicating whether there were any C side conditions.
-        /// </summary>
+        // <summary>
+        // Gets the types on the Edm side mapped in this fragment wrapper.
+        // It also returns an out parameter indicating whether there were any C side conditions.
+        // </summary>
         private static void GetTypesAndConditionForWrapper(LeftCellWrapper wrapper, out bool hasCondition, out List<EdmType> edmTypes)
         {
             hasCondition = false;
@@ -668,9 +668,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             }
         }
 
-        /// <summary>
-        /// Return true if there were any Store conditions on this cell wrapper.
-        /// </summary>
+        // <summary>
+        // Return true if there were any Store conditions on this cell wrapper.
+        // </summary>
         private static bool CheckForStoreConditions(LeftCellWrapper wrapper)
         {
             return wrapper.Cells.SelectMany(c => c.SQuery.Conditions).Any();

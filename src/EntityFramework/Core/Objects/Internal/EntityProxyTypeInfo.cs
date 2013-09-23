@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Reflection;
     using System.Reflection.Emit;
 
-    /// <summary>
-    /// Contains the Type of a proxy class, along with any behaviors associated with that proxy Type.
-    /// </summary>
+    // <summary>
+    // Contains the Type of a proxy class, along with any behaviors associated with that proxy Type.
+    // </summary>
     internal sealed class EntityProxyTypeInfo
     {
         private readonly Type _proxyType;
@@ -205,12 +205,12 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         #region Wrapper on the Proxy
 
-        /// <summary>
-        /// Set the proxy object's private entity wrapper field value to the specified entity wrapper object.
-        /// The proxy object (representing the wrapped entity) is retrieved from the wrapper itself.
-        /// </summary>
-        /// <param name="wrapper"> Wrapper object to be referenced by the proxy. </param>
-        /// <returns> The supplied entity wrapper. This is done so that this method can be more easily composed within lambda expressions (such as in the materializer). </returns>
+        // <summary>
+        // Set the proxy object's private entity wrapper field value to the specified entity wrapper object.
+        // The proxy object (representing the wrapped entity) is retrieved from the wrapper itself.
+        // </summary>
+        // <param name="wrapper"> Wrapper object to be referenced by the proxy. </param>
+        // <returns> The supplied entity wrapper. This is done so that this method can be more easily composed within lambda expressions (such as in the materializer). </returns>
         internal IEntityWrapper SetEntityWrapper(IEntityWrapper wrapper)
         {
             DebugCheck.NotNull(wrapper);
@@ -218,9 +218,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             return Proxy_SetEntityWrapper(wrapper.Entity, wrapper) as IEntityWrapper;
         }
 
-        /// <summary>
-        /// Gets the proxy object's entity wrapper field value
-        /// </summary>
+        // <summary>
+        // Gets the proxy object's entity wrapper field value
+        // </summary>
         internal IEntityWrapper GetEntityWrapper(object entity)
         {
             return Proxy_GetEntityWrapper(entity) as IEntityWrapper;

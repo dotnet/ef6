@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public abstract partial class MetadataItem
     {
-        /// <summary>
-        /// Static Constructor which initializes all the built in types and primitive types
-        /// </summary>
+        // <summary>
+        // Static Constructor which initializes all the built in types and primitive types
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static MetadataItem()
         {
@@ -588,13 +588,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _generalFacetDescriptions;
         }
 
-        /// <summary>
-        /// Initialize all the build in type with the given type attributes and properties
-        /// </summary>
-        /// <param name="builtInType"> The built In type which is getting initialized </param>
-        /// <param name="name"> name of the built in type </param>
-        /// <param name="isAbstract"> whether the type is abstract or not </param>
-        /// <param name="baseType"> The base type of the built in type </param>
+        // <summary>
+        // Initialize all the build in type with the given type attributes and properties
+        // </summary>
+        // <param name="builtInType"> The built In type which is getting initialized </param>
+        // <param name="name"> name of the built in type </param>
+        // <param name="isAbstract"> whether the type is abstract or not </param>
+        // <param name="baseType"> The base type of the built in type </param>
         private static void InitializeBuiltInTypes(
             ComplexType builtInType,
             string name,
@@ -605,11 +605,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             EdmType.Initialize(builtInType, name, EdmConstants.EdmNamespace, DataSpace.CSpace, isAbstract, baseType);
         }
 
-        /// <summary>
-        /// Add properties for all the build in complex type
-        /// </summary>
-        /// <param name="builtInTypeKind"> The type of the built In type whose properties are being added </param>
-        /// <param name="properties"> properties of the built in type </param>
+        // <summary>
+        // Add properties for all the build in complex type
+        // </summary>
+        // <param name="builtInTypeKind"> The type of the built In type whose properties are being added </param>
+        // <param name="properties"> properties of the built in type </param>
         private static void AddBuiltInTypeProperties(BuiltInTypeKind builtInTypeKind, EdmProperty[] properties)
         {
             var complexType = (ComplexType)GetBuiltInType(builtInTypeKind);
@@ -622,12 +622,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Initializes the enum type
-        /// </summary>
-        /// <param name="builtInTypeKind"> The built-in type kind enum value of this enum type </param>
-        /// <param name="name"> The name of this enum type </param>
-        /// <param name="enumMemberNames"> The member names of this enum type </param>
+        // <summary>
+        // Initializes the enum type
+        // </summary>
+        // <param name="builtInTypeKind"> The built-in type kind enum value of this enum type </param>
+        // <param name="name"> The name of this enum type </param>
+        // <param name="enumMemberNames"> The member names of this enum type </param>
         private static void InitializeEnumType(
             BuiltInTypeKind builtInTypeKind,
             string name,

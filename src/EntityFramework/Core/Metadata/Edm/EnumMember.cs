@@ -10,23 +10,23 @@ namespace System.Data.Entity.Core.Metadata.Edm
     /// </summary>
     public sealed class EnumMember : MetadataItem
     {
-        /// <summary>
-        /// The name of this enumeration member.
-        /// </summary>
+        // <summary>
+        // The name of this enumeration member.
+        // </summary>
         private readonly string _name;
 
-        /// <summary>
-        /// The value of this enumeration member.
-        /// </summary>
+        // <summary>
+        // The value of this enumeration member.
+        // </summary>
         private readonly object _value;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EnumMember" /> type by using the specified name and value.
-        /// </summary>
-        /// <param name="name"> The name of this enumeration member. Must not be null or the empty string. </param>
-        /// <param name="value"> The value of this enumeration member. </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name argument is null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
+        // <summary>
+        // Initializes a new instance of the <see cref="EnumMember" /> type by using the specified name and value.
+        // </summary>
+        // <param name="name"> The name of this enumeration member. Must not be null or the empty string. </param>
+        // <param name="value"> The value of this enumeration member. </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name argument is null</exception>
+        // <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal EnumMember(string name, object value)
             : base(MetadataFlags.Readonly)
         {
@@ -60,9 +60,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _value; }
         }
 
-        /// <summary>
-        /// Gets the identity for this item as a string
-        /// </summary>
+        // <summary>
+        // Gets the identity for this item as a string
+        // </summary>
         internal override string Identity
         {
             get { return Name; }

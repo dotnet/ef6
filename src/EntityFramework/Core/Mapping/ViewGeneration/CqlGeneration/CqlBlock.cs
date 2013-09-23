@@ -13,20 +13,20 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class that holds an expression of the form "(SELECT .. FROM .. WHERE) AS alias".
-    /// Essentially, it allows generating Cql query in a localized manner, i.e., all global decisions about nulls, constants,
-    /// case statements, etc have already been made.
-    /// </summary>
+    // <summary>
+    // A class that holds an expression of the form "(SELECT .. FROM .. WHERE) AS alias".
+    // Essentially, it allows generating Cql query in a localized manner, i.e., all global decisions about nulls, constants,
+    // case statements, etc have already been made.
+    // </summary>
     internal abstract class CqlBlock : InternalBase
     {
-        /// <summary>
-        /// Initializes a <see cref="CqlBlock" /> with the SELECT (<paramref name="slotInfos" />), FROM (
-        /// <paramref
-        ///     name="children" />
-        /// ),
-        /// WHERE (<paramref name="whereClause" />), AS (<paramref name="blockAliasNum" />).
-        /// </summary>
+        // <summary>
+        // Initializes a <see cref="CqlBlock" /> with the SELECT (<paramref name="slotInfos" />), FROM (
+        // <paramref
+        //     name="children" />
+        // ),
+        // WHERE (<paramref name="whereClause" />), AS (<paramref name="blockAliasNum" />).
+        // </summary>
         protected CqlBlock(
             SlotInfo[] slotInfos, List<CqlBlock> children, BoolExpression whereClause, CqlIdentifiers identifiers, int blockAliasNum)
         {
@@ -36,81 +36,81 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_blockAlias = identifiers.GetBlockAlias(blockAliasNum);
         }
 
-        /// <summary>
-        /// Essentially, SELECT. May be replaced with another collection after block construction.
-        /// </summary>
+        // <summary>
+        // Essentially, SELECT. May be replaced with another collection after block construction.
+        // </summary>
         private ReadOnlyCollection<SlotInfo> m_slots;
 
-        /// <summary>
-        /// FROM inputs.
-        /// </summary>
+        // <summary>
+        // FROM inputs.
+        // </summary>
         private readonly ReadOnlyCollection<CqlBlock> m_children;
 
-        /// <summary>
-        /// WHERER.
-        /// </summary>
+        // <summary>
+        // WHERER.
+        // </summary>
         private readonly BoolExpression m_whereClause;
 
-        /// <summary>
-        /// Alias of the whole block for cql generation.
-        /// </summary>
+        // <summary>
+        // Alias of the whole block for cql generation.
+        // </summary>
         private readonly string m_blockAlias;
 
-        /// <summary>
-        /// See <see cref="JoinTreeContext" /> for more info.
-        /// </summary>
+        // <summary>
+        // See <see cref="JoinTreeContext" /> for more info.
+        // </summary>
         private JoinTreeContext m_joinTreeContext;
 
-        /// <summary>
-        /// Returns all the slots for this block (SELECT).
-        /// </summary>
+        // <summary>
+        // Returns all the slots for this block (SELECT).
+        // </summary>
         internal ReadOnlyCollection<SlotInfo> Slots
         {
             get { return m_slots; }
             set { m_slots = value; }
         }
 
-        /// <summary>
-        /// Returns all the child (input) blocks of this block (FROM).
-        /// </summary>
+        // <summary>
+        // Returns all the child (input) blocks of this block (FROM).
+        // </summary>
         protected ReadOnlyCollection<CqlBlock> Children
         {
             get { return m_children; }
         }
 
-        /// <summary>
-        /// Returns the where clause of this block (WHERE).
-        /// </summary>
+        // <summary>
+        // Returns the where clause of this block (WHERE).
+        // </summary>
         protected BoolExpression WhereClause
         {
             get { return m_whereClause; }
         }
 
-        /// <summary>
-        /// Returns an alias for this block that can be used for "AS".
-        /// </summary>
+        // <summary>
+        // Returns an alias for this block that can be used for "AS".
+        // </summary>
         internal string CqlAlias
         {
             get { return m_blockAlias; }
         }
 
-        /// <summary>
-        /// Returns a string corresponding to the eSQL representation of this block (and its children below).
-        /// </summary>
+        // <summary>
+        // Returns a string corresponding to the eSQL representation of this block (and its children below).
+        // </summary>
         internal abstract StringBuilder AsEsql(StringBuilder builder, bool isTopLevel, int indentLevel);
 
-        /// <summary>
-        /// Returns a string corresponding to the CQT representation of this block (and its children below).
-        /// </summary>
+        // <summary>
+        // Returns a string corresponding to the CQT representation of this block (and its children below).
+        // </summary>
         internal abstract DbExpression AsCqt(bool isTopLevel);
 
-        /// <summary>
-        /// For the given <paramref name="slotNum" /> creates a <see cref="QualifiedSlot" /> qualified with
-        /// <see
-        ///     cref="CqlAlias" />
-        /// of the current block:
-        /// "<see cref="CqlAlias" />.slot_alias"
-        /// </summary>
+        // <summary>
+        // For the given <paramref name="slotNum" /> creates a <see cref="QualifiedSlot" /> qualified with
+        // <see
+        //     cref="CqlAlias" />
+        // of the current block:
+        // "<see cref="CqlAlias" />.slot_alias"
+        // </summary>
         internal QualifiedSlot QualifySlotWithBlockAlias(int slotNum)
         {
             Debug.Assert(
@@ -132,18 +132,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             return m_slots[slotNum].OutputMember;
         }
 
-        /// <summary>
-        /// Returns true iff <paramref name="slotNum" /> is being projected by this block.
-        /// </summary>
+        // <summary>
+        // Returns true iff <paramref name="slotNum" /> is being projected by this block.
+        // </summary>
         internal bool IsProjected(int slotNum)
         {
             Debug.Assert(slotNum < m_slots.Count, "Slotnum too high");
             return m_slots[slotNum].IsProjected;
         }
 
-        /// <summary>
-        /// Generates "A, B, C, ..." for all the slots in the block.
-        /// </summary>
+        // <summary>
+        // Generates "A, B, C, ..." for all the slots in the block.
+        // </summary>
         protected void GenerateProjectionEsql(
             StringBuilder builder, string blockAlias, bool addNewLineAfterEachSlot, int indentLevel, bool isTopLevel)
         {
@@ -184,13 +184,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             }
         }
 
-        /// <summary>
-        /// Generates "NewRow(A, B, C, ...)" for all the slots in the block.
-        /// If <paramref name="isTopLevel" />=true then generates "A" for the only slot that is marked as
-        /// <see
-        ///     cref="SlotInfo.IsRequiredByParent" />
-        /// .
-        /// </summary>
+        // <summary>
+        // Generates "NewRow(A, B, C, ...)" for all the slots in the block.
+        // If <paramref name="isTopLevel" />=true then generates "A" for the only slot that is marked as
+        // <see
+        //     cref="SlotInfo.IsRequiredByParent" />
+        // .
+        // </summary>
         protected DbExpression GenerateProjectionCqt(DbExpression row, bool isTopLevel)
         {
             if (isTopLevel)
@@ -206,22 +206,22 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             }
         }
 
-        /// <summary>
-        /// Initializes context positioning in the join tree that owns the <see cref="CqlBlock" />.
-        /// For more info see <see cref="JoinTreeContext" />.
-        /// </summary>
+        // <summary>
+        // Initializes context positioning in the join tree that owns the <see cref="CqlBlock" />.
+        // For more info see <see cref="JoinTreeContext" />.
+        // </summary>
         internal void SetJoinTreeContext(IList<string> parentQualifiers, string leafQualifier)
         {
             Debug.Assert(m_joinTreeContext == null, "Join tree context is already set.");
             m_joinTreeContext = new JoinTreeContext(parentQualifiers, leafQualifier);
         }
 
-        /// <summary>
-        /// Searches the input <paramref name="row" /> for the property that represents the current <see cref="CqlBlock" />.
-        /// In all cases except JOIN, the <paramref name="row" /> is returned as is.
-        /// In case of JOIN, <paramref name="row" />.JoinVarX.JoinVarY...blockVar is returned.
-        /// See <see cref="SetJoinTreeContext" /> for more info.
-        /// </summary>
+        // <summary>
+        // Searches the input <paramref name="row" /> for the property that represents the current <see cref="CqlBlock" />.
+        // In all cases except JOIN, the <paramref name="row" /> is returned as is.
+        // In case of JOIN, <paramref name="row" />.JoinVarX.JoinVarY...blockVar is returned.
+        // See <see cref="SetJoinTreeContext" /> for more info.
+        // </summary>
         internal DbExpression GetInput(DbExpression row)
         {
             return m_joinTreeContext != null ? m_joinTreeContext.FindInput(row) : row;
@@ -238,29 +238,29 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             m_whereClause.ToCompactString(builder);
         }
 
-        /// <summary>
-        /// The class represents a position of a <see cref="CqlBlock" /> in a join tree.
-        /// It is expected that the join tree is left-recursive (not balanced) and looks like this:
-        /// ___J___
-        /// /       \
-        /// L3/         \R3
-        /// /           \
-        /// __J__           \
-        /// /     \           \
-        /// L2/       \R2         \
-        /// /         \           \
-        /// _J_          \           \
-        /// /   \          \           \
-        /// L1/     \R1        \           \
-        /// /       \          \           \
-        /// CqlBlock1   CqlBlock2   CqlBlock3   CqlBlock4
-        /// Example of <see cref="JoinTreeContext" />s for the <see cref="CqlBlock" />s:
-        /// block#   m_parentQualifiers   m_indexInParentQualifiers   m_leafQualifier    FindInput(row) = ...
-        /// 1          (L2, L3)                    0                      L1             row.(L3.L2).L1
-        /// 2          (L2, L3)                    0                      R1             row.(L3.L2).R1
-        /// 3          (L2, L3)                    1                      R2             row.(L3).R2
-        /// 4          (L2, L3)                    2                      R3             row.().R3
-        /// </summary>
+        // <summary>
+        // The class represents a position of a <see cref="CqlBlock" /> in a join tree.
+        // It is expected that the join tree is left-recursive (not balanced) and looks like this:
+        // ___J___
+        // /       \
+        // L3/         \R3
+        // /           \
+        // __J__           \
+        // /     \           \
+        // L2/       \R2         \
+        // /         \           \
+        // _J_          \           \
+        // /   \          \           \
+        // L1/     \R1        \           \
+        // /       \          \           \
+        // CqlBlock1   CqlBlock2   CqlBlock3   CqlBlock4
+        // Example of <see cref="JoinTreeContext" />s for the <see cref="CqlBlock" />s:
+        // block#   m_parentQualifiers   m_indexInParentQualifiers   m_leafQualifier    FindInput(row) = ...
+        // 1          (L2, L3)                    0                      L1             row.(L3.L2).L1
+        // 2          (L2, L3)                    0                      R1             row.(L3.L2).R1
+        // 3          (L2, L3)                    1                      R2             row.(L3).R2
+        // 4          (L2, L3)                    2                      R3             row.().R3
+        // </summary>
         private sealed class JoinTreeContext
         {
             internal JoinTreeContext(IList<string> parentQualifiers, string leafQualifier)

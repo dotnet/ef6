@@ -14,13 +14,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private ReadOnlyMetadataCollection<RelationshipEndMember> _relationshipEndMembers;
 
-        /// <summary>
-        /// Initializes a new instance of relationship type
-        /// </summary>
-        /// <param name="name"> name of the relationship type </param>
-        /// <param name="namespaceName"> namespace of the relationship type </param>
-        /// <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
+        // <summary>
+        // Initializes a new instance of relationship type
+        // </summary>
+        // <param name="name"> name of the relationship type </param>
+        // <param name="namespaceName"> namespace of the relationship type </param>
+        // <param name="dataSpace"> dataSpace in which this edmtype belongs to </param>
+        // <exception cref="System.ArgumentNullException">Thrown if either name, namespace or version arguments are null</exception>
         internal RelationshipType(
             string name,
             string namespaceName,

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    /// <summary>
-    /// Binds a modification function parameter to a member of the entity or association being modified.
-    /// </summary>
+    // <summary>
+    // Binds a modification function parameter to a member of the entity or association being modified.
+    // </summary>
     internal sealed class ModificationFunctionParameterBinding : MappingItem
     {
         internal ModificationFunctionParameterBinding(
@@ -22,20 +22,20 @@ namespace System.Data.Entity.Core.Mapping
             IsCurrent = isCurrent;
         }
 
-        /// <summary>
-        /// Gets the parameter taking the value.
-        /// </summary>
+        // <summary>
+        // Gets the parameter taking the value.
+        // </summary>
         internal readonly FunctionParameter Parameter;
 
-        /// <summary>
-        /// Gets the path to the entity or association member defining the value.
-        /// </summary>
+        // <summary>
+        // Gets the path to the entity or association member defining the value.
+        // </summary>
         internal readonly ModificationFunctionMemberPath MemberPath;
 
-        /// <summary>
-        /// Gets a value indicating whether the current or original
-        /// member value is being bound.
-        /// </summary>
+        // <summary>
+        // Gets a value indicating whether the current or original
+        // member value is being bound.
+        // </summary>
         internal readonly bool IsCurrent;
 
         public override string ToString()

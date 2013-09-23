@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 {
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents PropertyRef Element for Entity keys and referential constraints
-    /// </summary>
+    // <summary>
+    // Represents PropertyRef Element for Entity keys and referential constraints
+    // </summary>
     internal sealed class PropertyRefElement : SchemaElement
     {
         #region Instance Fields
@@ -17,9 +17,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// construct a KeyProperty object
-        /// </summary>
+        // <summary>
+        // construct a KeyProperty object
+        // </summary>
         public PropertyRefElement(SchemaElement parentElement)
             : base(parentElement)
         {
@@ -29,9 +29,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// property chain from KeyedType to Leaf property
-        /// </summary>
+        // <summary>
+        // property chain from KeyedType to Leaf property
+        // </summary>
         public StructuredProperty Property
         {
             get { return _property; }
@@ -46,11 +46,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Debug.Assert(false, "This method should never be used. Use other overload instead");
         }
 
-        /// <summary>
-        /// Since this method can be used in different context, this method does not add any errors
-        /// Please make sure that the caller of this methods handles the error case and add errors
-        /// appropriately
-        /// </summary>
+        // <summary>
+        // Since this method can be used in different context, this method does not add any errors
+        // Please make sure that the caller of this methods handles the error case and add errors
+        // appropriately
+        // </summary>
         internal bool ResolveNames(SchemaEntityType entityType)
         {
             if (string.IsNullOrEmpty(Name))

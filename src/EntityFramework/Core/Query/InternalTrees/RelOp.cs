@@ -2,17 +2,17 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    /// <summary>
-    /// All relational operators - filter, project, join etc.
-    /// </summary>
+    // <summary>
+    // All relational operators - filter, project, join etc.
+    // </summary>
     internal abstract class RelOp : Op
     {
         #region constructors
 
-        /// <summary>
-        /// Basic constructor.
-        /// </summary>
-        /// <param name="opType"> kind of Op </param>
+        // <summary>
+        // Basic constructor.
+        // </summary>
+        // <param name="opType"> kind of Op </param>
         internal RelOp(OpType opType)
             : base(opType)
         {
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// RelOp
-        /// </summary>
+        // <summary>
+        // RelOp
+        // </summary>
         internal override bool IsRelOp
         {
             get { return true; }

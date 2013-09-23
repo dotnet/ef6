@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.SqlServer.Utilities
 {
@@ -12,9 +12,9 @@ namespace System.Data.Entity.SqlServer.Utilities
 #endif
     using System.Xml;
 
-    /// <summary>
-    /// This is a wrapper for <see cref="SqlDataReader" /> that allows a mock implementation to be used.
-    /// </summary>
+    // <summary>
+    // This is a wrapper for <see cref="SqlDataReader" /> that allows a mock implementation to be used.
+    // </summary>
     internal class SqlDataReaderWrapper : MarshalByRefObject
     {
         private readonly SqlDataReader _sqlDataReader;

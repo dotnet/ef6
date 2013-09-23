@@ -8,14 +8,14 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// extract the column rename info from polymorphic entity type mappings
-    /// </summary>
+    // <summary>
+    // extract the column rename info from polymorphic entity type mappings
+    // </summary>
     internal sealed class FunctionImportReturnTypeEntityTypeColumnsRenameBuilder
     {
-        /// <summary>
-        /// CMember -> SMember*
-        /// </summary>
+        // <summary>
+        // CMember -> SMember*
+        // </summary>
         internal Dictionary<string, FunctionImportReturnTypeStructuralTypeColumnRenameMapping> ColumnRenameMapping;
 
         internal FunctionImportReturnTypeEntityTypeColumnsRenameBuilder(
@@ -41,9 +41,9 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Set the column mappings for each defaultMemberName.
-        /// </summary>
+        // <summary>
+        // Set the column mappings for each defaultMemberName.
+        // </summary>
         private void SetStructuralTypeColumnsRename(
             EntityType entityType,
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameMapping,

@@ -31,9 +31,9 @@ namespace System.Data.Entity.Core.Mapping
         internal readonly ReadOnlyCollection<EntityType> EntityTypes;
         internal readonly ReadOnlyCollection<EntityType> IsOfTypeEntityTypes;
 
-        /// <summary>
-        /// Gets all (concrete) entity types implied by this type mapping.
-        /// </summary>
+        // <summary>
+        // Gets all (concrete) entity types implied by this type mapping.
+        // </summary>
         internal IEnumerable<EntityType> GetMappedEntityTypes(ItemCollection itemCollection)
         {
             const bool includeAbstractTypes = false;

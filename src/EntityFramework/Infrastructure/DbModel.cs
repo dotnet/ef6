@@ -19,9 +19,9 @@ namespace System.Data.Entity.Infrastructure
         private readonly DbDatabaseMapping _databaseMapping;
         private readonly DbModelBuilder _cachedModelBuilder;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbModel" /> class.
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbModel" /> class.
+        // </summary>
         internal DbModel(DbDatabaseMapping databaseMapping, DbModelBuilder modelBuilder)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -41,9 +41,9 @@ namespace System.Data.Entity.Infrastructure
                 EdmModel.CreateStoreModel(providerInfo, providerManifest));
         }
 
-        /// <summary>
-        /// For test purpose only.
-        /// </summary>
+        // <summary>
+        // For test purpose only.
+        // </summary>
         internal DbModel(EdmModel conceptualModel, EdmModel storeModel)
         {
             _databaseMapping = new DbDatabaseMapping { Model = conceptualModel, Database = storeModel };
@@ -65,21 +65,23 @@ namespace System.Data.Entity.Infrastructure
             get { return ((IEdmModelAdapter)this).StoreModel.ProviderManifest; }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EdmModel IEdmModelAdapter.ConceptualModel
         {
             get { return _databaseMapping.Model; }
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes")]
         EdmModel IEdmModelAdapter.StoreModel
         {
             get { return _databaseMapping.Database; }
         }
 
-        /// <summary>
-        /// A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
-        /// </summary>
+        // <summary>
+        // A snapshot of the <see cref="DbModelBuilder" /> that was used to create this compiled model.
+        // </summary>
         internal DbModelBuilder CachedModelBuilder
         {
             get { return _cachedModelBuilder; }

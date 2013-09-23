@@ -8,17 +8,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Xml;
 
-    /// <summary>
-    /// Represents an  element.
-    /// </summary>
+    // <summary>
+    // Represents an  element.
+    // </summary>
     internal sealed class EntityContainerAssociationSetEnd : EntityContainerRelationshipSetEnd
     {
         private string _unresolvedRelationshipEndRole;
 
-        /// <summary>
-        /// Constructs an EntityContainerAssociationSetEnd
-        /// </summary>
-        /// <param name="parentElement"> Reference to the schema element. </param>
+        // <summary>
+        // Constructs an EntityContainerAssociationSetEnd
+        // </summary>
+        // <param name="parentElement"> Reference to the schema element. </param>
         public EntityContainerAssociationSetEnd(EntityContainerAssociationSet parentElement)
             : base(parentElement)
         {
@@ -50,18 +50,18 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        /// <summary>
-        /// This is the method that is called when an Role Attribute is encountered.
-        /// </summary>
-        /// <param name="reader"> The XmlRead positned at the extent attribute. </param>
+        // <summary>
+        // This is the method that is called when an Role Attribute is encountered.
+        // </summary>
+        // <param name="reader"> The XmlRead positned at the extent attribute. </param>
         private void HandleRoleAttribute(XmlReader reader)
         {
             _unresolvedRelationshipEndRole = HandleUndottedNameAttribute(reader, _unresolvedRelationshipEndRole);
         }
 
-        /// <summary>
-        /// Used during the resolve phase to resolve the type name to the object that represents that type
-        /// </summary>
+        // <summary>
+        // Used during the resolve phase to resolve the type name to the object that represents that type
+        // </summary>
         internal override void ResolveTopLevelNames()
         {
             base.ResolveTopLevelNames();
@@ -107,12 +107,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// If the role name is missing but an entity set is given, figure out what the
-        /// relationship end should be
-        /// </summary>
-        /// <param name="set"> The given EntitySet </param>
-        /// <returns> The appropriate relationship end </returns>
+        // <summary>
+        // If the role name is missing but an entity set is given, figure out what the
+        // relationship end should be
+        // </summary>
+        // <param name="set"> The given EntitySet </param>
+        // <returns> The appropriate relationship end </returns>
         private IRelationshipEnd InferRelationshipEnd(EntityContainerEntitySet set)
         {
             DebugCheck.NotNull(set);

@@ -7,24 +7,24 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// An ordered list of Vars. Use this when you need an ordering.
-    /// </summary>
+    // <summary>
+    // An ordered list of Vars. Use this when you need an ordering.
+    // </summary>
     [DebuggerDisplay("{{{ToString()}}}")]
     internal class VarList : List<Var>
     {
         #region constructors
 
-        /// <summary>
-        /// Trivial constructor
-        /// </summary>
+        // <summary>
+        // Trivial constructor
+        // </summary>
         internal VarList()
         {
         }
 
-        /// <summary>
-        /// Not so trivial constructor
-        /// </summary>
+        // <summary>
+        // Not so trivial constructor
+        // </summary>
         internal VarList(IEnumerable<Var> vars)
             : base(vars)
         {
@@ -34,11 +34,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// Debugging support
-        /// provide a string representation for debugging.
-        /// </summary>
-        /// <returns> </returns>
+        // <summary>
+        // Debugging support
+        // provide a string representation for debugging.
+        // </summary>
+        // <returns> </returns>
         public override string ToString()
         {
             var sb = new StringBuilder();

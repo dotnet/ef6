@@ -155,12 +155,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return TryGetIntFacetValue(type, ProviderManifest.MaxLengthFacetName, out maxLength);
         }
 
-        /// <summary>
-        /// It will return true if there there non-boolean facets types that
-        /// are nulled out.
-        /// This function needs to be removed till the
-        /// HasNulledOutFacetValues of TypeUsage class become public
-        /// </summary>
+        // <summary>
+        // It will return true if there there non-boolean facets types that
+        // are nulled out.
+        // This function needs to be removed till the
+        // HasNulledOutFacetValues of TypeUsage class become public
+        // </summary>
         internal static bool HasNulledOutFacetValues(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);
@@ -188,9 +188,9 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return !hasFacet;
         }
 
-        /// <summary>
-        /// Returns the name of Primitive Data Type
-        /// </summary>
+        // <summary>
+        // Returns the name of Primitive Data Type
+        // </summary>
         internal static string PrimitiveTypeName(TypeUsage type)
         {
             var primitiveType = GetEdmType<PrimitiveType>(type);

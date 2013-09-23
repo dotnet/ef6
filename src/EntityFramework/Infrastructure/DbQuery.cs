@@ -24,9 +24,9 @@ namespace System.Data.Entity.Infrastructure
 
         private IQueryProvider _provider;
 
-        /// <summary>
-        /// Internal constructor prevents external classes deriving from DbQuery.
-        /// </summary>
+        // <summary>
+        // Internal constructor prevents external classes deriving from DbQuery.
+        // </summary>
         internal DbQuery()
         {
         }
@@ -218,10 +218,10 @@ namespace System.Data.Entity.Infrastructure
 
         #region InternalQuery
 
-        /// <summary>
-        /// Gets the underlying internal query object.
-        /// </summary>
-        /// <value> The internal query. </value>
+        // <summary>
+        // Gets the underlying internal query object.
+        // </summary>
+        // <value> The internal query. </value>
         internal virtual IInternalQuery InternalQuery
         {
             get { return null; }
@@ -232,9 +232,9 @@ namespace System.Data.Entity.Infrastructure
             throw new NotImplementedException(Strings.TestDoubleNotImplemented(memberName, GetType().Name, typeof(DbSet).Name));
         }
 
-        /// <summary>
-        /// The internal query object that is backing this DbQuery
-        /// </summary>
+        // <summary>
+        // The internal query object that is backing this DbQuery
+        // </summary>
         IInternalQuery IInternalQueryAdapter.InternalQuery
         {
             get { return InternalQuery; }

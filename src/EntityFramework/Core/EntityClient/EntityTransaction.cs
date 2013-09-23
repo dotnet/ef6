@@ -19,11 +19,11 @@ namespace System.Data.Entity.Core.EntityClient
         {
         }
 
-        /// <summary>
-        /// Constructs the EntityTransaction object with an associated connection and the underlying store transaction
-        /// </summary>
-        /// <param name="connection"> The EntityConnetion object owning this transaction </param>
-        /// <param name="storeTransaction"> The underlying transaction object </param>
+        // <summary>
+        // Constructs the EntityTransaction object with an associated connection and the underlying store transaction
+        // </summary>
+        // <param name="connection"> The EntityConnetion object owning this transaction </param>
+        // <param name="storeTransaction"> The underlying transaction object </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:DisposeObjectsBeforeLosingScope",
             Justification = "Object is in fact passed to property of the class and gets Disposed properly in the Dispose() method.")]
         internal EntityTransaction(EntityConnection connection, DbTransaction storeTransaction)
@@ -74,9 +74,9 @@ namespace System.Data.Entity.Core.EntityClient
             }
         }
 
-        /// <summary>
-        /// Gets the DbTransaction for the underlying provider transaction
-        /// </summary>
+        // <summary>
+        // Gets the DbTransaction for the underlying provider transaction
+        // </summary>
         internal virtual DbTransaction StoreTransaction
         {
             get { return _storeTransaction; }
@@ -146,9 +146,9 @@ namespace System.Data.Entity.Core.EntityClient
             base.Dispose(disposing);
         }
 
-        /// <summary>
-        /// Helper method to wrap EntityConnection.ClearCurrentTransaction()
-        /// </summary>
+        // <summary>
+        // Helper method to wrap EntityConnection.ClearCurrentTransaction()
+        // </summary>
         private void ClearCurrentTransaction()
         {
             if ((_connection != null)

@@ -330,18 +330,18 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Adds AllOtherConstants element to the domain set given by MemberPath
-        /// </summary>
+        // <summary>
+        // Adds AllOtherConstants element to the domain set given by MemberPath
+        // </summary>
         internal void AddSentinel(MemberPath path)
         {
             var set = GetDomainInternal(path);
             set.Add(Constant.AllOtherConstants);
         }
 
-        /// <summary>
-        /// Removes AllOtherConstant element from the domain set given by MemberPath
-        /// </summary>
+        // <summary>
+        // Removes AllOtherConstant element from the domain set given by MemberPath
+        // </summary>
         internal void RemoveSentinel(MemberPath path)
         {
             var set = GetDomainInternal(path);

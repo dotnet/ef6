@@ -15,35 +15,35 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
         private ReadOnlyCollection<PrimitiveType> _primitiveTypes;
         private static readonly ClrProviderManifest _instance = new ClrProviderManifest();
 
-        /// <summary>
-        /// A private constructor to prevent other places from instantiating this class
-        /// </summary>
+        // <summary>
+        // A private constructor to prevent other places from instantiating this class
+        // </summary>
         private ClrProviderManifest()
         {
         }
 
-        /// <summary>
-        /// Gets the EDM provider manifest singleton instance
-        /// </summary>
+        // <summary>
+        // Gets the EDM provider manifest singleton instance
+        // </summary>
         internal static ClrProviderManifest Instance
         {
             get { return _instance; }
         }
 
-        /// <summary>
-        /// Returns the namespace used by this provider manifest
-        /// </summary>
+        // <summary>
+        // Returns the namespace used by this provider manifest
+        // </summary>
         public override string NamespaceName
         {
             get { return EdmConstants.ClrPrimitiveTypeNamespace; }
         }
 
-        /// <summary>
-        /// Returns the primitive type corresponding to the given CLR type
-        /// </summary>
-        /// <param name="clrType"> The CLR type for which the PrimitiveType object is retrieved </param>
-        /// <param name="primitiveType"> The retrieved primitive type </param>
-        /// <returns> True if a primitive type is returned </returns>
+        // <summary>
+        // Returns the primitive type corresponding to the given CLR type
+        // </summary>
+        // <param name="clrType"> The CLR type for which the PrimitiveType object is retrieved </param>
+        // <param name="primitiveType"> The retrieved primitive type </param>
+        // <returns> True if a primitive type is returned </returns>
         internal bool TryGetPrimitiveType(Type clrType, out PrimitiveType primitiveType)
         {
             primitiveType = null;
@@ -58,12 +58,12 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             return false;
         }
 
-        /// <summary>
-        /// Returns the <see cref="PrimitiveTypeKind" /> corresponding to the given CLR type
-        /// </summary>
-        /// <param name="clrType"> The CLR type for which the PrimitiveTypeKind value should be resolved </param>
-        /// <param name="resolvedPrimitiveTypeKind"> The PrimitiveTypeKind value to which the CLR type resolves, if any. </param>
-        /// <returns> True if the CLR type represents a primitive (EDM) type; otherwise false. </returns>
+        // <summary>
+        // Returns the <see cref="PrimitiveTypeKind" /> corresponding to the given CLR type
+        // </summary>
+        // <param name="clrType"> The CLR type for which the PrimitiveTypeKind value should be resolved </param>
+        // <param name="resolvedPrimitiveTypeKind"> The PrimitiveTypeKind value to which the CLR type resolves, if any. </param>
+        // <returns> True if the CLR type represents a primitive (EDM) type; otherwise false. </returns>
         internal static bool TryGetPrimitiveTypeKind(Type clrType, out PrimitiveTypeKind resolvedPrimitiveTypeKind)
         {
             PrimitiveTypeKind? primitiveTypeKind = null;
@@ -155,20 +155,20 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             }
         }
 
-        /// <summary>
-        /// Returns all the functions in this provider manifest
-        /// </summary>
-        /// <returns> A collection of functions </returns>
+        // <summary>
+        // Returns all the functions in this provider manifest
+        // </summary>
+        // <returns> A collection of functions </returns>
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
             return Helper.EmptyEdmFunctionReadOnlyCollection;
         }
 
-        /// <summary>
-        /// Returns all the FacetDescriptions for a particular type
-        /// </summary>
-        /// <param name="type"> the type to return FacetDescriptions for. </param>
-        /// <returns> The FacetDescriptions for the type given. </returns>
+        // <summary>
+        // Returns all the FacetDescriptions for a particular type
+        // </summary>
+        // <param name="type"> the type to return FacetDescriptions for. </param>
+        // <returns> The FacetDescriptions for the type given. </returns>
         public override ReadOnlyCollection<FacetDescription> GetFacetDescriptions(EdmType type)
         {
             if (Helper.IsPrimitiveType(type)
@@ -182,9 +182,9 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             return Helper.EmptyFacetDescriptionEnumerable;
         }
 
-        /// <summary>
-        /// Initializes all the primitive types
-        /// </summary>
+        // <summary>
+        // Initializes all the primitive types
+        // </summary>
         private void InitializePrimitiveTypes()
         {
             if (_primitiveTypes != null)
@@ -218,11 +218,11 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             Interlocked.CompareExchange(ref _primitiveTypes, readOnlyTypes, null);
         }
 
-        /// <summary>
-        /// Initialize the primitive type with the given
-        /// </summary>
-        /// <param name="clrType"> The CLR type of this type </param>
-        /// <param name="primitiveTypeKind"> The primitive type kind of the primitive type </param>
+        // <summary>
+        // Initialize the primitive type with the given
+        // </summary>
+        // <param name="clrType"> The CLR type of this type </param>
+        // <param name="primitiveTypeKind"> The primitive type kind of the primitive type </param>
         private PrimitiveType CreatePrimitiveType(Type clrType, PrimitiveTypeKind primitiveTypeKind)
         {
             // Figures out the base type
@@ -252,12 +252,12 @@ namespace System.Data.Entity.Core.Metadata.Edm.Provider
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Providers should override this to return information specific to their provider.
-        /// This method should never return null.
-        /// </summary>
-        /// <param name="informationType"> The name of the information to be retrieved. </param>
-        /// <returns> An XmlReader at the begining of the information requested. </returns>
+        // <summary>
+        // Providers should override this to return information specific to their provider.
+        // This method should never return null.
+        // </summary>
+        // <param name="informationType"> The name of the information to be retrieved. </param>
+        // <returns> An XmlReader at the begining of the information requested. </returns>
         protected override XmlReader GetDbInformation(string informationType)
         {
             throw new NotImplementedException();

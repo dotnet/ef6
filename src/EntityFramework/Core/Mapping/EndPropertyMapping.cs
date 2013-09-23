@@ -51,9 +51,9 @@ namespace System.Data.Entity.Core.Mapping
     {
         private AssociationEndMember _associationEnd;
 
-        /// <summary>
-        /// List of property mappings that make up the End.
-        /// </summary>
+        // <summary>
+        // List of property mappings that make up the End.
+        // </summary>
         private readonly List<ScalarPropertyMapping> _properties = new List<ScalarPropertyMapping>();
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<ScalarPropertyMapping>(_properties); }
         }
 
-        /// <summary>
-        /// Returns all store properties that are mapped under this mapping fragment
-        /// </summary>
+        // <summary>
+        // Returns all store properties that are mapped under this mapping fragment
+        // </summary>
         internal IEnumerable<EdmMember> StoreProperties
         {
             get { return Properties.Select(propertyMap => propertyMap.Column); }

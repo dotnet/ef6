@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    /// <summary>
-    /// Defines a binding from a named result set column to a member taking the value.
-    /// </summary>
+    // <summary>
+    // Defines a binding from a named result set column to a member taking the value.
+    // </summary>
     internal sealed class ModificationFunctionResultBinding : MappingItem
     {
         internal ModificationFunctionResultBinding(string columnName, EdmProperty property)
@@ -20,15 +20,15 @@ namespace System.Data.Entity.Core.Mapping
             Property = property;
         }
 
-        /// <summary>
-        /// Gets the name of the column to bind from the function result set. We use a string
-        /// value rather than EdmMember, since there is no metadata for function result sets.
-        /// </summary>
+        // <summary>
+        // Gets the name of the column to bind from the function result set. We use a string
+        // value rather than EdmMember, since there is no metadata for function result sets.
+        // </summary>
         internal string ColumnName;
 
-        /// <summary>
-        /// Gets the property to be set on the entity.
-        /// </summary>
+        // <summary>
+        // Gets the property to be set on the entity.
+        // </summary>
         internal readonly EdmProperty Property;
 
         public override string ToString()

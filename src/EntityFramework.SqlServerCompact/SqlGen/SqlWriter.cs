@@ -7,10 +7,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
     using System.IO;
     using System.Text;
 
-    /// <summary>
-    /// This extends StringWriter primarily to add the ability to add an indent
-    /// to each line that is written out.
-    /// </summary>
+    // <summary>
+    // This extends StringWriter primarily to add the ability to add an indent
+    // to each line that is written out.
+    // </summary>
     internal class SqlWriter : IndentedTextWriter
     {
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Transferring ownership")]

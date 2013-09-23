@@ -4,10 +4,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Basic visitor which reproduces the given expression tree.
-    /// </summary>
-    /// <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
+    // <summary>
+    // Basic visitor which reproduces the given expression tree.
+    // </summary>
+    // <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
     internal abstract class BasicVisitor<T_Identifier> : Visitor<T_Identifier, BoolExpr<T_Identifier>>
     {
         internal override BoolExpr<T_Identifier> VisitFalse(FalseExpr<T_Identifier> expression)

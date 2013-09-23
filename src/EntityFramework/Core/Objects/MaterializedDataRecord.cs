@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Objects
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// Instances of this class would be returned to user via <see cref="ObjectQuery{T}"/>.
-    /// </summary>
+    // <summary>
+    // Instances of this class would be returned to user via <see cref="ObjectQuery{T}"/>.
+    // </summary>
     internal sealed class MaterializedDataRecord : DbDataRecord, IExtendedDataRecord, ICustomTypeDescriptor
     {
         private FieldNameLookup _fieldNameLookup;
@@ -279,9 +279,9 @@ namespace System.Data.Entity.Core.Objects
             return ((DbDataRecord)_values[ordinal]);
         }
 
-        /// <summary>
-        /// Used to return a nested result
-        /// </summary>
+        // <summary>
+        // Used to return a nested result
+        // </summary>
         public DbDataReader GetDataReader(int i)
         {
             return GetDbDataReader(i);
@@ -440,10 +440,10 @@ namespace System.Data.Entity.Core.Objects
             return null;
         }
 
-        /// <summary>
-        /// Initialize the property descriptors for each PrimitiveType attribute.
-        /// See similar functionality in DataRecordObjectView's ITypedList implementation.
-        /// </summary>
+        // <summary>
+        // Initialize the property descriptors for each PrimitiveType attribute.
+        // See similar functionality in DataRecordObjectView's ITypedList implementation.
+        // </summary>
         private PropertyDescriptorCollection InitializePropertyDescriptors()
         {
             if (null == _values)
@@ -463,13 +463,13 @@ namespace System.Data.Entity.Core.Objects
             return _propertyDescriptors;
         }
 
-        /// <summary>
-        /// Creates a PropertyDescriptorCollection based on a StructuralType definition
-        /// Currently this includes a PropertyDescriptor for each primitive type property in the StructuralType
-        /// </summary>
-        /// <param name="structuralType"> The structural type definition </param>
-        /// <param name="componentType"> The type to use as the component type </param>
-        /// <param name="isReadOnly"> Whether the properties in the collection should be read only or not </param>
+        // <summary>
+        // Creates a PropertyDescriptorCollection based on a StructuralType definition
+        // Currently this includes a PropertyDescriptor for each primitive type property in the StructuralType
+        // </summary>
+        // <param name="structuralType"> The structural type definition </param>
+        // <param name="componentType"> The type to use as the component type </param>
+        // <param name="isReadOnly"> Whether the properties in the collection should be read only or not </param>
         internal static PropertyDescriptorCollection CreatePropertyDescriptorCollection(
             StructuralType structuralType, Type componentType, bool isReadOnly)
         {

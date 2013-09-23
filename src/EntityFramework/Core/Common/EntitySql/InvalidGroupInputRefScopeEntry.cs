@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Resources;
 
-    /// <summary>
-    /// Represents a group input scope entry that should no longer be referenced.
-    /// </summary>
+    // <summary>
+    // Represents a group input scope entry that should no longer be referenced.
+    // </summary>
     internal sealed class InvalidGroupInputRefScopeEntry : ScopeEntry
     {
         internal InvalidGroupInputRefScopeEntry()

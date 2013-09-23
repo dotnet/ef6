@@ -220,13 +220,13 @@ namespace System.Data.Entity
                     _modelConfiguration.Entity(typeof(TEntityType), explicitEntity: true));
         }
 
-        /// <summary>
-        /// Registers a type as an entity in the model and returns an object that can be used to
-        /// configure the entity. This method can be called multiple times for the same type to
-        /// perform multiple lines of configuration.
-        /// </summary>
-        /// <param name="entityType"> The type to be registered or configured. </param>
-        /// <returns> The configuration object for the specified entity type. </returns>
+        // <summary>
+        // Registers a type as an entity in the model and returns an object that can be used to
+        // configure the entity. This method can be called multiple times for the same type to
+        // perform multiple lines of configuration.
+        // </summary>
+        // <param name="entityType"> The type to be registered or configured. </param>
+        // <returns> The configuration object for the specified entity type. </returns>
         internal virtual EntityTypeConfiguration Entity(Type entityType)
         {
             DebugCheck.NotNull(entityType);

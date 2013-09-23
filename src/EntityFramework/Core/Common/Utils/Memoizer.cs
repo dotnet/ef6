@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Common.Utils
 {
@@ -7,12 +7,12 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
 
-    /// <summary>
-    /// Remembers the result of evaluating an expensive function so that subsequent
-    /// evaluations are faster. Thread-safe.
-    /// </summary>
-    /// <typeparam name="TArg"> Type of the argument to the function. </typeparam>
-    /// <typeparam name="TResult"> Type of the function result. </typeparam>
+    // <summary>
+    // Remembers the result of evaluating an expensive function so that subsequent
+    // evaluations are faster. Thread-safe.
+    // </summary>
+    // <typeparam name="TArg"> Type of the argument to the function. </typeparam>
+    // <typeparam name="TResult"> Type of the function result. </typeparam>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable")]
     internal sealed class Memoizer<TArg, TResult>
     {
@@ -20,11 +20,11 @@ namespace System.Data.Entity.Core.Common.Utils
         private readonly Dictionary<TArg, Result> _resultCache;
         private readonly ReaderWriterLockSlim _lock;
 
-        /// <summary>
-        /// Constructs
-        /// </summary>
-        /// <param name="function"> Required. Function whose values are being cached. </param>
-        /// <param name="argComparer"> Optional. Comparer used to determine if two functions arguments are the same. </param>
+        // <summary>
+        // Constructs
+        // </summary>
+        // <param name="function"> Required. Function whose values are being cached. </param>
+        // <param name="argComparer"> Optional. Comparer used to determine if two functions arguments are the same. </param>
         internal Memoizer(Func<TArg, TResult> function, IEqualityComparer<TArg> argComparer)
         {
             DebugCheck.NotNull(function);
@@ -34,13 +34,13 @@ namespace System.Data.Entity.Core.Common.Utils
             _lock = new ReaderWriterLockSlim();
         }
 
-        /// <summary>
-        /// Evaluates the wrapped function for the given argument. If the function has already
-        /// been evaluated for the given argument, returns cached value. Otherwise, the value
-        /// is computed and returned.
-        /// </summary>
-        /// <param name="arg"> Function argument. </param>
-        /// <returns> Function result. </returns>
+        // <summary>
+        // Evaluates the wrapped function for the given argument. If the function has already
+        // been evaluated for the given argument, returns cached value. Otherwise, the value
+        // is computed and returned.
+        // </summary>
+        // <param name="arg"> Function argument. </param>
+        // <returns> Function result. </returns>
         internal TResult Evaluate(TArg arg)
         {
             Result result;
@@ -98,10 +98,10 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        /// <summary>
-        /// Encapsulates a 'deferred' result. The result is constructed with a delegate (must not
-        /// be null) and when the user requests a value the delegate is invoked and stored.
-        /// </summary>
+        // <summary>
+        // Encapsulates a 'deferred' result. The result is constructed with a delegate (must not
+        // be null) and when the user requests a value the delegate is invoked and stored.
+        // </summary>
         private class Result
         {
             private TResult _value;

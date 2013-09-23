@@ -50,9 +50,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return _filterAssemblyCacheByAssembly.Evaluate(assembly);
         }
 
-        /// <summary>
-        /// Is the assembly and its referened assemblies not expected to have any metadata
-        /// </summary>
+        // <summary>
+        // Is the assembly and its referened assemblies not expected to have any metadata
+        // </summary>
         private static bool ShouldFilterAssembly(AssemblyName assemblyName)
         {
             return (ArePublicKeyTokensEqual(assemblyName.GetPublicKeyToken(), _ecmaPublicKeyToken) ||

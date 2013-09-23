@@ -482,28 +482,28 @@ namespace System.Data.Entity.SqlServer
 
         #region Access to underlying string builder
 
-        /// <summary>
-        /// Appends raw SQL into the string builder.
-        /// </summary>
-        /// <param name="text"> Raw SQL string to append into the string builder. </param>
+        // <summary>
+        // Appends raw SQL into the string builder.
+        // </summary>
+        // <param name="text"> Raw SQL string to append into the string builder. </param>
         private void AppendSql(string text)
         {
             unencodedStringBuilder.Append(text);
         }
 
-        /// <summary>
-        /// Appends new line for visual formatting or for ending a comment.
-        /// </summary>
+        // <summary>
+        // Appends new line for visual formatting or for ending a comment.
+        // </summary>
         private void AppendNewLine()
         {
             unencodedStringBuilder.Append("\r\n");
         }
 
-        /// <summary>
-        /// Append raw SQL into the string builder with formatting options and invariant culture formatting.
-        /// </summary>
-        /// <param name="format"> A composite format string. </param>
-        /// <param name="args"> An array of objects to format. </param>
+        // <summary>
+        // Append raw SQL into the string builder with formatting options and invariant culture formatting.
+        // </summary>
+        // <param name="format"> A composite format string. </param>
+        // <param name="args"> An array of objects to format. </param>
         private void AppendSqlInvariantFormat(string format, params object[] args)
         {
             unencodedStringBuilder.AppendFormat(CultureInfo.InvariantCulture, format, args);

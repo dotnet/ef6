@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// Get the table instance produced by this Op
-        /// </summary>
+        // <summary>
+        // Get the table instance produced by this Op
+        // </summary>
         internal Table Table
         {
             get { return m_table; }

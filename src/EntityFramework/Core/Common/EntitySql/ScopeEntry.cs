@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
 {
     using System.Data.Entity.Core.Common.CommandTrees;
 
-    /// <summary>
-    /// Represents an entry in the scope.
-    /// </summary>
+    // <summary>
+    // Represents an entry in the scope.
+    // </summary>
     internal abstract class ScopeEntry
     {
         private readonly ScopeEntryKind _scopeEntryKind;
@@ -21,9 +21,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             get { return _scopeEntryKind; }
         }
 
-        /// <summary>
-        /// Returns CQT expression corresponding to the scope entry.
-        /// </summary>
+        // <summary>
+        // Returns CQT expression corresponding to the scope entry.
+        // </summary>
         internal abstract DbExpression GetExpression(string refName, ErrorContext errCtx);
     }
 }

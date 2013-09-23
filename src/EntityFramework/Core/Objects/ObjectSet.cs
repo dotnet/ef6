@@ -19,14 +19,14 @@ namespace System.Data.Entity.Core.Objects
 
         #region Internal Constructors
 
-        /// <summary>
-        /// Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
-        /// all of the entities in the specified EntitySet.
-        /// Sets the query's command text to the fully-qualified, quoted, EntitySet name, i.e. [EntityContainerName].[EntitySetName]
-        /// Explicitly set MergeOption to AppendOnly in order to mirror CreateQuery behavior
-        /// </summary>
-        /// <param name="entitySet"> Metadata EntitySet on which to base the ObjectSet. </param>
-        /// <param name="context"> ObjectContext to be used for the query and data modification operations. </param>
+        // <summary>
+        // Creates a new ObjectSet that has a base ObjectQuery with the CommandText that represents
+        // all of the entities in the specified EntitySet.
+        // Sets the query's command text to the fully-qualified, quoted, EntitySet name, i.e. [EntityContainerName].[EntitySetName]
+        // Explicitly set MergeOption to AppendOnly in order to mirror CreateQuery behavior
+        // </summary>
+        // <param name="entitySet"> Metadata EntitySet on which to base the ObjectSet. </param>
+        // <param name="context"> ObjectContext to be used for the query and data modification operations. </param>
         internal ObjectSet(EntitySet entitySet, ObjectContext context)
             : base(entitySet, context, MergeOption.AppendOnly)
         {

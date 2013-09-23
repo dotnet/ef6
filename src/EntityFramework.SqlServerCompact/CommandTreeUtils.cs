@@ -18,20 +18,20 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
                     DbExpressionKind.Multiply
                 });
 
-        /// <summary>
-        /// Creates a flat list of the associative arguments.
-        /// For example, for ((A1 + (A2 - A3)) + A4) it will create A1, (A2 - A3), A4
-        /// </summary>
+        // <summary>
+        // Creates a flat list of the associative arguments.
+        // For example, for ((A1 + (A2 - A3)) + A4) it will create A1, (A2 - A3), A4
+        // </summary>
         internal static IEnumerable<DbExpression> FlattenAssociativeExpression(DbExpression expression)
         {
             return FlattenAssociativeExpression(expression.ExpressionKind, expression);
         }
 
-        /// <summary>
-        /// Creates a flat list of the associative arguments.
-        /// For example, for ((A1 + (A2 - A3)) + A4) it will create A1, (A2 - A3), A4
-        /// Only 'unfolds' the given arguments that are of the given expression kind.
-        /// </summary>
+        // <summary>
+        // Creates a flat list of the associative arguments.
+        // For example, for ((A1 + (A2 - A3)) + A4) it will create A1, (A2 - A3), A4
+        // Only 'unfolds' the given arguments that are of the given expression kind.
+        // </summary>
         internal static IEnumerable<DbExpression> FlattenAssociativeExpression(
             DbExpressionKind expressionKind, params DbExpression[] arguments)
         {
@@ -48,12 +48,12 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return outputArguments;
         }
 
-        /// <summary>
-        /// Helper method for FlattenAssociativeExpression.
-        /// Creates a flat list of the associative arguments and appends to the given argument list.
-        /// For example, for ((A1 + (A2 - A3)) + A4) it will add A1, (A2 - A3), A4 to the list.
-        /// Only 'unfolds' the given expression if it is of the given expression kind.
-        /// </summary>
+        // <summary>
+        // Helper method for FlattenAssociativeExpression.
+        // Creates a flat list of the associative arguments and appends to the given argument list.
+        // For example, for ((A1 + (A2 - A3)) + A4) it will add A1, (A2 - A3), A4 to the list.
+        // Only 'unfolds' the given expression if it is of the given expression kind.
+        // </summary>
         private static void ExtractAssociativeArguments(
             DbExpressionKind expressionKind, List<DbExpression> argumentList, DbExpression expression)
         {

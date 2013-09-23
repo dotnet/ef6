@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -19,10 +19,10 @@ namespace System.Data.Entity.Infrastructure
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface")]
     public class DbSqlQuery : DbRawSqlQuery
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbSqlQuery" /> class.
-        /// </summary>
-        /// <param name="internalQuery"> The internal query. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbSqlQuery" /> class.
+        // </summary>
+        // <param name="internalQuery"> The internal query. </param>
         internal DbSqlQuery(InternalSqlQuery internalQuery)
             : base(internalQuery)
         {

@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A class to denote a part of the WITH RELATIONSHIP clause.
-    /// </summary>
+    // <summary>
+    // A class to denote a part of the WITH RELATIONSHIP clause.
+    // </summary>
     internal sealed class WithRelationship : InternalBase
     {
         internal WithRelationship(
@@ -87,9 +87,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
                     m_toEndEntityType, m_toEndEntityKeyMemberPaths.Select(keyMember => row.Property(keyMember.CqlFieldAlias))));
         }
 
-        /// <summary>
-        /// Not supported in this class.
-        /// </summary>
+        // <summary>
+        // Not supported in this class.
+        // </summary>
         internal override void ToCompactString(StringBuilder builder)
         {
             Debug.Fail("Should not be called.");

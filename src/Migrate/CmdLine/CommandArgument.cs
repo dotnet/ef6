@@ -6,9 +6,9 @@ namespace CmdLine
     using System.Text;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// Represents a command line argument
-    /// </summary>
+    // <summary>
+    // Represents a command line argument
+    // </summary>
     [Serializable]
     internal class CommandArgument
     {
@@ -18,10 +18,10 @@ namespace CmdLine
 
         private string value;
 
-        /// <summary>
-        /// Initializes a CommandArgument from a Regex match
-        /// </summary>
-        /// <param name="match"> </param>
+        // <summary>
+        // Initializes a CommandArgument from a Regex match
+        // </summary>
+        // <param name="match"> </param>
         public CommandArgument(Match match)
         {
             Token = GetGroupValue(match, TokenGroup);
@@ -62,12 +62,12 @@ namespace CmdLine
             set { parameterIndex = value; }
         }
 
-        /// <summary>
-        /// Returns the value used by the property cache for the key
-        /// </summary>
-        /// <remarks>
-        /// If the Command property has a value use that, otherwise use the formatted position value
-        /// </remarks>
+        // <summary>
+        // Returns the value used by the property cache for the key
+        // </summary>
+        // <remarks>
+        // If the Command property has a value use that, otherwise use the formatted position value
+        // </remarks>
         internal string Key
         {
             get

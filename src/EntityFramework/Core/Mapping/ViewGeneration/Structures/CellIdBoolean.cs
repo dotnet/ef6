@@ -9,14 +9,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Wraps from0, from1, etc. boolean fields that identify the source of tuples (# of respective cell query) in the view statements.
-    /// </summary>
+    // <summary>
+    // Wraps from0, from1, etc. boolean fields that identify the source of tuples (# of respective cell query) in the view statements.
+    // </summary>
     internal class CellIdBoolean : TrueFalseLiteral
     {
-        /// <summary>
-        /// Creates a boolean expression for the variable name specified by <paramref name="index" />, e.g., 0 results in from0, 1 into from1.
-        /// </summary>
+        // <summary>
+        // Creates a boolean expression for the variable name specified by <paramref name="index" />, e.g., 0 results in from0, 1 into from1.
+        // </summary>
         internal CellIdBoolean(CqlIdentifiers identifiers, int index)
         {
             Debug.Assert(index >= 0);
@@ -24,16 +24,16 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             m_slotName = identifiers.GetFromVariable(index);
         }
 
-        /// <summary>
-        /// e.g., from0, from1.
-        /// </summary>
+        // <summary>
+        // e.g., from0, from1.
+        // </summary>
         private readonly int m_index;
 
         private readonly string m_slotName;
 
-        /// <summary>
-        /// Returns the slotName corresponding to this, ie., _from0 etc.
-        /// </summary>
+        // <summary>
+        // Returns the slotName corresponding to this, ie., _from0 etc.
+        // </summary>
         internal string SlotName
         {
             get { return m_slotName; }

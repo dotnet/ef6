@@ -36,9 +36,9 @@ namespace System.Data.Entity.Core
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of ProviderIncompatibleException
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of ProviderIncompatibleException
+        // </summary>
         private ProviderIncompatibleException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

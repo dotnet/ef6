@@ -6,12 +6,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Text;
 
-    /// <summary>
-    /// Represents a relation signature that lists all projected
-    /// slots of two cell queries in a cell after projection. So if
-    /// SPerson1.Disc is present in the cellquery (and part of the where
-    /// clause) but not in the projected slots, it is missing from a ViewCellRelation
-    /// </summary>
+    // <summary>
+    // Represents a relation signature that lists all projected
+    // slots of two cell queries in a cell after projection. So if
+    // SPerson1.Disc is present in the cellquery (and part of the where
+    // clause) but not in the projected slots, it is missing from a ViewCellRelation
+    // </summary>
     internal class ViewCellRelation : CellRelation
     {
         // effects: Creates a view cell relation for "cell" with the

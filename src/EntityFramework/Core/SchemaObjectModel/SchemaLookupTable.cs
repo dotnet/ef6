@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Reponsible for keep map from alias to namespace for a given schema.
-    /// </summary>
+    // <summary>
+    // Reponsible for keep map from alias to namespace for a given schema.
+    // </summary>
     internal sealed class AliasResolver
     {
         #region Fields
@@ -23,9 +23,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Methods
 
-        /// <summary>
-        /// Construct the LookUp table
-        /// </summary>
+        // <summary>
+        // Construct the LookUp table
+        // </summary>
         public AliasResolver(Schema schema)
         {
             _definingSchema = schema;
@@ -38,10 +38,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Add a UsingElement to the table
-        /// </summary>
-        /// <param name="usingElement"> the UsingElement to add </param>
+        // <summary>
+        // Add a UsingElement to the table
+        // </summary>
+        // <param name="usingElement"> the UsingElement to add </param>
         public void Add(UsingElement usingElement)
         {
             DebugCheck.NotNull(usingElement);
@@ -79,10 +79,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Get the Schema(s) a namespace or alias might refer to
-        /// returned schemas may be null is called before or during Schema Resolution
-        /// </summary>
+        // <summary>
+        // Get the Schema(s) a namespace or alias might refer to
+        // returned schemas may be null is called before or during Schema Resolution
+        // </summary>
         public bool TryResolveAlias(string alias, out string namespaceName)
         {
             DebugCheck.NotEmpty(alias);
@@ -91,9 +91,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return _aliasToNamespaceMap.TryGetValue(alias, out namespaceName);
         }
 
-        /// <summary>
-        /// Resolves all the namespace specified in the using elements in this schema
-        /// </summary>
+        // <summary>
+        // Resolves all the namespace specified in the using elements in this schema
+        // </summary>
         public void ResolveNamespaces()
         {
             foreach (var usingElement in _usingElementCollection)
@@ -111,9 +111,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
-        /// </summary>
+        // <summary>
+        // Check if the given name is a reserved keyword. if yes, add appropriate error to the refschema
+        // </summary>
         private bool CheckForSystemNamespace(UsingElement refSchema, string name, NameKind nameKind)
         {
             Debug.Assert(
@@ -144,19 +144,19 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Types
 
-        /// <summary>
-        /// Kind of Name
-        /// </summary>
+        // <summary>
+        // Kind of Name
+        // </summary>
         private enum NameKind
         {
-            /// <summary>
-            /// It's an Alias
-            /// </summary>
+            // <summary>
+            // It's an Alias
+            // </summary>
             Alias,
 
-            /// <summary>
-            /// It's a namespace
-            /// </summary>
+            // <summary>
+            // It's a namespace
+            // </summary>
             Namespace,
         }
 

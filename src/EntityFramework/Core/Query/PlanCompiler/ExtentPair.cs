@@ -4,41 +4,41 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
-    /// <summary>
-    /// A simple class that represents a pair of extents
-    /// </summary>
+    // <summary>
+    // A simple class that represents a pair of extents
+    // </summary>
     internal class ExtentPair
     {
         #region public surface
 
-        /// <summary>
-        /// Return the left component of the pair
-        /// </summary>
+        // <summary>
+        // Return the left component of the pair
+        // </summary>
         internal EntitySetBase Left
         {
             get { return m_left; }
         }
 
-        /// <summary>
-        /// Return the right component of the pair
-        /// </summary>
+        // <summary>
+        // Return the right component of the pair
+        // </summary>
         internal EntitySetBase Right
         {
             get { return m_right; }
         }
 
-        /// <summary>
-        /// Equals
-        /// </summary>
+        // <summary>
+        // Equals
+        // </summary>
         public override bool Equals(object obj)
         {
             var other = obj as ExtentPair;
             return (other != null) && other.Left.Equals(Left) && other.Right.Equals(Right);
         }
 
-        /// <summary>
-        /// Hashcode
-        /// </summary>
+        // <summary>
+        // Hashcode
+        // </summary>
         public override int GetHashCode()
         {
             return (Left.GetHashCode() << 4) ^ Right.GetHashCode();

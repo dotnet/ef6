@@ -1255,10 +1255,10 @@ namespace System.Data.Entity.Infrastructure.Pluralization
 
         #region Utils
 
-        /// <summary>
-        /// captalize the return word if the parameter is capitalized
-        /// if word is "Table", then return "Tables"
-        /// </summary>
+        // <summary>
+        // captalize the return word if the parameter is capitalized
+        // if word is "Table", then return "Tables"
+        // </summary>
         private static string Capitalize(string word, Func<string, string> action)
         {
             var result = action(word);
@@ -1282,9 +1282,9 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             }
         }
 
-        /// <summary>
-        /// separate one combine word in to two parts, prefix word and the last word(suffix word)
-        /// </summary>
+        // <summary>
+        // separate one combine word in to two parts, prefix word and the last word(suffix word)
+        // </summary>
         private static string GetSuffixWord(string word, out string prefixWord)
         {
             // use the last space to separate the words
@@ -1334,10 +1334,10 @@ namespace System.Data.Entity.Infrastructure.Pluralization
             }
         }
 
-        /// <summary>
-        /// return true when the word is "[\s]*" or leading or tailing with spaces
-        /// or contains non alphabetical characters
-        /// </summary>
+        // <summary>
+        // return true when the word is "[\s]*" or leading or tailing with spaces
+        // or contains non alphabetical characters
+        // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         private bool IsNoOpWord(string word)
         {

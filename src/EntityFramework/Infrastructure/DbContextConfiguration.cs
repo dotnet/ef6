@@ -17,10 +17,10 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly InternalContext _internalContext;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbContextConfiguration" /> class.
-        /// </summary>
-        /// <param name="internalContext"> The internal context. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbContextConfiguration" /> class.
+        // </summary>
+        // <param name="internalContext"> The internal context. </param>
         internal DbContextConfiguration(InternalContext internalContext)
         {
             DebugCheck.NotNull(internalContext);

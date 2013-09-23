@@ -357,12 +357,12 @@ namespace System.Data.Entity.SqlServerCompact
             return result;
         }
 
-        /// <summary>
-        /// Create a SqlCeCommand object, given the provider manifest and command tree
-        /// </summary>
-        /// <param name="providerManifest"> provider manifest </param>
-        /// <param name="commandTree"> command tree for the statement </param>
-        /// <returns> a command object </returns>
+        // <summary>
+        // Create a SqlCeCommand object, given the provider manifest and command tree
+        // </summary>
+        // <param name="providerManifest"> provider manifest </param>
+        // <param name="commandTree"> command tree for the statement </param>
+        // <returns> a command object </returns>
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         private DbCommand CreateCommand(DbProviderManifest providerManifest, DbCommandTree commandTree)
@@ -500,9 +500,9 @@ namespace System.Data.Entity.SqlServerCompact
             return new SqlCeProviderManifest(_isLocalProvider);
         }
 
-        /// <summary>
-        /// Constructs a SqlCeParameter
-        /// </summary>
+        // <summary>
+        // Constructs a SqlCeParameter
+        // </summary>
         internal static DbParameter CreateSqlCeParameter(
             string name, TypeUsage type, object value, bool ignoreMaxLengthFacet, bool isLocalProvider)
         {
@@ -585,10 +585,10 @@ namespace System.Data.Entity.SqlServerCompact
             return result;
         }
 
-        /// <summary>
-        /// Determines SqlDbType for the given primitive type. Extracts facet
-        /// information as well.
-        /// </summary>
+        // <summary>
+        // Determines SqlDbType for the given primitive type. Extracts facet
+        // information as well.
+        // </summary>
         private static SqlDbType GetSqlDbType(TypeUsage type, out int? size, out byte? precision, out byte? scale)
         {
             // only supported for primitive type
@@ -657,10 +657,10 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
-        /// <summary>
-        /// Determines preferred value for SqlParameter.Size. Returns null
-        /// where there is no preference.
-        /// </summary>
+        // <summary>
+        // Determines preferred value for SqlParameter.Size. Returns null
+        // where there is no preference.
+        // </summary>
         private static int? GetParameterSize(TypeUsage type)
         {
             int maxLength;
@@ -678,10 +678,10 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
-        /// <summary>
-        /// Returns SqlParameter.Precision where the type facet exists. Otherwise,
-        /// returns null.
-        /// </summary>
+        // <summary>
+        // Returns SqlParameter.Precision where the type facet exists. Otherwise,
+        // returns null.
+        // </summary>
         private static byte? GetParameterPrecision(TypeUsage type, byte? defaultIfUndefined)
         {
             byte precision;
@@ -695,10 +695,10 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
-        /// <summary>
-        /// Returns SqlParameter.Scale where the type facet exists. Otherwise,
-        /// returns null.
-        /// </summary>
+        // <summary>
+        // Returns SqlParameter.Scale where the type facet exists. Otherwise,
+        // returns null.
+        // </summary>
         private static byte? GetScale(TypeUsage type)
         {
             byte scale;
@@ -712,9 +712,9 @@ namespace System.Data.Entity.SqlServerCompact
             }
         }
 
-        /// <summary>
-        /// Chooses the appropriate SqlDbType for the given string type.
-        /// </summary>
+        // <summary>
+        // Chooses the appropriate SqlDbType for the given string type.
+        // </summary>
         private static SqlDbType GetStringDbType(TypeUsage type)
         {
             Debug.Assert(
@@ -764,9 +764,9 @@ namespace System.Data.Entity.SqlServerCompact
             return dbType;
         }
 
-        /// <summary>
-        /// Chooses the appropriate SqlDbType for the given binary type.
-        /// </summary>
+        // <summary>
+        // Chooses the appropriate SqlDbType for the given binary type.
+        // </summary>
         private static SqlDbType GetBinaryDbType(TypeUsage type)
         {
             Debug.Assert(

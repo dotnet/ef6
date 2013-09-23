@@ -10,14 +10,14 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// Error reporting Helper
-    /// </summary>
+    // <summary>
+    // Error reporting Helper
+    // </summary>
     internal static class CqlErrorHelper
     {
-        /// <summary>
-        /// Reports function overload resolution error.
-        /// </summary>
+        // <summary>
+        // Reports function overload resolution error.
+        // </summary>
         internal static void ReportFunctionOverloadError(MethodExpr functionExpr, EdmFunction functionType, List<TypeUsage> argTypes)
         {
             var strDelim = "";
@@ -54,9 +54,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 null);
         }
 
-        /// <summary>
-        /// provides error feedback for aliases already used in a given context
-        /// </summary>
+        // <summary>
+        // provides error feedback for aliases already used in a given context
+        // </summary>
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId =
                 "System.Data.Entity.Core.EntityUtil.EntitySqlError(System.Data.Entity.Core.Common.EntitySql.ErrorContext,System.String)")]
@@ -67,9 +67,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
                 null);
         }
 
-        /// <summary>
-        /// Reports incompatible type error
-        /// </summary>
+        // <summary>
+        // Reports incompatible type error
+        // </summary>
         internal static void ReportIncompatibleCommonType(ErrorContext errCtx, TypeUsage leftType, TypeUsage rightType)
         {
             //
@@ -83,9 +83,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             throw EntitySqlException.Create(errCtx, Strings.ArgumentTypesAreIncompatible(leftType.Identity, rightType.Identity), null);
         }
 
-        /// <summary>
-        /// navigates through the type structure to find where the incompatibility happens
-        /// </summary>
+        // <summary>
+        // navigates through the type structure to find where the incompatibility happens
+        // </summary>
         private static void ReportIncompatibleCommonType(
             ErrorContext errCtx, TypeUsage rootLeftType, TypeUsage rootRightType, TypeUsage leftType, TypeUsage rightType)
         {

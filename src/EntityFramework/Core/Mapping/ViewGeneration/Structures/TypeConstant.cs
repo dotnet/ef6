@@ -12,29 +12,29 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// A constant for storing type values, e.g., a type constant is used to denote (say) a Person type, Address type, etc.
-    /// It essentially encapsulates an EDM nominal type.
-    /// </summary>
+    // <summary>
+    // A constant for storing type values, e.g., a type constant is used to denote (say) a Person type, Address type, etc.
+    // It essentially encapsulates an EDM nominal type.
+    // </summary>
     internal sealed class TypeConstant : Constant
     {
-        /// <summary>
-        /// Creates a type constant corresponding to the <paramref name="type" />.
-        /// </summary>
+        // <summary>
+        // Creates a type constant corresponding to the <paramref name="type" />.
+        // </summary>
         internal TypeConstant(EdmType type)
         {
             DebugCheck.NotNull(type);
             m_edmType = type;
         }
 
-        /// <summary>
-        /// The EDM type denoted by this type constant.
-        /// </summary>
+        // <summary>
+        // The EDM type denoted by this type constant.
+        // </summary>
         private readonly EdmType m_edmType;
 
-        /// <summary>
-        /// Returns the EDM type corresponding to the type constant.
-        /// </summary>
+        // <summary>
+        // Returns the EDM type corresponding to the type constant.
+        // </summary>
         internal EdmType EdmType
         {
             get { return m_edmType; }
@@ -157,11 +157,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return cqt;
         }
 
-        /// <summary>
-        /// Given the <paramref name="outputMember" /> in the output extent view, generates a constructor expression for
-        /// <paramref name="outputMember" />'s type, i.e, an expression of the form "Type(....)"
-        /// If <paramref name="outputMember" /> is an association end then instead of constructing an Entity or Complex type, constructs a reference.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="outputMember" /> in the output extent view, generates a constructor expression for
+        // <paramref name="outputMember" />'s type, i.e, an expression of the form "Type(....)"
+        // If <paramref name="outputMember" /> is an association end then instead of constructing an Entity or Complex type, constructs a reference.
+        // </summary>
         private void AsCql(Action<EntitySet, IList<MemberPath>> createRef, Action<IList<MemberPath>> createType, MemberPath outputMember)
         {
             var refScopeEntitySet = outputMember.GetScopeOfRelationEnd();

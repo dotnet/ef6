@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
@@ -11,11 +11,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader" /> such that
-    /// it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
-    /// from are provided by Code First.
-    /// </summary>
+    // <summary>
+    // This is an extraction of the code that was in <see cref="ObjectItemConventionAssemblyLoader" /> such that
+    // it can be used outside of the context of the traditional assembly loaders--notably the CLR types to load
+    // from are provided by Code First.
+    // </summary>
     internal abstract class OSpaceTypeFactory
     {
         public abstract List<Action> ReferenceResolutions { get; }
@@ -529,15 +529,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Creates an Enum property based on <paramref name="clrProperty" /> and adds it to the parent structural type.
-        /// </summary>
-        /// <param name="type">
-        /// CLR type owning <paramref name="clrProperty" /> .
-        /// </param>
-        /// <param name="ospaceType"> OSpace type the created property will be added to. </param>
-        /// <param name="cspaceProperty"> Corresponding property from CSpace. </param>
-        /// <param name="clrProperty"> CLR property used to build an Enum property. </param>
+        // <summary>
+        // Creates an Enum property based on <paramref name="clrProperty" /> and adds it to the parent structural type.
+        // </summary>
+        // <param name="type">
+        // CLR type owning <paramref name="clrProperty" /> .
+        // </param>
+        // <param name="ospaceType"> OSpace type the created property will be added to. </param>
+        // <param name="cspaceProperty"> Corresponding property from CSpace. </param>
+        // <param name="clrProperty"> CLR property used to build an Enum property. </param>
         private void CreateAndAddEnumProperty(Type type, StructuralType ospaceType, EdmProperty cspaceProperty, PropertyInfo clrProperty)
         {
             EdmType propertyType;

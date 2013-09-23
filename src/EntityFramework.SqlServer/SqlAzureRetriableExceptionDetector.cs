@@ -1,12 +1,12 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.SqlServer
 {
     using System.Data.SqlClient;
 
-    /// <summary>
-    /// Detects the exceptions caused by SQL Azure transient failures.
-    /// </summary>
+    // <summary>
+    // Detects the exceptions caused by SQL Azure transient failures.
+    // </summary>
     internal static class SqlAzureRetriableExceptionDetector
     {
         public static bool ShouldRetryOn(Exception ex)

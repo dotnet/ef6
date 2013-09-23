@@ -4,9 +4,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// Rules for SingleRowOp
-    /// </summary>
+    // <summary>
+    // Rules for SingleRowOp
+    // </summary>
     internal static class SingleRowOpRules
     {
         internal static readonly PatternMatchRule Rule_SingleRowOpOverAnything =
@@ -16,15 +16,15 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     new Node(LeafOp.Pattern)),
                 ProcessSingleRowOpOverAnything);
 
-        /// <summary>
-        /// Convert a
-        /// SingleRowOp(X) => X
-        /// if X produces at most one row
-        /// </summary>
-        /// <param name="context"> Rule Processing context </param>
-        /// <param name="singleRowNode"> Current subtree </param>
-        /// <param name="newNode"> transformed subtree </param>
-        /// <returns> Transformation status </returns>
+        // <summary>
+        // Convert a
+        // SingleRowOp(X) => X
+        // if X produces at most one row
+        // </summary>
+        // <param name="context"> Rule Processing context </param>
+        // <param name="singleRowNode"> Current subtree </param>
+        // <param name="newNode"> transformed subtree </param>
+        // <returns> Transformation status </returns>
         private static bool ProcessSingleRowOpOverAnything(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;
@@ -69,14 +69,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                         new Node(LeafOp.Pattern), new Node(LeafOp.Pattern))),
                 ProcessSingleRowOpOverProject);
 
-        /// <summary>
-        /// Convert
-        /// SingleRowOp(Project) => Project(SingleRowOp)
-        /// </summary>
-        /// <param name="context"> Rule Processing context </param>
-        /// <param name="singleRowNode"> current subtree </param>
-        /// <param name="newNode"> transformeed subtree </param>
-        /// <returns> transformation status </returns>
+        // <summary>
+        // Convert
+        // SingleRowOp(Project) => Project(SingleRowOp)
+        // </summary>
+        // <param name="context"> Rule Processing context </param>
+        // <param name="singleRowNode"> current subtree </param>
+        // <param name="newNode"> transformeed subtree </param>
+        // <returns> transformation status </returns>
         private static bool ProcessSingleRowOpOverProject(RuleProcessingContext context, Node singleRowNode, out Node newNode)
         {
             newNode = singleRowNode;

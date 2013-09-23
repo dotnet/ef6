@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping
 {
@@ -733,10 +733,10 @@ namespace System.Data.Entity.Core.Mapping
             m_itemsAlreadySeen = new Dictionary<object, int>();
         }
 
-        /// <summary>
-        /// if already seen, then out the object instance index, return false;
-        /// if haven't seen, then add it to the m_itemAlreadySeen, out the current index, return true
-        /// </summary>
+        // <summary>
+        // if already seen, then out the object instance index, return false;
+        // if haven't seen, then add it to the m_itemAlreadySeen, out the current index, return true
+        // </summary>
         private bool TryAddSeenItem(Object o, out int indexSeen)
         {
             if (!m_itemsAlreadySeen.TryGetValue(o, out indexSeen))
@@ -751,10 +751,10 @@ namespace System.Data.Entity.Core.Mapping
             return false;
         }
 
-        /// <summary>
-        /// if the object has seen, then add the seen object style to the hash source, return false;
-        /// if not, then add it to the seen list, and append the object start dump to the hash source, return true
-        /// </summary>
+        // <summary>
+        // if the object has seen, then add the seen object style to the hash source, return false;
+        // if not, then add it to the seen list, and append the object start dump to the hash source, return true
+        // </summary>
         private bool AddObjectToSeenListAndHashBuilder(object o, out int instanceIndex)
         {
             if (o == null)
@@ -811,9 +811,9 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Add V2 schema properties and attributes to the hash builder
-        /// </summary>
+        // <summary>
+        // Add V2 schema properties and attributes to the hash builder
+        // </summary>
         private void AddV2ObjectContentToHashBuilder(object content, double version)
         {
             // if the version number is greater than or equal to V2, then we add the value

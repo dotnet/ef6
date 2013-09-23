@@ -6,9 +6,9 @@ namespace System.Data.Entity.Internal.Linq
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// An interface implemented by <see cref="InternalSet{TEntity}" />.
-    /// </summary>
+    // <summary>
+    // An interface implemented by <see cref="InternalSet{TEntity}" />.
+    // </summary>
     internal interface IInternalSet<TEntity> : IInternalSet, IInternalQuery<TEntity>
         where TEntity : class
     {

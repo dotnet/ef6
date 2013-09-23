@@ -12,40 +12,40 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Modification function mapping translators are defined per extent (entity set
-    /// or association set) and manage the creation of function commands.
-    /// </summary>
+    // <summary>
+    // Modification function mapping translators are defined per extent (entity set
+    // or association set) and manage the creation of function commands.
+    // </summary>
     internal abstract class ModificationFunctionMappingTranslator
     {
-        /// <summary>
-        /// Requires: this translator must be registered to handle the entity set
-        /// for the given state entry.
-        /// Translates the given state entry to a command.
-        /// </summary>
-        /// <param name="translator"> Parent update translator (global state for the workload) </param>
-        /// <param name="stateEntry"> State entry to translate. Must belong to the entity/association set handled by this translator </param>
-        /// <returns> Command corresponding to the given state entry </returns>
+        // <summary>
+        // Requires: this translator must be registered to handle the entity set
+        // for the given state entry.
+        // Translates the given state entry to a command.
+        // </summary>
+        // <param name="translator"> Parent update translator (global state for the workload) </param>
+        // <param name="stateEntry"> State entry to translate. Must belong to the entity/association set handled by this translator </param>
+        // <returns> Command corresponding to the given state entry </returns>
         internal abstract FunctionUpdateCommand Translate(
             UpdateTranslator translator,
             ExtractedStateEntry stateEntry);
 
-        /// <summary>
-        /// Initialize a translator for the given entity set mapping.
-        /// </summary>
-        /// <param name="setMapping"> Entity set mapping. </param>
-        /// <returns> Translator. </returns>
+        // <summary>
+        // Initialize a translator for the given entity set mapping.
+        // </summary>
+        // <param name="setMapping"> Entity set mapping. </param>
+        // <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateEntitySetTranslator(
             EntitySetMapping setMapping)
         {
             return new EntitySetTranslator(setMapping);
         }
 
-        /// <summary>
-        /// Initialize a translator for the given association set mapping.
-        /// </summary>
-        /// <param name="setMapping"> Association set mapping. </param>
-        /// <returns> Translator. </returns>
+        // <summary>
+        // Initialize a translator for the given association set mapping.
+        // </summary>
+        // <param name="setMapping"> Association set mapping. </param>
+        // <returns> Translator. </returns>
         internal static ModificationFunctionMappingTranslator CreateAssociationSetTranslator(
             AssociationSetMapping setMapping)
         {

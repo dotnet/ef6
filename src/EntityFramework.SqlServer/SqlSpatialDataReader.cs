@@ -9,9 +9,9 @@ namespace System.Data.Entity.SqlServer
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// SqlClient specific implementation of <see cref="DbSpatialDataReader" />
-    /// </summary>
+    // <summary>
+    // SqlClient specific implementation of <see cref="DbSpatialDataReader" />
+    // </summary>
     internal sealed class SqlSpatialDataReader : DbSpatialDataReader
     {
         private static readonly Lazy<Func<BinaryReader, object>> _sqlGeographyFromBinaryReader =
@@ -54,7 +54,7 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         public override DbGeography GetGeography(int ordinal)
         {
             EnsureGeographyColumn(ordinal);
@@ -63,7 +63,7 @@ namespace System.Data.Entity.SqlServer
             return _spatialServices.GeographyFromProviderValue(providerValue);
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         public override DbGeometry GetGeometry(int ordinal)
         {
             EnsureGeometryColumn(ordinal);
@@ -72,13 +72,13 @@ namespace System.Data.Entity.SqlServer
             return _spatialServices.GeometryFromProviderValue(providerValue);
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         public override bool IsGeographyColumn(int ordinal)
         {
             return _geographyColumns[ordinal];
         }
 
-        /// <inheritdoc/>
+        // <inheritdoc/>
         public override bool IsGeometryColumn(int ordinal)
         {
             return _geometryColumns[ordinal];
@@ -100,13 +100,13 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
-        /// <summary>
-        /// Builds and compiles the Expression equivalent of the following:
-        /// (BinaryReader r) => { var result = new SpatialType(); result.Read(r); return r; }
-        /// The construct/read pattern is preferred over casting the result of calling GetValue on the DataReader,
-        /// because constructing the value directly allows client code to specify the type, rather than SqlClient using
-        /// the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.
-        /// </summary>
+        // <summary>
+        // Builds and compiles the Expression equivalent of the following:
+        // (BinaryReader r) => { var result = new SpatialType(); result.Read(r); return r; }
+        // The construct/read pattern is preferred over casting the result of calling GetValue on the DataReader,
+        // because constructing the value directly allows client code to specify the type, rather than SqlClient using
+        // the server-specified assembly qualified type name from TDS to try to locate the correct type on the client.
+        // </summary>
         private static Func<BinaryReader, object> CreateBinaryReadDelegate(Type spatialType)
         {
             DebugCheck.NotNull(spatialType);

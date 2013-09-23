@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Base class for DiscriminatedNewEntityOp and NewEntityOp
-    /// </summary>
+    // <summary>
+    // Base class for DiscriminatedNewEntityOp and NewEntityOp
+    // </summary>
     internal abstract class NewEntityBaseOp : ScalarOp
     {
         #region private state
@@ -41,26 +41,26 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public APIs
 
-        /// <summary>
-        /// True if the entity constructor is scoped to a particular entity set or null (scoped as "unscoped").
-        /// False if the scope is not yet known. Scope is determined in PreProcessor.
-        /// </summary>
+        // <summary>
+        // True if the entity constructor is scoped to a particular entity set or null (scoped as "unscoped").
+        // False if the scope is not yet known. Scope is determined in PreProcessor.
+        // </summary>
         internal bool Scoped
         {
             get { return m_scoped; }
         }
 
-        /// <summary>
-        /// Get the entityset (if any) associated with this constructor
-        /// </summary>
+        // <summary>
+        // Get the entityset (if any) associated with this constructor
+        // </summary>
         internal EntitySet EntitySet
         {
             get { return m_entitySet; }
         }
 
-        /// <summary>
-        /// get the list of relationship properties (if any) specified for this constructor
-        /// </summary>
+        // <summary>
+        // get the list of relationship properties (if any) specified for this constructor
+        // </summary>
         internal List<RelProperty> RelationshipProperties
         {
             get { return m_relProperties; }

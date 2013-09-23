@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    /// <summary>
-    /// Defines the function class of builtin expressions.
-    /// </summary>
+    // <summary>
+    // Defines the function class of builtin expressions.
+    // </summary>
     internal enum BuiltInKind
     {
         And,

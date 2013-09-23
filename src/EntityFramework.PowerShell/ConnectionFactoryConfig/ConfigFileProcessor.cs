@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
@@ -9,21 +9,21 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.Xml.Linq;
     using EnvDTE;
 
-    /// <summary>
-    /// Processes a .config file to possibly add an "defaultConnectionFactory" entry and then
-    /// save the file, if possible.
-    /// </summary>
+    // <summary>
+    // Processes a .config file to possibly add an "defaultConnectionFactory" entry and then
+    // save the file, if possible.
+    // </summary>
     internal class ConfigFileProcessor
     {
-        /// <summary>
-        /// Loads XML from the .config file, manipulates it to possibly add an "defaultConnectionFactory" entry
-        /// and then attempts to save the file.
-        /// </summary>
-        /// <remarks>
-        /// If the file cannot be saved then it is not saved and an exception is thrown. Under normal use this should not happen
-        /// because NuGet will have ensured that the file is writable. It would be possible to try to do things like try check out
-        /// the file from source control, but it doesn't seem like this is valuable enough to implement given it will not normally be used.
-        /// </remarks>
+        // <summary>
+        // Loads XML from the .config file, manipulates it to possibly add an "defaultConnectionFactory" entry
+        // and then attempts to save the file.
+        // </summary>
+        // <remarks>
+        // If the file cannot be saved then it is not saved and an exception is thrown. Under normal use this should not happen
+        // because NuGet will have ensured that the file is writable. It would be possible to try to do things like try check out
+        // the file from source control, but it doesn't seem like this is valuable enough to implement given it will not normally be used.
+        // </remarks>
         public virtual void ProcessConfigFile(ProjectItem configItem, IEnumerable<Func<XDocument, bool>> manipulators)
         {
             DebugCheck.NotNull(configItem);

@@ -243,12 +243,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
             }
         }
 
-        /// <summary>
-        /// Checks that if a DISTINCT operator exists between some C-Extent and S-Extent, there are no additional
-        /// mapping fragments between that C-Extent and S-Extent.
-        /// We need to enforce this because DISTINCT is not understood by viewgen machinery, and two fragments may be merged
-        /// despite one of them having DISTINCT.
-        /// </summary>
+        // <summary>
+        // Checks that if a DISTINCT operator exists between some C-Extent and S-Extent, there are no additional
+        // mapping fragments between that C-Extent and S-Extent.
+        // We need to enforce this because DISTINCT is not understood by viewgen machinery, and two fragments may be merged
+        // despite one of them having DISTINCT.
+        // </summary>
         private bool CheckCellsWithDistinctFlag()
         {
             var errorLogSize = m_errorLog.Count;

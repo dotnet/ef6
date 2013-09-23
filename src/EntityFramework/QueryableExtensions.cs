@@ -517,9 +517,9 @@ namespace System.Data.Entity
             return asDbQuery != null ? asDbQuery.Include(path) : CommonInclude(source, path);
         }
 
-        /// <summary>
-        /// Common code for generic and non-generic string Include.
-        /// </summary>
+        // <summary>
+        // Common code for generic and non-generic string Include.
+        // </summary>
         private static T CommonInclude<T>(T source, string path)
         {
             DebugCheck.NotNull((object)source);
@@ -618,9 +618,9 @@ namespace System.Data.Entity
             return asDbQuery != null ? asDbQuery.AsNoTracking() : CommonAsNoTracking(source);
         }
 
-        /// <summary>
-        /// Common code for generic and non-generic AsNoTracking.
-        /// </summary>
+        // <summary>
+        // Common code for generic and non-generic AsNoTracking.
+        // </summary>
         private static T CommonAsNoTracking<T>(T source) where T : class
         {
             DebugCheck.NotNull(source);

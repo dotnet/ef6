@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
-    /// </summary>
+    // <summary>
+    // Abstract class representing an eSQL expression classified as <see cref="ExpressionResolutionClass.MetadataMember" />.
+    // </summary>
     internal abstract class MetadataMember : ExpressionResolution
     {
         protected MetadataMember(MetadataMemberClass @class, string name)
@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         internal readonly MetadataMemberClass MetadataMemberClass;
         internal readonly string Name;
 
-        /// <summary>
-        /// Return the name of the <see cref="MetadataMemberClass" /> for error messages.
-        /// </summary>
+        // <summary>
+        // Return the name of the <see cref="MetadataMemberClass" /> for error messages.
+        // </summary>
         internal abstract string MetadataMemberClassName { get; }
 
         internal static IEqualityComparer<MetadataMember> CreateMetadataMemberNameEqualityComparer(StringComparer stringComparer)

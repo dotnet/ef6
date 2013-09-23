@@ -15,9 +15,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees.Internal
     using System.Text;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// Generates a key for a command tree.
-    /// </summary>
+    // <summary>
+    // Generates a key for a command tree.
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal sealed class ExpressionKeyGen : DbExpressionVisitor
     {

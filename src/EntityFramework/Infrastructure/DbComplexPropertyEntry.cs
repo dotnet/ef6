@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -14,16 +14,16 @@ namespace System.Data.Entity.Infrastructure
     {
         #region Fields and constructors
 
-        /// <summary>
-        /// Creates a <see cref="DbComplexPropertyEntry{TEntity,TComplexProperty}" /> from information in the given
-        /// <see
-        ///     cref="InternalPropertyEntry" />
-        /// .
-        /// Use this method in preference to the constructor since it may potentially create a subclass depending on
-        /// the type of member represented by the InternalCollectionEntry instance.
-        /// </summary>
-        /// <param name="internalPropertyEntry"> The internal property entry. </param>
-        /// <returns> The new entry. </returns>
+        // <summary>
+        // Creates a <see cref="DbComplexPropertyEntry{TEntity,TComplexProperty}" /> from information in the given
+        // <see
+        //     cref="InternalPropertyEntry" />
+        // .
+        // Use this method in preference to the constructor since it may potentially create a subclass depending on
+        // the type of member represented by the InternalCollectionEntry instance.
+        // </summary>
+        // <param name="internalPropertyEntry"> The internal property entry. </param>
+        // <returns> The new entry. </returns>
         internal new static DbComplexPropertyEntry Create(InternalPropertyEntry internalPropertyEntry)
         {
             DebugCheck.NotNull(internalPropertyEntry);
@@ -31,10 +31,10 @@ namespace System.Data.Entity.Infrastructure
             return (DbComplexPropertyEntry)internalPropertyEntry.CreateDbMemberEntry();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbPropertyEntry" /> class.
-        /// </summary>
-        /// <param name="internalPropertyEntry"> The internal entry. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="DbPropertyEntry" /> class.
+        // </summary>
+        // <param name="internalPropertyEntry"> The internal entry. </param>
         internal DbComplexPropertyEntry(InternalPropertyEntry internalPropertyEntry)
             : base(internalPropertyEntry)
         {

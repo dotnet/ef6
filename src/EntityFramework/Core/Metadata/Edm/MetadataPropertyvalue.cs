@@ -5,10 +5,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Reflection;
 
-    /// <summary>
-    /// Class representing a metadata property on an item. Supports
-    /// redirection from MetadataProperty instance to item property value.
-    /// </summary>
+    // <summary>
+    // Class representing a metadata property on an item. Supports
+    // redirection from MetadataProperty instance to item property value.
+    // </summary>
     internal sealed class MetadataPropertyValue
     {
         internal MetadataPropertyValue(PropertyInfo propertyInfo, MetadataItem item)

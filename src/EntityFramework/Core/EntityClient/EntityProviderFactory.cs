@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.EntityClient
 {
@@ -25,9 +25,9 @@ namespace System.Data.Entity.Core.EntityClient
             )]
         public static readonly EntityProviderFactory Instance = new EntityProviderFactory();
 
-        /// <summary>
-        /// Constructs the EntityProviderFactory object, this is private as users shouldn't create it directly
-        /// </summary>
+        // <summary>
+        // Constructs the EntityProviderFactory object, this is private as users shouldn't create it directly
+        // </summary>
         private EntityProviderFactory()
         {
         }

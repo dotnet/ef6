@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -9,27 +9,27 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// Encapsulates a cloned <see cref="ObjectContext" /> and store <see cref="DbConnection" />. Note that these
-    /// objects are disposable and should be used in a using block to ensure both the cloned context and the
-    /// cloned connection are disposed.
-    /// </summary>
+    // <summary>
+    // Encapsulates a cloned <see cref="ObjectContext" /> and store <see cref="DbConnection" />. Note that these
+    // objects are disposable and should be used in a using block to ensure both the cloned context and the
+    // cloned connection are disposed.
+    // </summary>
     internal class ClonedObjectContext : IDisposable
     {
         private ObjectContextProxy _objectContext;
 
-        /// <summary>
-        /// For mocking.
-        /// </summary>
+        // <summary>
+        // For mocking.
+        // </summary>
         protected ClonedObjectContext()
         {
         }
 
-        /// <summary>
-        /// Creates a clone of the given <see cref="ObjectContext" />. The underlying <see cref="DbConnection" /> of
-        /// the context is also cloned and the given connection string is used for the connection string of
-        /// the cloned connection.
-        /// </summary>
+        // <summary>
+        // Creates a clone of the given <see cref="ObjectContext" />. The underlying <see cref="DbConnection" /> of
+        // the context is also cloned and the given connection string is used for the connection string of
+        // the cloned connection.
+        // </summary>
         public ClonedObjectContext(
             ObjectContextProxy objectContext, string connectionString, bool transferLoadedAssemblies = true)
         {
@@ -56,26 +56,26 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// The cloned context.
-        /// </summary>
+        // <summary>
+        // The cloned context.
+        // </summary>
         public virtual ObjectContextProxy ObjectContext
         {
             get { return _objectContext; }
         }
 
-        /// <summary>
-        /// This is always the store connection of the underlying ObjectContext.
-        /// </summary>
+        // <summary>
+        // This is always the store connection of the underlying ObjectContext.
+        // </summary>
         public virtual DbConnection Connection
         {
             get { return _objectContext.Connection.StoreConnection; }
         }
 
-        /// <summary>
-        /// Finds the assemblies that were used for loading o-space types in the source context
-        /// and loads those assemblies in the cloned context.
-        /// </summary>
+        // <summary>
+        // Finds the assemblies that were used for loading o-space types in the source context
+        // and loads those assemblies in the cloned context.
+        // </summary>
         private void TransferLoadedAssemblies(ObjectContextProxy source)
         {
             DebugCheck.NotNull(source);
@@ -96,9 +96,9 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Disposes both the underlying ObjectContext and its store connection.
-        /// </summary>
+        // <summary>
+        // Disposes both the underlying ObjectContext and its store connection.
+        // </summary>
         public void Dispose()
         {
             if (_objectContext != null)

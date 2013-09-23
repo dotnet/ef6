@@ -32,10 +32,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         [NonSerialized]
         private static readonly DetachedEntityChangeTracker _detachedEntityChangeTracker = new DetachedEntityChangeTracker();
 
-        /// <summary>
-        /// Helper class used when we are not currently attached to a change tracker.
-        /// Simplifies the code so we don't always have to check for null before using the change tracker
-        /// </summary>
+        // <summary>
+        // Helper class used when we are not currently attached to a change tracker.
+        // Simplifies the code so we don't always have to check for null before using the change tracker
+        // </summary>
         private class DetachedEntityChangeTracker : IEntityChangeTracker
         {
             void IEntityChangeTracker.EntityMemberChanging(string entityMemberName)
@@ -222,14 +222,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return EntityState != EntityState.Detached; }
         }
 
-        /// <summary>
-        /// This method is called by a ComplexObject contained in this Entity
-        /// whenever a change is about to be made to a property of the
-        /// ComplexObject so that the change can be forwarded to the change tracker.
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
-        /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is called by a ComplexObject contained in this Entity
+        // whenever a change is about to be made to a property of the
+        // ComplexObject so that the change can be forwarded to the change tracker.
+        // </summary>
+        // <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
+        // <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal override sealed void ReportComplexPropertyChanging(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {
@@ -239,14 +239,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             EntityChangeTracker.EntityComplexMemberChanging(entityMemberName, complexObject, complexMemberName);
         }
 
-        /// <summary>
-        /// This method is called by a ComplexObject contained in this Entity
-        /// whenever a change has been made to a property of the
-        /// ComplexObject so that the change can be forwarded to the change tracker.
-        /// </summary>
-        /// <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
-        /// <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
-        /// <param name="complexMemberName"> The name of the changing property on complexObject. </param>
+        // <summary>
+        // This method is called by a ComplexObject contained in this Entity
+        // whenever a change has been made to a property of the
+        // ComplexObject so that the change can be forwarded to the change tracker.
+        // </summary>
+        // <param name="entityMemberName"> The name of the top-level entity property that contains the ComplexObject that is calling this method. </param>
+        // <param name="complexObject"> The instance of the ComplexObject on which the property is changing. </param>
+        // <param name="complexMemberName"> The name of the changing property on complexObject. </param>
         internal override sealed void ReportComplexPropertyChanged(
             string entityMemberName, ComplexObject complexObject, string complexMemberName)
         {

@@ -13,16 +13,16 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Globalization;
     using System.Linq;
 
-    /// <summary>
-    /// Helper Class for converting SOM objects to metadata objects
-    /// This class should go away once we have completely integrated SOM and metadata
-    /// </summary>
+    // <summary>
+    // Helper Class for converting SOM objects to metadata objects
+    // This class should go away once we have completely integrated SOM and metadata
+    // </summary>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class Converter
     {
-        /// <summary>
-        /// Static constructor for creating FacetDescription objects that we use
-        /// </summary>
+        // <summary>
+        // Static constructor for creating FacetDescription objects that we use
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static Converter()
         {
@@ -87,12 +87,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal static readonly FacetDescription StoreGeneratedPatternFacet;
         internal static readonly FacetDescription CollationFacet;
 
-        /// <summary>
-        /// Converts a schema from SOM into Metadata
-        /// </summary>
-        /// <param name="somSchema"> The SOM schema to convert </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="itemCollection"> The item collection for currently existing metadata objects </param>
+        // <summary>
+        // Converts a schema from SOM into Metadata
+        // </summary>
+        // <param name="somSchema"> The SOM schema to convert </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="itemCollection"> The item collection for currently existing metadata objects </param>
         internal static IEnumerable<GlobalItem> ConvertSchema(
             Schema somSchema,
             DbProviderManifest providerManifest,
@@ -168,14 +168,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Loads a schema element
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The item resulting from the load </returns>
+        // <summary>
+        // Loads a schema element
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The item resulting from the load </returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         internal static MetadataItem LoadSchemaElement(
             SchemaType element,
@@ -255,14 +255,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return item;
         }
 
-        /// <summary>
-        /// Converts an entity container from SOM to metadata
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The entity container object resulting from the convert </returns>
+        // <summary>
+        // Converts an entity container from SOM to metadata
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The entity container object resulting from the convert </returns>
         private static EntityContainer ConvertToEntityContainer(
             SchemaObjectModel.EntityContainer element,
             DbProviderManifest providerManifest,
@@ -319,17 +319,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return entityContainer;
         }
 
-        /// <summary>
-        /// Converts an entity type from SOM to metadata
-        /// This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not
-        /// sideways parts (NavigationProperties) that go between types or we risk trying to access and EntityTypes keys, from the referential constraint,
-        /// before the base type, which has the keys, is setup yet.
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The entity type object resulting from the convert </returns>
+        // <summary>
+        // Converts an entity type from SOM to metadata
+        // This method should only build the internally contained and vertical part of the EntityType (keys, properties, and base types) but not
+        // sideways parts (NavigationProperties) that go between types or we risk trying to access and EntityTypes keys, from the referential constraint,
+        // before the base type, which has the keys, is setup yet.
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The entity type object resulting from the convert </returns>
         private static EntityType ConvertToEntityType(
             SchemaEntityType element,
             DbProviderManifest providerManifest,
@@ -412,14 +412,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Converts an complex type from SOM to metadata
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The complex type object resulting from the convert </returns>
+        // <summary>
+        // Converts an complex type from SOM to metadata
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The complex type object resulting from the convert </returns>
         private static ComplexType ConvertToComplexType(
             SchemaComplexType element,
             DbProviderManifest providerManifest,
@@ -464,14 +464,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return complexType;
         }
 
-        /// <summary>
-        /// Converts an association type from SOM to metadata
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The association type object resulting from the convert </returns>
+        // <summary>
+        // Converts an association type from SOM to metadata
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The association type object resulting from the convert </returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static AssociationType ConvertToAssociationType(
             Relationship element,
@@ -576,9 +576,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return associationType;
         }
 
-        /// <summary>
-        /// Initialize the end member if its not initialized already
-        /// </summary>
+        // <summary>
+        // Initialize the end member if its not initialized already
+        // </summary>
         private static AssociationEndMember InitializeAssociationEndMember(
             AssociationType associationType, IRelationshipEnd end,
             EntityType endMemberType)
@@ -634,14 +634,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Converts an entity set from SOM to metadata
-        /// </summary>
-        /// <param name="set"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The entity set object resulting from the convert </returns>
+        // <summary>
+        // Converts an entity set from SOM to metadata
+        // </summary>
+        // <param name="set"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The entity set object resulting from the convert </returns>
         private static EntitySet ConvertToEntitySet(
             EntityContainerEntitySet set,
             DbProviderManifest providerManifest,
@@ -666,27 +666,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return entitySet;
         }
 
-        /// <summary>
-        /// Converts an entity set from SOM to metadata
-        /// </summary>
-        /// <param name="set"> The SOM element to process </param>
-        /// <param name="container"> </param>
-        /// <returns> The entity set object resulting from the convert </returns>
+        // <summary>
+        // Converts an entity set from SOM to metadata
+        // </summary>
+        // <param name="set"> The SOM element to process </param>
+        // <param name="container"> </param>
+        // <returns> The entity set object resulting from the convert </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static EntitySet GetEntitySet(EntityContainerEntitySet set, EntityContainer container)
         {
             return container.GetEntitySetByName(set.Name, false);
         }
 
-        /// <summary>
-        /// Converts an association set from SOM to metadata
-        /// </summary>
-        /// <param name="relationshipSet"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="container"> </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The association set object resulting from the convert </returns>
+        // <summary>
+        // Converts an association set from SOM to metadata
+        // </summary>
+        // <param name="relationshipSet"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="container"> </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The association set object resulting from the convert </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static AssociationSet ConvertToAssociationSet(
             EntityContainerRelationshipSet relationshipSet,
@@ -741,14 +741,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return associationSet;
         }
 
-        /// <summary>
-        /// Converts a property from SOM to metadata
-        /// </summary>
-        /// <param name="somProperty"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The property object resulting from the convert </returns>
+        // <summary>
+        // Converts a property from SOM to metadata
+        // </summary>
+        // <param name="somProperty"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The property object resulting from the convert </returns>
         private static EdmProperty ConvertToProperty(
             StructuredProperty somProperty,
             DbProviderManifest providerManifest,
@@ -819,15 +819,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return property;
         }
 
-        /// <summary>
-        /// Converts a navigation property from SOM to metadata
-        /// </summary>
-        /// <param name="declaringEntityType"> entity type on which this navigation property was declared </param>
-        /// <param name="somNavigationProperty"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The property object resulting from the convert </returns>
+        // <summary>
+        // Converts a navigation property from SOM to metadata
+        // </summary>
+        // <param name="declaringEntityType"> entity type on which this navigation property was declared </param>
+        // <param name="somNavigationProperty"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The property object resulting from the convert </returns>
         private static NavigationProperty ConvertToNavigationProperty(
             EntityType declaringEntityType,
             SchemaObjectModel.NavigationProperty somNavigationProperty,
@@ -900,15 +900,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return navigationProperty;
         }
 
-        /// <summary>
-        /// Converts a function from SOM to metadata
-        /// </summary>
-        /// <param name="somFunction"> The SOM element to process </param>
-        /// <param name="providerManifest"> The provider manifest to be used for conversion </param>
-        /// <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
-        /// <param name="functionImportEntityContainer"> For function imports, the entity container including the function declaration </param>
-        /// <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
-        /// <returns> The function object resulting from the convert </returns>
+        // <summary>
+        // Converts a function from SOM to metadata
+        // </summary>
+        // <param name="somFunction"> The SOM element to process </param>
+        // <param name="providerManifest"> The provider manifest to be used for conversion </param>
+        // <param name="convertedItemCache"> The item collection for currently existing metadata objects </param>
+        // <param name="functionImportEntityContainer"> For function imports, the entity container including the function declaration </param>
+        // <param name="newGlobalItems"> The new GlobalItem objects that are created as a result of this conversion </param>
+        // <returns> The function object resulting from the convert </returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         private static EdmFunction ConvertToFunction(
@@ -1105,11 +1105,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return function;
         }
 
-        /// <summary>
-        /// Converts SchemaEnumType instance to Metadata EnumType.
-        /// </summary>
-        /// <param name="somEnumType"> SchemaEnumType to be covnerted. </param>
-        /// <param name="newGlobalItems"> Global item objects where newly created Metadata EnumType will be added. </param>
+        // <summary>
+        // Converts SchemaEnumType instance to Metadata EnumType.
+        // </summary>
+        // <param name="somEnumType"> SchemaEnumType to be covnerted. </param>
+        // <param name="newGlobalItems"> Global item objects where newly created Metadata EnumType will be added. </param>
         private static EnumType ConvertToEnumType(SchemaEnumType somEnumType, Dictionary<SchemaElement, GlobalItem> newGlobalItems)
         {
             DebugCheck.NotNull(somEnumType);
@@ -1155,11 +1155,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return enumType;
         }
 
-        /// <summary>
-        /// Converts an SOM Documentation node to a metadata Documentation construct
-        /// </summary>
-        /// <param name="element"> The SOM element to process </param>
-        /// <returns> The Documentation object resulting from the convert operation </returns>
+        // <summary>
+        // Converts an SOM Documentation node to a metadata Documentation construct
+        // </summary>
+        // <param name="element"> The SOM element to process </param>
+        // <returns> The Documentation object resulting from the convert operation </returns>
         private static Documentation ConvertToDocumentation(DocumentationElement element)
         {
             DebugCheck.NotNull(element);
@@ -1309,11 +1309,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return usage;
         }
 
-        /// <summary>
-        /// Converts the ParameterDirection into a ParameterMode
-        /// </summary>
-        /// <param name="parameterDirection"> The ParameterDirection to convert </param>
-        /// <returns> ParameterMode </returns>
+        // <summary>
+        // Converts the ParameterDirection into a ParameterMode
+        // </summary>
+        // <param name="parameterDirection"> The ParameterDirection to convert </param>
+        // <returns> ParameterMode </returns>
         private static ParameterMode GetParameterMode(ParameterDirection parameterDirection)
         {
             Debug.Assert(
@@ -1336,11 +1336,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Apply the facet values
-        /// </summary>
-        /// <param name="sourceType"> The source TypeUsage </param>
-        /// <param name="targetType"> The primitive or enum type of the target </param>
+        // <summary>
+        // Apply the facet values
+        // </summary>
+        // <param name="sourceType"> The source TypeUsage </param>
+        // <param name="targetType"> The primitive or enum type of the target </param>
         private static void ApplyTypePropertyFacets(TypeUsage sourceType, ref TypeUsage targetType)
         {
             var newFacets = targetType.Facets.ToDictionary(f => f.Name);
@@ -1369,11 +1369,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Populate the facets on the TypeUsage object for a property
-        /// </summary>
-        /// <param name="somProperty"> The property containing the information </param>
-        /// <param name="propertyTypeUsage"> The type usage object where to populate facet </param>
+        // <summary>
+        // Populate the facets on the TypeUsage object for a property
+        // </summary>
+        // <param name="somProperty"> The property containing the information </param>
+        // <param name="propertyTypeUsage"> The type usage object where to populate facet </param>
         private static void PopulateGeneralFacets(
             StructuredProperty somProperty,
             ref TypeUsage propertyTypeUsage)
@@ -1423,11 +1423,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Get a primitive type when converting a CSDL schema
-        /// </summary>
-        /// <param name="scalarType"> The schema type representing the primitive type </param>
-        /// <param name="providerManifest"> The provider manifest for retrieving the store types </param>
+        // <summary>
+        // Get a primitive type when converting a CSDL schema
+        // </summary>
+        // <param name="scalarType"> The schema type representing the primitive type </param>
+        // <param name="providerManifest"> The provider manifest for retrieving the store types </param>
         private static PrimitiveType GetPrimitiveType(
             ScalarType scalarType,
             DbProviderManifest providerManifest)
@@ -1471,10 +1471,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Cache containing item collection and type usages to support looking up and generating
-        /// metadata types.
-        /// </summary>
+        // <summary>
+        // Cache containing item collection and type usages to support looking up and generating
+        // metadata types.
+        // </summary>
         internal class ConversionCache
         {
             internal readonly ItemCollection ItemCollection;
@@ -1488,10 +1488,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _nullFacetsCollectionTypeUsage = new Dictionary<EdmType, TypeUsage>();
             }
 
-            /// <summary>
-            /// Gets type usage for the given type with null facet values. Caches usage to avoid creating
-            /// redundant type usages.
-            /// </summary>
+            // <summary>
+            // Gets type usage for the given type with null facet values. Caches usage to avoid creating
+            // redundant type usages.
+            // </summary>
             internal TypeUsage GetTypeUsageWithNullFacets(EdmType edmType)
             {
                 // check for cached result
@@ -1510,10 +1510,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 return result;
             }
 
-            /// <summary>
-            /// Gets collection type usage for the given type with null facet values. Caches usage to avoid creating
-            /// redundant type usages.
-            /// </summary>
+            // <summary>
+            // Gets collection type usage for the given type with null facet values. Caches usage to avoid creating
+            // redundant type usages.
+            // </summary>
             internal TypeUsage GetCollectionTypeUsageWithNullFacets(EdmType edmType)
             {
                 // check for cached result

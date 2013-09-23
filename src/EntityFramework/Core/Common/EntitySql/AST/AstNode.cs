@@ -5,9 +5,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
     using System.Collections;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents base class for nodes in the eSQL abstract syntax tree OM.
-    /// </summary>
+    // <summary>
+    // Represents base class for nodes in the eSQL abstract syntax tree OM.
+    // </summary>
     internal abstract class Node
     {
         private ErrorContext _errCtx = new ErrorContext();
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _errCtx.InputPosition = inputPosition;
         }
 
-        /// <summary>
-        /// Ast Node error context.
-        /// </summary>
+        // <summary>
+        // Ast Node error context.
+        // </summary>
         internal ErrorContext ErrCtx
         {
             get { return _errCtx; }
@@ -32,51 +32,51 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         }
     }
 
-    /// <summary>
-    /// An ast node represents a generic list of ast nodes.
-    /// </summary>
+    // <summary>
+    // An ast node represents a generic list of ast nodes.
+    // </summary>
     internal sealed class NodeList<T> : Node, IEnumerable<T>
         where T : Node
     {
         private readonly List<T> _list = new List<T>();
 
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
+        // <summary>
+        // Default constructor.
+        // </summary>
         internal NodeList()
         {
         }
 
-        /// <summary>
-        /// Initializes adding one item to the list.
-        /// </summary>
-        /// <param name="item"> expression </param>
+        // <summary>
+        // Initializes adding one item to the list.
+        // </summary>
+        // <param name="item"> expression </param>
         internal NodeList(T item)
         {
             _list.Add(item);
         }
 
-        /// <summary>
-        /// Add an item to the list, return the updated list.
-        /// </summary>
+        // <summary>
+        // Add an item to the list, return the updated list.
+        // </summary>
         internal NodeList<T> Add(T item)
         {
             _list.Add(item);
             return this;
         }
 
-        /// <summary>
-        /// Returns the number of elements in the list.
-        /// </summary>
+        // <summary>
+        // Returns the number of elements in the list.
+        // </summary>
         internal int Count
         {
             get { return _list.Count; }
         }
 
-        /// <summary>
-        /// Indexer to the list entries.
-        /// </summary>
-        /// <param name="index"> integer position of the element in the list </param>
+        // <summary>
+        // Indexer to the list entries.
+        // </summary>
+        // <param name="index"> integer position of the element in the list </param>
         internal T this[int index]
         {
             get { return _list[index]; }

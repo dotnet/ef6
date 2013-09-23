@@ -4,10 +4,10 @@ namespace System.Data.Entity.Infrastructure.Design
 {
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Wraps a handler. If the handler does not implement a contract, calling its
-    /// operations will result in a no-op.
-    /// </summary>
+    // <summary>
+    // Wraps a handler. If the handler does not implement a contract, calling its
+    // operations will result in a no-op.
+    // </summary>
     internal class WrappedHandler : IResultHandler
     {
         private readonly IResultHandler _resultHandler;

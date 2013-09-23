@@ -14,14 +14,14 @@ namespace System.Data.Entity.Core.Common
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
-    /// <summary>
-    /// Represents a set of static Type helpers operating on TypeMetadata
-    /// </summary>
+    // <summary>
+    // Represents a set of static Type helpers operating on TypeMetadata
+    // </summary>
     internal static class TypeHelpers
     {
-        /// <summary>
-        /// Asserts types are in Model space
-        /// </summary>
+        // <summary>
+        // Asserts types are in Model space
+        // </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "CSpace")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "PrimitiveType")]
         [Conditional("DEBUG")]
@@ -56,9 +56,9 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        /// Asserts querycommandtrees are in model space type terms
-        /// </summary>
+        // <summary>
+        // Asserts querycommandtrees are in model space type terms
+        // </summary>
         [Conditional("DEBUG")]
         internal static void AssertEdmType(DbCommandTree commandTree)
         {
@@ -73,9 +73,9 @@ namespace System.Data.Entity.Core.Common
         // Type Semantics
         //
 
-        /// <summary>
-        /// Determines whether a given typeUsage is valid as OrderBy sort key
-        /// </summary>
+        // <summary>
+        // Determines whether a given typeUsage is valid as OrderBy sort key
+        // </summary>
         internal static bool IsValidSortOpKeyType(TypeUsage typeUsage)
         {
             if (TypeSemantics.IsRowType(typeUsage))
@@ -96,25 +96,25 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        /// Determines whether a given typeusage is valid as GroupBy key
-        /// </summary>
+        // <summary>
+        // Determines whether a given typeusage is valid as GroupBy key
+        // </summary>
         internal static bool IsValidGroupKeyType(TypeUsage typeUsage)
         {
             return IsSetComparableOpType(typeUsage);
         }
 
-        /// <summary>
-        /// Determine wheter a given typeusage is valid for Distinct operator
-        /// </summary>
+        // <summary>
+        // Determine wheter a given typeusage is valid for Distinct operator
+        // </summary>
         internal static bool IsValidDistinctOpType(TypeUsage typeUsage)
         {
             return IsSetComparableOpType(typeUsage);
         }
 
-        /// <summary>
-        /// Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
-        /// </summary>
+        // <summary>
+        // Determine wheter a given typeusage is valid for set comparison operator such as UNION, INTERSECT and EXCEPT
+        // </summary>
         internal static bool IsSetComparableOpType(TypeUsage typeUsage)
         {
             if (Helper.IsEntityType(typeUsage.EdmType)
@@ -142,9 +142,9 @@ namespace System.Data.Entity.Core.Common
             return false;
         }
 
-        /// <summary>
-        /// Returns true if typeUsage type is valid for IS [NOT] NULL (expr) operator
-        /// </summary>
+        // <summary>
+        // Returns true if typeUsage type is valid for IS [NOT] NULL (expr) operator
+        // </summary>
         internal static bool IsValidIsNullOpType(TypeUsage typeUsage)
         {
             return TypeSemantics.IsReferenceType(typeUsage) ||
@@ -385,11 +385,11 @@ namespace System.Data.Entity.Core.Common
             return TypeUsage.Create(CreateReferenceType(entityType));
         }
 
-        /// <summary>
-        /// Creates metadata for a new row type with column names and types based on the key members of the specified Entity type
-        /// </summary>
-        /// <param name="entityType"> The Entity type that provides the Key members on which the column names and types of the new row type will be based </param>
-        /// <returns> A new RowType info with column names and types corresponding to the Key members of the specified Entity type </returns>
+        // <summary>
+        // Creates metadata for a new row type with column names and types based on the key members of the specified Entity type
+        // </summary>
+        // <param name="entityType"> The Entity type that provides the Key members on which the column names and types of the new row type will be based </param>
+        // <returns> A new RowType info with column names and types corresponding to the Key members of the specified Entity type </returns>
         internal static RowType CreateKeyRowType(EntityTypeBase entityType)
         {
             IEnumerable<EdmMember> entityKeys = entityType.KeyMembers;
@@ -414,17 +414,17 @@ namespace System.Data.Entity.Core.Common
             return CreateRowType(resultCols);
         }
 
-        /// <summary>
-        /// Gets primitive type usage for <paramref name="scalarType" />.
-        /// </summary>
-        /// <param name="scalarType"> Primitive or enum type usage. </param>
-        /// <returns>
-        /// Primitive type usage for <paramref name="scalarType" /> .
-        /// </returns>
-        /// <remarks>
-        /// For enum types a new type usage based on the underlying type will be created. For primitive types
-        /// the value passed to the function will be returned.
-        /// </remarks>
+        // <summary>
+        // Gets primitive type usage for <paramref name="scalarType" />.
+        // </summary>
+        // <param name="scalarType"> Primitive or enum type usage. </param>
+        // <returns>
+        // Primitive type usage for <paramref name="scalarType" /> .
+        // </returns>
+        // <remarks>
+        // For enum types a new type usage based on the underlying type will be created. For primitive types
+        // the value passed to the function will be returned.
+        // </remarks>
         internal static TypeUsage GetPrimitiveTypeUsageForScalar(TypeUsage scalarType)
         {
             DebugCheck.NotNull(scalarType);
@@ -435,11 +435,11 @@ namespace System.Data.Entity.Core.Common
                        : scalarType;
         }
 
-        /// <summary>
-        /// Factory method for creating a type usage for underlying type of enum type usage.
-        /// </summary>
-        /// <param name="enumTypeUsage"> Enum type usage used to create an underlying type usage of. </param>
-        /// <returns> Type usage for the underlying enum type. </returns>
+        // <summary>
+        // Factory method for creating a type usage for underlying type of enum type usage.
+        // </summary>
+        // <param name="enumTypeUsage"> Enum type usage used to create an underlying type usage of. </param>
+        // <returns> Type usage for the underlying enum type. </returns>
         internal static TypeUsage CreateEnumUnderlyingTypeUsage(TypeUsage enumTypeUsage)
         {
             DebugCheck.NotNull(enumTypeUsage);
@@ -448,11 +448,11 @@ namespace System.Data.Entity.Core.Common
             return TypeUsage.Create(Helper.GetUnderlyingEdmTypeForEnumType(enumTypeUsage.EdmType), enumTypeUsage.Facets);
         }
 
-        /// <summary>
-        /// Factory method for creating a type usage for underlying union type of spatial type usage.
-        /// </summary>
-        /// <param name="spatialTypeUsage"> Spatial type usage used to create a union type usage of. </param>
-        /// <returns> Type usage for the spatial union type of the correct topology. </returns>
+        // <summary>
+        // Factory method for creating a type usage for underlying union type of spatial type usage.
+        // </summary>
+        // <param name="spatialTypeUsage"> Spatial type usage used to create a union type usage of. </param>
+        // <returns> Type usage for the spatial union type of the correct topology. </returns>
         internal static TypeUsage CreateSpatialUnionTypeUsage(TypeUsage spatialTypeUsage)
         {
             DebugCheck.NotNull(spatialTypeUsage);
@@ -464,9 +464,9 @@ namespace System.Data.Entity.Core.Common
         // Type extractors
         //
 
-        /// <summary>
-        /// Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
-        /// </summary>
+        // <summary>
+        // Retrieves Properties and/or RelationshipEnds declared by the specified type or any base type.
+        // </summary>
         internal static IBaseList<EdmMember> GetAllStructuralMembers(TypeUsage type)
         {
             return GetAllStructuralMembers(type.EdmType);
@@ -490,17 +490,17 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        /// Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
-        /// </summary>
+        // <summary>
+        // Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
+        // </summary>
         internal static IEnumerable GetDeclaredStructuralMembers(TypeUsage type)
         {
             return GetDeclaredStructuralMembers(type.EdmType);
         }
 
-        /// <summary>
-        /// Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
-        /// </summary>
+        // <summary>
+        // Retrieves Properties and/or RelationshipEnds declared by (and ONLY by) the specified type.
+        // </summary>
         internal static IEnumerable GetDeclaredStructuralMembers(EdmType edmType)
         {
             switch (edmType.BuiltInTypeKind)
@@ -558,9 +558,9 @@ namespace System.Data.Entity.Core.Common
             return null;
         }
 
-        /// <summary>
-        /// Returns row type if supplied function is a tvf returning Collection(RowType), otherwise null.
-        /// </summary>
+        // <summary>
+        // Returns row type if supplied function is a tvf returning Collection(RowType), otherwise null.
+        // </summary>
         internal static RowType GetTvfReturnType(EdmFunction tvf)
         {
             if (tvf.ReturnParameter != null
@@ -591,13 +591,13 @@ namespace System.Data.Entity.Core.Common
             return false;
         }
 
-        /// <summary>
-        /// If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
-        /// otherwise returns false.
-        /// </summary>
-        /// <param name="type"> TypeUsage that may or may not refer to a RefType </param>
-        /// <param name="referencedEntityType"> Non-null if the TypeUsage refers to a RefType, null otherwise </param>
-        /// <returns> True if the TypeUsage refers to a RefType, false otherwise </returns>
+        // <summary>
+        // If the type refered to by the TypeUsage is a RefType, extracts the EntityType and returns true,
+        // otherwise returns false.
+        // </summary>
+        // <param name="type"> TypeUsage that may or may not refer to a RefType </param>
+        // <param name="referencedEntityType"> Non-null if the TypeUsage refers to a RefType, null otherwise </param>
+        // <returns> True if the TypeUsage refers to a RefType, false otherwise </returns>
         internal static bool TryGetRefEntityType(TypeUsage type, out EntityType referencedEntityType)
         {
             RefType refType;
@@ -650,10 +650,10 @@ namespace System.Data.Entity.Core.Common
                        : string.Format(CultureInfo.InvariantCulture, "{0}.{1}", qualifier, name);
         }
 
-        /// <summary>
-        /// Converts the given CLR type into a DbType
-        /// </summary>
-        /// <param name="clrType"> The CLR type to convert </param>
+        // <summary>
+        // Converts the given CLR type into a DbType
+        // </summary>
+        // <param name="clrType"> The CLR type to convert </param>
         internal static DbType ConvertClrTypeToDbType(Type clrType)
         {
             switch (Type.GetTypeCode(clrType))
@@ -764,9 +764,9 @@ namespace System.Data.Entity.Core.Common
             }
         }
 
-        /// <summary>
-        /// returns a Typeusage
-        /// </summary>
+        // <summary>
+        // returns a Typeusage
+        // </summary>
         internal static TypeUsage GetLiteralTypeUsage(PrimitiveTypeKind primitiveTypeKind)
         {
             // all clr strings by default are unicode

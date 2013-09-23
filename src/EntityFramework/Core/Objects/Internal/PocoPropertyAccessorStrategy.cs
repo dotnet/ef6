@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
@@ -11,10 +11,10 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// Implementation of the property accessor strategy that gets and sets values on POCO entities.  That is,
-    /// entities that do not implement IEntityWithRelationships.
-    /// </summary>
+    // <summary>
+    // Implementation of the property accessor strategy that gets and sets values on POCO entities.  That is,
+    // entities that do not implement IEntityWithRelationships.
+    // </summary>
     internal sealed class PocoPropertyAccessorStrategy : IPropertyAccessorStrategy
     {
         internal static readonly MethodInfo AddToCollectionGeneric 
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         private readonly object _entity;
 
-        /// <summary>
-        /// Constructs a strategy object to work with the given entity.
-        /// </summary>
-        /// <param name="entity"> The entity to use </param>
+        // <summary>
+        // Constructs a strategy object to work with the given entity.
+        // </summary>
+        // <param name="entity"> The entity to use </param>
         public PocoPropertyAccessorStrategy(object entity)
         {
             _entity = entity;
@@ -297,10 +297,10 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        /// <summary>
-        /// We only get here if a navigation property getter returns null.  In this case, we try to set the
-        /// navigation property to some collection that will work.
-        /// </summary>
+        // <summary>
+        // We only get here if a navigation property getter returns null.  In this case, we try to set the
+        // navigation property to some collection that will work.
+        // </summary>
         private static Func<object> CreateCollectionCreateDelegate(Type navigationPropertyType, string propName)
         {
             var typeToInstantiate = EntityUtil.DetermineCollectionType(navigationPropertyType);

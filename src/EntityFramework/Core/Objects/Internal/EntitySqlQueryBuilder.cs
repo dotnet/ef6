@@ -11,20 +11,20 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    /// <summary>
-    /// Provides Entity-SQL query building services for <see cref="EntitySqlQueryState" />.
-    /// Knowledge of how to compose Entity-SQL fragments using query builder operators resides entirely in this class.
-    /// </summary>
+    // <summary>
+    // Provides Entity-SQL query building services for <see cref="EntitySqlQueryState" />.
+    // Knowledge of how to compose Entity-SQL fragments using query builder operators resides entirely in this class.
+    // </summary>
     internal static class EntitySqlQueryBuilder
     {
-        /// <summary>
-        /// Helper method to extract the Entity-SQL command text from an <see cref="ObjectQueryState" /> instance if that
-        /// instance models an Entity-SQL-backed ObjectQuery, or to throw an exception indicating that query builder methods
-        /// are not supported on this query.
-        /// </summary>
-        /// <param name="query"> The instance from which the Entity-SQL command text should be retrieved </param>
-        /// <returns> The Entity-SQL command text, if the specified query state instance is based on Entity-SQL </returns>
-        /// <exception cref="NotSupportedException">If the specified instance is not based on Entity-SQL command text, and so does not support Entity-SQL query builder methods</exception>
+        // <summary>
+        // Helper method to extract the Entity-SQL command text from an <see cref="ObjectQueryState" /> instance if that
+        // instance models an Entity-SQL-backed ObjectQuery, or to throw an exception indicating that query builder methods
+        // are not supported on this query.
+        // </summary>
+        // <param name="query"> The instance from which the Entity-SQL command text should be retrieved </param>
+        // <returns> The Entity-SQL command text, if the specified query state instance is based on Entity-SQL </returns>
+        // <exception cref="NotSupportedException">If the specified instance is not based on Entity-SQL command text, and so does not support Entity-SQL query builder methods</exception>
         private static string GetCommandText(ObjectQueryState query)
         {
             string commandText = null;
@@ -36,19 +36,19 @@ namespace System.Data.Entity.Core.Objects.Internal
             return commandText;
         }
 
-        /// <summary>
-        /// Merges <see cref="ObjectParameter" />s from a source ObjectQuery with ObjectParameters specified as an argument to a builder method.
-        /// A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
-        /// <paramref
-        ///     name="sourceQueryParams" />
-        /// and <paramref name="builderMethodParams" />.
-        /// </summary>
-        /// <param name="context">
-        /// The <see cref="ObjectContext" /> to use when constructing the new parameter collection
-        /// </param>
-        /// <param name="sourceQueryParams"> ObjectParameters from the ObjectQuery on which the query builder method was called </param>
-        /// <param name="builderMethodParams"> ObjectParameters that were specified as an argument to the builder method </param>
-        /// <returns> A new ObjectParameterCollection containing copies of all parameters </returns>
+        // <summary>
+        // Merges <see cref="ObjectParameter" />s from a source ObjectQuery with ObjectParameters specified as an argument to a builder method.
+        // A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
+        // <paramref
+        //     name="sourceQueryParams" />
+        // and <paramref name="builderMethodParams" />.
+        // </summary>
+        // <param name="context">
+        // The <see cref="ObjectContext" /> to use when constructing the new parameter collection
+        // </param>
+        // <param name="sourceQueryParams"> ObjectParameters from the ObjectQuery on which the query builder method was called </param>
+        // <param name="builderMethodParams"> ObjectParameters that were specified as an argument to the builder method </param>
+        // <returns> A new ObjectParameterCollection containing copies of all parameters </returns>
         private static ObjectParameterCollection MergeParameters(
             ObjectContext context, ObjectParameterCollection sourceQueryParams, ObjectParameter[] builderMethodParams)
         {
@@ -73,16 +73,16 @@ namespace System.Data.Entity.Core.Objects.Internal
             return mergedParams;
         }
 
-        /// <summary>
-        /// Merges <see cref="ObjectParameter" />s from two ObjectQuery arguments to SetOp builder methods (Except, Intersect, Union, UnionAll).
-        /// A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
-        /// <paramref
-        ///     name="query1Params" />
-        /// and <paramref name="query2Params" />.
-        /// </summary>
-        /// <param name="query1Params"> ObjectParameters from the first ObjectQuery argument (on which the query builder method was called) </param>
-        /// <param name="query2Params"> ObjectParameters from the second ObjectQuery argument (specified as an argument to the builder method) </param>
-        /// <returns> A new ObjectParameterCollection containing copies of all parameters </returns>
+        // <summary>
+        // Merges <see cref="ObjectParameter" />s from two ObjectQuery arguments to SetOp builder methods (Except, Intersect, Union, UnionAll).
+        // A new <see cref="ObjectParameterCollection" /> is returned that contains copies of parameters from both
+        // <paramref
+        //     name="query1Params" />
+        // and <paramref name="query2Params" />.
+        // </summary>
+        // <param name="query1Params"> ObjectParameters from the first ObjectQuery argument (on which the query builder method was called) </param>
+        // <param name="query2Params"> ObjectParameters from the second ObjectQuery argument (specified as an argument to the builder method) </param>
+        // <returns> A new ObjectParameterCollection containing copies of all parameters </returns>
         private static ObjectParameterCollection MergeParameters(
             ObjectParameterCollection query1Params, ObjectParameterCollection query2Params)
         {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.ELinq
 {
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
     internal sealed partial class ExpressionConverter
     {
-        /// <summary>
-        /// Translates System.Linq.Expression.MethodCallExpression to System.Data.Entity.Core.Common.CommandTrees.DbExpression
-        /// </summary>
+        // <summary>
+        // Translates System.Linq.Expression.MethodCallExpression to System.Data.Entity.Core.Common.CommandTrees.DbExpression
+        // </summary>
         internal sealed partial class MethodCallTranslator : TypedTranslator<MethodCallExpression>
         {
             internal MethodCallTranslator()
@@ -148,11 +148,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 return objectQueryCallTranslators;
             }
 
-            /// <summary>
-            /// Tries to get a translator for the given method info.
-            /// If the given method info corresponds to a Visual Basic property,
-            /// it also initializes the Visual Basic translators if they have not been initialized
-            /// </summary>
+            // <summary>
+            // Tries to get a translator for the given method info.
+            // If the given method info corresponds to a Visual Basic property,
+            // it also initializes the Visual Basic translators if they have not been initialized
+            // </summary>
             private static bool TryGetCallTranslator(MethodInfo methodInfo, out CallTranslator callTranslator)
             {
                 if (_methodTranslators.TryGetValue(methodInfo, out callTranslator))
@@ -640,12 +640,12 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     return ValidateReturnType(result, result.ResultType, parent, call, call.Type, false);
                 }
 
-                /// <summary>
-                /// Recursively rewrite the argument expression to unwrap any "structured" set sources
-                /// using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
-                /// and EntityCollection as argument types to functions.
-                /// NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
-                /// </summary>
+                // <summary>
+                // Recursively rewrite the argument expression to unwrap any "structured" set sources
+                // using ExpressionCoverter.NormalizeSetSource(). This is currently required for IGrouping
+                // and EntityCollection as argument types to functions.
+                // NOTE: Changes made to this function might have to be applied to ExpressionCoverter.NormalizeSetSource() too.
+                // </summary>
                 private CqtExpression NormalizeAllSetSources(ExpressionConverter parent, CqtExpression argumentExpr)
                 {
                     DbExpression newExpr = null;
@@ -708,11 +708,11 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     }
                 }
 
-                /// <summary>
-                /// Removes casts where possible, for example Cast from a Reference type to Object type
-                /// Handles nested converts recursively. Removing no-op casts is required to prevent the
-                /// expression converter from complaining.
-                /// </summary>
+                // <summary>
+                // Removes casts where possible, for example Cast from a Reference type to Object type
+                // Handles nested converts recursively. Removing no-op casts is required to prevent the
+                // expression converter from complaining.
+                // </summary>
                 private Expression UnwrapNoOpConverts(Expression expression)
                 {
                     if (expression.NodeType
@@ -731,17 +731,17 @@ namespace System.Data.Entity.Core.Objects.ELinq
                     return expression;
                 }
 
-                /// <summary>
-                /// Checks if the return type specified by the call expression matches that expected by the
-                /// function definition. Performs a recursive check in case of Collection type.
-                /// </summary>
-                /// <param name="result"> DbFunctionExpression for the function definition </param>
-                /// <param name="actualReturnType"> Return type expected by the function definition </param>
-                /// <param name="parent"> </param>
-                /// <param name="call"> LINQ MethodCallExpression </param>
-                /// <param name="clrReturnType"> Return type specified by the call </param>
-                /// <param name="isElementOfCollection"> Indicates if current call is for an Element of a Collection type </param>
-                /// <returns> DbFunctionExpression with aligned return types </returns>
+                // <summary>
+                // Checks if the return type specified by the call expression matches that expected by the
+                // function definition. Performs a recursive check in case of Collection type.
+                // </summary>
+                // <param name="result"> DbFunctionExpression for the function definition </param>
+                // <param name="actualReturnType"> Return type expected by the function definition </param>
+                // <param name="parent"> </param>
+                // <param name="call"> LINQ MethodCallExpression </param>
+                // <param name="clrReturnType"> Return type specified by the call </param>
+                // <param name="isElementOfCollection"> Indicates if current call is for an Element of a Collection type </param>
+                // <returns> DbFunctionExpression with aligned return types </returns>
                 [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
                 private CqtExpression ValidateReturnType(
                     CqtExpression result, TypeUsage actualReturnType, ExpressionConverter parent, MethodCallExpression call,

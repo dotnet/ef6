@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Diagnostics;
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for StructuredProperty.
-    /// </summary>
+    // <summary>
+    // Summary description for StructuredProperty.
+    // </summary>
     internal class StructuredProperty : Property
     {
         #region Instance Fields
@@ -48,17 +48,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return _type; }
         }
 
-        /// <summary>
-        /// Returns a TypeUsage that represent this property.
-        /// </summary>
+        // <summary>
+        // Returns a TypeUsage that represent this property.
+        // </summary>
         public TypeUsage TypeUsage
         {
             get { return _typeUsageBuilder.TypeUsage; }
         }
 
-        /// <summary>
-        /// The nullablity of this property.
-        /// </summary>
+        // <summary>
+        // The nullablity of this property.
+        // </summary>
         public bool Nullable
         {
             get { return _typeUsageBuilder.Nullable; }
@@ -74,11 +74,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return _typeUsageBuilder.DefaultAsObject; }
         }
 
-        /// <summary>
-        /// Specifies the type of the Collection.
-        /// By Default this is Single( i.e. not a Collection.
-        /// And in case of Collections, will be either Bag or List
-        /// </summary>
+        // <summary>
+        // Specifies the type of the Collection.
+        // By Default this is Single( i.e. not a Collection.
+        // And in case of Collections, will be either Bag or List
+        // </summary>
         public CollectionKind CollectionKind
         {
             get { return _collectionKind; }
@@ -116,9 +116,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _typeUsageBuilder.ValidateAndSetTypeUsage(propertyType, false); //use typeusagebuilder so dont lose facet information
         }
 
-        /// <summary>
-        /// Resolve the type string to a SchemaType object
-        /// </summary>
+        // <summary>
+        // Resolve the type string to a SchemaType object
+        // </summary>
         protected virtual SchemaType ResolveType(string typeName)
         {
             SchemaType element;
@@ -231,9 +231,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             UnresolvedType = type;
         }
 
-        /// <summary>
-        /// Handles the Multiplicity attribute on the property.
-        /// </summary>
+        // <summary>
+        // Handles the Multiplicity attribute on the property.
+        // </summary>
         private void HandleCollectionKindAttribute(XmlReader reader)
         {
             var value = reader.Value;

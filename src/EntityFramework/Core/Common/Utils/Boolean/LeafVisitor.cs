@@ -6,10 +6,10 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// A Visitor class that returns all the leaves in a boolean expression
-    /// </summary>
-    /// <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
+    // <summary>
+    // A Visitor class that returns all the leaves in a boolean expression
+    // </summary>
+    // <typeparam name="T_Identifier"> Type of leaf term identifiers in expression. </typeparam>
     internal class LeafVisitor<T_Identifier> : Visitor<T_Identifier, bool>
     {
         private readonly List<TermExpr<T_Identifier>> _terms;

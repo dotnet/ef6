@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects
 {
@@ -28,9 +28,9 @@ namespace System.Data.Entity.Core.Objects
 
         #region Constructor
 
-        /// <summary>
-        /// For testing.
-        /// </summary>
+        // <summary>
+        // For testing.
+        // </summary>
         internal ObjectStateEntry()
         {
         }
@@ -113,9 +113,9 @@ namespace System.Data.Entity.Core.Objects
         /// </returns>
         public abstract bool IsRelationship { get; }
 
-        /// <summary>
-        /// Gets bit array indicating which properties are modified.
-        /// </summary>
+        // <summary>
+        // Gets bit array indicating which properties are modified.
+        // </summary>
         internal abstract BitArray ModifiedProperties { get; }
 
         BitArray IEntityStateEntry.ModifiedProperties
@@ -318,9 +318,9 @@ namespace System.Data.Entity.Core.Objects
         internal abstract void EntityComplexMemberChanging(string entityMemberName, object complexObject, string complexObjectMemberName);
         internal abstract void EntityComplexMemberChanged(string entityMemberName, object complexObject, string complexObjectMemberName);
 
-        /// <summary>
-        /// Reuse or create a new (Entity)DataRecordInfo.
-        /// </summary>
+        // <summary>
+        // Reuse or create a new (Entity)DataRecordInfo.
+        // </summary>
         internal abstract DataRecordInfo GetDataRecordInfo(StateManagerTypeMetadata metadata, object userObject);
 
         internal virtual void Reset()

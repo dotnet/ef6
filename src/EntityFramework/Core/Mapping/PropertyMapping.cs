@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class PropertyMapping : MappingItem
     {
-        /// <summary>
-        /// The EdmProperty being mapped.
-        /// </summary>
+        // <summary>
+        // The EdmProperty being mapped.
+        // </summary>
         private EdmProperty _property;
 
         internal PropertyMapping(EdmProperty property)

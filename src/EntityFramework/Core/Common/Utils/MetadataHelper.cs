@@ -17,10 +17,10 @@ namespace System.Data.Entity.Core.Common.Utils
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
     internal static class MetadataHelper
     {
-        /// <summary>
-        /// Returns an element type of the collection returned by the function import.
-        /// Returns false, if element type cannot be determined.
-        /// </summary>
+        // <summary>
+        // Returns an element type of the collection returned by the function import.
+        // Returns false, if element type cannot be determined.
+        // </summary>
         internal static bool TryGetFunctionImportReturnType<T>(EdmFunction functionImport, int resultSetIndex, out T returnType)
             where T : EdmType
         {
@@ -54,9 +54,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        /// <summary>
-        /// effects: determines if the given function import returns collection type, and if so returns the type
-        /// </summary>
+        // <summary>
+        // effects: determines if the given function import returns collection type, and if so returns the type
+        // </summary>
         internal static bool TryGetFunctionImportReturnCollectionType(
             EdmFunction functionImport, int resultSetIndex, out CollectionType collectionType)
         {
@@ -71,9 +71,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        /// <summary>
-        /// Gets the resultSetIndexth return parameter for functionImport, or null if resultSetIndex is out of range
-        /// </summary>
+        // <summary>
+        // Gets the resultSetIndexth return parameter for functionImport, or null if resultSetIndex is out of range
+        // </summary>
         internal static FunctionParameter GetReturnParameter(EdmFunction functionImport, int resultSetIndex)
         {
             return functionImport.ReturnParameters.Count > resultSetIndex
@@ -93,9 +93,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return CommandHelper.FindFunctionImport(workspace, containerName, functionImportName);
         }
 
-        /// <summary>
-        /// Gets the resultSetIndexth result edm type, and ensure that it is consistent with EntityType.
-        /// </summary>
+        // <summary>
+        // Gets the resultSetIndexth result edm type, and ensure that it is consistent with EntityType.
+        // </summary>
         internal static EdmType GetAndCheckFunctionImportReturnType<TElement>(
             EdmFunction functionImport, int resultSetIndex, MetadataWorkspace workspace)
         {
@@ -109,9 +109,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return expectedEdmType;
         }
 
-        /// <summary>
-        /// check that the type TElement and function metadata are consistent
-        /// </summary>
+        // <summary>
+        // check that the type TElement and function metadata are consistent
+        // </summary>
         internal static void CheckFunctionImportReturnType<TElement>(EdmType expectedEdmType, MetadataWorkspace workspace)
         {
             // currently there are only two possible spatial O-space types, but 16 C-space types.   
@@ -171,9 +171,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        /// <summary>
-        /// Returns true iff member's is a simple non-structures scalar such as primitive or enum.
-        /// </summary>
+        // <summary>
+        // Returns true iff member's is a simple non-structures scalar such as primitive or enum.
+        // </summary>
         internal static bool IsNonRefSimpleMember(EdmMember member)
         {
             return member.TypeUsage.EdmType.BuiltInTypeKind == BuiltInTypeKind.PrimitiveType ||
@@ -300,9 +300,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        /// <summary>
-        /// Given a table EntitySet this function finds out all C-side EntitySets that are mapped to the table.
-        /// </summary>
+        // <summary>
+        // Given a table EntitySet this function finds out all C-side EntitySets that are mapped to the table.
+        // </summary>
         internal static IEnumerable<EntitySet> GetInfluencingEntitySetsForTable(EntitySet table, MetadataWorkspace workspace)
         {
             Debug.Assert(table.EntityContainer.GetDataSpace() == DataSpace.SSpace);
@@ -404,12 +404,12 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        /// <summary>
-        /// Builds an undirected graph (represented as a directional graph with reciprocal navigation edges) of the all the types in the workspace.
-        /// This is used to traverse inheritance hierarchy up and down.
-        /// O(n), where n=number of types
-        /// </summary>
-        /// <returns> A dictionary of type t -> set of types {s}, such that there is an edge between t and elem(s) iff t and s are related DIRECTLY via inheritance (child or parent type) </returns>
+        // <summary>
+        // Builds an undirected graph (represented as a directional graph with reciprocal navigation edges) of the all the types in the workspace.
+        // This is used to traverse inheritance hierarchy up and down.
+        // O(n), where n=number of types
+        // </summary>
+        // <returns> A dictionary of type t -> set of types {s}, such that there is an edge between t and elem(s) iff t and s are related DIRECTLY via inheritance (child or parent type) </returns>
         internal static Dictionary<EntityType, Set<EntityType>> BuildUndirectedGraphOfTypes(EdmItemCollection edmItemCollection)
         {
             var graph = new Dictionary<EntityType, Set<EntityType>>();
@@ -432,9 +432,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return graph;
         }
 
-        /// <summary>
-        /// is A parent of b?
-        /// </summary>
+        // <summary>
+        // is A parent of b?
+        // </summary>
         internal static bool IsParentOf(EntityType a, EntityType b)
         {
             var parent = b.BaseType as EntityType;
@@ -453,11 +453,11 @@ namespace System.Data.Entity.Core.Common.Utils
             return false;
         }
 
-        /// <summary>
-        /// Add and Edge a --> b
-        /// Assumes edge does not exist
-        /// O(1)
-        /// </summary>
+        // <summary>
+        // Add and Edge a --> b
+        // Assumes edge does not exist
+        // O(1)
+        // </summary>
         private static void AddDirectedEdgeBetweenEntityTypes(Dictionary<EntityType, Set<EntityType>> graph, EntityType a, EntityType b)
         {
             Set<EntityType> references;
@@ -475,11 +475,11 @@ namespace System.Data.Entity.Core.Common.Utils
             references.Add(b);
         }
 
-        /// <summary>
-        /// Checks wither the given AssociationEnd's keys are sufficient for identifying a unique tuple in the AssociationSet.
-        /// This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
-        /// and see if what is left is contributed only from the given end's keys.
-        /// </summary>
+        // <summary>
+        // Checks wither the given AssociationEnd's keys are sufficient for identifying a unique tuple in the AssociationSet.
+        // This is possible because refconstraints make certain Keys redundant. We subtract such redundant key sof "other" ends
+        // and see if what is left is contributed only from the given end's keys.
+        // </summary>
         [SuppressMessage("Microsoft.Security", "CA2140:TransparentMethodsMustNotReferenceCriticalCode",
             Justification = "Based on Bug VSTS Pioneer #433188: IsVisibleOutsideAssembly is wrong on generic instantiations.")]
         internal static bool DoesEndKeySubsumeAssociationSetKey(
@@ -771,9 +771,9 @@ namespace System.Data.Entity.Core.Common.Utils
             return StoreGeneratedPattern.None;
         }
 
-        /// <summary>
-        /// Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
-        /// </summary>
+        // <summary>
+        // Check if all the SchemaErrors have the serverity of SchemaErrorSeverity.Warning
+        // </summary>
         internal static bool CheckIfAllErrorsAreWarnings(IList<EdmSchemaError> schemaErrors)
         {
             var length = schemaErrors.Count;

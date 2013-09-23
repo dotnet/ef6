@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.Validation
 {
@@ -7,17 +7,17 @@ namespace System.Data.Entity.Internal.Validation
     using System.Diagnostics;
     using System.Linq;
 
-    /// <summary>
-    /// Validates a property of a given EDM complex type.
-    /// </summary>
-    /// <remarks>
-    /// This is a composite validator for a complex property of an entity.
-    /// </remarks>
+    // <summary>
+    // Validates a property of a given EDM complex type.
+    // </summary>
+    // <remarks>
+    // This is a composite validator for a complex property of an entity.
+    // </remarks>
     internal class ComplexPropertyValidator : PropertyValidator
     {
-        /// <summary>
-        /// The complex type validator.
-        /// </summary>
+        // <summary>
+        // The complex type validator.
+        // </summary>
         private readonly ComplexTypeValidator _complexTypeValidator;
 
         public ComplexTypeValidator ComplexTypeValidator
@@ -25,12 +25,12 @@ namespace System.Data.Entity.Internal.Validation
             get { return _complexTypeValidator; }
         }
 
-        /// <summary>
-        /// Creates an instance of <see cref="ComplexPropertyValidator" /> for a given complex property.
-        /// </summary>
-        /// <param name="propertyName"> The complex property name. </param>
-        /// <param name="propertyValidators"> Validators used to validate the given property. </param>
-        /// <param name="complexTypeValidator"> Complex type validator. </param>
+        // <summary>
+        // Creates an instance of <see cref="ComplexPropertyValidator" /> for a given complex property.
+        // </summary>
+        // <param name="propertyName"> The complex property name. </param>
+        // <param name="propertyValidators"> Validators used to validate the given property. </param>
+        // <param name="complexTypeValidator"> Complex type validator. </param>
         public ComplexPropertyValidator(
             string propertyName,
             IEnumerable<IValidator> propertyValidators,
@@ -40,14 +40,14 @@ namespace System.Data.Entity.Internal.Validation
             _complexTypeValidator = complexTypeValidator;
         }
 
-        /// <summary>
-        /// Validates a complex property.
-        /// </summary>
-        /// <param name="entityValidationContext"> Validation context. Never null. </param>
-        /// <param name="property"> Property to validate. Never null. </param>
-        /// <returns>
-        /// Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
-        /// </returns>
+        // <summary>
+        // Validates a complex property.
+        // </summary>
+        // <param name="entityValidationContext"> Validation context. Never null. </param>
+        // <param name="property"> Property to validate. Never null. </param>
+        // <returns>
+        // Validation errors as <see cref="IEnumerable{DbValidationError}" /> . Empty if no errors. Never null.
+        // </returns>
         public override IEnumerable<DbValidationError> Validate(
             EntityValidationContext entityValidationContext, InternalMemberEntry property)
         {

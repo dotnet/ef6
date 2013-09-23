@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Globalization;
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for Association.
-    /// </summary>
+    // <summary>
+    // Summary description for Association.
+    // </summary>
     [DebuggerDisplay(
         "Name={Name}, Relationship={_unresolvedRelationshipName}, FromRole={_unresolvedFromEndRole}, ToRole={_unresolvedToEndRole}")]
     internal sealed class NavigationProperty : Property
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             get { return _fromEnd; }
         }
 
-        /// <summary>
-        /// Gets the Type of the property
-        /// </summary>
+        // <summary>
+        // Gets the Type of the property
+        // </summary>
         public override SchemaType Type
         {
             get

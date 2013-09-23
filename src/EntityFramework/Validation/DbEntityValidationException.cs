@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Validation
 {
@@ -88,23 +88,23 @@ namespace System.Data.Entity.Validation
             get { return _state.EntityValidationErrors; }
         }
 
-        /// <summary>
-        /// Subscribes the SerializeObjectState event.
-        /// </summary>
+        // <summary>
+        // Subscribes the SerializeObjectState event.
+        // </summary>
         private void SubscribeToSerializeObjectState()
         {
             SerializeObjectState += (exception, eventArgs) => eventArgs.AddSerializedState(_state);
         }
 
-        /// <summary>
-        /// Holds exception state that will be serialized when the exception is serialized.
-        /// </summary>
+        // <summary>
+        // Holds exception state that will be serialized when the exception is serialized.
+        // </summary>
         [Serializable]
         private class DbEntityValidationExceptionState : ISafeSerializationData
         {
-            /// <summary>
-            /// Validation results.
-            /// </summary>
+            // <summary>
+            // Validation results.
+            // </summary>
             private IList<DbEntityValidationResult> _entityValidationResults;
 
             internal void InititializeValidationResults(IEnumerable<DbEntityValidationResult> entityValidationResults)
@@ -114,18 +114,18 @@ namespace System.Data.Entity.Validation
                                                : entityValidationResults.ToList();
             }
 
-            /// <summary>
-            /// Validation results.
-            /// </summary>
+            // <summary>
+            // Validation results.
+            // </summary>
             public IEnumerable<DbEntityValidationResult> EntityValidationErrors
             {
                 get { return _entityValidationResults; }
             }
 
-            /// <summary>
-            /// Completes the deserialization.
-            /// </summary>
-            /// <param name="deserialized"> The deserialized object. </param>
+            // <summary>
+            // Completes the deserialization.
+            // </summary>
+            // <param name="deserialized"> The deserialized object. </param>
             public void CompleteDeserialization(object deserialized)
             {
                 var validationException = (DbEntityValidationException)deserialized;

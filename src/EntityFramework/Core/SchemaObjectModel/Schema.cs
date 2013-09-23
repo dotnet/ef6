@@ -19,9 +19,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Xml;
     using System.Xml.Schema;
 
-    /// <summary>
-    /// class representing the Schema element in the schema
-    /// </summary>
+    // <summary>
+    // class representing the Schema element in the schema
+    // </summary>
     [DebuggerDisplay("Namespace={Namespace}, PublicKeyToken={PublicKeyToken}, Version={Version}")]
     internal class Schema : SchemaElement
     {
@@ -80,12 +80,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _errors.Add(error);
         }
 
-        /// <summary>
-        /// Populate the schema object from a schema
-        /// </summary>
-        /// <param name="sourceReader"> TextReader containing the schema xml definition </param>
-        /// <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
-        /// <returns> list of errors </returns>
+        // <summary>
+        // Populate the schema object from a schema
+        // </summary>
+        // <param name="sourceReader"> TextReader containing the schema xml definition </param>
+        // <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
+        // <returns> list of errors </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         internal IList<EdmSchemaError> Parse(XmlReader sourceReader, string sourceLocation)
         {
@@ -112,12 +112,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return ResetErrors();
         }
 
-        /// <summary>
-        /// Populate the schema object from a schema
-        /// </summary>
-        /// <param name="sourceReader"> TextReader containing the schema xml definition </param>
-        /// <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
-        /// <returns> list of errors </returns>
+        // <summary>
+        // Populate the schema object from a schema
+        // </summary>
+        // <param name="sourceReader"> TextReader containing the schema xml definition </param>
+        // <param name="sourceLocation"> Uri containing path to a schema file (may be null) </param>
+        // <returns> list of errors </returns>
         private IList<EdmSchemaError> InternalParse(XmlReader sourceReader, string sourceLocation)
         {
             DebugCheck.NotNull(sourceReader);
@@ -289,11 +289,11 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return readerSettings;
         }
 
-        /// <summary>
-        /// Called by the validating reader when the schema is xsd invalid
-        /// </summary>
-        /// <param name="sender"> the validating reader </param>
-        /// <param name="e"> information about the validation error </param>
+        // <summary>
+        // Called by the validating reader when the schema is xsd invalid
+        // </summary>
+        // <param name="sender"> the validating reader </param>
+        // <param name="e"> information about the validation error </param>
         internal void OnSchemaValidationEvent(object sender, ValidationEventArgs e)
         {
             DebugCheck.NotNull(e);
@@ -433,9 +433,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Vaidate the schema.
-        /// </summary>
+        // <summary>
+        // Vaidate the schema.
+        // </summary>
         internal override void Validate()
         {
             if (String.IsNullOrEmpty(Namespace))
@@ -478,9 +478,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Public Properties
 
-        /// <summary>
-        /// The namespaceUri of the winfs xml namespace
-        /// </summary>
+        // <summary>
+        // The namespaceUri of the winfs xml namespace
+        // </summary>
         internal string SchemaXmlNamespace { get; private set; }
 
         internal DbProviderManifest ProviderManifest
@@ -493,32 +493,32 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Version of the EDM that this schema represents.
-        /// </summary>
+        // <summary>
+        // Version of the EDM that this schema represents.
+        // </summary>
         internal double SchemaVersion
         {
             get { return _schemaVersion; }
             set { _schemaVersion = value; }
         }
 
-        /// <summary>
-        /// Alias for the schema (null if none)
-        /// </summary>
+        // <summary>
+        // Alias for the schema (null if none)
+        // </summary>
         internal virtual string Alias { get; private set; }
 
-        /// <summary>
-        /// Namespace of the schema
-        /// </summary>
+        // <summary>
+        // Namespace of the schema
+        // </summary>
         internal virtual string Namespace
         {
             get { return _namespaceName; }
             private set { _namespaceName = value; }
         }
 
-        /// <summary>
-        /// Uri containing the file that defines the schema
-        /// </summary>
+        // <summary>
+        // Uri containing the file that defines the schema
+        // </summary>
         internal string Location
         {
             get { return _location; }
@@ -545,9 +545,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// List of all types defined in the schema
-        /// </summary>
+        // <summary>
+        // List of all types defined in the schema
+        // </summary>
         internal List<SchemaType> SchemaTypes
         {
             get
@@ -560,9 +560,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Fully qualified name of the schema (same as the namespace name)
-        /// </summary>
+        // <summary>
+        // Fully qualified name of the schema (same as the namespace name)
+        // </summary>
         public override string FQName
         {
             get { return Namespace; }
@@ -746,9 +746,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Internal Methods
 
-        /// <summary>
-        /// Called when all attributes for the schema element have been handled
-        /// </summary>
+        // <summary>
+        // Called when all attributes for the schema element have been handled
+        // </summary>
         protected override void HandleAttributesComplete()
         {
             if (_depth < RootDepth)
@@ -777,13 +777,13 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Look up a fully qualified type name reference.
-        /// </summary>
-        /// <param name="usingElement"> element containing the reference </param>
-        /// <param name="typeName"> the fully qualified type name </param>
-        /// <param name="type"> the referenced schema type </param>
-        /// <returns> false if there was an error </returns>
+        // <summary>
+        // Look up a fully qualified type name reference.
+        // </summary>
+        // <param name="usingElement"> element containing the reference </param>
+        // <param name="typeName"> the fully qualified type name </param>
+        // <param name="type"> the referenced schema type </param>
+        // <returns> false if there was an error </returns>
         internal bool ResolveTypeName(SchemaElement usingElement, string typeName, out SchemaType type)
         {
             DebugCheck.NotNull(usingElement);
@@ -862,9 +862,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Internal Properties
 
-        /// <summary>
-        /// List containing the current schema and all referenced schemas. Used for alias and namespace lookup.
-        /// </summary>
+        // <summary>
+        // List containing the current schema and all referenced schemas. Used for alias and namespace lookup.
+        // </summary>
         internal AliasResolver AliasResolver
         {
             get
@@ -878,17 +878,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// The schema data model
-        /// </summary>
+        // <summary>
+        // The schema data model
+        // </summary>
         internal SchemaDataModelOption DataModel
         {
             get { return SchemaManager.DataModel; }
         }
 
-        /// <summary>
-        /// The schema data model
-        /// </summary>
+        // <summary>
+        // The schema data model
+        // </summary>
         internal SchemaManager SchemaManager
         {
             get { return _schemaManager; }
@@ -903,10 +903,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Private Methods
 
-        /// <summary>
-        /// Handler for the Namespace attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Namespace attribute </param>
+        // <summary>
+        // Handler for the Namespace attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Namespace attribute </param>
         private void HandleNamespaceAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -920,10 +920,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Namespace = returnValue.Value;
         }
 
-        /// <summary>
-        /// Handler for the Alias attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Alias attribute </param>
+        // <summary>
+        // Handler for the Alias attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Alias attribute </param>
         private void HandleAliasAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -931,10 +931,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Alias = HandleUndottedNameAttribute(reader, Alias);
         }
 
-        /// <summary>
-        /// Handler for the Provider attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Provider attribute </param>
+        // <summary>
+        // Handler for the Provider attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Provider attribute </param>
         private void HandleProviderAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -945,10 +945,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 (string message, ErrorCode code, EdmSchemaErrorSeverity severity) => AddError(code, severity, reader, message));
         }
 
-        /// <summary>
-        /// Handler for the ProviderManifestToken attribute
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at ProviderManifestToken attribute </param>
+        // <summary>
+        // Handler for the ProviderManifestToken attribute
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at ProviderManifestToken attribute </param>
         private void HandleProviderManifestTokenAttribute(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -970,9 +970,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Handler for the using element
-        /// </summary>
+        // <summary>
+        // Handler for the using element
+        // </summary>
         private void HandleUsingElement(XmlReader reader)
         {
             var referencedNamespace = new UsingElement(this);
@@ -980,10 +980,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             AliasResolver.Add(referencedNamespace);
         }
 
-        /// <summary>
-        /// Handler for the EnumType element.
-        /// </summary>
-        /// <param name="reader"> Source xml reader currently positioned on the EnumType element. </param>
+        // <summary>
+        // Handler for the EnumType element.
+        // </summary>
+        // <param name="reader"> Source xml reader currently positioned on the EnumType element. </param>
         private void HandleEnumTypeElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -994,10 +994,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddType(enumType, doNotAddErrorForEmptyName: true);
         }
 
-        /// <summary>
-        /// Handler for the top level element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at top level element </param>
+        // <summary>
+        // Handler for the top level element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at top level element </param>
         private void HandleTopLevelSchemaElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1013,10 +1013,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// Handler for the EntityType element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at EntityType element </param>
+        // <summary>
+        // Handler for the EntityType element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleEntityTypeElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1028,10 +1028,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddType(itemType, true /*doNotAddErrorForEmptyName*/);
         }
 
-        /// <summary>
-        /// Handler for the TypeInformation element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at EntityType element </param>
+        // <summary>
+        // Handler for the TypeInformation element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleTypeInformationElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1043,10 +1043,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddType(type, true /*doNotAddErrorForEmptyName*/);
         }
 
-        /// <summary>
-        /// Handler for the Function element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at EntityType element </param>
+        // <summary>
+        // Handler for the Function element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at EntityType element </param>
         private void HandleFunctionElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1069,10 +1069,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             Functions.Add(function);
         }
 
-        /// <summary>
-        /// Handler for the Association element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at Association element </param>
+        // <summary>
+        // Handler for the Association element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at Association element </param>
         private void HandleAssociationElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1084,10 +1084,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddType(relationship, true /*doNotAddErrorForEmptyName*/);
         }
 
-        /// <summary>
-        /// Handler for the InlineType element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at InlineType element </param>
+        // <summary>
+        // Handler for the InlineType element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at InlineType element </param>
         private void HandleInlineTypeElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1099,10 +1099,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddType(complexType, true /*doNotAddErrorForEmptyName*/);
         }
 
-        /// <summary>
-        /// Handler for the EntityContainer element
-        /// </summary>
-        /// <param name="reader"> xml reader currently positioned at EntityContainer element </param>
+        // <summary>
+        // Handler for the EntityContainer element
+        // </summary>
+        // <param name="reader"> xml reader currently positioned at EntityContainer element </param>
         private void HandleEntityContainerTypeElement(XmlReader reader)
         {
             DebugCheck.NotNull(reader);
@@ -1112,10 +1112,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             TryAddContainer(type, true /*doNotAddErrorForEmptyName*/);
         }
 
-        /// <summary>
-        /// reset the error collection
-        /// </summary>
-        /// <returns> old error list </returns>
+        // <summary>
+        // reset the error collection
+        // </summary>
+        // <returns> old error list </returns>
         private List<EdmSchemaError> ResetErrors()
         {
             var errors = _errors;

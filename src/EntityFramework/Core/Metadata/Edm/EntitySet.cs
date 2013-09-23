@@ -22,15 +22,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for constructing the EntitySet with a given name and an entity type
-        /// </summary>
-        /// <param name="name"> The name of the EntitySet </param>
-        /// <param name="schema"> The db schema </param>
-        /// <param name="table"> The db table </param>
-        /// <param name="definingQuery"> The provider specific query that should be used to retrieve the EntitySet </param>
-        /// <param name="entityType"> The entity type of the entities that this entity set type contains </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if the argument name or entityType is null</exception>
+        // <summary>
+        // The constructor for constructing the EntitySet with a given name and an entity type
+        // </summary>
+        // <param name="name"> The name of the EntitySet </param>
+        // <param name="schema"> The db schema </param>
+        // <param name="table"> The db table </param>
+        // <param name="definingQuery"> The provider specific query that should be used to retrieve the EntitySet </param>
+        // <param name="entityType"> The entity type of the entities that this entity set type contains </param>
+        // <exception cref="System.ArgumentNullException">Thrown if the argument name or entityType is null</exception>
         internal EntitySet(string name, string schema, string table, string definingQuery, EntityType entityType)
             : base(name, schema, table, definingQuery, entityType)
         {
@@ -69,10 +69,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return (EntityType)base.ElementType; }
         }
 
-        /// <summary>
-        /// Returns the associations and constraints where "this" EntitySet particpates as the Principal end.
-        /// From the results of this list, you can retrieve the Dependent IRelatedEnds
-        /// </summary>
+        // <summary>
+        // Returns the associations and constraints where "this" EntitySet particpates as the Principal end.
+        // From the results of this list, you can retrieve the Dependent IRelatedEnds
+        // </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyDependents
         {
             get
@@ -85,10 +85,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Returns the associations and constraints where "this" EntitySet particpates as the Dependent end.
-        /// From the results of this list, you can retrieve the Principal IRelatedEnds
-        /// </summary>
+        // <summary>
+        // Returns the associations and constraints where "this" EntitySet particpates as the Dependent end.
+        // From the results of this list, you can retrieve the Principal IRelatedEnds
+        // </summary>
         internal ReadOnlyCollection<Tuple<AssociationSet, ReferentialConstraint>> ForeignKeyPrincipals
         {
             get
@@ -101,9 +101,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// True if this entity set participates in any foreign key relationships, otherwise false.
-        /// </summary>
+        // <summary>
+        // True if this entity set participates in any foreign key relationships, otherwise false.
+        // </summary>
         internal bool HasForeignKeyRelationships
         {
             get
@@ -116,9 +116,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// True if this entity set participates in any independent relationships, otherwise false.
-        /// </summary>
+        // <summary>
+        // True if this entity set participates in any independent relationships, otherwise false.
+        // </summary>
         internal bool HasIndependentRelationships
         {
             get

@@ -13,9 +13,9 @@ namespace System.Data.Entity.Internal
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Implements ICachedMetadataWorkspace for a Code First model.
-    /// </summary>
+    // <summary>
+    // Implements ICachedMetadataWorkspace for a Code First model.
+    // </summary>
     internal class CodeFirstCachedMetadataWorkspace : ICachedMetadataWorkspace
     {
         #region Fields and constructors
@@ -25,10 +25,10 @@ namespace System.Data.Entity.Internal
         private readonly DbProviderInfo _providerInfo;
         private readonly string _defaultContainerName;
 
-        /// <summary>
-        /// Builds and stores the workspace based on the given code first configuration.
-        /// </summary>
-        /// <param name="databaseMapping"> The code first EDM model. </param>
+        // <summary>
+        // Builds and stores the workspace based on the given code first configuration.
+        // </summary>
+        // <param name="databaseMapping"> The code first EDM model. </param>
         public CodeFirstCachedMetadataWorkspace(DbDatabaseMapping databaseMapping)
         {
             DebugCheck.NotNull(databaseMapping);
@@ -46,13 +46,13 @@ namespace System.Data.Entity.Internal
 
         #region ICachedMetadataWorkspace implementation
 
-        /// <summary>
-        /// Gets the <see cref="MetadataWorkspace" />.
-        /// If the workspace is not compatible with the provider manifest obtained from the given
-        /// connection then an exception is thrown.
-        /// </summary>
-        /// <param name="connection"> The connection to use to create or check SSDL provider info. </param>
-        /// <returns> The workspace. </returns>
+        // <summary>
+        // Gets the <see cref="MetadataWorkspace" />.
+        // If the workspace is not compatible with the provider manifest obtained from the given
+        // connection then an exception is thrown.
+        // </summary>
+        // <param name="connection"> The connection to use to create or check SSDL provider info. </param>
+        // <returns> The workspace. </returns>
         public MetadataWorkspace GetMetadataWorkspace(DbConnection connection)
         {
             DebugCheck.NotNull(connection);
@@ -67,26 +67,26 @@ namespace System.Data.Entity.Internal
             return _metadataWorkspace;
         }
 
-        /// <summary>
-        /// The default container name for code first is the container name that is set from the DbModelBuilder
-        /// </summary>
+        // <summary>
+        // The default container name for code first is the container name that is set from the DbModelBuilder
+        // </summary>
         public string DefaultContainerName
         {
             get { return _defaultContainerName; }
         }
 
-        /// <summary>
-        /// The list of assemblies that contain entity types for this workspace, which may be empty, but
-        /// will never be null.
-        /// </summary>
+        // <summary>
+        // The list of assemblies that contain entity types for this workspace, which may be empty, but
+        // will never be null.
+        // </summary>
         public IEnumerable<Assembly> Assemblies
         {
             get { return _assemblies; }
         }
 
-        /// <summary>
-        /// The provider info used to construct the workspace.
-        /// </summary>
+        // <summary>
+        // The provider info used to construct the workspace.
+        // </summary>
         public DbProviderInfo ProviderInfo
         {
             get { return _providerInfo; }

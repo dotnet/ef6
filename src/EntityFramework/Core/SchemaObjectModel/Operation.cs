@@ -2,14 +2,14 @@
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
-    /// <summary>
-    /// The possible operations for an On&lt;Operation&gt; element
-    /// </summary>
+    // <summary>
+    // The possible operations for an On&lt;Operation&gt; element
+    // </summary>
     internal enum Operation
     {
-        /// <summary>
-        /// the delete operation
-        /// </summary>
+        // <summary>
+        // the delete operation
+        // </summary>
         Delete,
     }
 }

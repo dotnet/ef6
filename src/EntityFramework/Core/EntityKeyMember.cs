@@ -75,9 +75,9 @@ namespace System.Data.Entity.Core
             return String.Format(CultureInfo.CurrentCulture, "[{0}, {1}]", _keyName, _keyValue);
         }
 
-        /// <summary>
-        /// Ensures that the instance can be written to (value must be null)
-        /// </summary>
+        // <summary>
+        // Ensures that the instance can be written to (value must be null)
+        // </summary>
         private static void ValidateWritable(object instance)
         {
             if (instance != null)

@@ -23,14 +23,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             // testing
         }
 
-        /// <summary>
-        /// The constructor for FunctionParameter taking in a name and a TypeUsage object
-        /// </summary>
-        /// <param name="name"> The name of this FunctionParameter </param>
-        /// <param name="typeUsage"> The TypeUsage describing the type of this FunctionParameter </param>
-        /// <param name="parameterMode"> Mode of the parameter </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
-        /// <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
+        // <summary>
+        // The constructor for FunctionParameter taking in a name and a TypeUsage object
+        // </summary>
+        // <param name="name"> The name of this FunctionParameter </param>
+        // <param name="typeUsage"> The TypeUsage describing the type of this FunctionParameter </param>
+        // <param name="parameterMode"> Mode of the parameter </param>
+        // <exception cref="System.ArgumentNullException">Thrown if name or typeUsage arguments are null</exception>
+        // <exception cref="System.ArgumentException">Thrown if name argument is empty string</exception>
         internal FunctionParameter(string name, TypeUsage typeUsage, ParameterMode parameterMode)
         {
             Check.NotEmpty(name, "name");
@@ -74,9 +74,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Identity; }
         }
 
-        /// <summary>
-        /// Returns the identity of the member
-        /// </summary>
+        // <summary>
+        // Returns the identity of the member
+        // </summary>
         internal override string Identity
         {
             get { return _name; }
@@ -231,10 +231,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return Name;
         }
 
-        /// <summary>
-        /// Sets the member to read only mode. Once this is done, there are no changes
-        /// that can be done to this class
-        /// </summary>
+        // <summary>
+        // Sets the member to read only mode. Once this is done, there are no changes
+        // that can be done to this class
+        // </summary>
         internal override void SetReadOnly()
         {
             if (!IsReadOnly)

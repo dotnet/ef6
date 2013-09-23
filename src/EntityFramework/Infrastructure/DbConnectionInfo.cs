@@ -44,10 +44,10 @@ namespace System.Data.Entity.Infrastructure
             _providerInvariantName = providerInvariantName;
         }
 
-        /// <summary>
-        /// Gets the connection information represented by this instance.
-        /// </summary>
-        /// <param name="config"> Configuration to use if connection comes from the configuration file. </param>
+        // <summary>
+        // Gets the connection information represented by this instance.
+        // </summary>
+        // <param name="config"> Configuration to use if connection comes from the configuration file. </param>
         internal ConnectionStringSettings GetConnectionString(AppConfig config)
         {
             DebugCheck.NotNull(config);

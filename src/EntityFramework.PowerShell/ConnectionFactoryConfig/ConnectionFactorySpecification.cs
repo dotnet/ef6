@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ConnectionFactoryConfig
 {
@@ -6,9 +6,9 @@ namespace System.Data.Entity.ConnectionFactoryConfig
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a specification for the default connection factory to be set into a config file.
-    /// </summary>
+    // <summary>
+    // Represents a specification for the default connection factory to be set into a config file.
+    // </summary>
     internal class ConnectionFactorySpecification
     {
         public const string SqlConnectionFactoryName = "System.Data.Entity.Infrastructure.SqlConnectionFactory, EntityFramework";

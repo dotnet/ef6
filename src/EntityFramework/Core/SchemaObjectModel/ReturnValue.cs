@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.SchemaObjectModel
 {
-    /// <summary>
-    /// Summary description for ReturnValue.
-    /// </summary>
+    // <summary>
+    // Summary description for ReturnValue.
+    // </summary>
     internal sealed class ReturnValue<T>
     {
         #region Instance Fields

@@ -100,15 +100,15 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             return resolver.GetServices(type, null);
         }
 
-        /// <summary>
-        /// This is a helper method that can be used in an <see cref="IDbDependencyResolver.GetServices"/> implementation 
-        /// such that an empty list is returned if the <see cref="IDbDependencyResolver.GetService"/> returns null
-        /// and a list of one element is returned if GetService returns one element.
-        /// </summary>
-        /// <param name="resolver">The resolver.</param>
-        /// <param name="type"> The contract type to resolve. </param>
-        /// <param name="key"> The key of the dependency to resolve. </param>
-        /// <returns>A list of either zero or one elements.</returns>
+        // <summary>
+        // This is a helper method that can be used in an <see cref="IDbDependencyResolver.GetServices"/> implementation 
+        // such that an empty list is returned if the <see cref="IDbDependencyResolver.GetService"/> returns null
+        // and a list of one element is returned if GetService returns one element.
+        // </summary>
+        // <param name="resolver">The resolver.</param>
+        // <param name="type"> The contract type to resolve. </param>
+        // <param name="key"> The key of the dependency to resolve. </param>
+        // <returns>A list of either zero or one elements.</returns>
         internal static IEnumerable<object> GetServiceAsServices(this IDbDependencyResolver resolver, Type type, object key)
         {
             DebugCheck.NotNull(resolver);

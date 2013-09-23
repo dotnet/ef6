@@ -41,11 +41,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Constructors
         // ------------
 
-        /// <summary>
-        /// The default constructor is required for some serialization scenarios. It should not be used to
-        /// create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
-        /// class instead.
-        /// </summary>
+        // <summary>
+        // The default constructor is required for some serialization scenarios. It should not be used to
+        // create new EntityReferences. Use the GetRelatedReference or GetRelatedEnd methods on the RelationshipManager
+        // class instead.
+        // </summary>
         internal EntityReference()
         {
         }
@@ -299,11 +299,11 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// This method is called when either the EntityKey or the Value property is set to null when it is
-        /// already null. For an FK association of a tracked entity the method will attempt to null FKs
-        /// thereby deleting the relationship. This may result in conceptual nulls being set.
-        /// </summary>
+        // <summary>
+        // This method is called when either the EntityKey or the Value property is set to null when it is
+        // already null. For an FK association of a tracked entity the method will attempt to null FKs
+        // thereby deleting the relationship. This may result in conceptual nulls being set.
+        // </summary>
         internal bool AttemptToNullFKsOnRefOrKeySetToNull()
         {
             if (ReferenceValue.Entity == null
@@ -444,24 +444,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// EntityReferences can only deferred load if they are empty
-        /// </summary>
+        // <summary>
+        // EntityReferences can only deferred load if they are empty
+        // </summary>
         internal override bool CanDeferredLoad
         {
             get { return IsEmpty(); }
         }
 
-        /// <summary>
-        /// Takes key values from the given principal entity and transfers them to the foreign key properties
-        /// of the dependant entry.  This method requires a context, but does not require that either
-        /// entity is in the context.  This allows it to work in NoTracking cases where we have the context
-        /// but we're not tracked by that context.
-        /// </summary>
-        /// <param name="dependentEntity"> The entity into which foreign key values will be written </param>
-        /// <param name="principalEntity"> The entity from which key values will be obtained </param>
-        /// <param name="changedFKs"> If non-null, then keeps track of FKs that have already been set such that an exception can be thrown if we find conflicting values </param>
-        /// <param name="forceChange"> If true, then the property setter is called even if FK values already match, which causes the FK properties to be marked as modified. </param>
+        // <summary>
+        // Takes key values from the given principal entity and transfers them to the foreign key properties
+        // of the dependant entry.  This method requires a context, but does not require that either
+        // entity is in the context.  This allows it to work in NoTracking cases where we have the context
+        // but we're not tracked by that context.
+        // </summary>
+        // <param name="dependentEntity"> The entity into which foreign key values will be written </param>
+        // <param name="principalEntity"> The entity from which key values will be obtained </param>
+        // <param name="changedFKs"> If non-null, then keeps track of FKs that have already been set such that an exception can be thrown if we find conflicting values </param>
+        // <param name="forceChange"> If true, then the property setter is called even if FK values already match, which causes the FK properties to be marked as modified. </param>
         internal void UpdateForeignKeyValues(
             IEntityWrapper dependentEntity, IEntityWrapper principalEntity, Dictionary<int, object> changedFKs, bool forceChange)
         {
@@ -567,14 +567,14 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Takes key values from the given principal key and transfers them to the foreign key properties
-        /// of the dependant entry.  This method requires a context, but does not require that either
-        /// entity or key is in the context.  This allows it to work in NoTracking cases where we have the context
-        /// but we're not tracked by that context.
-        /// </summary>
-        /// <param name="dependentEntity"> The entity into which foreign key values will be written </param>
-        /// <param name="principalKey"> The key from which key values will be obtained </param>
+        // <summary>
+        // Takes key values from the given principal key and transfers them to the foreign key properties
+        // of the dependant entry.  This method requires a context, but does not require that either
+        // entity or key is in the context.  This allows it to work in NoTracking cases where we have the context
+        // but we're not tracked by that context.
+        // </summary>
+        // <param name="dependentEntity"> The entity into which foreign key values will be written </param>
+        // <param name="principalKey"> The key from which key values will be obtained </param>
         internal void UpdateForeignKeyValues(IEntityWrapper dependentEntity, EntityKey principalKey)
         {
             DebugCheck.NotNull(dependentEntity.Entity);
@@ -649,8 +649,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // else -- null just means the key isn't set, so the target entity key doesn't also have to be null
         }
 
-        /// <summary>Adds to navigation property if compatible.</summary>
-        /// <param name="otherRelatedEnd">The related end to add.</param>
+        // <summary>Adds to navigation property if compatible.</summary>
+        // <param name="otherRelatedEnd">The related end to add.</param>
         internal override void AddToNavigationPropertyIfCompatible(RelatedEnd otherRelatedEnd)
         {
             // If this end is non-null, then don't overwrite it.
@@ -683,20 +683,20 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             }
         }
 
-        /// <summary>
-        /// Returns whether the foreign key is conceptually null. 
-        /// This occurs when a relationship is set to null but the foreign key property is a non-nullable CLR type and therefore can't be set to null.
-        /// </summary>
-        /// <returns>true if the foreign key is conceptually null; otherwise, false.</returns>
+        // <summary>
+        // Returns whether the foreign key is conceptually null. 
+        // This occurs when a relationship is set to null but the foreign key property is a non-nullable CLR type and therefore can't be set to null.
+        // </summary>
+        // <returns>true if the foreign key is conceptually null; otherwise, false.</returns>
         internal override bool CachedForeignKeyIsConceptualNull()
         {
             return ForeignKeyFactory.IsConceptualNullKey(CachedForeignKey);
         }
 
-        /// <summary> Updates the foreign key if this is the dependent end of the relationship. </summary>
-        /// <returns> true if they key was updated; otherwise, false.</returns>
-        /// <param name="targetRelatedEnd">The target related end.</param>
-        /// <param name="forceForeignKeyChanges"> If true, then the property setter is called even if FK values already match, which causes the FK properties to be marked as modified. </param>
+        // <summary> Updates the foreign key if this is the dependent end of the relationship. </summary>
+        // <returns> true if they key was updated; otherwise, false.</returns>
+        // <param name="targetRelatedEnd">The target related end.</param>
+        // <param name="forceForeignKeyChanges"> If true, then the property setter is called even if FK values already match, which causes the FK properties to be marked as modified. </param>
         internal override bool UpdateDependentEndForeignKey(RelatedEnd targetRelatedEnd, bool forceForeignKeyChanges)
         {
             if (IsDependentEndOfReferentialConstraint(false))
@@ -708,9 +708,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return false;
         }
 
-        /// <summary>
-        /// Ensures the detached entity key is valid (not temporary etc.) 
-        /// </summary>
+        // <summary>
+        // Ensures the detached entity key is valid (not temporary etc.) 
+        // </summary>
         internal override void ValidateDetachedEntityKey()
         {
             // If this is a stub EntityReference and the DetachedEntityKey is set, make sure it is valid
@@ -732,8 +732,8 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             // because it will be checked later once we have the key for the contained entity
         }
 
-        /// <summary>Verifies the detached key matches of the entity key.</summary>
-        /// <param name="entityKey">The key entity.</param>
+        // <summary>Verifies the detached key matches of the entity key.</summary>
+        // <param name="entityKey">The key entity.</param>
         internal override void VerifyDetachedKeyMatches(EntityKey entityKey)
         {
             // If we have a reference with a detached key, make sure the key matches the relationship we are about to add
@@ -873,10 +873,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             return principalKey;
         }
 
-        /// <summary>
-        /// Attempts to null all FKs associated with the dependent end of this relationship on this entity.
-        /// This may result in setting conceptual nulls if the FK is not nullable.
-        /// </summary>
+        // <summary>
+        // Attempts to null all FKs associated with the dependent end of this relationship on this entity.
+        // This may result in setting conceptual nulls if the FK is not nullable.
+        // </summary>
         internal void NullAllForeignKeys()
         {
             Debug.Assert(ObjectContext != null, "Nulling FKs only works when attached.");

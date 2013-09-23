@@ -57,14 +57,14 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        /// <summary>
-        /// Types for which the mapping holds true for.
-        /// </summary>
+        // <summary>
+        // Types for which the mapping holds true for.
+        // </summary>
         private readonly Dictionary<string, EntityType> m_entityTypes = new Dictionary<string, EntityType>(StringComparer.Ordinal);
 
-        /// <summary>
-        /// Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
-        /// </summary>
+        // <summary>
+        // Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
+        // </summary>
         private readonly Dictionary<string, EntityType> m_isOfEntityTypes = new Dictionary<string, EntityType>(StringComparer.Ordinal);
 
         /// <summary>
@@ -91,18 +91,18 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_isOfEntityTypes.Count > 0 || m_entityTypes.Count > 1; }
         }
 
-        /// <summary>
-        /// a list of TypeMetadata that this mapping holds true for.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadata that this mapping holds true for.
+        // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> Types
         {
             get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_entityTypes.Values)); }
         }
 
-        /// <summary>
-        /// a list of TypeMetadatas for which the mapping holds true for
-        /// not only the type specified but the sub-types of that type as well.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadatas for which the mapping holds true for
+        // not only the type specified but the sub-types of that type as well.
+        // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> IsOfTypes
         {
             get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_isOfEntityTypes.Values)); }

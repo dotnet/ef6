@@ -11,17 +11,17 @@ namespace System.Data.Entity.Core.Common.Utils
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// Contains utility methods for construction of DB commands through generic
-    /// provider interfaces.
-    /// </summary>
+    // <summary>
+    // Contains utility methods for construction of DB commands through generic
+    // provider interfaces.
+    // </summary>
     internal static class CommandHelper
     {
-        /// <summary>
-        /// Consumes all rows and result sets from the reader. This allows client to retrieve
-        /// parameter values and intercept any store exceptions.
-        /// </summary>
-        /// <param name="reader"> Reader to consume. </param>
+        // <summary>
+        // Consumes all rows and result sets from the reader. This allows client to retrieve
+        // parameter values and intercept any store exceptions.
+        // </summary>
+        // <param name="reader"> Reader to consume. </param>
         internal static void ConsumeReader(DbDataReader reader)
         {
             if (null != reader
@@ -38,10 +38,10 @@ namespace System.Data.Entity.Core.Common.Utils
 
 #if !NET40
 
-        /// <summary>
-        /// Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
-        /// parameter values and intercept any store exceptions.
-        /// </summary>
+        // <summary>
+        // Asynchronously consumes all rows and result sets from the reader. This allows client to retrieve
+        // parameter values and intercept any store exceptions.
+        // </summary>
         internal static async Task ConsumeReaderAsync(DbDataReader reader, CancellationToken cancellationToken)
         {
             if (null != reader
@@ -58,10 +58,10 @@ namespace System.Data.Entity.Core.Common.Utils
 
 #endif
 
-        /// <summary>
-        /// requires: commandText must not be null
-        /// The command text must be in the form Container.FunctionImportName.
-        /// </summary>
+        // <summary>
+        // requires: commandText must not be null
+        // The command text must be in the form Container.FunctionImportName.
+        // </summary>
         internal static void ParseFunctionImportCommandText(
             string commandText, string defaultContainerName, out string containerName, out string functionImportName)
         {
@@ -89,13 +89,13 @@ namespace System.Data.Entity.Core.Common.Utils
             }
         }
 
-        /// <summary>
-        /// Given an entity command and entity transaction, passes through relevant state to store provider
-        /// command.
-        /// </summary>
-        /// <param name="entityCommand"> Entity command. Must not be null. </param>
-        /// <param name="entityTransaction"> Entity transaction. Must not be null. </param>
-        /// <param name="storeProviderCommand"> Store provider command that is being setup. Must not be null. </param>
+        // <summary>
+        // Given an entity command and entity transaction, passes through relevant state to store provider
+        // command.
+        // </summary>
+        // <param name="entityCommand"> Entity command. Must not be null. </param>
+        // <param name="entityTransaction"> Entity transaction. Must not be null. </param>
+        // <param name="storeProviderCommand"> Store provider command that is being setup. Must not be null. </param>
         internal static void SetStoreProviderCommandState(
             EntityCommand entityCommand, EntityTransaction entityTransaction, DbCommand storeProviderCommand)
         {
@@ -108,13 +108,13 @@ namespace System.Data.Entity.Core.Common.Utils
             storeProviderCommand.UpdatedRowSource = entityCommand.UpdatedRowSource;
         }
 
-        /// <summary>
-        /// Given an entity command, store provider command and a connection, sets all output parameter values on the entity command.
-        /// The connection is used to determine how to map spatial values.
-        /// </summary>
-        /// <param name="entityCommand"> Entity command on which to set parameter values. Must not be null. </param>
-        /// <param name="storeProviderCommand"> Store provider command from which to retrieve parameter values. Must not be null. </param>
-        /// <param name="connection"> The connection on which the command was run. Must not be null </param>
+        // <summary>
+        // Given an entity command, store provider command and a connection, sets all output parameter values on the entity command.
+        // The connection is used to determine how to map spatial values.
+        // </summary>
+        // <param name="entityCommand"> Entity command on which to set parameter values. Must not be null. </param>
+        // <param name="storeProviderCommand"> Store provider command from which to retrieve parameter values. Must not be null. </param>
+        // <param name="connection"> The connection on which the command was run. Must not be null </param>
         internal static void SetEntityParameterValues(
             EntityCommand entityCommand, DbCommand storeProviderCommand, EntityConnection connection)
         {

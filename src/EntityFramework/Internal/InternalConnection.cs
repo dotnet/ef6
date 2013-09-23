@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -13,11 +13,11 @@ namespace System.Data.Entity.Internal
     using System.Globalization;
     using System.Linq;
 
-    /// <summary>
-    /// InternalConnection objects manage DbConnections.
-    /// Two concrete base classes of this abstract interface exist:<see cref="LazyInternalConnection" />
-    /// and <see cref="EagerInternalConnection" />.
-    /// </summary>
+    // <summary>
+    // InternalConnection objects manage DbConnections.
+    // Two concrete base classes of this abstract interface exist:<see cref="LazyInternalConnection" />
+    // and <see cref="EagerInternalConnection" />.
+    // </summary>
     internal abstract class InternalConnection : IInternalConnection
     {
         private string _key;
@@ -26,9 +26,9 @@ namespace System.Data.Entity.Internal
         private string _originalDatabaseName;
         private string _originalDataSource;
 
-        /// <summary>
-        /// Returns the underlying DbConnection.
-        /// </summary>
+        // <summary>
+        // Returns the underlying DbConnection.
+        // </summary>
         public virtual DbConnection Connection
         {
             get
@@ -40,10 +40,10 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Returns a key consisting of the connection type and connection string.
-        /// If this is an EntityConnection then the metadata path is included in the key returned.
-        /// </summary>
+        // <summary>
+        // Returns a key consisting of the connection type and connection string.
+        // If this is an EntityConnection then the metadata path is included in the key returned.
+        // </summary>
         public virtual string ConnectionKey
         {
             get
@@ -59,14 +59,14 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Gets a value indicating whether the connection is an EF connection which therefore contains
-        /// metadata specifying the model, or instead is a store connection, in which case it contains no
-        /// model info.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if the connection contains model info; otherwise, <c>false</c> .
-        /// </value>
+        // <summary>
+        // Gets a value indicating whether the connection is an EF connection which therefore contains
+        // metadata specifying the model, or instead is a store connection, in which case it contains no
+        // model info.
+        // </summary>
+        // <value>
+        // <c>true</c> if the connection contains model info; otherwise, <c>false</c> .
+        // </value>
         public virtual bool ConnectionHasModel
         {
             get
@@ -77,20 +77,20 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Returns the origin of the underlying connection string.
-        /// </summary>
+        // <summary>
+        // Returns the origin of the underlying connection string.
+        // </summary>
         public abstract DbConnectionStringOrigin ConnectionStringOrigin { get; }
 
-        /// <summary>
-        /// Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries
-        /// and connection strins.
-        /// </summary>
+        // <summary>
+        // Gets or sets an object representing a config file used for looking for DefaultConnectionFactory entries
+        // and connection strins.
+        // </summary>
         public virtual AppConfig AppConfig { get; set; }
 
-        /// <summary>
-        /// Gets or sets the provider to be used when creating the underlying connection.
-        /// </summary>
+        // <summary>
+        // Gets or sets the provider to be used when creating the underlying connection.
+        // </summary>
         public virtual string ProviderName
         {
             get
@@ -101,17 +101,17 @@ namespace System.Data.Entity.Internal
             set { _providerName = value; }
         }
 
-        /// <summary>
-        /// Gets the name of the underlying connection string.
-        /// </summary>
+        // <summary>
+        // Gets the name of the underlying connection string.
+        // </summary>
         public virtual string ConnectionStringName
         {
             get { return null; }
         }
 
-        /// <summary>
-        /// Gets the original connection string.
-        /// </summary>
+        // <summary>
+        // Gets the original connection string.
+        // </summary>
         public string OriginalConnectionString
         {
             get
@@ -132,11 +132,11 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
-        /// only be called if ConnectionHasModel returns true.
-        /// </summary>
-        /// <returns> The newly created context. </returns>
+        // <summary>
+        // Creates an <see cref="ObjectContext" /> from metadata in the connection.  This method must
+        // only be called if ConnectionHasModel returns true.
+        // </summary>
+        // <returns> The newly created context. </returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public virtual ObjectContext CreateObjectContextFromConnectionModel()
         {
@@ -154,21 +154,21 @@ namespace System.Data.Entity.Internal
             return objectContext;
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+        // <summary>
+        // Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        // </summary>
         public abstract void Dispose();
 
-        /// <summary>
-        /// Gets or sets the underlying <see cref="DbConnection" /> object.  No initialization is done when the
-        /// connection is obtained, and it can also be set to null.
-        /// </summary>
-        /// <value> The underlying connection. </value>
+        // <summary>
+        // Gets or sets the underlying <see cref="DbConnection" /> object.  No initialization is done when the
+        // connection is obtained, and it can also be set to null.
+        // </summary>
+        // <value> The underlying connection. </value>
         protected DbConnection UnderlyingConnection { get; set; }
 
-        /// <summary>
-        /// Called after the connection is initialized for the first time.
-        /// </summary>
+        // <summary>
+        // Called after the connection is initialized for the first time.
+        // </summary>
         protected void OnConnectionInitialized()
         {
             Debug.Assert(UnderlyingConnection != null);

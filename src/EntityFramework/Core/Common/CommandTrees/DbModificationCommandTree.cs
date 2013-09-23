@@ -38,9 +38,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             get { return _target; }
         }
 
-        /// <summary>
-        /// Returns true if this modification command returns a reader (for instance, to return server generated values)
-        /// </summary>
+        // <summary>
+        // Returns true if this modification command returns a reader (for instance, to return server generated values)
+        // </summary>
         internal abstract bool HasReader { get; }
 
         internal override IEnumerable<KeyValuePair<string, TypeUsage>> GetParameters()

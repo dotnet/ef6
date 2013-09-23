@@ -311,9 +311,9 @@ namespace System.Data.Entity
 
         #region IInternalSetAdapter
 
-        /// <summary>
-        /// The internal IQueryable that is backing this DbQuery
-        /// </summary>
+        // <summary>
+        // The internal IQueryable that is backing this DbQuery
+        // </summary>
         IInternalSet IInternalSetAdapter.InternalSet
         {
             get { return InternalSet; }
@@ -323,10 +323,10 @@ namespace System.Data.Entity
 
         #region InternalSet
 
-        /// <summary>
-        /// Gets the underlying internal set.
-        /// </summary>
-        /// <value> The internal set. </value>
+        // <summary>
+        // Gets the underlying internal set.
+        // </summary>
+        // <value> The internal set. </value>
         internal virtual IInternalSet InternalSet
         {
             get { return null; }

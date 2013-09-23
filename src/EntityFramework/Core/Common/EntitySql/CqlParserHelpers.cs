@@ -8,9 +8,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    /// <summary>
-    /// Represents the Cql Parser engine. Also, implements helpers and util routines.
-    /// </summary>
+    // <summary>
+    // Represents the Cql Parser engine. Also, implements helpers and util routines.
+    // </summary>
     internal sealed partial class CqlParser
     {
         private Node _parsedTree;
@@ -19,9 +19,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
         private readonly ParserOptions _parserOptions;
         private const string _internalYaccSyntaxErrorMessage = "syntax error";
 
-        /// <summary>
-        /// Contains inclusive count of method expressions.
-        /// </summary>
+        // <summary>
+        // Contains inclusive count of method expressions.
+        // </summary>
         private uint _methodExprCounter;
 
         private Stack<uint> _methodExprCounterStack;
@@ -37,12 +37,12 @@ namespace System.Data.Entity.Core.Common.EntitySql
             yydebug = debug;
         }
 
-        /// <summary>
-        /// Main entry point for parsing cql.
-        /// </summary>
-        /// <param name="query"> query text </param>
-        /// <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic rules are violated and the query cannot be accepted</exception>
-        /// <returns> Abstract Syntax Tree </returns>
+        // <summary>
+        // Main entry point for parsing cql.
+        // </summary>
+        // <param name="query"> query text </param>
+        // <exception cref="System.Data.Entity.Core.EntityException">Thrown when Syntatic rules are violated and the query cannot be accepted</exception>
+        // <returns> Abstract Syntax Tree </returns>
         internal Node Parse(string query)
         {
             DebugCheck.NotEmpty(query);
@@ -55,9 +55,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
             return _parsedTree;
         }
 
-        /// <summary>
-        /// Returns query string
-        /// </summary>
+        // <summary>
+        // Returns query string
+        // </summary>
         internal string Query
         {
             get { return _query; }
@@ -74,20 +74,20 @@ namespace System.Data.Entity.Core.Common.EntitySql
         }
 #endif
 
-        /// <summary>
-        /// Returns ParserOptions used
-        /// </summary>
-        /// <remarks>
-        /// Once parse has been invoked, ParserOptions are frozen and cannot be changed. otherwise a EntityException exception will be thrown
-        /// </remarks>
+        // <summary>
+        // Returns ParserOptions used
+        // </summary>
+        // <remarks>
+        // Once parse has been invoked, ParserOptions are frozen and cannot be changed. otherwise a EntityException exception will be thrown
+        // </remarks>
         internal ParserOptions ParserOptions
         {
             get { return _parserOptions; }
         }
 
-        /// <summary>
-        /// Internal entry point
-        /// </summary>
+        // <summary>
+        // Internal entry point
+        // </summary>
         private void internalParseEntryPoint()
         {
             _lexer = new CqlLexer(Query, ParserOptions);

@@ -1,14 +1,14 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Represents the data contained in a StateEntry using internal data structures
-    /// of the UpdatePipeline.
-    /// </summary>
+    // <summary>
+    // Represents the data contained in a StateEntry using internal data structures
+    // of the UpdatePipeline.
+    // </summary>
     internal struct ExtractedStateEntry
     {
         internal readonly EntityState State;

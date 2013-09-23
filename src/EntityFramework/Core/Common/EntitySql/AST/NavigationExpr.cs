@@ -2,10 +2,10 @@
 
 namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
-    /// <summary>
-    /// Represents a relationship navigation operator NAVIGATE(sourceRefExpr, Relationship-Type-Name [,ToEndName [,FromEndName]]).
-    /// Also used in WITH RELATIONSHIP clause as RELATIONSHIP(targetRefExpr, Relationship-Type-Name [,FromEndName [,ToEndName]]).
-    /// </summary>
+    // <summary>
+    // Represents a relationship navigation operator NAVIGATE(sourceRefExpr, Relationship-Type-Name [,ToEndName [,FromEndName]]).
+    // Also used in WITH RELATIONSHIP clause as RELATIONSHIP(targetRefExpr, Relationship-Type-Name [,FromEndName [,ToEndName]]).
+    // </summary>
     internal sealed class RelshipNavigationExpr : Node
     {
         private readonly Node _refExpr;
@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         private readonly Identifier _toEndIdentifier;
         private readonly Identifier _fromEndIdentifier;
 
-        /// <summary>
-        /// Initializes relationship navigation expression.
-        /// </summary>
+        // <summary>
+        // Initializes relationship navigation expression.
+        // </summary>
         internal RelshipNavigationExpr(Node refExpr, Node relshipTypeName, Identifier toEndIdentifier, Identifier fromEndIdentifier)
         {
             _refExpr = refExpr;
@@ -24,33 +24,33 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
             _fromEndIdentifier = fromEndIdentifier;
         }
 
-        /// <summary>
-        /// Entity reference expression.
-        /// </summary>
+        // <summary>
+        // Entity reference expression.
+        // </summary>
         internal Node RefExpr
         {
             get { return _refExpr; }
         }
 
-        /// <summary>
-        /// Relship type name.
-        /// </summary>
+        // <summary>
+        // Relship type name.
+        // </summary>
         internal Node TypeName
         {
             get { return _relshipTypeName; }
         }
 
-        /// <summary>
-        /// TO end identifier.
-        /// </summary>
+        // <summary>
+        // TO end identifier.
+        // </summary>
         internal Identifier ToEndIdentifier
         {
             get { return _toEndIdentifier; }
         }
 
-        /// <summary>
-        /// FROM end identifier.
-        /// </summary>
+        // <summary>
+        // FROM end identifier.
+        // </summary>
         internal Identifier FromEndIdentifier
         {
             get { return _fromEndIdentifier; }

@@ -2,9 +2,9 @@
 
 namespace System.Data.Entity.Core.Query.InternalTrees
 {
-    /// <summary>
-    /// Base class for set operations - union, intersect, except
-    /// </summary>
+    // <summary>
+    // Base class for set operations - union, intersect, except
+    // </summary>
     internal abstract class SetOp : RelOp
     {
         #region private state
@@ -34,25 +34,25 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         #region public methods
 
-        /// <summary>
-        /// 2 children - left, right
-        /// </summary>
+        // <summary>
+        // 2 children - left, right
+        // </summary>
         internal override int Arity
         {
             get { return 2; }
         }
 
-        /// <summary>
-        /// Map of result vars to the vars of each branch of the setOp
-        /// </summary>
+        // <summary>
+        // Map of result vars to the vars of each branch of the setOp
+        // </summary>
         internal VarMap[] VarMap
         {
             get { return m_varMap; }
         }
 
-        /// <summary>
-        /// Get the set of output vars produced
-        /// </summary>
+        // <summary>
+        // Get the set of output vars produced
+        // </summary>
         internal VarVec Outputs
         {
             get { return m_outputVars; }

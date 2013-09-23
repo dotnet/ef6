@@ -7,9 +7,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
 
-    /// <summary>
-    /// Polymorphic new instance creation (takes all properties of all types in the hierarchy + discriminator)
-    /// </summary>
+    // <summary>
+    // Polymorphic new instance creation (takes all properties of all types in the hierarchy + discriminator)
+    // </summary>
     internal sealed class DiscriminatedNewEntityOp : NewEntityBaseOp
     {
         #region Private state
@@ -40,9 +40,9 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 
         internal static readonly DiscriminatedNewEntityOp Pattern = new DiscriminatedNewEntityOp();
 
-        /// <summary>
-        /// Gets discriminator and type information used in construction of type.
-        /// </summary>
+        // <summary>
+        // Gets discriminator and type information used in construction of type.
+        // </summary>
         internal ExplicitDiscriminatorMap DiscriminatorMap
         {
             get { return m_discriminatorMap; }

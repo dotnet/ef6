@@ -22,10 +22,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private readonly List<PrimitiveType>[] _primitiveTypeMap = new List<PrimitiveType>[EdmConstants.NumPrimitiveTypes];
 
-        /// <summary>
-        /// Add the given primitive type to the primitive type cache
-        /// </summary>
-        /// <param name="type"> The primitive type to add </param>
+        // <summary>
+        // Add the given primitive type to the primitive type cache
+        // </summary>
+        // <param name="type"> The primitive type to add </param>
         internal void Add(PrimitiveType type)
         {
             // Get to the list
@@ -44,13 +44,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Try and get the mapped type for the given primitiveTypeKind in the given dataspace
-        /// </summary>
-        /// <param name="primitiveTypeKind"> The primitive type kind of the primitive type to retrieve </param>
-        /// <param name="facets"> The facets to use in picking the primitive type </param>
-        /// <param name="type"> The resulting type </param>
-        /// <returns> Whether a type was retrieved or not </returns>
+        // <summary>
+        // Try and get the mapped type for the given primitiveTypeKind in the given dataspace
+        // </summary>
+        // <param name="primitiveTypeKind"> The primitive type kind of the primitive type to retrieve </param>
+        // <param name="facets"> The facets to use in picking the primitive type </param>
+        // <param name="type"> The resulting type </param>
+        // <returns> Whether a type was retrieved or not </returns>
         internal bool TryGetType(PrimitiveTypeKind primitiveTypeKind, IEnumerable<Facet> facets, out PrimitiveType type)
         {
             type = null;
@@ -176,9 +176,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return facets;
         }
 
-        /// <summary>
-        /// Get the list of the primitive types for the given dataspace
-        /// </summary>
+        // <summary>
+        // Get the list of the primitive types for the given dataspace
+        // </summary>
         internal ReadOnlyCollection<PrimitiveType> GetTypes()
         {
             var primitiveTypes = new List<PrimitiveType>();

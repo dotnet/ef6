@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// </summary>
     public abstract class EdmTypeAttribute : Attribute
     {
-        /// <summary>
-        /// Only allow derived attributes from this assembly
-        /// </summary>
+        // <summary>
+        // Only allow derived attributes from this assembly
+        // </summary>
         internal EdmTypeAttribute()
         {
         }

@@ -32,11 +32,11 @@ namespace System.Data.Entity.Core.EntityClient
 
         private bool _disposed;
 
-        /// <summary>
-        /// The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
-        /// DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
-        /// of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
-        /// </summary>
+        // <summary>
+        // The constructor for the data reader, each EntityDataReader must always be associated with a EntityCommand and an underlying
+        // DbDataReader.  It is expected that EntityDataReader only has a reference to EntityCommand and doesn't assume responsibility
+        // of cleaning the command object, but it does assume responsibility of cleaning up the store data reader object.
+        // </summary>
         internal EntityDataReader(EntityCommand command, DbDataReader storeDataReader, CommandBehavior behavior)
         {
             DebugCheck.NotNull(command);
@@ -48,9 +48,9 @@ namespace System.Data.Entity.Core.EntityClient
             _behavior = behavior;
         }
 
-        /// <summary>
-        /// For test purposes only.
-        /// </summary>
+        // <summary>
+        // For test purposes only.
+        // </summary>
         internal EntityDataReader()
         {
         }

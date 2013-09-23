@@ -49,10 +49,10 @@ namespace System.Data.Entity.Core.Mapping
             AddType(complexType);
         }
 
-        /// <summary>
-        /// Construct a new Complex Property mapping object
-        /// </summary>
-        /// <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
+        // <summary>
+        // Construct a new Complex Property mapping object
+        // </summary>
+        // <param name="isPartial"> Whether the property mapping representation is totally represented in this table mapping fragment or not. </param>
         [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "isPartial")]
         internal ComplexTypeMapping(bool isPartial)
         {
@@ -69,18 +69,18 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_types.Values.SingleOrDefault(); }
         }
 
-        /// <summary>
-        /// a list of TypeMetadata that this mapping holds true for.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadata that this mapping holds true for.
+        // </summary>
         internal ReadOnlyCollection<ComplexType> Types
         {
             get { return new ReadOnlyCollection<ComplexType>(new List<ComplexType>(m_types.Values)); }
         }
 
-        /// <summary>
-        /// a list of TypeMetadatas for which the mapping holds true for
-        /// not only the type specified but the sub-types of that type as well.
-        /// </summary>
+        // <summary>
+        // a list of TypeMetadatas for which the mapping holds true for
+        // not only the type specified but the sub-types of that type as well.
+        // </summary>
         internal ReadOnlyCollection<ComplexType> IsOfTypes
         {
             get { return new ReadOnlyCollection<ComplexType>(new List<ComplexType>(m_isOfTypes.Values)); }
@@ -102,10 +102,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return new ReadOnlyCollection<ConditionPropertyMapping>(new List<ConditionPropertyMapping>(m_conditionProperties.Values)); }
         }
 
-        /// <summary>
-        /// Returns all the property mappings defined in the complex type mapping
-        /// including Properties and Condition Properties
-        /// </summary>
+        // <summary>
+        // Returns all the property mappings defined in the complex type mapping
+        // including Properties and Condition Properties
+        // </summary>
         internal ReadOnlyCollection<PropertyMapping> AllProperties
         {
             get
@@ -117,17 +117,17 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Add a Type to the list of types that this mapping is valid for
-        /// </summary>
+        // <summary>
+        // Add a Type to the list of types that this mapping is valid for
+        // </summary>
         internal void AddType(ComplexType type)
         {
             m_types.Add(type.FullName, type);
         }
 
-        /// <summary>
-        /// Add a Type to the list of Is-Of types that this mapping is valid for
-        /// </summary>
+        // <summary>
+        // Add a Type to the list of Is-Of types that this mapping is valid for
+        // </summary>
         internal void AddIsOfType(ComplexType type)
         {
             m_isOfTypes.Add(type.FullName, type);
@@ -181,11 +181,11 @@ namespace System.Data.Entity.Core.Mapping
             m_conditionProperties.Remove(condition.Property ?? condition.Column);
         }
 
-        /// <summary>
-        /// Add a condition property mapping as a child of this complex property mapping
-        /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
-        /// </summary>
-        /// <param name="conditionPropertyMap"> The Condition Property mapping that needs to be added </param>
+        // <summary>
+        // Add a condition property mapping as a child of this complex property mapping
+        // Condition Property Mapping specifies a Condition either on the C side property or S side property.
+        // </summary>
+        // <param name="conditionPropertyMap"> The Condition Property mapping that needs to be added </param>
         internal void AddConditionProperty(
             ConditionPropertyMapping conditionPropertyMap, Action<EdmMember> duplicateMemberConditionError)
         {
@@ -205,10 +205,10 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// The method finds the type in which the member with the given name exists
-        /// form the list of IsOfTypes and Type.
-        /// </summary>
+        // <summary>
+        // The method finds the type in which the member with the given name exists
+        // form the list of IsOfTypes and Type.
+        // </summary>
         internal ComplexType GetOwnerType(string memberName)
         {
             foreach (var type in m_types.Values)

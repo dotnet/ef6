@@ -6,10 +6,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Helper class to track the aggregate nodes that are candidates to be
-    /// pushed into the definingGroupByNode.
-    /// </summary>
+    // <summary>
+    // Helper class to track the aggregate nodes that are candidates to be
+    // pushed into the definingGroupByNode.
+    // </summary>
     internal class GroupAggregateVarInfo
     {
         #region Private Fields
@@ -22,11 +22,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Constructor
 
-        /// <summary>
-        /// Public constructor
-        /// </summary>
-        /// <param name="defingingGroupNode"> The GroupIntoOp node </param>
-        /// <param name="groupAggregateVar"> </param>
+        // <summary>
+        // Public constructor
+        // </summary>
+        // <param name="defingingGroupNode"> The GroupIntoOp node </param>
+        // <param name="groupAggregateVar"> </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal GroupAggregateVarInfo(Node defingingGroupNode, Var groupAggregateVar)
         {
@@ -38,13 +38,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region 'Public' Properties
 
-        /// <summary>
-        /// Each key value pair represents a candidate aggregate.
-        /// The key is the function aggregate subtree and the value is a 'template' of translation of the
-        /// function aggregate's argument over the var representing the group aggregate.
-        /// A valid candidate has an argument that does not have any external references
-        /// except for the group aggregate corresponding to the DefiningGroupNode.
-        /// </summary>
+        // <summary>
+        // Each key value pair represents a candidate aggregate.
+        // The key is the function aggregate subtree and the value is a 'template' of translation of the
+        // function aggregate's argument over the var representing the group aggregate.
+        // A valid candidate has an argument that does not have any external references
+        // except for the group aggregate corresponding to the DefiningGroupNode.
+        // </summary>
         internal HashSet<KeyValuePair<Node, Node>> CandidateAggregateNodes
         {
             get
@@ -57,17 +57,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Are there are agregates that are candidates to be pushed into the DefiningGroupNode
-        /// </summary>
+        // <summary>
+        // Are there are agregates that are candidates to be pushed into the DefiningGroupNode
+        // </summary>
         internal bool HasCandidateAggregateNodes
         {
             get { return (_candidateAggregateNodes != null && _candidateAggregateNodes.Count != 0); }
         }
 
-        /// <summary>
-        /// The GroupIntoOp node that this GroupAggregateVarInfo represents
-        /// </summary>
+        // <summary>
+        // The GroupIntoOp node that this GroupAggregateVarInfo represents
+        // </summary>
         internal Node DefiningGroupNode
         {
             get { return _definingGroupByNode; }

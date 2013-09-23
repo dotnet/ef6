@@ -4,25 +4,25 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
 {
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Represents a paren expression ast node.
-    /// </summary>
+    // <summary>
+    // Represents a paren expression ast node.
+    // </summary>
     internal sealed class ParenExpr : Node
     {
         private readonly Node _expr;
 
-        /// <summary>
-        /// Initializes paren expression.
-        /// </summary>
+        // <summary>
+        // Initializes paren expression.
+        // </summary>
         internal ParenExpr(Node expr)
         {
             DebugCheck.NotNull(expr);
             _expr = expr;
         }
 
-        /// <summary>
-        /// Returns the parenthesized expression.
-        /// </summary>
+        // <summary>
+        // Returns the parenthesized expression.
+        // </summary>
         internal Node Expr
         {
             get { return _expr; }

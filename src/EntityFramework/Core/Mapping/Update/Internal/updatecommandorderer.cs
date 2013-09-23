@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.Update.Internal
 {
@@ -13,31 +13,31 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
     internal class UpdateCommandOrderer : Graph<UpdateCommand>
     {
-        /// <summary>
-        /// Gets comparer used to resolve identifiers to actual 'owning' key values (e.g. across referential constraints)
-        /// </summary>
+        // <summary>
+        // Gets comparer used to resolve identifiers to actual 'owning' key values (e.g. across referential constraints)
+        // </summary>
         private readonly ForeignKeyValueComparer _keyComparer;
 
-        /// <summary>
-        /// Maps from tables to all "source" referential constraints (where the table declares
-        /// foreign keys)
-        /// </summary>
+        // <summary>
+        // Maps from tables to all "source" referential constraints (where the table declares
+        // foreign keys)
+        // </summary>
         private readonly KeyToListMap<EntitySetBase, ReferentialConstraint> _sourceMap;
 
-        /// <summary>
-        /// Maps from tables to all "target" referential constraints (where the table is
-        /// referenced by a foreign key)
-        /// </summary>
+        // <summary>
+        // Maps from tables to all "target" referential constraints (where the table is
+        // referenced by a foreign key)
+        // </summary>
         private readonly KeyToListMap<EntitySetBase, ReferentialConstraint> _targetMap;
 
-        /// <summary>
-        /// Tracks whether any function commands exist in the current payload.
-        /// </summary>
+        // <summary>
+        // Tracks whether any function commands exist in the current payload.
+        // </summary>
         private readonly bool _hasFunctionCommands;
 
-        /// <summary>
-        /// Gets translator producing this graph.
-        /// </summary>
+        // <summary>
+        // Gets translator producing this graph.
+        // </summary>
         private readonly UpdateTranslator _translator;
 
         internal UpdateCommandOrderer(IEnumerable<UpdateCommand> commands, UpdateTranslator translator)
@@ -345,11 +345,11 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             return predecessors;
         }
 
-        /// <summary>
-        /// For function commands, we infer constraints based on relationships and entities. For instance,
-        /// we always insert an entity before inserting a relationship referencing that entity. When dynamic
-        /// and function UpdateCommands are mixed, we also fall back on this same interpretation.
-        /// </summary>
+        // <summary>
+        // For function commands, we infer constraints based on relationships and entities. For instance,
+        // we always insert an entity before inserting a relationship referencing that entity. When dynamic
+        // and function UpdateCommands are mixed, we also fall back on this same interpretation.
+        // </summary>
         private void AddModelDependencies()
         {
             var addedEntities = new KeyToListMap<EntityKey, UpdateCommand>(EqualityComparer<EntityKey>.Default);
@@ -397,18 +397,18 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
         }
 
-        /// <summary>
-        /// Describes an update command's foreign key (source or target)
-        /// </summary>
+        // <summary>
+        // Describes an update command's foreign key (source or target)
+        // </summary>
         private struct ForeignKeyValue
         {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="metadata"> Sets Metadata </param>
-            /// <param name="record"> Record containing key value </param>
-            /// <param name="isTarget"> Indicates whether the source or target end of the constraint is being pulled </param>
-            /// <param name="isInsert"> Indicates whether this is an insert dependency or a delete dependency </param>
+            // <summary>
+            // Constructor
+            // </summary>
+            // <param name="metadata"> Sets Metadata </param>
+            // <param name="record"> Record containing key value </param>
+            // <param name="isTarget"> Indicates whether the source or target end of the constraint is being pulled </param>
+            // <param name="isInsert"> Indicates whether this is an insert dependency or a delete dependency </param>
             private ForeignKeyValue(
                 ReferentialConstraint metadata, PropagatorResult record,
                 bool isTarget, bool isInsert)
@@ -445,14 +445,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 IsInsert = isInsert;
             }
 
-            /// <summary>
-            /// Initialize foreign key object for the target of a foreign key.
-            /// </summary>
-            /// <param name="metadata"> Sets Metadata </param>
-            /// <param name="record"> Record containing key value </param>
-            /// <param name="isInsert"> Indicates whether the key value is being inserted or deleted </param>
-            /// <param name="key"> Outputs key object </param>
-            /// <returns> true if the record contains key values for this constraint; false otherwise </returns>
+            // <summary>
+            // Initialize foreign key object for the target of a foreign key.
+            // </summary>
+            // <param name="metadata"> Sets Metadata </param>
+            // <param name="record"> Record containing key value </param>
+            // <param name="isInsert"> Indicates whether the key value is being inserted or deleted </param>
+            // <param name="key"> Outputs key object </param>
+            // <returns> true if the record contains key values for this constraint; false otherwise </returns>
             internal static bool TryCreateTargetKey(
                 ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
             {
@@ -464,14 +464,14 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return true;
             }
 
-            /// <summary>
-            /// Initialize foreign key object for the source of a foreign key.
-            /// </summary>
-            /// <param name="metadata"> Sets Metadata </param>
-            /// <param name="record"> Record containing key value </param>
-            /// <param name="isInsert"> Indicates whether the key value is being inserted or deleted </param>
-            /// <param name="key"> Outputs key object </param>
-            /// <returns> true if the record contains key values for this constraint; false otherwise </returns>
+            // <summary>
+            // Initialize foreign key object for the source of a foreign key.
+            // </summary>
+            // <param name="metadata"> Sets Metadata </param>
+            // <param name="record"> Record containing key value </param>
+            // <param name="isInsert"> Indicates whether the key value is being inserted or deleted </param>
+            // <param name="key"> Outputs key object </param>
+            // <returns> true if the record contains key values for this constraint; false otherwise </returns>
             internal static bool TryCreateSourceKey(
                 ReferentialConstraint metadata, PropagatorResult record, bool isInsert, out ForeignKeyValue key)
             {
@@ -483,25 +483,25 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 return true;
             }
 
-            /// <summary>
-            /// Foreign key metadata.
-            /// </summary>
+            // <summary>
+            // Foreign key metadata.
+            // </summary>
             internal readonly ReferentialConstraint Metadata;
 
-            /// <summary>
-            /// Foreign key value.
-            /// </summary>
+            // <summary>
+            // Foreign key value.
+            // </summary>
             internal readonly CompositeKey Key;
 
-            /// <summary>
-            /// Indicates whether this is an inserted or deleted key value.
-            /// </summary>
+            // <summary>
+            // Indicates whether this is an inserted or deleted key value.
+            // </summary>
             internal readonly bool IsInsert;
         }
 
-        /// <summary>
-        /// Equality comparer for ForeignKey class.
-        /// </summary>
+        // <summary>
+        // Equality comparer for ForeignKey class.
+        // </summary>
         private class ForeignKeyValueComparer : IEqualityComparer<ForeignKeyValue>
         {
             private readonly IEqualityComparer<CompositeKey> _baseComparer;

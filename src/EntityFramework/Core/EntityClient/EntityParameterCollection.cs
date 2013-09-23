@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.EntityClient
         private static readonly Type _itemType = typeof(EntityParameter);
         private bool _isDirty;
 
-        /// <summary>
-        /// Constructs the EntityParameterCollection object
-        /// </summary>
+        // <summary>
+        // Constructs the EntityParameterCollection object
+        // </summary>
         internal EntityParameterCollection()
         {
         }
@@ -47,9 +47,9 @@ namespace System.Data.Entity.Core.EntityClient
             set { SetParameter(parameterName, value); }
         }
 
-        /// <summary>
-        /// Gets whether this collection has been changes since the last reset
-        /// </summary>
+        // <summary>
+        // Gets whether this collection has been changes since the last reset
+        // </summary>
         internal bool IsDirty
         {
             get
@@ -245,9 +245,9 @@ namespace System.Data.Entity.Core.EntityClient
             Insert(index, (object)value);
         }
 
-        /// <summary>
-        /// Marks that this collection has been changed
-        /// </summary>
+        // <summary>
+        // Marks that this collection has been changed
+        // </summary>
         private void OnChange()
         {
             _isDirty = true;
@@ -268,9 +268,9 @@ namespace System.Data.Entity.Core.EntityClient
             Remove((object)value);
         }
 
-        /// <summary>
-        /// Reset the dirty flag on the collection
-        /// </summary>
+        // <summary>
+        // Reset the dirty flag on the collection
+        // </summary>
         internal void ResetIsDirty()
         {
             _isDirty = false;

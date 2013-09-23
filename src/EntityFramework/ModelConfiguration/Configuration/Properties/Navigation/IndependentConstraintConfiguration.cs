@@ -7,9 +7,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Used to configure an independent constraint on a navigation property.
-    /// </summary>
+    // <summary>
+    // Used to configure an independent constraint on a navigation property.
+    // </summary>
     internal class IndependentConstraintConfiguration : ConstraintConfiguration
     {
         private static readonly ConstraintConfiguration _instance = new IndependentConstraintConfiguration();
@@ -18,9 +18,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
         {
         }
 
-        /// <summary>
-        /// Gets the Singleton instance of the IndependentConstraintConfiguration class.
-        /// </summary>
+        // <summary>
+        // Gets the Singleton instance of the IndependentConstraintConfiguration class.
+        // </summary>
         public static ConstraintConfiguration Instance
         {
             get { return _instance; }

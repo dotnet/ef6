@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
-    /// <summary>
-    /// Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.EnumMember" />.
-    /// </summary>
+    // <summary>
+    // Represents an eSQL metadata member expression classified as <see cref="MetadataMemberClass.EnumMember" />.
+    // </summary>
     internal sealed class MetadataEnumMember : MetadataMember
     {
         internal MetadataEnumMember(string name, TypeUsage enumType, EnumMember enumMember)

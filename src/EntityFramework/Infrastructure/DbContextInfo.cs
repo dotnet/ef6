@@ -157,10 +157,10 @@ namespace System.Data.Entity.Infrastructure
         {
         }
 
-        /// <summary>
-        /// Called internally when a context info is needed for an existing context, which may not be constructable.
-        /// </summary>
-        /// <param name="context"> The context instance to get info from. </param>
+        // <summary>
+        // Called internally when a context info is needed for an existing context, which may not be constructable.
+        // </summary>
+        // <param name="context"> The context instance to get info from. </param>
         internal DbContextInfo(DbContext context)
         {
             Check.NotNull(context, "context");

@@ -16,9 +16,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private readonly Type _type;
 
-        /// <summary>
-        /// cached dynamic method to construct a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to construct a CLR instance
+        // </summary>
         private Func<object> _constructor;
 
         private readonly string _cspaceTypeName;
@@ -27,10 +27,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private string _hash;
 
-        /// <summary>
-        /// Initializes a new instance of Complex Type with properties from the type.
-        /// </summary>
-        /// <param name="type"> The CLR type to construct from </param>
+        // <summary>
+        // Initializes a new instance of Complex Type with properties from the type.
+        // </summary>
+        // <param name="type"> The CLR type to construct from </param>
         internal ClrEntityType(Type type, string cspaceNamespaceName, string cspaceTypeName)
             : base(Check.NotNull(type, "type").Name, type.NestingNamespace() ?? string.Empty,
                 DataSpace.OSpace)
@@ -44,9 +44,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Abstract = type.IsAbstract;
         }
 
-        /// <summary>
-        /// cached dynamic method to construct a CLR instance
-        /// </summary>
+        // <summary>
+        // cached dynamic method to construct a CLR instance
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal Func<object> Constructor
         {
@@ -73,14 +73,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _cspaceNamespaceName; }
         }
 
-        /// <summary>
-        /// Gets a collision resistent (SHA256) hash of the information used to build
-        /// a proxy for this type.  This hash is very, very unlikely to be the same for two
-        /// proxies generated from the same CLR type but with different metadata, and is
-        /// guarenteed to be the same for proxies generated from the same metadata.  This
-        /// means that when EntityType comparison fails because of metadata eviction,
-        /// the hash can be used to determine whether or not a proxy is of the correct type.
-        /// </summary>
+        // <summary>
+        // Gets a collision resistent (SHA256) hash of the information used to build
+        // a proxy for this type.  This hash is very, very unlikely to be the same for two
+        // proxies generated from the same CLR type but with different metadata, and is
+        // guarenteed to be the same for proxies generated from the same metadata.  This
+        // means that when EntityType comparison fails because of metadata eviction,
+        // the hash can be used to determine whether or not a proxy is of the correct type.
+        // </summary>
         internal string HashedDescription
         {
             get
@@ -93,10 +93,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Creates an SHA256 hash of a description of all the metadata relevant to the creation of a proxy type
-        /// for this entity type.
-        /// </summary>
+        // <summary>
+        // Creates an SHA256 hash of a description of all the metadata relevant to the creation of a proxy type
+        // for this entity type.
+        // </summary>
         private string BuildEntityTypeHash()
         {
             using (var sha256HashAlgorithm = MetadataHelper.CreateSHA256HashAlgorithm())
@@ -114,10 +114,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Creates a description of all the metadata relevant to the creation of a proxy type
-        /// for this entity type.
-        /// </summary>
+        // <summary>
+        // Creates a description of all the metadata relevant to the creation of a proxy type
+        // for this entity type.
+        // </summary>
         private string BuildEntityTypeDescription()
         {
             var builder = new StringBuilder(512);

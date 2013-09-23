@@ -45,19 +45,19 @@ namespace System.Data.Entity.SqlServerCompact
 
         #region Internal Errors
 
-        /// <summary>
-        /// Internal error code to use with the InternalError exception.
-        /// </summary>
-        /// <remarks>
-        /// You must never renumber these, because we rely upon them when
-        /// we get an exception report once we release the bits.
-        /// </remarks>
+        // <summary>
+        // Internal error code to use with the InternalError exception.
+        // </summary>
+        // <remarks>
+        // You must never renumber these, because we rely upon them when
+        // we get an exception report once we release the bits.
+        // </remarks>
         internal enum InternalErrorCode
         {
-            /// <summary>
-            /// Thrown when SQL gen produces parameters for anything other than a
-            /// modification command tree.
-            /// </summary>
+            // <summary>
+            // Thrown when SQL gen produces parameters for anything other than a
+            // modification command tree.
+            // </summary>
             SqlGenParametersNotPermitted = 1017,
         }
 

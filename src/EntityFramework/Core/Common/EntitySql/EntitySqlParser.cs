@@ -14,9 +14,9 @@ namespace System.Data.Entity.Core.Common.EntitySql
     {
         private readonly Perspective _perspective;
 
-        /// <summary>
-        /// Construct a parser bound to the specified workspace with the specified perspective.
-        /// </summary>
+        // <summary>
+        // Construct a parser bound to the specified workspace with the specified perspective.
+        // </summary>
         internal EntitySqlParser(Perspective perspective)
         {
             DebugCheck.NotNull(perspective);

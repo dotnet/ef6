@@ -11,22 +11,22 @@ namespace System.Data.Entity.Internal.Linq
     using System.Linq.Expressions;
     using System.Reflection;
 
-    /// <summary>
-    /// A wrapping query provider that performs expression transformation and then delegates
-    /// to the <see cref="ObjectQuery" /> provider.  The <see cref="IQueryable" /> objects returned
-    /// are instances of <see cref="DbQuery{TResult}" /> when the generic CreateQuery method is
-    /// used and are instances of <see cref="DbQuery" /> when the non-generic CreateQuery method
-    /// is used.  This provider is associated with non-generic <see cref="DbQuery" /> objects.
-    /// </summary>
+    // <summary>
+    // A wrapping query provider that performs expression transformation and then delegates
+    // to the <see cref="ObjectQuery" /> provider.  The <see cref="IQueryable" /> objects returned
+    // are instances of <see cref="DbQuery{TResult}" /> when the generic CreateQuery method is
+    // used and are instances of <see cref="DbQuery" /> when the non-generic CreateQuery method
+    // is used.  This provider is associated with non-generic <see cref="DbQuery" /> objects.
+    // </summary>
     internal class NonGenericDbQueryProvider : DbQueryProvider
     {
         #region Fields and constructors
 
-        /// <summary>
-        /// Creates a provider that wraps the given provider.
-        /// </summary>
-        /// <param name="internalContext"> </param>
-        /// <param name="provider"> The provider to wrap. </param>
+        // <summary>
+        // Creates a provider that wraps the given provider.
+        // </summary>
+        // <param name="internalContext"> </param>
+        // <param name="provider"> The provider to wrap. </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public NonGenericDbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
             : base(internalContext, provider)
@@ -37,10 +37,10 @@ namespace System.Data.Entity.Internal.Linq
 
         #region IQueryProvider Members
 
-        /// <summary>
-        /// Performs expression replacement and then delegates to the wrapped provider before wrapping
-        /// the returned <see cref="ObjectQuery" /> as a <see cref="DbQuery" />.
-        /// </summary>
+        // <summary>
+        // Performs expression replacement and then delegates to the wrapped provider before wrapping
+        // the returned <see cref="ObjectQuery" /> as a <see cref="DbQuery" />.
+        // </summary>
         public override IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -59,9 +59,9 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TElement>(new InternalQuery<TElement>(InternalContext, objectQuery));
         }
 
-        /// <summary>
-        /// Delegates to the wrapped provider except returns instances of <see cref="DbQuery" />.
-        /// </summary>
+        // <summary>
+        // Delegates to the wrapped provider except returns instances of <see cref="DbQuery" />.
+        // </summary>
         public override IQueryable CreateQuery(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -69,10 +69,10 @@ namespace System.Data.Entity.Internal.Linq
             return CreateQuery(CreateObjectQuery(expression));
         }
 
-        /// <summary>
-        /// Creates an appropriate generic IQueryable using Reflection and the underlying ElementType of
-        /// the given ObjectQuery.
-        /// </summary>
+        // <summary>
+        // Creates an appropriate generic IQueryable using Reflection and the underlying ElementType of
+        // the given ObjectQuery.
+        // </summary>
         private IQueryable CreateQuery(ObjectQuery objectQuery)
         {
             var internalQuery = CreateInternalQuery(objectQuery);

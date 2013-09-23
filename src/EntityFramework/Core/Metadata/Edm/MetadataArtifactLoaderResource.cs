@@ -12,21 +12,21 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Reflection;
     using System.Xml;
 
-    /// <summary>
-    /// This class represents one resource item to be loaded from an assembly.
-    /// </summary>
+    // <summary>
+    // This class represents one resource item to be loaded from an assembly.
+    // </summary>
     internal class MetadataArtifactLoaderResource : MetadataArtifactLoader, IComparable
     {
         private readonly bool _alreadyLoaded;
         private readonly Assembly _assembly;
         private readonly string _resourceName;
 
-        /// <summary>
-        /// Constructor - loads the resource stream
-        /// </summary>
-        /// <param name="assembly"> </param>
-        /// <param name="resourceName"> </param>
-        /// <param name="uriRegistry"> The global registry of URIs </param>
+        // <summary>
+        // Constructor - loads the resource stream
+        // </summary>
+        // <param name="assembly"> </param>
+        // <param name="resourceName"> </param>
+        // <param name="uriRegistry"> The global registry of URIs </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderResource(Assembly assembly, string resourceName, ICollection<string> uriRegistry)
         {
@@ -54,11 +54,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return MetadataArtifactLoaderCompositeResource.CreateResPath(_assembly, _resourceName); }
         }
 
-        /// <summary>
-        /// Implementation of IComparable.CompareTo()
-        /// </summary>
-        /// <param name="obj"> The object to compare to </param>
-        /// <returns> 0 if the loaders are "equal" (i.e., have the same _path value) </returns>
+        // <summary>
+        // Implementation of IComparable.CompareTo()
+        // </summary>
+        // <param name="obj"> The object to compare to </param>
+        // <returns> 0 if the loaders are "equal" (i.e., have the same _path value) </returns>
         public int CompareTo(object obj)
         {
             var loader = obj as MetadataArtifactLoaderResource;
@@ -71,29 +71,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return -1;
         }
 
-        /// <summary>
-        /// Equals() returns true if the objects have the same _path value
-        /// </summary>
-        /// <param name="obj"> The object to compare to </param>
-        /// <returns> true if the objects have the same _path value </returns>
+        // <summary>
+        // Equals() returns true if the objects have the same _path value
+        // </summary>
+        // <param name="obj"> The object to compare to </param>
+        // <returns> true if the objects have the same _path value </returns>
         public override bool Equals(object obj)
         {
             return CompareTo(obj) == 0;
         }
 
-        /// <summary>
-        /// GetHashCode override that defers the result to the _path member variable.
-        /// </summary>
+        // <summary>
+        // GetHashCode override that defers the result to the _path member variable.
+        // </summary>
         public override int GetHashCode()
         {
             return Path.GetHashCode();
         }
 
-        /// <summary>
-        /// Get paths to artifacts for a specific DataSpace.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
-        /// <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
+        // <summary>
+        // Get paths to artifacts for a specific DataSpace.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace for the artifacts of interest </param>
+        // <returns> A List of strings identifying paths to all artifacts for a specific DataSpace </returns>
         public override List<string> GetPaths(DataSpace spaceToGet)
         {
             var list = new List<string>();
@@ -105,10 +105,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Get paths to all artifacts
-        /// </summary>
-        /// <returns> A List of strings identifying paths to all resources </returns>
+        // <summary>
+        // Get paths to all artifacts
+        // </summary>
+        // <returns> A List of strings identifying paths to all resources </returns>
         public override List<string> GetPaths()
         {
             var list = new List<string>();
@@ -119,10 +119,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// Create and return an XmlReader around the resource represented by this instance.
-        /// </summary>
-        /// <returns> A List of XmlReaders for all resources </returns>
+        // <summary>
+        // Create and return an XmlReader around the resource represented by this instance.
+        // </summary>
+        // <returns> A List of XmlReaders for all resources </returns>
         public override List<XmlReader> GetReaders(Dictionary<MetadataArtifactLoader, XmlReader> sourceDictionary)
         {
             var list = new List<XmlReader>();
@@ -157,12 +157,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return reader;
         }
 
-        /// <summary>
-        /// Create and return an XmlReader around the resource represented by this instance
-        /// if it is of the requested DataSpace type.
-        /// </summary>
-        /// <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
-        /// <returns> A List of XmlReader objects </returns>
+        // <summary>
+        // Create and return an XmlReader around the resource represented by this instance
+        // if it is of the requested DataSpace type.
+        // </summary>
+        // <param name="spaceToGet"> The DataSpace corresponding to the requested artifacts </param>
+        // <returns> A List of XmlReader objects </returns>
         public override List<XmlReader> CreateReaders(DataSpace spaceToGet)
         {
             var list = new List<XmlReader>();
@@ -177,10 +177,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return list;
         }
 
-        /// <summary>
-        /// This method parses the path to the resource and attempts to load it.
-        /// The method also accounts for the wildcard assembly name.
-        /// </summary>
+        // <summary>
+        // This method parses the path to the resource and attempts to load it.
+        // The method also accounts for the wildcard assembly name.
+        // </summary>
         private Stream LoadResource()
         {
             Stream resourceStream;

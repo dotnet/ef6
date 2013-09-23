@@ -14,11 +14,11 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
-        /// <summary>
-        /// Returns the Item that is being mapped either for ES or OE spaces.
-        /// The EDM type will be an EntityContainer type in ES mapping case.
-        /// In the OE mapping case it could be any type.
-        /// </summary>
+        // <summary>
+        // Returns the Item that is being mapped either for ES or OE spaces.
+        // The EDM type will be an EntityContainer type in ES mapping case.
+        // In the OE mapping case it could be any type.
+        // </summary>
         internal abstract MetadataItem EdmItem { get; }
     }
 }

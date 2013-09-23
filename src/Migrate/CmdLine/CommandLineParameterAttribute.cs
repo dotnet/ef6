@@ -62,9 +62,9 @@ namespace CmdLine
 
         private string description;
 
-        /// <summary>
-        /// The description of the command
-        /// </summary>
+        // <summary>
+        // The description of the command
+        // </summary>
         public string Description
         {
             get
@@ -87,9 +87,9 @@ namespace CmdLine
 
         private string descriptionResourceId;
 
-        /// <summary>
-        /// The resource id of the command description
-        /// </summary>
+        // <summary>
+        // The resource id of the command description
+        // </summary>
         public string DescriptionResourceId
         {
             get { return descriptionResourceId; }
@@ -180,22 +180,22 @@ namespace CmdLine
             }
         }
 
-        /// <summary>
-        /// Searches a type for all properties with the CommandLineParameterAttribute and does action
-        /// </summary>
-        /// <param name="argumentType"> The argument type </param>
-        /// <param name="action"> The action to apply </param>
+        // <summary>
+        // Searches a type for all properties with the CommandLineParameterAttribute and does action
+        // </summary>
+        // <param name="argumentType"> The argument type </param>
+        // <param name="action"> The action to apply </param>
         internal static void ForEach(Type argumentType, Action<CommandLineParameter> action)
         {
             ForEach(argumentType, GetAll, action);
         }
 
-        /// <summary>
-        /// Searches a type for all properties with the CommandLineParameterAttribute and does action
-        /// </summary>
-        /// <param name="argumentType"> The argument type </param>
-        /// <param name="selector"> </param>
-        /// <param name="action"> The action to apply </param>
+        // <summary>
+        // Searches a type for all properties with the CommandLineParameterAttribute and does action
+        // </summary>
+        // <param name="argumentType"> The argument type </param>
+        // <param name="selector"> </param>
+        // <param name="action"> The action to apply </param>
         internal static void ForEach(
             Type argumentType, Func<PropertyInfo, IEnumerable<CommandLineParameterAttribute>> selector,
             Action<CommandLineParameter> action)

@@ -10,14 +10,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
     using System.Diagnostics;
     using System.Text;
 
-    /// <summary>
-    /// Encapsulates a slot in a particular cql block.
-    /// </summary>
+    // <summary>
+    // Encapsulates a slot in a particular cql block.
+    // </summary>
     internal sealed class QualifiedSlot : ProjectedSlot
     {
-        /// <summary>
-        /// Creates a qualified slot "block_alias.slot_alias"
-        /// </summary>
+        // <summary>
+        // Creates a qualified slot "block_alias.slot_alias"
+        // </summary>
         internal QualifiedSlot(CqlBlock block, ProjectedSlot slot)
         {
             DebugCheck.NotNull(block);
@@ -30,11 +30,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         private readonly CqlBlock m_block;
         private readonly ProjectedSlot m_slot;
 
-        /// <summary>
-        /// Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
-        /// If current slot is composite (such as <see cref="CaseStatementProjectedSlot" />, then this method recursively qualifies all parts
-        /// and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias" />).
-        /// </summary>
+        // <summary>
+        // Creates new <see cref="ProjectedSlot" /> that is qualified with <paramref name="block" />.CqlAlias.
+        // If current slot is composite (such as <see cref="CaseStatementProjectedSlot" />, then this method recursively qualifies all parts
+        // and returns a new deeply qualified slot (as opposed to <see cref="CqlBlock.QualifySlotWithBlockAlias" />).
+        // </summary>
         internal override ProjectedSlot DeepQualify(CqlBlock block)
         {
             // We take the slot inside this and change the block
@@ -42,9 +42,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             return result;
         }
 
-        /// <summary>
-        /// Delegates alias generation to the leaf slot in the qualified chain.
-        /// </summary>
+        // <summary>
+        // Delegates alias generation to the leaf slot in the qualified chain.
+        // </summary>
         internal override string GetCqlFieldAlias(MemberPath outputMember)
         {
             // Keep looking inside the chain of qualified slots till we find a non-qualified slot and then get the alias name for it.
@@ -52,9 +52,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
             return result;
         }
 
-        /// <summary>
-        /// Walks the chain of <see cref="QualifiedSlot" />s starting from the current one and returns the original slot.
-        /// </summary>
+        // <summary>
+        // Walks the chain of <see cref="QualifiedSlot" />s starting from the current one and returns the original slot.
+        // </summary>
         internal ProjectedSlot GetOriginalSlot()
         {
             var slot = m_slot;

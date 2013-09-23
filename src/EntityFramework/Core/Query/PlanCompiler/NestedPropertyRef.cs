@@ -4,20 +4,20 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// A nested propertyref describes a nested property access - think "a.b.c"
-    /// </summary>
+    // <summary>
+    // A nested propertyref describes a nested property access - think "a.b.c"
+    // </summary>
     internal class NestedPropertyRef : PropertyRef
     {
         private readonly PropertyRef m_inner;
         private readonly PropertyRef m_outer;
 
-        /// <summary>
-        /// Basic constructor.
-        /// Represents the access of property "propertyRef" within property "property"
-        /// </summary>
-        /// <param name="innerProperty"> the inner property </param>
-        /// <param name="outerProperty"> the outer property </param>
+        // <summary>
+        // Basic constructor.
+        // Represents the access of property "propertyRef" within property "property"
+        // </summary>
+        // <param name="innerProperty"> the inner property </param>
+        // <param name="outerProperty"> the outer property </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NestedPropertyRef")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "innerProperty")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -29,26 +29,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             m_outer = outerProperty;
         }
 
-        /// <summary>
-        /// the nested property
-        /// </summary>
+        // <summary>
+        // the nested property
+        // </summary>
         internal PropertyRef OuterProperty
         {
             get { return m_outer; }
         }
 
-        /// <summary>
-        /// the parent property
-        /// </summary>
+        // <summary>
+        // the parent property
+        // </summary>
         internal PropertyRef InnerProperty
         {
             get { return m_inner; }
         }
 
-        /// <summary>
-        /// Overrides the default equality function. Two NestedPropertyRefs are
-        /// equal if the have the same property name, and the types are the same
-        /// </summary>
+        // <summary>
+        // Overrides the default equality function. Two NestedPropertyRefs are
+        // equal if the have the same property name, and the types are the same
+        // </summary>
         public override bool Equals(object obj)
         {
             var other = obj as NestedPropertyRef;
@@ -57,10 +57,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                     m_outer.Equals(other.m_outer));
         }
 
-        /// <summary>
-        /// Overrides the default hashcode function. Simply adds the hashcodes
-        /// of the "property" and "propertyRef" fields
-        /// </summary>
+        // <summary>
+        // Overrides the default hashcode function. Simply adds the hashcodes
+        // of the "property" and "propertyRef" fields
+        // </summary>
         public override int GetHashCode()
         {
             return m_inner.GetHashCode() ^ m_outer.GetHashCode();

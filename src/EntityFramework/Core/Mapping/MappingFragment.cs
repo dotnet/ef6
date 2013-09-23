@@ -198,25 +198,25 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// Table extent from which the properties are mapped under this fragment.
-        /// </summary>
+        // <summary>
+        // Table extent from which the properties are mapped under this fragment.
+        // </summary>
         private EntitySet m_tableExtent;
 
-        /// <summary>
-        /// Type mapping under which this mapping fragment exists.
-        /// </summary>
+        // <summary>
+        // Type mapping under which this mapping fragment exists.
+        // </summary>
         private readonly TypeMapping m_typeMapping;
 
-        /// <summary>
-        /// Condition property mappings for this mapping fragment.
-        /// </summary>
+        // <summary>
+        // Condition property mappings for this mapping fragment.
+        // </summary>
         private readonly Dictionary<EdmProperty, ConditionPropertyMapping> m_conditionProperties =
             new Dictionary<EdmProperty, ConditionPropertyMapping>(EqualityComparer<EdmProperty>.Default);
 
-        /// <summary>
-        /// All the other properties .
-        /// </summary>
+        // <summary>
+        // All the other properties .
+        // </summary>
         private readonly List<PropertyMapping> m_properties = new List<PropertyMapping>();
 
         private readonly bool m_isSQueryDistinct;
@@ -237,9 +237,9 @@ namespace System.Data.Entity.Core.Mapping
             }
         }
 
-        /// <summary>
-        /// The table from which the properties are mapped in this fragment
-        /// </summary>
+        // <summary>
+        // The table from which the properties are mapped in this fragment
+        // </summary>
         internal EntitySet TableSet
         {
             get { return StoreEntitySet; }
@@ -272,10 +272,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return MakeColumnsDistinct; }
         }
 
-        /// <summary>
-        /// Returns all the property mappings defined in the complex type mapping
-        /// including Properties and Condition Properties
-        /// </summary>
+        // <summary>
+        // Returns all the property mappings defined in the complex type mapping
+        // including Properties and Condition Properties
+        // </summary>
         internal ReadOnlyCollection<PropertyMapping> AllProperties
         {
             get
@@ -353,19 +353,19 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_conditionProperties.Values; }
         }
 
-        /// <summary>
-        /// Line Number in MSL file where the Mapping Fragment Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Number in MSL file where the Mapping Fragment Element's Start Tag is present.
+        // </summary>
         internal int StartLineNumber { get; set; }
 
-        /// <summary>
-        /// Line Position in MSL file where the Mapping Fragment Element's Start Tag is present.
-        /// </summary>
+        // <summary>
+        // Line Position in MSL file where the Mapping Fragment Element's Start Tag is present.
+        // </summary>
         internal int StartLinePosition { get; set; }
 
-        /// <summary>
-        /// File URI of the MSL file
-        /// </summary>
+        // <summary>
+        // File URI of the MSL file
+        // </summary>
         //This should not be stored on the Fragment. Probably it should go on schema.
         //But this requires some thinking before we can finally decide where it should go.
         internal string SourceLocation
@@ -442,11 +442,11 @@ namespace System.Data.Entity.Core.Mapping
             AddConditionProperty(conditionPropertyMap, _ => { });
         }
 
-        /// <summary>
-        /// Add a condition property mapping as a child of this complex property mapping
-        /// Condition Property Mapping specifies a Condition either on the C side property or S side property.
-        /// </summary>
-        /// <param name="conditionPropertyMap"> The mapping that needs to be added </param>
+        // <summary>
+        // Add a condition property mapping as a child of this complex property mapping
+        // Condition Property Mapping specifies a Condition either on the C side property or S side property.
+        // </summary>
+        // <param name="conditionPropertyMap"> The mapping that needs to be added </param>
         internal void AddConditionProperty(
             ConditionPropertyMapping conditionPropertyMap, Action<EdmMember> duplicateMemberConditionError)
         {

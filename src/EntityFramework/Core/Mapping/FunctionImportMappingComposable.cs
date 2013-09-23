@@ -18,9 +18,9 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a mapping from a model function import to a store composable function.
-    /// </summary>
+    // <summary>
+    // Represents a mapping from a model function import to a store composable function.
+    // </summary>
     internal class FunctionImportMappingComposable : FunctionImportMapping
     {
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
@@ -98,26 +98,26 @@ namespace System.Data.Entity.Core.Mapping
 
         private readonly StorageMappingItemCollection m_mappingItemCollection;
 
-        /// <summary>
-        /// Command parameter refs created from m_edmFunction parameters.
-        /// Used as arguments to target (s-space) function calls in the generated command tree.
-        /// </summary>
+        // <summary>
+        // Command parameter refs created from m_edmFunction parameters.
+        // Used as arguments to target (s-space) function calls in the generated command tree.
+        // </summary>
         private readonly DbParameterReferenceExpression[] m_commandParameters;
 
-        /// <summary>
-        /// Result mapping as entity type hierarchy.
-        /// </summary>
+        // <summary>
+        // Result mapping as entity type hierarchy.
+        // </summary>
         private readonly List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
             m_structuralTypeMappings;
 
-        /// <summary>
-        /// Keys inside the result set of the target function. Inferred based on the mapping (using c-space entity type keys).
-        /// </summary>
+        // <summary>
+        // Keys inside the result set of the target function. Inferred based on the mapping (using c-space entity type keys).
+        // </summary>
         private readonly EdmProperty[] m_targetFunctionKeys;
 
-        /// <summary>
-        /// ITree template. Requires function argument substitution during function view expansion.
-        /// </summary>
+        // <summary>
+        // ITree template. Requires function argument substitution during function view expansion.
+        // </summary>
         private Node m_internalTreeNode;
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

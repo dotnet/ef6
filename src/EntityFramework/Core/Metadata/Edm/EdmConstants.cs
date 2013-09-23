@@ -193,9 +193,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         internal const string CommandTextFunctionAttribyte = "CommandText";
         internal const string StoreFunctionNameAttribute = "StoreFunctionNameAttribute";
 
-        /// <summary>
-        /// Used to denote application home directory in a Web/ASP.NET context
-        /// </summary>
+        // <summary>
+        // Used to denote application home directory in a Web/ASP.NET context
+        // </summary>
         internal const string WebHomeSymbol = "~";
 
         // Name of Properties belonging to EDM's Documentation construct

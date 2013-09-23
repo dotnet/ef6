@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
@@ -11,9 +11,9 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Linq;
     using System.Reflection;
 
-    /// <summary>
-    /// Factory class for creating IEntityWrapper instances.
-    /// </summary>
+    // <summary>
+    // Factory class for creating IEntityWrapper instances.
+    // </summary>
     internal class EntityWrapperFactory
     {
         // A cache of functions used to create IEntityWrapper instances for a given type
@@ -29,16 +29,16 @@ namespace System.Data.Entity.Core.Objects.Internal
         internal static readonly MethodInfo CreateWrapperDelegateTypedWithoutRelationshipsMethod
             = typeof(EntityWrapperFactory).GetDeclaredMethod("CreateWrapperDelegateTypedWithoutRelationships");
 
-        /// <summary>
-        /// Called to create a new wrapper outside of the normal materialization process.
-        /// This method is typically used when a new entity is created outside the context and then is
-        /// added or attached.  The materializer bypasses this method and calls wrapper constructors
-        /// directory for performance reasons.
-        /// This method does not check whether or not the wrapper already exists in the context.
-        /// </summary>
-        /// <param name="entity"> The entity for which a wrapper will be created </param>
-        /// <param name="key"> The key associated with that entity, or null </param>
-        /// <returns> The new wrapper instance </returns>
+        // <summary>
+        // Called to create a new wrapper outside of the normal materialization process.
+        // This method is typically used when a new entity is created outside the context and then is
+        // added or attached.  The materializer bypasses this method and calls wrapper constructors
+        // directory for performance reasons.
+        // This method does not check whether or not the wrapper already exists in the context.
+        // </summary>
+        // <param name="entity"> The entity for which a wrapper will be created </param>
+        // <param name="key"> The key associated with that entity, or null </param>
+        // <returns> The new wrapper instance </returns>
         internal static IEntityWrapper CreateNewWrapper(object entity, EntityKey key)
         {
             Debug.Assert(!(entity is IEntityWrapper), "Object is an IEntityWrapper instance instead of the raw entity.");
@@ -101,9 +101,9 @@ namespace System.Data.Entity.Core.Objects.Internal
             return (Func<object, IEntityWrapper>)createDelegate.Invoke(null, new object[0]);
         }
 
-        /// <summary>
-        /// Returns a delegate that creates the fast LightweightEntityWrapper
-        /// </summary>
+        // <summary>
+        // Returns a delegate that creates the fast LightweightEntityWrapper
+        // </summary>
         private static Func<object, IEntityWrapper> CreateWrapperDelegateTypedLightweight<TEntity>()
             where TEntity : class, IEntityWithRelationships, IEntityWithKey, IEntityWithChangeTracker
         {
@@ -185,56 +185,56 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        /// <summary>
-        /// Convenience function that gets the ObjectStateManager from the context and calls
-        /// WrapEntityUsingStateManager.
-        /// </summary>
-        /// <param name="entity"> the entity to wrap </param>
-        /// <param name="context"> the context in which the entity may exist, or null </param>
-        /// <returns> a new or existing wrapper </returns>
+        // <summary>
+        // Convenience function that gets the ObjectStateManager from the context and calls
+        // WrapEntityUsingStateManager.
+        // </summary>
+        // <param name="entity"> the entity to wrap </param>
+        // <param name="context"> the context in which the entity may exist, or null </param>
+        // <returns> a new or existing wrapper </returns>
         internal IEntityWrapper WrapEntityUsingContext(object entity, ObjectContext context)
         {
             EntityEntry existingEntry;
             return WrapEntityUsingStateManagerGettingEntry(entity, context == null ? null : context.ObjectStateManager, out existingEntry);
         }
 
-        /// <summary>
-        /// Convenience function that gets the ObjectStateManager from the context and calls
-        /// WrapEntityUsingStateManager.
-        /// </summary>
-        /// <param name="entity"> The entity to wrap </param>
-        /// <param name="context"> The context in which the entity may exist, or null </param>
-        /// <param name="existingEntry"> Set to the existing state entry if one is found, else null </param>
-        /// <returns> a new or existing wrapper </returns>
+        // <summary>
+        // Convenience function that gets the ObjectStateManager from the context and calls
+        // WrapEntityUsingStateManager.
+        // </summary>
+        // <param name="entity"> The entity to wrap </param>
+        // <param name="context"> The context in which the entity may exist, or null </param>
+        // <param name="existingEntry"> Set to the existing state entry if one is found, else null </param>
+        // <returns> a new or existing wrapper </returns>
         internal IEntityWrapper WrapEntityUsingContextGettingEntry(
             object entity, ObjectContext context, out EntityEntry existingEntry)
         {
             return WrapEntityUsingStateManagerGettingEntry(entity, context == null ? null : context.ObjectStateManager, out existingEntry);
         }
 
-        /// <summary>
-        /// Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
-        /// already exists in the ObjectStateManager or in a RelationshipManager associated with
-        /// the entity.
-        /// </summary>
-        /// <param name="entity"> the entity to wrap </param>
-        /// <param name="stateManager"> the state manager in which the entity may exist, or null </param>
-        /// <returns> a new or existing wrapper </returns>
+        // <summary>
+        // Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
+        // already exists in the ObjectStateManager or in a RelationshipManager associated with
+        // the entity.
+        // </summary>
+        // <param name="entity"> the entity to wrap </param>
+        // <param name="stateManager"> the state manager in which the entity may exist, or null </param>
+        // <returns> a new or existing wrapper </returns>
         internal IEntityWrapper WrapEntityUsingStateManager(object entity, ObjectStateManager stateManager)
         {
             EntityEntry existingEntry;
             return WrapEntityUsingStateManagerGettingEntry(entity, stateManager, out existingEntry);
         }
 
-        /// <summary>
-        /// Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
-        /// already exists in the ObjectStateManager or in a RelationshipManager associated with
-        /// the entity.
-        /// </summary>
-        /// <param name="entity"> The entity to wrap </param>
-        /// <param name="stateManager"> The state manager in which the entity may exist, or null </param>
-        /// <param name="existingEntry"> The existing state entry for the given entity if one exists, otherwise null </param>
-        /// <returns> A new or existing wrapper </returns>
+        // <summary>
+        // Wraps an entity and returns a new wrapper, or returns an existing wrapper if one
+        // already exists in the ObjectStateManager or in a RelationshipManager associated with
+        // the entity.
+        // </summary>
+        // <param name="entity"> The entity to wrap </param>
+        // <param name="stateManager"> The state manager in which the entity may exist, or null </param>
+        // <param name="existingEntry"> The existing state entry for the given entity if one exists, otherwise null </param>
+        // <returns> A new or existing wrapper </returns>
         internal virtual IEntityWrapper WrapEntityUsingStateManagerGettingEntry(
             object entity, ObjectStateManager stateManager, out EntityEntry existingEntry)
         {
@@ -301,13 +301,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             return wrapper;
         }
 
-        /// <summary>
-        /// When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
-        /// assumed to be present. This method updates the wrapper with a key and a context.
-        /// </summary>
-        /// <param name="wrapper"> The wrapped entity </param>
-        /// <param name="context"> The context that will be using this wrapper </param>
-        /// <param name="entitySet"> The entity set this wrapped entity belongs to </param>
+        // <summary>
+        // When an entity enters Object Services that was retreived with NoTracking, it may not have certain fields set that are in many cases
+        // assumed to be present. This method updates the wrapper with a key and a context.
+        // </summary>
+        // <param name="wrapper"> The wrapped entity </param>
+        // <param name="context"> The context that will be using this wrapper </param>
+        // <param name="entitySet"> The entity set this wrapped entity belongs to </param>
         internal virtual void UpdateNoTrackingWrapper(IEntityWrapper wrapper, ObjectContext context, EntitySet entitySet)
         {
             if (wrapper.EntityKey == null)
@@ -320,55 +320,55 @@ namespace System.Data.Entity.Core.Objects.Internal
             }
         }
 
-        /// <summary>
-        /// Returns a func that will create a PocoPropertyAccessorStrategy object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a PocoPropertyAccessorStrategy object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IPropertyAccessorStrategy> GetPocoPropertyAccessorStrategyFunc()
         {
             return (object entity) => new PocoPropertyAccessorStrategy(entity);
         }
 
-        /// <summary>
-        /// Returns a func that will create a null IPropertyAccessorStrategy strategy object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a null IPropertyAccessorStrategy strategy object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IPropertyAccessorStrategy> GetNullPropertyAccessorStrategyFunc()
         {
             return (object entity) => null;
         }
 
-        /// <summary>
-        /// Returns a func that will create a EntityWithChangeTrackerStrategy object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a EntityWithChangeTrackerStrategy object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IChangeTrackingStrategy> GetEntityWithChangeTrackerStrategyFunc()
         {
             return (object entity) => new EntityWithChangeTrackerStrategy((IEntityWithChangeTracker)entity);
         }
 
-        /// <summary>
-        /// Returns a func that will create a SnapshotChangeTrackingStrategy object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a SnapshotChangeTrackingStrategy object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IChangeTrackingStrategy> GetSnapshotChangeTrackingStrategyFunc()
         {
             return (object entity) => SnapshotChangeTrackingStrategy.Instance;
         }
 
-        /// <summary>
-        /// Returns a func that will create a EntityWithKeyStrategy object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a EntityWithKeyStrategy object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IEntityKeyStrategy> GetEntityWithKeyStrategyStrategyFunc()
         {
             return (object entity) => new EntityWithKeyStrategy((IEntityWithKey)entity);
         }
 
-        /// <summary>
-        /// Returns a func that will create a GetPocoEntityKeyStrategyFunc object for a given entity.
-        /// </summary>
-        /// <returns> The func to be used to create the strategy object. </returns>
+        // <summary>
+        // Returns a func that will create a GetPocoEntityKeyStrategyFunc object for a given entity.
+        // </summary>
+        // <returns> The func to be used to create the strategy object. </returns>
         internal static Func<object, IEntityKeyStrategy> GetPocoEntityKeyStrategyFunc()
         {
             return (object entity) => new PocoEntityKeyStrategy();

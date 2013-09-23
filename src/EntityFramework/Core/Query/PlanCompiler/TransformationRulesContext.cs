@@ -14,54 +14,54 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     {
         #region public methods and properties
 
-        /// <summary>
-        /// Whether any rule was applied that may have caused modifications such that projection pruning
-        /// may be useful
-        /// </summary>
+        // <summary>
+        // Whether any rule was applied that may have caused modifications such that projection pruning
+        // may be useful
+        // </summary>
         internal bool ProjectionPrunningRequired
         {
             get { return m_projectionPrunningRequired; }
         }
 
-        /// <summary>
-        /// Whether any rule was applied that may have caused modifications such that reapplying
-        /// the nullability rules may be useful
-        /// </summary>
+        // <summary>
+        // Whether any rule was applied that may have caused modifications such that reapplying
+        // the nullability rules may be useful
+        // </summary>
         internal bool ReapplyNullabilityRules
         {
             get { return m_reapplyNullabilityRules; }
         }
 
-        /// <summary>
-        /// Remap the given subree using the current remapper
-        /// </summary>
+        // <summary>
+        // Remap the given subree using the current remapper
+        // </summary>
         internal void RemapSubtree(Node subTree)
         {
             m_remapper.RemapSubtree(subTree);
         }
 
-        /// <summary>
-        /// Adds a mapping from oldVar to newVar
-        /// </summary>
+        // <summary>
+        // Adds a mapping from oldVar to newVar
+        // </summary>
         internal void AddVarMapping(Var oldVar, Var newVar)
         {
             m_remapper.AddMapping(oldVar, newVar);
             m_remappedVars.Set(oldVar);
         }
 
-        /// <summary>
-        /// "Remap" an expression tree, replacing all references to vars in varMap with
-        /// copies of the corresponding expression
-        /// The subtree is modified *inplace* - it is the caller's responsibility to make
-        /// a copy of the subtree if necessary.
-        /// The "replacement" expression (the replacement for the VarRef) is copied and then
-        /// inserted into the appropriate location into the subtree.
-        /// Note: we only support replacements in simple ScalarOp trees. This must be
-        /// validated by the caller.
-        /// </summary>
-        /// <param name="node"> Current subtree to process </param>
-        /// <param name="varMap"> </param>
-        /// <returns> The updated subtree </returns>
+        // <summary>
+        // "Remap" an expression tree, replacing all references to vars in varMap with
+        // copies of the corresponding expression
+        // The subtree is modified *inplace* - it is the caller's responsibility to make
+        // a copy of the subtree if necessary.
+        // The "replacement" expression (the replacement for the VarRef) is copied and then
+        // inserted into the appropriate location into the subtree.
+        // Note: we only support replacements in simple ScalarOp trees. This must be
+        // validated by the caller.
+        // </summary>
+        // <param name="node"> Current subtree to process </param>
+        // <param name="varMap"> </param>
+        // <returns> The updated subtree </returns>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
@@ -98,12 +98,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return node;
         }
 
-        /// <summary>
-        /// Makes a copy of the appropriate subtree - with a simple accelerator for VarRefOp
-        /// since that's likely to be the most command case
-        /// </summary>
-        /// <param name="node"> the subtree to copy </param>
-        /// <returns> the copy of the subtree </returns>
+        // <summary>
+        // Makes a copy of the appropriate subtree - with a simple accelerator for VarRefOp
+        // since that's likely to be the most command case
+        // </summary>
+        // <param name="node"> the subtree to copy </param>
+        // <returns> the copy of the subtree </returns>
         internal Node Copy(Node node)
         {
             if (node.Op.OpType
@@ -118,23 +118,23 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Checks to see if the current subtree only contains ScalarOps
-        /// </summary>
-        /// <param name="node"> current subtree </param>
-        /// <returns> true, if the subtree contains only ScalarOps </returns>
+        // <summary>
+        // Checks to see if the current subtree only contains ScalarOps
+        // </summary>
+        // <param name="node"> current subtree </param>
+        // <returns> true, if the subtree contains only ScalarOps </returns>
         internal bool IsScalarOpTree(Node node)
         {
             var nodeCount = 0;
             return IsScalarOpTree(node, null, ref nodeCount);
         }
 
-        /// <summary>
-        /// Is the given var guaranteed to be non-nullable with regards to the node
-        /// that is currently being processed.
-        /// True, if it is listed as such on any on the node infos on any of the
-        /// current relop ancestors.
-        /// </summary>
+        // <summary>
+        // Is the given var guaranteed to be non-nullable with regards to the node
+        // that is currently being processed.
+        // True, if it is listed as such on any on the node infos on any of the
+        // current relop ancestors.
+        // </summary>
         internal bool IsNonNullable(Var var)
         {
             foreach (var relOpAncestor in m_relOpAncestors)
@@ -157,17 +157,17 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return false;
         }
 
-        /// <summary>
-        /// Is it safe to use a null sentinel with any value?
-        /// It may not be safe if:
-        /// 1. The top most sort includes null sentinels. If the null sentinel is replaced with a different value
-        /// and is used as a sort key it may change the sorting results
-        /// 2. If any of the ancestors is Distinct, GroupBy, Intersect or Except,
-        /// because the null sentinel may be used as a key.
-        /// 3. If the null sentinel is defined in the left child of an apply it may be used at the right side,
-        /// thus in these cases we also verify that the right hand side does not have any Distinct, GroupBy,
-        /// Intersect or Except.
-        /// </summary>
+        // <summary>
+        // Is it safe to use a null sentinel with any value?
+        // It may not be safe if:
+        // 1. The top most sort includes null sentinels. If the null sentinel is replaced with a different value
+        // and is used as a sort key it may change the sorting results
+        // 2. If any of the ancestors is Distinct, GroupBy, Intersect or Except,
+        // because the null sentinel may be used as a key.
+        // 3. If the null sentinel is defined in the left child of an apply it may be used at the right side,
+        // thus in these cases we also verify that the right hand side does not have any Distinct, GroupBy,
+        // Intersect or Except.
+        // </summary>
         internal bool CanChangeNullSentinelValue
         {
             get
@@ -204,9 +204,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Is the op not safe for null sentinel value change
-        /// </summary>
+        // <summary>
+        // Is the op not safe for null sentinel value change
+        // </summary>
         internal static bool IsOpNotSafeForNullSentinelValueChange(OpType optype)
         {
             return optype == OpType.Distinct ||
@@ -215,10 +215,10 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                    optype == OpType.Except;
         }
 
-        /// <summary>
-        /// Does the given subtree contain a node with an op that
-        /// is not safer for null sentinel value change
-        /// </summary>
+        // <summary>
+        // Does the given subtree contain a node with an op that
+        // is not safer for null sentinel value change
+        // </summary>
         internal static bool HasOpNotSafeForNullSentinelValueChange(Node n)
         {
             if (IsOpNotSafeForNullSentinelValueChange(n.Op.OpType))
@@ -235,13 +235,13 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return false;
         }
 
-        /// <summary>
-        /// Is this is a scalar-op tree? Also return a dictionary of var refcounts (ie)
-        /// for each var encountered in the tree, determine the number of times it has
-        /// been seen
-        /// </summary>
-        /// <param name="node"> current subtree </param>
-        /// <param name="varRefMap"> dictionary of var refcounts to fill in </param>
+        // <summary>
+        // Is this is a scalar-op tree? Also return a dictionary of var refcounts (ie)
+        // for each var encountered in the tree, determine the number of times it has
+        // been seen
+        // </summary>
+        // <param name="node"> current subtree </param>
+        // <param name="varRefMap"> dictionary of var refcounts to fill in </param>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varRef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -253,19 +253,19 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return IsScalarOpTree(node, varRefMap, ref nodeCount);
         }
 
-        /// <summary>
-        /// Get a mapping from Var->Expression for a VarDefListOp tree. This information
-        /// will be used by later stages to replace all references to the Vars by the
-        /// corresponding expressions
-        /// This function uses a few heuristics along the way. It uses the varRefMap
-        /// parameter to determine if a computed Var (defined by this VarDefListOp)
-        /// has been referenced multiple times, and if it has, it checks to see if
-        /// the defining expression is too big (> 100 nodes). This is to avoid
-        /// bloating up the entire query tree with too many copies.
-        /// </summary>
-        /// <param name="varDefListNode"> The varDefListOp subtree </param>
-        /// <param name="varRefMap"> ref counts for each referenced var </param>
-        /// <returns> mapping from Var->replacement xpressions </returns>
+        // <summary>
+        // Get a mapping from Var->Expression for a VarDefListOp tree. This information
+        // will be used by later stages to replace all references to the Vars by the
+        // corresponding expressions
+        // This function uses a few heuristics along the way. It uses the varRefMap
+        // parameter to determine if a computed Var (defined by this VarDefListOp)
+        // has been referenced multiple times, and if it has, it checks to see if
+        // the defining expression is too big (> 100 nodes). This is to avoid
+        // bloating up the entire query tree with too many copies.
+        // </summary>
+        // <param name="varDefListNode"> The varDefListOp subtree </param>
+        // <param name="varRefMap"> ref counts for each referenced var </param>
+        // <returns> mapping from Var->replacement xpressions </returns>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "varDef")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -315,14 +315,14 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             return varMap;
         }
 
-        /// <summary>
-        /// Builds a NULLIF expression (ie) a Case expression that looks like
-        /// CASE WHEN v is null THEN null ELSE expr END
-        /// where v is the conditionVar parameter, and expr is the value of the expression
-        /// when v is non-null
-        /// </summary>
-        /// <param name="conditionVar"> null discriminator var </param>
-        /// <param name="expr"> expression </param>
+        // <summary>
+        // Builds a NULLIF expression (ie) a Case expression that looks like
+        // CASE WHEN v is null THEN null ELSE expr END
+        // where v is the conditionVar parameter, and expr is the value of the expression
+        // when v is non-null
+        // </summary>
+        // <param name="conditionVar"> null discriminator var </param>
+        // <param name="expr"> expression </param>
         internal Node BuildNullIfExpression(Var conditionVar, Node expr)
         {
             var varRefOp = Command.CreateVarRefOp(conditionVar);
@@ -337,25 +337,25 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Rule Interactions
 
-        /// <summary>
-        /// Shut off filter pushdown for this subtree
-        /// </summary>
+        // <summary>
+        // Shut off filter pushdown for this subtree
+        // </summary>
         internal void SuppressFilterPushdown(Node n)
         {
             m_suppressions[n] = n;
         }
 
-        /// <summary>
-        /// Is filter pushdown shut off for this subtree?
-        /// </summary>
+        // <summary>
+        // Is filter pushdown shut off for this subtree?
+        // </summary>
         internal bool IsFilterPushdownSuppressed(Node n)
         {
             return m_suppressions.ContainsKey(n);
         }
 
-        /// <summary>
-        /// Given a list of vars try to get one that is of type Int32
-        /// </summary>
+        // <summary>
+        // Given a list of vars try to get one that is of type Int32
+        // </summary>
         internal static bool TryGetInt32Var(IEnumerable<Var> varList, out Var int32Var)
         {
             foreach (var v in varList)
@@ -412,22 +412,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region RuleProcessingContext Overrides
 
-        /// <summary>
-        /// Callback function to invoke *before* rules are applied.
-        /// Calls the VarRemapper to update any Vars in this node, and recomputes
-        /// the nodeinfo
-        /// </summary>
+        // <summary>
+        // Callback function to invoke *before* rules are applied.
+        // Calls the VarRemapper to update any Vars in this node, and recomputes
+        // the nodeinfo
+        // </summary>
         internal override void PreProcess(Node n)
         {
             m_remapper.RemapNode(n);
             Command.RecomputeNodeInfo(n);
         }
 
-        /// <summary>
-        /// Callback function to invoke *before* rules are applied.
-        /// Calls the VarRemapper to update any Vars in the entire subtree
-        /// If the given node has a RelOp it is pushed on the relOp ancestors stack.
-        /// </summary>
+        // <summary>
+        // Callback function to invoke *before* rules are applied.
+        // Calls the VarRemapper to update any Vars in the entire subtree
+        // If the given node has a RelOp it is pushed on the relOp ancestors stack.
+        // </summary>
         internal override void PreProcessSubTree(Node subTree)
         {
             if (subTree.Op.IsRelOp)
@@ -453,9 +453,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// If the given node has a RelOp it is popped from the relOp ancestors stack.
-        /// </summary>
+        // <summary>
+        // If the given node has a RelOp it is popped from the relOp ancestors stack.
+        // </summary>
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "RelOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -470,16 +470,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Callback function to invoke *after* rules are applied
-        /// Recomputes the node info, if this node has changed
-        /// If the rule is among the rules after which projection pruning may be beneficial,
-        /// m_projectionPrunningRequired is set to true.
-        /// If the rule is among the rules after which reapplying the nullability rules may be beneficial,
-        /// m_reapplyNullabilityRules is set to true.
-        /// </summary>
-        /// <param name="n"> </param>
-        /// <param name="rule"> the rule that was applied </param>
+        // <summary>
+        // Callback function to invoke *after* rules are applied
+        // Recomputes the node info, if this node has changed
+        // If the rule is among the rules after which projection pruning may be beneficial,
+        // m_projectionPrunningRequired is set to true.
+        // If the rule is among the rules after which reapplying the nullability rules may be beneficial,
+        // m_reapplyNullabilityRules is set to true.
+        // </summary>
+        // <param name="n"> </param>
+        // <param name="rule"> the rule that was applied </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override void PostProcess(Node n, Rule rule)
         {
@@ -503,9 +503,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
             }
         }
 
-        /// <summary>
-        /// Get the hash value for this subtree
-        /// </summary>
+        // <summary>
+        // Get the hash value for this subtree
+        // </summary>
         internal override int GetHashCode(Node node)
         {
             var nodeInfo = Command.GetNodeInfo(node);
@@ -516,22 +516,22 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region private methods
 
-        /// <summary>
-        /// Check to see if the current subtree is a scalar-op subtree (ie) does
-        /// the subtree only comprise of scalarOps?
-        /// Additionally, compute the number of non-leaf nodes (ie) nodes with at least one child
-        /// that are found in the subtree. Note that this count is approximate - it is only
-        /// intended to be used as a hint. It is the caller's responsibility to initialize
-        /// nodeCount to a sane value on entry into this function
-        /// And finally, if the varRefMap parameter is non-null, we keep track of
-        /// how often a Var is referenced within the subtree
-        /// The non-leaf-node count and the varRefMap are used by GetVarMap to determine
-        /// if expressions can be composed together
-        /// </summary>
-        /// <param name="node"> root of the subtree </param>
-        /// <param name="varRefMap"> Ref counts for each Var encountered in the subtree </param>
-        /// <param name="nonLeafNodeCount"> count of non-leaf nodes encountered in the subtree </param>
-        /// <returns> true, if this node only contains scalarOps </returns>
+        // <summary>
+        // Check to see if the current subtree is a scalar-op subtree (ie) does
+        // the subtree only comprise of scalarOps?
+        // Additionally, compute the number of non-leaf nodes (ie) nodes with at least one child
+        // that are found in the subtree. Note that this count is approximate - it is only
+        // intended to be used as a hint. It is the caller's responsibility to initialize
+        // nodeCount to a sane value on entry into this function
+        // And finally, if the varRefMap parameter is non-null, we keep track of
+        // how often a Var is referenced within the subtree
+        // The non-leaf-node count and the varRefMap are used by GetVarMap to determine
+        // if expressions can be composed together
+        // </summary>
+        // <param name="node"> root of the subtree </param>
+        // <param name="varRefMap"> Ref counts for each Var encountered in the subtree </param>
+        // <param name="nonLeafNodeCount"> count of non-leaf nodes encountered in the subtree </param>
+        // <returns> true, if this node only contains scalarOps </returns>
         private bool IsScalarOpTree(Node node, Dictionary<Var, int> varRefMap, ref int nonLeafNodeCount)
         {
             if (!node.Op.IsScalarOp)

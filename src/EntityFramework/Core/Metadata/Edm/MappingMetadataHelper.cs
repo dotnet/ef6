@@ -9,9 +9,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    /// <summary>
-    /// Helps answer mapping questions since we don't have a good API for mapping information
-    /// </summary>
+    // <summary>
+    // Helps answer mapping questions since we don't have a good API for mapping information
+    // </summary>
     internal static class MappingMetadataHelper
     {
         internal static IEnumerable<TypeMapping> GetMappingsForEntitySetAndType(
@@ -33,9 +33,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        /// <summary>
-        /// Returns all mapping fragments for the given entity set's types and their parent types.
-        /// </summary>
+        // <summary>
+        // Returns all mapping fragments for the given entity set's types and their parent types.
+        // </summary>
         internal static IEnumerable<TypeMapping> GetMappingsForEntitySetAndSuperTypes(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet,
             EntityTypeBase childEntityType)
@@ -51,9 +51,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     }).ToList();
         }
 
-        /// <summary>
-        /// Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
-        /// </summary>
+        // <summary>
+        // Returns mappings for the given set/type only if the mapping applies also to childEntittyType either via IsTypeOf or explicitly specifying multiple types in mapping fragments.
+        // </summary>
         private static IEnumerable<TypeMapping> GetIsTypeOfMappingsForEntitySetAndType(
             StorageMappingItemCollection mappingCollection, EntityContainer container, EntitySetBase entitySet, EntityTypeBase entityType,
             EntityTypeBase childEntityType)

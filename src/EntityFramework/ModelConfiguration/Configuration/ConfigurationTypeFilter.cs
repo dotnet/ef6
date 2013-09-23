@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
@@ -6,11 +6,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
     internal class ConfigurationTypeFilter
     {
-        /// <summary>
-        /// Check if specified type is a EntityTypeConfiguration instance.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>True if type is a EntityTypeConfiguration, else false.</returns>
+        // <summary>
+        // Check if specified type is a EntityTypeConfiguration instance.
+        // </summary>
+        // <param name="type">The type to check.</param>
+        // <returns>True if type is a EntityTypeConfiguration, else false.</returns>
         public virtual bool IsEntityTypeConfiguration(Type type)
         {
             DebugCheck.NotNull(type);
@@ -18,11 +18,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return IsStructuralTypeConfiguration(type, typeof(EntityTypeConfiguration<>));
         }
 
-        /// <summary>
-        /// Check if specified type is a ComplexTypeConfiguration instance.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns>True if type is a ComplexTypeConfiguration, else false.</returns>
+        // <summary>
+        // Check if specified type is a ComplexTypeConfiguration instance.
+        // </summary>
+        // <param name="type">The type to check.</param>
+        // <returns>True if type is a ComplexTypeConfiguration, else false.</returns>
         public virtual bool IsComplexTypeConfiguration(Type type)
         {
             DebugCheck.NotNull(type);

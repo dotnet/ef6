@@ -6,20 +6,20 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
     using System.Linq;
     using System.Text;
 
-    /// <summary>
-    /// Base class for clauses, which are (constrained) combinations of literals.
-    /// </summary>
-    /// <typeparam name="T_Identifier"> Type of normal form literal. </typeparam>
+    // <summary>
+    // Base class for clauses, which are (constrained) combinations of literals.
+    // </summary>
+    // <typeparam name="T_Identifier"> Type of normal form literal. </typeparam>
     internal abstract class Clause<T_Identifier> : NormalFormNode<T_Identifier>
     {
         private readonly Set<Literal<T_Identifier>> _literals;
         private readonly int _hashCode;
 
-        /// <summary>
-        /// Initialize a new clause.
-        /// </summary>
-        /// <param name="literals"> Literals contained in the clause. </param>
-        /// <param name="treeType"> Type of expression tree to produce from literals. </param>
+        // <summary>
+        // Initialize a new clause.
+        // </summary>
+        // <param name="literals"> Literals contained in the clause. </param>
+        // <param name="treeType"> Type of expression tree to produce from literals. </param>
         protected Clause(Set<Literal<T_Identifier>> literals, ExprType treeType)
             : base(ConvertLiteralsToExpr(literals, treeType))
         {
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             _hashCode = _literals.GetElementsHashCode();
         }
 
-        /// <summary>
-        /// Gets the literals contained in this clause.
-        /// </summary>
+        // <summary>
+        // Gets the literals contained in this clause.
+        // </summary>
         internal Set<Literal<T_Identifier>> Literals
         {
             get { return _literals; }

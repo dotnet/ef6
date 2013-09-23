@@ -12,9 +12,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     [AttributeUsage(AttributeTargets.Property)]
     public abstract class EdmPropertyAttribute : Attribute
     {
-        /// <summary>
-        /// Only allow derived attributes from this assembly
-        /// </summary>
+        // <summary>
+        // Only allow derived attributes from this assembly
+        // </summary>
         internal EdmPropertyAttribute()
         {
         }

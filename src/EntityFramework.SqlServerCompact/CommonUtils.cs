@@ -38,19 +38,19 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return trimmed;
         }
 
-        /// <summary>
-        /// Method to add a closing square brace escape for all
-        /// embedded closing square braces in a string
-        /// </summary>
+        // <summary>
+        // Method to add a closing square brace escape for all
+        // embedded closing square braces in a string
+        // </summary>
         public static string EscapeSquareBraceNames(string name)
         {
             return EscapeNames(name, ']');
         }
 
-        /// <summary>
-        /// Routine to replace an interesting character with itself
-        /// (to escape the interesting character)
-        /// </summary>
+        // <summary>
+        // Routine to replace an interesting character with itself
+        // (to escape the interesting character)
+        // </summary>
         public static string EscapeNames(string name, char quote)
         {
             string outputName;
@@ -63,10 +63,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             return outputName;
         }
 
-        /// <summary>
-        /// Delete the database that the fileName points to.
-        /// </summary>
-        /// <param name="fileName"> Database file path. </param>
+        // <summary>
+        // Delete the database that the fileName points to.
+        // </summary>
+        // <param name="fileName"> Database file path. </param>
         public static void DeleteDatabase(string fileName)
         {
             var expandedFileName = ReplaceDataDirectory(fileName);
@@ -78,10 +78,10 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             File.Delete(expandedFileName);
         }
 
-        /// <summary>
-        /// Check whether the database pointed to by the file name exists or not.
-        /// </summary>
-        /// <param name="fileName"> Database file path </param>
+        // <summary>
+        // Check whether the database pointed to by the file name exists or not.
+        // </summary>
+        // <param name="fileName"> Database file path </param>
         public static bool DatabaseExists(string fileName)
         {
             var expandedFileName = ReplaceDataDirectory(fileName);

@@ -633,9 +633,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return fragmentQuery;
         }
 
-        /// <summary>
-        /// Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
-        /// </summary>
+        // <summary>
+        // Given the <paramref name="opType" />, returns eSQL string corresponding to the op.
+        // </summary>
         internal static string OpToEsql(CellTreeOpType opType)
         {
             switch (opType)

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Migrations.Infrastructure
 {
@@ -36,15 +36,15 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the MigrationsPendingException class with serialized data.
-        /// </summary>
-        /// <param name="info">
-        /// The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.
-        /// </param>
-        /// <param name="context">
-        /// The <see cref="StreamingContext" /> that contains contextual information about the source or destination.
-        /// </param>
+        // <summary>
+        // Initializes a new instance of the MigrationsPendingException class with serialized data.
+        // </summary>
+        // <param name="info">
+        // The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.
+        // </param>
+        // <param name="context">
+        // The <see cref="StreamingContext" /> that contains contextual information about the source or destination.
+        // </param>
         private MigrationsPendingException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

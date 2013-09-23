@@ -17,20 +17,20 @@ namespace System.Data.Entity.Infrastructure
 
         private readonly ObjectQuery<TElement> _query;
 
-        /// <summary>
-        /// Private constructor called by the Create factory method.
-        /// </summary>
-        /// <param name="query"> The query. </param>
+        // <summary>
+        // Private constructor called by the Create factory method.
+        // </summary>
+        // <param name="query"> The query. </param>
         private ReplacementDbQueryWrapper(ObjectQuery<TElement> query)
         {
             _query = query;
         }
 
-        /// <summary>
-        /// Factory method called by CreateDelegate to create an instance of this class.
-        /// </summary>
-        /// <param name="query"> The query, which must be a generic object of the expected type. </param>
-        /// <returns> A new instance. </returns>
+        // <summary>
+        // Factory method called by CreateDelegate to create an instance of this class.
+        // </summary>
+        // <param name="query"> The query, which must be a generic object of the expected type. </param>
+        // <returns> A new instance. </returns>
         internal static ReplacementDbQueryWrapper<TElement> Create(ObjectQuery query)
         {
             Debug.Assert(query is ObjectQuery<TElement>);

@@ -128,11 +128,11 @@ namespace CmdLine
             return Property.PropertyType == typeof(List<string>);
         }
 
-        /// <summary>
-        /// Returns a boolean value from a command switch
-        /// </summary>
-        /// <param name="cmd"> The command switch </param>
-        /// <returns> A boolean value based on the switch and value </returns>
+        // <summary>
+        // Returns a boolean value from a command switch
+        // </summary>
+        // <param name="cmd"> The command switch </param>
+        // <returns> A boolean value based on the switch and value </returns>
         private static bool GetBoolValue(CommandArgument cmd)
         {
             return string.IsNullOrWhiteSpace(cmd.SwitchOption) || cmd.SwitchOption.Trim() == "+";

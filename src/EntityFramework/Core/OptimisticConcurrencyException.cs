@@ -54,9 +54,9 @@ namespace System.Data.Entity.Core
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of OptimisticConcurrencyException
-        /// </summary>
+        // <summary>
+        // Initializes a new instance of OptimisticConcurrencyException
+        // </summary>
         private OptimisticConcurrencyException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

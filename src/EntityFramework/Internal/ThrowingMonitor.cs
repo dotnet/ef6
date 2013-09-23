@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -8,19 +8,19 @@ namespace System.Data.Entity.Internal
     using System.Diagnostics.CodeAnalysis;
     using System.Threading;
 
-    /// <summary>
-    /// Provides a mechanism to ensure an exception is thrown on concurrent execution of a critical section.
-    /// </summary>
+    // <summary>
+    // Provides a mechanism to ensure an exception is thrown on concurrent execution of a critical section.
+    // </summary>
     internal class ThrowingMonitor
     {
         // This is field is not volatile because we need stronger guarantees than volatile provides.
         // Instead we use Thread.MemoryBarrier to ensure freshness (Interlocked methods also use it internally).
         private int _isInCriticalSection;
 
-        /// <summary>
-        /// Acquires an exclusive lock on this instance.
-        /// Any subsequent call to Enter before a call to Exit will result in an exception.
-        /// </summary>
+        // <summary>
+        // Acquires an exclusive lock on this instance.
+        // Any subsequent call to Enter before a call to Exit will result in an exception.
+        // </summary>
         public void Enter()
         {
             if (Interlocked.CompareExchange(ref _isInCriticalSection, 1, 0) != 0)
@@ -29,9 +29,9 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        /// <summary>
-        /// Releases an exclusive lock on this instance.
-        /// </summary>
+        // <summary>
+        // Releases an exclusive lock on this instance.
+        // </summary>
         [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "state",
             Justification = "Used in the debug build")]
         public void Exit()
@@ -40,9 +40,9 @@ namespace System.Data.Entity.Internal
             Debug.Assert(state == 1, "Expected to be in a critical section");
         }
 
-        /// <summary>
-        /// Throws an exception if an exclusive lock has been acquired on this instance.
-        /// </summary>
+        // <summary>
+        // Throws an exception if an exclusive lock has been acquired on this instance.
+        // </summary>
         public void EnsureNotEntered()
         {
             // Ensure the value read from _isInCriticalSection is fresh

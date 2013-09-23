@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Globalization;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// This is an adapter to make PrimitiveTypeKindData fit in the Schema Object Model tree
-    /// </summary>
+    // <summary>
+    // This is an adapter to make PrimitiveTypeKindData fit in the Schema Object Model tree
+    // </summary>
     internal sealed class ScalarType : SchemaType
     {
         internal const string DateTimeFormat = @"yyyy-MM-dd HH\:mm\:ss.fffZ";
@@ -21,12 +21,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         private readonly PrimitiveType _primitiveType;
 
-        /// <summary>
-        /// Construct an internal (not from schema) CDM scalar type
-        /// </summary>
-        /// <param name="parentElement"> the owning schema </param>
-        /// <param name="typeName"> the naem of the type </param>
-        /// <param name="primitiveType"> the PrimitiveTypeKind of the type </param>
+        // <summary>
+        // Construct an internal (not from schema) CDM scalar type
+        // </summary>
+        // <param name="parentElement"> the owning schema </param>
+        // <param name="typeName"> the naem of the type </param>
+        // <param name="primitiveType"> the PrimitiveTypeKind of the type </param>
         internal ScalarType(Schema parentElement, string typeName, PrimitiveType primitiveType)
             : base(parentElement)
         {
@@ -34,12 +34,12 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             _primitiveType = primitiveType;
         }
 
-        /// <summary>
-        /// try to parse a string
-        /// </summary>
-        /// <param name="text"> the string to parse </param>
-        /// <param name="value"> the value of the string </param>
-        /// <returns> true if the value is a valid value, false otherwise </returns>
+        // <summary>
+        // try to parse a string
+        // </summary>
+        // <param name="text"> the string to parse </param>
+        // <param name="value"> the value of the string </param>
+        // <returns> true if the value is a valid value, false otherwise </returns>
         public bool TryParse(string text, out object value)
         {
             switch (_primitiveType.PrimitiveTypeKind)
@@ -79,17 +79,17 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        /// <summary>
-        /// The type kind of this type.
-        /// </summary>
+        // <summary>
+        // The type kind of this type.
+        // </summary>
         public PrimitiveTypeKind TypeKind
         {
             get { return _primitiveType.PrimitiveTypeKind; }
         }
 
-        /// <summary>
-        /// Returns the PrimitiveType of the scalar type.
-        /// </summary>
+        // <summary>
+        // Returns the PrimitiveType of the scalar type.
+        // </summary>
         public PrimitiveType Type
         {
             get { return _primitiveType; }
@@ -207,10 +207,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return true;
         }
 
-        /// <summary>
-        /// Parses the default value for Edm Type Time based on the DateTime format "HH:mm:ss.fffffffz".
-        /// The value is first converted to DateTime value and then converted to TimeSpan.
-        /// </summary>
+        // <summary>
+        // Parses the default value for Edm Type Time based on the DateTime format "HH:mm:ss.fffffffz".
+        // The value is first converted to DateTime value and then converted to TimeSpan.
+        // </summary>
         private static bool TryParseTime(string text, out object value)
         {
             DateTime temp;

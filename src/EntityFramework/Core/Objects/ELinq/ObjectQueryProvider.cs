@@ -13,9 +13,9 @@ namespace System.Data.Entity.Core.Objects.ELinq
     using System.Threading;
     using System.Threading.Tasks;
 
-    /// <summary>
-    /// LINQ query provider implementation.
-    /// </summary>
+    // <summary>
+    // LINQ query provider implementation.
+    // </summary>
     internal class ObjectQueryProvider : IQueryProvider
 #if !NET40
 , IDbAsyncQueryProvider
@@ -27,23 +27,23 @@ namespace System.Data.Entity.Core.Objects.ELinq
         private readonly ObjectContext _context;
         private readonly ObjectQuery _query;
 
-        /// <summary>
-        /// Constructs a new provider with the given context. This constructor can be
-        /// called directly when initializing ObjectContext or indirectly when initializing
-        /// ObjectQuery.
-        /// </summary>
-        /// <param name="context"> The ObjectContext of the provider. </param>
+        // <summary>
+        // Constructs a new provider with the given context. This constructor can be
+        // called directly when initializing ObjectContext or indirectly when initializing
+        // ObjectQuery.
+        // </summary>
+        // <param name="context"> The ObjectContext of the provider. </param>
         internal ObjectQueryProvider(ObjectContext context)
         {
             DebugCheck.NotNull(context);
             _context = context;
         }
 
-        /// <summary>
-        /// Constructs a new provider with the given ObjectQuery. This ObjectQuery instance
-        /// is used to transfer state information to the new ObjectQuery instance created using
-        /// the private CreateQuery method overloads.
-        /// </summary>
+        // <summary>
+        // Constructs a new provider with the given ObjectQuery. This ObjectQuery instance
+        // is used to transfer state information to the new ObjectQuery instance created using
+        // the private CreateQuery method overloads.
+        // </summary>
         internal ObjectQueryProvider(ObjectQuery query)
             : this(query.Context)
         {
@@ -51,29 +51,29 @@ namespace System.Data.Entity.Core.Objects.ELinq
             _query = query;
         }
 
-        /// <summary>
-        /// Creates a new query from an expression.
-        /// </summary>
-        /// <typeparam name="TElement"> The element type of the query. </typeparam>
-        /// <param name="expression"> Expression forming the query. </param>
-        /// <returns>
-        /// A new <see cref="ObjectQuery{S}" /> instance.
-        /// </returns>
+        // <summary>
+        // Creates a new query from an expression.
+        // </summary>
+        // <typeparam name="TElement"> The element type of the query. </typeparam>
+        // <param name="expression"> Expression forming the query. </param>
+        // <returns>
+        // A new <see cref="ObjectQuery{S}" /> instance.
+        // </returns>
         internal virtual ObjectQuery<TElement> CreateQuery<TElement>(Expression expression)
         {
             return GetObjectQueryState(_query, expression, typeof(TElement)).CreateObjectQuery<TElement>();
         }
 
-        /// <summary>
-        /// Provides an untyped method capable of creating a strong-typed ObjectQuery
-        /// (based on the <paramref name="ofType" /> argument) and returning it as an
-        /// instance of the untyped (in a generic sense) ObjectQuery base class.
-        /// </summary>
-        /// <param name="expression"> The LINQ expression that defines the new query </param>
-        /// <param name="ofType"> The result type of the new ObjectQuery </param>
-        /// <returns>
-        /// A new <see cref="ObjectQuery{ofType}" /> , as an instance of ObjectQuery
-        /// </returns>
+        // <summary>
+        // Provides an untyped method capable of creating a strong-typed ObjectQuery
+        // (based on the <paramref name="ofType" /> argument) and returning it as an
+        // instance of the untyped (in a generic sense) ObjectQuery base class.
+        // </summary>
+        // <param name="expression"> The LINQ expression that defines the new query </param>
+        // <param name="ofType"> The result type of the new ObjectQuery </param>
+        // <returns>
+        // A new <see cref="ObjectQuery{ofType}" /> , as an instance of ObjectQuery
+        // </returns>
         internal virtual ObjectQuery CreateQuery(Expression expression, Type ofType)
         {
             return GetObjectQueryState(_query, expression, ofType).CreateQuery();
@@ -88,14 +88,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #region IQueryProvider
 
-        /// <summary>
-        /// Creates a new query instance using the given LINQ expresion.
-        /// The current query is used to produce the context for the new query, but none of its logic
-        /// is used.
-        /// </summary>
-        /// <typeparam name="TElement"> Element type for query result. </typeparam>
-        /// <param name="expression"> LINQ expression forming the query. </param>
-        /// <returns> ObjectQuery implementing the expression logic. </returns>
+        // <summary>
+        // Creates a new query instance using the given LINQ expresion.
+        // The current query is used to produce the context for the new query, but none of its logic
+        // is used.
+        // </summary>
+        // <typeparam name="TElement"> Element type for query result. </typeparam>
+        // <param name="expression"> LINQ expression forming the query. </param>
+        // <returns> ObjectQuery implementing the expression logic. </returns>
         IQueryable<TElement> IQueryProvider.CreateQuery<TElement>(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -108,15 +108,15 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return CreateQuery<TElement>(expression);
         }
 
-        /// <summary>
-        /// Executes the given LINQ expression returning a single value, or null if the query yields
-        /// no results. If the return type is unexpected, raises a cast exception.
-        /// The current query is used to produce the context for the new query, but none of its logic
-        /// is used.
-        /// </summary>
-        /// <typeparam name="TResult"> Type of returned value. </typeparam>
-        /// <param name="expression"> Expression to evaluate. </param>
-        /// <returns> Single result from execution. </returns>
+        // <summary>
+        // Executes the given LINQ expression returning a single value, or null if the query yields
+        // no results. If the return type is unexpected, raises a cast exception.
+        // The current query is used to produce the context for the new query, but none of its logic
+        // is used.
+        // </summary>
+        // <typeparam name="TResult"> Type of returned value. </typeparam>
+        // <param name="expression"> Expression to evaluate. </param>
+        // <returns> Single result from execution. </returns>
         TResult IQueryProvider.Execute<TResult>(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -126,13 +126,13 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return ExecuteSingle(query, expression);
         }
 
-        /// <summary>
-        /// Creates a new query instance using the given LINQ expresion.
-        /// The current query is used to produce the context for the new query, but none of its logic
-        /// is used.
-        /// </summary>
-        /// <param name="expression"> Expression forming the query. </param>
-        /// <returns> ObjectQuery instance implementing the given expression. </returns>
+        // <summary>
+        // Creates a new query instance using the given LINQ expresion.
+        // The current query is used to produce the context for the new query, but none of its logic
+        // is used.
+        // </summary>
+        // <param name="expression"> Expression forming the query. </param>
+        // <returns> ObjectQuery instance implementing the given expression. </returns>
         IQueryable IQueryProvider.CreateQuery(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -149,14 +149,14 @@ namespace System.Data.Entity.Core.Objects.ELinq
             return CreateQuery(expression, elementType);
         }
 
-        /// <summary>
-        /// Executes the given LINQ expression returning a single value, or null if the query yields
-        /// no results.
-        /// The current query is used to produce the context for the new query, but none of its logic
-        /// is used.
-        /// </summary>
-        /// <param name="expression"> Expression to evaluate. </param>
-        /// <returns> Single result from execution. </returns>
+        // <summary>
+        // Executes the given LINQ expression returning a single value, or null if the query yields
+        // no results.
+        // The current query is used to produce the context for the new query, but none of its logic
+        // is used.
+        // </summary>
+        // <param name="expression"> Expression to evaluate. </param>
+        // <returns> Single result from execution. </returns>
         object IQueryProvider.Execute(Expression expression)
         {
             Check.NotNull(expression, "expression");
@@ -196,18 +196,18 @@ namespace System.Data.Entity.Core.Objects.ELinq
 
         #region Internal Utility API
 
-        /// <summary>
-        /// Uses an expression-specific 'materialization' function to produce
-        /// a singleton result from an IEnumerable query result. The function
-        /// used depends on the semantics required by the expression that is
-        /// the root of the query. First, FirstOrDefault and SingleOrDefault are
-        /// currently handled as special cases, and the default behavior is to
-        /// use the Enumerable.Single materialization pattern.
-        /// </summary>
-        /// <typeparam name="TResult"> The expected result type and the required element type of the IEnumerable collection </typeparam>
-        /// <param name="query"> The query result set </param>
-        /// <param name="queryRoot"> The expression that is the root of the LINQ query expression tree </param>
-        /// <returns> An instance of TResult if evaluation of the expression-specific singleton-producing function is successful </returns>
+        // <summary>
+        // Uses an expression-specific 'materialization' function to produce
+        // a singleton result from an IEnumerable query result. The function
+        // used depends on the semantics required by the expression that is
+        // the root of the query. First, FirstOrDefault and SingleOrDefault are
+        // currently handled as special cases, and the default behavior is to
+        // use the Enumerable.Single materialization pattern.
+        // </summary>
+        // <typeparam name="TResult"> The expected result type and the required element type of the IEnumerable collection </typeparam>
+        // <param name="query"> The query result set </param>
+        // <param name="queryRoot"> The expression that is the root of the LINQ query expression tree </param>
+        // <returns> An instance of TResult if evaluation of the expression-specific singleton-producing function is successful </returns>
         internal static TResult ExecuteSingle<TResult>(IEnumerable<TResult> query, Expression queryRoot)
         {
             return GetElementFunction<TResult>(queryRoot)(query);

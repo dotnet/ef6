@@ -4,59 +4,59 @@ namespace System.Data.Entity.Core.Query.InternalTrees
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents information about one collection being managed by the NestOps.
-    /// The CollectionVar is a Var that represents the entire collection.
-    /// </summary>
+    // <summary>
+    // Represents information about one collection being managed by the NestOps.
+    // The CollectionVar is a Var that represents the entire collection.
+    // </summary>
     internal class CollectionInfo
     {
         #region public methods
 
-        /// <summary>
-        /// The collection-var
-        /// </summary>
+        // <summary>
+        // The collection-var
+        // </summary>
         internal Var CollectionVar
         {
             get { return m_collectionVar; }
         }
 
-        /// <summary>
-        /// the column map for the collection element
-        /// </summary>
+        // <summary>
+        // the column map for the collection element
+        // </summary>
         internal ColumnMap ColumnMap
         {
             get { return m_columnMap; }
         }
 
-        /// <summary>
-        /// list of vars describing the collection element; flattened to remove
-        /// nested collections
-        /// </summary>
+        // <summary>
+        // list of vars describing the collection element; flattened to remove
+        // nested collections
+        // </summary>
         internal VarList FlattenedElementVars
         {
             get { return m_flattenedElementVars; }
         }
 
-        /// <summary>
-        /// list of keys specific to this collection
-        /// </summary>
+        // <summary>
+        // list of keys specific to this collection
+        // </summary>
         internal VarVec Keys
         {
             get { return m_keys; }
         }
 
-        /// <summary>
-        /// list of sort keys specific to this collection
-        /// </summary>
+        // <summary>
+        // list of sort keys specific to this collection
+        // </summary>
         internal List<SortKey> SortKeys
         {
             get { return m_sortKeys; }
         }
 
-        /// <summary>
-        /// Discriminator Value for this collection (for a given NestOp).
-        /// Should we break this out into a subtype of CollectionInfo
-        /// </summary>
+        // <summary>
+        // Discriminator Value for this collection (for a given NestOp).
+        // Should we break this out into a subtype of CollectionInfo
+        // </summary>
         internal object DiscriminatorValue
         {
             get { return m_discriminatorValue; }

@@ -16,11 +16,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for constructing a CollectionType object with the element type it contains
-        /// </summary>
-        /// <param name="elementType"> The element type that this collection type contains </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
+        // <summary>
+        // The constructor for constructing a CollectionType object with the element type it contains
+        // </summary>
+        // <param name="elementType"> The element type that this collection type contains </param>
+        // <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(EdmType elementType)
             : this(TypeUsage.Create(elementType))
@@ -28,11 +28,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DataSpace = elementType.DataSpace;
         }
 
-        /// <summary>
-        /// The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
-        /// </summary>
-        /// <param name="elementType"> The element type that this collection type contains </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
+        // <summary>
+        // The constructor for constructing a CollectionType object with the element type (as a TypeUsage) it contains
+        // </summary>
+        // <param name="elementType"> The element type that this collection type contains </param>
+        // <exception cref="System.ArgumentNullException">Thrown if the argument elementType is null</exception>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal CollectionType(TypeUsage elementType)
             : base(GetIdentity(Check.NotNull(elementType, "elementType")),
@@ -76,11 +76,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return _typeUsage; }
         }
 
-        /// <summary>
-        /// Constructs the name of the collection type
-        /// </summary>
-        /// <param name="typeUsage"> The typeusage for the element type that this collection type refers to </param>
-        /// <returns> The identity of the resulting collection type </returns>
+        // <summary>
+        // Constructs the name of the collection type
+        // </summary>
+        // <param name="typeUsage"> The typeusage for the element type that this collection type refers to </param>
+        // <returns> The identity of the resulting collection type </returns>
         private static string GetIdentity(TypeUsage typeUsage)
         {
             var builder = new StringBuilder(50);
@@ -90,9 +90,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return builder.ToString();
         }
 
-        /// <summary>
-        /// Override EdmEquals to support value comparison of TypeUsage property
-        /// </summary>
+        // <summary>
+        // Override EdmEquals to support value comparison of TypeUsage property
+        // </summary>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

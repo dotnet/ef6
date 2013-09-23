@@ -20,16 +20,16 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         /// </returns>
         public abstract DbMappingViewCache Create(string conceptualModelContainerName, string storeModelContainerName);
 
-        /// <summary>
-        /// Creates a concrete <see cref="DbMappingViewCache" /> corresponding to the specified container mapping.
-        /// </summary>
-        /// <param name="mapping">
-        /// A mapping between a container in the conceptual model and a container in
-        /// the store model.
-        /// </param>
-        /// <returns>
-        /// A concrete <see cref="DbMappingViewCache" />, or null if a creator was not found.
-        /// </returns>
+        // <summary>
+        // Creates a concrete <see cref="DbMappingViewCache" /> corresponding to the specified container mapping.
+        // </summary>
+        // <param name="mapping">
+        // A mapping between a container in the conceptual model and a container in
+        // the store model.
+        // </param>
+        // <returns>
+        // A concrete <see cref="DbMappingViewCache" />, or null if a creator was not found.
+        // </returns>
         internal DbMappingViewCache Create(EntityContainerMapping mapping)
         {
             return Create(mapping.EdmEntityContainer.Name, mapping.StorageEntityContainer.Name);

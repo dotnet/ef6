@@ -12,14 +12,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
     using System.Diagnostics.CodeAnalysis;
     using System.Text;
 
-    /// <summary>
-    /// A wrapper around MemberPath that allows members to be marked as ProjectedSlots.
-    /// </summary>
+    // <summary>
+    // A wrapper around MemberPath that allows members to be marked as ProjectedSlots.
+    // </summary>
     internal sealed class MemberProjectedSlot : ProjectedSlot
     {
-        /// <summary>
-        /// Creates a projected slot that references the relevant celltree node.
-        /// </summary>
+        // <summary>
+        // Creates a projected slot that references the relevant celltree node.
+        // </summary>
         internal MemberProjectedSlot(MemberPath node)
         {
             m_memberPath = node;
@@ -27,9 +27,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
 
         private readonly MemberPath m_memberPath;
 
-        /// <summary>
-        /// Returns the full metadata path from the root extent to this node, e.g., Person.Adrs.zip
-        /// </summary>
+        // <summary>
+        // Returns the full metadata path from the root extent to this node, e.g., Person.Adrs.zip
+        // </summary>
         internal MemberPath MemberPath
         {
             get { return m_memberPath; }
@@ -66,10 +66,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return cqt;
         }
 
-        /// <summary>
-        /// True iff <see cref=" m_memberPath" /> and <paramref name="outputMember" /> types do not match,
-        /// We assume that the mapping loader has already checked that the casts are ok and emitted warnings.
-        /// </summary>
+        // <summary>
+        // True iff <see cref=" m_memberPath" /> and <paramref name="outputMember" /> types do not match,
+        // We assume that the mapping loader has already checked that the casts are ok and emitted warnings.
+        // </summary>
         private bool NeedToCastCqlValue(MemberPath outputMember, out TypeUsage outputMemberTypeUsage)
         {
             var memberPathTypeUsage = Helper.GetModelTypeUsage(m_memberPath.LeafEdmMember);
@@ -103,9 +103,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return MemberPath.EqualityComparer.GetHashCode(m_memberPath);
         }
 
-        /// <summary>
-        /// Given a slot and the new mapping, returns the corresponding new slot.
-        /// </summary>
+        // <summary>
+        // Given a slot and the new mapping, returns the corresponding new slot.
+        // </summary>
         internal MemberProjectedSlot RemapSlot(Dictionary<MemberPath, MemberPath> remap)
         {
             MemberPath remappedNode = null;
@@ -119,12 +119,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             }
         }
 
-        /// <summary>
-        /// Given the <paramref name="prefix" />, determines the slots in <paramref name="slots" /> that correspond to the entity key for the entity set or the
-        /// association set end. Returns the list of slots.  Returns null if even one of the key slots is not present in slots.
-        /// </summary>
-        /// <param name="slots"> </param>
-        /// <param name="prefix"> corresponds to an entity set or an association end </param>
+        // <summary>
+        // Given the <paramref name="prefix" />, determines the slots in <paramref name="slots" /> that correspond to the entity key for the entity set or the
+        // association set end. Returns the list of slots.  Returns null if even one of the key slots is not present in slots.
+        // </summary>
+        // <param name="slots"> </param>
+        // <param name="prefix"> corresponds to an entity set or an association end </param>
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static List<MemberProjectedSlot> GetKeySlots(IEnumerable<MemberProjectedSlot> slots, MemberPath prefix)
         {
@@ -140,10 +140,10 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return keySlots;
         }
 
-        /// <summary>
-        /// Searches for members in <paramref name="slots" /> and returns the corresponding slots in the same order as present in
-        /// <paramref name="members" />. Returns null if even one member is not present in slots.
-        /// </summary>
+        // <summary>
+        // Searches for members in <paramref name="slots" /> and returns the corresponding slots in the same order as present in
+        // <paramref name="members" />. Returns null if even one member is not present in slots.
+        // </summary>
         internal static List<MemberProjectedSlot> GetSlots(IEnumerable<MemberProjectedSlot> slots, IEnumerable<MemberPath> members)
         {
             var result = new List<MemberProjectedSlot>();
@@ -159,9 +159,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
             return result;
         }
 
-        /// <summary>
-        /// Searches for <paramref name="member" /> in <paramref name="slots" /> and returns the corresponding slot. If none is found, returns null.
-        /// </summary>
+        // <summary>
+        // Searches for <paramref name="member" /> in <paramref name="slots" /> and returns the corresponding slot. If none is found, returns null.
+        // </summary>
         internal static MemberProjectedSlot GetSlotForMember(IEnumerable<ProjectedSlot> slots, MemberPath member)
         {
             foreach (MemberProjectedSlot slot in slots)

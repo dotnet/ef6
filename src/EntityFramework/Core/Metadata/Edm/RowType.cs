@@ -24,19 +24,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of RowType class with the given list of members
-        /// </summary>
-        /// <param name="properties"> properties for this row type </param>
-        /// <exception cref="System.ArgumentException">Thrown if any individual property in the passed in properties argument is null</exception>
+        // <summary>
+        // Initializes a new instance of RowType class with the given list of members
+        // </summary>
+        // <param name="properties"> properties for this row type </param>
+        // <exception cref="System.ArgumentException">Thrown if any individual property in the passed in properties argument is null</exception>
         internal RowType(IEnumerable<EdmProperty> properties)
             : this(properties, null)
         {
         }
 
-        /// <summary>
-        /// Initializes a RowType with the given members and initializer metadata
-        /// </summary>
+        // <summary>
+        // Initializes a RowType with the given members and initializer metadata
+        // </summary>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal RowType(IEnumerable<EdmProperty> properties, InitializerMetadata initializerMetadata)
             : base(
@@ -59,10 +59,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
             SetReadOnly();
         }
 
-        /// <summary>
-        /// Gets LINQ initializer Metadata for this row type. If there is no associated
-        /// initializer type, value is null.
-        /// </summary>
+        // <summary>
+        // Gets LINQ initializer Metadata for this row type. If there is no associated
+        // initializer type, value is null.
+        // </summary>
         internal InitializerMetadata InitializerMetadata
         {
             get { return _initializerMetadata; }
@@ -116,35 +116,35 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return GetDeclaredOnlyMembers<EdmProperty>(); }
         }
 
-        /// <summary>
-        /// Adds a property
-        /// </summary>
-        /// <param name="property"> The property to add </param>
+        // <summary>
+        // Adds a property
+        // </summary>
+        // <param name="property"> The property to add </param>
         private void AddProperty(EdmProperty property)
         {
             Check.NotNull(property, "property");
             AddMember(property);
         }
 
-        /// <summary>
-        /// Validates a EdmMember object to determine if it can be added to this type's
-        /// Members collection. If this method returns without throwing, it is assumed
-        /// the member is valid.
-        /// </summary>
-        /// <param name="member"> The member to validate </param>
-        /// <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
+        // <summary>
+        // Validates a EdmMember object to determine if it can be added to this type's
+        // Members collection. If this method returns without throwing, it is assumed
+        // the member is valid.
+        // </summary>
+        // <param name="member"> The member to validate </param>
+        // <exception cref="System.ArgumentException">Thrown if the member is not a EdmProperty</exception>
         internal override void ValidateMemberForAdd(EdmMember member)
         {
             Debug.Assert(Helper.IsEdmProperty(member), "Only members of type Property may be added to Row types.");
         }
 
-        /// <summary>
-        /// Calculates the row type identity that would result from
-        /// a given set of properties.
-        /// </summary>
-        /// <param name="properties"> The properties that determine the row type's structure </param>
-        /// <param name="initializerMetadata"> Metadata describing materialization of this row type </param>
-        /// <returns> A string that identifies the row type </returns>
+        // <summary>
+        // Calculates the row type identity that would result from
+        // a given set of properties.
+        // </summary>
+        // <param name="properties"> The properties that determine the row type's structure </param>
+        // <param name="initializerMetadata"> Metadata describing materialization of this row type </param>
+        // <returns> A string that identifies the row type </returns>
         private static string GetRowTypeIdentityFromProperties(IEnumerable<EdmProperty> properties, InitializerMetadata initializerMetadata)
         {
             // The row type identity is formed as follows:
@@ -203,9 +203,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return properties;
         }
 
-        /// <summary>
-        /// EdmEquals override verifying the equivalence of all members and their type usages.
-        /// </summary>
+        // <summary>
+        // EdmEquals override verifying the equivalence of all members and their type usages.
+        // </summary>
         internal override bool EdmEquals(MetadataItem item)
         {
             // short-circuit if this and other are reference equivalent

@@ -6,9 +6,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Data.Entity.Resources;
     using System.Xml;
 
-    /// <summary>
-    /// Summary description for NestedType.
-    /// </summary>
+    // <summary>
+    // Summary description for NestedType.
+    // </summary>
     internal sealed class SchemaComplexType : StructuredType
     {
         #region Public Methods

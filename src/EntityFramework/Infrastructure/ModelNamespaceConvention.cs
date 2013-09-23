@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Infrastructure
 {
@@ -15,10 +15,10 @@ namespace System.Data.Entity.Infrastructure
     {
         private readonly string _modelNamespace;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelNamespaceConvention" /> class.
-        /// </summary>
-        /// <param name="modelNamespace"> The model namespace. </param>
+        // <summary>
+        // Initializes a new instance of the <see cref="ModelNamespaceConvention" /> class.
+        // </summary>
+        // <param name="modelNamespace"> The model namespace. </param>
         internal ModelNamespaceConvention(string modelNamespace)
         {
             DebugCheck.NotEmpty(modelNamespace);

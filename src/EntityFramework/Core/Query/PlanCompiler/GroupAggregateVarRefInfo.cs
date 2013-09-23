@@ -4,12 +4,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Data.Entity.Core.Query.InternalTrees;
 
-    /// <summary>
-    /// Helper class to track usage of GroupAggregateVarInfo
-    /// It represents the usage of a single GroupAggregateVar.
-    /// The usage is defined by the computation, it should be a subree whose only
-    /// external reference is the group var represented by the GroupAggregateVarInfo.
-    /// </summary>
+    // <summary>
+    // Helper class to track usage of GroupAggregateVarInfo
+    // It represents the usage of a single GroupAggregateVar.
+    // The usage is defined by the computation, it should be a subree whose only
+    // external reference is the group var represented by the GroupAggregateVarInfo.
+    // </summary>
     internal class GroupAggregateVarRefInfo
     {
         #region Private fields
@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region Constructor
 
-        /// <summary>
-        /// Public constructor
-        /// </summary>
+        // <summary>
+        // Public constructor
+        // </summary>
         internal GroupAggregateVarRefInfo(GroupAggregateVarInfo groupAggregateVarInfo, Node computation, bool isUnnested)
         {
             _groupAggregateVarInfo = groupAggregateVarInfo;
@@ -36,26 +36,26 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
 
         #region 'Public' Properties
 
-        /// <summary>
-        /// Subtree whose only external reference is
-        /// the group var represented by the GroupAggregateVarInfo
-        /// </summary>
+        // <summary>
+        // Subtree whose only external reference is
+        // the group var represented by the GroupAggregateVarInfo
+        // </summary>
         internal Node Computation
         {
             get { return _computation; }
         }
 
-        /// <summary>
-        /// The GroupAggregateVarInfo (possibly) referenced by the computation
-        /// </summary>
+        // <summary>
+        // The GroupAggregateVarInfo (possibly) referenced by the computation
+        // </summary>
         internal GroupAggregateVarInfo GroupAggregateVarInfo
         {
             get { return _groupAggregateVarInfo; }
         }
 
-        /// <summary>
-        /// Is the computation over unnested group aggregate var
-        /// </summary>
+        // <summary>
+        // Is the computation over unnested group aggregate var
+        // </summary>
         internal bool IsUnnested
         {
             get { return _isUnnested; }
