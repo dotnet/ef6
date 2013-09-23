@@ -467,7 +467,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             // Look at both public, internal, and private instanced properties declared at this type, inherited members
             // are not looked at.  Internal and private properties are also looked at because they are also schematized fields
-            var properties = structuralType.ClrType.GetInstanceProperties();
+            var properties = structuralType.ClrType.GetDeclaredProperties().Where(p => !p.IsStatic());
 
             foreach (var property in properties)
             {

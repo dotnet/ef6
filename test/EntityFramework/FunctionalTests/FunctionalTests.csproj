@@ -231,6 +231,7 @@
     <Compile Include="Migrations\TestHelpers\TestDatabase.cs" />
     <Compile Include="Migrations\TestHelpers\VariantAttribute.cs" />
     <Compile Include="Migrations\UpgradeScenarios.cs" />
+    <Compile Include="Objects\AttributeBasedOCLoading.cs" />
     <Compile Include="Objects\TransactionsTests.cs" />
     <Compile Include="Migrations\SpatialScenarios.cs" />
     <Compile Include="PlanCompiler\AnonymousTypeTests.cs" />
