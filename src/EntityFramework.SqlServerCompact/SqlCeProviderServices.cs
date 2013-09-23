@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServerCompact
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
@@ -50,6 +51,9 @@ namespace System.Data.Entity.SqlServerCompact
         public static readonly SqlCeProviderServices Instance = new SqlCeProviderServices();
 
         internal bool _isLocalProvider = true;
+
+        private ConcurrentDictionary<bool, SqlCeProviderManifest> _providerManifests =
+            new ConcurrentDictionary<bool, SqlCeProviderManifest>();
 
         private SqlCeProviderServices()
         {
@@ -333,12 +337,12 @@ namespace System.Data.Entity.SqlServerCompact
             sqlCeConnection.InfoMessage
                 += (_, e)
                    =>
-                       {
-                           if (!string.IsNullOrWhiteSpace(e.Message))
-                           {
-                               handler(e.Message);
-                           }
-                       };
+                    {
+                        if (!string.IsNullOrWhiteSpace(e.Message))
+                        {
+                            handler(e.Message);
+                        }
+                    };
         }
 
         /// <summary>
@@ -497,7 +501,7 @@ namespace System.Data.Entity.SqlServerCompact
                 throw ADP1.Argument(EntityRes.GetString(EntityRes.UnableToDetermineStoreVersion));
             }
 
-            return new SqlCeProviderManifest(_isLocalProvider);
+            return _providerManifests.GetOrAdd(_isLocalProvider, l => new SqlCeProviderManifest(l));
         }
 
         // <summary>

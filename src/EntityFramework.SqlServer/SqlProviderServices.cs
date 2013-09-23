@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer
 {
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core;
@@ -52,6 +53,9 @@ namespace System.Data.Entity.SqlServer
         /// Entity Framework provider services.
         /// </summary>
         public const string ProviderInvariantName = "System.Data.SqlClient";
+
+        private ConcurrentDictionary<string, SqlProviderManifest> _providerManifests =
+            new ConcurrentDictionary<string, SqlProviderManifest>();
 
         // <summary>
         // Private constructor to ensure only Singleton instance is created.
@@ -373,7 +377,7 @@ namespace System.Data.Entity.SqlServer
                 throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
 
-            return new SqlProviderManifest(versionHint);
+            return _providerManifests.GetOrAdd(versionHint, s => new SqlProviderManifest(s));
         }
 
         /// <summary>

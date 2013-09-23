@@ -60,6 +60,53 @@ namespace System.Data.Entity.SqlServer
         {
             // GetSqlVersion will throw ArgumentException if manifestToken is null, empty, or not recognized.
             _version = SqlVersionUtils.GetSqlVersion(manifestToken);
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            if (_version == SqlVersion.Sql10
+                || _version == SqlVersion.Sql11)
+            {
+                _primitiveTypes = base.GetStoreTypes();
+                _functions = base.GetStoreFunctions();
+            }
+            else
+            {
+                var primitiveTypes = new List<PrimitiveType>(base.GetStoreTypes());
+                Debug.Assert(
+                    (_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9),
+                    "Found version other than SQL 8, 9, 10 or 11.");
+                    //Remove the Katmai types for both SQL 8 and SQL 9
+                    primitiveTypes.RemoveAll(
+                        primitiveType => primitiveType.Name.Equals("time", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("date", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("datetime2", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("datetimeoffset", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("geography", StringComparison.OrdinalIgnoreCase) ||
+                                         primitiveType.Name.Equals("geometry", StringComparison.OrdinalIgnoreCase)
+                        );
+                    //Remove the types that won't work in SQL 8
+                    if (_version == SqlVersion.Sql8)
+                    {
+                        // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
+                        primitiveTypes.RemoveAll(
+                            primitiveType => primitiveType.Name.Equals("xml", StringComparison.OrdinalIgnoreCase) ||
+                                             primitiveType.Name.EndsWith("(max)", StringComparison.OrdinalIgnoreCase)
+                            );
+                    }
+                _primitiveTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
+
+                //Remove the functions over katmai types from both SQL 9 and SQL 8.
+                var functions = base.GetStoreFunctions().Where(f => !IsKatmaiOrNewer(f));
+                if (_version == SqlVersion.Sql8)
+                {
+                    // SQLBUDT 550998: Remove unsupported overloads from Provider Manifest on SQL 8.0
+                    functions = functions.Where(f => !IsYukonOrNewer(f));
+                }
+                _functions = new ReadOnlyCollection<EdmFunction>(functions.ToList());
+            }
         }
 
         #endregion
@@ -175,78 +222,13 @@ namespace System.Data.Entity.SqlServer
             throw new ProviderIncompatibleException(Strings.ProviderReturnedNullForGetDbInformation(informationType));
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase")]
         public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
         {
-            if (_primitiveTypes == null)
-            {
-                if (_version == SqlVersion.Sql10
-                    ||
-                    _version == SqlVersion.Sql11)
-                {
-                    _primitiveTypes = base.GetStoreTypes();
-                }
-                else
-                {
-                    var primitiveTypes = new List<PrimitiveType>(base.GetStoreTypes());
-                    Debug.Assert(
-                        (_version == SqlVersion.Sql8) || (_version == SqlVersion.Sql9),
-                        "Found version other than SQL 8, 9, 10 or 11.");
-                    //Remove the Katmai types for both SQL 8 and SQL 9
-                    primitiveTypes.RemoveAll(
-                        delegate(PrimitiveType primitiveType)
-                        {
-                            var name = primitiveType.Name.ToLowerInvariant();
-                            return name.Equals("time", StringComparison.Ordinal) ||
-                                   name.Equals("date", StringComparison.Ordinal) ||
-                                   name.Equals("datetime2", StringComparison.Ordinal) ||
-                                   name.Equals("datetimeoffset", StringComparison.Ordinal) ||
-                                   name.Equals("geography", StringComparison.Ordinal) ||
-                                   name.Equals("geometry", StringComparison.Ordinal);
-                        }
-                        );
-                    //Remove the types that won't work in SQL 8
-                    if (_version == SqlVersion.Sql8)
-                    {
-                        // SQLBUDT 550667 and 551271: Remove xml and 'max' types for SQL Server 2000
-                        primitiveTypes.RemoveAll(
-                            delegate(PrimitiveType primitiveType)
-                            {
-                                var name = primitiveType.Name.ToLowerInvariant();
-                                return name.Equals("xml", StringComparison.Ordinal) || name.EndsWith("(max)", StringComparison.Ordinal);
-                            }
-                            );
-                    }
-                    _primitiveTypes = new ReadOnlyCollection<PrimitiveType>(primitiveTypes);
-                }
-            }
-
             return _primitiveTypes;
         }
 
         public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
         {
-            if (_functions == null)
-            {
-                if (_version == SqlVersion.Sql10
-                    ||
-                    _version == SqlVersion.Sql11)
-                {
-                    _functions = base.GetStoreFunctions();
-                }
-                else
-                {
-                    //Remove the functions over katmai types from both SQL 9 and SQL 8.
-                    var functions = base.GetStoreFunctions().Where(f => !IsKatmaiOrNewer(f));
-                    if (_version == SqlVersion.Sql8)
-                    {
-                        // SQLBUDT 550998: Remove unsupported overloads from Provider Manifest on SQL 8.0
-                        functions = functions.Where(f => !IsYukonOrNewer(f));
-                    }
-                    _functions = new ReadOnlyCollection<EdmFunction>(functions.ToList());
-                }
-            }
-
             return _functions;
         }
 

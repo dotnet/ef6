@@ -57,6 +57,13 @@ namespace System.Data.Entity.SqlServerCompact
             Assert.Equal(Resources.Strings.UnableToDetermineStoreVersion, baseException.Message);
         }
 
+        [Fact]
+        public void GetProviderManifest_returns_cached_object()
+        {
+            var localManifest = SqlCeProviderServices.Instance.GetProviderManifest("2008");
+            Assert.Same(localManifest, SqlCeProviderServices.Instance.GetProviderManifest("2010"));
+        }
+
         public class GetService
         {
             [Fact]

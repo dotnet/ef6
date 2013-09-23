@@ -51,9 +51,6 @@ namespace System.Data.Entity.SqlServerCompact
         private const string storeSchemaDescriptionFileForRDP =
             "Microsoft.SqlServerCe.Client.Resources.Entity.SqlCeProviderServices.StoreSchemaDefinition.ssdl";
 
-        private ReadOnlyCollection<PrimitiveType> _primitiveTypes;
-        private ReadOnlyCollection<EdmFunction> _functions;
-
         #endregion
 
         #region Constructors
@@ -112,26 +109,6 @@ namespace System.Data.Entity.SqlServerCompact
             throw ADP1.ProviderIncompatible(EntityRes.GetString(EntityRes.ProviderReturnedNullForGetDbInformation, informationType));
         }
 
-        public override ReadOnlyCollection<PrimitiveType> GetStoreTypes()
-        {
-            if (_primitiveTypes == null)
-            {
-                _primitiveTypes = base.GetStoreTypes();
-            }
-
-            return _primitiveTypes;
-        }
-
-        public override ReadOnlyCollection<EdmFunction> GetStoreFunctions()
-        {
-            if (_functions == null)
-            {
-                _functions = base.GetStoreFunctions();
-            }
-
-            return _functions;
-        }
-
         // <summary>
         // This method takes a type and a set of facets and returns the best mapped equivalent type
         // in EDM.
@@ -152,7 +129,6 @@ namespace System.Data.Entity.SqlServerCompact
             var edmPrimitiveType = base.StoreTypeNameToEdmPrimitiveType[storeTypeName];
 
             var maxLength = 0;
-            var isUnicode = true;
             var isFixedLen = false;
             var isUnbounded = true;
 
@@ -172,21 +148,18 @@ namespace System.Data.Entity.SqlServerCompact
                 case "nvarchar":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
                     isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
-                    isUnicode = true;
                     isFixedLen = false;
                     break;
 
                 case "nchar":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
                     isUnbounded = !TypeHelpers.TryGetMaxLength(storeType, out maxLength);
-                    isUnicode = true;
                     isFixedLen = true;
                     break;
 
                 case "ntext":
                     newPrimitiveTypeKind = PrimitiveTypeKind.String;
                     isUnbounded = true;
-                    isUnicode = true;
                     isFixedLen = false;
                     break;
 
@@ -249,14 +222,13 @@ namespace System.Data.Entity.SqlServerCompact
             switch (newPrimitiveTypeKind)
             {
                 case PrimitiveTypeKind.String:
-                    Debug.Assert(isUnicode, "SQLCE supports unicode datatypes only");
                     if (!isUnbounded)
                     {
-                        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, isUnicode, isFixedLen, maxLength);
+                        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, /*isUnicode*/ true, isFixedLen, maxLength);
                     }
                     else
                     {
-                        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, isUnicode, isFixedLen);
+                        return TypeUsage.CreateStringTypeUsage(edmPrimitiveType, /*isUnicode*/ true, isFixedLen);
                     }
                 case PrimitiveTypeKind.Binary:
                     if (!isUnbounded)
@@ -376,8 +348,6 @@ namespace System.Data.Entity.SqlServerCompact
                 case PrimitiveTypeKind.String:
                     //char, nchar, varchar, nvarchar, ntext, text, xml
                     {
-                        var isUnicode = null == facets[ProviderManifest.UnicodeFacetName].Value
-                                        || (bool)facets[ProviderManifest.UnicodeFacetName].Value;
                         var isFixedLength = null != facets[ProviderManifest.FixedLengthFacetName].Value
                                             && (bool)facets[ProviderManifest.FixedLengthFacetName].Value;
                         var f = facets[ProviderManifest.MaxLengthFacetName];

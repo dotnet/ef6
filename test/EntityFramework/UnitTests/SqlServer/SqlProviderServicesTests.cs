@@ -46,6 +46,36 @@ namespace System.Data.Entity.SqlServer
             }
         }
 
+        public class GetDbProviderManifest : TestBase
+        {
+            internal const string TokenSql8 = "2000";
+            internal const string TokenSql9 = "2005";
+            internal const string TokenSql10 = "2008";
+            internal const string TokenSql11 = "2012";
+            internal const string TokenAzure11 = "2012.Azure";
+
+            [Fact]
+            public void Returns_cached_objects()
+            {
+                var manifest8 = SqlProviderServices.Instance.GetProviderManifest(TokenSql8);
+                var manifest9 = SqlProviderServices.Instance.GetProviderManifest(TokenSql9);
+                var manifest10 = SqlProviderServices.Instance.GetProviderManifest(TokenSql10);
+                var manifest11 = SqlProviderServices.Instance.GetProviderManifest(TokenSql11);
+                var manifestAzure = SqlProviderServices.Instance.GetProviderManifest(TokenAzure11);
+
+                Assert.Same(manifest8, SqlProviderServices.Instance.GetProviderManifest(TokenSql8));
+                Assert.Same(manifest9, SqlProviderServices.Instance.GetProviderManifest(TokenSql9));
+                Assert.Same(manifest10, SqlProviderServices.Instance.GetProviderManifest(TokenSql10));
+                Assert.Same(manifest11, SqlProviderServices.Instance.GetProviderManifest(TokenSql11));
+                Assert.Same(manifestAzure, SqlProviderServices.Instance.GetProviderManifest(TokenAzure11));
+
+                Assert.NotSame(manifest8, manifest9);
+                Assert.NotSame(manifest9, manifest10); 
+                Assert.NotSame(manifest10, manifest11); 
+                Assert.NotSame(manifest11, manifestAzure);
+            }
+        }
+
         public class GetDbProviderManifestToken : TestBase
         {
             [Fact]
