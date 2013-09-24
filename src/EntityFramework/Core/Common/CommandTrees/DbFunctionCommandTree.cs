@@ -32,7 +32,6 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// <paramref name="dataSpace" /> does not represent a valid data space or <paramref name="edmFunction" />
         /// is a composable function
         /// </exception>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public DbFunctionCommandTree(
             MetadataWorkspace metadata, DataSpace dataSpace, EdmFunction edmFunction, TypeUsage resultType,

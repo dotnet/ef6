@@ -734,10 +734,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // Gets a metadata wrapper for the given type. The wrapper makes
         // certain tasks in the update pipeline more efficient.
         // </summary>
-        // <param name="entitySetBase"> </param>
         // <param name="type"> Structural type </param>
         // <returns> Metadata wrapper </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal ExtractorMetadata GetExtractorMetadata(EntitySetBase entitySetBase, StructuralType type)
         {
             ExtractorMetadata metadata;

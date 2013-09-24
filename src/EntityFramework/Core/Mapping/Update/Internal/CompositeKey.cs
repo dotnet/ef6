@@ -40,10 +40,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // <summary>
         // Creates a merged key instance where each key component contains both elements.
         // </summary>
-        // <param name="keyManager"> </param>
         // <param name="other"> Must be a non-null compatible key (same number of components). </param>
         // <returns> Merged key. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal CompositeKey Merge(KeyManager keyManager, CompositeKey other)
         {
             DebugCheck.NotNull(other);

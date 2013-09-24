@@ -1430,12 +1430,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // 2) Otherwise:
         // object.Method(argument) ->  defaultTranslator
         // </summary>
-        // <param name="call"> </param>
         // <param name="insertPercentAtStart"> Should '%' be inserted at the begining of the pattern </param>
         // <param name="insertPercentAtEnd"> Should '%' be inserted at the end of the pattern </param>
         // <param name="defaultTranslator"> The delegate that provides the default translation </param>
         // <returns> The translation </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbExpression TranslateFunctionIntoLike(
             MethodCallExpression call, bool insertPercentAtStart, bool insertPercentAtEnd,
             Func<ExpressionConverter, MethodCallExpression, DbExpression, DbExpression, DbExpression> defaultTranslator)
@@ -1541,8 +1539,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // </summary>
         // <param name="functionName"> Should represent a non-aggregate canonical function </param>
         // <param name="Expression"> Passed only for error handling purposes </param>
-        // <param name="linqArguments"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbFunctionExpression TranslateIntoCanonicalFunction(
             string functionName, Expression Expression, params Expression[] linqArguments)
         {
@@ -1559,8 +1555,6 @@ namespace System.Data.Entity.Core.Objects.ELinq
         // </summary>
         // <param name="functionName"> Should represent a non-aggregate canonical function </param>
         // <param name="Expression"> Passed only for error handling purposes </param>
-        // <param name="translatedArguments"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbFunctionExpression CreateCanonicalFunction(
             string functionName, Expression Expression, params DbExpression[] translatedArguments)
         {

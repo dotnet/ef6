@@ -171,9 +171,6 @@ namespace System.Data.Entity.Core.EntityClient
         // </summary>
         // <param name="connection"> The connection against which this EntityCommand should execute </param>
         // <param name="entityCommandDefinition"> The prepared command definition that can be executed using this EntityCommand </param>
-        // <param name="context"> </param>
-        // <param name="factory"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntityCommand(
             EntityConnection connection, EntityCommandDefinition entityCommandDefinition, DbInterceptionContext context, EntityDataReaderFactory factory = null)
             : this(entityCommandDefinition, context, factory)

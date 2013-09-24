@@ -49,9 +49,7 @@ namespace System.Data.Entity.Core.Mapping
         // For instance, given the types Base, Derived1 : Base, and Derived2 : Derived1,
         // w.r.t. Derived1 "IsTypeOf(Derived1)" takes precedence over "IsTypeOf(Base)" when you ask for the rename of Derived1
         // </summary>
-        // <param name="type"> </param>
         // <param name="lineInfo"> Empty for default rename mapping. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal string GetRename(EdmType type, out IXmlLineInfo lineInfo)
         {
             DebugCheck.NotNull(type);

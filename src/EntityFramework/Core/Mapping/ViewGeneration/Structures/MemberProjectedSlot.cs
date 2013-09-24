@@ -123,9 +123,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // Given the <paramref name="prefix" />, determines the slots in <paramref name="slots" /> that correspond to the entity key for the entity set or the
         // association set end. Returns the list of slots.  Returns null if even one of the key slots is not present in slots.
         // </summary>
-        // <param name="slots"> </param>
         // <param name="prefix"> corresponds to an entity set or an association end </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static List<MemberProjectedSlot> GetKeySlots(IEnumerable<MemberProjectedSlot> slots, MemberPath prefix)
         {
             // Get the entity type of the hosted end or entity set

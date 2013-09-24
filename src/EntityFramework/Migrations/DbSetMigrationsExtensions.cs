@@ -28,7 +28,6 @@ namespace System.Data.Entity.Migrations
         /// When the <paramref name="set" /> parameter is a custom or fake IDbSet implementation, this method will
         /// attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static void AddOrUpdate<TEntity>(
             this IDbSet<TEntity> set, params TEntity[] entities)
             where TEntity : class
@@ -74,7 +73,6 @@ namespace System.Data.Entity.Migrations
         /// When the <paramref name="set" /> parameter is a custom or fake IDbSet implementation, this method will
         /// attempt to locate and invoke a public, instance method with the same signature as this extension method.
         /// </remarks>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static void AddOrUpdate<TEntity>(
             this IDbSet<TEntity> set, Expression<Func<TEntity, object>> identifierExpression, params TEntity[] entities)

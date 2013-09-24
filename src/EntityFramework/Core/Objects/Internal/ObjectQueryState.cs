@@ -68,11 +68,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // <summary>
         // Constructs a new <see cref="ObjectQueryState" /> instance that uses the specified context and parameters collection.
         // </summary>
-        // <param name="elementType"> </param>
         // <param name="context"> The ObjectContext to which the implemented ObjectQuery belongs </param>
-        // <param name="parameters"> </param>
-        // <param name="span"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected ObjectQueryState(Type elementType, ObjectContext context, ObjectParameterCollection parameters, Span span)
         {
             // Validate the element type

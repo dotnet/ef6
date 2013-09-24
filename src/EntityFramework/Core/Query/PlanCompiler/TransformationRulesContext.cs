@@ -60,9 +60,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // validated by the caller.
         // </summary>
         // <param name="node"> Current subtree to process </param>
-        // <param name="varMap"> </param>
         // <returns> The updated subtree </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "scalarOp")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
@@ -478,9 +476,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // If the rule is among the rules after which reapplying the nullability rules may be beneficial,
         // m_reapplyNullabilityRules is set to true.
         // </summary>
-        // <param name="n"> </param>
         // <param name="rule"> the rule that was applied </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override void PostProcess(Node n, Rule rule)
         {
             if (rule != null)

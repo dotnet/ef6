@@ -318,10 +318,8 @@ namespace System.Data.Entity.SqlServerCompact
         // <summary>
         // Append raw SQL into the string builder with formatting options and invariant culture formatting.
         // </summary>
-        // <param name="builder"> </param>
         // <param name="format"> A composite format string. </param>
         // <param name="args"> An array of objects to format. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void AppendSqlInvariantFormat(StringBuilder builder, string format, params object[] args)
         {
             builder.AppendFormat(CultureInfo.InvariantCulture, format, args);

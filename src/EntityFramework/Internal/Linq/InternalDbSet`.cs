@@ -42,10 +42,8 @@ namespace System.Data.Entity.Internal.Linq
         // Creates an instance of this class.  This method is used with CreateDelegate to cache a delegate
         // that can create a generic instance without calling MakeGenericType every time.
         // </summary>
-        // <param name="internalContext"> </param>
         // <param name="internalSet"> The internal set to wrap, or null if a new internal set should be created. </param>
         // <returns> The set. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static InternalDbSet<TEntity> Create(InternalContext internalContext, IInternalSet internalSet)
         {
             return

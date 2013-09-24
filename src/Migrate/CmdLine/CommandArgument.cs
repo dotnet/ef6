@@ -21,7 +21,6 @@ namespace CmdLine
         // <summary>
         // Initializes a CommandArgument from a Regex match
         // </summary>
-        // <param name="match"> </param>
         public CommandArgument(Match match)
         {
             Token = GetGroupValue(match, TokenGroup);

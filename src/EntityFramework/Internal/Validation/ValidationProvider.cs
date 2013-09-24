@@ -58,12 +58,10 @@ namespace System.Data.Entity.Internal.Validation
         // <summary>
         // Returns a validator to validate <paramref name="property" />.
         // </summary>
-        // <param name="owningEntity"> </param>
         // <param name="property"> Navigation property the validator is requested for. </param>
         // <returns>
         // Validator to validate <paramref name="property" /> . Possibly null if no validation has been specified for the requested property.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public virtual PropertyValidator GetPropertyValidator(
             InternalEntityEntry owningEntity, InternalMemberEntry property)
         {

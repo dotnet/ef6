@@ -152,9 +152,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         // the RelationshipManager when needed, then this method is a no-op.  This is
         // typically the case for non-POCO entities.
         // </summary>
-        // <param name="relatedEnd"> </param>
         // <param name="value"> The value to remove </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         void RemoveNavigationPropertyValue(RelatedEnd relatedEnd, object value);
 
         // <summary>

@@ -33,11 +33,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // res://MyAssembly/  -- could be multiple artifacts in the one assembly
         // </summary>
         // <param name="originalPath"> The path to the (collection of) resources </param>
-        // <param name="assemblyName"> </param>
-        // <param name="resourceName"> </param>
         // <param name="uriRegistry"> The global registry of URIs </param>
-        // <param name="resolver"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderCompositeResource(
             string originalPath, string assemblyName, string resourceName, ICollection<string> uriRegistry,
             MetadataArtifactAssemblyResolver resolver)
@@ -142,11 +138,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Load all resources from the assembly/assemblies identified in the resource path.
         // </summary>
-        // <param name="assemblyName"> </param>
-        // <param name="resourceName"> </param>
         // <param name="uriRegistry"> The global registry of URIs </param>
-        // <param name="resolver"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static List<MetadataArtifactLoaderResource> LoadResources(
             string assemblyName, string resourceName, ICollection<string> uriRegistry, MetadataArtifactAssemblyResolver resolver)
         {
@@ -341,9 +333,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // part (if any)
         // </summary>
         // <param name="path"> The resource path to parse </param>
-        // <param name="assemblyName"> </param>
-        // <param name="resourceName"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void ParseResourcePath(string path, out string assemblyName, out string resourceName)
         {
             // Extract the components from the path

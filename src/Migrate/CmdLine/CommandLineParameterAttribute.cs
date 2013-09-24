@@ -194,7 +194,6 @@ namespace CmdLine
         // Searches a type for all properties with the CommandLineParameterAttribute and does action
         // </summary>
         // <param name="argumentType"> The argument type </param>
-        // <param name="selector"> </param>
         // <param name="action"> The action to apply </param>
         internal static void ForEach(
             Type argumentType, Func<PropertyInfo, IEnumerable<CommandLineParameterAttribute>> selector,

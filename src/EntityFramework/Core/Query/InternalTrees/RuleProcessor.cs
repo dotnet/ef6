@@ -159,10 +159,8 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Apply a set of rules to the subtree
         // </summary>
         // <param name="context"> Rule processing context </param>
-        // <param name="rules"> </param>
         // <param name="subTreeRoot"> current subtree </param>
         // <returns> transformed subtree </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node ApplyRulesToSubtree(
             RuleProcessingContext context, ReadOnlyCollection<ReadOnlyCollection<Rule>> rules, Node subTreeRoot)
         {

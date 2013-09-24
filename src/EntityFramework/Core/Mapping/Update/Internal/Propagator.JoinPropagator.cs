@@ -477,7 +477,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             }
 
             // <summary>
-            // See <see cref="LeftPlaceholder"></see>
+            // See <see cref="LeftPlaceholder" />
             // </summary>
             private PropagatorResult RightPlaceholder(CompositeKey key, PopulateMode mode)
             {

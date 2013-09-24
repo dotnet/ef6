@@ -26,8 +26,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Public constructor
         // </summary>
         // <param name="defingingGroupNode"> The GroupIntoOp node </param>
-        // <param name="groupAggregateVar"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal GroupAggregateVarInfo(Node defingingGroupNode, Var groupAggregateVar)
         {
             _definingGroupByNode = defingingGroupNode;

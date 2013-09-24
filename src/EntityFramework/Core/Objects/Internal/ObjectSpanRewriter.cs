@@ -81,12 +81,9 @@ namespace System.Data.Entity.Core.Objects.Internal
         // Constructs a new ObjectSpanRewriter that will attempt to apply spanning to the specified query
         // (represented as a DbExpression) when <see cref="RewriteQuery" /> is called.
         // </summary>
-        // <param name="tree"> </param>
         // <param name="toRewrite">
         // A <see cref="DbExpression" /> representing the query to span.
         // </param>
-        // <param name="aliasGenerator"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal ObjectSpanRewriter(DbCommandTree tree, DbExpression toRewrite, AliasGenerator aliasGenerator)
         {
             DebugCheck.NotNull(toRewrite);

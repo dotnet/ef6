@@ -51,13 +51,8 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // Initializes a new query EntitySqlQueryState instance.
         // </summary>
-        // <param name="elementType"> </param>
         // <param name="commandText"> The Entity-SQL text of the query </param>
-        // <param name="allowsLimit"> </param>
         // <param name="context"> The ObjectContext containing the metadata workspace the query was built against, the connection on which to execute the query, and the cache to store the results in. Must not be null. </param>
-        // <param name="parameters"> </param>
-        // <param name="span"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntitySqlQueryState(
             Type elementType, string commandText, bool allowsLimit, ObjectContext context, ObjectParameterCollection parameters, Span span)
             : this(elementType, commandText, /*expression*/ null, allowsLimit, context, parameters, span)
@@ -67,18 +62,12 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // Initializes a new query EntitySqlQueryState instance.
         // </summary>
-        // <param name="elementType"> </param>
         // <param name="commandText"> The Entity-SQL text of the query </param>
         // <param name="expression">
         // Optional <see cref="DbExpression" /> that defines the query. Must be semantically equal to the
         // <paramref name="commandText" />.
         // </param>
-        // <param name="allowsLimit"> </param>
         // <param name="context"> The ObjectContext containing the metadata workspace the query was built against, the connection on which to execute the query, and the cache to store the results in. Must not be null. </param>
-        // <param name="parameters"> </param>
-        // <param name="span"> </param>
-        // <param name="objectQueryExecutionPlanFactory"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntitySqlQueryState(
             Type elementType, string commandText, DbExpression expression, bool allowsLimit, ObjectContext context,
             ObjectParameterCollection parameters, Span span,

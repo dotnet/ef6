@@ -24,10 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Constructor - loads the resource stream
         // </summary>
-        // <param name="assembly"> </param>
-        // <param name="resourceName"> </param>
         // <param name="uriRegistry"> The global registry of URIs </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MetadataArtifactLoaderResource(Assembly assembly, string resourceName, ICollection<string> uriRegistry)
         {
             DebugCheck.NotNull(assembly);

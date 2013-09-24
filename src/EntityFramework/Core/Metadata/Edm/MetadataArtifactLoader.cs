@@ -71,9 +71,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="extensionCheck"> Any URI extension checks to perform </param>
         // <param name="validExtension"> A specific extension for an artifact resource </param>
         // <param name="uriRegistry"> The global registry of URIs </param>
-        // <param name="resolver"> </param>
         // <returns> A concrete instance of an artifact loader. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [ResourceExposure(ResourceScope.Machine)] //Exposes the file name which is a Machine resource
         [ResourceConsumption(ResourceScope.Machine)] //For CheckArtifactExtension method call. But the path is not created in this method.
         internal static MetadataArtifactLoader Create(

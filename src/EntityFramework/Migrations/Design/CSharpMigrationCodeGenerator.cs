@@ -274,7 +274,6 @@ namespace System.Data.Entity.Migrations.Design
         /// </summary>
         /// <param name="namespace"> </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
         {

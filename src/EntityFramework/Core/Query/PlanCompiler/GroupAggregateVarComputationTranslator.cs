@@ -47,14 +47,9 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // aggregate var
         // </summary>
         // <param name="subtree"> The input subtree </param>
-        // <param name="isVarDefinition"> </param>
-        // <param name="command"> </param>
-        // <param name="groupAggregateVarInfoManager"> </param>
         // <param name="groupAggregateVarInfo"> The groupAggregateVarInfo over which the input subtree can be translated </param>
         // <param name="templateNode"> A tree that is equvalent to the input tree, but over the group aggregate variable represented by the groupAggregetVarInfo </param>
-        // <param name="isUnnested"> </param>
         // <returns> True, if the translation can be done, false otherwise </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public static bool TryTranslateOverGroupAggregateVar(
             Node subtree,
             bool isVarDefinition,

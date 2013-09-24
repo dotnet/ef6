@@ -88,9 +88,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
         {
             EdmType cdmType = null;
@@ -184,9 +182,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
             return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);

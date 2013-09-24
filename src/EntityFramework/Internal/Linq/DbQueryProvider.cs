@@ -32,9 +32,7 @@ namespace System.Data.Entity.Internal.Linq
         // <summary>
         // Creates a provider that wraps the given provider.
         // </summary>
-        // <param name="internalContext"> </param>
         // <param name="provider"> The provider to wrap. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public DbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
         {
             DebugCheck.NotNull(internalContext);

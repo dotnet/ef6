@@ -353,9 +353,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <param name="sqlVersion"> Server version </param>
         // <param name="parameters"> Parameters to add to the command tree corresponding to constants in the command tree. Used only in ModificationCommandTrees. </param>
         // <param name="commandType"> CommandType for generated command. </param>
-        // <param name="paramsToForceNonUnicode"> </param>
-        // <returns> The string representing the SQL to be executed. </returns>\
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
+        // <returns> The string representing the SQL to be executed. </returns>
         internal static string GenerateSql(
             DbCommandTree tree, SqlVersion sqlVersion, out List<SqlParameter> parameters, out CommandType commandType,
             out HashSet<string> paramsToForceNonUnicode)
@@ -515,10 +513,8 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Convert the SQL fragments to a string. Writes a string representing the SQL to be executed
         // into the specified writer.
         // </summary>
-        // <param name="writer"> </param>
         // <param name="sqlStatement">The fragment to be emitted</param>
         // <returns>The writer specified for fluent continuations. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal SqlWriter WriteSql(SqlWriter writer, ISqlFragment sqlStatement)
         {
             sqlStatement.WriteSql(writer, this);
@@ -2947,9 +2943,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <summary>
         // <see cref="Visit(DbIsEmptyExpression)" />
         // </summary>
-        // <param name="e"> </param>
         // <param name="negate"> Was the parent a DbNotExpression? </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlBuilder VisitIsEmptyExpression(DbIsEmptyExpression e, bool negate)
         {
             var result = new SqlBuilder();
@@ -3027,9 +3021,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // <summary>
         // <see cref="Visit(DbIsNullExpression)" />
         // </summary>
-        // <param name="e"> </param>
         // <param name="negate"> Was the parent a DbNotExpression? </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlBuilder VisitIsNullExpression(DbIsNullExpression e, bool negate)
         {
             var result = new SqlBuilder();
@@ -3691,11 +3683,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Finally, we have to add the alias to the global list of aliases used,
         // and also to the current symbol table.
         // </summary>
-        // <param name="selectStatement"> </param>
         // <param name="inputVarName"> The alias to be used. </param>
-        // <param name="fromSymbol"> </param>
-        // <param name="addToSymbolTable"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void AddFromSymbol(SqlSelectStatement selectStatement, string inputVarName, Symbol fromSymbol, bool addToSymbolTable)
         {
             // the first check is true if this is a new statement
@@ -3726,8 +3714,6 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // Used in the translation of OrderBy
         // </summary>
         // <param name="orderByClause"> The SqlBuilder to which the sort keys should be appended </param>
-        // <param name="sortKeys"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void AddSortKeys(SqlBuilder orderByClause, IList<DbSortClause> sortKeys)
         {
             var separator = "";
@@ -4144,12 +4130,9 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // This method is called by <see cref="Visit(DbFilterExpression)" /> and
         // <see cref="Visit(DbQuantifierExpression)" />
         // </summary>
-        // <param name="input"> </param>
-        // <param name="predicate"> </param>
         // <param name="negatePredicate">
         // This is passed from <see cref="Visit(DbQuantifierExpression)" /> in the All(...) case.
         // </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private SqlSelectStatement VisitFilterExpression(DbExpressionBinding input, DbExpression predicate, bool negatePredicate)
         {
             Symbol fromSymbol;

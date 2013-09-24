@@ -94,15 +94,12 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Process Driver
         // </summary>
-        // <param name="itree"> </param>
         // <param name="referencedTypes"> structured types referenced in the query </param>
         // <param name="referencedEntitySets"> entitysets referenced in the query </param>
         // <param name="freeFloatingEntityConstructorTypes"> entity types that have "free-floating" entity constructors </param>
         // <param name="discriminatorMaps"> information on optimized discriminator patterns for entity sets </param>
         // <param name="relPropertyHelper"> helper for rel properties </param>
         // <param name="typesNeedingNullSentinel"> which types need a null sentinel </param>
-        // <param name="structuredTypeInfo"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void Process(
             Command itree,
             HashSet<md.TypeUsage> referencedTypes,
@@ -121,13 +118,11 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Fills the StructuredTypeInfo instance from the itree provided.
         // </summary>
-        // <param name="itree"> </param>
         // <param name="referencedTypes"> referenced structured types </param>
         // <param name="referencedEntitySets"> referenced entitysets </param>
         // <param name="freeFloatingEntityConstructorTypes"> free-floating entityConstructor types </param>
         // <param name="discriminatorMaps"> discriminator information for entity sets mapped using TPH pattern </param>
         // <param name="relPropertyHelper"> helper for rel properties </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "itree")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

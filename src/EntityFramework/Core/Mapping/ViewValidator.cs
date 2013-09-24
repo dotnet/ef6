@@ -23,10 +23,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // <param name="view"> Query view to validate. </param>
         // <param name="setMapping"> Mapping in which view is declared. </param>
-        // <param name="elementType"> </param>
-        // <param name="includeSubtypes"> </param>
         // <returns> Errors in view definition. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IEnumerable<EdmSchemaError> ValidateQueryView(
             DbQueryCommandTree view, EntitySetBaseMapping setMapping, EntityTypeBase elementType, bool includeSubtypes)
         {

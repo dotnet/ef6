@@ -484,9 +484,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // a join - we invoke the BuildJoinEdges() function on the join node
         // anything else - do nothing
         // </summary>
-        // <param name="node"> </param>
         // <param name="maxVisibility"> highest node that this node is visible at </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void BuildJoinEdges(AugmentedNode node, int maxVisibility)
         {
             switch (node.Node.Op.OpType)

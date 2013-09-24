@@ -766,11 +766,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="namespaceName"> namespace of the function </param>
         // <param name="parameterTypes"> types of the parameters </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
-        // <param name="dataSpace"> </param>
         // <param name="function"> The function that needs to be returned </param>
         // <returns> The function as specified in the function key or null </returns>
         // <exception cref="System.ArgumentNullException">if name, namespaceName, parameterTypes or space argument is null</exception>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetFunction(
             string name,
             string namespaceName,
@@ -834,9 +832,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
         // <param name="mappingSpace"> space for which you want to get the mapped type </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(string typeIdentity, DataSpace typeSpace, bool ignoreCase, DataSpace mappingSpace, out Map map)
         {
             map = null;
@@ -860,10 +856,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Search for a Mapping metadata with the specified type key.
         // </summary>
-        // <param name="item"> </param>
         // <param name="dataSpace"> space for which you want to get the mapped type </param>
         // <exception cref="ArgumentException">Thrown if mapping space is not valid</exception>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual Map GetMap(GlobalItem item, DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, required: true);
@@ -873,11 +867,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <summary>
         // Search for a Mapping metadata with the specified type key.
         // </summary>
-        // <param name="item"> </param>
         // <param name="dataSpace"> space for which you want to get the mapped type </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual bool TryGetMap(GlobalItem item, DataSpace dataSpace, out Map map)
         {
             map = null;

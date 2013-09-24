@@ -248,11 +248,9 @@ namespace System.Data.Entity.Core.Objects
         // Adds an object to the ObjectStateManager.
         // </summary>
         // <param name="wrappedObject"> the object to add </param>
-        // <param name="passedKey"> </param>
         // <param name="entitySet"> the entity set of the given object </param>
         // <param name="argumentName"> Name of the argument passed to a public method, for use in exceptions. </param>
         // <param name="isAdded"> Indicates whether the entity is added or unchanged. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual EntityEntry AddEntry(
             IEntityWrapper wrappedObject, EntityKey passedKey, EntitySet entitySet, string argumentName, bool isAdded)
         {
@@ -639,8 +637,6 @@ namespace System.Data.Entity.Core.Objects
         // <param name="wrappedEntity"> the object to add </param>
         // <param name="replacingEntry"> True if this promoted key entry is replacing an existing detached entry </param>
         // <param name="setIsLoaded"> Tells whether we should allow the IsLoaded flag to be set to true for RelatedEnds </param>
-        // <param name="keyEntryInitialized"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual void PromoteKeyEntry(
             EntityEntry keyEntry,
             IEntityWrapper wrappedEntity,
@@ -1453,10 +1449,8 @@ namespace System.Data.Entity.Core.Objects
         // appropriately matches the given entity.
         // </summary>
         // <param name="wrappedEntity"> The entity whose key must be verified </param>
-        // <param name="entityKey"> </param>
         // <param name="entitySetForType"> The entity set corresponding to the type of the given entity. </param>
         // <param name="forAttach"> If true, then the exception message will reflect a bad key to attach, otherwise it will reflect a general inconsistency </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void CheckKeyMatchesEntity(IEntityWrapper wrappedEntity, EntityKey entityKey, EntitySet entitySetForType, bool forAttach)
         {
             DebugCheck.NotNull(wrappedEntity);

@@ -78,11 +78,8 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         //     name="builder" />
         // .
         // </summary>
-        // <param name="builder"> </param>
         // <param name="outputMember"> outputMember is non-null if this slot is not a constant slot </param>
-        // <param name="blockAlias"> </param>
         // <param name="indentLevel"> indicates the appropriate indentation level (method can ignore it) </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal abstract StringBuilder AsEsql(StringBuilder builder, MemberPath outputMember, string blockAlias, int indentLevel);
 
         // <summary>

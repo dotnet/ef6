@@ -245,12 +245,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // resources. See the remarks section below for some useful information.
         // </summary>
         // <param name="xmlReaders"> A list of XmlReader instances </param>
-        // <param name="sourceFilePaths"> </param>
         // <param name="dataModelOption"> whether this is a entity data model or provider data model </param>
         // <param name="providerManifest"> provider manifest from which the primitive type definition comes from </param>
         // <param name="itemCollection"> item collection to add the item after loading </param>
-        // <param name="throwOnError"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static IList<EdmSchemaError> LoadItems(
             IEnumerable<XmlReader> xmlReaders,
             IEnumerable<string> sourceFilePaths,

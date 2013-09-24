@@ -35,9 +35,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // This method will return null if the attribute is not present and otherwise will return the
         // attribute value.
         // </summary>
-        // <param name="nav"> </param>
         // <param name="attributeName"> name of the attribute </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static string GetAttributeValue(
             XPathNavigator nav,
             string attributeName)

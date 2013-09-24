@@ -64,10 +64,8 @@ namespace System.Data.Entity.Core.Common.QueryCache
         // <param name="parametersToken"> A string representation of the parameters to the query (may be null) </param>
         // <param name="includePathsToken"> A string representation of the Include span paths in effect (may be null) </param>
         // <param name="mergeOption"> The merge option in effect. Required for result assembly. </param>
-        // <param name="streaming"> </param>
         // <param name="useCSharpNullComparisonBehavior"> Flag indicating if the C# behavior should be used for null comparisons </param>
         // <param name="resultType"> The type of each result item - for a given query as a CLR type instance </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal LinqQueryCacheKey(
             string expressionKey,
             int parameterCount,

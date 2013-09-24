@@ -160,12 +160,7 @@ namespace System.Data.Entity.Core.Mapping
             // <summary>
             // Generates a single query view for a given Extent and type. It is used to generate OfType and OfTypeOnly views.
             // </summary>
-            // <param name="entityContainer"> </param>
-            // <param name="entity"> </param>
-            // <param name="type"> </param>
             // <param name="includeSubtypes"> Whether the view should include extents that are subtypes of the given entity </param>
-            // <param name="generatedView"> </param>
-            [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
             private bool TryGenerateQueryViewOfType(
                 EntityContainer entityContainer, EntitySetBase entity, EntityTypeBase type, bool includeSubtypes,
                 out GeneratedView generatedView)
@@ -594,8 +589,6 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="storeCollection"> The store metadata collection that this mapping is to use </param>
         // <param name="xmlReaders"> The XmlReaders to load mapping from </param>
         // <param name="filePaths"> Mapping URIs </param>
-        // <param name="throwOnError"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private IList<EdmSchemaError> Init(
             EdmItemCollection edmCollection,
             StoreItemCollection storeCollection,
@@ -736,9 +729,7 @@ namespace System.Data.Entity.Core.Mapping
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
         // <param name="ignoreCase"> true for case-insensitive lookup </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, bool ignoreCase, out Map map)
         {
             if (typeSpace != DataSpace.CSpace)
@@ -764,9 +755,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // <param name="identity"> identity of the type </param>
         // <param name="typeSpace"> The dataspace that the type for which map needs to be returned belongs to </param>
-        // <param name="map"> </param>
         // <returns> Returns false if no match found. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal override bool TryGetMap(string identity, DataSpace typeSpace, out Map map)
         {
             return TryGetMap(identity, typeSpace, false /*ignoreCase*/, out map);
@@ -1047,8 +1036,6 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // <param name="functionMappings"> Modification function mapping. Must not be null. </param>
         // <param name="interestingMembersKind"> Update scenario the members will be used in (in general - partial update vs. full update). </param>
-        // <param name="interestingMembers"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void FindInterestingFunctionMappingMembers(
             EntityTypeModificationFunctionMapping functionMappings, InterestingMembersKind interestingMembersKind,
             ref List<EdmMember> interestingMembers)

@@ -27,11 +27,8 @@ namespace System.Data.Entity.Core.Query.ResultAssembly
         // and ResultColumn Hierarchy.  All construction of top level data readers go through
         // this method.
         // </summary>
-        // <param name="storeDataReader"> </param>
         // <param name="columnMap"> column map of the first result set </param>
-        // <param name="workspace"> </param>
         // <param name="nextResultColumnMaps"> enumerable of the column maps for NextResult() calls. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         public virtual DbDataReader Create(
             DbDataReader storeDataReader, ColumnMap columnMap, MetadataWorkspace workspace, IEnumerable<ColumnMap> nextResultColumnMaps)
         {

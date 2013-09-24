@@ -2387,8 +2387,6 @@ namespace System.Data.Entity.Core.Objects
         // The entity is added to the entities dictionary, and checked for duplicates.
         // </summary>
         // <param name="entities"> on exit, entity is added to this dictionary. </param>
-        // <param name="key"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void RefreshCheck(
             Dictionary<EntityKey, EntityEntry> entities, EntityKey key)
         {

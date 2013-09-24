@@ -58,8 +58,6 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // API to accept the current values as original values and  mark the entity as Unchanged.
         // </summary>
-        // <param> </param>
-        // <returns> </returns>
         public override bool IsRelationship
         {
             get
@@ -171,11 +169,6 @@ namespace System.Data.Entity.Core.Objects
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationState);
         }
 
-        // <summary>
-        // Original values
-        // </summary>
-        // <param> </param>
-        // <returns> DbDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override DbDataRecord OriginalValues
         {
@@ -196,10 +189,6 @@ namespace System.Data.Entity.Core.Objects
             throw new InvalidOperationException(Strings.ObjectStateEntry_CantModifyRelationValues);
         }
 
-        // <summary>
-        // Current values
-        // </summary>
-        // <param> </param>
         // <returns> DbUpdatableDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override CurrentValueRecord CurrentValues

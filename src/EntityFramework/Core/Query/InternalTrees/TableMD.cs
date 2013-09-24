@@ -52,9 +52,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // The table may correspond to an entity set (if the entityset parameter was non-null)
         // </summary>
         // <param name="properties"> prperties corresponding to columns of the table </param>
-        // <param name="keyProperties"> </param>
         // <param name="extent"> entityset corresponding to the table (if any) </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal TableMD(
             IEnumerable<EdmProperty> properties, IEnumerable<EdmMember> keyProperties,
             EntitySetBase extent)

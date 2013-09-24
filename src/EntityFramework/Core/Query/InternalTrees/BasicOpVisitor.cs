@@ -74,8 +74,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Default handler for all JoinOps
         // </summary>
         // <param name="op"> join op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitJoinOp(JoinBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -85,8 +83,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Default handler for all ApplyOps
         // </summary>
         // <param name="op"> apply op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitApplyOp(ApplyBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -96,8 +92,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Default handler for all SetOps
         // </summary>
         // <param name="op"> set op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitSetOp(SetOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -107,8 +101,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Default handler for all SortOps
         // </summary>
         // <param name="op"> sort op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitSortOp(SortBaseOp op, Node n)
         {
             VisitRelOpDefault(op, n);
@@ -726,8 +718,6 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Common handling for all nestOps
         // </summary>
         // <param name="op"> nest op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected virtual void VisitNestOp(NestBaseOp op, Node n)
         {
             VisitPhysicalOpDefault(op, n);

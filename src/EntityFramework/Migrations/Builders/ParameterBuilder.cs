@@ -32,7 +32,6 @@ namespace System.Data.Entity.Migrations.Builders
         /// <param name="storeType"> Provider specific data type to use for this parameter. </param>
         /// <param name="outParameter"> </param>
         /// <returns> The newly constructed parameter definition. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
         public ParameterModel Binary(

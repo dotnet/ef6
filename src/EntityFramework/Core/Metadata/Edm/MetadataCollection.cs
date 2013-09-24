@@ -238,12 +238,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Adds an item to the identityDictionary
         // </summary>
         // <param name="identityDictionary"> The collection data to add to </param>
-        // <param name="orderedList"> </param>
         // <param name="identity"> The identity to add </param>
         // <param name="index"> The identity's index in collection </param>
         // <param name="updateIfFound"> Whether the item should be updated if a matching item is found. </param>
         // <returns> Index of the added entity, possibly different from the index parameter if updateIfFound is true. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         private static int AddToDictionary(
             Dictionary<string, OrderedIndex> identityDictionary,

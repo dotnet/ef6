@@ -335,7 +335,6 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // Original values
         // </summary>
-        // <param> </param>
         // <returns> DbDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override DbDataRecord OriginalValues
@@ -403,7 +402,6 @@ namespace System.Data.Entity.Core.Objects
         // <summary>
         // Current values
         // </summary>
-        // <param> </param>
         // <returns> DbUpdatableDataRecord </returns>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override CurrentValueRecord CurrentValues

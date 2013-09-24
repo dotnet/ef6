@@ -737,12 +737,10 @@ namespace System.Data.Entity.Core.Objects.ELinq
                 // </summary>
                 // <param name="result"> DbFunctionExpression for the function definition </param>
                 // <param name="actualReturnType"> Return type expected by the function definition </param>
-                // <param name="parent"> </param>
                 // <param name="call"> LINQ MethodCallExpression </param>
                 // <param name="clrReturnType"> Return type specified by the call </param>
                 // <param name="isElementOfCollection"> Indicates if current call is for an Element of a Collection type </param>
                 // <returns> DbFunctionExpression with aligned return types </returns>
-                [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
                 private CqtExpression ValidateReturnType(
                     CqtExpression result, TypeUsage actualReturnType, ExpressionConverter parent, MethodCallExpression call,
                     Type clrReturnType, bool isElementOfCollection)

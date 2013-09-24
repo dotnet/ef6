@@ -226,9 +226,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // <param name="sourceAccessor"> Accessor of the property on the source of the navigation. </param>
         // <param name="targetAccessor"> Accessor of the property on the target of the navigation. </param>
         // <param name="sourceRoleMultiplicity"> Multiplicity of the source role. RelationshipMultiplicity.OneToOne and RelationshipMultiplicity.Zero are both accepted for a reference end, and RelationshipMultiplicity.Many is accepted for a collection </param>
-        // <param name="existingRelatedEnd"> </param>
         // <returns> Collection of related entities of type TTargetEntity </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EntityCollection<TTargetEntity> GetRelatedCollection<TSourceEntity, TTargetEntity>(
             string relationshipName,
             string sourceRoleName, string targetRoleName, NavigationPropertyAccessor sourceAccessor,

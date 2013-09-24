@@ -70,19 +70,10 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Resolves <paramref name="argTypes" /> against the list of function signatures.
         // </summary>
-        // <param name="functionsMetadata"> </param>
-        // <param name="argTypes"> </param>
         // <param name="getSignatureParams"> function formal signature getter </param>
         // <param name="getParameterTypeUsage"> TypeUsage getter for a signature param </param>
         // <param name="getParameterMode"> ParameterMode getter for a signature param </param>
-        // <param name="flattenArgumentType"> </param>
-        // <param name="flattenParameterType"> </param>
-        // <param name="isPromotableTo"> </param>
-        // <param name="isStructurallyEqual"> </param>
-        // <param name="isGroupAggregateFunction"> </param>
-        // <param name="isAmbiguous"> </param>
         // <returns> Funciton metadata </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static TFunctionMetadata ResolveFunctionOverloads<TFunctionMetadata, TFunctionParameterMetadata>(
             IList<TFunctionMetadata> functionsMetadata,
             IList<TypeUsage> argTypes,
@@ -197,13 +188,8 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <param name="overloadParamList"> list of overload parameter types </param>
         // <param name="getParameterTypeUsage"> TypeUsage getter for the overload parameters </param>
         // <param name="getParameterMode"> ParameterMode getter for the overload parameters </param>
-        // <param name="flattenParameterType"> </param>
-        // <param name="isPromotableTo"> </param>
-        // <param name="isStructurallyEqual"> </param>
-        // <param name="isGroupAggregateFunction"> </param>
         // <param name="totalRank"> returns total promotion rank of the overload, 0 if no arguments </param>
         // <param name="parameterRanks"> returns individual promotion ranks of the overload parameters, empty array if no arguments </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryRankFunctionParameters<TFunctionParameterMetadata>(
             IList<TypeUsage> argumentList,
             IList<TypeUsage> flatArgumentList,

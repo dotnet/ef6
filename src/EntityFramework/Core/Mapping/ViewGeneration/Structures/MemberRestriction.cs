@@ -54,12 +54,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Structures
         // <summary>
         // Creates a complete member restriction with the meaning "<paramref name="slot" /> in <paramref name="values" />".
         // </summary>
-        // <param name="slot"> </param>
-        // <param name="values"> </param>
         // <param name="possibleValues">
         // all the values that the <paramref name="slot" /> can take
         // </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected MemberRestriction(MemberProjectedSlot slot, IEnumerable<Constant> values, IEnumerable<Constant> possibleValues)
             : this(slot, new Domain(values, possibleValues))
         {

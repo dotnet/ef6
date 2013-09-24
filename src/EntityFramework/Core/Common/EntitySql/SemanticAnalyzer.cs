@@ -213,9 +213,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Dispatches/Converts statement expressions.
         // </summary>
-        // <param name="astStatement"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertStatement(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -243,9 +241,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts query statement AST to a <see cref="DbQueryCommandTree" />
         // </summary>
-        // <param name="astStatement"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ParseResult ConvertQueryStatementToDbCommandTree(Statement astStatement, SemanticResolver sr)
         {
             DebugCheck.NotNull(astStatement);
@@ -1269,12 +1265,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Try convert method expr in a group scope as a collection aggregate
         // </summary>
-        // <param name="methodExpr"> </param>
-        // <param name="metadataFunctionGroup"> </param>
-        // <param name="sr"> </param>
         // <param name="argTypes"> argTypes are returned regardless of the function result </param>
-        // <param name="converted"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryConvertAsCollectionFunction(
             MethodExpr methodExpr,
             MetadataFunctionGroup metadataFunctionGroup,
@@ -2200,9 +2191,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Arithmetic Expressions Args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertArithmeticArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2243,9 +2232,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Plus Args - specific case since string edmType is an allowed edmType for '+'
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertPlusOperands(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var operands = ConvertValueExpressionsWithUntypedNulls(
@@ -2285,9 +2272,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Logical Expression Args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertLogicalArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var leftExpr = ConvertValueExpressionAllowUntypedNulls(astBuiltInExpr.Arg1, sr);
@@ -2333,9 +2318,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Equal Comparison Expression Args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertEqualCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2365,9 +2348,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Order Comparison Expression Args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertOrderCompArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var compArgs = ConvertValueExpressionsWithUntypedNulls(
@@ -2394,9 +2375,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set Expression Args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertSetArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             //
@@ -2527,9 +2506,7 @@ namespace System.Data.Entity.Core.Common.EntitySql
         // <summary>
         // Converts Set 'IN' expression args
         // </summary>
-        // <param name="astBuiltInExpr"> </param>
         // <param name="sr"> SemanticResolver instance relative to a especif typespace/system </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static Pair<DbExpression, DbExpression> ConvertInExprArgs(BuiltInExpr astBuiltInExpr, SemanticResolver sr)
         {
             var rightExpr = ConvertValueExpression(astBuiltInExpr.Arg2, sr);

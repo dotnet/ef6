@@ -87,11 +87,7 @@ namespace System.Data.Entity.Core.Mapping
         // For Beta2 we wont support delay loading Mapping information and we would also support
         // only one mapping file for workspace.
         // </summary>
-        // <param name="reader"> </param>
-        // <param name="storageMappingItemCollection"> </param>
-        // <param name="fileName"> </param>
         // <param name="scalarMemberMappings"> Dictionary to keep the list of all scalar member mappings </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal MappingItemLoader(
             XmlReader reader, StorageMappingItemCollection storageMappingItemCollection, string fileName,
             Dictionary<EdmMember, KeyValuePair<TypeUsage, TypeUsage>> scalarMemberMappings)
@@ -566,9 +562,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Validates that association sets are only mapped once.
         // </summary>
-        // <param name="nav"> </param>
         // <param name="entityContainerMapping"> Container to validate </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void ValidateFunctionAssociationFunctionMappingUnique(
             XPathNavigator nav, EntityContainerMapping entityContainerMapping)
         {
@@ -641,9 +635,7 @@ namespace System.Data.Entity.Core.Mapping
         // Validates that all or no related extents have function mappings. If an EntitySet or an AssociationSet has a function mapping,
         // then all the sets that touched the same store tableSet must also have function mappings.
         // </summary>
-        // <param name="nav"> </param>
         // <param name="entityContainerMapping"> Container to validate. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private void ValidateEntitySetFunctionMappingClosure(XPathNavigator nav, EntityContainerMapping entityContainerMapping)
         {
@@ -771,9 +763,7 @@ namespace System.Data.Entity.Core.Mapping
         // Validates that all or no related extents have query views defined. If an extent has a query view defined, then
         // all related extents must also have query views.
         // </summary>
-        // <param name="nav"> </param>
         // <param name="entityContainerMapping"> Container to validate. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void ValidateQueryViewsClosure(XPathNavigator nav, EntityContainerMapping entityContainerMapping)
         {
             //If there is no query view defined, no need to validate
@@ -3596,12 +3586,7 @@ namespace System.Data.Entity.Core.Mapping
         // Throws a new MappingException giving out the line number and
         // File Name where the error in Mapping specification is present.
         // </summary>
-        // <param name="message"> </param>
-        // <param name="errorCode"> </param>
-        // <param name="location"> </param>
-        // <param name="lineInfo"> </param>
         // <param name="parsingErrors"> Error Collection where the parsing errors are collected </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static void AddToSchemaErrors(
             string message, MappingErrorCode errorCode, string location, IXmlLineInfo lineInfo, IList<EdmSchemaError> parsingErrors)
         {
@@ -3674,13 +3659,7 @@ namespace System.Data.Entity.Core.Mapping
         // The method simply calls the helper method on Helper class with the
         // namespaceURI that is default for CSMapping.
         // </summary>
-        // <param name="nav"> </param>
-        // <param name="attributeName"> </param>
-        // <param name="clrType"> </param>
-        // <param name="sourceLocation"> </param>
         // <param name="parsingErrors"> Error Collection where the parsing errors are collected </param>
-        // <param name="value"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static bool TryGetTypedAttributeValue(
             XPathNavigator nav, string attributeName, Type clrType, string sourceLocation, IList<EdmSchemaError> parsingErrors,
             out object value)
@@ -3703,12 +3682,7 @@ namespace System.Data.Entity.Core.Mapping
         // <summary>
         // Returns the enum EdmMember corresponding to attribute name in enumType.
         // </summary>
-        // <param name="nav"> </param>
-        // <param name="attributeName"> </param>
-        // <param name="enumType"> </param>
-        // <param name="sourceLocation"> </param>
         // <param name="parsingErrors"> Error Collection where the parsing errors are collected </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static EnumMember GetEnumAttributeValue(
             XPathNavigator nav, string attributeName, EnumType enumType, string sourceLocation, IList<EdmSchemaError> parsingErrors)
         {

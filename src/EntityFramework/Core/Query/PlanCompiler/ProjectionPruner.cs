@@ -351,10 +351,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Common handling for all ApplyOps. Visit the right child first to capture
         // any references to the left, and then visit the left child.
         // </summary>
-        // <param name="op"> </param>
         // <param name="n"> the apply op </param>
         // <returns> modified subtree </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitApplyOp(ApplyBaseOp op, Node n)
         {
             // visit the right child first, then the left
@@ -537,10 +535,8 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // For crossjoins, we simply use the default processing - visit all children
         // ; there can be no correlations between the nodes anyway
         // </summary>
-        // <param name="op"> </param>
         // <param name="n"> Node for the join subtree </param>
         // <returns> modified subtree </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitJoinOp(JoinBaseOp op, Node n)
         {
             // Simply visit all children for a CrossJoin
@@ -615,9 +611,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // as well as from the Varmaps.
         // Finally, we visit the children
         // </summary>
-        // <param name="op"> </param>
         // <param name="n"> current node </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override Node VisitSetOp(SetOp op, Node n)
         {
             // Prune the outputs varset, except for Intersect and Except, which require 

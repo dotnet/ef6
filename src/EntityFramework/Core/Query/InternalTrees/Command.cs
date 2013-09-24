@@ -1080,9 +1080,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // then create a VarDefOp for the computed Var. Finally, we create a Node for
         // the VarDefOp
         // </summary>
-        // <param name="definingExpr"> </param>
         // <param name="computedVar"> new Var produced </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node CreateVarDefNode(Node definingExpr, out Var computedVar)
         {
             DebugCheck.NotNull(definingExpr.Op);
@@ -1098,9 +1096,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         // Creates a VarDefListOp with a single child - a VarDefOp created as in the function
         // above.
         // </summary>
-        // <param name="definingExpr"> </param>
         // <param name="computedVar"> the computed Var produced </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal Node CreateVarDefListNode(Node definingExpr, out Var computedVar)
         {
             var varDefNode = CreateVarDefNode(definingExpr, out computedVar);

@@ -69,9 +69,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // True if literal is a string.
         // </summary>
-        // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException"></exception>
-        // </remarks>
         internal bool IsString
         {
             get { return _literalKind == LiteralKind.String || _literalKind == LiteralKind.UnicodeString; }
@@ -80,9 +77,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // True if literal is a unicode string.
         // </summary>
-        // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException"></exception>
-        // </remarks>
         internal bool IsUnicodeString
         {
             get { return _literalKind == LiteralKind.UnicodeString; }
@@ -91,9 +85,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // True if literal is the eSQL untyped null.
         // </summary>
-        // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException"></exception>
-        // </remarks>
         internal bool IsNullLiteral
         {
             get { return _literalKind == LiteralKind.Null; }
@@ -124,9 +115,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // Returns literal converted value.
         // </summary>
-        // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException"></exception>
-        // </remarks>
         internal object Value
         {
             get
@@ -140,9 +128,6 @@ namespace System.Data.Entity.Core.Common.EntitySql.AST
         // <summary>
         // Returns literal value type. If value is eSQL untyped null, returns null.
         // </summary>
-        // <remarks>
-        // <exception cref="System.Data.Entity.Core.EntityException"></exception>
-        // </remarks>
         internal Type Type
         {
             get

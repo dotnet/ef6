@@ -205,10 +205,8 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // the principal key is always the first result in the chain (in case of an RIC). In
         // addition, entity entries always appear before relationship entries.
         // </remarks>
-        // <param name="keyManager"> </param>
         // <param name="other"> Result to merge with. </param>
         // <returns> Merged result. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal virtual PropagatorResult Merge(KeyManager keyManager, PropagatorResult other)
         {
             throw EntityUtil.InternalError(EntityUtil.InternalErrorCode.UpdatePipelineResultRequestInvalid, 0, "PropagatorResult.Merge");

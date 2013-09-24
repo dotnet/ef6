@@ -50,10 +50,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="message"> The explanation of the error. </param>
         // <param name="errorCode"> The code associated with this error. </param>
         // <param name="severity"> The severity of the error. </param>
-        // <param name="schemaLocation"> </param>
-        // <param name="line"> </param>
-        // <param name="column"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EdmSchemaError(string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column)
             : this(message, errorCode, severity, schemaLocation, line, column, null)
         {
@@ -65,11 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // <param name="message"> The explanation of the error. </param>
         // <param name="errorCode"> The code associated with this error. </param>
         // <param name="severity"> The severity of the error. </param>
-        // <param name="schemaLocation"> </param>
-        // <param name="line"> </param>
-        // <param name="column"> </param>
         // <param name="exception"> The exception that caused the error to be filed. </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal EdmSchemaError(
             string message, int errorCode, EdmSchemaErrorSeverity severity, string schemaLocation, int line, int column, Exception exception)
             : base(message)

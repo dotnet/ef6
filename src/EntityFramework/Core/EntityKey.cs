@@ -1218,9 +1218,7 @@ namespace System.Data.Entity.Core
         // Asserts that the "state" of the EntityKey is correct, by validating assumptions
         // based on whether the key is a singleton, composite, or temporary.
         // </summary>
-        // <param name="entitySet"> </param>
         // <param name="isTemporary"> whether we expect this EntityKey to be marked temporary </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [Conditional("DEBUG")]
         private void AssertCorrectState(EntitySetBase entitySet, bool isTemporary)
         {

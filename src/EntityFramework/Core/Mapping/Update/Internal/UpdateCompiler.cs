@@ -174,14 +174,12 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
         // </remarks>
         // <param name="target"> Expression binding representing the table. </param>
         // <param name="row"> Row containing values to set. </param>
-        // <param name="originalRow"> </param>
         // <param name="processor"> Context for table. </param>
         // <param name="insertMode"> Determines whether key columns and 'preserve' columns are omitted from the list. </param>
         // <param name="outputIdentifiers"> Dictionary listing server generated identifiers. </param>
         // <param name="returning"> DbExpression describing result projection for server generated values. </param>
         // <param name="rowMustBeTouched"> Indicates whether the row must be touched because it produces a value (e.g. computed) </param>
         // <returns> Column value pairs. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private IEnumerable<DbModificationClause> BuildSetClauses(
             DbExpressionBinding target, PropagatorResult row,
             PropagatorResult originalRow, TableChangeProcessor processor, bool insertMode, out Dictionary<int, string> outputIdentifiers,

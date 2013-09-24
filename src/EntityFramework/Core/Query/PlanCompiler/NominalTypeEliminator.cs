@@ -124,9 +124,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Eliminates all structural types from the query
         // </summary>
         // <param name="compilerState"> current compiler state </param>
-        // <param name="structuredTypeInfo"> </param>
         // <param name="tvfResultKeys"> inferred s-space keys for TVFs that are mapped to entities </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static void Process(
             PlanCompiler compilerState,
             StructuredTypeInfo structuredTypeInfo,
@@ -811,8 +809,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="v"> The Var </param>
         // <param name="node"> Subtree rooted at the VarDefOp expression </param>
         // <param name="newNodes"> list of new nodes produced </param>
-        // <param name="newType"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         private void FlattenComputedVar(ComputedVar v, Node node, out List<Node> newNodes, out md.TypeUsage newType)
@@ -2360,11 +2356,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <summary>
         // Common handler for PropertyOp and RelPropertyOp
         // </summary>
-        // <param name="op"> </param>
-        // <param name="n"> </param>
-        // <param name="propertyRef"> </param>
         // <param name="throwIfMissing"> ignore missing properties </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "optype")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]

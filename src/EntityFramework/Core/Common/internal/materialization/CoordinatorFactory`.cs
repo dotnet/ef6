@@ -55,12 +55,9 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // <summary>
         // Used for testing.
         // </summary>
-        // <param name="depth"> </param>
-        // <param name="stateSlot"> </param>
         // <param name="hasData"> Can be null. </param>
         // <param name="setKeys"> Can be null. </param>
         // <param name="checkKeys"> Can be null. </param>
-        // <param name="nestedCoordinators"> </param>
         // <param name="element">
         // Supply null if <paramref name="wrappedElement" /> isn't null.
         // </param>
@@ -69,8 +66,6 @@ namespace System.Data.Entity.Core.Common.Internal.Materialization
         // </param>
         // <param name="elementWithErrorHandling"> Should return the unwrapped entity. </param>
         // <param name="initializeCollection"> Can be null. </param>
-        // <param name="recordStateFactories"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal CoordinatorFactory(
             int depth,
             int stateSlot,

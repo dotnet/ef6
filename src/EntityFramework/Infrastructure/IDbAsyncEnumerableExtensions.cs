@@ -18,11 +18,9 @@ namespace System.Data.Entity.Infrastructure
         // <summary>
         // Asynchronously executes the provided action on each element of the <see cref="IDbAsyncEnumerable" />.
         // </summary>
-        // <param name="source"> </param>
         // <param name="action"> The action to be executed. </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns> A Task representing the asynchronous operation. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static async Task ForEachAsync(
             this IDbAsyncEnumerable source, Action<object> action, CancellationToken cancellationToken)
         {
@@ -48,11 +46,9 @@ namespace System.Data.Entity.Infrastructure
         // <summary>
         // Asynchronously executes the provided action on each element of the <see cref="IDbAsyncEnumerable{T}" />.
         // </summary>
-        // <param name="source"> </param>
         // <param name="action"> The action to be executed. </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns> A Task representing the asynchronous operation. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static Task ForEachAsync<T>(
             this IDbAsyncEnumerable<T> source, Action<T> action, CancellationToken cancellationToken)
         {
@@ -99,12 +95,10 @@ namespace System.Data.Entity.Infrastructure
         // Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable" />.
         // </summary>
         // <typeparam name="T"> The type that the elements will be cast to. </typeparam>
-        // <param name="source"> </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns>
         // A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal static async Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable source, CancellationToken cancellationToken)
         {
             DebugCheck.NotNull(source);
@@ -131,12 +125,10 @@ namespace System.Data.Entity.Infrastructure
         // <summary>
         // Asynchronously creates a <see cref="List{T}" /> from the <see cref="IDbAsyncEnumerable{T}" />.
         // </summary>
-        // <param name="source"> </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns>
         // A <see cref="Task" /> containing a <see cref="List{T}" /> that contains elements from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<List<T>> ToListAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
@@ -187,12 +179,10 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="T">
         // The type of the elements of <paramref name="source" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns>
         // A <see cref="Task" /> containing a T[] that contains elements from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<T[]> ToArrayAsync<T>(this IDbAsyncEnumerable<T> source, CancellationToken cancellationToken)
         {
@@ -212,12 +202,10 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TKey">
         // The type of the key returned by <paramref name="keySelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <returns>
         // A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector)
@@ -238,13 +226,11 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TKey">
         // The type of the key returned by <paramref name="keySelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
         // <returns>
         // A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, CancellationToken cancellationToken)
@@ -265,7 +251,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TKey">
         // The type of the key returned by <paramref name="keySelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="comparer">
         // An <see cref="IEqualityComparer{TKey}" /> to compare keys.
@@ -273,7 +258,6 @@ namespace System.Data.Entity.Infrastructure
         // <returns>
         // A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
@@ -294,7 +278,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TKey">
         // The type of the key returned by <paramref name="keySelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="comparer">
         // An <see cref="IEqualityComparer{TKey}" /> to compare keys.
@@ -303,7 +286,6 @@ namespace System.Data.Entity.Infrastructure
         // <returns>
         // A <see cref="Task" /> containing a <see cref="Dictionary{TKey, TSource}" /> that contains selected keys and values.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TSource>> ToDictionaryAsync<TSource, TKey>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer,
@@ -328,7 +310,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TElement">
         // The type of the value returned by <paramref name="elementSelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         // <returns>
@@ -337,7 +318,6 @@ namespace System.Data.Entity.Infrastructure
         //     name="TElement" />
         // selected from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
@@ -362,7 +342,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TElement">
         // The type of the value returned by <paramref name="elementSelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         // <param name="cancellationToken"> The token to monitor for cancellation requests. </param>
@@ -372,7 +351,6 @@ namespace System.Data.Entity.Infrastructure
         //     name="TElement" />
         // selected from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
@@ -398,7 +376,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TElement">
         // The type of the value returned by <paramref name="elementSelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         // <param name="comparer">
@@ -410,7 +387,6 @@ namespace System.Data.Entity.Infrastructure
         //     name="TElement" />
         // selected from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,
@@ -436,7 +412,6 @@ namespace System.Data.Entity.Infrastructure
         // <typeparam name="TElement">
         // The type of the value returned by <paramref name="elementSelector" /> .
         // </typeparam>
-        // <param name="source"> </param>
         // <param name="keySelector"> A function to extract a key from each element. </param>
         // <param name="elementSelector"> A transform function to produce a result element value from each element. </param>
         // <param name="comparer">
@@ -449,7 +424,6 @@ namespace System.Data.Entity.Infrastructure
         //     name="TElement" />
         // selected from the input sequence.
         // </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         internal static async Task<Dictionary<TKey, TElement>> ToDictionaryAsync<TSource, TKey, TElement>(
             this IDbAsyncEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector,

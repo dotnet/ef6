@@ -524,8 +524,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // left
         // </summary>
         // <param name="op"> apply op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitApplyOp(ApplyBaseOp op, Node n)
         {
             VisitNode(n.Child1); // the right input
@@ -590,8 +588,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // For cross joins, simply process all the (relop) inputs
         // </summary>
         // <param name="op"> join op </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitJoinOp(JoinBaseOp op, Node n)
         {
             if (n.Op.OpType
@@ -661,8 +657,6 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // Vars of the input
         // </summary>
         // <param name="op"> the setop </param>
-        // <param name="n"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override void VisitSetOp(SetOp op, Node n)
         {
             foreach (var varMap in op.VarMap)

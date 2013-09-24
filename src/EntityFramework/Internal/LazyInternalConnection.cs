@@ -299,9 +299,7 @@ namespace System.Data.Entity.Internal
         // The connection might be a store connection or an EF connection.
         // </summary>
         // <param name="name"> The connection name. </param>
-        // <param name="config"> </param>
         // <returns> True if a connection from the app.config file was found and used. </returns>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private bool TryInitializeFromAppConfig(string name, AppConfig config)
         {
             DebugCheck.NotNull(config);

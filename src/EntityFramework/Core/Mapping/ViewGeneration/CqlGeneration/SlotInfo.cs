@@ -36,17 +36,12 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.CqlGeneration
         // ) and
         // the output member path (<paramref name="outputMember" /> (for regular/non-boolean slots) for the slot.
         // </summary>
-        // <param name="isRequiredByParent"> </param>
-        // <param name="isProjected"> </param>
-        // <param name="slotValue"> </param>
-        // <param name="outputMember"> </param>
         // <param name="enforceNotNull">
         // We need to ensure that _from variables are never null since view generation uses 2-valued boolean logic. If
         // <paramref
         //     name="enforceNotNull" />
         // =true, the generated Cql adds a condition (AND <paramref name="slotValue" /> NOT NULL). This flag is used only for boolean slots.
         // </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         internal SlotInfo(bool isRequiredByParent, bool isProjected, ProjectedSlot slotValue, MemberPath outputMember, bool enforceNotNull)
         {
             m_isRequiredByParent = isRequiredByParent;

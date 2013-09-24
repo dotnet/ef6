@@ -136,9 +136,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // <param name="ctree"> the input CQT </param>
         // <param name="providerCommands"> list of provider commands </param>
         // <param name="resultColumnMap"> column map for result assembly </param>
-        // <param name="columnCount"> </param>
         // <param name="entitySets"> the entity sets referenced in this query </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters",
             MessageId = "System.Data.Entity.Core.Query.PlanCompiler.PlanCompiler.Assert(System.Boolean,System.String)")]
         internal static void Compile(
@@ -243,9 +241,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         // </summary>
         // <param name="providerCommands"> list of provider commands </param>
         // <param name="resultColumnMap"> column map for the result </param>
-        // <param name="columnCount"> </param>
         // <param name="entitySets"> the entity sets exposed in this query </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private void Compile(
             out List<ProviderCommandInfo> providerCommands, out ColumnMap resultColumnMap, out int columnCount,
             out Set<md.EntitySet> entitySets)

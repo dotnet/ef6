@@ -203,12 +203,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // the columns represented in the sortExpressionsOverLeft list and only these are used in the predicate.
         // This is because we want to support skip over input with non-equal comarable columns and we have no way to recognize these.
         // </summary>
-        // <param name="left"> </param>
-        // <param name="right"> </param>
-        // <param name="expressionKind"> </param>
         // <param name="sortExpressionsOverLeft"> note that this list gets destroyed by this method </param>
-        // <param name="sortExpressionsBindingVariableName"> </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private DbExpression TransformIntersectOrExcept(
             DbExpression left, DbExpression right, DbExpressionKind expressionKind, IList<DbPropertyExpression> sortExpressionsOverLeft,
             string sortExpressionsBindingVariableName)

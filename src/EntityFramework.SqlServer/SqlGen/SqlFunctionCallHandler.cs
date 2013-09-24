@@ -982,10 +982,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         // arg0 op arg1
         // Also, the arguments can be optionaly enclosed in parethesis
         // </summary>
-        // <param name="sqlgen"> </param>
-        // <param name="e"> </param>
         // <param name="parenthesiseArguments"> Whether the arguments should be enclosed in parethesis </param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private static ISqlFragment HandleSpecialFunctionToOperator(SqlGenerator sqlgen, DbFunctionExpression e, bool parenthesiseArguments)
         {
             var result = new SqlBuilder();
@@ -1021,7 +1018,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // <see cref="HandleSpecialFunctionToOperator"></see>
+        // <see cref="HandleSpecialFunctionToOperator" />
         // </summary>
         private static ISqlFragment HandleConcatFunction(SqlGenerator sqlgen, DbFunctionExpression e)
         {
@@ -1029,7 +1026,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
         }
 
         // <summary>
-        // <see cref="HandleSpecialFunctionToOperator"></see>
+        // <see cref="HandleSpecialFunctionToOperator" />
         // </summary>
         private static ISqlFragment HandleCanonicalFunctionBitwise(SqlGenerator sqlgen, DbFunctionExpression e)
         {

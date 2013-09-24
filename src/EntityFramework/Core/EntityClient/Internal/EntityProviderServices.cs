@@ -27,11 +27,9 @@ namespace System.Data.Entity.Core.EntityClient.Internal
         // <summary>
         // Create a Command Definition object, given the connection and command tree
         // </summary>
-        // <param name="providerManifest"> </param>
         // <param name="commandTree"> command tree for the statement </param>
         // <returns> an executable command definition object </returns>
         // <exception cref="ArgumentNullException">connection and commandTree arguments must not be null</exception>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         protected override DbCommandDefinition CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
         {
             Check.NotNull(providerManifest, "providerManifest");

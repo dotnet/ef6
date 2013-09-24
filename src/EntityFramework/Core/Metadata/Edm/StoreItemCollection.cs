@@ -73,9 +73,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         // <param name="xmlReaders">xmlReaders where the CDM schemas are loaded</param>
         // <param name="filePaths">the paths where the files can be found that match the xml readers collection</param>
-        // <param name="resolver"> </param>
         // <param name="errors">An out parameter to return the collection of errors encountered while loading</param>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1614:ElementParameterDocumentationMustHaveText")]
         private StoreItemCollection(
             IEnumerable<XmlReader> xmlReaders,
             ReadOnlyCollection<string> filePaths,
