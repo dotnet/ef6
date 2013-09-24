@@ -9,8 +9,8 @@ Project global pre-settings.
   
   <PropertyGroup>
     <VersionMajor>6</VersionMajor>
-    <VersionMinor>0</VersionMinor>
-    <VersionRelease>1-alpha1</VersionRelease>
+    <VersionMinor>1</VersionMinor>
+    <VersionRelease>0-alpha1</VersionRelease>
   </PropertyGroup>
 
   <!-- Default properties -->
