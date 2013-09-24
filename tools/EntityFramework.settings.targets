@@ -35,6 +35,11 @@ Project global pre-settings.
     <OutputPath45>$([System.Text.RegularExpressions.Regex]::Replace('$(OutputPath)', 'Net40', '', System.Text.RegularExpressions.RegexOptions.IgnoreCase))</OutputPath45>
     <OutputPath40>$(OutputPath45.TrimEnd('\'))Net40\</OutputPath40>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+    <StyleCopOverrideSettingsFile>$(RepositoryRoot)Settings.StyleCop</StyleCopOverrideSettingsFile>
+  </PropertyGroup>
 
   <PropertyGroup>
     <!-- Use CustomAfterMicrosoftCommonTargets property (Microsoft.Common.targets) to inject project post-targets  -->

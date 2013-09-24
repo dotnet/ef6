@@ -16,6 +16,12 @@ Project global post-settings and targets.
       <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EFPackageVersion=$(EFPackageVersion)</NuSpecProperties>
     </PropertyGroup>
   </Target>
+  
+  <PropertyGroup Condition="'$(Configuration45)' == 'Debug'">
+    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
+  </PropertyGroup>
+
+  <Import Project="EF.stylecop.targets" Condition="Exists('..\packages\StyleCop.4.7.10.0\lib\StyleCop.dll')" />
 
   <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 </Project>

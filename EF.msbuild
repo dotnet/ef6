@@ -7,6 +7,7 @@
     <BuildProperties>Platform=$(Platform);SolutionDir=$(SolutionDir)</BuildProperties>
     <BuildProperties Condition="'$(InternalsInvisible)' != ''">$(BuildProperties);InternalsInvisible=$(InternalsInvisible)</BuildProperties>
     <BuildProperties Condition="'$(RunCodeAnalysis)' != ''">$(BuildProperties);RunCodeAnalysis=$(RunCodeAnalysis)</BuildProperties>
+    <BuildProperties Condition="'$(StyleCopEnabled)' != ''">$(BuildProperties);StyleCopEnabled=$(StyleCopEnabled)</BuildProperties>
   </PropertyGroup>
 
   <ItemGroup>
@@ -71,7 +72,7 @@
           LogStandardErrorAsError="true" />
   </Target>
 
-  <Target Name="Build">
+  <Target Name="Build" DependsOnTargets="RestoreSolutionPackages">
     <MSBuild Targets="Build"
              Projects="@(ProjectToBuild)"
              Properties="Configuration=%(BuildConfiguration.Identity);$(BuildProperties)"
@@ -103,7 +104,7 @@
   <Target Name="Package">
     <MSBuild Targets="Rebuild"
              Projects="$(MSBuildThisFileFullPath)"
-             Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false" />
+             Properties="Configuration=$(Configuration);$(BuildProperties);BuildCoreOnly=true;InternalsInvisible=true;RunCodeAnalysis=false;StyleCopEnabled=false" />
     <MSBuild Targets="Build"
              Projects="src\NuGet\NuGet.proj"
              Properties="Configuration=$(Configuration)"
