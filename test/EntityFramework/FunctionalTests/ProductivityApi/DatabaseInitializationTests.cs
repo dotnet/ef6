@@ -11,6 +11,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
+    using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.SqlServer;
     using System.Data.SqlClient;
     using System.Linq;
@@ -1732,6 +1733,155 @@ namespace ProductivityApiTests
             {
                 Assert.Equal("A book about SchemaBooksContext", context.Books.Single().Title);
             }
+        }
+
+        [Fact]
+        public void Model_is_built_only_once_when_database_exists_and_contains_metadata()
+        {
+            using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseContext>()))
+            {
+                context.Database.CreateIfNotExists();
+                context.Database.ExecuteSqlCommand(
+                    @"UPDATE __MigrationHistory
+                      SET ContextKey = 'ProductivityApiTests.DatabaseInitializationTests+ExistingDatabaseContext'
+                      WHERE ContextKey = 'ProductivityApiTests.DatabaseInitializationTests+BaseModelContext'");
+            }
+
+            using (var context = new ExistingDatabaseContext())
+            {
+                var _ = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.Equal(1, context.BuildCount);
+
+                Assert.True(context.Database.Exists());
+            }
+        }
+
+        [Fact]
+        public void Model_is_built_only_once_when_database_exists_and_contains_no_metadata()
+        {
+            using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseNoMetadataContext>()))
+            {
+                context.Database.CreateIfNotExists();
+                context.Database.ExecuteSqlCommand(
+                    @"IF EXISTS(SELECT 1 
+                                FROM INFORMATION_SCHEMA.TABLES 
+                                WHERE TABLE_NAME = '__MigrationHistory')
+                      DROP TABLE __MigrationHistory");
+            }
+
+            using (var context = new ExistingDatabaseNoMetadataContext())
+            {
+                var _ = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.Equal(1, context.BuildCount);
+
+                Assert.True(context.Database.Exists());
+            }
+        }
+
+        [Fact]
+        public void Model_is_built_only_once_when_database_does_not_exist()
+        {
+            using (var context = new BaseModelContext(SimpleConnection<NewDatabaseContext>()))
+            {
+                context.Database.Delete();
+            }
+
+            using (var context = new NewDatabaseContext())
+            {
+                var _ = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.Equal(1, context.BuildCount);
+
+                Assert.True(context.Database.Exists());
+            }
+        }
+
+        [Fact]
+        public void Model_is_built_only_once_when_dropping_and_creating_database()
+        {
+            using (var context = new BaseModelContext(SimpleConnection<DropCreateContext>()))
+            {
+                context.Database.CreateIfNotExists();
+                context.Database.ExecuteSqlCommand(
+                    @"UPDATE __MigrationHistory
+                      SET ContextKey = 'ProductivityApiTests.DatabaseInitializationTests+DropCreateContext'
+                      WHERE ContextKey = 'ProductivityApiTests.DatabaseInitializationTests+BaseModelContext'");
+            }
+
+            Database.SetInitializer(new DropCreateDatabaseAlways<DropCreateContext>());
+
+            using (var context = new DropCreateContext())
+            {
+                var _ = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.Equal(1, context.BuildCount);
+
+                Assert.True(context.Database.Exists());
+            }
+        }
+
+        public class BaseModelContext : DbContext
+        {
+            static BaseModelContext()
+            {
+                Database.SetInitializer<BaseModelContext>(null);
+            }
+
+            protected BaseModelContext()
+            {
+            }
+
+            public BaseModelContext(DbConnection connection)
+                : base(connection, contextOwnsConnection: true)
+            {
+            }
+
+            public int BuildCount { get; set; }
+
+            public DbSet<Product> Products { get; set; }
+            public DbSet<Category> Categories { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Conventions.Add(new CounterConvention(() => BuildCount++));
+            }
+        }
+
+        public class CounterConvention : IStoreModelConvention<EntityType>
+        {
+            private readonly Action _count;
+
+            public CounterConvention(Action count)
+            {
+                _count = count;
+            }
+
+            public void Apply(EntityType item, DbModel model)
+            {
+                if (item.Name == "Category")
+                {
+                    _count();
+                }
+            }
+        }
+
+
+        public class ExistingDatabaseContext : BaseModelContext
+        {
+        }
+
+        public class ExistingDatabaseNoMetadataContext : BaseModelContext
+        {
+        }
+
+        public class NewDatabaseContext : BaseModelContext
+        {
+        }
+
+        public class DropCreateContext : BaseModelContext
+        {
         }
     }
 }

@@ -247,6 +247,11 @@ namespace System.Data.Entity.Internal
             get { return null; }
         }
 
+        public virtual DbModel ModelBeingInitialized
+        {
+            get { return null; }
+        }
+
         /// <summary>
         /// Called by methods of <see cref="Database" /> to create a database either using the Migrations pipeline
         /// if possible and the core provider otherwise.
