@@ -25,6 +25,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="provider"> Provider information on the Schema element </param>
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
+        /// <param name="serializeDefaultNullability">A value indicating whether to serialize Nullable attributes when they are set to the default value.</param>
         /// <returns> true if model can be serialized, otherwise false </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
@@ -54,6 +55,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="provider"> Provider information on the Schema element </param>
         /// <param name="providerManifestToken"> ProviderManifestToken information on the Schema element </param>
         /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
+        /// <param name="serializeDefaultNullability">A value indicating whether to serialize Nullable attributes when they are set to the default value.</param>
         /// <returns> true if model can be serialized, otherwise false </returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Nullability")]
@@ -82,20 +84,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             bool modelIsValid = true;
 
             Action<DataModelErrorEventArgs> onErrorAction =
-                e => 
+                e =>
+                {
+                    // Ssdl serializer writes metadata items marked as invalid as comments
+                    // therefore we should not report errors for those.
+                    var metadataItem = e.Item as MetadataItem;
+                    if (metadataItem == null || !MetadataItemHelper.IsInvalid(metadataItem))
                     {
-                        // Ssdl serializer writes metadata items marked as invalid as comments
-                        // therefore we should not report errors for those.
-                        var metadataItem = e.Item as MetadataItem;
-                        if (metadataItem == null || !MetadataItemHelper.IsInvalid(metadataItem))
+                        modelIsValid = false;
+                        if (OnError != null)
                         {
-                            modelIsValid = false;
-                            if (OnError != null)
-                            {
-                                OnError(this, e);
-                            }
+                            OnError(this, e);
                         }
-                    };
+                    }
+                };
 
             if (model.NamespaceNames.Count() > 1
                 || model.Containers.Count() != 1)

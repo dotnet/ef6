@@ -54,6 +54,7 @@ namespace System.Data.Entity
         /// set at application start before any Entity Framework features have been used and afterwards
         /// should be treated as read-only.
         /// </summary>
+        /// <param name="configuration">The instance of <see cref="DbConfiguration" />.</param>
         public static void SetConfiguration(DbConfiguration configuration)
         {
             Check.NotNull(configuration, "configuration");

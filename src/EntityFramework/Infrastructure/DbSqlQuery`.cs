@@ -15,6 +15,7 @@ namespace System.Data.Entity.Infrastructure
     /// SQL queries for non-entities are created using <see cref="Database.SqlQuery{TElement}(string, object[])" />.
     /// See <see cref="DbSqlQuery" /> for a non-generic version of this class.
     /// </summary>
+    /// <typeparam name="TEntity">The type of entities returned by the query.</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class DbSqlQuery<TEntity> : DbRawSqlQuery<TEntity>
         where TEntity : class
@@ -47,7 +48,7 @@ namespace System.Data.Entity.Infrastructure
         /// <returns> A new query with NoTracking applied. </returns>
         public virtual DbSqlQuery<TEntity> AsNoTracking()
         {
-            return InternalQuery == null ? this: new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
+            return InternalQuery == null ? this : new DbSqlQuery<TEntity>(InternalQuery.AsNoTracking());
         }
 
         #endregion

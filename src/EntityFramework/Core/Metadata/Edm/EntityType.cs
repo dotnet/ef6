@@ -262,8 +262,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="keyMemberNames">Name of key members for the type.</param>
         /// <param name="members">Members of the entity type (primitive and navigation properties).</param>
         /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The EntityType object.</returns>
         /// <exception cref="System.ArgumentException">Thrown if either name, namespace arguments are null.</exception>
-        /// <notes>The newly created EntityType will be read only.</notes>
+        /// <remarks>The newly created EntityType will be read only.</remarks>
         public static EntityType Create(
             string name,
             string namespaceName,

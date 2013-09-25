@@ -240,6 +240,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <inhertidoc />
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1604:ElementDocumentationMustHaveSummary")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1615:ElementReturnValueMustBeDocumented")]
         protected override DbParameter GetParameter(int index)
         {
             RangeCheck(index);
@@ -247,6 +250,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <inhertidoc />
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1604:ElementDocumentationMustHaveSummary")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1615:ElementReturnValueMustBeDocumented")]
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override DbParameter GetParameter(string parameterName)
         {
@@ -453,6 +459,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <inhertidoc />
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1604:ElementDocumentationMustHaveSummary")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented")]
         protected override void SetParameter(int index, DbParameter value)
         {
             OnChange();
@@ -461,6 +469,8 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <inhertidoc />
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1604:ElementDocumentationMustHaveSummary")]
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1611:ElementParametersMustBeDocumented")]
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         protected override void SetParameter(string parameterName, DbParameter value)
         {

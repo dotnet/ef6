@@ -278,8 +278,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="entitySets">Entity sets that will be included in the new container. Can be null.</param>
         /// <param name="functionImports">Functions that will be included in the new container. Can be null.</param>
         /// <param name="metadataProperties">Metadata properties to be associated with the instance.</param>
+        /// <returns>The EntityContainer object.</returns>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
-        /// <notes>The newly created EntityContainer will be read only.</notes>
+        /// <remarks>The newly created EntityContainer will be read only.</remarks>
         public static EntityContainer Create(
             string name, DataSpace dataSpace, IEnumerable<EntitySetBase> entitySets,
             IEnumerable<EdmFunction> functionImports, IEnumerable<MetadataProperty> metadataProperties)

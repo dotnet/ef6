@@ -93,7 +93,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// ToString
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
             return String.Format(

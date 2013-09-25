@@ -142,6 +142,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="relationshipType">The relationship type for the navigation.</param>
         /// <param name="from">The source end member in the navigation.</param>
         /// <param name="to">The target end member in the navigation.</param>
+        /// <param name="metadataProperties">The metadata properties of the navigation property.</param>
         /// <returns>The newly created NavigationProperty instance.</returns>
         public static NavigationProperty Create(
             string name,

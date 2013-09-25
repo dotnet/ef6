@@ -96,6 +96,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <typeparam name="TContext"> The type of context to create. </typeparam>
         /// <param name="existingConnection"> An existing connection to a database for use by the context. </param>
+        /// <returns>The context.</returns>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public TContext CreateObjectContext<TContext>(DbConnection existingConnection) where TContext : ObjectContext
         {

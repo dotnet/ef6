@@ -259,6 +259,7 @@ namespace System.Data.Entity.Core.Objects
         /// These methods return enumerator instances, which allow the collection to
         /// be iterated through and traversed.
         /// </summary>
+        /// <returns>An <see cref="IEnumerator{ObjectParameter}" /> object that can be used to iterate through the collection.</returns>
         public virtual IEnumerator<ObjectParameter> GetEnumerator()
         {
             return ((ICollection<ObjectParameter>)_parameters).GetEnumerator();

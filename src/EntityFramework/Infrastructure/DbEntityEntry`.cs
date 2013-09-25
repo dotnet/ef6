@@ -429,6 +429,7 @@ namespace System.Data.Entity.Infrastructure
         /// Returns a new instance of the non-generic <see cref="DbEntityEntry" /> class for
         /// the tracked entity represented by this object.
         /// </summary>
+        /// <param name="entry">The object representing the tracked entity.</param>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
             Justification = "Intentionally just implicit to reduce API clutter.")]

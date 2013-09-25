@@ -179,6 +179,7 @@ namespace System.Data.Entity.Infrastructure
         /// Returns a new instance of the non-generic <see cref="DbCollectionEntry" /> class for
         /// the navigation property represented by this object.
         /// </summary>
+        /// <param name="entry">The object representing the navigation property.</param>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",
             Justification = "Intentionally just implicit to reduce API clutter.")]

@@ -48,6 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>
@@ -65,6 +66,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>Configures a parameter for this stored procedure.</summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
         /// <param name="propertyExpression"> A lambda expression representing the property to configure the parameter for. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">The name of the parameter.</param>

@@ -22,6 +22,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// which can either be all entities of a particular type or
     /// entities participating in a particular relationship.
     /// </summary>
+    /// <typeparam name="TEntity">The type of entities in this collection.</typeparam>
     [Serializable]
     public class EntityCollection<TEntity> : RelatedEnd, ICollection<TEntity>, IListSource
         where TEntity : class

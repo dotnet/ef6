@@ -107,6 +107,7 @@ namespace System.Data.Entity.Spatial
         /// <summary>
         /// Returns whether the column at the specified column ordinal is of geography type
         /// </summary>
+        /// <param name="ordinal">The column ordinal.</param>
         /// <returns>
         /// <c>true</c> if the column at the specified column ordinal is of geography type;
         /// <c>false</c> otherwise.
@@ -116,6 +117,7 @@ namespace System.Data.Entity.Spatial
         /// <summary>
         /// Returns whether the column at the specified column ordinal is of geometry type
         /// </summary>
+        /// <param name="ordinal">The column ordinal.</param>
         /// <returns>
         /// <c>true</c> if the column at the specified column ordinal is of geometry type;
         /// <c>false</c> otherwise.

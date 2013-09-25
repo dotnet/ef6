@@ -11,6 +11,8 @@ namespace System.Data.Entity
     /// An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
     /// to update the database to the latest version.
     /// </summary>
+    /// <typeparam name="TContext">The type of the context.</typeparam>
+    /// <typeparam name="TMigrationsConfiguration">The type of the migrations configuration to use during initialization.</typeparam>
     public class MigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
         where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()

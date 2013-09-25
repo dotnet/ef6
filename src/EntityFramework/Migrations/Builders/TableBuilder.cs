@@ -19,6 +19,7 @@ namespace System.Data.Entity.Migrations.Builders
     /// (such as the end user of an application). If input is accepted from such sources it should be validated 
     /// before being passed to these APIs to protect against SQL injection attacks etc.
     /// </summary>
+    /// <typeparam name="TColumns">The type that represents the table's columns.</typeparam>
     public class TableBuilder<TColumns>
     {
         private readonly CreateTableOperation _createTableOperation;

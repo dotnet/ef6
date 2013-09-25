@@ -91,6 +91,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>
         /// Adds the specified property to the list of keys for the current entity.  
         /// </summary>
+        /// <param name="member">The property to add.</param>
         /// <exception cref="System.ArgumentNullException">if member argument is null</exception>
         /// <exception cref="System.InvalidOperationException">Thrown if the EntityType has a base type of another EntityTypeBase. In this case KeyMembers should be added to the base type</exception>
         /// <exception cref="System.InvalidOperationException">If the EntityType instance is in ReadOnly state</exception>

@@ -188,8 +188,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="metadataProperties">
         /// Metadata properties that will be added to the newly created EntitySet. Can be null.
         /// </param>
+        /// <returns>The EntitySet object.</returns>
         /// <exception cref="System.ArgumentException">Thrown if the name argument is null or empty string.</exception>
-        /// <notes>The newly created EntitySet will be read only.</notes>
+        /// <remarks>The newly created EntitySet will be read only.</remarks>
         public static EntitySet Create(
             string name, string schema, string table, string definingQuery, EntityType entityType,
             IEnumerable<MetadataProperty> metadataProperties)

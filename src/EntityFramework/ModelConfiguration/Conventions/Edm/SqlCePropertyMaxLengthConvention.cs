@@ -27,6 +27,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// <summary>
         /// Initializes a new instance of <see cref="SqlCePropertyMaxLengthConvention"/> with the specified length.
         /// </summary>
+        /// <param name="length">The default maximum length for properties.</param>
         public SqlCePropertyMaxLengthConvention(int length)
         {
             if (length <= 0)

@@ -57,7 +57,7 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Construct a new Complex Property mapping object
         /// </summary>
-        /// <param name="cdmMember"> The MemberMetadata object that represents this Complex member </param>
+        /// <param name="property"> The MemberMetadata object that represents this Complex member </param>
         public ComplexPropertyMapping(EdmProperty property)
             : base(property)
         {
@@ -82,7 +82,6 @@ namespace System.Data.Entity.Core.Mapping
 
         /// <summary>
         /// Adds a type mapping corresponding to a nested complex type.
-        /// </summary>
         /// </summary>
         /// <param name="typeMapping">The complex type mapping to be added.</param>
         public void AddTypeMapping(ComplexTypeMapping typeMapping)

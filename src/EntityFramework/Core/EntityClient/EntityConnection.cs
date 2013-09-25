@@ -9,7 +9,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
@@ -709,6 +708,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Create a new command object that uses this connection object
         /// </summary>
+        /// <returns>The command object.</returns>
         protected override DbCommand CreateDbCommand()
         {
             return CreateCommand();

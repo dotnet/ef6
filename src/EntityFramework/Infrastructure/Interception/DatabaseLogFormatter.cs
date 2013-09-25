@@ -203,6 +203,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <see cref="LogCommand" />. This method would typically only be overridden to change the
         /// context filtering behavior.
         /// </summary>
+        /// <typeparam name="TResult">The type of the operation's results.</typeparam>
         /// <param name="command">The command that will be executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void Executing<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
@@ -223,6 +224,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <see cref="LogResult" />. This method would typically only be overridden to change the context
         /// filtering behavior.
         /// </summary>
+        /// <typeparam name="TResult">The type of the operation's results.</typeparam>
         /// <param name="command">The command that was executed.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void Executed<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
@@ -241,6 +243,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// Called to log a command that is about to be executed. Override this method to change how the
         /// command is logged to <see cref="WriteAction" />.
         /// </summary>
+        /// <typeparam name="TResult">The type of the operation's results.</typeparam>
         /// <param name="command">The command to be logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void LogCommand<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)
@@ -277,6 +280,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// implementation of <see cref="LogCommand" /> to log parameters, and/or can be overridden to
         /// change the way that parameters are logged to <see cref="WriteAction" />.
         /// </summary>
+        /// <typeparam name="TResult">The type of the operation's results.</typeparam>
         /// <param name="command">The command being logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         /// <param name="parameter">The parameter to log.</param>
@@ -329,6 +333,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// Called to log the result of executing a command. Override this method to change how results are
         /// logged to <see cref="WriteAction" />.
         /// </summary>
+        /// <typeparam name="TResult">The type of the operation's results.</typeparam>
         /// <param name="command">The command being logged.</param>
         /// <param name="interceptionContext">Contextual information associated with the command.</param>
         public virtual void LogResult<TResult>(DbCommand command, DbCommandInterceptionContext<TResult> interceptionContext)

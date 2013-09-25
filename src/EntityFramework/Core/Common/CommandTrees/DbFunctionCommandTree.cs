@@ -22,9 +22,9 @@ namespace System.Data.Entity.Core.Common.CommandTrees
         /// </summary>
         /// <param name="metadata"> The metadata workspace that the command tree should use. </param>
         /// <param name="dataSpace"> The logical 'space' that metadata in the expressions used in this command tree must belong to. </param>
-        /// <param name="edmFunction"> </param>
-        /// <param name="resultType"> </param>
-        /// <param name="parameters"> </param>
+        /// <param name="edmFunction">The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EdmFunction" /> that represents the function that is being invoked.</param>
+        /// <param name="resultType">The expected result type for the function’s first result set.</param>
+        /// <param name="parameters">The function's parameters.</param>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="metadata" />, <paramref name="dataSpace" /> or <paramref name="edmFunction" /> is null
         /// </exception>

@@ -816,6 +816,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>Explicitly loads an object that is related to the supplied object by the specified LINQ query and by using the default merge option. </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The source object for which related objects are to be loaded.</param>
         /// <param name="selector">A LINQ expression that defines the related objects to be loaded.</param>
         /// <exception cref="T:System.ArgumentException"> selector  does not supply a valid input parameter.</exception>
@@ -842,6 +843,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         /// <summary>Explicitly loads an object that is related to the supplied object by the specified LINQ query and by using the specified merge option. </summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The source object for which related objects are to be loaded.</param>
         /// <param name="selector">A LINQ expression that defines the related objects to be loaded.</param>
         /// <param name="mergeOption">
@@ -3455,6 +3457,7 @@ namespace System.Data.Entity.Core.Objects
         /// </param>
         /// <param name="executionOptions"> The options for executing this function. </param>
         /// <param name="parameters"> The parameter values to use for the function. </param>
+        /// <returns>An object representing the result of executing this function.</returns>
         /// <exception cref="ArgumentException"> If function is null or empty </exception>
         /// <exception cref="InvalidOperationException">
         /// If function is invalid (syntax,
@@ -3615,7 +3618,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     var storeItemCollection = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
                     var providerServices = DbConfiguration.DependencyResolver.GetService<DbProviderServices>(storeItemCollection.ProviderInvariantName);
-                    
+
                     shaperFactory = _translator.TranslateColumnMap<TElement>(
                         commandDefinition.CreateColumnMap(storeReader, 0),
                         MetadataWorkspace, null, executionOptions.MergeOption, false, valueLayer: false);
@@ -4632,6 +4635,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type.
         /// </summary>
+        /// <typeparam name="TElement">The entity type.</typeparam>
         /// <returns>An enumeration of objects of type  TResult .</returns>
         /// <param name="reader">
         /// The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
@@ -4660,6 +4664,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Translates a <see cref="T:System.Data.Common.DbDataReader" /> that contains rows of entity data to objects of the requested entity type, in a specific entity set, and with the specified merge option.
         /// </summary>
+        /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <returns>An enumeration of objects of type  TResult .</returns>
         /// <param name="reader">
         /// The <see cref="T:System.Data.Common.DbDataReader" /> that contains entity data to translate into entity objects.
@@ -4843,6 +4848,7 @@ namespace System.Data.Entity.Core.Objects
         /// Checks if the database that is specified as the database in the current store connection exists on the store. Most of the actual work
         /// is done by the DbProviderServices implementation for the current store connection.
         /// </summary>
+        /// <returns>true if the database exists; otherwise, false.</returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public virtual bool DatabaseExists()
         {

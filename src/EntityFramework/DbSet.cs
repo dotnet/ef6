@@ -276,6 +276,7 @@ namespace System.Data.Entity
         /// The instance returned will be a proxy if the underlying context is configured to create
         /// proxies and the entity type meets the requirements for creating a proxy.
         /// </summary>
+        /// <param name="derivedEntityType">The type of entity to create.</param>
         /// <returns> The entity instance, which may be a proxy. </returns>
         public virtual object Create(Type derivedEntityType)
         {

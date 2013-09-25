@@ -256,6 +256,7 @@ namespace System.Data.Entity.Infrastructure
         /// <summary>
         /// Returns a new instance of the non-generic <see cref="DbQuery" /> class for this query.
         /// </summary>
+        /// <param name="entry">The query.</param>
         /// <returns> A non-generic version. </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",

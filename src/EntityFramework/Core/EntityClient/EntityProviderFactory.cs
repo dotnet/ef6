@@ -110,8 +110,8 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Throws a <see cref="T:System.NotSupportedException" />. This method is currently not supported.
         /// </summary>
+        /// <param name="state">This method is currently not supported.</param>
         /// <returns>This method is currently not supported.</returns>
-
         public override CodeAccessPermission CreatePermission(PermissionState state)
         {
             throw new NotSupportedException();

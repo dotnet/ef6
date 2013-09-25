@@ -6,7 +6,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Text;
@@ -118,6 +117,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Removes an annotation with the specified name.
         /// </summary>
         /// <param name="name">The name of the annotation property.</param>
+        /// <returns>true if an annotation was removed; otherwise, false.</returns>
         public bool RemoveAnnotation(string name)
         {
             Check.NotEmpty(name, "name");

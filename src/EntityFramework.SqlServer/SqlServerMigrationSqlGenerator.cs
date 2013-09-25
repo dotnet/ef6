@@ -1356,6 +1356,7 @@ namespace System.Data.Entity.SqlServer
         /// </summary>
         /// <param name="sql"> The statement to be executed. </param>
         /// <param name="suppressTransaction"> Gets or sets a value indicating whether this statement should be performed outside of the transaction scope that is used to make the migration process transactional. If set to true, this operation will not be rolled back if the migration process fails. </param>
+        /// <param name="batchTerminator">The batch terminator for the database provider.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(string sql, bool suppressTransaction = false, string batchTerminator = null)
         {
@@ -1387,6 +1388,7 @@ namespace System.Data.Entity.SqlServer
         /// Adds a new Statement to be executed against the database.
         /// </summary>
         /// <param name="writer"> The writer containing the SQL to be executed. </param>
+        /// <param name="batchTerminator">The batch terminator for the database provider.</param>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         protected void Statement(IndentedTextWriter writer, string batchTerminator = null)
         {

@@ -55,6 +55,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the parameter for the left key value(s).
         /// </summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
@@ -74,6 +75,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the parameter for the left key value(s).
         /// </summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
@@ -129,6 +131,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the parameter for the right key value(s).
         /// </summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
@@ -148,6 +151,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Configures the parameter for the right key value(s).
         /// </summary>
+        /// <typeparam name="TProperty">The type of the property to configure.</typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
         /// <param name="parameterName">Name of the parameter.</param>
         /// <returns> The same configuration instance so that multiple calls can be chained. </returns>

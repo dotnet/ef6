@@ -69,6 +69,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary> Overriding System.Object.ToString to provide better String representation for this type. </summary>
+        /// <returns>The name of this enumeration member.</returns>
         public override string ToString()
         {
             return Name;

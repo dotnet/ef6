@@ -190,6 +190,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
         /// <summary>
         /// Sets the current plan compiler trace function to <paramref name="traceCallback" />, enabling plan compiler tracing
         /// </summary>
+        /// <param name="traceCallback">The plan compiler trace function callback.</param>
         internal static void TraceOn(Action<string, object> traceCallback)
         {
             s_traceCallback = traceCallback;

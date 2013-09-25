@@ -31,6 +31,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         /// <summary>
         /// Initializes a new instance of <see cref="PropertyMaxLengthConvention"/> with the specified length.
         /// </summary>
+        /// <param name="length">The maximum lenght of properties.</param>
         public PropertyMaxLengthConvention(int length)
         {
             if (length <= 0)

@@ -244,6 +244,7 @@ namespace System.Data.Entity
         /// <summary>
         /// Returns the equivalent non-generic <see cref="DbSet" /> object.
         /// </summary>
+        /// <param name="entry">The generic set object.</param>
         /// <returns> The non-generic set object. </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         [SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",

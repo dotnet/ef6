@@ -12,7 +12,6 @@ namespace System.Data.Entity.Core.EntityClient
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.EntityClient.Internal;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
@@ -465,6 +464,7 @@ namespace System.Data.Entity.Core.EntityClient
         /// <summary>
         /// Create and return a new parameter object representing a parameter in the eSQL statement
         /// </summary>
+        /// <returns>The parameter object.</returns>
         protected override DbParameter CreateDbParameter()
         {
             return CreateParameter();

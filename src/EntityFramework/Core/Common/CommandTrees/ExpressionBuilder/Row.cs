@@ -39,6 +39,7 @@ namespace System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder
         /// <summary>
         /// Converts the given Row instance into an instance of <see cref="DbExpression" />
         /// </summary>
+        /// <param name="row">The Row instance.</param>
         /// <returns> A DbExpression based on the Row instance </returns>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="row" />

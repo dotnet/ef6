@@ -26,7 +26,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="model">
         /// The EdmModel to serialize.
         /// </param>
-        /// <param name="xmlWriter"> The XmlWriter to serialize to </param>
+        /// <param name="xmlWriter"> The XmlWriter to serialize to. </param>
+        /// <param name="modelNamespace">The serialized model's namespace.</param>
+        /// <returns>true if the model is valid; otherwise, false.</returns>
         [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed")]
         public bool Serialize(EdmModel model, XmlWriter xmlWriter, string modelNamespace = null)
         {
@@ -34,7 +36,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Check.NotNull(xmlWriter, "xmlWriter");
 
             bool modelIsValid = true;
-           
+
             Action<DataModelErrorEventArgs> onErrorAction =
                 e =>
                 {

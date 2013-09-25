@@ -110,7 +110,7 @@ namespace System.Data.Entity.Infrastructure
         /// The value may be a nested instance of this class.
         /// </summary>
         /// <param name="propertyName"> The property name. </param>
-        /// <value> The value of the property. </value>
+        /// <returns> The value of the property. </returns>
         public object this[string propertyName]
         {
             get

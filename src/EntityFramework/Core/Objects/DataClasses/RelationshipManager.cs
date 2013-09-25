@@ -621,6 +621,9 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         /// This method is designed to be used during deserialization only, and will throw an exception if the provided EntityCollection has already been initialized,
         /// or if the relationship manager is already attached to a ObjectContext.
         /// </summary>
+        /// <param name="relationshipName">The relationship name.</param>
+        /// <param name="targetRoleName">The target role name.</param>
+        /// <param name="entityCollection">An existing EntityCollection.</param>
         /// <typeparam name="TTargetEntity"> Type of the entity represented by targetRoleName </typeparam>
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]

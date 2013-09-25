@@ -18,6 +18,7 @@ namespace System.Data.Entity.ModelConfiguration
     /// <see cref="DbModelBuilder" /> or a custom type derived from EntityTypeConfiguration
     /// can be registered via the Configurations property on <see cref="DbModelBuilder" />.
     /// </summary>
+    /// <typeparam name="TEntityType">The entity type being configured.</typeparam>
     public class EntityTypeConfiguration<TEntityType> : StructuralTypeConfiguration<TEntityType>
         where TEntityType : class
     {
@@ -91,6 +92,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public EntityTypeConfiguration<TEntityType> Ignore<TProperty>(Expression<Func<TEntityType, TProperty>> propertyExpression)
@@ -108,6 +110,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         public EntityTypeConfiguration<TEntityType> ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
@@ -124,6 +127,7 @@ namespace System.Data.Entity.ModelConfiguration
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <param name="schemaName"> The database schema of the table. </param>
+        /// <returns> The same EntityTypeConfiguration instance so that multiple calls can be chained. </returns>
         public EntityTypeConfiguration<TEntityType> ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");

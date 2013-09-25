@@ -6,9 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
-    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -104,6 +102,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         public ConventionTypeConfiguration Ignore()
         {
             ValidateConfiguration(ConfigurationAspect.IgnoreType);
@@ -120,6 +121,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Changes this entity type to a complex type.
         /// </summary>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         public ConventionTypeConfiguration IsComplexType()
         {
             ValidateConfiguration(ConfigurationAspect.IsComplexType);
@@ -137,6 +141,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyName"> The name of the property to be configured. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect if the property does not exist.
         /// </remarks>
@@ -159,6 +166,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Excludes a property from the model so that it will not be mapped to the database.
         /// </summary>
         /// <param name="propertyInfo"> The property to be configured. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect if the property does not exist.
         /// </remarks>
@@ -388,6 +398,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect once it has been configured.
         /// </remarks>
@@ -412,6 +425,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <param name="schemaName"> The database schema of the table. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect once it has been configured.
         /// </remarks>

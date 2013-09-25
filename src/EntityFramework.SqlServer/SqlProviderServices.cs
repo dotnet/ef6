@@ -896,6 +896,9 @@ namespace System.Data.Entity.SqlServer
         /// CreateDatabase
         /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
+        /// <param name="connection">Connection to a non-existent database that needs to be created and populated with the store objects indicated with the storeItemCollection parameter.</param>
+        /// <param name="commandTimeout">Execution timeout for any commands needed to create the database.</param>
+        /// <param name="storeItemCollection">The collection of all store items based on which the script should be created.</param>
         protected override void DbCreateDatabase(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");
@@ -1077,6 +1080,10 @@ namespace System.Data.Entity.SqlServer
         /// Also note that checking for the existence of the file does not work for a remote server.  (Dev11 #290487)
         /// For further details on the behavior when AttachDBFilename is specified see Dev10# 188936
         /// </summary>
+        /// <param name="connection">Connection to a database whose existence is checked by this method.</param>
+        /// <param name="commandTimeout">Execution timeout for any commands needed to determine the existence of the database.</param>
+        /// <param name="storeItemCollection">The collection of all store items from the model. This parameter is no longer used for determining database existence.</param>
+        /// <returns>True if the provider can deduce the database only based on the connection.</returns>
         protected override bool DbDatabaseExists(DbConnection connection, int? commandTimeout, StoreItemCollection storeItemCollection)
         {
             Check.NotNull(connection, "connection");

@@ -88,6 +88,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Excludes this entity type from the model so that it will not be mapped to the database.
         /// </summary>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         public ConventionTypeConfiguration<T> Ignore()
         {
             _configuration.Ignore();
@@ -98,6 +101,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// <summary>
         /// Changes this entity type to a complex type.
         /// </summary>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         public ConventionTypeConfiguration<T> IsComplexType()
         {
             _configuration.IsComplexType();
@@ -110,6 +116,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <typeparam name="TProperty"> The type of the property to be ignored. </typeparam>
         /// <param name="propertyExpression"> A lambda expression representing the property to be configured. C#: t => t.MyProperty VB.Net: Function(t) t.MyProperty </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public ConventionTypeConfiguration<T> Ignore<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
@@ -173,6 +182,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// Configures the table name that this entity type is mapped to.
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect once it has been configured.
         /// </remarks>
@@ -190,6 +202,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="tableName"> The name of the table. </param>
         /// <param name="schemaName"> The database schema of the table. </param>
+        /// <returns>
+        /// The same <see cref="ConventionTypeConfiguration{T}" /> instance so that multiple calls can be chained.
+        /// </returns>
         /// <remarks>
         /// Calling this will have no effect once it has been configured.
         /// </remarks>

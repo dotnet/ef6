@@ -272,7 +272,7 @@ namespace System.Data.Entity.Migrations.Design
         /// <summary>
         /// Generates the closing code for a class that was started with WriteClassStart.
         /// </summary>
-        /// <param name="namespace"> </param>
+        /// <param name="namespace"> Namespace that code should be generated in. </param>
         /// <param name="writer"> Text writer to add the generated code to. </param>
         [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "namespace")]
         protected virtual void WriteClassEnd(string @namespace, IndentedTextWriter writer)
@@ -1121,7 +1121,11 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(");");
         }
 
-        /// 
+        /// <summary>
+        /// Generates code to perform a <see cref="MoveProcedureOperation" />.
+        /// </summary>
+        /// <param name="moveProcedureOperation">The operation to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
         protected virtual void Generate(MoveProcedureOperation moveProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(moveProcedureOperation, "moveProcedureOperation");
@@ -1152,7 +1156,11 @@ namespace System.Data.Entity.Migrations.Design
             writer.WriteLine(");");
         }
 
-        /// 
+        /// <summary>
+        /// Generates code to perform a <see cref="RenameProcedureOperation" />.
+        /// </summary>
+        /// <param name="renameProcedureOperation">The operation to generate code for.</param>
+        /// <param name="writer">Text writer to add the generated code to.</param>
         protected virtual void Generate(RenameProcedureOperation renameProcedureOperation, IndentedTextWriter writer)
         {
             Check.NotNull(renameProcedureOperation, "renameProcedureOperation");

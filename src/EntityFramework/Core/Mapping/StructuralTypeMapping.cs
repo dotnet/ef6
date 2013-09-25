@@ -34,13 +34,13 @@ namespace System.Data.Entity.Core.Mapping
         /// <summary>
         /// Adds a property mapping condition.
         /// </summary>
-        /// <param name="propertyMapping">The property mapping condition to be added.</param>
+        /// <param name="condition">The property mapping condition to be added.</param>
         public abstract void AddCondition(ConditionPropertyMapping condition);
 
         /// <summary>
         /// Removes a property mapping condition.
         /// </summary>
-        /// <param name="propertyMapping">The property mapping condition to be removed.</param>
+        /// <param name="condition">The property mapping condition to be removed.</param>
         public abstract void RemoveCondition(ConditionPropertyMapping condition);
     }
 }

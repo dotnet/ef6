@@ -16,6 +16,7 @@ namespace System.Data.Entity.Core.Objects
     /// <summary>
     /// This class represents the result of the <see cref="ObjectQuery{T}.Execute" /> method.
     /// </summary>
+    /// <typeparam name="T">The type of the result.</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     public class ObjectResult<T> : ObjectResult, IEnumerable<T>
 #if !NET40

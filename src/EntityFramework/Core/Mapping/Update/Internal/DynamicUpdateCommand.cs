@@ -276,9 +276,9 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
 
 #endif
 
-        /// <summary>
-        /// Gets DB command definition encapsulating store logic for this command.
-        /// </summary>
+        // <summary>
+        // Gets DB command definition encapsulating store logic for this command.
+        // </summary>
         protected virtual DbCommand CreateCommand(Dictionary<int, object> identifierValues)
         {
             var commandTree = _modificationCommandTree;

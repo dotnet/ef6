@@ -505,6 +505,7 @@ namespace System.Data.Entity.Core.Common
         /// <summary>
         /// Return an XML reader which represents the CSDL description
         /// </summary>
+        /// <param name="csdlName">The name of the CSDL description.</param>
         /// <returns> An XmlReader that represents the CSDL description </returns>
         public static XmlReader GetConceptualSchemaDefinition(string csdlName)
         {

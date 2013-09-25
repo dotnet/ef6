@@ -128,7 +128,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 // If not, return the actual stored value
                 return _value;
             }
-            
+
             set
             {
                 Check.NotNull(value, "value");
@@ -192,10 +192,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="name">The name of the metadata property.</param>
         /// <param name="typeUsage">The type usage of the metadata property.</param>
         /// <param name="value">The value of the metadata property.</param>
+        /// <returns>The MetadataProperty object.</returns>
         /// <exception cref="System.NullReferenceException">
         /// Thrown <paramref name="typeUsage" /> is <c>null</c>.
         /// </exception>
-        /// <notes>The newly created MetadataProperty will be read only.</notes>
+        /// <remarks>The newly created MetadataProperty will be read only.</remarks>
         public static MetadataProperty Create(string name, TypeUsage typeUsage, object value)
         {
             Check.NotEmpty(name, "name");

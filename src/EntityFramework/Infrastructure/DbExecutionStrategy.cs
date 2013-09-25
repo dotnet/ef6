@@ -301,6 +301,7 @@ namespace System.Data.Entity.Infrastructure
         /// <see cref="EntityException" />, <see cref="DbUpdateException" /> or <see cref="UpdateException" />
         /// and passes it to <paramref name="exceptionHandler" />
         /// </summary>
+        /// <typeparam name="T">The type of the unwrapped exception.</typeparam>
         /// <param name="exception"> The exception to be unwrapped. </param>
         /// <param name="exceptionHandler"> A delegate that will be called with the unwrapped exception. </param>
         /// <returns>

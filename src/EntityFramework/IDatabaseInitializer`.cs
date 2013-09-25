@@ -11,6 +11,7 @@ namespace System.Data.Entity
     /// The following implementations are provided: <see cref="DropCreateDatabaseIfModelChanges{TContext}" />,
     /// <see cref="DropCreateDatabaseAlways{TContext}" />, <see cref="CreateDatabaseIfNotExists{TContext}" />.
     /// </summary>
+    /// <typeparam name="TContext">The type of the context.</typeparam>
     public interface IDatabaseInitializer<in TContext>
         where TContext : DbContext
     {

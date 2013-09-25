@@ -12,6 +12,7 @@ namespace System.Data.Entity.Infrastructure
     /// this interface. Design-time services will auto-discover implementations of this interface that are in the
     /// same assembly as the derived <see cref="DbContext" /> type.
     /// </summary>
+    /// <typeparam name="TContext">The type of the context.</typeparam>
     public interface IDbContextFactory<out TContext>
         where TContext : DbContext
     {

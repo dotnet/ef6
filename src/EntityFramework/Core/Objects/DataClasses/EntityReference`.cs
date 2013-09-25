@@ -21,6 +21,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
     /// <summary>
     /// Models a relationship end with multiplicity 1.
     /// </summary>
+    /// <typeparam name="TEntity">The type of the entity being referenced.</typeparam>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
     [DataContract]
     [Serializable]

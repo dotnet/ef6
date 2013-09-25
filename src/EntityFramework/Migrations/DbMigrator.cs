@@ -7,13 +7,13 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Edm;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -255,6 +255,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Gets all migrations that are defined in the configured migrations assembly.
         /// </summary>
+        /// <returns>The list of migrations.</returns>
         public override IEnumerable<string> GetLocalMigrations()
         {
             return _migrationAssembly.MigrationIds;
@@ -263,6 +264,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Gets all migrations that have been applied to the target database.
         /// </summary>
+        /// <returns>The list of migrations.</returns>
         public override IEnumerable<string> GetDatabaseMigrations()
         {
             return _historyRepository.GetMigrationsSince(InitialDatabase);
@@ -271,6 +273,7 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Gets all migrations that are defined in the assembly but haven't been applied to the target database.
         /// </summary>
+        /// <returns>The list of migrations.</returns>
         public override IEnumerable<string> GetPendingMigrations()
         {
             return _historyRepository.GetPendingMigrations(_migrationAssembly.MigrationIds);

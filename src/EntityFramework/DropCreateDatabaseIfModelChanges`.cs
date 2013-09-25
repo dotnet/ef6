@@ -11,6 +11,7 @@ namespace System.Data.Entity
     /// An implementation of IDatabaseInitializer that will <b>DELETE</b>, recreate, and optionally re-seed the
     /// database only if the model has changed since the database was created.
     /// </summary>
+    /// <typeparam name="TContext"> The type of the context. </typeparam>
     /// <remarks>
     /// Whether or not the model has changed is determined by the <see cref="Database.CompatibleWithModel(bool)" />
     /// method.

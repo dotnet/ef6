@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Runtime.Versioning;
     using System.Xml;
@@ -35,19 +34,19 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // </summary>
         public enum ExtensionCheck
         {
-            // <summary>
-            // Do not perform any extension check
-            // </summary>
+            /// <summary>
+            /// Do not perform any extension check
+            /// </summary>
             None = 0,
 
-            // <summary>
-            // Check the extension against a specific value
-            // </summary>
+            /// <summary>
+            /// Check the extension against a specific value
+            /// </summary>
             Specific,
 
-            // <summary>
-            // Check the extension against the set of acceptable extensions
-            // </summary>
+            /// <summary>
+            /// Check the extension against the set of acceptable extensions
+            /// </summary>
             All
         }
 

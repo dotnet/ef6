@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.Collections.Generic;
     using System.Data.Entity.Internal.Linq;
-    using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -22,7 +21,8 @@ namespace System.Data.Entity.Migrations
         /// from database terminology.
         /// This method can useful when seeding data using Migrations.
         /// </summary>
-        /// <param name="set"> </param>
+        /// <typeparam name="TEntity">The type of entities to add or update.</typeparam>
+        /// <param name="set">The set to which the entities belong.</param>
         /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
         /// When the <paramref name="set" /> parameter is a custom or fake IDbSet implementation, this method will
@@ -66,7 +66,8 @@ namespace System.Data.Entity.Migrations
         /// Equivalent to an "upsert" operation from database terminology.
         /// This method can useful when seeding data using Migrations.
         /// </summary>
-        /// <param name="set"> </param>
+        /// <typeparam name="TEntity">The type of entities to add or update.</typeparam>
+        /// <param name="set">The set to which the entities belong.</param>
         /// <param name="identifierExpression"> An expression specifying the properties that should be used when determining whether an Add or Update operation should be performed. </param>
         /// <param name="entities"> The entities to add or update. </param>
         /// <remarks>
@@ -90,7 +91,7 @@ namespace System.Data.Entity.Migrations
 
                 if (internalSet != null)
                 {
-                    var identifyingProperties 
+                    var identifyingProperties
                         = identifierExpression.GetSimplePropertyAccessList();
 
                     dbSet.AddOrUpdate(identifyingProperties, internalSet, entities);

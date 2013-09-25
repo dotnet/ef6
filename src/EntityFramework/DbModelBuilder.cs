@@ -180,6 +180,7 @@ namespace System.Data.Entity
         /// for database objects that do not have an explicitly configured schema name.
         /// </summary>
         /// <param name="schema"> The name of the default database schema. </param>
+        /// <returns> The same DbModelBuilder instance so that multiple calls can be chained. </returns>
         public virtual DbModelBuilder HasDefaultSchema(string schema)
         {
             _modelConfiguration.DefaultSchema = schema;

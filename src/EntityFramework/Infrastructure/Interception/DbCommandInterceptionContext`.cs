@@ -12,6 +12,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     /// Represents contextual information associated with calls into <see cref="IDbCommandInterceptor" />
     /// implementations including the result of the operation.
     /// </summary>
+    /// <typeparam name="TResult">The type of the operation's results.</typeparam>
     /// <remarks>
     /// Instances of this class are publicly immutable for contextual information. To add
     /// contextual information use one of the With... or As... methods to create a new

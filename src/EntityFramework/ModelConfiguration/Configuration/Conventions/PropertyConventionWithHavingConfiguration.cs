@@ -13,6 +13,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     /// Allows configuration to be performed for a lightweight convention based on
     /// the properties of entity types in a model and a captured value.
     /// </summary>
+    /// <typeparam name="T">The type of the captured value.</typeparam>
     public class PropertyConventionWithHavingConfiguration<T>
         where T : class
     {
