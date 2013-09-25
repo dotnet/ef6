@@ -84,6 +84,8 @@ namespace System.Data.Entity.Internal
 
         private readonly AttributeProvider _attributeProvider;
 
+        private DbModel _modelBeingInitialized;
+
         // <summary>
         // Constructs a <see cref="LazyInternalContext" /> for the given <see cref="DbContext" /> owner that will be initialized
         // on first use.
@@ -140,6 +142,15 @@ namespace System.Data.Entity.Internal
             {
                 InitializeContext();
                 return _model;
+            }
+        }
+
+        public override DbModel ModelBeingInitialized
+        {
+            get
+            {
+                InitializeContext();
+                return _modelBeingInitialized;
             }
         }
 
@@ -461,6 +472,8 @@ namespace System.Data.Entity.Internal
                       ? modelBuilder.Build(internalContext._internalConnection.Connection)
                       : modelBuilder.Build(internalContext._modelProviderInfo);
 
+            internalContext._modelBeingInitialized = model;
+
             return model.Compile();
         }
 
@@ -617,6 +630,7 @@ namespace System.Data.Entity.Internal
                 finally
                 {
                     _inDatabaseInitialization = false;
+                    _modelBeingInitialized = null;
                 }
             }
         }

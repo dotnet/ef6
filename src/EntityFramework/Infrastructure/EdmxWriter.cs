@@ -37,6 +37,14 @@ namespace System.Data.Entity.Infrastructure
             {
                 throw Error.EdmxWriter_EdmxFromObjectContextNotSupported();
             }
+
+            var modelBeingInitialized = internalContext.ModelBeingInitialized;
+            if (modelBeingInitialized != null)
+            {
+                WriteEdmx(modelBeingInitialized, writer);
+                return;
+            }
+
             var compiledModel = internalContext.CodeFirstModel;
             if (compiledModel == null)
             {
