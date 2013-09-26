@@ -15,6 +15,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Resources;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Xml.Linq;
     using Moq;
     using Moq.Protected;
     using Xunit;
@@ -583,10 +584,10 @@ namespace System.Data.Entity.Migrations
 
             var migrator = new DbMigrator(context, mockFactory.Object);
             var statement = new MigrationStatement
-            {
-                Sql = "Some Sql",
-                SuppressTransaction = true
-            };
+                {
+                    Sql = "Some Sql",
+                    SuppressTransaction = true
+                };
 
             var mockInterceptor = new Mock<DbCommandInterceptor> { CallBase = true };
             DbInterception.Add(mockInterceptor.Object);
@@ -601,12 +602,27 @@ namespace System.Data.Entity.Migrations
             }
 
             mockInterceptor.Verify(m => m.NonQueryExecuting(
-                mockCommand.Object,
-                It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context))));
-            
+                    mockCommand.Object,
+                    It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context))));
+
             mockInterceptor.Verify(m => m.NonQueryExecuted(
-                mockCommand.Object, 
-                It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context) && c.Result == 2013)));
+                    mockCommand.Object,
+                    It.Is<DbCommandInterceptionContext<int>>(c => c.DbContexts.Contains(context) && c.Result == 2013)));
+        }
+    }
+
+    public class Upgrade : TestBase
+    {
+        [Fact]
+        public void Upgrade_does_not_do_model_diff_or_run_Seed_when_using_initializer_path()
+        {
+            var mockMigrator = new Mock<DbMigrator>(null, null, new Mock<MigrationAssembly>().Object) { CallBase = true };
+            mockMigrator.Setup(m => m.IsModelOutOfDate(It.IsAny<XDocument>(), It.IsAny<DbMigration>())).Returns(false);
+
+            mockMigrator.Object.Upgrade(Enumerable.Empty<string>(), "A", "B");
+
+            mockMigrator.Verify(m => m.SeedDatabase(), Times.Never());
+            mockMigrator.Verify(m => m.IsModelOutOfDate(It.IsAny<XDocument>(), It.IsAny<DbMigration>()), Times.Never());
         }
     }
 }

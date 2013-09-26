@@ -66,13 +66,18 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// For testing.
         /// </summary>
-        internal DbMigrator(DbContext usersContext = null, DbProviderFactory providerFactory = null)
+        internal DbMigrator(
+            DbContext usersContext = null, 
+            DbProviderFactory providerFactory = null,
+            MigrationAssembly migrationAssembly = null)
             : base(null)
         {
             _contextForInterception = usersContext;
             _providerFactory = providerFactory;
+            _migrationAssembly = migrationAssembly;
             _usersContextInfo = new DbContextInfo(typeof(DbContext));
             _configuration = new DbMigrationsConfiguration();
+            _calledByCreateDatabase = true;
         }
 
         /// <summary>
@@ -544,7 +549,9 @@ namespace System.Data.Entity.Migrations
                     false);
             }
 
-            if (!IsModelOutOfDate(_currentModel, lastMigration))
+            // Context may not be constructable when Migrations is being called by DbContext CreateDatabase
+            // and the config cannot have Seed data anyway, so avoid doing model diff and creating the context to seed.
+            if (!_calledByCreateDatabase && !IsModelOutOfDate(_currentModel, lastMigration))
             {
                 base.SeedDatabase();
             }
@@ -552,20 +559,17 @@ namespace System.Data.Entity.Migrations
 
         internal override void SeedDatabase()
         {
-            // Context may not be constructable when Migrations is being called by DbContext CreateDatabase
-            // and the config cannot have Seed data anyway, so avoid creating the context to seed.
-            if (!_calledByCreateDatabase)
-            {
-                using (var context = _usersContextInfo.CreateInstance())
-                {
-                    _configuration.OnSeed(context);
+            Debug.Assert(!_calledByCreateDatabase);
 
-                    context.SaveChanges();
-                }
+            using (var context = _usersContextInfo.CreateInstance())
+            {
+                _configuration.OnSeed(context);
+
+                context.SaveChanges();
             }
         }
 
-        private bool IsModelOutOfDate(XDocument model, DbMigration lastMigration)
+        internal virtual bool IsModelOutOfDate(XDocument model, DbMigration lastMigration)
         {
             DebugCheck.NotNull(model);
 
