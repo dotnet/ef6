@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -13,6 +14,28 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
     public class SqlCePropertyMaxLengthConvention : IConceptualModelConvention<EntityType>, IConceptualModelConvention<ComplexType>
     {
         private const int DefaultLength = 4000;
+        private readonly int _length;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="SqlCePropertyMaxLengthConvention"/> with the default length.
+        /// </summary>
+        public SqlCePropertyMaxLengthConvention()
+            : this(DefaultLength)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="SqlCePropertyMaxLengthConvention"/> with the specified length.
+        /// </summary>
+        public SqlCePropertyMaxLengthConvention(int length)
+        {
+            if (length <= 0)
+            {
+                throw new ArgumentOutOfRangeException("length", Strings.InvalidMaxLengthSize);
+            }
+
+            _length = length;
+        }
 
         /// <inheritdoc />
         public virtual void Apply(EntityType item, DbModel model)
@@ -44,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        private static void SetLength(IEnumerable<EdmProperty> properties)
+        private void SetLength(IEnumerable<EdmProperty> properties)
         {
             foreach (var property in properties)
             {
@@ -61,14 +84,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        private static void SetDefaults(EdmProperty property)
+        private void SetDefaults(EdmProperty property)
         {
             DebugCheck.NotNull(property);
 
             if ((property.MaxLength == null)
                 && (!property.IsMaxLength))
             {
-                property.MaxLength = DefaultLength;
+                property.MaxLength = _length;
             }
         }
     }
