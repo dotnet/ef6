@@ -8,6 +8,7 @@ namespace System.Data.Entity.Functionals.Utilities
 namespace System.Data.Entity.Utilities
 #endif
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -743,7 +744,7 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(parameterTypes);
 
-            return parameterTypes
+            return ((IEnumerable<Type[]>)parameterTypes)
                 .Select(type.GetDeclaredConstructor)
                 .FirstOrDefault(c => c != null && predicate(c));
         }
