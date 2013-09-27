@@ -254,21 +254,17 @@ namespace System.Data.Entity.Internal
         // if possible and the core provider otherwise.
         // </summary>
         // <param name="objectContext"> The context to use for core provider calls. </param>
-        public virtual void CreateDatabase(ObjectContext objectContext)
+        public virtual void CreateDatabase(ObjectContext objectContext, DatabaseExistenceState existenceState)
         {
             // objectContext may be null when testing.
             new DatabaseCreator().CreateDatabase(
-                this, (config, context) => new DbMigrator(config, context), objectContext);
+                this, (config, context) => new DbMigrator(config, context, existenceState), objectContext);
         }
 
-        // <summary>
-        // Internal implementation of <see cref="Database.CompatibleWithModel(bool)" />.
-        // </summary>
-        // <returns> True if the model hash in the context and the database match; false otherwise. </returns>
-        public virtual bool CompatibleWithModel(bool throwIfNoMetadata)
+        public virtual bool CompatibleWithModel(bool throwIfNoMetadata, DatabaseExistenceState existenceState)
         {
             return new ModelCompatibilityChecker().CompatibleWithModel(
-                this, new ModelHashCalculator(), throwIfNoMetadata);
+                this, new ModelHashCalculator(), throwIfNoMetadata, existenceState);
         }
 
         // <summary>
@@ -296,9 +292,9 @@ namespace System.Data.Entity.Internal
         // Queries the database for a model stored in the MigrationHistory table and returns it as an EDMX, or returns
         // null if the database does not contain a model.
         // </summary>
-        public virtual XDocument QueryForModel()
+        public virtual XDocument QueryForModel(DatabaseExistenceState existenceState)
         {
-            return CreateHistoryRepository().GetLastModel();
+            return CreateHistoryRepository(existenceState).GetLastModel();
         }
 
         // <summary>
@@ -318,7 +314,7 @@ namespace System.Data.Entity.Internal
             return CreateHistoryRepository().HasMigrations();
         }
 
-        private HistoryRepository CreateHistoryRepository()
+        private HistoryRepository CreateHistoryRepository(DatabaseExistenceState existenceState = DatabaseExistenceState.Unknown)
         {
             return new HistoryRepository(
                 OriginalConnectionString,
@@ -326,8 +322,9 @@ namespace System.Data.Entity.Internal
                 ContextKey,
                 CommandTimeout,
                 HistoryContextFactory,
-                schemas: new [] { DefaultSchema },
-                contextForInterception: Owner);
+                schemas: DefaultSchema != null ? new[] { DefaultSchema } : Enumerable.Empty<string>(),
+                contextForInterception: Owner,
+                initialExistence: existenceState);
         }
 
         // <summary>

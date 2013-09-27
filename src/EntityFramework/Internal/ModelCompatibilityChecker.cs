@@ -8,7 +8,8 @@ namespace System.Data.Entity.Internal
     internal class ModelCompatibilityChecker
     {
         public virtual bool CompatibleWithModel(
-            InternalContext internalContext, ModelHashCalculator modelHashCalculator, bool throwIfNoMetadata)
+            InternalContext internalContext, ModelHashCalculator modelHashCalculator,
+            bool throwIfNoMetadata, DatabaseExistenceState existenceState = DatabaseExistenceState.Unknown)
         {
             DebugCheck.NotNull(internalContext);
             DebugCheck.NotNull(modelHashCalculator);
@@ -22,7 +23,7 @@ namespace System.Data.Entity.Internal
                 return true;
             }
 
-            var model = internalContext.QueryForModel();
+            var model = internalContext.QueryForModel(existenceState);
             if (model != null)
             {
                 return internalContext.ModelMatches(model);

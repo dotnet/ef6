@@ -175,7 +175,12 @@ namespace System.Data.Entity
         /// <returns> True if the model hash in the context and the database match; false otherwise. </returns>
         public bool CompatibleWithModel(bool throwIfNoMetadata)
         {
-            return _internalContext.CompatibleWithModel(throwIfNoMetadata);
+            return CompatibleWithModel(throwIfNoMetadata, DatabaseExistenceState.Unknown);
+        }
+
+        internal bool CompatibleWithModel(bool throwIfNoMetadata, DatabaseExistenceState existenceState)
+        {
+            return _internalContext.CompatibleWithModel(throwIfNoMetadata, existenceState);
         }
 
         #endregion
@@ -189,19 +194,23 @@ namespace System.Data.Entity
         /// </summary>
         public void Create()
         {
-            Create(skipExistsCheck: false);
+            Create(DatabaseExistenceState.Unknown);
         }
 
-        internal void Create(bool skipExistsCheck)
+        internal void Create(DatabaseExistenceState existenceState)
         {
             using (var clonedObjectContext = _internalContext.CreateObjectContextForDdlOps())
             {
-                if (!skipExistsCheck
-                    && _internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
+                if (existenceState == DatabaseExistenceState.Unknown)
                 {
-                    throw Error.Database_DatabaseAlreadyExists(_internalContext.Connection.Database);
+                    if (_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
+                    {
+                        throw Error.Database_DatabaseAlreadyExists(_internalContext.Connection.Database);
+                    }
+                    existenceState = DatabaseExistenceState.DoesNotExist;
                 }
-                _internalContext.CreateDatabase(clonedObjectContext.ObjectContext);
+
+                _internalContext.CreateDatabase(clonedObjectContext.ObjectContext, existenceState);
             }
         }
 
@@ -216,7 +225,7 @@ namespace System.Data.Entity
             {
                 if (!_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
                 {
-                    _internalContext.CreateDatabase(clonedObjectContext.ObjectContext);
+                    _internalContext.CreateDatabase(clonedObjectContext.ObjectContext, DatabaseExistenceState.DoesNotExist);
                     return true;
                 }
             }

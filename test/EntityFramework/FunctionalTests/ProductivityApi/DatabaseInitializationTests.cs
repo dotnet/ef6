@@ -9,6 +9,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -1736,7 +1737,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        public void Model_is_built_only_once_when_database_exists_and_contains_metadata()
+        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseContext>()))
             {
@@ -1747,18 +1748,30 @@ namespace ProductivityApiTests
                       WHERE ContextKey = 'ProductivityApiTests.DatabaseInitializationTests+BaseModelContext'");
             }
 
-            using (var context = new ExistingDatabaseContext())
+            var counter = new DdlCounter();
+            DbInterception.Add(counter);
+            try
             {
-                var _ = ((IObjectContextAdapter)context).ObjectContext;
+                using (var context = new ExistingDatabaseContext())
+                {
+                    var _ = ((IObjectContextAdapter)context).ObjectContext;
 
-                Assert.Equal(1, context.BuildCount);
+                    Assert.Equal(1, context.BuildCount);
 
-                Assert.True(context.Database.Exists());
+                    Assert.Equal(1, counter.ExistsCount);
+                    Assert.Equal(1, counter.MigrationsDiscoveryCount);
+
+                    Assert.True(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(counter);
             }
         }
 
         [Fact]
-        public void Model_is_built_only_once_when_database_exists_and_contains_no_metadata()
+        public void Model_is_built_and_existance_checked_only_once_when_database_exists_and_contains_no_metadata()
         {
             using (var context = new BaseModelContext(SimpleConnection<ExistingDatabaseNoMetadataContext>()))
             {
@@ -1770,36 +1783,63 @@ namespace ProductivityApiTests
                       DROP TABLE __MigrationHistory");
             }
 
-            using (var context = new ExistingDatabaseNoMetadataContext())
+            var counter = new DdlCounter();
+            DbInterception.Add(counter);
+            try
             {
-                var _ = ((IObjectContextAdapter)context).ObjectContext;
+                using (var context = new ExistingDatabaseNoMetadataContext())
+                {
+                    var _ = ((IObjectContextAdapter)context).ObjectContext;
 
-                Assert.Equal(1, context.BuildCount);
+                    Assert.Equal(1, context.BuildCount);
 
-                Assert.True(context.Database.Exists());
+                    Assert.Equal(1, counter.ExistsCount);
+
+                    // We do two queries here to handle the case where the context key exists (which failed)
+                    // then the check for the case with no context key, which also fails.
+                    Assert.Equal(2, counter.MigrationsDiscoveryCount);
+
+                    Assert.True(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(counter);
             }
         }
 
         [Fact]
-        public void Model_is_built_only_once_when_database_does_not_exist()
+        public void Model_is_built_and_existance_checked_only_once_when_database_does_not_exist()
         {
             using (var context = new BaseModelContext(SimpleConnection<NewDatabaseContext>()))
             {
                 context.Database.Delete();
             }
 
-            using (var context = new NewDatabaseContext())
+            var counter = new DdlCounter();
+            DbInterception.Add(counter);
+            try
             {
-                var _ = ((IObjectContextAdapter)context).ObjectContext;
+                using (var context = new NewDatabaseContext())
+                {
+                    var _ = ((IObjectContextAdapter)context).ObjectContext;
 
-                Assert.Equal(1, context.BuildCount);
+                    Assert.Equal(1, context.BuildCount);
 
-                Assert.True(context.Database.Exists());
+                    Assert.Equal(1, counter.ExistsCount);
+                    Assert.Equal(0, counter.MigrationsDiscoveryCount);
+
+                    Assert.True(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(counter);
             }
         }
 
         [Fact]
-        public void Model_is_built_only_once_when_dropping_and_creating_database()
+        public void Model_is_built_and_existance_checked_only_once_when_dropping_and_creating_database()
         {
             using (var context = new BaseModelContext(SimpleConnection<DropCreateContext>()))
             {
@@ -1811,14 +1851,52 @@ namespace ProductivityApiTests
             }
 
             Database.SetInitializer(new DropCreateDatabaseAlways<DropCreateContext>());
-
-            using (var context = new DropCreateContext())
+            
+            var counter = new DdlCounter();
+            DbInterception.Add(counter);
+            try
             {
-                var _ = ((IObjectContextAdapter)context).ObjectContext;
+                using (var context = new DropCreateContext())
+                {
+                    var _ = ((IObjectContextAdapter)context).ObjectContext;
 
-                Assert.Equal(1, context.BuildCount);
+                    Assert.Equal(1, context.BuildCount);
+                    
+                    Assert.Equal(1, counter.ExistsCount);
+                    Assert.Equal(0, counter.MigrationsDiscoveryCount);
 
-                Assert.True(context.Database.Exists());
+                    Assert.True(context.Database.Exists());
+                }
+            }
+            finally
+            {
+                DbInterception.Remove(counter);
+            }
+        }
+
+        public class DdlCounter : DbCommandInterceptor
+        {
+            public int ExistsCount { get; set; }
+            public int MigrationsDiscoveryCount { get; set; }
+
+            public override void ScalarExecuting(DbCommand command, DbCommandInterceptionContext<object> interceptionContext)
+            {
+                if (command.CommandText.Contains("SELECT Count(*) FROM sys.databases"))
+                {
+                    ExistsCount++;
+                }
+            }
+
+            public override void ReaderExecuting(DbCommand command, DbCommandInterceptionContext<DbDataReader> interceptionContext)
+            {
+                if (command.CommandText
+                    .Replace(" ", "")
+                    .Replace("\n", "")
+                    .Replace("\r", "")
+                    .Contains("SELECTCOUNT(1)AS[A1]FROM[dbo].[__MigrationHistory]AS[Extent1]"))
+                {
+                    MigrationsDiscoveryCount++;
+                }
             }
         }
 

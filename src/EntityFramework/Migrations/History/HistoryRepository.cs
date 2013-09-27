@@ -37,6 +37,7 @@ namespace System.Data.Entity.Migrations.History
         private readonly DbContext _contextForInterception;
         private readonly int _contextKeyMaxLength;
         private readonly int _migrationIdMaxLength;
+        private readonly DatabaseExistenceState _initialExistence;
 
         private string _currentSchema;
         private bool? _exists;
@@ -48,11 +49,15 @@ namespace System.Data.Entity.Migrations.History
             string contextKey, 
             int? commandTimeout, 
             Func<DbConnection, string, HistoryContext> historyContextFactory, 
-            IEnumerable<string> schemas = null, DbContext contextForInterception = null)
+            IEnumerable<string> schemas = null,
+            DbContext contextForInterception = null,
+            DatabaseExistenceState initialExistence = DatabaseExistenceState.Unknown)
             : base(connectionString, providerFactory)
         {
             DebugCheck.NotEmpty(contextKey);
             DebugCheck.NotNull(historyContextFactory);
+
+            _initialExistence = initialExistence;
 
             _commandTimeout = commandTimeout;
 
@@ -381,13 +386,21 @@ namespace System.Data.Entity.Migrations.History
         {
             DebugCheck.NotNull(contextKey);
 
+            if (_initialExistence == DatabaseExistenceState.DoesNotExist)
+            {
+                return false;
+            }
+
             using (var connection = CreateConnection())
             {
-                using (var context = CreateContext(connection))
+                if (_initialExistence == DatabaseExistenceState.Unknown)
                 {
-                    if (!context.Database.Exists())
+                    using (var context = CreateContext(connection))
                     {
-                        return false;
+                        if (!context.Database.Exists())
+                        {
+                            return false;
+                        }
                     }
                 }
 
@@ -395,36 +408,43 @@ namespace System.Data.Entity.Migrations.History
                 {
                     using (var context = CreateContext(connection, schema))
                     {
+                        _currentSchema = schema;
+                        _contextKeyColumnExists = true;
+
+                        // Do the context-key specific query first, since if it succeeds we can avoid
+                        // doing the more general query.
                         try
                         {
                             using (new TransactionScope(TransactionScopeOption.Suppress))
                             {
-                                context.History.Count();
-                            }
+                                contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
 
-                            _currentSchema = schema;
-                            _contextKeyColumnExists = true;
-
-                            try
-                            {
-                                using (new TransactionScope(TransactionScopeOption.Suppress))
+                                if (context.History.Count(hr => hr.ContextKey == contextKey) > 0)
                                 {
-                                    contextKey = contextKey.RestrictTo(_contextKeyMaxLength);
-
-                                    if (context.History.Count(hr => hr.ContextKey == contextKey) > 0)
-                                    {
-                                        return true;
-                                    }
+                                    return true;
                                 }
-                            }
-                            catch (EntityException)
-                            {
-                                _contextKeyColumnExists = false;
                             }
                         }
                         catch (EntityException)
                         {
-                            _currentSchema = null;
+                            _contextKeyColumnExists = false;
+                        }
+
+                        // If the context-key specific query failed, then try the general query to see
+                        // if there is a history table in this schema at all
+                        if (!_contextKeyColumnExists)
+                        {
+                            try
+                            {
+                                using (new TransactionScope(TransactionScopeOption.Suppress))
+                                {
+                                    context.History.Count();
+                                }
+                            }
+                            catch (EntityException)
+                            {
+                                _currentSchema = null;
+                            }
                         }
                     }
                 }

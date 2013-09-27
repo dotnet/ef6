@@ -17,7 +17,7 @@ namespace System.Data.Entity.Internal
     {
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
-        public bool AnyModelTableExists(InternalContext internalContext)
+        public DatabaseExistenceState AnyModelTableExists(InternalContext internalContext)
         {
             using (var clonedObjectContext = internalContext.CreateObjectContextForDdlOps())
             {
@@ -25,14 +25,15 @@ namespace System.Data.Entity.Internal
 
                 if (!exists)
                 {
-                    return false;
+                    return DatabaseExistenceState.DoesNotExist;
                 }
 
                 try
                 {
                     if (internalContext.CodeFirstModel == null)
                     {
-                        return true;
+                        // If not Code First, then assume tables created in some other way
+                        return DatabaseExistenceState.Exists;
                     }
 
                     var providerName = internalContext.ProviderName;
@@ -49,41 +50,61 @@ namespace System.Data.Entity.Internal
                             break;
 
                         default:
-                            return true;
+                            // If we can't check for tables, then assume they exist as we did in older versions
+                            return DatabaseExistenceState.Exists;
                     }
 
-                    var modelTables = GetModelTables(internalContext.ObjectContext.MetadataWorkspace).ToList();
+                    var modelTables = GetModelTables(internalContext).ToList();
 
                     if (!modelTables.Any())
                     {
-                        return true;
+                        // If this is an empty model, then all tables that can exist (0) do exist
+                        return DatabaseExistenceState.Exists;
                     }
 
-                    using (new TransactionScope(TransactionScopeOption.Suppress))
+                    if (QueryForTableExistence(provider, clonedObjectContext, modelTables))
                     {
-                        if (provider.AnyModelTableExistsInDatabase(
-                            clonedObjectContext.ObjectContext, clonedObjectContext.Connection, modelTables,
-                            EdmMetadataContext.TableName))
-                        {
-                            return true;
-                        }
+                        // If any table exists, then assume that this is a non-empty database
+                        return DatabaseExistenceState.Exists;
                     }
 
-                    return internalContext.HasHistoryTableEntry();
+                    // At this point we know no model tables exist. If the history table exists and has an entry
+                    // for this context, then treat this as a non-empty database, otherwise treat is as existing
+                    // but empty.
+                    return internalContext.HasHistoryTableEntry()
+                               ? DatabaseExistenceState.Exists
+                               : DatabaseExistenceState.ExistsConsideredEmpty;
                 }
                 catch (Exception ex)
                 {
                     Debug.Fail(ex.Message, ex.ToString());
 
                     // Revert to previous behavior on error
-                    return true;
+                    return DatabaseExistenceState.Exists;
                 }
             }
         }
 
-        private static IEnumerable<EntitySet> GetModelTables(MetadataWorkspace workspace)
+        public virtual bool QueryForTableExistence(
+            IPseudoProvider provider, ClonedObjectContext clonedObjectContext, List<EntitySet> modelTables)
         {
-            return workspace
+            using (new TransactionScope(TransactionScopeOption.Suppress))
+            {
+                if (provider.AnyModelTableExistsInDatabase(
+                    clonedObjectContext.ObjectContext, 
+                    clonedObjectContext.Connection, 
+                    modelTables,
+                    EdmMetadataContext.TableName))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public virtual IEnumerable<EntitySet> GetModelTables(InternalContext internalContext)
+        {
+            return internalContext.ObjectContext.MetadataWorkspace
                 .GetItemCollection(DataSpace.SSpace)
                 .GetItems<EntityContainer>()
                 .Single()
@@ -102,7 +123,7 @@ namespace System.Data.Entity.Internal
                        : modelTable.Name;
         }
 
-        private interface IPseudoProvider
+        internal interface IPseudoProvider
         {
             bool AnyModelTableExistsInDatabase(
                 ObjectContext context, DbConnection connection, List<EntitySet> modelTables, string edmMetadataContextTableName);
@@ -218,19 +239,6 @@ WHERE t.TABLE_TYPE = 'TABLE'
                         }
                     }
                 }
-            }
-        }
-
-        private class IgnoreSchemaComparer : IEqualityComparer<Tuple<string, string>>
-        {
-            public bool Equals(Tuple<string, string> x, Tuple<string, string> y)
-            {
-                return EqualityComparer<string>.Default.Equals(x.Item2, y.Item2);
-            }
-
-            public int GetHashCode(Tuple<string, string> obj)
-            {
-                return EqualityComparer<string>.Default.GetHashCode(obj.Item2);
             }
         }
     }

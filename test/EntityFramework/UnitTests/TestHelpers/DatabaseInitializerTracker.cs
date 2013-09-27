@@ -43,7 +43,7 @@ namespace System.Data.Entity
 
             _mockInternalContext.Setup(c => c.DatabaseOperations).Returns(_mockDatabaseOps.Object);
             _mockInternalContext.Setup(c => c.DefaultInitializer).Returns(new CreateDatabaseIfNotExists<DbContext>());
-            _mockInternalContext.Setup(c => c.CreateDatabase(It.IsAny<ObjectContext>())).Callback(
+            _mockInternalContext.Setup(c => c.CreateDatabase(It.IsAny<ObjectContext>(), It.IsAny<DatabaseExistenceState>())).Callback(
                 () =>
                     {
                         _databaseExists = true;
@@ -66,8 +66,8 @@ namespace System.Data.Entity
             _mockInternalContext.Setup(c => c.DisposeTempObjectContext()).Callback(() => _operations.Append("DisposeTempObjectContext "));
             _mockInternalContext.Setup(c => c.SaveMetadataToDatabase()).Callback(() => _operations.Append("SaveMetadataToDatabase "));
 
-            _mockInternalContext.Setup(c => c.CompatibleWithModel(It.IsAny<bool>())).Callback(
-                (bool throwIfNoMetadata) =>
+            _mockInternalContext.Setup(c => c.CompatibleWithModel(It.IsAny<bool>(), It.IsAny<DatabaseExistenceState>())).Callback(
+                (bool throwIfNoMetadata, DatabaseExistenceState existenceState) =>
                     {
                         if (!hasMetadata && throwIfNoMetadata)
                         {

@@ -96,7 +96,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists Exists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace System.Data.Entity
 
             tracker.ExecuteStrategy();
 
-            Assert.Equal("DeleteIfExists Exists CreateDatabase Seed", tracker.Result);
+            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
@@ -370,7 +370,7 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void MigrateDatabaseToLatestVersion_use_connection_name_from_config_file()
+        public void MigrateDatabaseToLatestVersion_uses_connection_name_from_config_file()
         {
             var init =
                 new MigrateDatabaseToLatestVersion<EmptyContext, TestMigrationsConfiguration>(
@@ -727,7 +727,7 @@ namespace System.Data.Entity
 
             mockContext.Object.Owner.Database.Create();
 
-            mockContext.Verify(m => m.CreateDatabase(null), Times.Once());
+            mockContext.Verify(m => m.CreateDatabase(null, It.IsAny<DatabaseExistenceState>()), Times.Once());
         }
 
         [Fact]
@@ -741,7 +741,7 @@ namespace System.Data.Entity
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
-            mockContext.Verify(m => m.CreateDatabase(null), Times.Once());
+            mockContext.Verify(m => m.CreateDatabase(null, It.IsAny<DatabaseExistenceState>()), Times.Once());
         }
 
         [Fact]
@@ -758,7 +758,7 @@ namespace System.Data.Entity
                 Strings.Database_DatabaseAlreadyExists("Foo"),
                 Assert.Throws<InvalidOperationException>(() => mockContext.Object.Owner.Database.Create()).Message);
 
-            mockContext.Verify(m => m.CreateDatabase(null), Times.Never());
+            mockContext.Verify(m => m.CreateDatabase(null, It.IsAny<DatabaseExistenceState>()), Times.Never());
         }
 
         [Fact]
@@ -772,7 +772,7 @@ namespace System.Data.Entity
 
             mockContext.Object.Owner.Database.CreateIfNotExists();
 
-            mockContext.Verify(m => m.CreateDatabase(null), Times.Never());
+            mockContext.Verify(m => m.CreateDatabase(null, It.IsAny<DatabaseExistenceState>()), Times.Never());
         }
 
         public class FakeContext : DbContext

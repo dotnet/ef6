@@ -15,7 +15,7 @@ namespace System.Data.Entity.Internal
         {
             var mockInternalContext = new Mock<InternalContextForMock<DatabaseInitializerTests.FakeNoRegContext>>();
             mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
-            mockInternalContext.Setup(c => c.QueryForModel()).Returns(new XDocument());
+            mockInternalContext.Setup(c => c.QueryForModel(It.IsAny<DatabaseExistenceState>())).Returns(new XDocument());
             mockInternalContext.Setup(c => c.ModelMatches(It.IsAny<XDocument>())).Returns(modelMatches);
             return mockInternalContext;
         }
@@ -25,7 +25,7 @@ namespace System.Data.Entity.Internal
         {
             var mockInternalContext = new Mock<InternalContextForMock<DatabaseInitializerTests.FakeNoRegContext>>();
             mockInternalContext.Setup(c => c.CodeFirstModel).Returns(codeFirst ? new DbCompiledModel() : null);
-            mockInternalContext.Setup(c => c.QueryForModel()).Returns((XDocument)null);
+            mockInternalContext.Setup(c => c.QueryForModel(It.IsAny<DatabaseExistenceState>())).Returns((XDocument)null);
             mockInternalContext.Setup(c => c.QueryForModelHash()).Returns(databaseHash);
             return mockInternalContext;
         }

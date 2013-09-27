@@ -51,13 +51,13 @@ namespace System.Data.Entity
 
             if (_migrationsChecker.IsMigrationsConfigured(
                 context.InternalContext,
-                () => new DatabaseTableChecker().AnyModelTableExists(context.InternalContext)))
+                () => new DatabaseTableChecker().AnyModelTableExists(context.InternalContext) == DatabaseExistenceState.Exists))
             {
                 return;
             }
 
             context.Database.Delete();
-            context.Database.Create();
+            context.Database.Create(DatabaseExistenceState.DoesNotExist);
             Seed(context);
             context.SaveChanges();
         }

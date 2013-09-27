@@ -98,7 +98,7 @@ namespace System.Data.Entity.Internal
         }
 
         [Fact]
-        public void AnyModelTableExists_returns_false_if_database_does_not_exist()
+        public void AnyModelTableExists_returns_DoesNotExist_if_database_does_not_exist()
         {
             var mockOperations = new Mock<DatabaseOperations>();
             mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(false);
@@ -107,7 +107,124 @@ namespace System.Data.Entity.Internal
             internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
             internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
 
-            Assert.False(new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object));
+            Assert.Equal(DatabaseExistenceState.DoesNotExist, new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_Exists_if_database_exists_and_not_Code_First()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+
+            Assert.Equal(DatabaseExistenceState.Exists, new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_Exists_if_provider_doesnt_support_table_checking()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            internalContextMock.Setup(m => m.CodeFirstModel).Returns(new DbCompiledModel());
+            internalContextMock.Setup(m => m.ProviderName).Returns("Access");
+
+            Assert.Equal(DatabaseExistenceState.Exists, new DatabaseTableChecker().AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_Exists_if_model_is_empty()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            internalContextMock.Setup(m => m.CodeFirstModel).Returns(new DbCompiledModel());
+            internalContextMock.Setup(m => m.ProviderName).Returns("System.Data.SqlClient");
+
+            var mockTableChecker = new Mock<DatabaseTableChecker> { CallBase = true };
+            mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(Enumerable.Empty<EntitySet>());
+
+            Assert.Equal(DatabaseExistenceState.Exists, mockTableChecker.Object.AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_Exists_if_any_model_table_exists()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            internalContextMock.Setup(m => m.CodeFirstModel).Returns(new DbCompiledModel());
+            internalContextMock.Setup(m => m.ProviderName).Returns("System.Data.SqlClient");
+
+            var mockTableChecker = new Mock<DatabaseTableChecker> { CallBase = true };
+            mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
+            mockTableChecker.Setup(
+                m => m.QueryForTableExistence(
+                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<ClonedObjectContext>(),
+                    It.IsAny<List<EntitySet>>())).Returns(true);
+
+            Assert.Equal(DatabaseExistenceState.Exists, mockTableChecker.Object.AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_Exists_if_history_table_with_entry_exists()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            internalContextMock.Setup(m => m.CodeFirstModel).Returns(new DbCompiledModel());
+            internalContextMock.Setup(m => m.ProviderName).Returns("System.Data.SqlClient");
+            internalContextMock.Setup(m => m.HasHistoryTableEntry()).Returns(true);
+
+            var mockTableChecker = new Mock<DatabaseTableChecker> { CallBase = true };
+            mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
+            mockTableChecker.Setup(
+                m => m.QueryForTableExistence(
+                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<ClonedObjectContext>(),
+                    It.IsAny<List<EntitySet>>())).Returns(false);
+
+            Assert.Equal(DatabaseExistenceState.Exists, mockTableChecker.Object.AnyModelTableExists(internalContextMock.Object));
+        }
+
+        [Fact]
+        public void AnyModelTableExists_returns_ExistsConsideredEmpty_if_no_tables_and_no_history()
+        {
+            var mockOperations = new Mock<DatabaseOperations>();
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
+
+            var internalContextMock = new Mock<InternalContext>();
+            internalContextMock.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
+            internalContextMock.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
+            internalContextMock.Setup(m => m.CodeFirstModel).Returns(new DbCompiledModel());
+            internalContextMock.Setup(m => m.ProviderName).Returns("System.Data.SqlClient");
+            internalContextMock.Setup(m => m.HasHistoryTableEntry()).Returns(false);
+
+            var mockTableChecker = new Mock<DatabaseTableChecker> { CallBase = true };
+            mockTableChecker.Setup(m => m.GetModelTables(It.IsAny<InternalContext>())).Returns(new[] { new EntitySet() });
+            mockTableChecker.Setup(
+                m => m.QueryForTableExistence(
+                    It.IsAny<DatabaseTableChecker.IPseudoProvider>(),
+                    It.IsAny<ClonedObjectContext>(),
+                    It.IsAny<List<EntitySet>>())).Returns(false);
+
+            Assert.Equal(DatabaseExistenceState.ExistsConsideredEmpty, mockTableChecker.Object.AnyModelTableExists(internalContextMock.Object));
         }
 
         private static void SetupMocksForTableChecking(

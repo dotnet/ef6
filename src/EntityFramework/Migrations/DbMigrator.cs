@@ -54,6 +54,7 @@ namespace System.Data.Entity.Migrations
         private readonly Func<DbConnection, string, HistoryContext> _historyContextFactory;
 
         private readonly bool _calledByCreateDatabase;
+        private readonly DatabaseExistenceState _existenceState;
 
         private readonly string _providerManifestToken;
         private readonly string _targetDatabase;
@@ -85,7 +86,7 @@ namespace System.Data.Entity.Migrations
         /// </summary>
         /// <param name="configuration"> Configuration to be used for the migration process. </param>
         public DbMigrator(DbMigrationsConfiguration configuration)
-            : this(configuration, null)
+            : this(configuration, null, DatabaseExistenceState.Unknown)
         {
             Check.NotNull(configuration, "configuration");
             Check.NotNull(configuration.ContextType, "configuration.ContextType");
@@ -93,7 +94,7 @@ namespace System.Data.Entity.Migrations
 
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext)
+        internal DbMigrator(DbMigrationsConfiguration configuration, DbContext usersContext, DatabaseExistenceState existenceState)
             : base(null)
         {
             Check.NotNull(configuration, "configuration");
@@ -101,6 +102,7 @@ namespace System.Data.Entity.Migrations
 
             _configuration = configuration;
             _calledByCreateDatabase = usersContext != null;
+            _existenceState = existenceState;
 
             if (_calledByCreateDatabase)
             {
@@ -153,7 +155,8 @@ namespace System.Data.Entity.Migrations
                         _configuration.CommandTimeout,
                         _historyContextFactory, 
                         schemas: new[] { _defaultSchema }.Concat(GetHistorySchemas()), 
-                        contextForInterception: _contextForInterception);
+                        contextForInterception: _contextForInterception,
+                        initialExistence: _existenceState);
 
                 _providerManifestToken
                     = context.InternalContext.ModelProviderInfo != null
@@ -1062,7 +1065,9 @@ namespace System.Data.Entity.Migrations
             var databaseCreator = new DatabaseCreator(_configuration.CommandTimeout);
             using (var connection = CreateConnection())
             {
-                if (!databaseCreator.Exists(connection))
+                if (_existenceState == DatabaseExistenceState.DoesNotExist
+                    || (_existenceState == DatabaseExistenceState.Unknown
+                        && !databaseCreator.Exists(connection)))
                 {
                     databaseCreator.Create(connection);
 

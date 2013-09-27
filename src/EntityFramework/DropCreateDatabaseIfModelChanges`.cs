@@ -53,24 +53,24 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            var exists = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
+            var existence = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
 
             if (_migrationsChecker.IsMigrationsConfigured(
                 context.InternalContext,
                 () =>
                 {
-                    if (exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))
+                    if (existence == DatabaseExistenceState.Exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                     {
                         throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
                     }
 
-                    return exists;
+                    return existence == DatabaseExistenceState.Exists;
                 }))
             {
                 return;
             }
 
-            if (exists)
+            if (existence == DatabaseExistenceState.Exists)
             {
                 if (context.Database.CompatibleWithModel(throwIfNoMetadata: true))
                 {
@@ -78,10 +78,11 @@ namespace System.Data.Entity
                 }
 
                 context.Database.Delete();
+                existence = DatabaseExistenceState.DoesNotExist;
             }
 
             // Database didn't exist or we deleted it, so we now create it again.
-            context.Database.Create(skipExistsCheck: true);
+            context.Database.Create(existence);
 
             Seed(context);
             context.SaveChanges();
