@@ -406,7 +406,7 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotNull(condition, "condition");
             ThrowIfReadOnly();
 
-            m_properties.Add(condition);
+            AddConditionProperty(condition);
         }
 
         /// <summary>

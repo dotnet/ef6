@@ -3,10 +3,10 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -30,82 +30,131 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class AssociationSetMapping : EntitySetBaseMapping
     {
+        private readonly AssociationSet _associationSet;
+        private AssociationTypeMapping _associationTypeMapping;
+        private AssociationSetModificationFunctionMapping _modificationFunctionMapping;
+
         /// <summary>
-        /// Construct a new AssociationSetMapping object
+        /// Initializes a new AssociationSetMapping instance.
         /// </summary>
-        /// <param name="extent"> Represents the Association Set Metadata object. Will change this to Extent instead of MemberMetadata. </param>
-        /// <param name="entityContainerMapping"> The entityContainerMapping mapping that contains this Set mapping </param>
-        public AssociationSetMapping(AssociationSet extent, EntityContainerMapping entityContainerMapping)
-            : base(extent, entityContainerMapping)
+        /// <param name="associationSet">The association set to be mapped.</param>
+        /// <param name="storeEntitySet">The store entity set to be mapped.</param>
+        /// <param name="containerMapping">The parent container mapping.</param>
+        public AssociationSetMapping(AssociationSet associationSet, EntitySet storeEntitySet, EntityContainerMapping containerMapping)
+            : base(containerMapping)
+        {
+            Check.NotNull(associationSet, "associationSet");
+            Check.NotNull(storeEntitySet, "storeEntitySet");
+
+            _associationSet = associationSet;
+            _associationTypeMapping = new AssociationTypeMapping(associationSet.ElementType, this);
+            _associationTypeMapping.MappingFragment
+                = new MappingFragment(storeEntitySet, _associationTypeMapping, false);
+        }
+
+        // Used for testing only.
+        internal AssociationSetMapping(AssociationSet associationSet, EntitySet storeEntitySet)
+            : this(associationSet, storeEntitySet, null)
         {
         }
 
-        internal AssociationSetMapping(AssociationSet extent, EntitySet entitySet)
-            : base(extent, null)
+        internal AssociationSetMapping(AssociationSet associationSet, EntityContainerMapping containerMapping)
+            : base(containerMapping)
         {
-            DebugCheck.NotNull(entitySet);
-
-            var associationTypeMapping
-                = new AssociationTypeMapping(extent.ElementType, this);
-
-            var mappingFragment
-                = new MappingFragment(entitySet, associationTypeMapping, false);
-
-            associationTypeMapping.AddFragment(mappingFragment);
-
-            AddTypeMapping(associationTypeMapping);
+            _associationSet = associationSet;
         }
 
         /// <summary>
-        /// AssociationSet
+        /// Gets the association set that is mapped.
         /// </summary>
-        public virtual AssociationSet AssociationSet
+        public AssociationSet AssociationSet
         {
-            get { return (AssociationSet)Set; }
+            get { return _associationSet; }
         }
 
-        // <summary>
-        // Gets or sets function mapping information for this association set. May be null.
-        // </summary>
-        internal AssociationSetModificationFunctionMapping ModificationFunctionMapping { get; set; }
+        internal override EntitySetBase Set
+        {
+            get { return AssociationSet; }
+        }
 
         /// <summary>
-        /// StoreEntitySet
+        /// Gets the contained association type mapping.
         /// </summary>
-        public EntitySet StoreEntitySet
+        public AssociationTypeMapping AssociationTypeMapping 
         {
-            get { return (SingleFragment != null) ? SingleFragment.TableSet : null; }
+            get { return _associationTypeMapping; }
+
             internal set
             {
                 DebugCheck.NotNull(value);
-                Debug.Assert(SingleFragment != null);
+                Debug.Assert(_associationTypeMapping == null);
+                Debug.Assert(!IsReadOnly);
 
-                SingleFragment.TableSet = value;
+                _associationTypeMapping = value;
+            }
+        }
+
+        internal override IEnumerable<TypeMapping> TypeMappings
+        {
+            get { yield return _associationTypeMapping; }
+        }
+
+        /// <summary>
+        /// Gets or sets the corresponding function mapping. Can be null.
+        /// </summary>
+        public AssociationSetModificationFunctionMapping ModificationFunctionMapping
+        {
+            get { return _modificationFunctionMapping;  }
+
+            set
+            {
+                ThrowIfReadOnly();
+
+                _modificationFunctionMapping = value; 
+                
             }
         }
 
         /// <summary>
-        /// Table
+        /// Gets the store entity set that is mapped.
         /// </summary>
-        public EntityType Table
+        public EntitySet StoreEntitySet
+        {
+            get { return (SingleFragment != null) ? SingleFragment.StoreEntitySet : null; }
+
+            internal set
+            {
+                DebugCheck.NotNull(value);
+                Debug.Assert(SingleFragment != null);
+                Debug.Assert(!IsReadOnly);
+
+                SingleFragment.StoreEntitySet = value;
+            }
+        }
+
+        internal EntityType Table
         {
             get { return (StoreEntitySet != null ? StoreEntitySet.ElementType : null); }
         }
 
         /// <summary>
-        /// SourceEndMapping
+        /// Gets or sets the source end property mapping.
         /// </summary>
         public EndPropertyMapping SourceEndMapping
         {
             get
             {
-                return (SingleFragment != null)
-                           ? SingleFragment.Properties.OfType<EndPropertyMapping>().FirstOrDefault()
-                           : null;
+                return 
+                    (SingleFragment != null)
+                        ? SingleFragment.Properties.OfType<EndPropertyMapping>().FirstOrDefault()
+                        : null;
             }
-            internal set
+
+            set
             {
-                DebugCheck.NotNull(value);
+                Check.NotNull(value, "value");
+                ThrowIfReadOnly();
+
                 DebugCheck.NotNull(SingleFragment);
                 Debug.Assert(SingleFragment.Properties.Count == 0);
 
@@ -114,7 +163,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// TargetEndMapping
+        /// Gets or sets the target end property mapping.
         /// </summary>
         public EndPropertyMapping TargetEndMapping
         {
@@ -124,9 +173,12 @@ namespace System.Data.Entity.Core.Mapping
                            ? SingleFragment.Properties.OfType<EndPropertyMapping>().ElementAtOrDefault(1)
                            : null;
             }
-            internal set
+
+            set
             {
-                DebugCheck.NotNull(value);
+                Check.NotNull(value, "value");
+                ThrowIfReadOnly();
+
                 DebugCheck.NotNull(SingleFragment);
                 Debug.Assert(SingleFragment.Properties.Count == 1);
 
@@ -135,40 +187,17 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// ColumnConditions
+        /// Gets the property mapping conditions.
         /// </summary>
-        public virtual IEnumerable<ConditionPropertyMapping> ColumnConditions
+        public ReadOnlyCollection<ConditionPropertyMapping> Conditions
         {
             get
             {
-                return (SingleFragment != null)
-                           ? SingleFragment.ColumnConditions
-                           : Enumerable.Empty<ConditionPropertyMapping>();
-            }
-        }
-
-        /// <summary>
-        /// AddProperty
-        /// </summary>
-        /// <param name="mapping"></param>
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
-        public void AddProperty(EndPropertyMapping mapping)
-        {
-            if (SingleFragment != null)
-            {
-                SingleFragment.AddProperty(mapping);
-            }
-        }
-
-        /// <summary>
-        /// AddColumnCondition
-        /// </summary>
-        /// <param name="conditionPropertyMapping"></param>
-        public void AddColumnCondition(ConditionPropertyMapping conditionPropertyMapping)
-        {
-            if (SingleFragment != null)
-            {
-                SingleFragment.AddConditionProperty(conditionPropertyMapping);
+                return 
+                    (SingleFragment != null)
+                        ? SingleFragment.Conditions
+                        : new ReadOnlyCollection<ConditionPropertyMapping>(
+                            new List<ConditionPropertyMapping>());
             }
         }
 
@@ -176,11 +205,39 @@ namespace System.Data.Entity.Core.Mapping
         {
             get
             {
-                var typeMapping = TypeMappings.SingleOrDefault();
-
-                return (typeMapping != null)
-                           ? typeMapping.MappingFragments.SingleOrDefault()
+                return (_associationTypeMapping != null)
+                           ? _associationTypeMapping.MappingFragment
                            : null;
+            }
+        }
+
+        /// <summary>
+        /// Adds a property mapping condition.
+        /// </summary>
+        /// <param name="condition">The condition to add.</param>
+        public void AddCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            if (SingleFragment != null)
+            {
+                SingleFragment.AddCondition(condition);
+            }
+        }
+
+        /// <summary>
+        /// Removes a property mapping condition.
+        /// </summary>
+        /// <param name="condition">The property mapping condition to remove.</param>
+        public void RemoveCondition(ConditionPropertyMapping condition)
+        {
+            Check.NotNull(condition, "condition");
+            ThrowIfReadOnly();
+
+            if (SingleFragment != null)
+            {
+                SingleFragment.RemoveCondition(condition);
             }
         }
     }

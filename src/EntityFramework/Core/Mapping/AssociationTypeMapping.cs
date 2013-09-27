@@ -6,6 +6,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
     /// <summary>
     /// Represents the Mapping metadata for an association type map in CS space.
@@ -43,14 +44,19 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class AssociationTypeMapping : TypeMapping
     {
+        private readonly AssociationSetMapping _associationSetMapping;
+        private MappingFragment _mappingFragment;
+
         /// <summary>
         /// Creates an AssociationTypeMapping instance.
         /// </summary>
         /// <param name="associationSetMapping">The AssociationSetMapping that 
         /// the contains this AssociationTypeMapping.</param>
         public AssociationTypeMapping(AssociationSetMapping associationSetMapping)
-            : base(Check.NotNull(associationSetMapping, "associationSetMapping"))
         {
+            Check.NotNull(associationSetMapping, "associationSetMapping");
+
+            _associationSetMapping = associationSetMapping;
             m_relation = associationSetMapping.AssociationSet.ElementType;
         }
 
@@ -58,10 +64,10 @@ namespace System.Data.Entity.Core.Mapping
         // Construct the new AssociationTypeMapping object.
         // </summary>
         // <param name="relation"> Represents the Association Type metadata object </param>
-        // <param name="setMapping"> Set Mapping that contains this Type mapping </param>
-        internal AssociationTypeMapping(AssociationType relation, EntitySetBaseMapping setMapping)
-            : base(setMapping)
+        // <param name="associationSetMapping"> Set Mapping that contains this Type mapping </param>
+        internal AssociationTypeMapping(AssociationType relation, AssociationSetMapping associationSetMapping)
         {
+            _associationSetMapping = associationSetMapping;
             m_relation = relation;
         }
 
@@ -75,7 +81,12 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public AssociationSetMapping AssociationSetMapping
         {
-            get { return (AssociationSetMapping)SetMapping; }
+            get { return _associationSetMapping; }
+        }
+
+        internal override EntitySetBaseMapping SetMapping
+        {
+            get { return AssociationSetMapping;  }
         }
 
         /// <summary>
@@ -84,6 +95,28 @@ namespace System.Data.Entity.Core.Mapping
         public AssociationType AssociationType
         {
             get { return m_relation; }
+        }
+
+        /// <summary>
+        /// Gets the single mapping fragment.
+        /// </summary>
+        public MappingFragment MappingFragment
+        {
+            get { return _mappingFragment;  }
+
+            internal set
+            {
+                DebugCheck.NotNull(value);
+                Debug.Assert(_mappingFragment == null);
+                Debug.Assert(!IsReadOnly);
+
+                _mappingFragment = value;                  
+            }
+        }
+
+        internal override ReadOnlyCollection<MappingFragment> MappingFragments
+        {
+            get { return new ReadOnlyCollection<MappingFragment>(new[] { _mappingFragment }); }
         }
 
         // <summary>

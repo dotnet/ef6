@@ -48,13 +48,17 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class EntityTypeMapping : TypeMapping
     {
+        private readonly EntitySetMapping _entitySetMapping;
+        private readonly List<MappingFragment> _fragments;
+
         /// <summary>
         /// Creates an EntityTypeMapping instance.
         /// </summary>
         /// <param name="entitySetMapping">The EntitySetMapping that contains this EntityTypeMapping.</param>
         public EntityTypeMapping(EntitySetMapping entitySetMapping)
-            : base(entitySetMapping)
         {
+            _entitySetMapping = entitySetMapping;
+            _fragments = new List<MappingFragment>();
         }
 
         // <summary>
@@ -72,7 +76,12 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public EntitySetMapping EntitySetMapping
         {
-            get { return (EntitySetMapping)SetMapping; }
+            get { return _entitySetMapping; }
+        }
+
+        internal override EntitySetBaseMapping SetMapping
+        {
+            get { return EntitySetMapping; }
         }
 
         /// <summary>
@@ -91,12 +100,41 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_isOfEntityTypes.Count > 0 || m_entityTypes.Count > 1; }
         }
 
+        /// <summary>
+        /// Gets a read-only collection of mapping fragments.
+        /// </summary>
+        public ReadOnlyCollection<MappingFragment> Fragments
+        {
+            get { return new ReadOnlyCollection<MappingFragment>(_fragments); }
+        }
+
+        internal override ReadOnlyCollection<MappingFragment> MappingFragments
+        {
+            get { return Fragments; }
+        }
+
+        /// <summary>
+        /// Gets the mapped entity types.
+        /// </summary>
+        public ReadOnlyCollection<EntityTypeBase> EntityTypes
+        {
+            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_entityTypes.Values)); }
+        }
+
         // <summary>
         // a list of TypeMetadata that this mapping holds true for.
         // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> Types
         {
-            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_entityTypes.Values)); }
+            get { return EntityTypes; }
+        }
+
+        /// <summary>
+        /// Gets the mapped base types for a hierarchy mapping.
+        /// </summary>
+        public ReadOnlyCollection<EntityTypeBase> IsOfEntityTypes
+        {
+            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_isOfEntityTypes.Values)); }
         }
 
         // <summary>
@@ -105,7 +143,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         internal override ReadOnlyCollection<EntityTypeBase> IsOfTypes
         {
-            get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>(m_isOfEntityTypes.Values)); }
+            get { return IsOfEntityTypes; }
         }
 
         /// <summary>
@@ -157,6 +195,30 @@ namespace System.Data.Entity.Core.Mapping
             ThrowIfReadOnly();
 
             m_isOfEntityTypes.Remove(type.FullName);
+        }
+
+        /// <summary>
+        /// Adds a mapping fragment.
+        /// </summary>
+        /// <param name="fragment">The mapping fragment to be added.</param>
+        public void AddFragment(MappingFragment fragment)
+        {
+            Check.NotNull(fragment, "fragment");
+            ThrowIfReadOnly();
+
+            _fragments.Add(fragment);
+        }
+
+        /// <summary>
+        /// Removes a mapping fragment.
+        /// </summary>
+        /// <param name="fragment">The mapping fragment to be removed.</param>
+        public void RemoveFragment(MappingFragment fragment)
+        {
+            Check.NotNull(fragment, "fragment");
+            ThrowIfReadOnly();
+
+            _fragments.Remove(fragment);
         }
 
         internal EntityType GetContainerType(string memberName)

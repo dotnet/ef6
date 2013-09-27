@@ -852,7 +852,7 @@ namespace System.Data.Entity.Core.Mapping
             //Set the Start Line Information on Fragment
             setMapping.StartLineNumber = navLineInfo.LineNumber;
             setMapping.StartLinePosition = navLineInfo.LinePosition;
-            entityContainerMapping.AddEntitySetMapping(setMapping);
+            entityContainerMapping.AddSetMapping(setMapping);
 
             //If the TypeName was not specified as an attribute, than an EntityTypeMapping element should be present 
             if (String.IsNullOrEmpty(entityTypeName))
@@ -1542,7 +1542,7 @@ namespace System.Data.Entity.Core.Mapping
                 return;
             }
 
-            entityContainerMapping.AddAssociationSetMapping(setMapping);
+            entityContainerMapping.AddSetMapping(setMapping);
 
             //If there is a query view it has to be the first element
             if (nav.LocalName
@@ -2731,7 +2731,7 @@ namespace System.Data.Entity.Core.Mapping
 
             //Create an AssociationTypeMapping to hold the information for AssociationType mapping.
             var associationTypeMapping = new AssociationTypeMapping(associationType, associationSetMapping);
-            associationSetMapping.AddTypeMapping(associationTypeMapping);
+            associationSetMapping.AssociationTypeMapping = associationTypeMapping;
             //If the table name was not specified on the AssociationSetMapping element 
             //Then there should have been a query view. Otherwise throw.
             if (String.IsNullOrEmpty(tableName)
@@ -2748,7 +2748,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (fragment != null)
                 {
                     //Fragment can be null because of validation errors
-                    associationTypeMapping.AddFragment(fragment);
+                    associationTypeMapping.MappingFragment = fragment;
                 }
             }
         }

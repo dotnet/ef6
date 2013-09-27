@@ -367,7 +367,7 @@ using System.Data.Entity.Infrastructure;
             var containerMapping = storageMappingItemCollection.GetItems<EntityContainerMapping>().First();
             foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
             {
-                entityTypeMapping.SetMapping.RemoveTypeMapping(entityTypeMapping);
+                entityTypeMapping.EntitySetMapping.RemoveTypeMapping(entityTypeMapping);
             }
 
             var errors = new List<EdmSchemaError>();

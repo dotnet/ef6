@@ -221,7 +221,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             databaseMapping
                 .EntityContainerMappings
                 .Single()
-                .AddEntitySetMapping(entitySetMapping);
+                .AddSetMapping(entitySetMapping);
 
             return entitySetMapping;
         }
@@ -232,13 +232,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(databaseMapping);
             DebugCheck.NotNull(associationSet);
 
-            var associationSetMapping
-                = new AssociationSetMapping(associationSet, entitySet).Initialize();
-
-            databaseMapping
+            var containerMapping = databaseMapping
                 .EntityContainerMappings
-                .Single()
-                .AddAssociationSetMapping(associationSetMapping);
+                .Single();
+
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet, containerMapping).Initialize();
+
+            containerMapping.AddSetMapping(associationSetMapping);
 
             return associationSetMapping;
         }

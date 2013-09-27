@@ -42,38 +42,11 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class TypeMapping : MappingItem
     {
-        // <summary>
-        // Construct the new TypeMapping object.
-        // </summary>
-        // <param name="setMapping"> EntitySetBaseMapping that contains this type mapping </param>
-        internal TypeMapping(EntitySetBaseMapping setMapping)
+        internal TypeMapping()
         {
-            m_fragments = new List<MappingFragment>();
-            m_setMapping = setMapping;
         }
 
-        // <summary>
-        // ExtentMap that contains this type mapping.
-        // </summary>
-        private readonly EntitySetBaseMapping m_setMapping;
-
-        // <summary>
-        // Set of fragments that make up the type Mapping.
-        // </summary>
-        private readonly List<MappingFragment> m_fragments;
-
-        /// <summary>
-        /// Gets a read-only collection of mapping fragments.
-        /// </summary>
-        public ReadOnlyCollection<MappingFragment> MappingFragments
-        {
-            get { return new ReadOnlyCollection<MappingFragment>(m_fragments); }
-        }
-
-        internal EntitySetBaseMapping SetMapping
-        {
-            get { return m_setMapping; }
-        }
+        internal abstract EntitySetBaseMapping SetMapping { get; }
 
         // <summary>
         // a list of TypeMetadata that this mapping holds true for.
@@ -86,28 +59,6 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         internal abstract ReadOnlyCollection<EntityTypeBase> IsOfTypes { get; }
 
-        /// <summary>
-        /// Adds a mapping fragment.
-        /// </summary>
-        /// <param name="fragment">The mapping fragment to be added.</param>
-        public void AddFragment(MappingFragment fragment)
-        {
-            Check.NotNull(fragment, "fragment");
-            ThrowIfReadOnly();
-
-            m_fragments.Add(fragment);
-        }
-
-        /// <summary>
-        /// Removes a mapping fragment.
-        /// </summary>
-        /// <param name="fragment">The mapping fragment to be removed.</param>
-        public void RemoveFragment(MappingFragment fragment)
-        {
-            Check.NotNull(fragment, "fragment");
-            ThrowIfReadOnly();
-
-            m_fragments.Remove(fragment);
-        }
+        internal abstract ReadOnlyCollection<MappingFragment> MappingFragments { get; }
     }
 }

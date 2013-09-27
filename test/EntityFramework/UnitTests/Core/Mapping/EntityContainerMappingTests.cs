@@ -4,7 +4,9 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
+    using FunctionalTests.Model;
     using Xunit;
+    using System.Data.Entity.Resources;
 
     public class EntityContainerMappingTests
     {
@@ -50,7 +52,7 @@ namespace System.Data.Entity.Core.Mapping
                 = new EntitySetMapping(
                     new EntitySet("ES", null, null, null, new EntityType("E", "N", DataSpace.CSpace)), entityContainerMapping);
 
-            entityContainerMapping.AddEntitySetMapping(entitySetMapping);
+            entityContainerMapping.AddSetMapping(entitySetMapping);
 
             Assert.Same(entitySetMapping, entityContainerMapping.EntitySetMappings.Single());
             Assert.Same(entitySetMapping, entityContainerMapping.EntitySetMaps.Single());
@@ -68,7 +70,7 @@ namespace System.Data.Entity.Core.Mapping
                 = new AssociationSetMapping(
                     new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace)), entityContainerMapping);
 
-            entityContainerMapping.AddAssociationSetMapping(associationSetMapping);
+            entityContainerMapping.AddSetMapping(associationSetMapping);
 
             Assert.Same(associationSetMapping, entityContainerMapping.AssociationSetMappings.Single());
             Assert.Same(associationSetMapping, entityContainerMapping.RelationshipSetMaps.Single());
@@ -125,7 +127,7 @@ namespace System.Data.Entity.Core.Mapping
         public void Cannot_add_null_function_import_mapping()
         {
             Assert.Equal(
-                "mapping",
+                "functionImportMapping",
                 Assert.Throws<ArgumentNullException>(
                     () => new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)).AddFunctionImportMapping(null))
                       .ParamName);

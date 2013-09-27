@@ -35,13 +35,34 @@ namespace System.Data.Entity.Core.Mapping
     public class EntityContainerMapping : Map
     {
         /// <summary>
-        /// Construct a new EntityContainer mapping object
-        /// passing in the C-space EntityContainer  and
-        /// the s-space Entity container metadata objects.
+        /// Initializes a new EntityContainerMapping instance.
         /// </summary>
-        /// <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
-        /// <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
+        /// <param name="conceptualEntityContainer">The conceptual entity container to be mapped.</param>
+        /// <param name="storeEntityContainer">The store entity container to be mapped.</param>
+        /// <param name="mappingItemCollection">The parent mapping item collection.</param>
+        /// <param name="generateUpdateViews">Flag indicating whether to generate update views.</param>
         public EntityContainerMapping(
+            EntityContainer conceptualEntityContainer, 
+            EntityContainer storeEntityContainer,
+            StorageMappingItemCollection mappingItemCollection, 
+            bool generateUpdateViews)
+            : this(
+                conceptualEntityContainer,
+                storeEntityContainer,
+                mappingItemCollection,
+                true, 
+                generateUpdateViews)
+        {
+        }
+
+        // <summary>
+        // Construct a new EntityContainer mapping object
+        // passing in the C-space EntityContainer  and
+        // the s-space Entity container metadata objects.
+        // </summary>
+        // <param name="entityContainer"> Entity Continer type that is being mapped on the C-side </param>
+        // <param name="storageEntityContainer"> Entity Continer type that is being mapped on the S-side </param>
+        internal EntityContainerMapping(
             EntityContainer entityContainer, EntityContainer storageEntityContainer,
             StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
         {
@@ -85,11 +106,16 @@ namespace System.Data.Entity.Core.Mapping
         private readonly Memoizer<InputForComputingCellGroups, OutputFromComputeCellGroups> m_memoizedCellGroupEvaluator;
 
         /// <summary>
-        /// StorageMappingItemCollection
+        /// Gets the parent mapping item collection.
         /// </summary>
-        public StorageMappingItemCollection StorageMappingItemCollection
+        public StorageMappingItemCollection MappingItemCollection
         {
             get { return m_storageMappingItemCollection; }
+        }
+
+        internal StorageMappingItemCollection StorageMappingItemCollection
+        {
+            get { return MappingItemCollection; }
         }
 
         /// <summary>
@@ -143,35 +169,43 @@ namespace System.Data.Entity.Core.Mapping
         internal string SourceLocation { get; set; }
 
         /// <summary>
-        /// The Entity Container Metadata object on the C-side
-        /// for which the mapping is being represented.
+        /// Gets the conceptual entity container.
         /// </summary>
-        public EntityContainer EdmEntityContainer
+        public EntityContainer ConceptualEntityContainer
         {
             get { return m_entityContainer; }
         }
 
+        internal EntityContainer EdmEntityContainer
+        {
+            get { return ConceptualEntityContainer; }
+        }
+
         /// <summary>
-        /// The Entity Container Metadata object on the C-side
-        /// for which the mapping is being represented.
+        /// Gets the store entity container.
         /// </summary>
-        public EntityContainer StorageEntityContainer
+        public EntityContainer StoreEntityContainer
         {
             get { return m_storageEntityContainer; }
         }
 
-        /// <summary>
-        /// a list of all the  entity set maps under this
-        /// container. In CS mapping, the mapping is done
-        /// at the extent level as opposed to the type level.
-        /// </summary>
-        public ReadOnlyCollection<EntitySetBaseMapping> EntitySetMaps
+        internal EntityContainer StorageEntityContainer
+        {
+            get { return StoreEntityContainer; }
+        }
+
+        // <summary>
+        // a list of all the  entity set maps under this
+        // container. In CS mapping, the mapping is done
+        // at the extent level as opposed to the type level.
+        // </summary>
+        internal ReadOnlyCollection<EntitySetBaseMapping> EntitySetMaps
         {
             get { return new ReadOnlyCollection<EntitySetBaseMapping>(new List<EntitySetBaseMapping>(m_entitySetMappings.Values)); }
         }
 
         /// <summary>
-        /// EntitySetMappings
+        /// Gets the entity set mappings.
         /// </summary>
         public virtual IEnumerable<EntitySetMapping> EntitySetMappings
         {
@@ -179,7 +213,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// AssociationSetMappings
+        /// Gets the association set mappings.
         /// </summary>
         public virtual IEnumerable<AssociationSetMapping> AssociationSetMappings
         {
@@ -187,34 +221,34 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// FunctionImportMappings
+        /// Gets the function import mappings.
         /// </summary>
-        public ReadOnlyCollection<FunctionImportMapping> FunctionImportMappings
+        public IEnumerable<FunctionImportMapping> FunctionImportMappings
         {
-            get { return new ReadOnlyCollection<FunctionImportMapping>(m_functionImportMappings.Values.ToList()); }
+            get { return m_functionImportMappings.Values; }
         }
 
-        /// <summary>
-        /// a list of all the  entity set maps under this
-        /// container. In CS mapping, the mapping is done
-        /// at the extent level as opposed to the type level.
-        /// RelationshipSetMaps will be CompositionSetMaps and
-        /// AssociationSetMaps put together.
-        /// </summary>
-        /// <remarks>
-        /// The reason we have RelationshipSetMaps is to be consistent with CDM metadata
-        /// which treats both associations and compositions as Relationships.
-        /// </remarks>
-        public ReadOnlyCollection<EntitySetBaseMapping> RelationshipSetMaps
+        // <summary>
+        // a list of all the  entity set maps under this
+        // container. In CS mapping, the mapping is done
+        // at the extent level as opposed to the type level.
+        // RelationshipSetMaps will be CompositionSetMaps and
+        // AssociationSetMaps put together.
+        // </summary>
+        // <remarks>
+        // The reason we have RelationshipSetMaps is to be consistent with CDM metadata
+        // which treats both associations and compositions as Relationships.
+        // </remarks>
+        internal ReadOnlyCollection<EntitySetBaseMapping> RelationshipSetMaps
         {
             get { return new ReadOnlyCollection<EntitySetBaseMapping>(new List<EntitySetBaseMapping>(m_associationSetMappings.Values)); }
         }
 
-        /// <summary>
-        /// a list of all the  set maps under this
-        /// container.
-        /// </summary>
-        public IEnumerable<EntitySetBaseMapping> AllSetMaps
+        // <summary>
+        // a list of all the  set maps under this
+        // container.
+        // </summary>
+        internal IEnumerable<EntitySetBaseMapping> AllSetMaps
         {
             get { return m_entitySetMappings.Values.Concat(m_associationSetMappings.Values); }
         }
@@ -237,10 +271,10 @@ namespace System.Data.Entity.Core.Mapping
             get { return m_validate; }
         }
 
-        // <summary>
-        // Indicates whether to generate the update views or not.
-        // </summary>
-        internal bool GenerateUpdateViews
+        /// <summary>
+        /// Gets a flag that indicates whether to generate the update views or not.
+        /// </summary>
+        public bool GenerateUpdateViews
         {
             get { return m_generateUpdateViews; }
         }
@@ -250,12 +284,12 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // //
         // <param name="entitySetName"> the name of the entity set </param>
-        internal EntitySetBaseMapping GetEntitySetMapping(String entitySetName)
+        internal EntitySetBaseMapping GetEntitySetMapping(String setName)
         {
-            DebugCheck.NotNull(entitySetName);
+            DebugCheck.NotNull(setName);
             //Key for EntitySetMapping should be EntitySet name and Entoty type name
             EntitySetBaseMapping setMapping = null;
-            m_entitySetMappings.TryGetValue(entitySetName, out setMapping);
+            m_entitySetMappings.TryGetValue(setName, out setMapping);
             return setMapping;
         }
 
@@ -264,11 +298,11 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         // <param name="relationshipSetName"> the name of the relationship set </param>
         // <returns> the mapping for the entity set if it exists, null if it does not exist </returns>
-        internal EntitySetBaseMapping GetRelationshipSetMapping(string relationshipSetName)
+        internal EntitySetBaseMapping GetAssociationSetMapping(string setName)
         {
-            DebugCheck.NotNull(relationshipSetName);
+            DebugCheck.NotNull(setName);
             EntitySetBaseMapping setMapping = null;
-            m_associationSetMappings.TryGetValue(relationshipSetName, out setMapping);
+            m_associationSetMappings.TryGetValue(setName, out setMapping);
             return setMapping;
         }
 
@@ -300,18 +334,20 @@ namespace System.Data.Entity.Core.Mapping
             var setMap = GetEntitySetMapping(setName);
             if (setMap == null)
             {
-                setMap = GetRelationshipSetMapping(setName);
+                setMap = GetAssociationSetMapping(setName);
             }
             return setMap;
         }
 
         /// <summary>
-        /// Adds an entity set mapping to the list of EntitySetMaps
-        /// under this entity container mapping. The method will be called
-        /// by the Mapping loader.
+        /// Adds an entity set mapping.
         /// </summary>
-        public void AddEntitySetMapping(EntitySetBaseMapping setMapping)
+        /// <param name="setMapping">The entity set mapping to add.</param>
+        public void AddSetMapping(EntitySetMapping setMapping)
         {
+            Check.NotNull(setMapping, "setMapping");
+            //Util.ThrowIfReadOnly(this);
+
             if (!m_entitySetMappings.ContainsKey(setMapping.Set.Name))
             {
                 m_entitySetMappings.Add(setMapping.Set.Name, setMapping);
@@ -319,13 +355,42 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Adds a association set mapping to the list of AssociationSetMaps
-        /// under this entity container mapping. The method will be called
-        /// by the Mapping loader.
+        /// Removes an association set mapping.
         /// </summary>
-        public void AddAssociationSetMapping(EntitySetBaseMapping setMapping)
+        /// <param name="setMapping">The association set mapping to remove.</param>
+        public void RemoveSetMapping(EntitySetMapping setMapping)
         {
-            m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
+            Check.NotNull(setMapping, "setMapping");
+            //Util.ThrowIfReadOnly(this);
+
+            m_entitySetMappings.Remove(setMapping.Set.Name);
+        }
+
+        /// <summary>
+        /// Adds an association set mapping.
+        /// </summary>
+        /// <param name="setMapping">The association set mapping to add.</param>
+        public void AddSetMapping(AssociationSetMapping setMapping)
+        {
+            Check.NotNull(setMapping, "setMapping");
+            //Util.ThrowIfReadOnly(this);
+
+            if (!m_associationSetMappings.ContainsKey(setMapping.Set.Name))
+            {
+                m_associationSetMappings.Add(setMapping.Set.Name, setMapping);
+            }
+        }
+
+        /// <summary>
+        /// Removes an association set mapping.
+        /// </summary>
+        /// <param name="setMapping">The association set mapping to remove.</param>
+        public void RemoveSetMapping(AssociationSetMapping setMapping)
+        {
+            Check.NotNull(setMapping, "setMapping");
+            //Util.ThrowIfReadOnly(this);
+
+            m_associationSetMappings.Remove(setMapping.Set.Name);
         }
 
         // <summary>
@@ -335,6 +400,30 @@ namespace System.Data.Entity.Core.Mapping
         internal bool ContainsAssociationSetMapping(AssociationSet associationSet)
         {
             return m_associationSetMappings.ContainsKey(associationSet.Name);
+        }
+
+        /// <summary>
+        /// Adds a function import mapping.
+        /// </summary>
+        /// <param name="functionImportMapping">The function import mapping to add.</param>
+        public void AddFunctionImportMapping(FunctionImportMapping functionImportMapping)
+        {
+            Check.NotNull(functionImportMapping, "functionImportMapping");
+            //Util.ThrowIfReadOnly(this);
+
+            m_functionImportMappings.Add(functionImportMapping.FunctionImport, functionImportMapping);
+        }
+
+        /// <summary>
+        /// Removes a function import mapping.
+        /// </summary>
+        /// <param name="functionImportMapping">The function import mapping to remove.</param>
+        public void RemoveFunctionImportMapping(FunctionImportMapping functionImportMapping)
+        {
+            Check.NotNull(functionImportMapping, "functionImportMapping");
+            //Util.ThrowIfReadOnly(this);
+
+            m_functionImportMappings.Remove(functionImportMapping.FunctionImport);
         }
 
         // <summary>
@@ -363,19 +452,6 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
             return false;
-        }
-
-        // Methods to modify and access function imports, which association a "functionImport" declared
-        // in the model entity container with a targetFunction declared in the target
-        /// <summary>
-        /// AddFunctionImportMapping
-        /// </summary>
-        /// <param name="mapping"></param>
-        public void AddFunctionImportMapping(FunctionImportMapping mapping)
-        {
-            Check.NotNull(mapping, "mapping");
-
-            m_functionImportMappings.Add(mapping.FunctionImport, mapping);
         }
 
         internal virtual bool TryGetFunctionImportMapping(EdmFunction functionImport, out FunctionImportMapping mapping)

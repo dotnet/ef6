@@ -14,8 +14,8 @@ namespace System.Data.Entity.Core.Mapping
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             var setMapping
-                = new EntitySetMapping(
-                    new EntitySet(),
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType), 
                     new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
 
             Assert.Same(
@@ -29,8 +29,8 @@ namespace System.Data.Entity.Core.Mapping
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             var setMapping
-                = new EntitySetMapping(
-                    new EntitySet(),
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType), 
                     new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
 
             Assert.Same(
@@ -44,8 +44,8 @@ namespace System.Data.Entity.Core.Mapping
             var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
 
             var setMapping
-                = new EntitySetMapping(
-                    new EntitySet(),
+                = new AssociationSetMapping(
+                    new AssociationSet("AS", associationType), 
                     new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
 
             Assert.Empty(new AssociationTypeMapping(associationType, setMapping).IsOfTypes);

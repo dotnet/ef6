@@ -29,122 +29,182 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public class EntitySetMapping : EntitySetBaseMapping
     {
-        /// <summary>
-        /// Construct a EntitySet mapping object
-        /// </summary>
-        /// <param name="extent"> EntitySet metadata object </param>
-        /// <param name="entityContainerMapping"> The entity Container Mapping that contains this Set mapping </param>
-        public EntitySetMapping(EntitySet extent, EntityContainerMapping entityContainerMapping)
-            : base(extent, entityContainerMapping)
-        {
-            Check.NotNull(extent, "extent");
+        private readonly EntitySet _entitySet;
+        private readonly List<EntityTypeMapping> _entityTypeMappings;
+        private readonly List<EntityTypeModificationFunctionMapping> _modificationFunctionMappings;
+        private Lazy<List<AssociationSetEnd>> _implicitlyMappedAssociationSetEnds;
 
-            m_modificationFunctionMappings = new List<EntityTypeModificationFunctionMapping>();
-            m_implicitlyMappedAssociationSetEnds = new List<AssociationSetEnd>();
+        /// <summary>
+        /// Initialiazes a new EntitySetMapping instance.
+        /// </summary>
+        /// <param name="entitySet">The entity set to be mapped.</param>
+        /// <param name="containerMapping">The parent container mapping.</param>
+        public EntitySetMapping(EntitySet entitySet, EntityContainerMapping containerMapping)
+            : base(containerMapping)
+        {
+            Check.NotNull(entitySet, "entitySet");
+
+            _entitySet = entitySet;
+            _entityTypeMappings = new List<EntityTypeMapping>();
+            _modificationFunctionMappings = new List<EntityTypeModificationFunctionMapping>();
+            _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
+                InitializeImplicitlyMappedAssociationSetEnds);
         }
 
-        private readonly List<EntityTypeModificationFunctionMapping> m_modificationFunctionMappings;
-        private readonly List<AssociationSetEnd> m_implicitlyMappedAssociationSetEnds;
+        /// <summary>
+        /// Gets the entity set that is mapped.
+        /// </summary>
+        public EntitySet EntitySet
+        {
+            get { return _entitySet; }
+        }
+
+        internal override EntitySetBase Set
+        {
+            get { return EntitySet; }
+        }
 
         /// <summary>
-        /// Gets all function mappings for this entity set.
+        /// Gets the contained entity type mappings.
         /// </summary>
-        public IList<EntityTypeModificationFunctionMapping> ModificationFunctionMappings
+        public ReadOnlyCollection<EntityTypeMapping> EntityTypeMappings
         {
-            get { return new ReadOnlyCollection<EntityTypeModificationFunctionMapping>(m_modificationFunctionMappings); }
+            get { return new ReadOnlyCollection<EntityTypeMapping>(_entityTypeMappings); }
+        }
+
+        internal override IEnumerable<TypeMapping> TypeMappings
+        {
+            get { return _entityTypeMappings; }
+        }
+
+        /// <summary>
+        /// Gets the corresponding function mappings.
+        /// </summary>
+        public ReadOnlyCollection<EntityTypeModificationFunctionMapping> ModificationFunctionMappings
+        {
+            get { return new ReadOnlyCollection<EntityTypeModificationFunctionMapping>(_modificationFunctionMappings); }
+        }
+
+        // Gets all association sets that are implicitly "covered" through function mappings.
+        internal IEnumerable<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
+        {
+            get { return _implicitlyMappedAssociationSetEnds.Value; }
+        }
+
+        // Returns true if there are no Function Maps and no table Mapping fragments.
+        internal override bool HasNoContent
+        {
+            get { return (_modificationFunctionMappings.Count == 0) ? base.HasNoContent : false; } 
+        }
+
+        /// <summary>
+        /// Adds a type mapping.
+        /// </summary>
+        /// <param name="typeMapping">The type mapping to add.</param>
+        public void AddTypeMapping(EntityTypeMapping typeMapping)
+        {
+            Check.NotNull(typeMapping, "typeMapping");
+            ThrowIfReadOnly();
+
+            _entityTypeMappings.Add(typeMapping);
+        }
+
+        /// <summary>
+        /// Removes a type mapping.
+        /// </summary>
+        /// <param name="typeMapping">The type mapping to remove.</param>
+        public void RemoveTypeMapping(EntityTypeMapping typeMapping)
+        {
+            Check.NotNull(typeMapping, "typeMapping");
+            ThrowIfReadOnly();
+
+            _entityTypeMappings.Remove(typeMapping);
         }
 
         internal void ClearModificationFunctionMappings()
         {
-            m_modificationFunctionMappings.Clear();
+            Debug.Assert(!IsReadOnly);
+
+            _modificationFunctionMappings.Clear();
         }
 
         /// <summary>
-        /// Gets all association sets that are implicitly "covered" through function mappings.
+        /// Adds a function mapping.
         /// </summary>
-        public IList<AssociationSetEnd> ImplicitlyMappedAssociationSetEnds
+        /// <param name="modificationFunctionMapping">The function mapping to add.</param>
+        public void AddModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
-            get { return new ReadOnlyCollection<AssociationSetEnd>(m_implicitlyMappedAssociationSetEnds); }
-        }
+            Check.NotNull(modificationFunctionMapping, "modificationFunctionMapping");
+            ThrowIfReadOnly();
 
-        /// <summary>
-        /// EntityTypeMappings
-        /// </summary>
-        public IEnumerable<EntityTypeMapping> EntityTypeMappings
-        {
-            get { return TypeMappings.OfType<EntityTypeMapping>(); }
-        }
-
-        /// <summary>
-        /// EntitySet
-        /// </summary>
-        public EntitySet EntitySet
-        {
-            get { return (EntitySet)Set; }
-        }
-
-        // <summary>
-        // Whether the EntitySetMapping has empty content
-        // Returns true if there are no Function Maps and no table Mapping fragments
-        // </summary>
-        internal override bool HasNoContent
-        {
-            get
-            {
-                if (m_modificationFunctionMappings.Count != 0)
-                {
-                    return false;
-                }
-                return base.HasNoContent;
-            }
-        }
-
-        // <summary>
-        // Requires:
-        // - Function mapping refers to a sub-type of this entity set's element type
-        // - Function mappings for types are not redundantly specified
-        // Adds a new function mapping for this class.
-        // </summary>
-        // <param name="modificationFunctionMapping"> Function mapping to add. May not be null. </param>
-        internal void AddModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
-        {
             AssertModificationFunctionMappingInvariants(modificationFunctionMapping);
 
-            m_modificationFunctionMappings.Add(modificationFunctionMapping);
+            _modificationFunctionMappings.Add(modificationFunctionMapping);
 
-            // check if any association sets are indirectly mapped within this function mapping
-            // through association navigation bindings
-            if (null != modificationFunctionMapping.DeleteFunctionMapping)
-            {
-                m_implicitlyMappedAssociationSetEnds.AddRange(
-                    modificationFunctionMapping.DeleteFunctionMapping.CollocatedAssociationSetEnds);
-            }
-            if (null != modificationFunctionMapping.InsertFunctionMapping)
-            {
-                m_implicitlyMappedAssociationSetEnds.AddRange(
-                    modificationFunctionMapping.InsertFunctionMapping.CollocatedAssociationSetEnds);
-            }
-            if (null != modificationFunctionMapping.UpdateFunctionMapping)
-            {
-                m_implicitlyMappedAssociationSetEnds.AddRange(
-                    modificationFunctionMapping.UpdateFunctionMapping.CollocatedAssociationSetEnds);
-            }
+            _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
+                InitializeImplicitlyMappedAssociationSetEnds);
         }
 
+        /// <summary>
+        /// Removes a function mapping.
+        /// </summary>
+        /// <param name="modificationFunctionMapping">The function mapping to remove.</param>
+        public void RemoveModificationFunctionMapping(EntityTypeModificationFunctionMapping modificationFunctionMapping)
+        {
+            Check.NotNull(modificationFunctionMapping, "modificationFunctionMapping");
+            ThrowIfReadOnly();
+
+            _modificationFunctionMappings.Remove(modificationFunctionMapping);
+
+            _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
+                InitializeImplicitlyMappedAssociationSetEnds);
+        }
+
+        // Requires:
+        // - Function mapping refers to a sub-type of this entity set's element type.
+        // - Function mappings for types are not redundantly specified
         [Conditional("DEBUG")]
-        internal void AssertModificationFunctionMappingInvariants(EntityTypeModificationFunctionMapping modificationFunctionMapping)
+        private void AssertModificationFunctionMappingInvariants(EntityTypeModificationFunctionMapping modificationFunctionMapping)
         {
             DebugCheck.NotNull(modificationFunctionMapping);
             Debug.Assert(
                 modificationFunctionMapping.EntityType.Equals(Set.ElementType) ||
                 Helper.IsSubtypeOf(modificationFunctionMapping.EntityType, Set.ElementType),
                 "attempting to add a modification function mapping with the wrong entity type");
-            foreach (var existingMapping in m_modificationFunctionMappings)
+            foreach (var existingMapping in _modificationFunctionMappings)
             {
                 Debug.Assert(
                     !existingMapping.EntityType.Equals(modificationFunctionMapping.EntityType),
                     "modification function mapping already exists for this type");
             }
+        }
+
+        private List<AssociationSetEnd> InitializeImplicitlyMappedAssociationSetEnds()
+        {
+            var implicitlyMappedAssociationSetEnds = new List<AssociationSetEnd>();
+
+            foreach (var modificationFunctionMapping in _modificationFunctionMappings)
+            {
+                // check if any association sets are indirectly mapped within this function mapping
+                // through association navigation bindings
+                if (null != modificationFunctionMapping.DeleteFunctionMapping)
+                {
+                    implicitlyMappedAssociationSetEnds.AddRange(
+                        modificationFunctionMapping.DeleteFunctionMapping.CollocatedAssociationSetEnds);
+                }
+                if (null != modificationFunctionMapping.InsertFunctionMapping)
+                {
+                    implicitlyMappedAssociationSetEnds.AddRange(
+                        modificationFunctionMapping.InsertFunctionMapping.CollocatedAssociationSetEnds);
+                }
+                if (null != modificationFunctionMapping.UpdateFunctionMapping)
+                {
+                    implicitlyMappedAssociationSetEnds.AddRange(
+                        modificationFunctionMapping.UpdateFunctionMapping.CollocatedAssociationSetEnds);
+                }
+            }
+
+            return implicitlyMappedAssociationSetEnds;
         }
     }
 }

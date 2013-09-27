@@ -5,7 +5,6 @@ namespace System.Data.Entity.Core.Mapping
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Linq;
     using Triple = Common.Utils.Pair<Metadata.Edm.EntitySetBase, Common.Utils.Pair<Metadata.Edm.EntityTypeBase, bool>>;
@@ -32,70 +31,50 @@ namespace System.Data.Entity.Core.Mapping
     /// </example>
     public abstract class EntitySetBaseMapping : MappingItem
     {
-        // <summary>
-        // Construct the new EntitySetBaseMapping object.
-        // </summary>
-        // <param name="extent"> Extent metadata object </param>
-        // <param name="entityContainerMapping"> The EntityContainer mapping that contains this extent mapping </param>
-        internal EntitySetBaseMapping(EntitySetBase extent, EntityContainerMapping entityContainerMapping)
+        private readonly EntityContainerMapping _containerMapping;
+        private string _queryView;
+
+        // Stores type-Specific user-defined query views.
+        private readonly Dictionary<Triple, string> _typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
+
+        internal EntitySetBaseMapping(EntityContainerMapping containerMapping)
         {
-            m_entityContainerMapping = entityContainerMapping;
-            m_extent = extent;
-            m_typeMappings = new List<TypeMapping>();
-        }
-
-        // <summary>
-        // The EntityContainer mapping that contains this extent mapping.
-        // </summary>
-        private readonly EntityContainerMapping m_entityContainerMapping;
-
-        // <summary>
-        // The extent for which this mapping represents.
-        // </summary>
-        private readonly EntitySetBase m_extent;
-
-        // <summary>
-        // Set of type mappings that make up the Set Mapping.
-        // Unless this is a EntitySetMapping with inheritance,
-        // you would have a single type mapping per set.
-        // </summary>
-        private readonly List<TypeMapping> m_typeMappings;
-
-        // <summary>
-        // Stores type-Specific user-defined QueryViews.
-        // </summary>
-        private readonly Dictionary<Triple, string> m_typeSpecificQueryViews = new Dictionary<Triple, string>(Triple.PairComparer.Instance);
-
-        /// <summary>
-        /// The set for which this mapping is for
-        /// </summary>
-        public EntitySetBase Set
-        {
-            get { return m_extent; }
+            _containerMapping = containerMapping;
         }
 
         /// <summary>
-        /// TypeMappings that make up this set type.
-        /// For AssociationSet and CompositionSet there will be one type (at least that's what
-        /// we expect as of now). EntitySet could have mappings for multiple Entity types.
+        /// Gets the parent container mapping.
         /// </summary>
-        public ReadOnlyCollection<TypeMapping> TypeMappings
+        public EntityContainerMapping ContainerMapping
         {
-            get { return new ReadOnlyCollection<TypeMapping>(m_typeMappings); }
+            get { return _containerMapping; }
+        }
+
+        internal EntityContainerMapping EntityContainerMapping
+        {
+            get { return ContainerMapping; }
         }
 
         /// <summary>
-        /// EntityContainerMapping
+        /// Gets or sets the query view associated with this mapping.
         /// </summary>
-        public EntityContainerMapping EntityContainerMapping
+        public string QueryView
         {
-            get { return m_entityContainerMapping; }
+            get { return _queryView; }
+
+            set
+            {
+                ThrowIfReadOnly();
+
+                _queryView = value;                 
+            }
         }
 
-        // <summary>
-        // Whether the EntitySetBaseMapping has empty content
-        // Returns true if there no table Mapping fragments
-        // </summary>
+        internal abstract EntitySetBase Set { get; }
+
+        internal abstract IEnumerable<TypeMapping> TypeMappings { get; }
+
+        // Returns true if there no table mapping fragments.
         internal virtual bool HasNoContent
         {
             get
@@ -116,9 +95,7 @@ namespace System.Data.Entity.Core.Mapping
                 }
                 return true;
             }
-        }
-
-        internal string QueryView { get; set; }
+        }     
 
         // <summary>
         // Line Number in MSL file where the Set Mapping Element's Start Tag is present.
@@ -132,47 +109,28 @@ namespace System.Data.Entity.Core.Mapping
 
         internal bool HasModificationFunctionMapping { get; set; }
 
-        /// <summary>
-        /// Add type mapping as a child under this EntitySetBaseMapping
-        /// </summary>
-        public void AddTypeMapping(TypeMapping typeMapping)
-        {
-            Check.NotNull(typeMapping, "typeMapping");
-
-            m_typeMappings.Add(typeMapping);
-        }
-
-        internal void RemoveTypeMapping(TypeMapping typeMapping)
-        {
-            DebugCheck.NotNull(typeMapping);
-
-            m_typeMappings.Remove(typeMapping);
-        }
-
         internal bool ContainsTypeSpecificQueryView(Triple key)
         {
-            return m_typeSpecificQueryViews.ContainsKey(key);
+            return _typeSpecificQueryViews.ContainsKey(key);
         }
 
-        // <summary>
         // Stores a type-specific user-defiend QueryView so that it can be loaded
         // into StorageMappingItemCollection's view cache.
-        // </summary>
         internal void AddTypeSpecificQueryView(Triple key, string viewString)
         {
-            Debug.Assert(!m_typeSpecificQueryViews.ContainsKey(key), "Query View already present for the given Key");
-            m_typeSpecificQueryViews.Add(key, viewString);
+            Debug.Assert(!_typeSpecificQueryViews.ContainsKey(key), "Query View already present for the given Key");
+            _typeSpecificQueryViews.Add(key, viewString);
         }
 
         internal ReadOnlyCollection<Triple> GetTypeSpecificQVKeys()
         {
-            return new ReadOnlyCollection<Triple>(m_typeSpecificQueryViews.Keys.ToList());
+            return new ReadOnlyCollection<Triple>(_typeSpecificQueryViews.Keys.ToList());
         }
 
         internal string GetTypeSpecificQueryView(Triple key)
         {
-            Debug.Assert(m_typeSpecificQueryViews.ContainsKey(key));
-            return m_typeSpecificQueryViews[key];
+            Debug.Assert(_typeSpecificQueryViews.ContainsKey(key));
+            return _typeSpecificQueryViews[key];
         }
     }
 }

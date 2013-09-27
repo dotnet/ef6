@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 else if (entitySetBase.BuiltInTypeKind
                          == BuiltInTypeKind.AssociationSet)
                 {
-                    setMapping = mapping.GetRelationshipSetMapping(entitySetBase.Name);
+                    setMapping = mapping.GetAssociationSetMapping(entitySetBase.Name);
                 }
                 else
                 {

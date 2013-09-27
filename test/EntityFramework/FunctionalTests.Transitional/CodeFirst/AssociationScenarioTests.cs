@@ -3324,7 +3324,7 @@ namespace FunctionalTests
                            .HasColumn("IndependentColumn1");
             Assert.Equal(
                 "IndependentColumn1",
-                databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).ColumnConditions.ElementAt(0).Column
+                databaseMapping.EntityContainerMappings.Single().AssociationSetMappings.ElementAt(0).Conditions.ElementAt(0).Column
                                                           .Name);
         }
 

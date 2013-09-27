@@ -124,7 +124,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 WriteModificationFunctionMapping(associationSetMapping.ModificationFunctionMapping);
             }
 
-            foreach (var conditionColumn in associationSetMapping.ColumnConditions)
+            foreach (var conditionColumn in associationSetMapping.Conditions)
             {
                 WriteConditionElement(conditionColumn);
             }

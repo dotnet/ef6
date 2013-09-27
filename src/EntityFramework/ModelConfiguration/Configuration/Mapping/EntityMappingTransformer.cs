@@ -570,7 +570,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                             = TableOperations.MoveColumnAndAnyConstraints(
                                 associationSetMapping.Table, toTable, oldColumn, useExistingColumns);
 
-                        associationSetMapping.ColumnConditions
+                        associationSetMapping.Conditions
                                              .Where(cc => cc.Column == oldColumn)
                                              .Each(cc => cc.Column = pm.Column);
                     });

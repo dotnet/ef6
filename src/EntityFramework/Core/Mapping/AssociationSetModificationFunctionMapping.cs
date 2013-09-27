@@ -6,10 +6,10 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    // <summary>
-    // Describes modification function mappings for an association set.
-    // </summary>
-    internal sealed class AssociationSetModificationFunctionMapping : MappingItem
+    /// <summary>
+    /// Describes modification function mappings for an association set.
+    /// </summary>
+    public sealed class AssociationSetModificationFunctionMapping : MappingItem
     {
         internal AssociationSetModificationFunctionMapping(
             AssociationSet associationSet,
@@ -38,6 +38,7 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         internal readonly ModificationFunctionMapping InsertFunctionMapping;
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return String.Format(

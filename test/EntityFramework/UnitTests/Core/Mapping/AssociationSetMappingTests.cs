@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -97,7 +98,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         [Fact]
-        public void Can_add_column_conditions()
+        public void Can_add_get_remove_column_conditions()
         {
             var entitySet1 = new EntitySet();
             var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
@@ -105,14 +106,106 @@ namespace System.Data.Entity.Core.Mapping
             var associationSetMapping
                 = new AssociationSetMapping(associationSet, entitySet1);
 
-            Assert.Empty(associationSetMapping.ColumnConditions);
+            Assert.Empty(associationSetMapping.Conditions);
 
             var conditionPropertyMapping
                 = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
 
-            associationSetMapping.AddColumnCondition(conditionPropertyMapping);
+            associationSetMapping.AddCondition(conditionPropertyMapping);
 
-            Assert.Same(conditionPropertyMapping, associationSetMapping.ColumnConditions.Single());
+            Assert.Same(conditionPropertyMapping, associationSetMapping.Conditions.Single());
+
+            associationSetMapping.RemoveCondition(conditionPropertyMapping);
+
+            Assert.Empty(associationSetMapping.Conditions);
+        }
+
+        [Fact]
+        public void Cannot_set_source_end_mapping_when_read_only()
+        {
+            var entitySet = new EntitySet();
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet);
+            var sourceEndMapping = new EndPropertyMapping();
+
+            associationSetMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => (associationSetMapping.SourceEndMapping = sourceEndMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_set_target_end_mapping_when_read_only()
+        {
+            var entitySet = new EntitySet();
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet);
+            var targetEndMapping = new EndPropertyMapping();
+
+            associationSetMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => (associationSetMapping.TargetEndMapping = targetEndMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_set__modification_function_mapping_when_read_only()
+        {
+            var entitySet = new EntitySet();
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet);
+            var modificationFunctionMapping = new AssociationSetModificationFunctionMapping(associationSet, null, null);
+
+            associationSetMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => (associationSetMapping.ModificationFunctionMapping = modificationFunctionMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_add_condition_when_read_only()
+        {
+            var entitySet = new EntitySet();
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet);
+            var conditionPropertyMapping
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+
+            associationSetMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => associationSetMapping.AddCondition(conditionPropertyMapping)).Message);
+        }
+
+        [Fact]
+        public void Cannot_remove_condition_when_read_only()
+        {
+            var entitySet = new EntitySet();
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping
+                = new AssociationSetMapping(associationSet, entitySet);
+            var conditionPropertyMapping
+                = new ConditionPropertyMapping(null, new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })), 42, null);
+
+            associationSetMapping.AddCondition(conditionPropertyMapping);
+            associationSetMapping.SetReadOnly();
+
+            Assert.Equal(
+                Strings.OperationOnReadOnlyItem,
+                Assert.Throws<InvalidOperationException>(
+                    () => associationSetMapping.RemoveCondition(conditionPropertyMapping)).Message);
         }
     }
 }
