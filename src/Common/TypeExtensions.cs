@@ -744,8 +744,8 @@ namespace System.Data.Entity.Utilities
             DebugCheck.NotNull(type);
             DebugCheck.NotNull(parameterTypes);
 
-            return ((IEnumerable<Type[]>)parameterTypes)
-                .Select(type.GetDeclaredConstructor)
+            return parameterTypes
+                .Select(p => type.GetDeclaredConstructor(p))
                 .FirstOrDefault(c => c != null && predicate(c));
         }
 
