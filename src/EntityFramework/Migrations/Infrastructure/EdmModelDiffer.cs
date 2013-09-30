@@ -1056,8 +1056,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             // the source and target input models.
 
             return
-                (from esm1 in _source.StorageEntityContainerMapping.EntitySetMappings
-                 from esm2 in _target.StorageEntityContainerMapping.EntitySetMappings
+                (from esm1 in _source.EntityContainerMapping.EntitySetMappings
+                 from esm2 in _target.EntityContainerMapping.EntitySetMappings
                  where esm1.EntitySet.ElementType.Name.EqualsIgnoreCase(esm2.EntitySet.ElementType.Name)
                  from etm1 in esm1.EntityTypeMappings
                  from etm2 in esm2.EntityTypeMappings
@@ -1076,8 +1076,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         from np1 in et1.NavigationProperties
                         from np2 in et2.NavigationProperties
                         where np1.Name.EqualsIgnoreCase(np2.Name)
-                        from asm1 in _source.StorageEntityContainerMapping.AssociationSetMappings
-                        from asm2 in _target.StorageEntityContainerMapping.AssociationSetMappings
+                        from asm1 in _source.EntityContainerMapping.AssociationSetMappings
+                        from asm2 in _target.EntityContainerMapping.AssociationSetMappings
                         where asm1.AssociationSet.ElementType == np1.Association
                               && asm2.AssociationSet.ElementType == np2.Association
                         select Tuple.Create(asm1.StoreEntitySet, asm2.StoreEntitySet));
