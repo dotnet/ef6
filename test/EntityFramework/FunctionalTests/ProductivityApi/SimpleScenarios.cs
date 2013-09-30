@@ -4,15 +4,16 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Transactions;
     using SimpleModel;
     using Xunit;
 
     /// <summary>
-    /// These are not really tests, but rather simple scenarios with minimal final state validation.
-    /// They are here as a good starting point for understanding the functionality and to give some level
-    /// of confidence that the simple scenarios keep on working as the code evolves.
+    ///     These are not really tests, but rather simple scenarios with minimal final state validation.
+    ///     They are here as a good starting point for understanding the functionality and to give some level
+    ///     of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
     [PartialTrustFixture]
     public class SimpleScenarios : FunctionalTestBase
@@ -20,7 +21,9 @@ namespace ProductivityApiTests
         #region Scenarios for SQL Server
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
-        public void SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
+        public void
+            SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
+            ()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
@@ -29,12 +32,12 @@ namespace ProductivityApiTests
                 using (var context = new ModelWithWideProperties())
                 {
                     var entity = new EntityWithExplicitWideProperties
-                                     {
-                                         Property1 = new String('1', 1000),
-                                         Property2 = new String('2', 1000),
-                                         Property3 = new String('3', 1000),
-                                         Property4 = new String('4', 1000),
-                                     };
+                    {
+                        Property1 = new String('1', 1000),
+                        Property2 = new String('2', 1000),
+                        Property3 = new String('3', 1000),
+                        Property4 = new String('4', 1000),
+                    };
 
                     context.ExplicitlyWide.Add(entity);
 
@@ -49,6 +52,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
@@ -58,12 +62,12 @@ namespace ProductivityApiTests
                 using (var context = new ModelWithWideProperties())
                 {
                     var entity = new EntityWithImplicitWideProperties
-                                     {
-                                         Property1 = new String('1', 1000),
-                                         Property2 = new String('2', 1000),
-                                         Property3 = new String('3', 1000),
-                                         Property4 = new String('4', 1000),
-                                     };
+                    {
+                        Property1 = new String('1', 1000),
+                        Property2 = new String('2', 1000),
+                        Property3 = new String('3', 1000),
+                        Property4 = new String('4', 1000),
+                    };
 
                     context.ImplicitlyWide.Add(entity);
 
@@ -78,6 +82,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Find()
         {
             using (var context = new SimpleModelContext())
@@ -99,6 +104,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Insert()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -108,9 +114,9 @@ namespace ProductivityApiTests
                 using (var context = new SimpleModelContext())
                 {
                     var product = new Product
-                                      {
-                                          Name = "Vegemite"
-                                      };
+                    {
+                        Name = "Vegemite"
+                    };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -122,6 +128,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Update()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -142,6 +149,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Query()
         {
             using (var context = new SimpleModelContext())
@@ -155,6 +163,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Relate_using_query()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -165,10 +174,10 @@ namespace ProductivityApiTests
                 {
                     var category = context.Categories.Find("Foods");
                     var product = new Product
-                                      {
-                                          Name = "Bovril",
-                                          Category = category
-                                      };
+                    {
+                        Name = "Bovril",
+                        Category = category
+                    };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -187,6 +196,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Relate_using_FK()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -196,10 +206,10 @@ namespace ProductivityApiTests
                 using (var context = new SimpleModelContext())
                 {
                     var product = new Product
-                                      {
-                                          Name = "Bovril",
-                                          CategoryId = "Foods"
-                                      };
+                    {
+                        Name = "Bovril",
+                        CategoryId = "Foods"
+                    };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -212,6 +222,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_CodeFirst_with_ModelBuilder()
         {
             Database.Delete("Scenario_CodeFirstWithModelBuilder");
@@ -255,19 +266,20 @@ namespace ProductivityApiTests
         {
             context.Categories.Add(
                 new Category
-                    {
-                        Id = "Large Hadron Collider"
-                    });
+                {
+                    Id = "Large Hadron Collider"
+                });
             context.Products.Add(
                 new Product
-                    {
-                        Name = "Higgs Boson",
-                        CategoryId = "Large Hadron Collider"
-                    });
+                {
+                    Name = "Higgs Boson",
+                    CategoryId = "Large Hadron Collider"
+                });
             context.SaveChanges();
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Using_two_databases()
         {
             EnsureDatabaseInitialized(() => new LoginsContext());
@@ -278,10 +290,10 @@ namespace ProductivityApiTests
                 using (var context = new LoginsContext())
                 {
                     var login = new Login
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        Username = "elmo"
-                                    };
+                    {
+                        Id = Guid.NewGuid(),
+                        Username = "elmo"
+                    };
                     context.Logins.Add(login);
                     context.SaveChanges();
 
@@ -296,14 +308,14 @@ namespace ProductivityApiTests
                 using (var context = new SimpleModelContext())
                 {
                     var category = new Category
-                                       {
-                                           Id = "Books"
-                                       };
+                    {
+                        Id = "Books"
+                    };
                     var product = new Product
-                                      {
-                                          Name = "The Unbearable Lightness of Being",
-                                          Category = category
-                                      };
+                    {
+                        Name = "The Unbearable Lightness of Being",
+                        Category = category
+                    };
                     context.Products.Add(product);
                     context.SaveChanges();
 
@@ -318,6 +330,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Use_AppConfig_connection_string()
         {
             Database.Delete("Scenario_Use_AppConfig_connection_string");
@@ -335,6 +348,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_Include()
         {
             using (var context = new SimpleModelContext())
@@ -351,6 +365,7 @@ namespace ProductivityApiTests
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
+        [UseDefaultExecutionStrategy]
         public void Scenario_IncludeWithLambda()
         {
             using (var context = new SimpleModelContext())

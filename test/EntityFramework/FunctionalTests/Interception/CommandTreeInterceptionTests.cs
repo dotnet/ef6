@@ -8,12 +8,14 @@ namespace System.Data.Entity.Interception
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
     public class CommandTreeInterceptionTests : FunctionalTestBase
     {
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Command_trees_for_initialization_and_simple_query_and_update_commands_can_be_logged()
         {
             // Make sure that HistoryContext has been used to ensure test runs consistently regardless of
@@ -70,6 +72,7 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Multiple_contexts_running_concurrently_can_log_command_trees_except_trees_for_cached_queries()
         {
             // Make sure no logs get initialization trees

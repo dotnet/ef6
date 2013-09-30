@@ -7,6 +7,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.Validation;
     using System.Diagnostics;
     using System.Linq;
@@ -610,6 +611,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void GetValidationErrors_calls_DetectChanges_once()
         {
             using (var context = new DbContextTests.ValidationTestContext())
@@ -788,6 +790,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbEntityEntry_GetValidationResult_does_not_call_DetectChanges()
         {
             using (var context = new DbContextTests.ValidationTestContext())
@@ -826,6 +829,7 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Nongeneric_DbEntityEntry_GetValidationResult_does_not_call_DetectChanges()
         {
             using (var context = new DbContextTests.ValidationTestContext())
@@ -1392,12 +1396,14 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
         #region Navigation properties
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ValidateEntity_does_not_load_entities_if_LazyLoading_is_enabled()
         {
             Test_ValidateEntity_LazyLoading(true);
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ValidateEntity_does_not_load_entities_if_LazyLoading_is_disabled()
         {
             Test_ValidateEntity_LazyLoading(false);

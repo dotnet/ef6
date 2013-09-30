@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Transactions;
     using AdvancedPatternsModel;
@@ -255,6 +256,7 @@ namespace ProductivityApiTests
         #region Tests for changing entity state of a tracked entity using DbEntityEntry
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbEntityEntry_State_calls_DetectChanges_for_detached_modified_entities()
         {
             using (var context = new SimpleModelContext())
@@ -279,6 +281,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbEntityEntry_State_calls_DetectChanges_for_detached_unchanged_entities()
         {
             using (var context = new SimpleModelContext())
@@ -305,6 +308,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_DbEntityEntry_State_calls_DetectChanges_for_detached_modified_entities()
         {
             using (var context = new SimpleModelContext())
@@ -329,6 +333,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_DbEntityEntry_State_calls_DetectChanges_for_detached_unchanged_entities()
         {
             using (var context = new SimpleModelContext())

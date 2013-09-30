@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.CodeFirst
 {
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Transactions;
     using FunctionalTests;
@@ -10,6 +11,7 @@ namespace System.Data.Entity.CodeFirst
     public class InheritanceScenarioTests : TestBase
     {
         [Fact] // CodePlex 583
+        [UseDefaultExecutionStrategy]
         public void Subclasses_with_different_properties_to_same_column_using_TPH_can_round_trip()
         {
             using (var context = new FunctionalTests.InheritanceScenarioTests.TphPersonContext())
@@ -44,12 +46,14 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void TPT_model_with_PK_property_to_different_columns_in_different_tables_roundtrips()
         {
             TPT_or_TPC_model_with_PK_property_to_different_columns_in_different_tables_roundtrips<ContextForPkNamingTPT>();
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void TPC_model_with_PK_property_to_different_columns_in_different_tables_roundtrips()
         {
             TPT_or_TPC_model_with_PK_property_to_different_columns_in_different_tables_roundtrips<ContextForPkNamingTPC>();

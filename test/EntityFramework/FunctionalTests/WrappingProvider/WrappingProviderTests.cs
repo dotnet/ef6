@@ -10,6 +10,7 @@ namespace System.Data.Entity.WrappingProvider
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Reflection;
@@ -110,6 +111,7 @@ namespace System.Data.Entity.WrappingProvider
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Simple_query_and_update_works_with_wrapping_provider_setup_by_replacing_ADO_NET_provider()
         {
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
@@ -150,6 +152,7 @@ namespace System.Data.Entity.WrappingProvider
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Simple_query_and_update_works_with_wrapping_provider_setup_at_EF_level_only()
         {
             WrappingAdoNetProvider<SqlClientFactory>.WrapProviders();

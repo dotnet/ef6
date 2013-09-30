@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Update
 {
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.TestModels.ArubaCeModel;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Linq;
@@ -20,7 +21,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_truncate_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
@@ -29,7 +30,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_truncate_behaves_differently_when_flag_is_changed()
         {
             RunWithTruncateFlag(
@@ -39,7 +40,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_round_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_relies_on_old_behavior_to_round_behaves_differently_when_flag_is_changed()
         {
             RunWithTruncateFlag(
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_rounds_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
@@ -67,7 +68,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_rounds_continues_to_work_when_flag_is_changed()
         {
             RunWithTruncateFlag(
@@ -77,7 +78,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_truncates_continues_to_work_by_default()
         {
             InsertAndUpdateWithDecimals(
@@ -86,7 +87,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Legacy_code_that_explicitly_truncates_continues_to_work_when_flag_is_changed()
         {
             RunWithTruncateFlag(

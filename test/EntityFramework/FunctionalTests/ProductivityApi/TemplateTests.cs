@@ -8,6 +8,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Reflection;
     using System.Transactions;
@@ -36,6 +37,7 @@ namespace ProductivityApiTests
         private const string Building18Id = "18181818-1818-1818-1818-181818181818";
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Read_and_write_using_AdvancedPatternsModelFirst_created_from_T4_template()
         {
             var building18 = CreateBuilding();
@@ -93,7 +95,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Read_and_write_using_MonsterModel_created_from_T4_template()
         {
             int orderId;

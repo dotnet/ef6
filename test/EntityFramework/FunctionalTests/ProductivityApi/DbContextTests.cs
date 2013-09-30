@@ -608,7 +608,7 @@ namespace ProductivityApiTests
         #region Positive SaveChanges tests
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
@@ -617,7 +617,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
@@ -680,7 +680,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChanges_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
@@ -689,7 +689,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChangesAsync_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
@@ -873,6 +873,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SaveChanges_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation((c) => c.SaveChanges());
@@ -881,6 +882,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_bubbles_UpdateException()
         {
             SaveChanges_bubbles_UpdateException_implementation(
@@ -909,7 +911,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChanges_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation((c) => c.SaveChanges());
@@ -918,7 +920,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SaveChangesAsync_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation(
@@ -3072,12 +3074,14 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_is_called_by_SaveChanges_when_AutoDetectChangesEnabled_is_on()
         {
             TestDetectChangesWithSaveChanges(autoDetectChanges: true);
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_is_not_called_by_SaveChanges_when_AutoDetectChangesEnabled_is_off()
         {
             TestDetectChangesWithSaveChanges(autoDetectChanges: false);
@@ -3277,12 +3281,14 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_is_called_by_SaveChanges_once_when_ValidateOnSaveEnabled_is_on()
         {
             TestDetectChangesWithSaveChangesAndValidation(validateOnSaveEnabled: true);
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_is_called_by_SaveChanges_once_when_ValidateOnSaveEnabled_is_off()
         {
             TestDetectChangesWithSaveChangesAndValidation(validateOnSaveEnabled: false);
@@ -3339,6 +3345,7 @@ namespace ProductivityApiTests
         #region Test EntityConnection-Store Connection state correlation when opening EntityConnection implicitly through context
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Implicit_EntityConnection_throws_if_close_underlying_StoreConnection()
         {
             using (var context = new SimpleModelContext())
@@ -3392,6 +3399,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Implicit_EntityConnection_throws_if_close_EntityConnection_during_query()
         {
             using (var context = new SimpleModelContext())
@@ -3476,6 +3484,7 @@ namespace ProductivityApiTests
         #endregion
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_transaction_scope_if_the_context_type_has_been_previously_initialized_outside()
         {
             var connectionString = default(string);

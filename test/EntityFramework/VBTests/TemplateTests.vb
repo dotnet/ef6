@@ -40,7 +40,7 @@ Public Class TemplateTests
 
 #Region "Simple tests that the context and entities works"
 
-    <Fact()> _
+    <Fact(), UseDefaultExecutionStrategy()> _
     Public Sub Read_and_write_using_AdvancedPatternsModelFirst_created_from_Visual_Basic_T4_template()
 
         Dim building18 = CreateBuilding()
@@ -88,7 +88,7 @@ Public Class TemplateTests
 
     End Function
 
-    <Fact(), AutoRollback()> _
+    <Fact(), AutoRollback(), UseDefaultExecutionStrategy()> _
     Public Sub Read_and_write_using_MonsterModel_created_from_Visual_Basic_T4_template()
 
         Dim orderId As Integer

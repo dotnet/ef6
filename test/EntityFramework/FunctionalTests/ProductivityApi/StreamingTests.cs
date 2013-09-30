@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using ConcurrencyModel;
     using Xunit;
@@ -18,6 +19,7 @@ namespace ProductivityApiTests
         #region Tests for AsStreaming on DbSet/DbQuery
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_AsStreaming_can_be_used_on_IQueryable()
         {
             using (var context = new F1Context())
@@ -45,6 +47,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_AsStreaming_can_be_used_directly_on_DbSet()
         {
             using (var context = new F1Context())
@@ -72,6 +75,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_AsStreaming_can_be_used_directly_on_DbQuery()
         {
             using (var context = new F1Context())
@@ -99,6 +103,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_AsStreaming_can_be_used_on_IQueryable()
         {
             using (var context = new F1Context())
@@ -127,6 +132,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_AsStreaming_can_be_used_directly_on_DbSet()
         {
             using (var context = new F1Context())
@@ -154,6 +160,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_AsStreaming_can_be_used_directly_on_DbQuery()
         {
             using (var context = new F1Context())
@@ -182,6 +189,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_AsStreaming_can_be_used_on_generic_IQueryable()
         {
             using (var context = new F1Context())
@@ -209,6 +217,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_AsStreaming_can_be_used_directly_on_generic_DbSet()
         {
             using (var context = new F1Context())
@@ -236,6 +245,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void AsStreaming_can_be_used_before_the_rest_of_the_query()
         {
             using (var context = new F1Context())
@@ -267,6 +277,7 @@ namespace ProductivityApiTests
         #region Tests for AsStreaming on ObjectSet/ObjectQuery
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_ObjectSet_AsStreaming_can_be_used_on_IQueryable()
         {
             using (var context = new F1Context())
@@ -294,6 +305,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Generic_ObjectSet_AsStreaming_can_be_used_directly_on_ObjectSet()
         {
             using (var context = new F1Context())
@@ -321,6 +333,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_ObjectSet_AsStreaming_can_be_used_on_generic_IQueryable()
         {
             using (var context = new F1Context())
@@ -348,6 +361,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_ObjectSet_AsStreaming_can_be_used_directly_on_generic_ObjectSet()
         {
             using (var context = new F1Context())
@@ -375,6 +389,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ObjectSet_AsStreaming_can_be_used_before_the_rest_of_the_query()
         {
             using (var context = new F1Context())

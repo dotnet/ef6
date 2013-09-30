@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using AdvancedPatternsModel;
@@ -196,6 +197,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -210,6 +212,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -224,6 +227,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
@@ -239,6 +243,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void
             Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
@@ -269,6 +274,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -284,6 +290,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
@@ -299,6 +306,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -313,6 +321,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
@@ -552,6 +561,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming()
         {
             using (var context = new SimpleModelContext())
@@ -583,6 +593,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming_async()
         {
             using (var context = new SimpleModelContext())
@@ -785,7 +796,7 @@ namespace ProductivityApiTests
         #region SQL command tests
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database()
         {
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommand(q));
@@ -794,7 +805,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database_async()
         {
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommandAsync(q).Result);
@@ -817,7 +828,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommand(q, p));
@@ -826,7 +837,7 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
         {
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(

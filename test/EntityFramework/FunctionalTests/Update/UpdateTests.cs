@@ -7,6 +7,7 @@ namespace System.Data.Entity.Update
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.TestModels.GearsOfWarModel;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -23,7 +24,7 @@ namespace System.Data.Entity.Update
         }
         
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Verify_that_deletes_precede_inserts()
         {
             using (var context = new GearsOfWarContext())
@@ -53,7 +54,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Verify_that_order_of_insert_is_based_on_key_values_and_not_order_of_adding_to_collection()
         {
             using (var context = new GearsOfWarContext())
@@ -97,7 +98,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Insert_resulting_in_data_truncation_throws_exception()
         {
             using (var context = new GearsOfWarContext())
@@ -116,7 +117,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Update_resulting_in_data_truncation_throws_exception()
         {
             using (var context = new GearsOfWarContext())
@@ -137,7 +138,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Inserting_entity_that_references_itself_in_one_to_one_relationship_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -157,7 +158,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Inserting_entity_that_references_itself_in_one_to_many_relationship_works()
         {
             using (var context = new GearsOfWarContext())
@@ -193,7 +194,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Inserting_entities_that_both_reference_each_other_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -229,7 +230,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Inserting_entities_that_reference_themselves_in_a_cycle_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -276,7 +277,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Insert_dependant_entity_without_required_principal_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -296,7 +297,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Insert_principal_entity_without_required_dependant_does_not_throw()
         {
             using (var context = new GearsOfWarContext())
@@ -315,7 +316,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Same_entity_with_one_to_one_relationship_attached_to_two_different_entities_throw_on_insert()
         {
             using (var context = new GearsOfWarContext())
@@ -350,7 +351,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Cascade_delete_works_properly_on_one_to_many_relationship()
         {
             using (var context = new GearsOfWarContext())
@@ -400,7 +401,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Saving_null_compex_type_property_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -419,7 +420,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Modifying_identity_generated_key_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -440,7 +441,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Modifying_non_generated_key_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -461,7 +462,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Modifying_identity_non_key_throws()
         {
             using (var context = new GearsOfWarContext())
@@ -489,7 +490,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_on_property_update_previously_modified_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -510,7 +511,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_delete_previously_modified_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -538,7 +539,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_modify_previously_deleted_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -566,7 +567,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_update_previously_modified_entity_when_using_property_as_concurrency_token()
         {
             using (var context = new GearsOfWarContext())
@@ -587,7 +588,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_delete_previously_modified_entity_when_using_property_as_concurrency_token()
         {
             using (var context = new GearsOfWarContext())
@@ -608,7 +609,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_when_updating_previously_modified_reference()
         {
             using (var context = new GearsOfWarContext())
@@ -633,7 +634,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Optimisic_concurrency_error_when_deleting_previously_modified_reference()
         {
             using (var context = new GearsOfWarContext())
@@ -657,7 +658,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Insert_update_and_delete_entity_with_enum_property()
         {
             using (var context = new GearsOfWarContext())
@@ -693,7 +694,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Insert_update_delete_entity_with_spatial_property()
         {
             using (var context = new GearsOfWarContext())

@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using AdvancedPatternsModel;
     using ConcurrencyModel;
@@ -163,7 +164,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded()
         {
             using (var context = new F1Context())
@@ -583,7 +584,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded_asynchronously()
         {
             using (var context = new F1Context())

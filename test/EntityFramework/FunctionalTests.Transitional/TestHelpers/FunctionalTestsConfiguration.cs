@@ -8,6 +8,7 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
     using System.Linq;
+    using System.Runtime.Remoting.Messaging;
 
     public class FunctionalTestsConfiguration : DbConfiguration
     {
@@ -67,6 +68,23 @@ namespace System.Data.Entity.TestHelpers
 
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
+
+            this.SetExecutionStrategy("System.Data.SqlClient", () =>
+                DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
+                ? new TestSqlAzureExecutionStrategy()
+                : (IDbExecutionStrategy)new DefaultExecutionStrategy());
+        }
+
+        public static bool SuspendExecutionStrategy
+        {
+            get
+            {
+                return (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
+            }
+            set
+            {
+                CallContext.LogicalSetData("SuspendExecutionStrategy", value);
+            }
         }
     }
 }

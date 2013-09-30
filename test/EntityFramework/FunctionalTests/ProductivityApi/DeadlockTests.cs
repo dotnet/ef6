@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.ProductivityApi
 {
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace System.Data.Entity.ProductivityApi
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_SaveChangesAsync_does_not_deadlock()
         {
             using (var context = new SimpleModelContext())

@@ -9,6 +9,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using SimpleModel;
     using Xunit;
@@ -203,7 +204,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Dispose_does_not_dispose_underlying_ObjectContext_if_DbContext_does_not_own_it()
         {
             using (var outerContext = new SimpleModelContext())

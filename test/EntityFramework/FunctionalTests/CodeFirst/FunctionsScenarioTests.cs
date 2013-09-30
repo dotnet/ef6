@@ -4,6 +4,7 @@ namespace System.Data.Entity.CodeFirst
 {
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using FunctionalTests;
     using Xunit;
@@ -14,7 +15,7 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEnd : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback]
+            [AutoRollback, UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_generated_property()
             {
                 using (var context = CreateContext())
@@ -46,7 +47,7 @@ namespace System.Data.Entity.CodeFirst
             }
 
             [Fact]
-            [AutoRollback]
+            [AutoRollback, UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tph_inheritance()
             {
                 using (var context = CreateContext())
@@ -76,7 +77,7 @@ namespace System.Data.Entity.CodeFirst
             }
 
             [Fact]
-            [AutoRollback]
+            [AutoRollback, UseDefaultExecutionStrategy]
             public void Can_insert_and_delete_when_many_to_many()
             {
                 using (var context = CreateContext())
@@ -122,7 +123,7 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPT : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback]
+            [AutoRollback, UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
                 using (var context = CreateContext())
@@ -166,7 +167,7 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPC : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback]
+            [AutoRollback, UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
                 using (var context = CreateContext())

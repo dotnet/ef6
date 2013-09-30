@@ -14,6 +14,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.ModelConfiguration.Conventions;
     using System.Data.Entity.SqlServer;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Transactions;
@@ -186,6 +187,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Transaction_can_be_started_after_database_initialization_has_happened()
         {
             Database.Delete(SimpleConnection<SimpleContextForDropCreateDatabaseAlways>());
@@ -480,6 +482,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Local_transaction_can_be_started_after_database_initialization_has_happened()
         {
             Database.Delete(SimpleConnection<SimpleContextForCreateDatabaseIfNotExists>());

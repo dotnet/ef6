@@ -7,6 +7,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.IO;
     using System.Linq;
     using System.Runtime.Serialization.Formatters.Binary;
@@ -45,7 +46,7 @@ namespace ProductivityApiTests
         #region Concurrency resolution with FK associations
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values()
         {
             ConcurrencyTest(
@@ -57,7 +58,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(
@@ -71,7 +72,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values()
         {
             ConcurrencyTest(
@@ -84,7 +85,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_objects()
         {
             ConcurrencyTest(
@@ -97,7 +98,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_objects()
         {
             ConcurrencyTest(
@@ -111,7 +112,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_objects()
         {
             ConcurrencyTest(
@@ -124,7 +125,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_client_values_using_cloned_property_values()
         {
             ConcurrencyTest(
@@ -137,7 +138,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_cloned_property_values()
         {
             ConcurrencyTest(
@@ -151,7 +152,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_new_values_using_cloned_property_values()
         {
             ConcurrencyTest(
@@ -164,7 +165,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_equivalent_of_accept_changes()
         {
             ConcurrencyTest(
@@ -177,14 +178,14 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Simple_concurrency_exception_can_be_resolved_with_store_values_using_Reload()
         {
             ConcurrencyTest(StorePodiums, (c, ex) => ex.Entries.Single().Reload());
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Two_concurrency_issues_in_one_to_one_related_entities_can_be_handled_by_dealing_with_dependent_first()
         {
             ConcurrencyTest(
@@ -228,7 +229,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void
             Two_concurrency_issues_in_one_to_many_related_entities_can_be_handled_by_dealing_with_dependent_first()
         {
@@ -273,7 +274,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Concurrency_issue_where_the_FK_is_the_concurrency_token_can_be_handled()
         {
             ConcurrencyTest(
@@ -312,7 +313,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Change_in_independent_association_results_in_independent_association_exception()
         {
             ConcurrencyTest(
@@ -327,7 +328,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void
             Change_in_independent_association_after_change_in_different_concurrency_token_results_in_independent_association_exception()
         {
@@ -346,7 +347,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void
             Attempting_to_delete_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
         {
@@ -363,7 +364,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void
             Attempting_to_add_same_relationship_twice_for_many_to_many_results_in_independent_association_exception()
         {
@@ -384,7 +385,7 @@ namespace ProductivityApiTests
         #region Concurrency exceptions with complex types
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Concurrency_issue_where_a_complex_type_nested_member_is_the_concurrency_token_can_be_handled()
         {
             ConcurrencyTest(
@@ -406,7 +407,7 @@ namespace ProductivityApiTests
         #region Tests for update exceptions involving adding and deleting entities
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Adding_the_same_entity_twice_results_in_DbUpdateException()
         {
             ConcurrencyTest(
@@ -431,7 +432,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Deleting_the_same_entity_twice_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(
@@ -449,7 +450,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void
             Deleting_the_same_entity_twice_when_entity_has_independent_association_results_in_DbIndependentAssociationUpdateException()
         {
@@ -465,7 +466,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(
@@ -484,7 +485,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Updating_then_deleting_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(
@@ -507,7 +508,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException()
         {
             ConcurrencyTest(
@@ -526,7 +527,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Deleting_then_updating_the_same_entity_results_in_DbUpdateConcurrencyException_which_can_be_resolved_with_store_values()
         {
             ConcurrencyTest(
@@ -705,7 +706,7 @@ namespace ProductivityApiTests
         #region Serialization of exceptions
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void DbUpdateException_can_be_serialized_but_does_not_serialize_entries()
         {
             ConcurrencyTest(
@@ -726,7 +727,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void DbUpdateConcurrencyException_can_be_serialized_but_does_not_serialize_entries()
         {
             ConcurrencyTest(
@@ -751,7 +752,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void DbUpdateException_for_independent_association_error_can_be_serialized()
         {
             ConcurrencyTest(

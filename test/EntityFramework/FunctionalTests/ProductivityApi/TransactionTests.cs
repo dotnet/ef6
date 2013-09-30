@@ -3,6 +3,7 @@
 namespace ProductivityApiTests
 {
     using System.Data.Entity;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Transactions;
     using SimpleModel;
@@ -16,6 +17,7 @@ namespace ProductivityApiTests
         #region Transaction scenarios
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Insert_In_SystemTransaction_without_commit_works_and_transaction_count_is_correct()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -38,6 +40,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Explicit_rollback_can_be_used_to_rollback_a_transaction()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -69,6 +72,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Transaction_with_explicit_commit_on_a_local_transaction_can_be_used()
         {
             // Since this test actually mutates the database outside of a transaction it needs
@@ -101,6 +105,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Explicit_rollback_on_a_local_transaction_can_be_used_to_rollback_a_transaction()
         {
             EnsureDatabaseInitialized(() => new SimpleModelContext());
@@ -132,6 +137,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Transaction_with_explicit_commit_on_commitable_transaction_can_be_used()
         {
             // Since this test actually mutates the database outside of a transaction it needs

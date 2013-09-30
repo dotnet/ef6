@@ -138,6 +138,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_EntityConnection_is_opened_and_context_does_not_own_connection()
         {
             try
@@ -165,6 +166,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_owns_connection()
         {
             try
@@ -193,6 +195,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_using_DbContext_and_no_transaction_created_by_user_and_SqlConnection_is_opened_and_context_does_not_own_connection()
         {
             try
@@ -259,6 +262,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_simple_commit_DbContextTransaction_works()
         {
             try
@@ -284,6 +288,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_simple_rollback_DbContextTransaction_works()
         {
             try
@@ -324,6 +329,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_SaveChanges_commits_when_using_UseTransaction_with_open_external_connection()
         {
             try
@@ -361,6 +367,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_SaveChanges_rolls_back_when_using_UseTransaction_with_open_external_connection()
         {
             try
@@ -398,6 +405,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_ExecuteStoreCommand_works_when_using_UseTransaction_with_open_external_connection()
         {
             try
@@ -433,6 +441,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_ExecuteStoreCommand_works_if_external_transaction_is_already_committed()
         {
             try
@@ -470,6 +479,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_ExecuteStoreCommand_works_if_external_transaction_is_already_rolled_back()
         {
             try
@@ -507,6 +517,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact] // CodePlex 906
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void UseTransaction_does_not_cause_or_require_database_initialization()
         {
             using (var context = new SimpleModelContext(
@@ -586,6 +597,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_can_commit_a_transaction_and_still_use_connection_without_transaction_afterwards()
         {
             try
@@ -614,6 +626,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_can_rollback_a_transaction_and_still_use_connection_without_transaction_afterwards()
         {
             try
@@ -642,6 +655,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_SaveChanges_works_when_using_its_own_connection_to_open_transaction()
         {
             try
@@ -693,6 +707,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_calling_UseTransaction_throws_when_passed_rolled_back_transaction()
         {
             try
@@ -719,6 +734,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_committed_DbContextTransaction_inside_completed_TransactionScope_commits()
         {
             try
@@ -750,6 +766,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_committed_DbContextTransaction_inside_uncompleted_TransactionScope_rolls_back()
         {
             try
@@ -781,6 +798,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_rolled_back_DbContextTransaction_inside_completed_TransactionScope_throws_TransactionAbortedException()
         {
             try
@@ -815,6 +833,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_rolled_back_DbContextTransaction_inside_uncompleted_TransactionScope_rolls_back()
         {
             try
@@ -848,6 +867,7 @@ namespace System.Data.Entity.Objects
         #endregion
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_closed()
         {
             var entityConnection = new EntityConnection(_entityConnectionString);
@@ -865,6 +885,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_SqlConnection_is_closed()
         {
             var connection = new SqlConnection(_connectionString);
@@ -882,6 +903,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_using_DbContext_and_user_creates_transaction_using_TransactionScope_and_EntityConnection_is_opened_inside_transaction_scope()
         {
             var connection = new EntityConnection(_entityConnectionString);
@@ -947,6 +969,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_closed()
         {
             try
@@ -969,6 +992,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_open()
         {
             try
@@ -992,6 +1016,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open()
         {
             try
@@ -1017,6 +1042,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_closed()
         {
             using (new TransactionScope())
@@ -1034,6 +1060,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed()
         {
             using (new TransactionScope())
@@ -1052,6 +1079,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_closed_plus_AdoNet_calls()
         {
             using (new TransactionScope())
@@ -1072,6 +1100,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed()
         {
             var connection = new EntityConnection(_entityConnectionString);
@@ -1090,6 +1119,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls()
         {
             var connection = new EntityConnection(_entityConnectionString);
@@ -1109,6 +1139,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_only_one_transaction_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_transaction_scope_and_is_closed_plus_AdoNet_calls_and_transaction_is_completed()
         {
             try
@@ -1142,6 +1173,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_is_open()
         {
             using (new TransactionScope())
@@ -1161,6 +1193,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_using_TransactionScope_and_connection_created_outside_context_and_is_open()
         {
             using (new TransactionScope())
@@ -1276,6 +1309,7 @@ namespace System.Data.Entity.Objects
         ////}
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_executing_multiple_operations_in_the_same_TransactionScope()
         {
             using (new TransactionScope())
@@ -1330,6 +1364,7 @@ namespace System.Data.Entity.Objects
         ////}
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_transaction_explicitly_using_CommittableTransaction()
         {
             using (var ctx = CreateTransactionContext())
@@ -1351,6 +1386,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_enlists_TransactionScope()
         {
             using (var ctx = CreateTransactionContext())
@@ -1372,6 +1408,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_creates_ambient_CommittableTransaction()
         {
             using (var ctx = CreateTransactionContext())
@@ -1396,6 +1433,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_is_not_created_when_user_starts_DbTransaction_explicitly()
         {
             using (var ctx = CreateTransactionContext())
@@ -1415,6 +1453,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_DbTransaction_cannot_be_mixed_with_TransactionScope()
         {
             try
@@ -1443,6 +1482,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_DbTransaction_cannot_be_mixed_with_CommittableTransaction()
         {
             try
@@ -1468,6 +1508,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_using_TransactionScope_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
             using (var ctx = CreateTransactionContext())
@@ -1522,6 +1563,7 @@ namespace System.Data.Entity.Objects
         ////}
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_using_CommittableTransaction_with_DbTransaction_results_in_nested_transaction_and_implicit_transaction_not_created()
         {
             using (var ctx = CreateTransactionContext())
@@ -1546,6 +1588,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_TransactionScope_cannot_be_mixed_with_CommitableTransaction()
         {
             try
@@ -1571,6 +1614,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_CommitableTransaction_cannot_be_mixed_with_TransactionScope()
         {
             try
@@ -1600,6 +1644,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_created_when_transaction_from_previous_operation_disposed_and_connection_opened()
         {
             try
@@ -1632,6 +1677,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_if_enlisted_in_explicit_transaction_after_transaction_from_previous_operation_disposed()
         {
             using (var ctx = CreateObjectContext())
@@ -1662,6 +1708,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_implicit_transaction_created_when_transaction_from_previous_operation_disposed_and_connection_closed()
         {
             try
@@ -1692,6 +1739,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_explicit_transaction_cleared_after_disposing()
         {
             try
@@ -1724,6 +1772,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_transactions_change_between_requests()
         {
             using (var ctx = CreateObjectContext())
@@ -1751,6 +1800,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_enlisting_in_transaction_between_requests()
         {
             using (var ctx = CreateObjectContext())
@@ -1780,6 +1830,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Verify_no_implicit_transaction_created_when_transaction_change_and_connection_is_closed_between_requests()
         {
             using (var ctx = CreateObjectContext())
@@ -1807,6 +1858,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_cannot_enlist_in_more_than_one_active_transaction_on_the_same_opened_connection()
         {
             try
@@ -1834,6 +1886,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_closing_connection_invalidates_explicit_transaction()
         {
             try
@@ -1862,6 +1915,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_by_default_uses_transaction()
         {
             try
@@ -1881,6 +1935,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void ExecuteSqlCommand_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
         {
             try
@@ -1900,6 +1955,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
         {
             try
@@ -1919,6 +1975,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_transaction_scope()
         {
             try
@@ -1941,6 +1998,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommand_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
         {
             try
@@ -1962,6 +2020,7 @@ namespace System.Data.Entity.Objects
 
 #if !NET40
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_by_default_uses_transaction()
         {
             try
@@ -1981,6 +2040,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
         {
             try
@@ -2000,6 +2060,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_does_not_use_transaction()
         {
             try
@@ -2019,6 +2080,7 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSqlCommandAsync_with_TransactionalBehavior_DoNotEnsureTransaction_still_uses_transaction_if_called_inside_user_transaction()
         {
             try

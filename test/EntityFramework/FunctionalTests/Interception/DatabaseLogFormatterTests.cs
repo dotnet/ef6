@@ -4,6 +4,7 @@ namespace System.Data.Entity.Interception
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.Interception;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Globalization;
     using System.IO;
@@ -38,6 +39,7 @@ namespace System.Data.Entity.Interception
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Simple_query_and_update_commands_can_be_logged()
         {
             var log = new StringWriter();

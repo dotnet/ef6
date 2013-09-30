@@ -6,6 +6,7 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using AdvancedPatternsModel;
     using Xunit;
@@ -506,6 +507,7 @@ namespace ProductivityApiTests
         }
 
         [Fact] // CodePlex 663
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_can_be_called_twice_for_nullable_key_with_related_entities()
         {
             using (var context = new BlogContext663())
@@ -545,6 +547,7 @@ namespace ProductivityApiTests
         }
 
         [Fact] // CodePlex 663
+        [UseDefaultExecutionStrategy]
         public void DetectChanges_can_be_called_twice_for_nullable_composite_key_with_related_entities()
         {
             using (var context = new BlogContext663())

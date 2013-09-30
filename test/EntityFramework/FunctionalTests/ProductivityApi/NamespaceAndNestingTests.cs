@@ -9,12 +9,14 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
     public class NamespaceAndNestingTests : FunctionalTestBase
     {
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Code_First_can_use_types_that_have_the_same_name_but_different_namespaces()
         {
             // This test excerises queries and updates using models with a variety of types
@@ -147,6 +149,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void Code_First_can_use_nested_types()
         {
             using (var nested = new NestedContext())

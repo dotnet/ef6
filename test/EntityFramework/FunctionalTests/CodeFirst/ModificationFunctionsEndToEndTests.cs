@@ -4,6 +4,7 @@ namespace System.Data.Entity.CodeFirst
 {
     using System.Collections.Generic;
     using System.Data.Entity.Spatial;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.TestModels.ArubaModel;
     using System.Data.Entity.TestModels.GearsOfWarModel;
     using System.Data.Entity.TestModels.FantasyModel;
@@ -36,7 +37,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Update_GearsOfWar_entities_using_stored_procedures()
         {
             using (var context = new GearsOfWarStoredProceduresContext())
@@ -80,7 +81,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Update_Aruba_entities_using_stored_procedures()
         {
             using (var context = new ArubaStoredProceduresContext())
@@ -157,7 +158,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Update_Fantasy_entities_using_stored_procedures()
         {
             using (var context = new FantasyStoredProceduresContext())
@@ -195,7 +196,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Delete_GearsOfWar_entities_using_stored_procedures()
         {
             using (var context = new GearsOfWarStoredProceduresContext())
@@ -225,7 +226,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Update_Many_to_Many_relationship_using_stored_procedures()
         {
             List<int?> usedWeaponIds;

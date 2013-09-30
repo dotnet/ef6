@@ -5,6 +5,7 @@ namespace System.Data.Entity.ProductivityApi
     using System.Collections.Generic;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.WrappingProvider;
     using System.Data.SqlClient;
     using System.Linq;
@@ -57,6 +58,7 @@ namespace System.Data.Entity.ProductivityApi
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_timeout_is_used_for_updates()
         {
             using (var context = new TimeoutContext())
@@ -158,6 +160,7 @@ namespace System.Data.Entity.ProductivityApi
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_timeout_is_used_for_Database_ExecuteSqlCommand()
         {
             using (var context = new TimeoutContext())
@@ -272,6 +275,7 @@ namespace System.Data.Entity.ProductivityApi
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_timeout_is_used_for_async_updates()
         {
             using (var context = new TimeoutContext())
@@ -361,6 +365,7 @@ namespace System.Data.Entity.ProductivityApi
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_timeout_is_used_for_async_Database_ExecuteSqlCommand()
         {
             using (var context = new TimeoutContext())

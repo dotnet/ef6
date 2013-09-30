@@ -40,7 +40,7 @@ namespace ProductivityApiTests
         #region DeleteObject throws a collection modified exception with change tracking proxies (Dev11 71937, 209773)
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_71937()
         {
             using (var context = new GranniesContext())
@@ -131,7 +131,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
         {
             if (!_isSqlAzure)
@@ -336,7 +336,7 @@ namespace ProductivityApiTests
         #endregion
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void RelationshipManager_can_be_accessed_by_casting_proxy_entity_to_IEntityWithRelationships()
         {
             using (var context = new GranniesContext())
@@ -350,7 +350,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void SetChangeTracker_can_be_called_by_casting_proxy_entity_to_IEntityWithChangeTracker()
         {
             using (var context = new GranniesContext())

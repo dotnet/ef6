@@ -9,6 +9,7 @@ namespace ProductivityApiTests
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.IO;
     using System.Linq;
     using System.Reflection;

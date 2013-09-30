@@ -4,6 +4,7 @@ namespace System.Data.Entity.CodeFirst
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
 
@@ -33,6 +34,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact] // CodePlex 137
+        [UseDefaultExecutionStrategy]
         public void Entities_with_unmapped_base_class_with_private_property_setters_can_be_updated_and_inserted()
         {
             using (var context = new PrivacyContext())

@@ -171,6 +171,7 @@
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />
     <Compile Include="TestHelpers\TestGroup.cs" />
+    <Compile Include="TestHelpers\TestSqlAzureExecutionStrategy.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Chassis.cs" />
     <Compile Include="TestModels\ConcurrencyModel\ConcurrencyModelInitializer.cs" />
     <Compile Include="TestModels\ConcurrencyModel\Driver.cs" />

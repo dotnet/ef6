@@ -27,7 +27,7 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback]
+        [AutoRollback, UseDefaultExecutionStrategy]
         public void Verify_insert_update_detele_for_guid_identity_column()
         {
             if (!_isSqlAzure)
