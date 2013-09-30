@@ -328,7 +328,7 @@
     <xs:simpleType name="TSimpleIdentifier">
         <xs:restriction base="xs:token">
             <!-- The below pattern represents the allowed identifiers in ECMA specification -->
-            <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
+            <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}" />
         </xs:restriction>
     </xs:simpleType>
 
@@ -338,7 +338,7 @@
     <xs:simpleType name="TQualifiedName">
         <xs:restriction base="xs:token">
             <!-- The below pattern represents the allowed identifiers in ECMA specification plus the '.' for namespace qualification  -->
-            <xs:pattern value="[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
+            <xs:pattern value="[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}(\.[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}){0,}" />
         </xs:restriction>
     </xs:simpleType>
 

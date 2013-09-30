@@ -205,6 +205,7 @@
     <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
     <Compile Include="CodeFirst\ModificationFunctionsEndToEndTests.cs" />
+    <Compile Include="CodeFirst\SpecialCharacterTests.cs" />
     <Compile Include="Interception\BlogContextNoInit.cs" />
     <Compile Include="Interception\DatabaseLogFormatterTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />

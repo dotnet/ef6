@@ -93,7 +93,6 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Strings_that_dont_start_with_a_valid_characeter_are_not_valid()
             {
-                Assert.False("_PinkyPie".IsValidUndottedName());
                 Assert.False(" RainbowDash".IsValidUndottedName());
                 Assert.False("-AppleJack".IsValidUndottedName());
                 Assert.False("\u033CFlutterShy".IsValidUndottedName()); // Non-spacing mark (Combining seagull below)
@@ -115,6 +114,7 @@ namespace System.Data.Entity.Utilities
             [Fact]
             public void Strings_that_have_only_valid_characters_are_valid()
             {
+                Assert.True("_PinkyPie".IsValidUndottedName());
                 Assert.True("Pinky_Pie".IsValidUndottedName());
                 Assert.True("Flutter\u033CShy".IsValidUndottedName()); // Non-spacing mark (Combining seagull below)
                 Assert.True("Twighlight\u0940Sparkle".IsValidUndottedName()); // Spacing-combining mark (Devanagari vowel sign II)
