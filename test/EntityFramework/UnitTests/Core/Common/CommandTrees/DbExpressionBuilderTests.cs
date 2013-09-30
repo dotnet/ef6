@@ -1132,13 +1132,13 @@ namespace System.Data.Entity.Core.Common.CommandTrees
             Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lm));
             Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Lo));
             Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nl));
-            Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "_"));
             
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Nd));
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Mn));
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Mc));
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Pc));
             Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, Cf));
+            Assert.Throws<ArgumentException>(() => DbExpressionBuilder.Parameter(stringTypeUsage, "_"));
 
             // Following characters
             Assert.DoesNotThrow(() => DbExpressionBuilder.Parameter(stringTypeUsage, "P" + Nd));
