@@ -862,6 +862,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var sourceMetadata = new EdmModelDiffer.ModelMetadata
                                  {
                                      Model = sourceModel,
+                                     EdmItemCollection = storageMappingItemCollection.EdmItemCollection,
                                      StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
                                      EntityContainerMapping
                                          = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
@@ -874,6 +875,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                      Model = targetModel,
                                      // Use the source model here since it doesn't effect the test and the SQL Server provider
                                      // won't load the target model
+                                     EdmItemCollection = storageMappingItemCollection.EdmItemCollection,
                                      StoreItemCollection = storageMappingItemCollection.StoreItemCollection,
                                      EntityContainerMapping
                                          = storageMappingItemCollection.GetItems<EntityContainerMapping>().Single(),
