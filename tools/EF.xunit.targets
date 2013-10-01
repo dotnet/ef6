@@ -15,6 +15,7 @@
         <xunit Assembly="..\test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.dll" Xml="..\test\EntityFramework\UnitTests\bin\$(Configuration)\EntityFramework.UnitTests.xml" ShadowCopy="true" />
         <xunit Assembly="..\test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.dll" Xml="..\test\EntityFramework\FunctionalTests\bin\$(Configuration)\EntityFramework.FunctionalTests.xml" ShadowCopy="true" />
         <xunit Assembly="..\test\EntityFramework\FunctionalTests.Transitional\bin\$(Configuration)\EntityFramework.FunctionalTests.Transitional.dll" Xml="..\test\EntityFramework\FunctionalTests.Transitional\bin\$(Configuration)\EntityFramework.FunctionalTests.Transitional.xml" ShadowCopy="true" />
+        <xunit Assembly="..\test\EntityFramework\FunctionalTests.ProviderAgnostic\bin\$(Configuration)\EntityFramework.FunctionalTests.ProviderAgnostic.dll" Xml="..\test\EntityFramework\FunctionalTests.ProviderAgnostic\bin\$(Configuration)\EntityFramework.FunctionalTests.ProviderAgnostic.xml" ShadowCopy="true" />
         <xunit Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" Assembly="..\test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.dll" Xml="..\test\EntityFramework\VBTests\bin\$(Configuration)\EntityFramework.VBTests.xml" ShadowCopy="true" />
     </Target>
     

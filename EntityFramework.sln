@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{6A921FFC-887B-4406-A3E6-8E41817020B5}"
 	ProjectSection(SolutionItems) = preProject
 		src\EcmaPublicKey.snk = src\EcmaPublicKey.snk
@@ -70,6 +70,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.SqlServerCompact", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj", "{1EF9C524-7122-4677-B111-DD14BB2A9EA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests.Transitional", "test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj", "{3D65611F-E8FB-4A33-9196-7836969D6378}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests.ProviderAgnostic", "test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj", "{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +159,14 @@ Global
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.ReleaseNet40|Any CPU.ActiveCfg = ReleaseNet40|Any CPU
 		{3D65611F-E8FB-4A33-9196-7836969D6378}.ReleaseNet40|Any CPU.Build.0 = ReleaseNet40|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.DebugNet40|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.DebugNet40|Any CPU.Build.0 = Debug|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,5 +182,6 @@ Global
 		{23330EF8-2593-4B0A-A70F-12E6BE1F46C4} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{CF1C27F8-D603-4960-BE99-BCF348545368} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 		{3D65611F-E8FB-4A33-9196-7836969D6378} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
+		{C0B5124C-0133-4E0B-BF36-A32CE5AD9DAA} = {24A9C4D1-E189-4D3A-A2D7-36D3ED51D277}
 	EndGlobalSection
 EndGlobal

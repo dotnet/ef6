@@ -28,6 +28,9 @@
     <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
       <RestorePackages>true</RestorePackages>
     </NonCoreProjectToBuild>
+    <NonCoreProjectToBuild Include="test\EntityFramework\FunctionalTests.ProviderAgnostic\FunctionalTests.ProviderAgnostic.csproj">
+      <RestorePackages>true</RestorePackages>
+    </NonCoreProjectToBuild>
     <NonCoreProjectToBuild Include="test\EntityFramework\UnitTests\UnitTests.csproj">
       <RestorePackages>true</RestorePackages>
     </NonCoreProjectToBuild>

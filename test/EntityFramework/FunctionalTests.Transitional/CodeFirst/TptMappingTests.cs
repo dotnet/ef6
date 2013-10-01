@@ -2,7 +2,8 @@
 
 namespace System.Data.Entity.CodeFirst
 {
-    using System.Linq;    using Xunit;
+    using System.Linq;
+    using Xunit;
 
     public class TptMappingTests : FunctionalTestBase
     {
@@ -42,10 +43,12 @@ namespace System.Data.Entity.CodeFirst
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<A>().ToTable("A");
-            modelBuilder.Entity<AA>().ToTable("AA").HasRequired(o => o.BAChild).WithRequiredPrincipal(o => o.Parent);            modelBuilder.Entity<AB>().ToTable("AB").HasRequired(o => o.BBChild).WithRequiredPrincipal(o => o.Parent);
+            modelBuilder.Entity<AA>().ToTable("AA").HasRequired(o => o.BAChild).WithRequiredPrincipal(o => o.Parent);
+            modelBuilder.Entity<AB>().ToTable("AB").HasRequired(o => o.BBChild).WithRequiredPrincipal(o => o.Parent);
             modelBuilder.Entity<B>().ToTable("B");
             modelBuilder.Entity<BA>().ToTable("BA");
-            modelBuilder.Entity<BB>().ToTable("BB");
+            modelBuilder.Entity<BB>().ToTable("BB");
+
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
@@ -57,5 +60,6 @@ namespace System.Data.Entity.CodeFirst
             databaseMapping.Assert<BB>("BB").HasForeignKeyColumn("ID", "B");
             databaseMapping.Assert<BA>("BA").HasForeignKeyColumn("ID", "AA");
             databaseMapping.Assert<BB>("BB").HasForeignKeyColumn("ID", "AB");
-        }    }
+        }
+    }
 }
