@@ -560,5 +560,22 @@ namespace System.Data.Entity
         }
 
         #endregion
+
+        public static void RunTestInAppDomain(Type testType)
+        {
+            var domain = AppDomain.CreateDomain("TestAppDomain", null, AppDomain.CurrentDomain.SetupInformation);
+            try
+            {
+                domain.CreateInstanceAndUnwrap(
+                    testType.Assembly().FullName,
+                    testType.FullName,
+                    false, BindingFlags.Instance | BindingFlags.Public | BindingFlags.CreateInstance,
+                    null, null, null, null);
+            }
+            finally
+            {
+                AppDomain.Unload(domain);
+            }
+        }
     }
 }

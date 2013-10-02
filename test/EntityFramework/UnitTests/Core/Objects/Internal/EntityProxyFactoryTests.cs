@@ -4,7 +4,10 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
     using System.Linq;
+    using System.Reflection;
+    using System.Reflection.Emit;
     using Moq;
     using Xunit;
 
@@ -16,6 +19,95 @@ namespace System.Data.Entity.Core.Objects.Internal
             Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedLightweightMethod);
             Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithRelationshipsMethod);
             Assert.NotNull(EntityWrapperFactory.CreateWrapperDelegateTypedWithoutRelationshipsMethod);
+        }
+
+        public class MarkAsNotSerializable : TestBase
+        {
+            [Fact]
+            public void Field_is_marked_with_all_ignore_attributes_when_System_Web_loaded()
+            {
+                RunTestInAppDomain(typeof(MarkAsNotSerializablePublicWithSystemWeb));
+            }
+
+            public class MarkAsNotSerializablePublicWithSystemWeb : MarshalByRefObject
+            {
+                public MarkAsNotSerializablePublicWithSystemWeb()
+                {
+                    // Ensure System.Web is loaded for this test
+                    Assembly.Load("System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+
+                    var attributes = BuildTestField(FieldAttributes.Public)
+                        .GetCustomAttributes(inherit: false)
+                        .Select(a => a.GetType().Name)
+                        .ToList();
+
+                    Assert.Contains("NonSerializedAttribute", attributes);
+                    Assert.Contains("IgnoreDataMemberAttribute", attributes);
+                    Assert.Contains("XmlIgnoreAttribute", attributes);
+                    Assert.Contains("ScriptIgnoreAttribute", attributes);
+                }
+            }
+
+            [Fact]
+            public void Field_is_marked_with_all_ignore_attributes_except_script_ignore_when_System_Web_not_loaded()
+            {
+                RunTestInAppDomain(typeof(MarkAsNotSerializablePublicWithNoSystemWeb));
+            }
+
+            public class MarkAsNotSerializablePublicWithNoSystemWeb : MarshalByRefObject
+            {
+                public MarkAsNotSerializablePublicWithNoSystemWeb()
+                {
+                    var attributes = BuildTestField(FieldAttributes.Public)
+                        .GetCustomAttributes(inherit: false)
+                        .Select(a => a.GetType().Name)
+                        .ToList();
+
+                    Assert.Contains("NonSerializedAttribute", attributes);
+                    Assert.Contains("IgnoreDataMemberAttribute", attributes);
+                    Assert.Contains("XmlIgnoreAttribute", attributes);
+                    Assert.DoesNotContain("ScriptIgnoreAttribute", attributes);
+                }
+            }
+
+            [Fact]
+            public void Field_is_marked_with_only_non_serialized_when_not_public()
+            {
+                RunTestInAppDomain(typeof(MarkAsNotSerializableNonPublic));
+            }
+
+            public class MarkAsNotSerializableNonPublic : MarshalByRefObject
+            {
+                public MarkAsNotSerializableNonPublic()
+                {
+                    // Ensure System.Web is loaded for this test
+                    Assembly.Load("System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+
+                    var attributes = BuildTestField(FieldAttributes.Assembly)
+                        .GetCustomAttributes(inherit: false)
+                        .Select(a => a.GetType().Name)
+                        .ToList();
+
+                    Assert.Contains("NonSerializedAttribute", attributes);
+                    Assert.DoesNotContain("IgnoreDataMemberAttribute", attributes);
+                    Assert.DoesNotContain("XmlIgnoreAttribute", attributes);
+                    Assert.DoesNotContain("ScriptIgnoreAttribute", attributes);
+                }
+            }
+
+            private static FieldInfo BuildTestField(FieldAttributes fieldAttributes)
+            {
+                var name = Guid.NewGuid().ToString();
+                var assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
+                    new AssemblyName(name), AssemblyBuilderAccess.Run).DefineDynamicModule(name);
+
+                var typeBuilder = assemblyBuilder.DefineType("Elbow");
+                var fieldBuilder = typeBuilder.DefineField("_knee", typeof(object), fieldAttributes);
+
+                EntityProxyFactory.ProxyTypeBuilder.MarkAsNotSerializable(fieldBuilder);
+
+                return typeBuilder.CreateType().GetRuntimeFields().Single(f => f.Name == "_knee");
+            }
         }
 
         public class TryGetAssociationTypeFromProxyInfo : TestBase

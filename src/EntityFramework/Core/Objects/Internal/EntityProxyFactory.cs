@@ -23,9 +23,6 @@ namespace System.Data.Entity.Core.Objects.Internal
     // </summary>
     internal class EntityProxyFactory
     {
-        private const string ProxyTypeNameFormat = "System.Data.Entity.DynamicProxies.{0}_{1}";
-        private const string SystemWebExtensionsAssemblyName = @"System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        private const string ScriptIgnoreAttributeTypeName = @"System.Web.Script.Serialization.ScriptIgnoreAttribute";
         internal const string ResetFKSetterFlagFieldName = "_resetFKSetterFlag";
         internal const string CompareByteArraysFieldName = "_compareByteArrays";
 
@@ -597,7 +594,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             return CanProxyMethod(clrProperty.Setter());
         }
 
-        private class ProxyTypeBuilder
+        internal class ProxyTypeBuilder
         {
             private TypeBuilder _typeBuilder;
             private readonly BaseProxyImplementor _baseImplementor;
@@ -700,7 +697,7 @@ namespace System.Data.Entity.Core.Objects.Internal
                         // name will be too long.  Note that the full name always gets used to compute the hash.
                         var baseName = BaseType.Name.Length <= 20 ? BaseType.Name : BaseType.Name.Substring(0, 20);
                         var proxyTypeName = String.Format(
-                            CultureInfo.InvariantCulture, ProxyTypeNameFormat, baseName, _ospaceEntityType.HashedDescription);
+                            CultureInfo.InvariantCulture, "System.Data.Entity.DynamicProxies.{0}_{1}", baseName, _ospaceEntityType.HashedDescription);
 
                         _typeBuilder = _moduleBuilder.DefineType(proxyTypeName, proxyTypeAttributes, BaseType, _ipocoImplementor.Interfaces);
                         _typeBuilder.DefineDefaultConstructor(
@@ -785,29 +782,35 @@ namespace System.Data.Entity.Core.Objects.Internal
             private static readonly ConstructorInfo _xmlIgnoreAttributeConstructor =
                 typeof(XmlIgnoreAttribute).GetDeclaredConstructor();
 
-            private static readonly ConstructorInfo _scriptIgnoreAttributeConstructor =
-                TryGetScriptIgnoreAttributeConstructor();
+            private static readonly Lazy<ConstructorInfo> _scriptIgnoreAttributeConstructor =
+                new Lazy<ConstructorInfo>(TryGetScriptIgnoreAttributeConstructor);
 
             [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
             private static ConstructorInfo TryGetScriptIgnoreAttributeConstructor()
             {
                 try
                 {
-                    var scriptIgnoreAttributeAssembly = Assembly.Load(SystemWebExtensionsAssemblyName);
-                    var scriptIgnoreAttributeType = scriptIgnoreAttributeAssembly.GetType(ScriptIgnoreAttributeTypeName);
-                    if (scriptIgnoreAttributeType != null)
+                    if (AspProxy.IsSystemWebLoaded())
                     {
-                        return scriptIgnoreAttributeType.GetDeclaredConstructor();
+                        var scriptIgnoreAttributeAssembly
+                            = Assembly.Load("System.Web.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35");
+                        var scriptIgnoreAttributeType
+                            = scriptIgnoreAttributeAssembly.GetType("System.Web.Script.Serialization.ScriptIgnoreAttribute");
+
+                        if (scriptIgnoreAttributeType != null)
+                        {
+                            return scriptIgnoreAttributeType.GetDeclaredConstructor();
+                        }
                     }
                 }
-                catch (Exception)
+                catch
                 {
                     // Intentionally ignore any failure to find the attribute
                 }
                 return null;
             }
 
-            private static void MarkAsNotSerializable(FieldBuilder field)
+            public static void MarkAsNotSerializable(FieldBuilder field)
             {
                 var emptyArray = new object[0];
 
@@ -818,9 +821,9 @@ namespace System.Data.Entity.Core.Objects.Internal
                     field.SetCustomAttribute(new CustomAttributeBuilder(_ignoreDataMemberAttributeConstructor, emptyArray));
                     field.SetCustomAttribute(new CustomAttributeBuilder(_xmlIgnoreAttributeConstructor, emptyArray));
 
-                    if (_scriptIgnoreAttributeConstructor != null)
+                    if (_scriptIgnoreAttributeConstructor.Value != null)
                     {
-                        field.SetCustomAttribute(new CustomAttributeBuilder(_scriptIgnoreAttributeConstructor, emptyArray));
+                        field.SetCustomAttribute(new CustomAttributeBuilder(_scriptIgnoreAttributeConstructor.Value, emptyArray));
                     }
                 }
             }

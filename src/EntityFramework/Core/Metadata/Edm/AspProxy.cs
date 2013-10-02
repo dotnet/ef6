@@ -4,9 +4,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections;
     using System.Collections.Generic;
+    using System.Data.Entity.Core.SchemaObjectModel;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Reflection;
     using System.Security;
@@ -15,6 +17,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         private const string BUILD_MANAGER_TYPE_NAME = @"System.Web.Compilation.BuildManager";
         private const string AspNetAssemblyName = "System.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a";
+        private static readonly byte[] _systemWebPublicKeyToken = ScalarType.ConvertToByteArray("b03f5f7f11d50a3a");
         private Assembly _webAssembly;
         private bool _triedLoadingWebAssembly;
 
@@ -53,23 +56,28 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        private bool TryInitializeWebAssembly()
+        public bool TryInitializeWebAssembly()
         {
-            // We cannot introduce a hard dependency on the System.Web assembly, so we load
-            // it via reflection.
-            //
             if (_webAssembly != null)
             {
                 return true;
             }
-            else if (_triedLoadingWebAssembly)
+
+            if (_triedLoadingWebAssembly)
             {
                 return false;
             }
 
-            Debug.Assert(_triedLoadingWebAssembly == false);
-            Debug.Assert(_webAssembly == null);
+            // We should not use System.Web unless it is already loaded. In addition, we make the assumption that
+            // in a traditional web app (which is where this is needed) System.Web will be loaded before EF is used
+            // because it is involved in initializing the application, so we only check once.
             _triedLoadingWebAssembly = true;
+
+            if (!IsSystemWebLoaded())
+            {
+                return false;
+            }
+
             try
             {
                 _webAssembly = Assembly.Load(AspNetAssemblyName);
@@ -79,15 +87,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 if (!e.IsCatchableExceptionType())
                 {
-                    throw; // StackOverflow, OutOfMemory, ...
+                    throw;
                 }
-
-                // It is possible that we are operating in an environment where
-                // System.Web is simply not available (for instance, inside SQL
-                // Server). Instead of throwing or rethrowing, we simply fail
-                // gracefully
             }
 
+            return false;
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        public static bool IsSystemWebLoaded()
+        {
+            try
+            {
+                return AppDomain.CurrentDomain.GetAssemblies().Any(
+                    a => a.GetName().Name == "System.Web"
+                         && a.GetName().GetPublicKeyToken() != null
+                         && a.GetName().GetPublicKeyToken().SequenceEqual(_systemWebPublicKeyToken));
+            }
+            catch
+            {
+            }
             return false;
         }
 
