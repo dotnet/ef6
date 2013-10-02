@@ -10,6 +10,7 @@ namespace Microsoft.DbContextPackage
     using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
+    using System.Xml.Linq;
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.DbContextPackage.Extensions;
@@ -216,23 +217,37 @@ namespace Microsoft.DbContextPackage
                 return;
             }
 
-            Type systemContextType;
-            var context = DiscoverUserContextType(out systemContextType);
-
-            if (context != null)
+            try
             {
-                if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidPrecompileEntityDataModelViews)
+                Type systemContextType;
+                var context = DiscoverUserContextType(out systemContextType);
+
+                if (context != null)
                 {
-                    _optimizeContextHandler.OptimizeContext(context);
+                    if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidPrecompileEntityDataModelViews)
+                    {
+                        _optimizeContextHandler.OptimizeContext(context);
+                    }
+                    else if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidViewEntityModelDdl)
+                    {
+                        _viewDdlHandler.ViewDdl(context);
+                    }
+                    else
+                    {
+                        _viewContextHandler.ViewContext(menuCommand, context, systemContextType);
+                    }
                 }
-                else if (menuCommand.CommandID.ID == PkgCmdIDList.cmdidViewEntityModelDdl)
-                {
-                    _viewDdlHandler.ViewDdl(context);
-                }
-                else
-                {
-                    _viewContextHandler.ViewContext(menuCommand, context, systemContextType);
-                }
+            }
+            catch (TargetInvocationException ex)
+            {
+                var innerException = ex.InnerException;
+
+                var remoteStackTraceString =
+                    typeof(Exception).GetField("_remoteStackTraceString", BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?? typeof(Exception).GetField("remote_stack_trace", BindingFlags.Instance | BindingFlags.NonPublic);
+                remoteStackTraceString.SetValue(innerException, innerException.StackTrace + "$$RethrowMarker$$");
+
+                throw innerException;
             }
         }
 
@@ -306,12 +321,12 @@ namespace Microsoft.DbContextPackage
 
         private dynamic DiscoverUserContextType(out Type systemContextType)
         {
+            systemContextType = null;
             var project = _dte2.SelectedItems.Item(1).ProjectItem.ContainingProject;
 
             if (!project.TryBuild())
             {
                 _dte2.StatusBar.Text = Strings.BuildFailed;
-                systemContextType = null;
 
                 return null;
             }
@@ -334,77 +349,72 @@ namespace Microsoft.DbContextPackage
 
             var resolver = typeService.GetTypeResolutionService(vsHierarchy);
 
-            systemContextType = resolver.GetType("System.Data.Entity.DbContext");
+            var codeElements = FindClassesInCodeModel(_dte2.SelectedItems.Item(1).ProjectItem.FileCodeModel.CodeElements);
 
-            if (systemContextType != null)
+            if (codeElements.Any())
             {
-                var codeElements = FindClassesInCodeModel(_dte2.SelectedItems.Item(1).ProjectItem.FileCodeModel.CodeElements);
-
-                if (codeElements.Any())
+                foreach (var codeElement in codeElements)
                 {
-                    var contextInfoType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.DbContextInfo");
-                    var startUpProject = GetStartUpProject() ?? project;
-                    Configuration userConfig;
+                    var userContextType = resolver.GetType(codeElement.FullName);
 
-                    try
+                    if (userContextType != null && IsContextType(userContextType, out systemContextType))
                     {
-                        userConfig = GetUserConfig(startUpProject);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError(Strings.LoadConfigFailed, ex);
+                        dynamic contextInfo;
 
-                        return null;
-                    }
-
-                    SetDataDirectory(startUpProject);
-
-                    foreach (var codeElement in codeElements)
-                    {
-                        var userContextType = resolver.GetType(codeElement.FullName);
-
-                        if (userContextType != null && systemContextType.IsAssignableFrom(userContextType))
+                        var contextInfoType = systemContextType.Assembly.GetType("System.Data.Entity.Infrastructure.DbContextInfo");
+                        if (contextInfoType != null)
                         {
-                            dynamic contextInfo;
+                            var startUpProject = GetStartUpProject() ?? project;
+                            Configuration userConfig;
 
-                            if (contextInfoType != null)
+                            try
                             {
-                                var constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(Configuration) });
+                                userConfig = GetUserConfig(startUpProject, systemContextType.Assembly.FullName);
+                            }
+                            catch (Exception ex)
+                            {
+                                LogError(Strings.LoadConfigFailed, ex);
 
-                                if (constructor != null)
-                                {
-                                    // Versions 4.3.0 and higher
-                                    contextInfo = constructor.Invoke(new object[] { userContextType, userConfig });
-                                }
-                                else
-                                {
-                                    constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(ConnectionStringSettingsCollection) });
-                                    Debug.Assert(constructor != null);
+                                return null;
+                            }
 
-                                    // Versions 4.1.10715 through 4.2.0.0
-                                    contextInfo = constructor.Invoke(new object[] { userContextType, userConfig.ConnectionStrings.ConnectionStrings });
-                                }
+                            SetDataDirectory(startUpProject);
+
+                            var constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(Configuration) });
+
+                            if (constructor != null)
+                            {
+                                // Versions 4.3.0 and higher
+                                contextInfo = constructor.Invoke(new object[] { userContextType, userConfig });
                             }
                             else
                             {
-                                // Versions 4.1.10331.0 and lower
-                                throw Error.UnsupportedVersion();
+                                constructor = contextInfoType.GetConstructor(new[] { typeof(Type), typeof(ConnectionStringSettingsCollection) });
+                                Debug.Assert(constructor != null);
+
+                                // Versions 4.1.10715 through 4.2.0.0
+                                contextInfo = constructor.Invoke(new object[] { userContextType, userConfig.ConnectionStrings.ConnectionStrings });
                             }
+                        }
+                        else
+                        {
+                            // Versions 4.1.10331.0 and lower
+                            throw Error.UnsupportedVersion();
+                        }
 
-                            if (contextInfo.IsConstructible)
+                        if (contextInfo.IsConstructible)
+                        {
+                            DisableDatabaseInitializer(userContextType, systemContextType);
+
+                            try
                             {
-                                DisableDatabaseInitializer(userContextType, systemContextType);
+                                return contextInfo.CreateInstance();
+                            }
+                            catch (Exception exception)
+                            {
+                                LogError(Strings.CreateContextFailed(userContextType.Name), exception);
 
-                                try
-                                {
-                                    return contextInfo.CreateInstance();
-                                }
-                                catch (Exception exception)
-                                {
-                                    LogError(Strings.CreateContextFailed(userContextType.Name), exception);
-
-                                    return null;
-                                }
+                                return null;
                             }
                         }
                     }
@@ -452,7 +462,7 @@ namespace Microsoft.DbContextPackage
             return null;
         }
 
-        private static Configuration GetUserConfig(Project project)
+        private static Configuration GetUserConfig(Project project, string assemblyFullName)
         {
             DebugCheck.NotNull(project);
 
@@ -463,8 +473,14 @@ namespace Microsoft.DbContextPackage
                         ? "Web.config"
                         : "App.config");
 
+            var document = XDocument.Load(userConfigFilename);
+            FixUpConfig(document, assemblyFullName);
+
+            var tempFile = Path.GetTempFileName();
+            document.Save(tempFile);
+
             return ConfigurationManager.OpenMappedExeConfiguration(
-                new ExeConfigurationFileMap { ExeConfigFilename = userConfigFilename },
+                new ExeConfigurationFileMap { ExeConfigFilename = tempFile },
                 ConfigurationUserLevel.None);
         }
 
@@ -517,6 +533,57 @@ namespace Microsoft.DbContextPackage
                     boundSetInitializerMethodInfo.Invoke(null, new object[] { null, true });
                 }
             }
+        }
+
+        private static bool IsContextType(Type userContextType, out Type systemContextType)
+        {
+            systemContextType = GetBaseTypes(userContextType).FirstOrDefault(
+                t => t.FullName == "System.Data.Entity.DbContext" && t.Assembly.GetName().Name == "EntityFramework");
+
+            return systemContextType != null;
+        }
+
+        private static IEnumerable<Type> GetBaseTypes(Type type)
+        {
+            while (type != typeof(object))
+            {
+                yield return type.BaseType;
+
+                type = type.BaseType;
+            }
+        }
+
+        private static void FixUpConfig(XDocument document, string assemblyFullName)
+        {
+            var entityFramework = document.Descendants("entityFramework").FirstOrDefault();
+            if (entityFramework == null)
+            {
+                return;
+            }
+
+            var defaultConnectionFactory = entityFramework.Descendants("defaultConnectionFactory").FirstOrDefault();
+            if (defaultConnectionFactory != null)
+            {
+                var type = defaultConnectionFactory.Attribute("type");
+                if (type != null)
+                {
+                    type.SetValue(QualifyAssembly(type.Value, assemblyFullName));
+                }
+            }
+        }
+
+        private static string QualifyAssembly(string typeName, string assemblyFullName)
+        {
+            var parts = typeName.Split(new[] { ',' }, 2);
+            if (parts.Length == 2)
+            {
+                if (parts[1].Trim().EqualsIgnoreCase("EntityFramework"))
+                {
+                    return parts[0] + ", " + assemblyFullName;
+                }
+            }
+
+            return typeName;
         }
 
         internal T GetService<T>()
