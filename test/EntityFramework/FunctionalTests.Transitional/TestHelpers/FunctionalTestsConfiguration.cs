@@ -69,22 +69,9 @@ namespace System.Data.Entity.TestHelpers
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
 
-            this.SetExecutionStrategy("System.Data.SqlClient", () =>
-                DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
-                ? new TestSqlAzureExecutionStrategy()
-                : (IDbExecutionStrategy)new DefaultExecutionStrategy());
+            this.SetExecutionStrategy("System.Data.SqlClient", () => new TestSqlAzureExecutionStrategy());
         }
 
-        public static bool SuspendExecutionStrategy
-        {
-            get
-            {
-                return (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
-            }
-            set
-            {
-                CallContext.LogicalSetData("SuspendExecutionStrategy", value);
-            }
-        }
+        public static bool SuspendExecutionStrategy { get; set; }
     }
 }
