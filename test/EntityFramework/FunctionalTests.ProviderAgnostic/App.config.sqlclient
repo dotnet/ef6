@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
+  </configSections>
+  <appSettings>
+    <add key="BaseConnectionString" value="Data Source=.\SQLEXPRESS; Integrated Security=True;" />
+  </appSettings>
+  <entityFramework codeConfigurationType="System.Data.Entity.Configuration.SqlClientConfiguration, EntityFramework.FunctionalTests.ProviderAgnostic">
+    <providers>
+      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+    </providers>
+  </entityFramework>
+  <runtime>
+    <ThrowUnobservedTaskExceptions enabled="true" />
+  </runtime>
+</configuration>

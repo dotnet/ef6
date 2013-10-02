@@ -5,7 +5,7 @@ Param(
 
 foreach($appConfigPath in "FunctionalTests", "FunctionalTests.Transitional", "FunctionalTests.ProviderAgnostic", "UnitTests", "VBTests")
 {
-	$appConfigPath = "$pwd\test\EntityFramework\$appConfigPath\App.config"
+	$appConfigPath = "$pwd\..\test\EntityFramework\$appConfigPath\App.config"
 	$xml = [xml] (get-content $appConfigPath)
 	$connectionStrings = $xml.configuration.connectionStrings.add
 	foreach ($conStr in $connectionStrings)
