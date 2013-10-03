@@ -102,7 +102,12 @@
   <Target Name="Test" DependsOnTargets="CheckSkipStrongNames;Build">
     <MSBuild Projects="tools\EF.xunit.targets"
              Properties="Configuration=$(Configuration);$(BuildProperties)" />
-    </Target>
+  </Target>
+
+  <Target Name="ProviderAgnosticTests" DependsOnTargets="CheckSkipStrongNames;Build">
+    <MSBuild Projects="tools\EF.provideragnostictests.targets"
+             Properties="Configuration=$(Configuration);$(BuildProperties)" />
+  </Target>
 
   <Target Name="Package">
     <MSBuild Targets="Rebuild"
