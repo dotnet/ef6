@@ -19,13 +19,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
         }
 
-        /// <summary>
-        /// The constructor for constructing a read-only metadata collection to wrap another MetadataCollection.
-        /// </summary>
-        /// <param name="collection"> The metadata collection to wrap </param>
-        /// <exception cref="System.ArgumentNullException">Thrown if collection argument is null</exception>
-        internal ReadOnlyMetadataCollection(IList<T> collection)
-            : base((collection as MetadataCollection<T>) ?? new MetadataCollection<T>(collection))
+        internal ReadOnlyMetadataCollection(MetadataCollection<T> collection)
+            : base(collection)
+        {
+        }
+
+        internal ReadOnlyMetadataCollection(List<T> list)
+            : base(MetadataCollection<T>.Wrap(list))
         {
         }
 

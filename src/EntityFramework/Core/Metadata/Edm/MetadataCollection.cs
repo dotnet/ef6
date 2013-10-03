@@ -33,8 +33,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// Default constructor for constructing an empty collection
         /// </summary>
         internal MetadataCollection()
-            : this(null)
         {
+            _collectionData = new CollectionData();
         }
 
         /// <summary>
@@ -57,6 +57,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     AddInternal(item);
                 }
             }
+        }
+
+        private MetadataCollection(List<T> items)
+        {
+            _collectionData = new CollectionData(items);
+            InvalidateCache();
+        }
+
+        internal static MetadataCollection<T> Wrap(List<T> items)
+        {
+            return new MetadataCollection<T>(items);
         }
 
         /// <summary>
@@ -768,6 +779,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal CollectionData()
             {
                 OrderedList = new List<T>();
+            }
+
+            internal CollectionData(List<T> items)
+            {
+                OrderedList = items;
             }
 
             internal CollectionData(CollectionData original, int additionalCapacity)
