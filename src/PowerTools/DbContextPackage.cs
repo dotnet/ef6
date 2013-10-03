@@ -442,7 +442,7 @@ namespace Microsoft.DbContextPackage
                         startupProjectPath);
                 }
 
-                return _dte2.Solution.Projects.Cast<Project>().Single(
+                return GetSolutionProjects().Single(
                     p =>
                     {
                         string fullName;
@@ -460,6 +460,34 @@ namespace Microsoft.DbContextPackage
             }
 
             return null;
+        }
+
+        private IEnumerable<Project> GetSolutionProjects()
+        {
+            var projects = new Stack<Project>();
+
+            foreach (var project in _dte2.Solution.Projects.Cast<Project>())
+            {
+                projects.Push(project);
+            }
+
+            while (projects.Count != 0)
+            {
+                var project = projects.Pop();
+
+                yield return project;
+
+                if (project.ProjectItems != null)
+                {
+                    foreach (var projectItem in project.ProjectItems.Cast<ProjectItem>())
+                    {
+                        if (projectItem.SubProject != null)
+                        {
+                            projects.Push(projectItem.SubProject);
+                        }
+                    }
+                }
+            }
         }
 
         private static Configuration GetUserConfig(Project project, string assemblyFullName)
