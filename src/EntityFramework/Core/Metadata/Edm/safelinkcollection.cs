@@ -14,7 +14,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         where TParent : class
     {
         public SafeLinkCollection(TParent parent, Func<TChild, SafeLink<TParent>> getLink, MetadataCollection<TChild> children)
-            : base((IList<TChild>)SafeLink<TParent>.BindChildren(parent, getLink, children))
+            : base((MetadataCollection<TChild>)SafeLink<TParent>.BindChildren(parent, getLink, children))
         {
         }
     }

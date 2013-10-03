@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer.SqlGen
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -350,7 +351,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockEdmFunction.Setup(m => m.Name).Returns(functionName.Split('.')[1]);
             mockEdmFunction.Setup(m => m.DataSpace).Returns(DataSpace.CSpace);
             mockEdmFunction.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
 
             return mockEdmFunction;
         }

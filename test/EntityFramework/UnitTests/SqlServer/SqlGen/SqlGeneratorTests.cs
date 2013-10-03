@@ -50,7 +50,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 var mockSet = new Mock<EntitySetBase>();
                 mockSet.Setup(m => m.MetadataProperties).Returns(
-                    new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
 
                 Assert.Equal("(Run Run Run)", SqlGenerator.GetTargetTSql(mockSet.Object));
             }
@@ -70,7 +70,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 var mockSet = new Mock<EntitySetBase>();
                 mockSet.Setup(m => m.MetadataProperties).Returns(
-                    new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockSchemaProperty.Object, mockTableProperty.Object }));
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockSchemaProperty.Object, mockTableProperty.Object }));
 
                 Assert.Equal("[Velvet].[Underground]", SqlGenerator.GetTargetTSql(mockSet.Object));
             }
@@ -83,7 +83,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
                 var mockSet = new Mock<EntitySetBase>();
                 mockSet.Setup(m => m.MetadataProperties).Returns(
-                    new ReadOnlyMetadataCollection<MetadataProperty>(new MetadataProperty[0]));
+                    new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>()));
                 mockSet.Setup(m => m.Name).Returns("Leather");
                 mockSet.Setup(m => m.EntityContainer).Returns(mockContainer.Object);
 
@@ -999,7 +999,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
             mockEdmFunction.Setup(m => m.DataSpace).Returns(DataSpace.CSpace);
             mockEdmFunction.Setup(m => m.BuiltInAttribute).Returns(builtInAttribute);
             mockEdmFunction.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
 
             return mockEdmFunction;
         }

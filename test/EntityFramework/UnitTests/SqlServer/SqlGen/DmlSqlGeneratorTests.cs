@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer.SqlGen
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.Metadata.Edm;
@@ -81,7 +82,7 @@ namespace System.Data.Entity.SqlServer.SqlGen
 
             var mockSet = new Mock<EntitySetBase>();
             mockSet.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
             mockSet.Setup(m => m.Name).Returns("Binky");
             mockSet.Setup(m => m.EntityContainer).Returns(mockContainer.Object);
 

@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer.Utilities
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using Moq;
     using Xunit;
@@ -59,7 +60,7 @@ namespace System.Data.Entity.SqlServer.Utilities
                                           CallBase = true
                                       };
             mockEdmFunction.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
 
             return mockEdmFunction;
         }

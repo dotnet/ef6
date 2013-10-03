@@ -33,8 +33,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
         // Default constructor for constructing an empty collection
         // </summary>
         internal MetadataCollection()
-            : this(null)
         {
+            _collectionData = new CollectionData();
         }
 
         // <summary>
@@ -59,9 +59,20 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
-        // <summary>
-        // structure to contain the indexes of items whose identity match by OrdinalIgnoreCase
-        // </summary>
+        private MetadataCollection(List<T> items)
+        {
+            _collectionData = new CollectionData(items);
+            InvalidateCache();
+        }
+
+        internal static MetadataCollection<T> Wrap(List<T> items)
+        {
+            return new MetadataCollection<T>(items);
+        }
+
+        /// <summary>
+        /// structure to contain the indexes of items whose identity match by OrdinalIgnoreCase
+        /// </summary>
         private struct OrderedIndex
         {
             // <summary>
@@ -766,6 +777,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             internal CollectionData()
             {
                 OrderedList = new List<T>();
+            }
+
+            internal CollectionData(List<T> items)
+            {
+                OrderedList = items;
             }
 
             internal CollectionData(CollectionData original, int additionalCapacity)

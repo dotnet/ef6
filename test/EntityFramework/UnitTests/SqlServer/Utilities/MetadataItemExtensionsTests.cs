@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.SqlServer.Utilities
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using Moq;
     using Xunit;
@@ -18,7 +19,7 @@ namespace System.Data.Entity.SqlServer.Utilities
 
             var mockSet = new Mock<EntitySetBase>();
             mockSet.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new[] { mockProperty.Object }));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { mockProperty.Object }));
 
             Assert.Equal("I am defined.", mockSet.Object.GetMetadataPropertyValue<string>("DefiningQuery"));
         }
@@ -28,7 +29,7 @@ namespace System.Data.Entity.SqlServer.Utilities
         {
             var mockSet = new Mock<EntitySetBase>();
             mockSet.Setup(m => m.MetadataProperties).Returns(
-                new ReadOnlyMetadataCollection<MetadataProperty>(new MetadataProperty[0]));
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>()));
 
             Assert.Equal(null, mockSet.Object.GetMetadataPropertyValue<string>("DefiningQuery"));
         }
