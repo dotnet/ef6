@@ -22,9 +22,7 @@ namespace ProductivityApiTests
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         [UseDefaultExecutionStrategy]
-        public void
-            SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
-            ()
+        public void SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
         {
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 

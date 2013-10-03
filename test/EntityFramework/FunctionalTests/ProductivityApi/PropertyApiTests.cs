@@ -164,7 +164,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded()
         {
             using (var context = new F1Context())
@@ -584,7 +585,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Collection_navigation_property_can_be_reloaded_even_if_marked_as_loaded_asynchronously()
         {
             using (var context = new F1Context())
@@ -605,10 +607,10 @@ namespace ProductivityApiTests
                 {
                     innerContext.Drivers.Add(
                         new Driver
-                            {
-                                Name = "Larry David",
-                                TeamId = Team.McLaren
-                            });
+                        {
+                            Name = "Larry David",
+                            TeamId = Team.McLaren
+                        });
                     innerContext.SaveChanges();
                 }
 

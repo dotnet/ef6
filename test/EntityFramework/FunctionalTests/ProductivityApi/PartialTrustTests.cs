@@ -36,8 +36,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void DbPropertyValues_ToObject_for_an_entity_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -50,8 +49,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void DbPropertyValues_ToObject_for_a_complex_type_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -76,8 +74,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void DbEntityEntry_Member_works_for_collections_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -91,8 +88,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void Non_generic_DbSet_Create_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -105,8 +101,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void DbPropertyValues_SetValues_for_an_entity_wih_complex_objects_works_under_partial_trust()
         {
             using (var context = new AdvancedPatternsMasterContext())
@@ -156,8 +151,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void Non_generic_store_query_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -168,8 +162,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void SelectMany_works_under_partial_trust()
         {
             using (var context = new SimpleModelForLinq())
@@ -189,8 +182,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void Setting_current_value_of_reference_nav_prop_works_under_partial_trust()
         {
             using (var context = new SimpleModelContext())
@@ -219,8 +211,7 @@ namespace ProductivityApiTests
             }
         }
 
-        [ExtendedFact(SkipForLocalDb = true,
-            Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
+        [ExtendedFact(SkipForLocalDb = true, Justification = "Creating new instance of Local Db requires permissions that are not availabe in partial trust")]
         public void Query_with_top_level_nested_query_obtained_from_context_field_in_select_works_under_partial_trust()
         {
             var results = new ClassWithContextField().Test();

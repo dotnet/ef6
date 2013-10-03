@@ -269,6 +269,7 @@
     <Compile Include="Query\StoredProcedures\StoredProceduresTests.cs" />
     <Compile Include="TestDoubles\InMemorySqlQuery.cs" />
     <Compile Include="TestDoubles\UnimplementedNonGenericDbSetTests.cs" />
+    <Compile Include="TestHelpers\IUseDefaultExecutionStrategy.cs" />
     <Compile Include="TestHelpers\UseDefaultExecutionStrategyAttribute.cs" />
     <Compile Include="TestHelpers\StringExtensions.cs" />
     <Compile Include="ProductivityApi\TemplateBasedModelnitializer.cs" />

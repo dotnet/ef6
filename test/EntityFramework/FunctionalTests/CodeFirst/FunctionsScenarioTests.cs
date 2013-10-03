@@ -15,11 +15,12 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEnd : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback, UseDefaultExecutionStrategy]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_generated_property()
             {
                 using (var context = CreateContext())
-                {
+               {
                     var order = new Order
                     {
                         Type = "Foo"
@@ -47,7 +48,8 @@ namespace System.Data.Entity.CodeFirst
             }
 
             [Fact]
-            [AutoRollback, UseDefaultExecutionStrategy]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tph_inheritance()
             {
                 using (var context = CreateContext())
@@ -77,7 +79,8 @@ namespace System.Data.Entity.CodeFirst
             }
 
             [Fact]
-            [AutoRollback, UseDefaultExecutionStrategy]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
             public void Can_insert_and_delete_when_many_to_many()
             {
                 using (var context = CreateContext())
@@ -123,7 +126,8 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPT : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback, UseDefaultExecutionStrategy]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
                 using (var context = CreateContext())
@@ -167,7 +171,8 @@ namespace System.Data.Entity.CodeFirst
         public class EndToEntWithTPC : EndToEndFunctionsTest
         {
             [Fact]
-            [AutoRollback, UseDefaultExecutionStrategy]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
             public void Can_insert_update_and_delete_when_tpt_inheritance()
             {
                 using (var context = CreateContext())

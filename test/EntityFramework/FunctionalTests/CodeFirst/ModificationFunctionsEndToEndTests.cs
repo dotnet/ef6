@@ -37,7 +37,8 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Update_GearsOfWar_entities_using_stored_procedures()
         {
             using (var context = new GearsOfWarStoredProceduresContext())
@@ -81,7 +82,8 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Update_Aruba_entities_using_stored_procedures()
         {
             using (var context = new ArubaStoredProceduresContext())
@@ -158,7 +160,8 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Update_Fantasy_entities_using_stored_procedures()
         {
             using (var context = new FantasyStoredProceduresContext())
@@ -196,7 +199,8 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Delete_GearsOfWar_entities_using_stored_procedures()
         {
             using (var context = new GearsOfWarStoredProceduresContext())
@@ -226,7 +230,8 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Update_Many_to_Many_relationship_using_stored_procedures()
         {
             List<int?> usedWeaponIds;

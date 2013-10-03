@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.TestHelpers
 {
     using System.Reflection;
+    using Xunit;
 
-    public class UseDefaultExecutionStrategyAttribute : Xunit.BeforeAfterTestAttribute
+    public class UseDefaultExecutionStrategyAttribute : BeforeAfterTestAttribute
     {
         public override void Before(MethodInfo methodUnderTest)
         {

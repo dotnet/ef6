@@ -204,7 +204,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Dispose_does_not_dispose_underlying_ObjectContext_if_DbContext_does_not_own_it()
         {
             using (var outerContext = new SimpleModelContext())

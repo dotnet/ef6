@@ -2,11 +2,6 @@
 
 namespace ProductivityApiTests
 {
-    using AdvancedPatternsModel;
-    using AllTypeKeysModel;
-    using ConcurrencyModel;
-    using DaFunc;
-    using SimpleModel;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -25,11 +20,16 @@ namespace ProductivityApiTests
     using System.Globalization;
     using System.Linq;
     using System.Transactions;
+    using AdvancedPatternsModel;
+    using AllTypeKeysModel;
+    using ConcurrencyModel;
+    using DaFunc;
+    using SimpleModel;
     using Xunit;
     using Xunit.Extensions;
 
     /// <summary>
-    /// Tests for the primary methods on DbContext.
+    ///     Tests for the primary methods on DbContext.
     /// </summary>
     public class DbContextTests : FunctionalTestBase
     {
@@ -377,7 +377,7 @@ namespace ProductivityApiTests
 
         [Fact]
         public void DbContext_construction_using_named_connection_string_and_model_Ctor_where_model_defines_a_subset_of_entities_on_context(
-
+            
             )
         {
             DbContext_construction_using_connection_string_and_model_Ctor(
@@ -608,7 +608,8 @@ namespace ProductivityApiTests
         #region Positive SaveChanges tests
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChanges_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChanges());
@@ -617,7 +618,8 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_saves_Added_Modified_Deleted_entities()
         {
             SaveChanges_saves_Added_Modified_Deleted_entities_implementation((c) => c.SaveChangesAsync().Result);
@@ -639,9 +641,9 @@ namespace ProductivityApiTests
 
                 // Added
                 var product3 = new Product
-                                   {
-                                       Name = "Branston Pickle"
-                                   };
+                {
+                    Name = "Branston Pickle"
+                };
                 context.Products.Add(product3);
 
                 // Validate state before Save
@@ -680,7 +682,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChanges_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChanges());
@@ -689,7 +692,8 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_performs_DetectChanges()
         {
             SaveChanges_performs_DetectChanges_implementation((c) => c.SaveChangesAsync().Result);
@@ -852,14 +856,14 @@ namespace ProductivityApiTests
                 using (var context = new AdvancedPatternsMasterContext())
                 {
                     var emp = new CurrentEmployee
-                                  {
-                                      EmployeeId = 4
-                                  };
+                    {
+                        EmployeeId = 4
+                    };
                     var ord = new WorkOrder
-                                  {
-                                      WorkOrderId = 2,
-                                      EmployeeId = 4
-                                  };
+                    {
+                        WorkOrderId = 2,
+                        EmployeeId = 4
+                    };
                     context.Employees.Attach(emp);
                     context.WorkOrders.Attach(ord);
 
@@ -898,10 +902,10 @@ namespace ProductivityApiTests
                 using (context.Database.BeginTransaction())
                 {
                     var prod = new Product
-                                   {
-                                       Name = "Wallaby Sausages",
-                                       CategoryId = "AUSSIE FOODS"
-                                   };
+                    {
+                        Name = "Wallaby Sausages",
+                        CategoryId = "AUSSIE FOODS"
+                    };
                     context.Products.Add(prod);
 
                     Assert.Throws<DbUpdateException>(() => saveChanges(context)).ValidateMessage(
@@ -911,7 +915,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChanges_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation((c) => c.SaveChanges());
@@ -920,7 +925,8 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SaveChangesAsync_bubbles_exception_during_AcceptChanges()
         {
             SaveChanges_bubbles_exception_during_AcceptChanges_implementation(
@@ -934,13 +940,13 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContext())
             {
                 var cat1 = new Category
-                               {
-                                   Id = "AUSSIE FOODS"
-                               };
+                {
+                    Id = "AUSSIE FOODS"
+                };
                 var cat2 = new Category
-                               {
-                                   Id = "AUSSIE FOODS"
-                               };
+                {
+                    Id = "AUSSIE FOODS"
+                };
 
                 context.Categories.Attach(cat1);
                 context.Categories.Add(cat2);
@@ -2377,7 +2383,7 @@ namespace ProductivityApiTests
         [Fact]
         public void
             Changing_lazy_loading_flag_after_ObjectContext_is_initialized_causes_lazy_loading_flag_in_DbContext_and_ObjectContext_to_change(
-
+            
             )
         {
             using (var context = new F1Context())
@@ -2482,7 +2488,7 @@ namespace ProductivityApiTests
                 context.Configuration.LazyLoadingEnabled = false;
 
                 Assert.True(engine.Teams.Count > 0);
-                bool engineTeamsContainSponsorTeam = false;
+                var engineTeamsContainSponsorTeam = false;
                 foreach (var sponsorTeam in sponsorTeams)
                 {
                     if (engine.Teams.Contains(sponsorTeam))
@@ -3060,9 +3066,9 @@ namespace ProductivityApiTests
                 var mclaren = context.Teams.Find(Team.McLaren);
                 var larryEntry = context.Entry(
                     new Driver
-                        {
-                            Name = "Larry David"
-                        });
+                    {
+                        Name = "Larry David"
+                    });
                 mclaren.Drivers.Add(larryEntry.Entity);
 
                 actOnContext(context);
@@ -3100,9 +3106,9 @@ namespace ProductivityApiTests
                     var mclaren = context.Teams.Find(Team.McLaren);
                     var larryEntry = context.Entry(
                         new Driver
-                            {
-                                Name = "Larry David"
-                            });
+                        {
+                            Name = "Larry David"
+                        });
                     mclaren.Drivers.Add(larryEntry.Entity);
 
                     Assert.Equal(autoDetectChanges ? EntityState.Added : EntityState.Detached, larryEntry.State);
@@ -3267,13 +3273,13 @@ namespace ProductivityApiTests
                     var validateCalled = false;
 
                     context.ValidateEntityFunc = (entry) =>
-                                                     {
-                                                         validateCalled = true;
-                                                         return new DbEntityValidationResult(
-                                                             entry,
-                                                             Enumerable.Empty
-                                                                 <DbValidationError>());
-                                                     };
+                    {
+                        validateCalled = true;
+                        return new DbEntityValidationResult(
+                            entry,
+                            Enumerable.Empty
+                                <DbValidationError>());
+                    };
                     context.Categories.Add(new Category("FOOD"));
                     context.SaveChanges();
 
@@ -3317,21 +3323,21 @@ namespace ProductivityApiTests
                     Assert.Equal(EntityState.Unchanged, food.State);
 
                     context.ValidateEntityFunc = (entry) =>
-                                                     {
-                                                         Assert.Equal(
-                                                             validateOnSaveEnabled
-                                                                 ? EntityState.Modified
-                                                                 : EntityState.Unchanged, entry.State);
-                                                         entry.State = EntityState.Unchanged;
+                    {
+                        Assert.Equal(
+                            validateOnSaveEnabled
+                                ? EntityState.Modified
+                                : EntityState.Unchanged, entry.State);
+                        entry.State = EntityState.Unchanged;
 
-                                                         food.Entity.DetailedDescription = "bar";
-                                                         Assert.Equal(EntityState.Unchanged, entry.State);
+                        food.Entity.DetailedDescription = "bar";
+                        Assert.Equal(EntityState.Unchanged, entry.State);
 
-                                                         return new DbEntityValidationResult(
-                                                             entry,
-                                                             Enumerable.Empty
-                                                                 <DbValidationError>());
-                                                     };
+                        return new DbEntityValidationResult(
+                            entry,
+                            Enumerable.Empty
+                                <DbValidationError>());
+                    };
 
                     context.SaveChanges();
                     Assert.Equal(validateOnSaveEnabled ? "bar" : "foo", food.Entity.DetailedDescription);
@@ -3352,22 +3358,22 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+                var entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
 
                 Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
-                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
-                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
+                var dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                var entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
 
                 var query = from p in context.Products
-                            select p.Name;
+                    select p.Name;
 
                 query = query.AsStreaming();
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
-                IEnumerator<string> enumerator = query.GetEnumerator();
+                var enumerator = query.GetEnumerator();
                 enumerator.MoveNext();
 
                 // close the underlying store connection without explicitly closing entityConnection
@@ -3406,22 +3412,22 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+                var entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
 
                 Assert.True(context.Products.Count() >= 2, "Need at least 2 product entries for test to work below");
 
-                ConnectionEventsTracker dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
-                ConnectionEventsTracker entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
+                var dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
+                var entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
 
                 var query = from p in context.Products
-                            select p.Name;
+                    select p.Name;
 
                 query = query.AsStreaming();
 
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
-                IEnumerator<string> enumerator = query.GetEnumerator();
+                var enumerator = query.GetEnumerator();
                 enumerator.MoveNext();
 
                 // close the entity connection explicitly (i.e. not through context) in middle of query
@@ -3458,7 +3464,7 @@ namespace ProductivityApiTests
         {
             using (var context = new SimpleModelContext())
             {
-                EntityConnection entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
+                var entityConnection = (EntityConnection)((IObjectContextAdapter)context).ObjectContext.Connection;
 
                 var dbConnectionTracker = new ConnectionEventsTracker(entityConnection.StoreConnection);
                 var entityConnectionTracker = new ConnectionEventsTracker(entityConnection);
@@ -3483,6 +3489,7 @@ namespace ProductivityApiTests
                 entityConnectionTracker.VerifyConnectionOpenCloseEventsWereFired();
             }
         }
+
         #endregion
 
         [Fact]
@@ -3569,5 +3576,4 @@ namespace ProductivityApiTests
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
 }

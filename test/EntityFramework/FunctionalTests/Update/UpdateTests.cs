@@ -6,8 +6,8 @@ namespace System.Data.Entity.Update
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
-    using System.Data.Entity.TestModels.GearsOfWarModel;
     using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.TestModels.GearsOfWarModel;
     using System.Linq;
     using Xunit;
     using Xunit.Extensions;
@@ -22,27 +22,28 @@ namespace System.Data.Entity.Update
                 context.Weapons.Count();
             }
         }
-        
+
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Verify_that_deletes_precede_inserts()
         {
             using (var context = new GearsOfWarContext())
             {
                 var squad1 = new Squad
-                    {
-                        Id = 3,
-                        Name = "Alpha",
-                    };
+                {
+                    Id = 3,
+                    Name = "Alpha",
+                };
 
                 context.Squads.Add(squad1);
                 context.SaveChanges();
 
                 var squad2 = new Squad
-                    {
-                        Id = 3,
-                        Name = "Bravo",
-                    };
+                {
+                    Id = 3,
+                    Name = "Bravo",
+                };
 
                 context.Squads.Add(squad2);
                 context.Squads.Remove(squad1);
@@ -54,35 +55,36 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Verify_that_order_of_insert_is_based_on_key_values_and_not_order_of_adding_to_collection()
         {
             using (var context = new GearsOfWarContext())
             {
                 var weapon1 = new HeavyWeapon
-                    {
-                        Id = 10,
-                        Name = "Mortar",
-                        Overheats = false,
-                    };
+                {
+                    Id = 10,
+                    Name = "Mortar",
+                    Overheats = false,
+                };
 
                 var weapon2 = new HeavyWeapon
-                    {
-                        Id = 11,
-                        Name = "Oneshot",
-                        Overheats = false,
-                    };
+                {
+                    Id = 11,
+                    Name = "Oneshot",
+                    Overheats = false,
+                };
 
                 var weapon3 = new StandardWeapon
+                {
+                    Id = 12,
+                    Name = "Boltok",
+                    Specs = new WeaponSpecification
                     {
-                        Id = 12,
-                        Name = "Boltok",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 6,
-                                ClipsCount = 9,
-                            },
-                    };
+                        AmmoPerClip = 6,
+                        ClipsCount = 9,
+                    },
+                };
 
                 context.Weapons.Add(weapon3);
                 context.Weapons.Add(weapon1);
@@ -98,17 +100,18 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Insert_resulting_in_data_truncation_throws_exception()
         {
             using (var context = new GearsOfWarContext())
             {
                 var cogTagNoteMaxLength = 40;
                 var cogTag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = new string('A', cogTagNoteMaxLength + 1),
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = new string('A', cogTagNoteMaxLength + 1),
+                };
 
                 context.Tags.Add(cogTag);
 
@@ -117,17 +120,18 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Update_resulting_in_data_truncation_throws_exception()
         {
             using (var context = new GearsOfWarContext())
             {
                 var cogTagNoteMaxLength = 40;
                 var cogTag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = new string('A', cogTagNoteMaxLength),
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = new string('A', cogTagNoteMaxLength),
+                };
 
                 context.Tags.Add(cogTag);
                 context.SaveChanges();
@@ -138,50 +142,52 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Inserting_entity_that_references_itself_in_one_to_one_relationship_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var hammerOfDawn = new HeavyWeapon
-                    {
-                        Name = "Hammer of Dawn",
-                        Overheats = false,
-                    };
+                {
+                    Name = "Hammer of Dawn",
+                    Overheats = false,
+                };
 
                 hammerOfDawn.SynergyWith = hammerOfDawn;
                 context.Weapons.Add(hammerOfDawn);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
+                    .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Inserting_entity_that_references_itself_in_one_to_many_relationship_works()
         {
             using (var context = new GearsOfWarContext())
             {
                 var squad = new Squad
-                    {
-                        Name = "One Man Squad",
-                    };
+                {
+                    Name = "One Man Squad",
+                };
 
                 var tag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = "Tag",
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = "Tag",
+                };
 
                 var oneManArmy = new Gear
-                    {
-                        FullName = "One Man Army",
-                        Nickname = "OMA",
-                        Rank = MilitaryRank.Private,
-                        Squad = squad,
-                        Tag = tag,
-                    };
+                {
+                    FullName = "One Man Army",
+                    Nickname = "OMA",
+                    Rank = MilitaryRank.Private,
+                    Squad = squad,
+                    Tag = tag,
+                };
 
                 oneManArmy.Reports = new List<Gear> { oneManArmy };
 
@@ -194,30 +200,31 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Inserting_entities_that_both_reference_each_other_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var snub = new StandardWeapon
+                {
+                    Name = "Snub",
+                    Specs = new WeaponSpecification
                     {
-                        Name = "Snub",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 12,
-                                ClipsCount = 11,
-                            }
-                    };
+                        AmmoPerClip = 12,
+                        ClipsCount = 11,
+                    }
+                };
 
                 var sawedoff = new StandardWeapon
+                {
+                    Name = "Sawed-Off Shotgun",
+                    Specs = new WeaponSpecification
                     {
-                        Name = "Sawed-Off Shotgun",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 1,
-                                ClipsCount = 6,
-                            }
-                    };
+                        AmmoPerClip = 1,
+                        ClipsCount = 6,
+                    }
+                };
 
                 snub.SynergyWith = sawedoff;
                 sawedoff.SynergyWith = snub;
@@ -225,45 +232,46 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(snub);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
+                    .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Inserting_entities_that_reference_themselves_in_a_cycle_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var snub = new StandardWeapon
+                {
+                    Name = "Snub",
+                    Specs = new WeaponSpecification
                     {
-                        Name = "Snub",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 12,
-                                ClipsCount = 11,
-                            }
-                    };
+                        AmmoPerClip = 12,
+                        ClipsCount = 11,
+                    }
+                };
 
                 var sawedoff = new StandardWeapon
+                {
+                    Name = "Sawed-Off Shotgun",
+                    Specs = new WeaponSpecification
                     {
-                        Name = "Sawed-Off Shotgun",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 1,
-                                ClipsCount = 6,
-                            }
-                    };
+                        AmmoPerClip = 1,
+                        ClipsCount = 6,
+                    }
+                };
 
                 var longshot = new StandardWeapon
+                {
+                    Name = "Longshot",
+                    Specs = new WeaponSpecification
                     {
-                        Name = "Longshot",
-                        Specs = new WeaponSpecification
-                            {
-                                AmmoPerClip = 1,
-                                ClipsCount = 24,
-                            }
-                    };
+                        AmmoPerClip = 1,
+                        ClipsCount = 24,
+                    }
+                };
 
                 snub.SynergyWith = sawedoff;
                 sawedoff.SynergyWith = longshot;
@@ -272,23 +280,24 @@ namespace System.Data.Entity.Update
                 context.Weapons.Add(snub);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
+                    .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConstraintCycle", null);
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Insert_dependant_entity_without_required_principal_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var gearWithoutTag = new Gear
-                    {
-                        Nickname = "Stranded",
-                        FullName = "John Doe",
-                        Rank = MilitaryRank.Private,
-                        Squad = context.Squads.First(),
-                    };
+                {
+                    Nickname = "Stranded",
+                    FullName = "John Doe",
+                    Rank = MilitaryRank.Private,
+                    Squad = context.Squads.First(),
+                };
 
                 context.Gears.Add(gearWithoutTag);
 
@@ -297,16 +306,17 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Insert_principal_entity_without_required_dependant_does_not_throw()
         {
             using (var context = new GearsOfWarContext())
             {
                 var nobodysTag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = "Owner Unknown",
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = "Owner Unknown",
+                };
 
                 context.Tags.Add(nobodysTag);
                 context.SaveChanges();
@@ -316,34 +326,35 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Same_entity_with_one_to_one_relationship_attached_to_two_different_entities_throw_on_insert()
         {
             using (var context = new GearsOfWarContext())
             {
                 var tag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = "Who's tag is it?",
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = "Who's tag is it?",
+                };
 
                 var gear1 = new Gear
-                    {
-                        Nickname = "Gear1",
-                        FullName = "Gear1",
-                        Rank = MilitaryRank.Private,
-                        Squad = context.Squads.First(),
-                        Tag = tag,
-                    };
+                {
+                    Nickname = "Gear1",
+                    FullName = "Gear1",
+                    Rank = MilitaryRank.Private,
+                    Squad = context.Squads.First(),
+                    Tag = tag,
+                };
 
                 var gear2 = new Gear
-                    {
-                        Nickname = "Gear2",
-                        FullName = "Gear2",
-                        Rank = MilitaryRank.Private,
-                        Squad = context.Squads.First(),
-                        Tag = tag,
-                    };
+                {
+                    Nickname = "Gear2",
+                    FullName = "Gear2",
+                    Rank = MilitaryRank.Private,
+                    Squad = context.Squads.First(),
+                    Tag = tag,
+                };
 
                 context.Gears.AddRange(new[] { gear1, gear2 });
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges());
@@ -351,39 +362,40 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Cascade_delete_works_properly_on_one_to_many_relationship()
         {
             using (var context = new GearsOfWarContext())
             {
                 var gearsBefore = context.Gears.Count();
                 var gear1 = new Gear
+                {
+                    FullName = "Gear1",
+                    Nickname = "Gear1",
+                    Tag = new CogTag
                     {
-                        FullName = "Gear1",
-                        Nickname = "Gear1",
-                        Tag = new CogTag
-                            {
-                                Id = Guid.NewGuid(),
-                                Note = "Tag1",
-                            },
-                    };
+                        Id = Guid.NewGuid(),
+                        Note = "Tag1",
+                    },
+                };
 
                 var gear2 = new Gear
+                {
+                    FullName = "Gear2",
+                    Nickname = "Gear2",
+                    Tag = new CogTag
                     {
-                        FullName = "Gear2",
-                        Nickname = "Gear2",
-                        Tag = new CogTag
-                            {
-                                Id = Guid.NewGuid(),
-                                Note = "Tag2",
-                            },
-                    };
+                        Id = Guid.NewGuid(),
+                        Note = "Tag2",
+                    },
+                };
 
                 var squad = new Squad
-                    {
-                        Name = "Charlie",
-                        Members = new List<Gear> { gear1, gear2 },
-                    };
+                {
+                    Name = "Charlie",
+                    Members = new List<Gear> { gear1, gear2 },
+                };
 
                 context.Squads.Add(squad);
                 context.SaveChanges();
@@ -401,77 +413,81 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Saving_null_compex_type_property_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var secretWeapon = new StandardWeapon
-                    {
-                        Name = "Top Secret",
-                        Specs = null,
-                    };
+                {
+                    Name = "Top Secret",
+                    Specs = null,
+                };
 
                 context.Weapons.Add(secretWeapon);
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly(), "Update_NullValue", null, "Specs");
+                    .ValidateMessage(typeof(DbContext).Assembly(), "Update_NullValue", null, "Specs");
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Modifying_identity_generated_key_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var tag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = "Some Note",
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = "Some Note",
+                };
 
                 context.Tags.Add(tag);
                 context.SaveChanges();
                 tag.Id = Guid.NewGuid();
 
                 Assert.Throws<InvalidOperationException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
+                    .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Modifying_non_generated_key_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var squad = new Squad
-                    {
-                        Id = 10,
-                        Name = "Lima",
-                    };
+                {
+                    Id = 10,
+                    Name = "Lima",
+                };
 
                 context.Squads.Add(squad);
                 context.SaveChanges();
                 squad.Id = 20;
 
                 Assert.Throws<InvalidOperationException>(() => context.SaveChanges())
-                      .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
+                    .ValidateMessage(typeof(DbContext).Assembly(), "ObjectStateEntry_CannotModifyKeyProperty", null, "Id");
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Modifying_identity_non_key_throws()
         {
             using (var context = new GearsOfWarContext())
             {
                 var squad = new Squad
-                    {
-                        Id = 10,
-                        Name = "Lima",
-                    };
+                {
+                    Id = 10,
+                    Name = "Lima",
+                };
 
                 context.Squads.Add(squad);
                 context.SaveChanges();
@@ -479,18 +495,19 @@ namespace System.Data.Entity.Update
                 squad.InternalNumber = squadInternalNumber + 1;
 
                 Assert.Throws<DbUpdateException>(() => context.SaveChanges())
-                      .InnerException.InnerException.ValidateMessage(
-                          typeof(DbContext).Assembly(),
-                          "Update_ModifyingIdentityColumn",
-                          null,
-                          "Identity",
-                          "InternalNumber",
-                          "CodeFirstDatabaseSchema.Squad");
+                    .InnerException.InnerException.ValidateMessage(
+                        typeof(DbContext).Assembly(),
+                        "Update_ModifyingIdentityColumn",
+                        null,
+                        "Identity",
+                        "InternalNumber",
+                        "CodeFirstDatabaseSchema.Squad");
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_on_property_update_previously_modified_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -505,13 +522,14 @@ namespace System.Data.Entity.Update
 
                     gnasher2.Name = "Sawed-off";
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_delete_previously_modified_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -519,10 +537,10 @@ namespace System.Data.Entity.Update
                 using (var context2 = new GearsOfWarContext())
                 {
                     var troika = new HeavyWeapon
-                        {
-                            Name = "Troika",
-                            Overheats = true,
-                        };
+                    {
+                        Name = "Troika",
+                        Overheats = true,
+                    };
 
                     context.Weapons.Add(troika);
                     context.SaveChanges();
@@ -533,13 +551,14 @@ namespace System.Data.Entity.Update
 
                     context2.Weapons.Remove(troika2);
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_modify_previously_deleted_entity_when_using_timestamp()
         {
             using (var context = new GearsOfWarContext())
@@ -547,10 +566,10 @@ namespace System.Data.Entity.Update
                 using (var context2 = new GearsOfWarContext())
                 {
                     var troika = new HeavyWeapon
-                        {
-                            Name = "Troika",
-                            Overheats = true,
-                        };
+                    {
+                        Name = "Troika",
+                        Overheats = true,
+                    };
 
                     context.Weapons.Add(troika);
                     context.SaveChanges();
@@ -561,13 +580,14 @@ namespace System.Data.Entity.Update
 
                     troika2.Overheats = false;
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_update_previously_modified_entity_when_using_property_as_concurrency_token()
         {
             using (var context = new GearsOfWarContext())
@@ -582,13 +602,14 @@ namespace System.Data.Entity.Update
 
                     baird2.Rank = MilitaryRank.Private;
                     Assert.Throws<DbUpdateConcurrencyException>(() => context2.SaveChanges())
-                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_attempting_to_delete_previously_modified_entity_when_using_property_as_concurrency_token()
         {
             using (var context = new GearsOfWarContext())
@@ -603,13 +624,14 @@ namespace System.Data.Entity.Update
 
                     context2.Gears.Remove(baird2);
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges()).InnerException
-                          .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimistic_concurrency_error_when_updating_previously_modified_reference()
         {
             using (var context = new GearsOfWarContext())
@@ -628,13 +650,14 @@ namespace System.Data.Entity.Update
                     cole2.CityOfBirth = ephyra2;
 
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges())
-                          .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Optimisic_concurrency_error_when_deleting_previously_modified_reference()
         {
             using (var context = new GearsOfWarContext())
@@ -652,31 +675,32 @@ namespace System.Data.Entity.Update
                     cole2.CityOfBirth = null;
 
                     Assert.Throws<DbUpdateException>(() => context2.SaveChanges())
-                          .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
+                        .InnerException.ValidateMessage(typeof(DbContext).Assembly(), "Update_ConcurrencyError", null);
                 }
             }
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Insert_update_and_delete_entity_with_enum_property()
         {
             using (var context = new GearsOfWarContext())
             {
                 var taisTag = new CogTag
-                    {
-                        Id = Guid.NewGuid(),
-                        Note = "Tai's tag",
-                    };
+                {
+                    Id = Guid.NewGuid(),
+                    Note = "Tai's tag",
+                };
 
                 var tai = new Gear
-                    {
-                        FullName = "Tai Kaliso",
-                        Nickname = "Tai",
-                        Squad = context.Squads.First(),
-                        Rank = MilitaryRank.Corporal,
-                        Tag = taisTag,
-                    };
+                {
+                    FullName = "Tai Kaliso",
+                    Nickname = "Tai",
+                    Squad = context.Squads.First(),
+                    Rank = MilitaryRank.Corporal,
+                    Tag = taisTag,
+                };
 
                 context.Gears.Add(tai);
                 context.SaveChanges();
@@ -694,17 +718,18 @@ namespace System.Data.Entity.Update
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Insert_update_delete_entity_with_spatial_property()
         {
             using (var context = new GearsOfWarContext())
             {
                 var GeographySrid = 4326;
                 var halvoBay = new City
-                    {
-                        Name = "Halvo Bay",
-                        Location = DbGeography.FromText("POINT(10 10)", GeographySrid),
-                    };
+                {
+                    Name = "Halvo Bay",
+                    Location = DbGeography.FromText("POINT(10 10)", GeographySrid),
+                };
 
                 context.Cities.Add(halvoBay);
                 context.SaveChanges();

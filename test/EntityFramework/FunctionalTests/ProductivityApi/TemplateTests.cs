@@ -95,7 +95,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void Read_and_write_using_MonsterModel_created_from_T4_template()
         {
             int orderId;

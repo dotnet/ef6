@@ -16,8 +16,8 @@ namespace ProductivityApiTests
     using Xunit.Extensions;
 
     /// <summary>
-    /// Functional tests for DbSqlQuery and other raw SQL functionality. 
-    /// Unit tests also exist in the unit tests project.
+    ///     Functional tests for DbSqlQuery and other raw SQL functionality.
+    ///     Unit tests also exist in the unit tests project.
     /// </summary>
     public class DbSqlQueryTests : FunctionalTestBase
     {
@@ -148,15 +148,15 @@ namespace ProductivityApiTests
                 var products = context.Products.SqlQuery(
                     "select * from Products where Id < @p0 and CategoryId = @p1",
                     new SqlParameter
-                        {
-                            ParameterName = "p0",
-                            Value = 4
-                        },
+                    {
+                        ParameterName = "p0",
+                        Value = 4
+                    },
                     new SqlParameter
-                        {
-                            ParameterName = "p1",
-                            Value = "Beverages"
-                        })
+                    {
+                        ParameterName = "p1",
+                        Value = "Beverages"
+                    })
                     .ToList();
 
                 Assert.Equal(1, context.Products.Local.Count);
@@ -173,15 +173,15 @@ namespace ProductivityApiTests
                     context.Set(typeof(Product)).SqlQuery(
                         "select * from Products where Id < @p0 and CategoryId = @p1",
                         new SqlParameter
-                            {
-                                ParameterName = "p0",
-                                Value = 4
-                            },
+                        {
+                            ParameterName = "p0",
+                            Value = 4
+                        },
                         new SqlParameter
-                            {
-                                ParameterName = "p1",
-                                Value = "Beverages"
-                            })
+                        {
+                            ParameterName = "p1",
+                            Value = "Beverages"
+                        })
                         .ToList<Product>();
 
                 Assert.Equal(1, context.Products.Local.Count);
@@ -586,9 +586,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () => ExceptionHelpers.UnwrapAggregateExceptions(
                         () =>
-                        query.ToListAsync().Result)).ValidateMessage(
-                            "Materializer_InvalidCastReference", "System.String",
-                            "System.Int32");
+                            query.ToListAsync().Result)).ValidateMessage(
+                                "Materializer_InvalidCastReference", "System.String",
+                                "System.Int32");
             }
         }
 
@@ -603,9 +603,9 @@ namespace ProductivityApiTests
                 Assert.Throws<InvalidOperationException>(
                     () => ExceptionHelpers.UnwrapAggregateExceptions(
                         () =>
-                        query.ToListAsync().Result)).ValidateMessage(
-                            "Materializer_InvalidCastReference", "System.String",
-                            "System.Int32");
+                            query.ToListAsync().Result)).ValidateMessage(
+                                "Materializer_InvalidCastReference", "System.String",
+                                "System.Int32");
             }
         }
 
@@ -616,11 +616,11 @@ namespace ProductivityApiTests
         {
             SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
                 new
-                    {
-                        Id = 2,
-                        Name = "Bovril",
-                        CategoryId = "Foods"
-                    }, q => q.ToList());
+                {
+                    Id = 2,
+                    Name = "Bovril",
+                    CategoryId = "Foods"
+                }, q => q.ToList());
         }
 
 #if !NET40
@@ -630,11 +630,11 @@ namespace ProductivityApiTests
         {
             SQL_query_cannot_be_used_to_materialize_anonymous_types_implementation(
                 new
-                    {
-                        Id = 2,
-                        Name = "Bovril",
-                        CategoryId = "Foods"
-                    }, q => ExceptionHelpers.UnwrapAggregateExceptions(() => q.ToListAsync().Result));
+                {
+                    Id = 2,
+                    Name = "Bovril",
+                    CategoryId = "Foods"
+                }, q => ExceptionHelpers.UnwrapAggregateExceptions(() => q.ToListAsync().Result));
         }
 
 #endif
@@ -796,7 +796,8 @@ namespace ProductivityApiTests
         #region SQL command tests
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database()
         {
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommand(q));
@@ -805,7 +806,8 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SQL_commands_can_be_executed_against_the_database_async()
         {
             SQL_commands_can_be_executed_against_the_database_implementation((d, q) => d.ExecuteSqlCommandAsync(q).Result);
@@ -828,7 +830,8 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database()
         {
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation((d, q, p) => d.ExecuteSqlCommand(q, p));
@@ -837,7 +840,8 @@ namespace ProductivityApiTests
 #if !NET40
 
         [Fact]
-        [AutoRollback, UseDefaultExecutionStrategy]
+        [AutoRollback]
+        [UseDefaultExecutionStrategy]
         public void SQL_commands_with_parameters_can_be_executed_against_the_database_async()
         {
             SQL_commands_with_parameters_can_be_executed_against_the_database_implementation(

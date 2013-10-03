@@ -20,8 +20,7 @@ namespace System.Data.Entity.TestHelpers
         {
             get
             {
-                return DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
-                       && !FunctionalTestsConfiguration.SuspendExecutionStrategy;
+                return !FunctionalTestsConfiguration.SuspendExecutionStrategy;
             }
         }
 
