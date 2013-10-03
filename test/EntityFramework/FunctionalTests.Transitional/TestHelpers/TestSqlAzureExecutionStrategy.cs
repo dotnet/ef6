@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.TestHelpers
 {
-    using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.SqlServer;
     using System.Data.Entity.Utilities;
-    using System.Data.SqlClient;
     using System.Threading;
+    using System.Threading.Tasks;
 
-    class TestSqlAzureExecutionStrategy : IDbExecutionStrategy
+    internal class TestSqlAzureExecutionStrategy : IDbExecutionStrategy
     {
         private IDbExecutionStrategy azureExecutionStrategy;
 
         public TestSqlAzureExecutionStrategy()
         {
-            azureExecutionStrategy = new SqlAzureExecutionStrategy();
+            azureExecutionStrategy = new ExtendedSqlAzureExecutionStrategy();
         }
 
-        public bool RetriesOnFailure 
+        public bool RetriesOnFailure
         {
-            get { return !FunctionalTestsConfiguration.SuspendExecutionStrategy; }
+            get
+            {
+                return DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
+                       && !FunctionalTestsConfiguration.SuspendExecutionStrategy;
+            }
         }
 
         public void Execute(Action operation)
@@ -36,14 +34,14 @@ namespace System.Data.Entity.TestHelpers
                 {
                     operation();
                     return (object)null;
-                });           
+                });
         }
 
         public TResult Execute<TResult>(Func<TResult> operation)
         {
             if (!RetriesOnFailure)
             {
-                return operation();    
+                return operation();
             }
             return azureExecutionStrategy.Execute(operation);
         }
@@ -65,7 +63,7 @@ namespace System.Data.Entity.TestHelpers
             {
                 return operation();
             }
-            return azureExecutionStrategy.ExecuteAsync(operation , cancellationToken);
+            return azureExecutionStrategy.ExecuteAsync(operation, cancellationToken);
         }
 
 #endif

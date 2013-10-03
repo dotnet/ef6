@@ -54,6 +54,15 @@ namespace System.Data.Entity.TestHelpers
 
                     sandboxedClass = PartialTrustSandbox.Default.CreateInstance(testClassType);
                     ApplyFixtures(sandboxedClass);
+
+                    if (FunctionalTestsConfiguration.SuspendExecutionStrategy)
+                    {
+                        var defaultSandboxed = sandboxedClass as IUseDefaultExecutionStrategy;
+                        if (defaultSandboxed != null)
+                        {
+                            defaultSandboxed.UseDefaultExecutionStrategy();
+                        }
+                    }
                 }
                 else
                 {

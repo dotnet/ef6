@@ -137,7 +137,6 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Transaction_with_explicit_commit_on_commitable_transaction_can_be_used()
         {
             // Since this test actually mutates the database outside of a transaction it needs

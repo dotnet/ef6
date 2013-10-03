@@ -8,7 +8,6 @@ namespace System.Data.Entity.TestHelpers
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.SqlServerCompact;
     using System.Linq;
-    using System.Runtime.Remoting.Messaging;
 
     public class FunctionalTestsConfiguration : DbConfiguration
     {
@@ -30,30 +29,30 @@ namespace System.Data.Entity.TestHelpers
             // the functional test project and set to the DbConfiguration that was set in code when running the unit tests project.
             Loaded +=
                 (s, a) =>
+                {
+                    var currentFactory = a.DependencyResolver.GetService<IDbConnectionFactory>();
+                    if (currentFactory != _originalConnectionFactories.LastOrDefault())
                     {
-                        var currentFactory = a.DependencyResolver.GetService<IDbConnectionFactory>();
-                        if (currentFactory != _originalConnectionFactories.LastOrDefault())
+                        var newList = new List<IDbConnectionFactory>(_originalConnectionFactories)
                         {
-                            var newList = new List<IDbConnectionFactory>(_originalConnectionFactories)
-                                {
-                                    currentFactory
-                                };
-                            _originalConnectionFactories = newList;
-                        }
-                        a.AddDependencyResolver(
-                            new SingletonDependencyResolver<IDbConnectionFactory>(
-                                new SqlConnectionFactory(ModelHelpers.BaseConnectionString)), overrideConfigFile: true);
+                            currentFactory
+                        };
+                        _originalConnectionFactories = newList;
+                    }
+                    a.AddDependencyResolver(
+                        new SingletonDependencyResolver<IDbConnectionFactory>(
+                            new SqlConnectionFactory(ModelHelpers.BaseConnectionString)), overrideConfigFile: true);
 
-                        var currentProviderFactory = a.DependencyResolver.GetService<IDbProviderFactoryResolver>();
-                        a.AddDependencyResolver(
-                            new SingletonDependencyResolver<IDbProviderFactoryResolver>(
-                                new FakeProviderFactoryResolver(currentProviderFactory))
-                            , overrideConfigFile: true);
+                    var currentProviderFactory = a.DependencyResolver.GetService<IDbProviderFactoryResolver>();
+                    a.AddDependencyResolver(
+                        new SingletonDependencyResolver<IDbProviderFactoryResolver>(
+                            new FakeProviderFactoryResolver(currentProviderFactory))
+                        , overrideConfigFile: true);
 
-                        a.AddDependencyResolver(new FakeProviderServicesResolver(), overrideConfigFile: true);
+                    a.AddDependencyResolver(new FakeProviderServicesResolver(), overrideConfigFile: true);
 
-                        a.AddDependencyResolver(MutableResolver.Instance, overrideConfigFile: true);
-                    };
+                    a.AddDependencyResolver(MutableResolver.Instance, overrideConfigFile: true);
+                };
         }
 
         private static void OnLoaded(object sender, DbConfigurationLoadedEventArgs eventArgs)
@@ -69,7 +68,10 @@ namespace System.Data.Entity.TestHelpers
             SetDefaultConnectionFactory(new DefaultUnitTestsConnectionFactory());
             AddDependencyResolver(new SingletonDependencyResolver<IManifestTokenResolver>(new FunctionalTestsManifestTokenResolver()));
 
-            this.SetExecutionStrategy("System.Data.SqlClient", () => new TestSqlAzureExecutionStrategy());
+            SetExecutionStrategy(
+                "System.Data.SqlClient", () => DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
+                    ? new TestSqlAzureExecutionStrategy()
+                    : (IDbExecutionStrategy)new DefaultExecutionStrategy());
         }
 
         public static bool SuspendExecutionStrategy { get; set; }

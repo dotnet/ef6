@@ -3242,12 +3242,14 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ValidateEntity_is_called_by_SaveChanges_when_ValidateOnSaveEnabled_is_on()
         {
             TestValidateEntityWithSaveChanges(validateOnSaveEnabled: true);
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void ValidateEntity_is_not_called_by_SaveChanges_when_ValidateOnSaveEnabled_is_off()
         {
             TestValidateEntityWithSaveChanges(validateOnSaveEnabled: false);
@@ -3516,6 +3518,7 @@ namespace ProductivityApiTests
         }
 
         [Fact]
+        [UseDefaultExecutionStrategy]
         public void DbContext_can_be_initialized_without_promotion_to_distributed_transaction_inside_user_transaction_if_the_context_type_has_been_previously_initalized_outside()
         {
             var connectionString = default(string);

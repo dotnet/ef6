@@ -441,7 +441,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_ExecuteStoreCommand_works_if_external_transaction_is_already_committed()
         {
             try
@@ -517,7 +516,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact] // CodePlex 906
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void UseTransaction_does_not_cause_or_require_database_initialization()
         {
             using (var context = new SimpleModelContext(
@@ -1016,7 +1014,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_implicit_transaction_is_created_when_no_transaction_created_by_user_and_connection_is_created_outside_context_and_is_open()
         {
             try
@@ -1858,7 +1855,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_cannot_enlist_in_more_than_one_active_transaction_on_the_same_opened_connection()
         {
             try
@@ -1886,7 +1882,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void Verify_closing_connection_invalidates_explicit_transaction()
         {
             try
@@ -1935,7 +1930,6 @@ namespace System.Data.Entity.Objects
         }
 
         [Fact]
-        // this test seems to pass with the default execution strategy even though it appears to have a user transaction
         public void ExecuteSqlCommand_with_TransactionalBehavior_EnsureTransaction_uses_transaction()
         {
             try

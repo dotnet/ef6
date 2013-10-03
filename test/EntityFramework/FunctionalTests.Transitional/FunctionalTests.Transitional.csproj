@@ -156,6 +156,7 @@
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />
     <Compile Include="CodeFirst\EnumsScenarioTests.cs" />
+    <Compile Include="TestHelpers\ExtendedSqlAzureExecutionStrategy.cs" />
     <Compile Include="TestHelpers\FakeProviderFactoryResolver.cs" />
     <Compile Include="TestHelpers\FakeProviderServicesResolver.cs" />
     <Compile Include="TestHelpers\FunctionalTestBase.cs" />
@@ -167,6 +168,7 @@
     </Compile>
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
+    <Compile Include="TestHelpers\IUseDefaultExecutionStrategy.cs" />
     <Compile Include="TestHelpers\LocalizationTestHelpers.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />

@@ -13,6 +13,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
+    using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
     using System.Xml.Linq;
@@ -450,6 +451,7 @@ namespace System.Data.Entity.Migrations
     public class DbMigratorTests_SqlClientOnly : DbTestCase
     {
         [MigrationsTheory]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSql_should_honor_CommandTimeout()
         {
             var migrator = CreateMigrator<ShopContext_v1>();
@@ -472,6 +474,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [MigrationsTheory]
+        [UseDefaultExecutionStrategy]
         public void ExecuteSql_when_SuppressTransaction_should_honor_CommandTimeout()
         {
             var migrator = CreateMigrator<ShopContext_v1>();

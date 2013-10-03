@@ -16,7 +16,7 @@ namespace ProductivityApiTests
     ///     of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
     [PartialTrustFixture]
-    public class SimpleScenarios : FunctionalTestBase
+    public class SimpleScenarios : FunctionalTestBase, IUseDefaultExecutionStrategy
     {
         #region Scenarios for SQL Server
 
@@ -26,7 +26,6 @@ namespace ProductivityApiTests
             SqlServer_Database_can_be_created_with_columns_that_explicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted
             ()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
             using (new TransactionScope())
@@ -51,14 +50,12 @@ namespace ProductivityApiTests
                     context.SaveChanges();
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         [UseDefaultExecutionStrategy]
         public void SqlServer_Database_can_be_created_with_columns_that_implicitly_total_more_that_8060_bytes_and_data_longer_than_8060_can_be_inserted()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new ModelWithWideProperties());
 
             using (new TransactionScope())
@@ -83,7 +80,6 @@ namespace ProductivityApiTests
                     context.SaveChanges();
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
@@ -111,7 +107,6 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void Scenario_Insert()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new SimpleModelContext());
 
             using (new TransactionScope())
@@ -130,14 +125,12 @@ namespace ProductivityApiTests
                     Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         [UseDefaultExecutionStrategy]
         public void Scenario_Update()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new SimpleModelContext());
 
             using (new TransactionScope())
@@ -153,7 +146,6 @@ namespace ProductivityApiTests
                     Assert.Equal(EntityState.Unchanged, GetStateEntry(context, product).State);
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
@@ -173,7 +165,6 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void Scenario_Relate_using_query()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new SimpleModelContext());
 
             using (new TransactionScope())
@@ -201,14 +192,12 @@ namespace ProductivityApiTests
                     Assert.True(category.Products.Contains(product));
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
         [UseDefaultExecutionStrategy]
         public void Scenario_Relate_using_FK()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new SimpleModelContext());
 
             using (new TransactionScope())
@@ -229,7 +218,6 @@ namespace ProductivityApiTests
                     Assert.Equal("Foods", product.CategoryId);
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
@@ -292,7 +280,6 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void Scenario_Using_two_databases()
         {
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
             EnsureDatabaseInitialized(() => new LoginsContext());
             EnsureDatabaseInitialized(() => new SimpleModelContext());
 
@@ -338,7 +325,6 @@ namespace ProductivityApiTests
                     Assert.True(category.Products.Contains(product));
                 }
             }
-            FunctionalTestsConfiguration.SuspendExecutionStrategy = false;
         }
 
         [ExtendedFact(SkipForLocalDb = true, Justification = "This scenario is executed on LocalDb in SimpleScenariosForLocalDb test suite")]
@@ -391,5 +377,10 @@ namespace ProductivityApiTests
         }
 
         #endregion Scenarios for SQL Server
+
+        public void UseDefaultExecutionStrategy()
+        {
+            FunctionalTestsConfiguration.SuspendExecutionStrategy = true;
+        }
     }
 }
