@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var table
                 = entitySetMapping.EntityTypeMappings.Any()
-                      ? entitySetMapping.EntityTypeMappings.First().MappingFragments.First().Table
+                      ? entitySetMapping.EntityTypeMappings.First().MappingFragments.Last().Table
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
             var entityTypeMapping = new EntityTypeMapping(null);

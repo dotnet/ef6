@@ -6239,5 +6239,90 @@ namespace FunctionalTests
         }
 
         #endregion
+
+        public class CodePlex1646 : TestBase
+        {
+            public class Address
+            {
+                public int Id { get; set; }
+                [Required]
+                public virtual Person Person { get; set; }
+                public string Number { get; set; }
+                public string Street { get; set; }
+                public string City { get; set; }
+                public string PostalCode { get; set; }
+                public string Country { get; set; }
+            }
+
+            public class Client : Person
+            {
+                public string CompanyName { get; set; }
+            }
+
+            public class Department
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+            }
+
+            public abstract class Employee : Person
+            {
+                [Required]
+                public virtual Department Department { get; set; }
+                public DateTime HiredDate { get; set; }
+            }
+
+            public class NonUser : Employee
+            {
+            }
+
+            public abstract class Person
+            {
+                public int Id { get; set; }
+                public string Name { get; set; }
+                public virtual ICollection<Address> Addresses { get; set; }
+            }
+
+            public class User : Employee
+            {
+                [Required]
+                public string Login { get; set; }
+            }
+
+            [Fact]
+            public void Foreign_keys_are_placed_correctly()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<Address>();
+                modelBuilder.Entity<Client>().ToTable("Clients");
+                modelBuilder.Entity<Department>();
+                modelBuilder.Entity<Employee>().ToTable("Employees");
+                modelBuilder.Entity<NonUser>().ToTable("NonUsers");
+                modelBuilder.Entity<Person>().ToTable("Persons")
+                    .HasMany(x => x.Addresses).WithRequired(x => x.Person).WillCascadeOnDelete(false); ;
+                modelBuilder.Entity<User>().ToTable("Users");
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<Address>("Addresses")
+                    .HasForeignKeyColumn("Person_Id", "Persons");
+                databaseMapping.Assert<Department>("Departments")
+                    .HasNoForeignKeyColumns();
+                databaseMapping.Assert<User>("Users")
+                    .HasForeignKeyColumn("Id", "Employees");
+                databaseMapping.Assert<NonUser>("NonUsers")
+                    .HasForeignKeyColumn("Id", "Employees");
+                databaseMapping.Assert<Client>("Clients")
+                    .HasForeignKeyColumn("Id", "Persons");
+                databaseMapping.Assert<Person>("Persons")
+                    .HasNoForeignKeyColumns();
+                databaseMapping.Assert<Employee>("Employees")
+                    .HasForeignKeyColumn("Id", "Persons")
+                    .HasForeignKeyColumn("Department_Id", "Departments");
+            }
+        }
     }
 }
