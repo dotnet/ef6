@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Objects
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using ConcurrencyModel;
     using System.Data.Entity.Infrastructure;
@@ -212,6 +213,288 @@ namespace System.Data.Entity.Objects
             public string Name { get; set; }
 
             public virtual ICollection<Child> Childs { get; set; }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Lazy_loading_works_for_tracking_proxies_with_two_nav_props_with_same_FK_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                var booking = context.Bookings.Find(4);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(1, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                // Trigger lazy loading
+                Assert.Equal(1, booking.CreatedBy.Id);
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Lazy_loading_works_for_tracking_proxies_with_two_nav_props_with_different_FKs_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                var booking = context.Bookings.Find(5);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(2, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                // Trigger lazy loading
+                Assert.Equal(1, booking.CreatedBy.Id);
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Lazy_loading_works_for_non_tracking_proxies_with_two_nav_props_with_same_FK_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                var booking = context.BookingsNp.Find(4);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(1, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                // Trigger lazy loading
+                Assert.Equal(1, booking.CreatedBy.Id);
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Lazy_loading_works_for_non_tracking_proxies_with_two_nav_props_with_different_FKs_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                var booking = context.BookingsNp.Find(5);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(2, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                // Trigger lazy loading
+                Assert.Equal(1, booking.CreatedBy.Id);
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Explicit_loading_works_for_non_tracking_proxies_with_two_nav_props_with_same_FK_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var booking = context.BookingsNp.Find(4);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(1, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                context.Entry(booking).Reference(b => b.CreatedBy).Load();
+                Assert.Equal(1, context.UsersNp.Local.Count(u => u.Id == 1));
+                Assert.Equal(1, booking.CreatedBy.Id);
+
+                context.Entry(booking).Reference(b => b.ModifiedBy).Load();
+                Assert.Equal(1, context.UsersNp.Local.Count(u => u.Id == 3));
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        [Fact] // CodePlex 1142
+        public void Explicit_loading_works_for_non_tracking_proxies_with_two_nav_props_with_different_FKs_when_one_FK_changes()
+        {
+            using (var context = new TwoIntoOneContext())
+            {
+                context.Configuration.LazyLoadingEnabled = false;
+
+                var booking = context.BookingsNp.Find(5);
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(2, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                booking.ModifiedById = 3;
+
+                Assert.Equal(1, booking.CreatedById);
+                Assert.Equal(3, booking.ModifiedById);
+                Assert.False(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.False(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+
+                context.Entry(booking).Reference(b => b.CreatedBy).Load();
+                Assert.Equal(1, context.UsersNp.Local.Count(u => u.Id == 1));
+                Assert.Equal(1, booking.CreatedBy.Id);
+
+                context.Entry(booking).Reference(b => b.ModifiedBy).Load();
+                Assert.Equal(1, context.UsersNp.Local.Count(u => u.Id == 3));
+                Assert.Equal(3, booking.ModifiedBy.Id);
+
+                Assert.True(context.Entry(booking).Reference(b => b.CreatedBy).IsLoaded);
+                Assert.True(context.Entry(booking).Reference(b => b.ModifiedBy).IsLoaded);
+            }
+        }
+
+        public class TwoIntoOneContext : DbContext
+        {
+            static TwoIntoOneContext()
+            {
+                Database.SetInitializer(new TwoIntoOneInitializer());
+            }
+
+            public DbSet<Booking> Bookings { get; set; }
+            public DbSet<User> Users { get; set; }
+            public DbSet<BookingNp> BookingsNp { get; set; }
+            public DbSet<UserNp> UsersNp { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder
+                    .Entity<Booking>()
+                    .HasRequired(e => e.CreatedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.CreatedById)
+                    .WillCascadeOnDelete(false);
+
+                modelBuilder
+                    .Entity<Booking>()
+                    .HasRequired(e => e.ModifiedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.ModifiedById)
+                    .WillCascadeOnDelete(false);
+
+                modelBuilder
+                    .Entity<BookingNp>()
+                    .HasRequired(e => e.CreatedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.CreatedById)
+                    .WillCascadeOnDelete(false);
+
+                modelBuilder
+                    .Entity<BookingNp>()
+                    .HasRequired(e => e.ModifiedBy)
+                    .WithMany()
+                    .HasForeignKey(e => e.ModifiedById)
+                    .WillCascadeOnDelete(false);
+            }
+        }
+
+        public class TwoIntoOneInitializer : DropCreateDatabaseIfModelChanges<TwoIntoOneContext>
+        {
+            protected override void Seed(TwoIntoOneContext context)
+            {
+                context.Users.AddRange(new[] { new User { Id = 1 }, new User { Id = 2 }, new User { Id = 3 } });
+                context.Bookings.AddRange(
+                    new[]
+                        {
+                            new Booking { Id = 4, CreatedById = 1, ModifiedById = 1 },
+                            new Booking { Id = 5, CreatedById = 1, ModifiedById = 2 }
+                        });
+
+                context.UsersNp.AddRange(new[] { new UserNp { Id = 1 }, new UserNp { Id = 2 }, new UserNp { Id = 3 } });
+                context.BookingsNp.AddRange(
+                    new[]
+                        {
+                            new BookingNp { Id = 4, CreatedById = 1, ModifiedById = 1 },
+                            new BookingNp { Id = 5, CreatedById = 1, ModifiedById = 2 }
+                        });
+            }
+        }
+
+        public class Booking
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual long Id { get; set; }
+
+            public virtual long CreatedById { get; set; }
+            public virtual User CreatedBy { get; set; }
+
+            public virtual long ModifiedById { get; set; }
+            public virtual User ModifiedBy { get; set; }
+        }
+
+        public class User
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public virtual long Id { get; set; }
+        }
+
+        public class BookingNp
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public long Id { get; set; }
+
+            public long CreatedById { get; set; }
+            public virtual UserNp CreatedBy { get; set; }
+
+            public long ModifiedById { get; set; }
+            public virtual UserNp ModifiedBy { get; set; }
+        }
+
+        public class UserNp
+        {
+            [DatabaseGenerated(DatabaseGeneratedOption.None)]
+            public long Id { get; set; }
         }
     }
 }

@@ -359,13 +359,12 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         internal void SetCachedForeignKey(EntityKey newForeignKey, EntityEntry source)
         {
             if (ObjectContext != null
-                && ObjectContext.ObjectStateManager != null
-                && // are we attached?
-                source != null
-                && // do we have an entry?
-                _cachedForeignKey != null
+                && ObjectContext.ObjectStateManager != null // are we attached?
+                && source != null // do we have an entry?
+                && _cachedForeignKey != null
                 && !ForeignKeyFactory.IsConceptualNullKey(_cachedForeignKey) // do we have an fk?
-                && _cachedForeignKey != newForeignKey) // is the FK different from the one that we already have?
+                && _cachedForeignKey != newForeignKey // is the FK different from the one that we already have?
+                && !source.FindFKRelatedEnds().Any(e => e != this && e.CachedForeignKey == _cachedForeignKey))
             {
                 ObjectContext.ObjectStateManager.RemoveEntryFromForeignKeyIndex(_cachedForeignKey, source);
             }
