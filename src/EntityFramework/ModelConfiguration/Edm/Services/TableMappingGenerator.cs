@@ -27,12 +27,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = databaseMapping.GetEntitySetMapping(entitySet)
                   ?? databaseMapping.AddEntitySetMapping(entitySet);
 
+            var entityTypeMapping =
+                entitySetMapping.EntityTypeMappings.FirstOrDefault(
+                    m => m.EntityTypes.Contains(entitySet.ElementType))
+                ?? entitySetMapping.EntityTypeMappings.FirstOrDefault();
+
             var table
-                = entitySetMapping.EntityTypeMappings.Any()
-                      ? entitySetMapping.EntityTypeMappings.First().MappingFragments.Last().Table
+                = entityTypeMapping != null
+                      ? entityTypeMapping.MappingFragments.First().Table
                       : databaseMapping.Database.AddTable(entityType.GetRootType().Name);
 
-            var entityTypeMapping = new EntityTypeMapping(null);
+            entityTypeMapping = new EntityTypeMapping(null);
 
             var entityTypeMappingFragment
                 = new MappingFragment(databaseMapping.Database.GetEntitySet(table), entityTypeMapping, false);
