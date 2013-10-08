@@ -6324,5 +6324,69 @@ namespace FunctionalTests
                     .HasForeignKeyColumn("Department_Id", "Departments");
             }
         }
+
+        public class CodePlex1646_Repro2 : TestBase
+        {
+            public abstract class Human
+            {
+                public int Id { get; set; }
+            }
+
+            public abstract class Person : Human
+            {
+                public string Foo { get; set; }
+            }
+
+            public class Client : Person
+            {
+                public string CompanyName { get; set; }
+            }
+
+            public class Department
+            {
+                public int Id { get; set; }
+            }
+
+            public abstract class Employee : Person
+            {
+                public virtual Department Department { get; set; }
+                public DateTime HiredDate { get; set; }
+            }
+
+            public class User : Employee
+            {
+                public string Login { get; set; }
+            }
+
+            [Fact]
+            public void Foreign_keys_are_placed_correctly()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<Client>().ToTable("Clients");
+                modelBuilder.Entity<Human>().ToTable("Humans");
+                modelBuilder.Entity<Person>().ToTable("Persons");
+                modelBuilder.Entity<Employee>().ToTable("Employees");
+                modelBuilder.Entity<User>().ToTable("Users");
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<Human>("Humans")
+                    .HasNoForeignKeyColumns();
+                databaseMapping.Assert<Person>("Persons")
+                    .HasForeignKeyColumn("Id", "Humans");
+                databaseMapping.Assert<Employee>("Employees")
+                    .HasForeignKeyColumn("Id", "Persons")
+                    .HasForeignKeyColumn("Department_Id", "Departments");
+                databaseMapping.Assert<User>("Users")
+                    .HasForeignKeyColumn("Id", "Employees");
+                databaseMapping.Assert<Client>("Clients")
+                    .HasForeignKeyColumn("Id", "Persons");
+                databaseMapping.Assert<Department>("Departments")
+                    .HasNoForeignKeyColumns();
+            }
+        }
     }
 }
