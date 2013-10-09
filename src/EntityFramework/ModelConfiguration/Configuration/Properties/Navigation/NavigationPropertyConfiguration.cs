@@ -378,8 +378,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                     associationType.MarkPrincipalConfigured();
 
                     var navProp = model.EntityTypes
-                                       .SelectMany(et => et.DeclaredNavigationProperties)
-                                       .Single(np => np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
+                        .SelectMany(et => et.DeclaredNavigationProperties)
+                        .Single(
+                            np => np.RelationshipType.Equals(associationType) // CodePlex 546
+                                  && np.GetClrPropertyInfo().IsSameAs(NavigationProperty));
 
                     principalEnd = IsNavigationPropertyDeclaringTypePrincipal.Value
                                        ? associationType.GetOtherEnd(navProp.ResultEnd)
@@ -397,8 +399,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
 
                         var associationSet
                             = model.Containers
-                                   .SelectMany(ct => ct.AssociationSets)
-                                   .Single(aset => aset.ElementType == associationType);
+                                .SelectMany(ct => ct.AssociationSets)
+                                .Single(aset => aset.ElementType == associationType);
 
                         var sourceSet = associationSet.SourceSet;
 

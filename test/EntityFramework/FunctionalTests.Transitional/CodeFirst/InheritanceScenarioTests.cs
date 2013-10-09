@@ -8,6 +8,7 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using FunctionalTests.Model;
@@ -1274,6 +1275,80 @@ namespace FunctionalTests
 
         public class LosPollosHermanos : FastFoodChain
         {
+        }
+
+        [Fact] // CodePlex 546
+        public void Multiple_one_to_one_associations_using_same_lifted_nav_prop_are_identified_correctly()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<DerivedClassA>()
+                .HasOptional(e => e.ClassA1)
+                .WithOptionalDependent();
+
+            modelBuilder
+                .Entity<DerivedClassA>()
+                .HasOptional(e => e.ClassA2)
+                .WithOptionalDependent();
+
+            modelBuilder
+                .Entity<DerivedClassB>()
+                .HasOptional(e => e.ClassA1)
+                .WithOptionalDependent();
+
+            modelBuilder
+                .Entity<DerivedClassB>()
+                .HasOptional(e => e.ClassA2)
+                .WithOptionalDependent();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            var associationTypes = databaseMapping.Model.AssociationTypes.ToList();
+
+            Assert.Equal(4, associationTypes.Count);
+
+            var one = associationTypes.Single(a => a.Name == "DerivedClassA_ClassA1");
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, one.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, one.TargetEnd.RelationshipMultiplicity);
+            Assert.Equal("DerivedClassA", one.SourceEnd.GetEntityType().Name);
+            Assert.Equal("DerivedClassA", one.TargetEnd.GetEntityType().Name);
+
+            var two = associationTypes.Single(a => a.Name == "DerivedClassA_ClassA2");
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, two.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, two.TargetEnd.RelationshipMultiplicity);
+            Assert.Equal("DerivedClassA", two.SourceEnd.GetEntityType().Name);
+            Assert.Equal("DerivedClassA", two.TargetEnd.GetEntityType().Name);
+
+            var three = associationTypes.Single(a => a.Name == "DerivedClassB_ClassA1");
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, three.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, three.TargetEnd.RelationshipMultiplicity);
+            Assert.Equal("DerivedClassA", three.SourceEnd.GetEntityType().Name);
+            Assert.Equal("DerivedClassB", three.TargetEnd.GetEntityType().Name);
+
+            var four = associationTypes.Single(a => a.Name == "DerivedClassB_ClassA2");
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, four.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal(RelationshipMultiplicity.ZeroOrOne, four.TargetEnd.RelationshipMultiplicity);
+            Assert.Equal("DerivedClassA", four.SourceEnd.GetEntityType().Name);
+            Assert.Equal("DerivedClassB", four.TargetEnd.GetEntityType().Name);
+        }
+
+        public abstract class TheBaseClass
+        {
+            public int Id { get; set; }
+            public DerivedClassA ClassA1 { get; set; }
+            public DerivedClassA ClassA2 { get; set; }
+        }
+
+        public class DerivedClassA : TheBaseClass
+        {
+            public string TitleA { get; set; }
+        }
+
+        public class DerivedClassB : TheBaseClass
+        {
+            public string TitleB { get; set; }
         }
     }
 
