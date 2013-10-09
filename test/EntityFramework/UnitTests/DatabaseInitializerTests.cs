@@ -110,14 +110,16 @@ namespace System.Data.Entity
         }
 
         [Fact] // CodePlex 1192
-        public void DropCreateDatabaseAlways_does_nothing_if_Migrations_is_configured_and_database_exists()
+        public void DropCreateDatabaseAlways_throws_if_Migrations_is_configured_and_database_exists()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
                 databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
 
-            tracker.ExecuteStrategy();
+            Assert.Equal(
+                Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop("FakeNoRegContextProxy"),
+                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
 
-            Assert.Equal("Exists", tracker.Result);
+            Assert.Equal("", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
@@ -127,10 +129,10 @@ namespace System.Data.Entity
                 databaseExists: false, checker: new MigrationsChecker(c => true));
 
             Assert.Equal(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
+                Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop("FakeNoRegContextProxy"),
                 Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
 
-            Assert.Equal("Exists", tracker.Result);
+            Assert.Equal("", tracker.Result);
         }
 
         #endregion

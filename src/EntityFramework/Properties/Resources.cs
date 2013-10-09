@@ -1126,6 +1126,14 @@ namespace System.Data.Entity.Resources
         }
 
         /// <summary>
+        /// A string like "The DropCreateDatabaseAlways initializer did not drop or create the database backing context '{0}' because Migrations are enabled for the context. Use Migrations to manage the database for this context, for example by running the 'Update-Database' command from the Package Manager Console."
+        /// </summary>
+        internal static string DatabaseInitializationStrategy_MigrationsEnabledNoDrop(object p0)
+        {
+            return EntityRes.GetString(EntityRes.DatabaseInitializationStrategy_MigrationsEnabledNoDrop, p0);
+        }
+
+        /// <summary>
         /// A string like "Database '{0}' cannot be created because it already exists."
         /// </summary>
         internal static string Database_DatabaseAlreadyExists(object p0)
@@ -15488,6 +15496,7 @@ namespace System.Data.Entity.Resources
         internal const string DbPropertyValues_CannotSetPropertyOnNullOriginalValue = "DbPropertyValues_CannotSetPropertyOnNullOriginalValue";
         internal const string DatabaseInitializationStrategy_ModelMismatch = "DatabaseInitializationStrategy_ModelMismatch";
         internal const string DatabaseInitializationStrategy_MigrationsEnabled = "DatabaseInitializationStrategy_MigrationsEnabled";
+        internal const string DatabaseInitializationStrategy_MigrationsEnabledNoDrop = "DatabaseInitializationStrategy_MigrationsEnabledNoDrop";
         internal const string Database_DatabaseAlreadyExists = "Database_DatabaseAlreadyExists";
         internal const string Database_NonCodeFirstCompatibilityCheck = "Database_NonCodeFirstCompatibilityCheck";
         internal const string Database_NoDatabaseMetadata = "Database_NoDatabaseMetadata";
