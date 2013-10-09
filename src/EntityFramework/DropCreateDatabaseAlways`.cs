@@ -4,6 +4,7 @@ namespace System.Data.Entity
 {
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -49,11 +50,10 @@ namespace System.Data.Entity
         {
             Check.NotNull(context, "context");
 
-            if (_migrationsChecker.IsMigrationsConfigured(
-                context.InternalContext,
-                () => new DatabaseTableChecker().AnyModelTableExists(context.InternalContext) == DatabaseExistenceState.Exists))
+            if (_migrationsChecker.IsMigrationsConfigured(context.InternalContext, () => true))
             {
-                return;
+                throw new InvalidOperationException(
+                    Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop(context.GetType().Name));
             }
 
             context.Database.Delete();
