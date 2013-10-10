@@ -6,13 +6,13 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Configuration;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
     using Xunit;
-    using Xunit.Extensions;
 
-    public class ChangeTrackingProxyTests : FunctionalTestBase
+    public class ChangeTrackingProxyTests
     {
         #region Infrastructure/setup
 
@@ -40,53 +40,62 @@ namespace ProductivityApiTests
         #region DeleteObject throws a collection modified exception with change tracking proxies (Dev11 71937, 209773)
 
         [Fact]
-        [AutoRollback] 
-        [UseDefaultExecutionStrategy]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_71937()
         {
-            using (var context = new GranniesContext())
+            try
             {
-                var g = context.Grannys.Add(context.Grannys.Create());
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = true;
+                using (var context = new GranniesContext())
+                {
+                    using (context.Database.BeginTransaction())
+                    {
+                        var g = context.Grannys.Add(context.Grannys.Create());
 
-                var c = context.Children.Add(context.Children.Create());
-                c.Name = "Child";
+                        var c = context.Children.Add(context.Children.Create());
+                        c.Name = "Child";
 
-                var h = context.Houses.Add(context.Houses.Create());
+                        var h = context.Houses.Add(context.Houses.Create());
 
-                g.Children.Add(c);
-                g.House = h;
+                        g.Children.Add(c);
+                        g.House = h;
 
-                context.SaveChanges();
+                        context.SaveChanges();
 
-                context.Children.Remove(c); // This would previously throw
+                        context.Children.Remove(c); // This would previously throw
 
-                Assert.Equal(EntityState.Deleted, context.Entry(c).State);
-                Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
-                Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
+                        Assert.Equal(EntityState.Deleted, context.Entry(c).State);
+                        Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
+                        Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
 
-                Assert.Null(c.House);
-                Assert.Null(c.Granny);
+                        Assert.Null(c.House);
+                        Assert.Null(c.Granny);
 
-                Assert.Equal(0, g.Children.Count);
-                Assert.Same(h, g.House);
+                        Assert.Equal(0, g.Children.Count);
+                        Assert.Same(h, g.House);
 
-                Assert.Equal(0, h.Children.Count);
-                Assert.Same(g, h.Granny);
+                        Assert.Equal(0, h.Children.Count);
+                        Assert.Same(g, h.Granny);
 
-                context.SaveChanges();
+                        context.SaveChanges();
 
-                Assert.Equal(EntityState.Detached, context.Entry(c).State);
-                Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
-                Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
+                        Assert.Equal(EntityState.Detached, context.Entry(c).State);
+                        Assert.Equal(EntityState.Unchanged, context.Entry(g).State);
+                        Assert.Equal(EntityState.Unchanged, context.Entry(h).State);
 
-                Assert.Null(c.House);
-                Assert.Null(c.Granny);
+                        Assert.Null(c.House);
+                        Assert.Null(c.Granny);
 
-                Assert.Equal(0, g.Children.Count);
-                Assert.Same(h, g.House);
+                        Assert.Equal(0, g.Children.Count);
+                        Assert.Same(h, g.House);
 
-                Assert.Equal(0, h.Children.Count);
-                Assert.Same(g, h.Granny);
+                        Assert.Equal(0, h.Children.Count);
+                        Assert.Same(g, h.Granny);
+                    }
+                }
+            }
+            finally
+            {
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
             }
         }
 
@@ -132,26 +141,35 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void Deleting_object_when_relationships_have_not_been_all_enumerated_should_not_cause_collection_modified_exception_209773()
         {
             if (!_isSqlAzure)
             {
-                using (var context = new HaveToDoContext())
+                try
                 {
-                    var group = context.ComplexExams.Where(e => e.Code == "group").Single();
-                    var _ = group.Training.Id;
+                    ProviderAgnosticConfiguration.SuspendExecutionStrategy = true;
+                    using (var context = new HaveToDoContext())
+                    {
+                        using (context.Database.BeginTransaction())
+                        {
+                            var group = context.ComplexExams.Where(e => e.Code == "group").Single();
+                            var _ = group.Training.Id;
 
-                    context.ComplexExams.Remove(group); // This would previously throw
+                            context.ComplexExams.Remove(group); // This would previously throw
 
-                    Assert.Equal(EntityState.Deleted, context.Entry(group).State);
-                    Assert.Equal(0, group.Exams.Count);
+                            Assert.Equal(EntityState.Deleted, context.Entry(group).State);
+                            Assert.Equal(0, group.Exams.Count);
 
-                    context.SaveChanges();
+                            context.SaveChanges();
 
-                    Assert.Equal(EntityState.Detached, context.Entry(group).State);
-                    Assert.Equal(0, group.Exams.Count);
+                            Assert.Equal(EntityState.Detached, context.Entry(group).State);
+                            Assert.Equal(0, group.Exams.Count);
+                        }
+                    }
+                }
+                finally
+                {
+                    ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
                 }
             }
         }
@@ -215,40 +233,30 @@ namespace ProductivityApiTests
         #region Re-parenting 1:0..1 Added dependent (263813)
 
         [Fact]
-        public void
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_Added_dependnent_to_be_Detached()
+        public void Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_Added_dependnent_to_be_Detached()
         {
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
-                EntityState.Added, useFK: false);
+            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(EntityState.Added, useFK: false);
         }
 
         [Fact]
-        public void
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_Unchanged_dependnent_to_be_Deleted()
+        public void Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_Unchanged_dependnent_to_be_Deleted()
         {
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
-                EntityState.Unchanged, useFK: false);
+            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(EntityState.Unchanged, useFK: false);
         }
 
         [Fact]
         public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Added_dependnent_to_be_Detached()
         {
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
-                EntityState.Added, useFK: true);
+            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(EntityState.Added, useFK: true);
         }
 
         [Fact]
-        public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Unchanged_dependnent_to_be_Deleted(
-            
-            )
+        public void Re_parenting_one_to_zero_or_one_Added_dependent_by_changing_FK_should_cause_existing_Unchanged_dependnent_to_be_Deleted()
         {
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
-                EntityState.Unchanged, useFK: true);
+            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(EntityState.Unchanged, useFK: true);
         }
 
-        private void
-            Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(
-            EntityState dependentState, bool useFK)
+        private void Re_parenting_one_to_zero_or_one_Added_dependent_should_cause_existing_dependnent_to_be_Deleted_or_Detached(EntityState dependentState, bool useFK)
         {
             using (var context = new YummyContext())
             {
@@ -338,31 +346,49 @@ namespace ProductivityApiTests
         #endregion
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void RelationshipManager_can_be_accessed_by_casting_proxy_entity_to_IEntityWithRelationships()
         {
-            using (var context = new GranniesContext())
+            try
             {
-                var granny = context.Grannys.Create();
-                context.Grannys.Attach(granny);
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = true;
+                using (var context = new GranniesContext())
+                {
+                    using (context.Database.BeginTransaction())
+                    {
+                        var granny = context.Grannys.Create();
+                        context.Grannys.Attach(granny);
 
-                var relationshipManager = ((IEntityWithRelationships)granny).RelationshipManager;
-                Assert.NotNull(relationshipManager);
+                        var relationshipManager = ((IEntityWithRelationships)granny).RelationshipManager;
+                        Assert.NotNull(relationshipManager);
+                    }
+                }
+            }
+            finally
+            {
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
             }
         }
 
         [Fact]
-        [AutoRollback]
-        [UseDefaultExecutionStrategy]
         public void SetChangeTracker_can_be_called_by_casting_proxy_entity_to_IEntityWithChangeTracker()
         {
-            using (var context = new GranniesContext())
+            try
             {
-                var granny = context.Grannys.Create();
-                context.Grannys.Attach(granny);
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = true;
+                using (var context = new GranniesContext())
+                {
+                    using (context.Database.BeginTransaction())
+                    {
+                        var granny = context.Grannys.Create();
+                        context.Grannys.Attach(granny);
 
-                ((IEntityWithChangeTracker)granny).SetChangeTracker(null);
+                        ((IEntityWithChangeTracker)granny).SetChangeTracker(null);
+                    }
+                }
+            }
+            finally
+            {
+                ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
             }
         }
     }

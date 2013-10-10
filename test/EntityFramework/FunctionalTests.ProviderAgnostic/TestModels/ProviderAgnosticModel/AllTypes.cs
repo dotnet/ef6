@@ -4,6 +4,14 @@ namespace System.Data.Entity.TestModels.ProviderAgnosticModel
 {
     using System;
 
+    public enum AllTypesEnum
+    {
+        EnumValue0 = 0,
+        EnumValue1 = 1,
+        EnumValue2 = 2,
+        EnumValue3 = 3,
+    };
+
     public class AllTypes
     {
         public int Id { get; set; }
@@ -27,5 +35,6 @@ namespace System.Data.Entity.TestModels.ProviderAgnosticModel
         public string VariableLengthStringProperty { get; set; }
         public byte[] VariableLengthBinaryProperty { get; set; }
         public string VariableLengthUnicodeStringProperty { get; set; }
+        public AllTypesEnum EnumProperty { get; set; }
     }
 }

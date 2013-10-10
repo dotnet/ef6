@@ -198,11 +198,7 @@
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
-    <Compile Include="CodeFirst\EntitySplittingTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
-    <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
-    <Compile Include="CodeFirst\NameUniquificationTests.cs" />
-    <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
     <Compile Include="CodeFirst\QueryCachingTests.cs" />
     <Compile Include="CodeFirst\ModificationFunctionsEndToEndTests.cs" />
     <Compile Include="CodeFirst\SpecialCharacterTests.cs" />
@@ -241,9 +237,6 @@
     <Compile Include="ProductivityApi\DbContextTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
-    <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
-    <Compile Include="ProductivityApi\HasChangesTests.cs" />
-    <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
@@ -257,7 +250,6 @@
     <Compile Include="TestDoubles\InMemoryDbAsyncEnumerator.cs" />
     <Compile Include="TestDoubles\InMemoryDbSet.cs" />
     <Compile Include="TestDoubles\MockableDbSetTests.cs" />
-    <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="ProductivityApi\NamespaceAndNestingTests.cs" />
     <Compile Include="ProductivityApi\TimeoutTests.cs" />
     <Compile Include="Query\ApplyOpRulesTests.cs" />
@@ -640,7 +632,6 @@
     <Compile Include="TestModels\StoreModel\DatabaseLog.cs" />
     <Compile Include="TestModels\StoreModel\ErrorLog.cs" />
     <Compile Include="TestModels\AdvancedPatternsModel\AdvancedPatternsEmployeeContext.cs" />
-    <Compile Include="ProductivityApi\ChangeTrackingProxyTests.cs" />
     <Compile Include="ProductivityApi\ComplexTypeTests.cs" />
     <Compile Include="ProductivityApi\ConcurrencyTests.cs" />
     <Compile Include="ProductivityApi\ConnectionTests.cs" />
@@ -657,13 +648,6 @@
     <Compile Include="ProductivityApi\DetectChangesTests.cs" />
     <Compile Include="ProductivityApi\DisposeTests.cs" />
     <Compile Include="ProductivityApi\enumtests.cs" />
-    <Compile Include="ProductivityApi\extralazyloadingtests.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\cachingcollectioninitializer.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\collectionextensions.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\ihasisloaded.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\lazyblogcontext.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\queryablecollection.cs" />
-    <Compile Include="TestModels\ExtraLazyLoading\queryablecollectioninitializer.cs" />
     <Compile Include="ProductivityApi\FindTests.cs" />
     <Compile Include="ProductivityApi\IncludeTests.cs" />
     <Compile Include="TestModels\InvalidMappingModel\InvalidMappingContext.cs" />

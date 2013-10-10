@@ -1544,17 +1544,17 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     {
                         EntityWithPropertyLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                             (propertyValue) =>
-                                {
-                                    Assert.Equal(entity.ID, propertyValue);
-                                    return resultForValidationWithoutContext;
-                                };
+                            {
+                                Assert.Equal(entity.ID, propertyValue);
+                                return resultForValidationWithoutContext;
+                            };
                         EntityWithPropertyLevelCustomValidationAttributes.ValidateWithContextFunc =
                             (propertyValue, ctx) =>
-                                {
-                                    Assert.Equal(entity.ID, propertyValue);
-                                    Assert.Equal("ID", ctx.DisplayName);
-                                    return resultForValidationWithContext;
-                                };
+                            {
+                                Assert.Equal(entity.ID, propertyValue);
+                                Assert.Equal("ID", ctx.DisplayName);
+                                return resultForValidationWithContext;
+                            };
 
                         var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                         VerifyValidationResults(
@@ -1611,19 +1611,19 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     {
                         EntityWithEntityLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                             (validatedEntity) =>
-                                {
-                                    Assert.NotNull(validatedEntity);
-                                    Assert.Same(entity, validatedEntity);
-                                    return resultForValidationWithoutContext;
-                                };
+                            {
+                                Assert.NotNull(validatedEntity);
+                                Assert.Same(entity, validatedEntity);
+                                return resultForValidationWithoutContext;
+                            };
                         EntityWithEntityLevelCustomValidationAttributes.ValidateWithContextFunc =
                             (validatedEntity, ctx) =>
-                                {
-                                    Assert.NotNull(validatedEntity);
-                                    Assert.Same(entity, validatedEntity);
-                                    Assert.Equal(validatedEntity.GetType().Name, ctx.DisplayName);
-                                    return resultForValidationWithContext;
-                                };
+                            {
+                                Assert.NotNull(validatedEntity);
+                                Assert.Same(entity, validatedEntity);
+                                Assert.Equal(validatedEntity.GetType().Name, ctx.DisplayName);
+                                return resultForValidationWithContext;
+                            };
 
                         var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                         VerifyValidationResults(
@@ -1788,16 +1788,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             {
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (propertyValue) =>
-                        {
-                            Assert.True(false, "This shouldn't run.");
-                            return ValidationResult.Success;
-                        };
+                    {
+                        Assert.True(false, "This shouldn't run.");
+                        return ValidationResult.Success;
+                    };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (propertyValue, ctx) =>
-                        {
-                            Assert.True(false, "This shouldn't run.");
-                            return ValidationResult.Success;
-                        };
+                    {
+                        Assert.True(false, "This shouldn't run.");
+                        return ValidationResult.Success;
+                    };
 
                 var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 Assert.NotNull(entityValidationResult);
@@ -1830,24 +1830,24 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
             {
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (value) =>
+                    {
+                        if (!value.IsValid)
                         {
-                            if (!value.IsValid)
-                            {
-                                return result;
-                            }
-                            return ValidationResult.Success;
-                        };
+                            return result;
+                        }
+                        return ValidationResult.Success;
+                    };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (value, ctx) =>
+                    {
+                        if (!value.IsValid)
                         {
-                            if (!value.IsValid)
-                            {
-                                return result;
-                            }
+                            return result;
+                        }
 
-                            Assert.Equal("ID", ctx.DisplayName);
-                            return ValidationResult.Success;
-                        };
+                        Assert.Equal("ID", ctx.DisplayName);
+                        return ValidationResult.Success;
+                    };
 
                 var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 VerifyValidationResults(
@@ -1884,16 +1884,16 @@ namespace Microsoft.Data.CodeFirst.FunctionalTests.ProductivityApi.Validation
                     (propertyValue) => { return new ValidationResult(errorMessage); };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithoutContextFunc =
                     (value) =>
-                        {
-                            Assert.True(false, "This shouldn't run.");
-                            return ValidationResult.Success;
-                        };
+                    {
+                        Assert.True(false, "This shouldn't run.");
+                        return ValidationResult.Success;
+                    };
                 ComplexTypeWithTypeLevelCustomValidationAttributes.ValidateWithContextFunc =
                     (value, ctx) =>
-                        {
-                            Assert.True(false, "This shouldn't run.");
-                            return ValidationResult.Success;
-                        };
+                    {
+                        Assert.True(false, "This shouldn't run.");
+                        return ValidationResult.Success;
+                    };
 
                 var entityValidationResult = Invoke_DbContext_ValidateEntity(entity);
                 Assert.NotNull(entityValidationResult);

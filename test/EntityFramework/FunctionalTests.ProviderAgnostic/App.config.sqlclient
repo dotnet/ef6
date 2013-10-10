@@ -5,8 +5,9 @@
   </configSections>
   <appSettings>
     <add key="BaseConnectionString" value="Data Source=.\SQLEXPRESS; Integrated Security=True;" />
+    <add key="ProviderInvariantName" value="System.Data.SqlClient" />
   </appSettings>
-  <entityFramework codeConfigurationType="System.Data.Entity.Configuration.SqlClientConfiguration, EntityFramework.FunctionalTests.ProviderAgnostic">
+  <entityFramework codeConfigurationType="System.Data.Entity.Configuration.ProviderAgnosticConfiguration, EntityFramework.FunctionalTests.ProviderAgnostic">
     <providers>
       <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
     </providers>

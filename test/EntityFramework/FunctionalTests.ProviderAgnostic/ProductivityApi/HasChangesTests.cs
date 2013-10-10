@@ -4,7 +4,7 @@ namespace System.Data.Entity.ProductivityApi
 {
     using Xunit;
 
-    public class HasChangesTests : FunctionalTestBase
+    public class HasChangesTests
     {
         public HasChangesTests()
         {

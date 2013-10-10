@@ -9,7 +9,6 @@ namespace System.Data.Entity.Query.LinqToEntities
 
     public class IncludeTests
     {
-
         [Fact]
         public void Include_on_one_to_many_relationship()
         {

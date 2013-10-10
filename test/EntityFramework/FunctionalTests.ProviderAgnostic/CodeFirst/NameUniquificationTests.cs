@@ -12,7 +12,7 @@ namespace System.Data.Entity.CodeFirst
     public class NameUniquificationTests
     {
         // TPH, navigation properties with same name, on derived types.
-        public class Case1 : TestBase
+        public class Case1
         {
             // E2 declared before E3.
             public class Order1
@@ -98,7 +98,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         // TPH, inverse navigation properties to derived types.
-        public class Case2 : TestBase
+        public class Case2
         {
             // E2 declared before E3.
             public class Order1
@@ -186,7 +186,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         // Inverse navigation properties to same type.
-        public class Case3 : TestBase
+        public class Case3
         {
             public class Order1
             {
@@ -258,7 +258,7 @@ namespace System.Data.Entity.CodeFirst
         }
 
         // Table splitting, same property names.
-        public class Case4 : TestBase
+        public class Case4
         {
             public class E1
             {

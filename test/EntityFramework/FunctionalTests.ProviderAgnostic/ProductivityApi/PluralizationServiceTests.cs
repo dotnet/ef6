@@ -12,7 +12,7 @@
     /// <summary>
     /// Tests for validating the work of pluralization service in a DbContext.
     /// </summary>
-    public class PluralizationServiceTests : FunctionalTestBase
+    public class PluralizationServiceTests
     {
         [Fact]
         public void PluralizationService_pluralize_names_taken_from_DbSet_property_type_names()
@@ -67,7 +67,10 @@
             public DbSet<Product> Products { get; set; }
             public DbSet<Category> Categories { get; set; }
 
-            public PluralizationServiceContext() { }
+            public PluralizationServiceContext()
+                : base("PluralizationServiceContext")
+            { 
+            }
         }
 
         public class FakePluralizationService : IPluralizationService

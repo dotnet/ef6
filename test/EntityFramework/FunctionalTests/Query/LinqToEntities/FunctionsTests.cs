@@ -12,16 +12,6 @@ namespace System.Data.Entity.Query.LinqToEntities
         public class StringFunctions : FunctionalTestBase
         {
             [Fact]
-            public void String_Concat_translated_properly_to_plus_operator()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => string.Concat(o.LastName, o.FirstName));
-                    Assert.True(query.ToString().Contains("+"));
-                }
-            }
-
-            [Fact]
             public void IsNullOrEmpty_translated_properly_to_expression()
             {
                 using (var context = new ArubaContext())
@@ -65,133 +55,6 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
                     Assert.Contains("LIKE N'NAME%'", query.ToString().ToUpperInvariant());
                 }
             }
-
-            [Fact]
-            public void String_Length_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.Length);
-                    Assert.Contains("LEN", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void IndexOf_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.IndexOf("N"));
-
-                    // translated to charindex() - 1
-                    Assert.True(query.ToString().ToLowerInvariant().Contains("charindex"));
-                    Assert.Contains("CHARINDEX", query.ToString().ToUpperInvariant());
-                    Assert.True(query.ToString().Contains("- 1"));
-                }
-            }
-
-            [Fact]
-            public void String_Insert_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var expectedSql =
-                        @"SELECT 
-SUBSTRING([Extent1].[LastName], 1, 2) + N'Foo' + SUBSTRING([Extent1].[LastName], 2 + 1, ( CAST(LEN([Extent1].[LastName]) AS int)) - 2) AS [C1]
-FROM [dbo].[ArubaOwners] AS [Extent1]";
-
-                    var query = context.Owners.Select(o => o.LastName.Insert(2, "Foo"));
-                    QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-                }
-            }
-
-            [Fact]
-            public void String_Remove_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var expectedSql =
-                        @"SELECT 
-SUBSTRING([Extent1].[LastName], 1, 2) + SUBSTRING([Extent1].[LastName], 2 + 3 + 1, ( CAST(LEN([Extent1].[LastName]) AS int)) - (2 + 3)) AS [C1]
-FROM [dbo].[ArubaOwners] AS [Extent1]";
-
-                    var query = context.Owners.Select(o => o.LastName.Remove(2, 3));
-                    QueryTestHelpers.VerifyDbQuery(query, expectedSql);
-                }
-            }
-
-            [Fact]
-            public void String_Replace_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.Replace("Name", "Foo"));
-                    Assert.Contains("REPLACE", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void Substring_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query1 = context.Owners.Select(o => o.LastName.Substring(1));
-                    var query2 = context.Owners.Select(o => o.LastName.Substring(1, 2));
-                    Assert.Contains("SUBSTRING", query1.ToString().ToUpperInvariant());
-                    Assert.Contains("SUBSTRING", query2.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void ToLower_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.ToLower());
-                    Assert.Contains("LOWER", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void ToUpper_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.ToUpper());
-                    Assert.Contains("UPPER", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void Trim_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.Trim());
-                    Assert.Contains("LTRIM", query.ToString().ToUpperInvariant());
-                    Assert.Contains("RTRIM", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void TrimStart_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.TrimStart());
-                    Assert.Contains("LTRIM", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void TrimEnd_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Owners.Select(o => o.LastName.TrimEnd());
-                    Assert.Contains("RTRIM", query.ToString().ToUpperInvariant());
-                }
-            }
         }
 
         public class DateTimeFunctions : FunctionalTestBase
@@ -213,83 +76,6 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
                 {
                     var query = context.Owners.Select(o => DateTime.UtcNow);
                     Assert.Contains("SYSUTCDATETIME", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Day_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Day);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("DAY", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Hour_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Hour);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("HOUR", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Millisecond_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Millisecond);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("MILLISECOND", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Minute_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Minute);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("MINUTE", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Month_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Month);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("MONTH", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Second_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Second);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("SECOND", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void DateTime_Year_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.Failures.Select(f => f.Changed.Year);
-                    Assert.Contains("DATEPART", query.ToString().ToUpperInvariant());
-                    Assert.Contains("YEAR", query.ToString().ToUpperInvariant());
                 }
             }
 
@@ -462,26 +248,6 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
         public class MathFunctions : FunctionalTestBase
         {
             [Fact]
-            public void Ceiling_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.AllTypes.Select(a => Math.Ceiling(a.c7_decimal_28_4));
-                    Assert.Contains("CEILING", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void Floor_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query = context.AllTypes.Select(a => Math.Floor(a.c7_decimal_28_4));
-                    Assert.Contains("FLOOR", query.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
             public void Rounds_properly_translated_to_function()
             {
                 using (var context = new ArubaContext())
@@ -527,21 +293,6 @@ FROM [dbo].[ArubaOwners] AS [Extent1]";
 
                     var query7 = context.AllTypes.Select(a => Math.Abs(a.c10_float));
                     Assert.Contains("ABS", query7.ToString().ToUpperInvariant());
-                }
-            }
-
-            [Fact]
-            public void Truncates_properly_translated_to_function()
-            {
-                using (var context = new ArubaContext())
-                {
-                    var query1 = context.AllTypes.Select(a => Math.Truncate(a.c7_decimal_28_4));
-                    Assert.Contains("ROUND", query1.ToString().ToUpperInvariant());
-                    Assert.Contains("0", query1.ToString().ToUpperInvariant());
-
-                    var query2 = context.AllTypes.Select(a => Math.Truncate(a.c10_float));
-                    Assert.Contains("ROUND", query2.ToString().ToUpperInvariant());
-                    Assert.Contains("0", query2.ToString().ToUpperInvariant());
                 }
             }
 

@@ -268,6 +268,7 @@ namespace System.Data.Entity.TestModels.ProviderAgnosticModel
                     VariableLengthBinaryProperty = Enumerable.Repeat<byte>((byte)i, 1 + i % 7).ToArray(),
                     VariableLengthStringProperty = new string((char)(i + 'a'), i % 8),
                     VariableLengthUnicodeStringProperty = new string((char)(i + 'a'), i),
+                    EnumProperty = (AllTypesEnum)(i % 4),
                 };
 
                 allTypesList[i] = allTypes;
@@ -357,7 +358,7 @@ namespace System.Data.Entity.TestModels.ProviderAgnosticModel
                 var owner = new Owner
                 {
                     Id = i,
-                    Alias = "Owner Alias " + i,
+                    Alias = "  Owner Alias " + i + " ",
                     FirstName = "First Name " + i % 3,
                     LastName = "Last Name " + i,
                 };

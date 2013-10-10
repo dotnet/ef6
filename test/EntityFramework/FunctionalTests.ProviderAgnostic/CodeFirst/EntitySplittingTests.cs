@@ -8,7 +8,7 @@ namespace System.Data.Entity.CodeFirst
     using System.Data.Entity.Core.Metadata.Edm;
     using Xunit;
 
-    public class EntitySplitingTests : FunctionalTestBase
+    public class EntitySplitingTests
     {
         public class MyEntity
         {

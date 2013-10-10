@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace LazyUnicorns
+namespace System.Data.Entity.TestModels.ExtraLazyLoading
 {
     using System;
     using System.Collections.Concurrent;
@@ -37,35 +37,35 @@ namespace LazyUnicorns
             var factories = _factories.GetOrAdd(
                 entity.GetType(),
                 t =>
+                {
+                    var currentDetectChanges = context.Configuration.AutoDetectChangesEnabled;
+                    try
                     {
-                        var currentDetectChanges = context.Configuration.AutoDetectChangesEnabled;
-                        try
+                        context.Configuration.AutoDetectChangesEnabled = false;
+
+                        var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
+
+                        foreach (var property in t.GetRuntimeProperties().Where(p => p.IsPublic()))
                         {
-                            context.Configuration.AutoDetectChangesEnabled = false;
+                            var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
 
-                            var list = new List<Tuple<string, Func<DbCollectionEntry, object>>>();
-
-                            foreach (var property in t.GetRuntimeProperties().Where(p => p.IsPublic()))
+                            if (collectionEntry != null)
                             {
-                                var collectionEntry = context.Entry(entity).Member(property.Name) as DbCollectionEntry;
-
-                                if (collectionEntry != null)
+                                var elementType = TryGetElementType(property);
+                                if (elementType != null)
                                 {
-                                    var elementType = TryGetElementType(property);
-                                    if (elementType != null)
-                                    {
-                                        list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
-                                    }
+                                    list.Add(Tuple.Create(property.Name, CreateCollectionFactory(elementType)));
                                 }
                             }
+                        }
 
-                            return list;
-                        }
-                        finally
-                        {
-                            context.Configuration.AutoDetectChangesEnabled = currentDetectChanges;
-                        }
-                    });
+                        return list;
+                    }
+                    finally
+                    {
+                        context.Configuration.AutoDetectChangesEnabled = currentDetectChanges;
+                    }
+                });
 
             foreach (var factory in factories)
             {

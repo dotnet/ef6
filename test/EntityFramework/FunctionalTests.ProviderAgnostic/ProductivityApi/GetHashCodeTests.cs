@@ -9,13 +9,18 @@ namespace System.Data.Entity.ProductivityApi
     using System.Runtime.Serialization.Formatters.Binary;
     using Xunit;
 
-    public class GetHashCodeTests : TestBase
+    public class GetHashCodeTests
     {
         #region Test model
 
         public class GetHashCodeContext : DbContext
         {
             public GetHashCodeContext()
+                : base("GetHashCodeContext")
+            {
+            }
+
+            static GetHashCodeContext()
             {
                 Database.SetInitializer(new GetHashCodeInitializer());
             }

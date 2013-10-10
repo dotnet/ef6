@@ -4,11 +4,11 @@ namespace System.Data.Entity.CodeFirst
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.TestHelpers;
+    using System.Data.Entity.Configuration;
     using System.Linq;
     using Xunit;
 
-    public class NonPublicPropertyTests : FunctionalTestBase
+    public class NonPublicPropertyTests
     {
         [Fact] // CodePlex 137
         public void Entities_with_unmapped_base_class_with_private_property_setters_can_be_queried()
@@ -34,7 +34,6 @@ namespace System.Data.Entity.CodeFirst
         }
 
         [Fact] // CodePlex 137
-        [UseDefaultExecutionStrategy]
         public void Entities_with_unmapped_base_class_with_private_property_setters_can_be_updated_and_inserted()
         {
             using (var context = new PrivacyContext())
@@ -52,18 +51,27 @@ namespace System.Data.Entity.CodeFirst
                             new ActualEntity2(748, "Slash Dot Dash", AnEnum.Beat, 0, null)
                         });
 
-                using (context.Database.BeginTransaction())
+                try
                 {
-                    context.SaveChanges();
+                    ProviderAgnosticConfiguration.SuspendExecutionStrategy = true;
 
-                    var twos = context.Twos.AsNoTracking().ToList();
-                    Assert.Equal(new[] { "Slash Dot Dash", "Wonderful Night" }, twos.Select(t => t.Name).OrderBy(n => n));
-                    Assert.Equal(new[] { 747, 748 }, twos.Select(t => t.Id).OrderBy(n => n));
+                    using (context.Database.BeginTransaction())
+                    {
+                        context.SaveChanges();
 
-                    one = context.Ones.AsNoTracking().Single();
-                    Assert.Equal("Praise You", one.Name);
-                    Assert.Equal(AnEnum.Big, one.AnEnum);
-                    Assert.Equal(32, one.Info.Image.Length);
+                        var twos = context.Twos.AsNoTracking().ToList();
+                        Assert.Equal(new[] { "Slash Dot Dash", "Wonderful Night" }, twos.Select(t => t.Name).OrderBy(n => n));
+                        Assert.Equal(new[] { 747, 748 }, twos.Select(t => t.Id).OrderBy(n => n));
+
+                        one = context.Ones.AsNoTracking().Single();
+                        Assert.Equal("Praise You", one.Name);
+                        Assert.Equal(AnEnum.Big, one.AnEnum);
+                        Assert.Equal(32, one.Info.Image.Length);
+                    }
+                }
+                finally
+                {
+                    ProviderAgnosticConfiguration.SuspendExecutionStrategy = false;
                 }
             }
         }
@@ -254,6 +262,11 @@ namespace System.Data.Entity.CodeFirst
 
         public class PrivacyContext : DbContext
         {
+            public PrivacyContext()
+                : base("PrivacyContext")
+            {
+            }
+
             static PrivacyContext()
             {
                 Database.SetInitializer(new PrivacyInitializer());

@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;$(BuildConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;EF_FUNCTIONALS;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -32,7 +32,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;$(BuildConstants)</DefineConstants>
+    <DefineConstants>TRACE;EF_FUNCTIONALS;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -45,7 +45,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DebugNet40\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NET40;$(BuildConstants)</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NET40;EF_FUNCTIONALS;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -57,7 +57,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\ReleaseNet40\</OutputPath>
-    <DefineConstants>TRACE;NET40;$(BuildConstants)</DefineConstants>
+    <DefineConstants>TRACE;NET40;EF_FUNCTIONALS;$(BuildConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -75,6 +75,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -85,12 +86,47 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\MySqlConnectionFactory.cs" Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" />
-    <Compile Include="Configuration\MySqlConfiguration.cs" Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" />
-    <Compile Include="Configuration\MySqlHistoryContext.cs" Condition="'$(Configuration)' != 'ReleaseNet40' And '$(Configuration)' != 'DebugNet40'" />
-    <Compile Include="Configuration\SqlClientConfiguration.cs" />
+    <Compile Include="..\..\..\src\Common\TypeExtensions.cs">
+      <Link>Utilities\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\DebugCheck.cs">
+      <Link>Utilities\DebugCheck.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\MemberInfoExtensions.cs">
+      <Link>Utilities\MemberInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\AssemblyExtensions.cs">
+      <Link>Utilities\AssemblyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\Common\PropertyInfoExtensions.cs">
+      <Link>Utilities\PropertyInfoExtensions.cs</Link>
+    </Compile>
+    <Compile Include="CodeFirst\EntitySplittingTests.cs" />
+    <Compile Include="CodeFirst\InheritanceScenarioTests.cs" />
+    <Compile Include="CodeFirst\NameUniquificationTests.cs" />
+    <Compile Include="CodeFirst\NonPublicPropertyTests.cs" />
+    <Compile Include="Configuration\MySqlConnectionFactory.cs" />
+    <Compile Include="Configuration\MySqlHistoryContext.cs" />
+    <Compile Include="Configuration\ProviderAgnosticConfiguration.cs" />
+    <Compile Include="ProductivityApi\ChangeTrackingProxyTests.cs" />
+    <Compile Include="ProductivityApi\ExtraLazyLoadingTests.cs" />
+    <Compile Include="ProductivityApi\GetHashCodeTests.cs" />
+    <Compile Include="ProductivityApi\HasChangesTests.cs" />
+    <Compile Include="ProductivityApi\PluralizationServiceTests.cs" />
+    <Compile Include="ProductivityApi\StreamingTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\LinqToEntities\EnumTests.cs" />
+    <Compile Include="Query\LinqToEntities\FunctionsTests.cs" />
     <Compile Include="Query\LinqToEntities\IncludeTests.cs" />
+    <Compile Include="Query\LinqToEntities\MaterializationTests.cs" />
+    <Compile Include="Query\LinqToEntities\OrderByLiftingTests.cs" />
+    <Compile Include="Query\QueryTestHelpers.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\CachingCollectionInitializer.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\CollectionExtensions.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\IHasIsLoaded.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\LazyBlogContext.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\QueryableCollection.cs" />
+    <Compile Include="TestModels\ExtraLazyLoading\QueryableCollectionInitializer.cs" />
     <Compile Include="TestModels\ProviderAgnosticModel\Bug.cs" />
     <Compile Include="TestModels\ProviderAgnosticModel\Failure.cs" />
     <Compile Include="TestModels\ProviderAgnosticModel\AllTypes.cs" />
@@ -119,6 +155,10 @@
     <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
       <Project>{e06d1c12-efe8-4413-a15c-ae01fc158f2f}</Project>
       <Name>EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FunctionalTests.Transitional\FunctionalTests.Transitional.csproj">
+      <Project>{3d65611f-e8fb-4a33-9196-7836969d6378}</Project>
+      <Name>FunctionalTests.Transitional</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

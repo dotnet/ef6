@@ -5,11 +5,11 @@ namespace ProductivityApiTests
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Functionals.Utilities;
+    using System.Data.Entity.TestModels.ExtraLazyLoading;
     using System.Linq;
-    using LazyUnicorns;
     using Xunit;
 
-    public class ExtraLazyLoadingTests : FunctionalTestBase
+    public class ExtraLazyLoadingTests
     {
         #region General extra-lazy collection tests
 
