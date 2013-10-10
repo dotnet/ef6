@@ -98,6 +98,7 @@
     <Compile Include="Extensions\IComponentModelExtensions.cs" />
     <Compile Include="Extensions\IEnumerableOfEdmSchemaErrorExtensions.cs" />
     <Compile Include="Extensions\ProjectExtensions.cs" />
+    <Compile Include="Extensions\ProjectItemExtensions.cs" />
     <Compile Include="Extensions\ProjectItemsExtensions.cs" />
     <Compile Include="Extensions\SourceControlExtenstions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -115,16 +116,27 @@
       <DependentUpon>Resources.tt</DependentUpon>
     </Compile>
     <Compile Include="Utilities\Check.cs" />
+    <Compile Include="Utilities\VBViewGenerator.cs">
+      <DependentUpon>VBViewGenerator.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Utilities\DebugCheck.cs" />
     <Compile Include="Utilities\EdmxUtility.cs" />
     <Compile Include="Utilities\EfTextTemplateHost.cs" />
     <Compile Include="Utilities\FileExtensions.cs" />
+    <Compile Include="Utilities\IViewGenerator.cs" />
     <Compile Include="Utilities\TemplateProcessor.cs" />
     <Compile Include="Utilities\Templates.cs" />
     <Compile Include="DbContextPackage.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Utilities\CSharpViewGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharpViewGenerator.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="db.png">
@@ -166,6 +178,14 @@
     </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Utilities\VBViewGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>VBViewGenerator.cs</LastGenOutput>
+    </None>
+    <None Include="Utilities\CSharpViewGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSharpViewGenerator.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

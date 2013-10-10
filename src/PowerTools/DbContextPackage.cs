@@ -619,5 +619,12 @@ namespace Microsoft.DbContextPackage
         {
             return (T)GetService(typeof(T));
         }
+
+        internal TResult GetService<TService, TResult>()
+            where TService : class
+            where TResult : class
+        {
+            return (TResult)GetService(typeof(TService));
+        }
     }
 }

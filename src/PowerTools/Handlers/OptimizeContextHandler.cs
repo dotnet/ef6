@@ -2,17 +2,23 @@
 namespace Microsoft.DbContextPackage.Handlers
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Design;
     using System.Data.Mapping;
     using System.Data.Metadata.Edm;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
+    using System.Reflection;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using EnvDTE;
     using Microsoft.DbContextPackage.Extensions;
     using Microsoft.DbContextPackage.Resources;
     using Microsoft.DbContextPackage.Utilities;
+    using Microsoft.VisualStudio.Shell.Design;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using VSLangProj;
     using Task = System.Threading.Tasks.Task;
 
     internal class OptimizeContextHandler
@@ -30,17 +36,6 @@ namespace Microsoft.DbContextPackage.Handlers
         {
             Type contextType = context.GetType();
 
-            if (GetEntityFrameworkVersion(contextType) >= new Version(6, 0))
-            {
-                MessageBox.Show(
-                    "Generating views for Entity Framework version 6 is currently not supported.",
-                    "Entity Framework Power Tools",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
-
-                return;
-            }
-
             try
             {
                 var selectedItem = _package.DTE2.SelectedItems.Item(1);
@@ -49,9 +44,30 @@ namespace Microsoft.DbContextPackage.Handlers
                     ? LanguageOption.GenerateCSharpCode
                     : LanguageOption.GenerateVBCode;
                 var objectContext = DbContextPackage.GetObjectContext(context);
-                var mappingCollection = (StorageMappingItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+                var baseFileName = contextType.Name;
 
-                OptimizeContextCore(languageOption, contextType.Name, mappingCollection);
+                if (GetEntityFrameworkVersion(contextType) < new Version(6, 0))
+                {
+                    var mappingCollection = (StorageMappingItemCollection)objectContext.MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+
+                    OptimizeContextEF5(languageOption, baseFileName, mappingCollection, selectedItem);
+                }
+                else
+                {
+                    var metadataWorkspace = objectContext.MetadataWorkspace;
+                    var getItemCollection = ((Type)metadataWorkspace.GetType()).GetMethod("GetItemCollection");
+                    var dataSpace = getItemCollection.GetParameters().First().ParameterType;
+                    var mappingCollection = getItemCollection.Invoke(
+                        metadataWorkspace,
+                        new[] { Enum.Parse(dataSpace, "CSSpace") });
+
+                    OptimizeContextEF6(
+                        languageOption,
+                        baseFileName,
+                        mappingCollection,
+                        selectedItem,
+                        contextType.FullName);
+                }
             }
             catch (Exception ex)
             {
@@ -67,13 +83,40 @@ namespace Microsoft.DbContextPackage.Handlers
 
             try
             {
-                var project = _package.DTE2.SelectedItems.Item(1).ProjectItem.ContainingProject;
+                var selectedItem = _package.DTE2.SelectedItems.Item(1);
+                var project = selectedItem.ProjectItem.ContainingProject;
                 var languageOption = project.CodeModel.Language == CodeModelLanguageConstants.vsCMLanguageCSharp
                     ? LanguageOption.GenerateCSharpCode
                     : LanguageOption.GenerateVBCode;
-                var mappingCollection = new EdmxUtility(inputPath).GetMappingCollection();
+                var edmxUtility = new EdmxUtility(inputPath);
 
-                OptimizeContextCore(languageOption, baseFileName, mappingCollection);
+                var ef6Reference = ((VSProject)project.Object).References.Cast<Reference>().FirstOrDefault(
+                    r => r.Name.EqualsIgnoreCase("EntityFramework")
+                        && Version.Parse(r.Version) >= new Version(6, 0)
+                        && r.PublicKeyToken.EqualsIgnoreCase("b77a5c561934e089"));
+
+                if (ef6Reference == null)
+                {
+                    var mappingCollection = edmxUtility.GetMappingCollection();
+
+                    OptimizeContextEF5(languageOption, baseFileName, mappingCollection, selectedItem);
+                }
+                else
+                {
+                    var typeService = _package.GetService<DynamicTypeService>();
+                    var solution = _package.GetService<SVsSolution, IVsSolution>();
+                    IVsHierarchy hierarchy;
+                    solution.GetProjectOfUniqueName(project.UniqueName, out hierarchy);
+                    var typeResolutionService = typeService.GetTypeResolutionService(hierarchy);
+                    var ef6Assembly = typeResolutionService.GetAssembly(
+                        new AssemblyName { Name = ef6Reference.Name, Version = new Version(ef6Reference.Version) });
+
+                    string containerName;
+                    var mappingCollection = edmxUtility.GetMappingCollectionEF6(ef6Assembly, out containerName);
+                    var contextTypeName = selectedItem.ProjectItem.GetDefaultNamespace() + "." + containerName;
+
+                    OptimizeContextEF6(languageOption, baseFileName, mappingCollection, selectedItem, contextTypeName);
+                }
             }
             catch (Exception ex)
             {
@@ -81,23 +124,24 @@ namespace Microsoft.DbContextPackage.Handlers
             }
         }
 
-        private void OptimizeContextCore(LanguageOption languageOption, string baseFileName, StorageMappingItemCollection mappingCollection)
+        private void OptimizeContextCore(
+            LanguageOption languageOption,
+            string baseFileName,
+            SelectedItem selectedItem,
+            Action<string> generateAction)
         {
             DebugCheck.NotEmpty(baseFileName);
-            DebugCheck.NotNull(mappingCollection);
 
             var progressTimer = new Timer { Interval = 1000 };
 
             try
             {
-                var selectedItem = _package.DTE2.SelectedItems.Item(1);
                 var selectedItemPath = (string)selectedItem.ProjectItem.Properties.Item("FullPath").Value;
-                var viewGenerator = new EntityViewGenerator(languageOption);
                 var viewsFileName = baseFileName
-                        + ".Views"
-                        + ((languageOption == LanguageOption.GenerateCSharpCode)
-                            ? FileExtensions.CSharp
-                            : FileExtensions.VisualBasic);
+                    + ".Views"
+                    + ((languageOption == LanguageOption.GenerateCSharpCode)
+                        ? FileExtensions.CSharp
+                        : FileExtensions.VisualBasic);
                 var viewsPath = Path.Combine(
                     Path.GetDirectoryName(selectedItemPath),
                     viewsFileName);
@@ -115,11 +159,10 @@ namespace Microsoft.DbContextPackage.Handlers
                 progressTimer.Start();
 
                 Task.Factory.StartNew(
-                    () =>
-                    {
-                        var errors = viewGenerator.GenerateViews(mappingCollection, viewsPath);
-                        errors.HandleErrors(Strings.Optimize_SchemaError(baseFileName));
-                    })
+                        () =>
+                        {
+                            generateAction(viewsPath);
+                        })
                     .ContinueWith(
                         t =>
                         {
@@ -147,6 +190,69 @@ namespace Microsoft.DbContextPackage.Handlers
 
                 throw;
             }
+        }
+
+        private void OptimizeContextEF5(
+            LanguageOption languageOption,
+            string baseFileName,
+            StorageMappingItemCollection mappingCollection,
+            SelectedItem selectedItem)
+        {
+            DebugCheck.NotEmpty(baseFileName);
+            DebugCheck.NotNull(mappingCollection);
+
+            OptimizeContextCore(
+                languageOption,
+                baseFileName,
+                selectedItem,
+                viewsPath =>
+                {
+                    var viewGenerator = new EntityViewGenerator(languageOption);
+                    var errors = viewGenerator.GenerateViews(mappingCollection, viewsPath);
+                    errors.HandleErrors(Strings.Optimize_SchemaError(baseFileName));
+                });
+        }
+
+        private void OptimizeContextEF6(
+            LanguageOption languageOption,
+            string baseFileName,
+            dynamic mappingCollection,
+            SelectedItem selectedItem,
+            string contextTypeName)
+        {
+            DebugCheck.NotEmpty(baseFileName);
+
+            OptimizeContextCore(
+                languageOption,
+                baseFileName,
+                selectedItem,
+                viewsPath =>
+                {
+                    var edmSchemaError = ((Type)mappingCollection.GetType()).Assembly
+                        .GetType("System.Data.Entity.Core.Metadata.Edm.EdmSchemaError", true);
+                    var listOfEdmSchemaError = typeof(List<>).MakeGenericType(edmSchemaError);
+                    var errors = Activator.CreateInstance(listOfEdmSchemaError);
+                    var views = ((Type)mappingCollection.GetType())
+                        .GetMethod("GenerateViews", new[] { listOfEdmSchemaError })
+                        .Invoke(mappingCollection, new[] { errors });
+
+                    foreach (var error in (IEnumerable<dynamic>)errors)
+                    {
+                        if ((int)error.Severity == 1)
+                        {
+                            throw new EdmSchemaErrorException(Strings.Optimize_SchemaError(baseFileName));
+                        }
+                    }
+
+                    var viewGenerator = languageOption == LanguageOption.GenerateVBCode
+                        ? (IViewGenerator)new VBViewGenerator()
+                        : new CSharpViewGenerator();
+                    viewGenerator.ContextTypeName = contextTypeName;
+                    viewGenerator.MappingHashValue = mappingCollection.ComputeMappingHashValue();
+                    viewGenerator.Views = views;
+
+                    File.WriteAllText(viewsPath, viewGenerator.TransformText());
+                });
         }
 
         private Version GetEntityFrameworkVersion(Type contextType)

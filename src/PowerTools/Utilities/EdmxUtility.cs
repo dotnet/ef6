@@ -1,11 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 namespace Microsoft.DbContextPackage.Utilities
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Design;
     using System.Data.Mapping;
     using System.Data.Metadata.Edm;
     using System.IO;
+    using System.Reflection;
     using System.Xml;
     using System.Xml.Linq;
     using Microsoft.DbContextPackage.Extensions;
@@ -61,6 +63,58 @@ namespace Microsoft.DbContextPackage.Utilities
                         new[] { reader },
                         out errors);
                 errors.HandleErrors(Strings.EdmSchemaError(edmxFileName, EdmxSection.Msl.SectionName));
+            }
+
+            return mappingCollection;
+        }
+
+        public dynamic GetMappingCollectionEF6(Assembly ef6Assembly, out string containerName)
+        {
+            var edmItemCollectionType = ef6Assembly.GetType(
+                "System.Data.Entity.Core.Metadata.Edm.EdmItemCollection",
+                true);
+            var storeItemCollectionType = ef6Assembly.GetType(
+                "System.Data.Entity.Core.Metadata.Edm.StoreItemCollection",
+                true);
+            var storageMappingItemCollectionType = ef6Assembly.GetType(
+                "System.Data.Entity.Core.Mapping.StorageMappingItemCollection",
+                true);
+
+            dynamic edmCollection;
+            using (var reader = CreateSectionReader(EdmxSection.Csdl))
+            {
+                edmCollection = Activator.CreateInstance(
+                    edmItemCollectionType,
+                    (IEnumerable<XmlReader>)new[] { reader });
+            }
+
+            containerName = null;
+            foreach (var item in edmCollection)
+            {
+                if (item.GetType().Name == "EntityContainer")
+                {
+                    containerName = item.ToString();
+
+                    break;
+                }
+            }
+
+            dynamic storeCollection;
+            using (var reader = CreateSectionReader(EdmxSection.Ssdl))
+            {
+                storeCollection = Activator.CreateInstance(
+                    storeItemCollectionType,
+                    (IEnumerable<XmlReader>)new[] { reader });
+            }
+
+            dynamic mappingCollection;
+            using (var reader = CreateSectionReader(EdmxSection.Msl))
+            {
+                mappingCollection = Activator.CreateInstance(
+                    storageMappingItemCollectionType,
+                    edmCollection,
+                    storeCollection,
+                    (IEnumerable<XmlReader>)new[] { reader });
             }
 
             return mappingCollection;

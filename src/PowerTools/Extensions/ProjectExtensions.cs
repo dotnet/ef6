@@ -94,6 +94,13 @@ namespace Microsoft.DbContextPackage.Extensions
             return dte.Solution.SolutionBuild.LastBuildInfo == 0;
         }
 
+        public static string GetRootNamespace(this Project project)
+        {
+            DebugCheck.NotNull(project);
+
+            return project.GetPropertyValue<string>("RootNamespace");
+        }
+
         private static T GetPropertyValue<T>(this Project project, string propertyName)
         {
             DebugCheck.NotNull(project);
