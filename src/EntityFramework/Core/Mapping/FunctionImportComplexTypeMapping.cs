@@ -4,16 +4,47 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.ObjectModel;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Utilities;
+    using System.Diagnostics;
 
-    internal sealed class FunctionImportComplexTypeMapping : FunctionImportStructuralTypeMapping
+    /// <summary>
+    /// Represents a complex type mapping for a function import result.
+    /// </summary>
+    public sealed class FunctionImportComplexTypeMapping : FunctionImportStructuralTypeMapping
     {
-        internal readonly ComplexType ReturnType;
+        private readonly ComplexType _returnType;
+
+        /// <summary>
+        /// Initializes a new FunctionImportComplexTypeMapping instance.
+        /// </summary>
+        /// <param name="returnType">The return type.</param>
+        /// <param name="properties">The property mappings for the result type of a function import.</param>
+        public FunctionImportComplexTypeMapping(
+            ComplexType returnType, 
+            Collection<FunctionImportReturnTypePropertyMapping> properties)
+            : this(
+                Check.NotNull(returnType, "returnType"),
+                Check.NotNull(properties, "properties"), 
+                LineInfo.Empty)
+        {
+        }
 
         internal FunctionImportComplexTypeMapping(
-            ComplexType returnType, Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList, LineInfo lineInfo)
-            : base(columnsRenameList, lineInfo)
+            ComplexType returnType, Collection<FunctionImportReturnTypePropertyMapping> properties, LineInfo lineInfo)
+            : base(properties, lineInfo)
         {
-            ReturnType = returnType;
+            DebugCheck.NotNull(returnType);
+            DebugCheck.NotNull(properties);
+
+            _returnType = returnType;
+        }
+
+        /// <summary>
+        /// Ges the return type.
+        /// </summary>
+        public ComplexType ReturnType
+        {
+            get { return _returnType; }
         }
     }
 }

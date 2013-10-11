@@ -9,8 +9,37 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Linq;
 
-    internal sealed class FunctionImportEntityTypeMapping : FunctionImportStructuralTypeMapping
+    /// <summary>
+    /// Represents a function import entity type mapping.
+    /// </summary>
+    public sealed class FunctionImportEntityTypeMapping : FunctionImportStructuralTypeMapping
     {
+        private readonly ReadOnlyCollection<EntityType> _entityTypes;
+        private readonly ReadOnlyCollection<EntityType> _isOfTypeEntityTypes;
+        private readonly ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> _conditions;
+
+        /// <summary>
+        /// Initializes a new FunctionImportEntityTypeMapping instance.
+        /// </summary>
+        /// <param name="isOfTypeEntityTypes">The entity types at the base of 
+        /// the type hierarchies to be mapped.</param>
+        /// <param name="entityTypes">The entity types to be mapped.</param>
+        /// <param name="properties">The property mappings for the result types of a function import.</param>
+        /// <param name="conditions">The mapping conditions.</param>
+        public FunctionImportEntityTypeMapping(
+            IEnumerable<EntityType> isOfTypeEntityTypes,
+            IEnumerable<EntityType> entityTypes, 
+            Collection<FunctionImportReturnTypePropertyMapping> properties,
+            IEnumerable<FunctionImportEntityTypeMappingCondition> conditions)
+            : this(
+                Check.NotNull(isOfTypeEntityTypes, "isOfTypeEntityTypes"), 
+                Check.NotNull(entityTypes, "entityTypes"),
+                Check.NotNull(conditions, "conditions"),
+                Check.NotNull(properties, "properties"),
+                LineInfo.Empty)
+        {
+        }
+
         internal FunctionImportEntityTypeMapping(
             IEnumerable<EntityType> isOfTypeEntityTypes,
             IEnumerable<EntityType> entityTypes, IEnumerable<FunctionImportEntityTypeMappingCondition> conditions,
@@ -22,14 +51,34 @@ namespace System.Data.Entity.Core.Mapping
             DebugCheck.NotNull(entityTypes);
             DebugCheck.NotNull(conditions);
 
-            IsOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(isOfTypeEntityTypes.ToList());
-            EntityTypes = new ReadOnlyCollection<EntityType>(entityTypes.ToList());
-            Conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(conditions.ToList());
+            _isOfTypeEntityTypes = new ReadOnlyCollection<EntityType>(isOfTypeEntityTypes.ToList());
+            _entityTypes = new ReadOnlyCollection<EntityType>(entityTypes.ToList());
+            _conditions = new ReadOnlyCollection<FunctionImportEntityTypeMappingCondition>(conditions.ToList());
         }
 
-        internal readonly ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> Conditions;
-        internal readonly ReadOnlyCollection<EntityType> EntityTypes;
-        internal readonly ReadOnlyCollection<EntityType> IsOfTypeEntityTypes;
+        /// <summary>
+        /// Gets the entity types being mapped.
+        /// </summary>
+        public ReadOnlyCollection<EntityType> EntityTypes
+        {
+            get { return _entityTypes; } 
+        }
+
+        /// <summary>
+        /// Gets the entity types at the base of the hierarchies being mapped.
+        /// </summary>
+        public ReadOnlyCollection<EntityType> IsOfTypeEntityTypes
+        {
+            get { return _isOfTypeEntityTypes; }
+        }
+
+        /// <summary>
+        /// Gets the mapping conditions.
+        /// </summary>
+        public ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> Conditions
+        {
+            get { return _conditions; }
+        }
 
         // <summary>
         // Gets all (concrete) entity types implied by this type mapping.

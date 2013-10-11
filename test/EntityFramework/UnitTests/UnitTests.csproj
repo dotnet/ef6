@@ -160,7 +160,10 @@
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
     <Compile Include="Core\Mapping\ComplexPropertyMappingTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportEntityTypeMappingConditionValueTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportMappingNonComposableTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportResultMappingTests.cs" />
     <Compile Include="Core\Mapping\MappingItemTests.cs" />
     <Compile Include="Core\Mapping\IsNullConditionMappingTests.cs" />
     <Compile Include="Core\Mapping\MetadataMappingHasherVisitorTests.cs" />

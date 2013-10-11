@@ -2,15 +2,41 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
-    internal sealed class FunctionImportEntityTypeMappingConditionIsNull : FunctionImportEntityTypeMappingCondition
+    using System.Data.Entity.Utilities;
+
+    /// <summary>
+    /// Represents a mapping condition for the result of a function import
+    /// evaluated by checking null or not null.
+    /// </summary>
+    public sealed class FunctionImportEntityTypeMappingConditionIsNull : FunctionImportEntityTypeMappingCondition
     {
+        private readonly bool _isNull;
+
+        /// <summary>
+        /// Initializes a new FunctionImportEntityTypeMappingConditionIsNull instance.
+        /// </summary>
+        /// <param name="columnName">The name of the column used to evaluate the condition.</param>
+        /// <param name="isNull">Flag that indicates whether a null or not null check is performed.</param>
+        public FunctionImportEntityTypeMappingConditionIsNull(string columnName, bool isNull)
+            : this(Check.NotNull(columnName, "columnName"), isNull, LineInfo.Empty)
+        {
+        }
+
         internal FunctionImportEntityTypeMappingConditionIsNull(string columnName, bool isNull, LineInfo lineInfo)
             : base(columnName, lineInfo)
         {
-            IsNull = isNull;
+            DebugCheck.NotNull(columnName);
+
+            _isNull = isNull;
         }
 
-        internal readonly bool IsNull;
+        /// <summary>
+        /// Gets a flag that indicates whether a null or not null check is performed.
+        /// </summary>
+        public bool IsNull
+        {
+            get { return _isNull; }
+        }
 
         internal override ValueCondition ConditionValue
         {

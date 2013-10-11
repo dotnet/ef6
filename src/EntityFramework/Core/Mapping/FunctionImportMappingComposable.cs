@@ -18,14 +18,117 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    // <summary>
-    // Represents a mapping from a model function import to a store composable function.
-    // </summary>
-    internal class FunctionImportMappingComposable : FunctionImportMapping
+    /// <summary>
+    /// Represents a mapping from a model function import to a store composable function.
+    /// </summary>
+    public class FunctionImportMappingComposable : FunctionImportMapping
     {
+        private readonly FunctionImportResultMapping _resultMapping;
+        private readonly EntityContainerMapping _containerMapping;
+
+        /// <summary>
+        /// Initializes a new FunctionImportMappingComposable instance.
+        /// </summary>
+        /// <param name="functionImport">The model function import.</param>
+        /// <param name="targetFunction">The store composable function.</param>
+        /// <param name="resultMapping">The result mapping for the function import.</param>
+        /// <param name="containerMapping">The parent container mapping.</param>
+        public FunctionImportMappingComposable(
+            EdmFunction functionImport,
+            EdmFunction targetFunction,
+            FunctionImportResultMapping resultMapping,
+            EntityContainerMapping containerMapping)
+            : base(
+                Check.NotNull(functionImport, "functionImport"), 
+                Check.NotNull(targetFunction, "targetFunction"))
+        {
+            Check.NotNull(resultMapping, "resultMapping");
+            Check.NotNull(containerMapping, "containerMapping");
+
+            if (!functionImport.IsComposableAttribute)
+            {
+                throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("functionImport"));
+            }
+
+            if (!targetFunction.IsComposableAttribute)
+            {
+                throw new ArgumentException(Strings.NonComposableFunctionCannotBeMappedAsComposable("targetFunction"));
+            }
+
+            if (functionImport.EntitySet != null)
+            {
+                throw new NotSupportedException(Strings.ComposableFunctionImportsReturningEntitiesNotSupported);
+            }
+
+            EdmType resultType;
+            if (!MetadataHelper.TryGetFunctionImportReturnType(functionImport, 0, out resultType))
+            {
+                throw new ArgumentException(Strings.InvalidReturnTypeForComposableFunction);
+            }
+
+            // Function mapping is allowed only for TVFs on the s-space.
+            var cTypeTargetFunction = containerMapping.StorageMappingItemCollection.StoreItemCollection.ConvertToCTypeFunction(targetFunction);
+            var cTypeTvfElementType = TypeHelpers.GetTvfReturnType(cTypeTargetFunction);
+            var sTypeTvfElementType = TypeHelpers.GetTvfReturnType(targetFunction);
+
+            if (cTypeTvfElementType == null)
+            {
+                Debug.Assert(sTypeTvfElementType == null);
+
+                throw new ArgumentException(
+                    Strings.Mapping_FunctionImport_ResultMapping_InvalidSType(functionImport.Identity),
+                    "functionImport");
+            }
+
+            var errors = new List<EdmSchemaError>();           
+            var functionImportHelper = new FunctionImportMappingComposableHelper(
+                containerMapping,
+                String.Empty,
+                errors);
+
+            FunctionImportMappingComposable mapping;
+
+            if (Helper.IsStructuralType(resultType))
+            {
+                functionImportHelper.TryCreateFunctionImportMappingComposableWithStructuralResult(
+                    functionImport,
+                    cTypeTargetFunction,
+                    resultMapping.SourceList,
+                    cTypeTvfElementType,
+                    sTypeTvfElementType,
+                    LineInfo.Empty,
+                    out mapping);
+            }
+            else
+            {
+                Debug.Assert(TypeSemantics.IsScalarType(resultType));
+                Debug.Assert(resultMapping.TypeMappings.Count == 0);
+
+                functionImportHelper.TryCreateFunctionImportMappingComposableWithScalarResult(
+                    functionImport,
+                    cTypeTargetFunction,
+                    targetFunction,
+                    resultType,
+                    cTypeTvfElementType,
+                    LineInfo.Empty,
+                    out mapping);
+            }
+
+            if (mapping == null)
+            {
+                throw new InvalidOperationException(errors.Count > 0 ? errors[0].Message : String.Empty);
+            }
+
+            _containerMapping = mapping._containerMapping;
+            m_commandParameters = mapping.m_commandParameters;
+            m_structuralTypeMappings = mapping.m_structuralTypeMappings;
+            m_targetFunctionKeys = mapping.m_targetFunctionKeys;
+            _resultMapping = resultMapping;
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public FunctionImportMappingComposable(
+        internal FunctionImportMappingComposable(
             EdmFunction functionImport,
             EdmFunction targetFunction,
             List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>> structuralTypeMappings)
@@ -66,10 +169,10 @@ namespace System.Data.Entity.Core.Mapping
             EdmFunction targetFunction,
             List<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>> structuralTypeMappings,
             EdmProperty[] targetFunctionKeys,
-            StorageMappingItemCollection mappingItemCollection)
+            EntityContainerMapping containerMapping)
             : base(functionImport, targetFunction)
         {
-            DebugCheck.NotNull(mappingItemCollection);
+            DebugCheck.NotNull(containerMapping);
             Debug.Assert(functionImport.IsComposableAttribute, "functionImport.IsComposableAttribute");
             Debug.Assert(targetFunction.IsComposableAttribute, "targetFunction.IsComposableAttribute");
             Debug.Assert(
@@ -87,7 +190,7 @@ namespace System.Data.Entity.Core.Mapping
                 "Keys must be inferred for a function import returning entities.");
             Debug.Assert(targetFunctionKeys == null || targetFunctionKeys.Length > 0, "Keys must be null or non-empty.");
 
-            m_mappingItemCollection = mappingItemCollection;
+            _containerMapping = containerMapping;
             // We will use these parameters to target s-space function calls in the generated command tree. 
             // Since enums don't exist in s-space we need to use the underlying type.
             m_commandParameters =
@@ -95,8 +198,6 @@ namespace System.Data.Entity.Core.Mapping
             m_structuralTypeMappings = structuralTypeMappings;
             m_targetFunctionKeys = targetFunctionKeys;
         }
-
-        private readonly StorageMappingItemCollection m_mappingItemCollection;
 
         // <summary>
         // Command parameter refs created from m_edmFunction parameters.
@@ -120,8 +221,16 @@ namespace System.Data.Entity.Core.Mapping
         // </summary>
         private Node m_internalTreeNode;
 
+        /// <summary>
+        /// Gets the result mapping for the function import.
+        /// </summary>
+        public FunctionImportResultMapping ResultMapping
+        {
+            get { return _resultMapping; }
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
-        public ReadOnlyCollection<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
+        internal ReadOnlyCollection<Tuple<StructuralType, List<ConditionPropertyMapping>, List<PropertyMapping>>>
             StructuralTypeMappings
         {
             get
@@ -260,7 +369,7 @@ namespace System.Data.Entity.Core.Mapping
 
         internal DbQueryCommandTree GenerateFunctionView(out DiscriminatorMap discriminatorMap)
         {
-            DebugCheck.NotNull(m_mappingItemCollection);
+            DebugCheck.NotNull(_containerMapping);
 
             discriminatorMap = null;
 
@@ -290,7 +399,7 @@ namespace System.Data.Entity.Core.Mapping
 
             // Generate parameterized command, where command parameters are semantically the c-space function parameters.
             return DbQueryCommandTree.FromValidExpression(
-                m_mappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, queryExpression);
+                _containerMapping.StorageMappingItemCollection.Workspace, TargetPerspective.TargetPerspectiveDataSpace, queryExpression);
         }
 
         private IEnumerable<DbExpression> GetParametersForTargetFunctionCall()

@@ -115,6 +115,8 @@
     <Compile Include="..\Common\PropertyInfoExtensions.cs">
       <Link>Utilities\PropertyInfoExtensions.cs</Link>
     </Compile>
+    <Compile Include="Core\Mapping\FunctionImportMappingComposableHelper.cs" />
+    <Compile Include="Core\Mapping\FunctionImportResultMapping.cs" />
     <Compile Include="Core\Mapping\IsNullConditionMapping.cs" />
     <Compile Include="Core\Mapping\MappingItem.cs" />
     <Compile Include="Core\Mapping\ValueConditionMapping.cs" />

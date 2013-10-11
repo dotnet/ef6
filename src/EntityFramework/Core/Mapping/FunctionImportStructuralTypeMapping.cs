@@ -4,7 +4,10 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Collections.ObjectModel;
 
-    internal abstract class FunctionImportStructuralTypeMapping
+    /// <summary>
+    /// Specifies a function import structural type mapping.
+    /// </summary>
+    public abstract class FunctionImportStructuralTypeMapping
     {
         internal readonly LineInfo LineInfo;
         internal readonly Collection<FunctionImportReturnTypePropertyMapping> ColumnsRenameList;
@@ -14,6 +17,14 @@ namespace System.Data.Entity.Core.Mapping
         {
             ColumnsRenameList = columnsRenameList;
             LineInfo = lineInfo;
+        }
+
+        /// <summary>
+        /// Gets the property mappings for the result type of a function import.
+        /// </summary>
+        public ReadOnlyCollection<FunctionImportReturnTypePropertyMapping> Properties
+        {
+            get { return new ReadOnlyCollection<FunctionImportReturnTypePropertyMapping>(ColumnsRenameList); }
         }
     }
 }

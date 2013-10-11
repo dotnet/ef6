@@ -8,24 +8,6 @@ namespace System.Data.Entity.Core.Mapping
     public class FunctionImportMappingTests
     {
         [Fact]
-        public void Can_not_create_composable_function_import_mapping_with_null_store_function()
-        {
-            Assert.Equal(
-                "functionImport",
-                Assert.Throws<ArgumentNullException>(
-                    () => new FunctionImportMappingFake(null, new EdmFunction("f", "n", DataSpace.SSpace))).ParamName);
-        }
-
-        [Fact]
-        public void Can_not_create_composable_function_import_mapping_with_null_function_import()
-        {
-            Assert.Equal(
-                "targetFunction",
-                Assert.Throws<ArgumentNullException>(
-                    () => new FunctionImportMappingFake(new EdmFunction("f", "n", DataSpace.CSpace), null)).ParamName);
-        }
-
-        [Fact]
         public void Can_get_function_import_and_store_function()
         {
             var functionImport = 

@@ -83,6 +83,11 @@ namespace System.Data.Entity.Core.Mapping
         {
         }
 
+        // For test only.
+        internal EntityContainerMapping()
+        {
+        }
+
         private readonly string identity;
         private readonly bool m_validate;
         private readonly bool m_generateUpdateViews;

@@ -2,17 +2,19 @@
 
 namespace System.Data.Entity.Core.Mapping
 {
-    internal abstract class FunctionImportReturnTypePropertyMapping
+    /// <summary>
+    /// Base class for mapping a property of a function import return type.
+    /// </summary>
+    public abstract class FunctionImportReturnTypePropertyMapping : MappingItem
     {
-        internal readonly string CMember;
-        internal readonly string SColumn;
         internal readonly LineInfo LineInfo;
 
-        internal FunctionImportReturnTypePropertyMapping(string cMember, string sColumn, LineInfo lineInfo)
+        internal FunctionImportReturnTypePropertyMapping(LineInfo lineInfo)
         {
-            CMember = cMember;
-            SColumn = sColumn;
             LineInfo = lineInfo;
         }
+
+        internal abstract string CMember { get; }
+        internal abstract string SColumn { get; }
     }
 }

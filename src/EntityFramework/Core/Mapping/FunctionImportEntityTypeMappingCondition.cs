@@ -4,23 +4,35 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Utilities;
 
-    internal abstract class FunctionImportEntityTypeMappingCondition
+    /// <summary>
+    /// Represents a mapping condition for a function import result.
+    /// </summary>
+    public abstract class FunctionImportEntityTypeMappingCondition : MappingItem
     {
-        protected FunctionImportEntityTypeMappingCondition(string columnName, LineInfo lineInfo)
+        private readonly string _columnName;
+        internal FunctionImportEntityTypeMappingCondition(string columnName, LineInfo lineInfo)
         {
             DebugCheck.NotNull(columnName);
 
-            ColumnName = columnName;
+            _columnName = columnName;
             LineInfo = lineInfo;
         }
 
-        internal readonly string ColumnName;
+        /// <summary>
+        /// Gets the name of the column used to evaluate the condition.
+        /// </summary>
+        public string ColumnName
+        {
+            get { return _columnName; }
+        }
+
         internal readonly LineInfo LineInfo;
 
         internal abstract ValueCondition ConditionValue { get; }
 
         internal abstract bool ColumnValueMatchesCondition(object columnValue);
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return ConditionValue.ToString();

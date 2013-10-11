@@ -12,8 +12,8 @@ namespace System.Data.Entity.Core.Mapping
     {
         internal FunctionImportMapping(EdmFunction functionImport, EdmFunction targetFunction)
         {
-            Check.NotNull(functionImport, "functionImport");
-            Check.NotNull(targetFunction, "targetFunction");
+            DebugCheck.NotNull(functionImport);
+            DebugCheck.NotNull(targetFunction);
 
             FunctionImport = functionImport;
             TargetFunction = targetFunction;
