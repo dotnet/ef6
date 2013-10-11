@@ -10,38 +10,55 @@ namespace System.Data.Entity.Core.Mapping
     using System.Diagnostics;
     using System.Globalization;
 
-    // <summary>
-    // Describes the location of a member within an entity or association type structure.
-    // </summary>
-    internal sealed class ModificationFunctionMemberPath : MappingItem
+    /// <summary>
+    /// Describes the location of a member within an entity or association type structure.
+    /// </summary>
+    public sealed class ModificationFunctionMemberPath : MappingItem
     {
-        internal ModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSetNavigation)
+        private readonly ReadOnlyCollection<EdmMember> _members;
+        private readonly AssociationSetEnd _associationSetEnd;
+
+        /// <summary>
+        /// Initializes a new ModificationFunctionMemberPath instance.
+        /// </summary>
+        /// <param name="members">Gets the members in the path from the leaf (the member being bound)
+        /// to the root of the structure.</param>
+        /// <param name="associationSet">Gets the association set to which we are navigating 
+        /// via this member. If the value is null, this is not a navigation member path.</param>
+        public ModificationFunctionMemberPath(IEnumerable<EdmMember> members, AssociationSet associationSet)
         {
-            DebugCheck.NotNull(members);
+            Check.NotNull(members, "members");
 
-            Members = new ReadOnlyCollection<EdmMember>(new List<EdmMember>(members));
+            _members = new ReadOnlyCollection<EdmMember>(new List<EdmMember>(members));
 
-            if (null != associationSetNavigation)
+            if (null != associationSet)
             {
                 Debug.Assert(2 == Members.Count, "Association bindings must always consist of the end and the key");
 
                 // find the association set end
-                AssociationSetEnd = associationSetNavigation.AssociationSetEnds[Members[1].Name];
+                _associationSetEnd = associationSet.AssociationSetEnds[Members[1].Name];
             }
         }
 
-        // <summary>
-        // Gets the members in the path from the leaf (the member being bound)
-        // to the Root of the structure.
-        // </summary>
-        internal readonly ReadOnlyCollection<EdmMember> Members;
+        /// <summary>
+        /// Gets the members in the path from the leaf (the member being bound)
+        /// to the Root of the structure.
+        /// </summary>
+        public ReadOnlyCollection<EdmMember> Members
+        {
+            get { return _members; }
+        }
 
-        // <summary>
-        // Gets the association set to which we are navigating via this member. If the value
-        // is null, this is not a navigation member path.
-        // </summary>
-        internal readonly AssociationSetEnd AssociationSetEnd;
+        /// <summary>
+        /// Gets the association set to which we are navigating via this member. If the value
+        /// is null, this is not a navigation member path.
+        /// </summary>
+        public AssociationSetEnd AssociationSetEnd
+        {
+            get { return _associationSetEnd; }
+        }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return String.Format(

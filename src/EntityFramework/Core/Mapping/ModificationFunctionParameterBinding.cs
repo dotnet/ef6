@@ -6,38 +6,58 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Utilities;
     using System.Globalization;
 
-    // <summary>
-    // Binds a modification function parameter to a member of the entity or association being modified.
-    // </summary>
-    internal sealed class ModificationFunctionParameterBinding : MappingItem
+    /// <summary>
+    /// Binds a modification function parameter to a member of the entity or association being modified.
+    /// </summary>
+    public sealed class ModificationFunctionParameterBinding : MappingItem
     {
-        internal ModificationFunctionParameterBinding(
+        private readonly FunctionParameter _parameter;
+        private readonly ModificationFunctionMemberPath _memberPath;
+        private readonly bool _isCurrent;
+
+        /// <summary>
+        /// Initializes a new ModificationFunctionParameterBinding instance.
+        /// </summary>
+        /// <param name="parameter">The parameter taking the value.</param>
+        /// <param name="memberPath">The path to the entity or association member defining the value.</param>
+        /// <param name="isCurrent">A flag indicating whether the current or original member value is being bound.</param>
+        public ModificationFunctionParameterBinding(
             FunctionParameter parameter, ModificationFunctionMemberPath memberPath, bool isCurrent)
         {
-            DebugCheck.NotNull(parameter);
-            DebugCheck.NotNull(memberPath);
+            Check.NotNull(parameter, "parameter");
+            Check.NotNull(memberPath, "memberPath");
 
-            Parameter = parameter;
-            MemberPath = memberPath;
-            IsCurrent = isCurrent;
+            _parameter = parameter;
+            _memberPath = memberPath;
+            _isCurrent = isCurrent;
         }
 
-        // <summary>
-        // Gets the parameter taking the value.
-        // </summary>
-        internal readonly FunctionParameter Parameter;
+        /// <summary>
+        /// Gets the parameter taking the value.
+        /// </summary>
+        public FunctionParameter Parameter
+        {
+            get { return _parameter; }
+        }
 
-        // <summary>
-        // Gets the path to the entity or association member defining the value.
-        // </summary>
-        internal readonly ModificationFunctionMemberPath MemberPath;
+        /// <summary>
+        /// Gets the path to the entity or association member defining the value.
+        /// </summary>
+        public ModificationFunctionMemberPath MemberPath
+        {
+            get { return _memberPath; }
+        }
 
-        // <summary>
-        // Gets a value indicating whether the current or original
-        // member value is being bound.
-        // </summary>
-        internal readonly bool IsCurrent;
+        /// <summary>
+        /// Gets a flag indicating whether the current or original
+        /// member value is being bound.
+        /// </summary>
+        public bool IsCurrent
+        {
+            get { return _isCurrent; }
+        }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return String.Format(

@@ -169,6 +169,9 @@
     <Compile Include="Core\Mapping\MetadataMappingHasherVisitorTests.cs" />
     <Compile Include="Core\Mapping\AssociationTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\EntityTypeModificationFunctionMappingTests.cs" />
+    <Compile Include="Core\Mapping\MidificationFunctionMemberPathTests.cs" />
+    <Compile Include="Core\Mapping\ModificationFunctionParameterBindingTests.cs" />
+    <Compile Include="Core\Mapping\ModificationFunctionResultBindingTests.cs" />
     <Compile Include="Core\Mapping\StorageMappingItemCollectionTests.cs" />
     <Compile Include="Core\Mapping\ModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\PropertyMappingTests.cs" />

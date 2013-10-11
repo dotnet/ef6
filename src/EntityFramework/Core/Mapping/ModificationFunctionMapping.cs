@@ -7,6 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     using System.Data.Entity.Core.Common.Utils;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
 
@@ -17,8 +18,20 @@ namespace System.Data.Entity.Core.Mapping
     {
         private FunctionParameter _rowsAffectedParameter;
         private readonly EdmFunction _function;
+        private readonly ReadOnlyCollection<ModificationFunctionParameterBinding> _parameterBindings;
+        private readonly ReadOnlyCollection<AssociationSetEnd> _collocatedAssociationSetEnds;
+        private readonly ReadOnlyCollection<ModificationFunctionResultBinding> _resultBindings;
 
-        internal ModificationFunctionMapping(
+        /// <summary>
+        /// Initializes a new ModificationFunctionMapping instance.
+        /// </summary>
+        /// <param name="entitySet">The entity or association set.</param>
+        /// <param name="entityType">The entity or association type.</param>
+        /// <param name="function">The metadata of function to which we should bind.</param>
+        /// <param name="parameterBindings">Bindings for function parameters.</param>
+        /// <param name="rowsAffectedParameter">The output parameter producing number of rows affected.</param>
+        /// <param name="resultBindings">Bindings for the results of function evaluation</param>
+        public ModificationFunctionMapping(
             EntitySetBase entitySet,
             EntityTypeBase entityType,
             EdmFunction function,
@@ -26,14 +39,14 @@ namespace System.Data.Entity.Core.Mapping
             FunctionParameter rowsAffectedParameter,
             IEnumerable<ModificationFunctionResultBinding> resultBindings)
         {
-            DebugCheck.NotNull(entitySet);
-            DebugCheck.NotNull(function);
-            DebugCheck.NotNull(parameterBindings);
+            Check.NotNull(entitySet, "entitySet");
+            Check.NotNull(function, "function");
+            Check.NotNull(parameterBindings, "parameterBindings");
 
             _function = function;
             _rowsAffectedParameter = rowsAffectedParameter;
 
-            ParameterBindings = new ReadOnlyCollection<ModificationFunctionParameterBinding>(parameterBindings.ToList());
+            _parameterBindings = new ReadOnlyCollection<ModificationFunctionParameterBinding>(parameterBindings.ToList());
 
             if (null != resultBindings)
             {
@@ -41,11 +54,11 @@ namespace System.Data.Entity.Core.Mapping
 
                 if (0 < bindings.Count)
                 {
-                    ResultBindings = new ReadOnlyCollection<ModificationFunctionResultBinding>(bindings);
+                    _resultBindings = new ReadOnlyCollection<ModificationFunctionResultBinding>(bindings);
                 }
             }
 
-            CollocatedAssociationSetEnds =
+            _collocatedAssociationSetEnds =
                 new ReadOnlyCollection<AssociationSetEnd>(
                     GetReferencedAssociationSetEnds(entitySet as EntitySet, entityType as EntityType, parameterBindings)
                         .ToList());
@@ -57,9 +70,11 @@ namespace System.Data.Entity.Core.Mapping
         public FunctionParameter RowsAffectedParameter
         {
             get { return _rowsAffectedParameter; }
-            set
+
+            internal set
             {
                 DebugCheck.NotNull(value);
+                Debug.Assert(!IsReadOnly);
 
                 _rowsAffectedParameter = value;
             }
@@ -83,25 +98,31 @@ namespace System.Data.Entity.Core.Mapping
             get { return _function; }
         }
 
-        // <summary>
-        // Gets bindings for function parameters.
-        // </summary>
-        internal readonly ReadOnlyCollection<ModificationFunctionParameterBinding> ParameterBindings;
-
-        // <summary>
-        // Gets all association set ends collocated in this mapping.
-        // </summary>
-        internal readonly ReadOnlyCollection<AssociationSetEnd> CollocatedAssociationSetEnds;
-
-        // <summary>
-        // Gets bindings for the results of function evaluation.
-        // </summary>
-        internal readonly ReadOnlyCollection<ModificationFunctionResultBinding> ResultBindings;
+        /// <summary>
+        /// Gets bindings for function parameters.
+        /// </summary>
+        public ReadOnlyCollection<ModificationFunctionParameterBinding> ParameterBindings
+        {
+            get { return _parameterBindings; }
+        }
 
         /// <summary>
-        /// ToString
+        /// Gets all association set ends collocated in this mapping.
         /// </summary>
-        /// <returns>A string that represents the current object.</returns>
+        internal ReadOnlyCollection<AssociationSetEnd> CollocatedAssociationSetEnds
+        {
+            get { return _collocatedAssociationSetEnds; }
+        }
+
+        /// <summary>
+        /// Gets bindings for the results of function evaluation.
+        /// </summary>
+        public ReadOnlyCollection<ModificationFunctionResultBinding> ResultBindings
+        {
+            get { return _resultBindings; }
+        }
+
+        /// <inheritdoc/>
         public override string ToString()
         {
             return String.Format(
