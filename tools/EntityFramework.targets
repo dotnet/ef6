@@ -17,6 +17,36 @@ Project global post-settings and targets.
     </PropertyGroup>
   </Target>
 
+  <!-- GetNuGetContentFromProject: Gets the Compile item collection (source files) from projects into the NuGetContent item. -->
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.nuproj'">
+    <BuildDependsOn>GetNuGetContentFromProject;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <NuGetContentProject>
+      <SourceRootFullPath />
+      <Destination>src</Destination>
+    </NuGetContentProject>
+  </ItemDefinitionGroup>
+
+  <Target Name="GetNuGetContentFromProject" Condition="'@(NuGetContentProject)' != ''">
+    <MSBuild Projects="$(MSBuildThisFileFullPath)" Targets="GetNuGetContentFromProjectCore"
+             Properties="NuGetContentProject=%(NuGetContentProject.FullPath);SourceRootFullPath=%(RootDir)%(Directory)\..\;Destination=%(Destination)" >
+      <Output TaskParameter="TargetOutputs" ItemName="NuGetContent" />
+    </MSBuild>
+  </Target>
+
+  <Target Name="GetNuGetContentFromProjectCore" Outputs="@(NuGetContent)">
+    <MSBuild Projects="$(NuGetContentProject)" Targets="GetCompile" RebaseOutputs="true">
+      <Output TaskParameter="TargetOutputs" ItemName="Compile" />
+    </MSBuild>
+    <ItemGroup>
+      <NugetContent Include="%(Compile.FullPath)">
+        <Destination>$([System.IO.Path]::Combine($(Destination), $([MSBuild]::MakeRelative($([System.IO.Path]::GetFullPath($(SourceRootFullPath))), %(Compile.RootDir)%(Directory)))))</Destination>
+      </NugetContent>
+    </ItemGroup>
+  </Target>
+
   <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 </Project>
 
