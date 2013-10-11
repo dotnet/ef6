@@ -15,6 +15,8 @@ Relevant parameters:
   merged, with precedense taken by the provided parameters. This allows for parameterization of the file.
 * NuGetPackOptions property:
   Represents the options passed to the NuGet.exe tool in the command line.
+* NuGetPackSymbols property:
+  Determines whether symbols package is built. Ignored if NuGetPackOptions is defined.
 * NuGetOutputPath property:
   Represents the directory where the package is to be created.
 ****************************************************************************************************-->
@@ -26,22 +28,25 @@ Relevant parameters:
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <OutputPath Condition="'$(OutputPath)' == ''">bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath Condition="'$(IntermediateOutputPath)' == ''">obj\$(Configuration)\</IntermediateOutputPath>
+    <IntermediateOutputPath Condition="'$(NuGetPackageLanguage)' != ''">$(IntermediateOutputPath)$(NuGetPackageLanguage)\</IntermediateOutputPath>
   </PropertyGroup>
 
   <PropertyGroup>
-    <NuGetPackOptions Condition="'$(NuGetPackOptions)' == ''">-NoPackageAnalysis -symbols</NuGetPackOptions>
-    <NuGetPackageName Condition="'$(NuGetPackageName)' == ''">$(MSBuildProjectName)</NuGetPackageName>
-    <NuSpecFile Condition="'$(NuSpecFile)' == ''">$(MSBuildProjectDirectory)\$(NuGetPackageName).nuspec</NuSpecFile>
+    <NuGetPackageId Condition="'$(NuGetPackageId)' == ''">$(MSBuildProjectName)</NuGetPackageId>
+    <NuGetPackSymbols Condition="'$(NuGetPackOptions.ToLower().Contains(symbols))'">true</NuGetPackSymbols>
+    <NuGetPackSymbols Condition="'$(NuGetPackSymbols)' == ''">true</NuGetPackSymbols>
+    <NuSpecFile Condition="'$(NuSpecFile)' == ''">$(MSBuildProjectDirectory)\$(NuGetPackageId).nuspec</NuSpecFile>
     <NuSpecFileName>$([System.IO.Path]::GetFileName('$(NuSpecFile)'))</NuSpecFileName>
     <NuSpecCreateOnMissing Condition="'$(NuSpecCreateOnMissing)' == ''">true</NuSpecCreateOnMissing>
-    <NuGetProjectOutputsFile Condition="'$(NuGetProjectOutputsFile)' == ''">$(IntermediateOutputPath)$(NuGetPackageName).outputs</NuGetProjectOutputsFile>
+    <NuGetProjectOutputsFile>$(IntermediateOutputPath)$(NuGetPackageId).outputs</NuGetProjectOutputsFile>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet.targets inputs">
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildThisFileDirectory)..\</SolutionDir>
     <PackageOutputDir Condition="'$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackageOutputDir>
     <PackageOutputDir Condition="'$(PackageOutputDir)' == ''">$(OutputPath)NuGet</PackageOutputDir>
-    <NuGetOutputPath Condition="'$(NuGetOutputPath)' == ''">PackageOutputDir</NuGetOutputPath>
+    <PackageOutputDir>$(PackageOutputDir.TrimEnd('\'))</PackageOutputDir>
+    <NuGetOutputPath Condition="'$(NuGetOutputPath)' == ''">$(PackageOutputDir)</NuGetOutputPath>
     <ProjectPath>$(IntermediateOutputPath)$(NuSpecFileName)</ProjectPath>
   </PropertyGroup>
 
@@ -52,8 +57,8 @@ Relevant parameters:
   <ItemDefinitionGroup>
     <!-- NuGetContent represents the files to be packed (dll, exe, pdb, .cs, content, etc). -->
     <NuGetContent>
-      <Source/>
-      <Destination/>
+      <Source>$(NuGetContentSource)</Source>
+      <Destination>$(NuGetContentDestination)</Destination>
     </NuGetContent>
     <!-- NuSpecMetadata represents the simple items under the 'metadata' schema element (title, version, etc.) -->
     <NuSpecMetadata>
@@ -71,6 +76,10 @@ Relevant parameters:
     
   <ItemGroup>
     <NuGetContent Include="$(NuSpecFile)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Clean Include="$(NuGetProjectOutputsFile)" />
   </ItemGroup>
 
   <!--
@@ -127,16 +136,19 @@ NuGetPack: Creates a nuget package.
   <Target Name="NuGetPack" DependsOnTargets="GenerateNuSpecFile" Condition="'$(OutputsOutdated)' == 'true'">
     <PropertyGroup>
       <NuSpecProperties>$(NuSpecProperties.Trim(';'))</NuSpecProperties>
+      <NuGetPackOptions Condition="'$(NuGetPackOptions)' == '' AND '$(NuGetPackSymbols)' != 'true'">-NoPackageAnalysis</NuGetPackOptions>
+      <NuGetPackOptions Condition="'$(NuGetPackOptions)' == '' AND '$(NuGetPackSymbols)' == 'true'">-NoPackageAnalysis -symbols</NuGetPackOptions>
       <!-- BuildCommand is defined in nuget.targets file -->
-      <BuildCommand Condition="'$(NuSpecProperties)' != ''">$(BuildCommand) -Properties $(NuSpecProperties)</BuildCommand>
-      <BuildCommand Condition="'$(NuGetPackOptions)' != ''">$(BuildCommand.Replace('-symbols', '')) $(NuGetPackOptions)</BuildCommand>
+        <BuildCommand>$(BuildCommand.Replace('-symbols', ''))</BuildCommand>
+        <BuildCommand>$(BuildCommand.Replace('/symbols', ''))</BuildCommand>
+      <BuildCommand Condition="'$(NuSpecProperties)' != ''">$(BuildCommand) -Properties $(NuSpecProperties) $(NuGetPackOptions)</BuildCommand>
     </PropertyGroup>
     <!-- Invalidate outputs to force a full build in case of failure -->
     <Delete Files="$(NuGetPackTargetFile)" />
     <MakeDir Directories="$(PackageOutputDir)" />
-    <Exec Command="$(BuildCommand)" StandardOutputImportance="high" WorkingDirectory="$(MSBuildProjectDirectory)" CustomErrorRegularExpression="invalid"/>
+    <Exec Command="$(BuildCommand)" StandardOutputImportance="high" StandardErrorImportance="high" WorkingDirectory="$(MSBuildProjectDirectory)" CustomErrorRegularExpression="invalid"/>
     <ItemGroup>
-      <Clean Include="$(PackageOutputDir)\$(NuGetPackageName).$(NuGetPackageVersion)*.nupkg" />
+      <Clean Include="$(PackageOutputDir)\$(NuGetPackageId).$(NuGetPackageVersion)*.nupkg" />
     </ItemGroup>
   </Target>
 
@@ -156,11 +168,12 @@ GetNuGetProjectOutputs: Reads build-generated files from outputs file.
 **************************************************************************************************** -->
   <Target Name="GetNuGetProjectOutputs">
     <PropertyGroup>
-      <NuGetPackTargetFile>$(PackageOutputDir)\$(NuGetPackageName).$(NuGetPackageVersion).nupkg</NuGetPackTargetFile>
-      <NuGetPackTargetFile Condition="$(NuGetPackOptions.ToLower().Contains('-symbols'))">$(PackageOutputDir)\$(NuGetPackageName).$(NuGetPackageVersion).symbols.nupkg</NuGetPackTargetFile>
+      <NuGetPackTargetFile>$(PackageOutputDir)\$(NuGetPackageId).$(NuGetPackageVersion).nupkg</NuGetPackTargetFile>
+      <NuGetPackTargetFile Condition="'$(NuGetPackSymbols)' == 'true'">$(PackageOutputDir)\$(NuGetPackageId).$(NuGetPackageVersion).symbols.nupkg</NuGetPackTargetFile>
     </PropertyGroup>
     <ItemGroup>
       <NuGetProjectOutput Include="$(NuGetPackTargetFile)" />
+      <NuGetProjectOutput Include="$(NuGetProjectOutputsFile)" />
     </ItemGroup>
   </Target>
 
@@ -182,7 +195,6 @@ cleaning and incremental build.
 **************************************************************************************************** -->
   <Target Name="WriteNuGetProjectOutputs" Condition="'$(OutputsOutdated)' == 'true'">
     <ItemGroup>
-      <Clean Include="$(NuGetProjectOutputsFile)" />
       <NuGetProjectOutput Include="@(Clean->Distinct())" />
     </ItemGroup>
     <WriteLinesToFile File="$(NuGetProjectOutputsFile)" Lines="@(NuGetProjectOutput->Distinct())" Overwrite="true" Condition="'@(NuGetProjectOutput)' != ''" />
@@ -200,6 +212,7 @@ GenerateNuSpecFile: generates the final nuspec file for the package.
     <ItemGroup>
       <Clean Include="$(GeneratedNuSpec)" />
     </ItemGroup>
+    <Message Text="Generated NuSpec file: $(GeneratedNuSpec)" />
   </Target>
 
   <!--
