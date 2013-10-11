@@ -4000,7 +4000,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         // </summary>
         private static bool IsStoreFunction(EdmFunction function)
         {
-            return (bool)function.MetadataProperties["BuiltInAttribute"].Value && !TypeHelpers.IsCanonicalFunction(function);
+            return function.BuiltInAttribute && !TypeHelpers.IsCanonicalFunction(function);
         }
 
         private static string ByteArrayToBinaryString(Byte[] binaryArray)

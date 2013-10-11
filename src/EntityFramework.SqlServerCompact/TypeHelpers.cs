@@ -228,7 +228,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             }
             if (TypeSemantics.IsReferenceType(type))
             {
-                throw new NotSupportedException(String.Empty);
+                return TypeUsage.Create(((RefType)type.EdmType).ElementType, type.Facets);
             }
             return null;
         }
