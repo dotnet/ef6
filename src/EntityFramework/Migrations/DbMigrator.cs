@@ -946,7 +946,7 @@ namespace System.Data.Entity.Migrations
 
                 try
                 {
-                    transaction.Commit();
+                    DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
                 }
                 catch (Exception ex)
                 {
@@ -968,7 +968,7 @@ namespace System.Data.Entity.Migrations
             
             if (!migrationStatement.SuppressTransaction)
             {
-                var dbCommand = transaction.Connection.CreateCommand();
+                var dbCommand = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext).CreateCommand();
                 using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql))
                 {
                     command.Transaction = transaction;

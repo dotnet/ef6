@@ -14,6 +14,7 @@ namespace System.Data.Entity.Infrastructure.Interception
     {
         private readonly DbCommandTreeDispatcher _commandTreeDispatcher = new DbCommandTreeDispatcher();
         private readonly DbCommandDispatcher _commandDispatcher = new DbCommandDispatcher();
+        private readonly DbTransactionDispatcher _transactionDispatcher = new DbTransactionDispatcher();
         private readonly DbConnectionDispatcher _dbConnectionDispatcher = new DbConnectionDispatcher();
 
         private readonly CancelableEntityConnectionDispatcher _cancelableEntityConnectionDispatcher =
@@ -41,6 +42,15 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Provides methods for dispatching to <see cref="IDbCommandInterceptor" /> interceptors for
+        /// interception of methods on <see cref="DbTransaction" />.
+        /// </summary>
+        public virtual DbTransactionDispatcher Transaction
+        {
+            get { return _transactionDispatcher; }
+        }
+
+        /// <summary>
+        /// Provides methods for dispatching to <see cref="IDbCommandInterceptor" /> interceptors for
         /// interception of methods on <see cref="DbConnection" />.
         /// </summary>
         public virtual DbConnectionDispatcher Connection
@@ -64,6 +74,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             _commandTreeDispatcher.InternalDispatcher.Add(interceptor);
             _commandDispatcher.InternalDispatcher.Add(interceptor);
+            _transactionDispatcher.InternalDispatcher.Add(interceptor);
             _dbConnectionDispatcher.InternalDispatcher.Add(interceptor);
             _cancelableEntityConnectionDispatcher.InternalDispatcher.Add(interceptor);
             _cancelableCommandDispatcher.InternalDispatcher.Add(interceptor);
@@ -75,6 +86,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             _commandTreeDispatcher.InternalDispatcher.Remove(interceptor);
             _commandDispatcher.InternalDispatcher.Remove(interceptor);
+            _transactionDispatcher.InternalDispatcher.Remove(interceptor);
             _dbConnectionDispatcher.InternalDispatcher.Remove(interceptor);
             _cancelableEntityConnectionDispatcher.InternalDispatcher.Remove(interceptor);
             _cancelableCommandDispatcher.InternalDispatcher.Remove(interceptor);

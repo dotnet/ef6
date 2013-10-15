@@ -15,6 +15,7 @@ namespace System.Data.Entity.Core.Objects
     using System.Data.Entity.Core.Objects.Internal;
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Internal.UnitTests;
     using System.Data.Entity.Resources;
@@ -139,7 +140,8 @@ namespace System.Data.Entity.Core.Objects
                     .Returns(() => hasChangesCount == 1);
 
                 var dbTransaction = new Mock<DbTransaction>();
-                var entityTransactionMock = new Mock<EntityTransaction>(new EntityConnection(), dbTransaction.Object);
+                var entityTransactionMock = new Mock<EntityTransaction>(
+                    new EntityConnection(), dbTransaction.Object);
                 var entityTransaction = entityTransactionMock.Object;
 
                 var connectionState = ConnectionState.Closed;
@@ -1739,7 +1741,8 @@ namespace System.Data.Entity.Core.Objects
                     .Returns(() => hasChangesCount == 1);
 
                 var dbTransaction = new Mock<DbTransaction>();
-                var entityTransactionMock = new Mock<EntityTransaction>(new EntityConnection(), dbTransaction.Object);
+                var entityTransactionMock = new Mock<EntityTransaction>(
+                    new EntityConnection(), dbTransaction.Object);
                 var entityTransaction = entityTransactionMock.Object;
 
                 var connectionState = ConnectionState.Closed;

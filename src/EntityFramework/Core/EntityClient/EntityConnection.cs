@@ -522,7 +522,9 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 // Null out the current transaction if the state is closed or zombied
                 if ((null != _currentTransaction)
-                    && ((null == _currentTransaction.StoreTransaction.Connection) || (State == ConnectionState.Closed)))
+                    && ((null
+                         == DbInterception.Dispatch.Transaction.GetConnection(_currentTransaction.StoreTransaction, InterceptionContext))
+                        || (State == ConnectionState.Closed)))
                 {
                     ClearCurrentTransaction();
                 }
@@ -886,12 +888,14 @@ namespace System.Data.Entity.Core.EntityClient
                     throw new InvalidOperationException(Strings.DbContext_TransactionAlreadyEnlistedInUserTransaction);
                 }
 
-                if (storeTransaction.Connection == null)
+                var transactionConnection = DbInterception.Dispatch.Transaction.GetConnection(
+                    storeTransaction, InterceptionContext);
+                if (transactionConnection == null)
                 {
                     throw new InvalidOperationException(Strings.DbContext_InvalidTransactionNoConnection);
                 }
 
-                if (storeTransaction.Connection != StoreConnection)
+                if (transactionConnection != StoreConnection)
                 {
                     throw new InvalidOperationException(Strings.DbContext_InvalidTransactionForConnection);
                 }

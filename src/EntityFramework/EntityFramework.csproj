@@ -281,6 +281,9 @@
     <Compile Include="Infrastructure\Interception\DbDispatchers.cs" />
     <Compile Include="Infrastructure\Interception\DbInterception.cs" />
     <Compile Include="Infrastructure\Interception\DbInterceptionContext.cs" />
+    <Compile Include="Infrastructure\Interception\DbTransactionDispatcher.cs" />
+    <Compile Include="Infrastructure\Interception\DbTransactionInterceptionContext.cs" />
+    <Compile Include="Infrastructure\Interception\DbTransactionInterceptionContext`.cs" />
     <Compile Include="Infrastructure\Interception\EnlistTransactionInterceptionContext.cs" />
     <Compile Include="Infrastructure\Interception\ICancelableDbCommandInterceptor.cs" />
     <Compile Include="Infrastructure\Interception\ICancelableEntityConnectionInterceptor.cs" />
@@ -290,6 +293,7 @@
     <Compile Include="Infrastructure\Interception\IDbInterceptor.cs" />
     <Compile Include="Infrastructure\Interception\IDbMutableInterceptionContext.cs" />
     <Compile Include="Infrastructure\Interception\IDbMutableInterceptionContext`.cs" />
+    <Compile Include="Infrastructure\Interception\IDbTransactionInterceptor.cs" />
     <Compile Include="Infrastructure\Interception\InterceptionContextMutableData.cs" />
     <Compile Include="Infrastructure\Interception\InterceptionContextMutableData`.cs" />
     <Compile Include="Infrastructure\Interception\InternalDispatcher.cs" />

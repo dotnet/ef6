@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.Data;
     using System.Data.Common;
     using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Moq.Protected;
     using Xunit;

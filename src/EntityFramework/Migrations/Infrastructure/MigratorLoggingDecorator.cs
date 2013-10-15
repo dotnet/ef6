@@ -56,13 +56,13 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             _logger.Verbose(migrationStatement.Sql);
 
-            var providerServices
-                = DbProviderServices.GetProviderServices(transaction.Connection);
+            var connection = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext);
+            var providerServices = DbProviderServices.GetProviderServices(connection);
 
             if (providerServices != null)
             {
                 providerServices.RegisterInfoMessageHandler(
-                    transaction.Connection,
+                    connection,
                     message =>
                         {
                             if (!string.Equals(message, _lastInfoMessage, StringComparison.OrdinalIgnoreCase))

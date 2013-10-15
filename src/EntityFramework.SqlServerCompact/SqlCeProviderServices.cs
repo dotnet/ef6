@@ -249,10 +249,11 @@ namespace System.Data.Entity.SqlServerCompact
 
             DbTransaction transaction = null;
 
+            var interceptionContext = new DbInterceptionContext();
             try
             {
                 // Open the connection.
-                DbInterception.Dispatch.Connection.Open(connection, new DbInterceptionContext());
+                DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
                 // Open a transaction and attach to the command.
                 transaction = DbInterception.Dispatch.Connection.BeginTransaction(connection, new BeginTransactionInterceptionContext());
@@ -266,14 +267,14 @@ namespace System.Data.Entity.SqlServerCompact
                 }
 
                 // Commit the transaction.
-                transaction.Commit();
+                DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
             }
             catch (Exception e)
             {
                 if (transaction != null)
                 {
                     // Rollback the transaction.
-                    transaction.Rollback();
+                    DbInterception.Dispatch.Transaction.Rollback(transaction, interceptionContext);
                 }
 
                 // Throw IOE with SqlCeException embedded as inner exception.
@@ -288,11 +289,11 @@ namespace System.Data.Entity.SqlServerCompact
                 }
                 if (transaction != null)
                 {
-                    transaction.Dispose();
+                    DbInterception.Dispatch.Transaction.Dispose(transaction, interceptionContext);
                 }
                 if (connection != null)
                 {
-                    DbInterception.Dispatch.Connection.Close(connection, new DbInterceptionContext());
+                    DbInterception.Dispatch.Connection.Close(connection, interceptionContext);
                 }
             }
         }
