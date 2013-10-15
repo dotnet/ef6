@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
     // <summary>
@@ -22,7 +23,8 @@ namespace System.Data.Entity.Internal
         // <param name="connectionOwned">
         // If set to <c>true</c> then the underlying connection should be disposed when this object is disposed.
         // </param>
-        public EagerInternalConnection(DbConnection existingConnection, bool connectionOwned)
+        public EagerInternalConnection(DbContext context, DbConnection existingConnection, bool connectionOwned)
+            : base(new DbInterceptionContext().WithDbContext(context))
         {
             DebugCheck.NotNull(existingConnection);
 

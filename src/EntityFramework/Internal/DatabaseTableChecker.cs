@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
@@ -91,8 +92,8 @@ namespace System.Data.Entity.Internal
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 if (provider.AnyModelTableExistsInDatabase(
-                    clonedObjectContext.ObjectContext, 
-                    clonedObjectContext.Connection, 
+                    clonedObjectContext.ObjectContext,
+                    clonedObjectContext.Connection,
                     modelTables,
                     EdmMetadataContext.TableName))
                 {
@@ -146,8 +147,8 @@ namespace System.Data.Entity.Internal
                 }
                 modelTablesListBuilder.Remove(modelTablesListBuilder.Length - 1, 1);
 
-                using (var command = new InterceptableDbCommand(
-                    connection.CreateCommand(), context.InterceptionContext))
+                var dbCommand = connection.CreateCommand();
+                using (var command = new InterceptableDbCommand(dbCommand, context.InterceptionContext))
                 {
                     command.CommandText = @"
 SELECT Count(*)
@@ -162,14 +163,14 @@ WHERE t.TABLE_TYPE = 'BASE TABLE'
                         return executionStrategy.Execute(
                             () =>
                                 {
-                                    if (connection.State == ConnectionState.Broken)
+                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
                                     {
-                                        connection.Close();
+                                        DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
                                     }
 
-                                    if (connection.State == ConnectionState.Closed)
+                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
                                     {
-                                        connection.Open();
+                                        DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
                                     }
 
                                     return (int)command.ExecuteScalar() > 0;
@@ -177,9 +178,9 @@ WHERE t.TABLE_TYPE = 'BASE TABLE'
                     }
                     finally
                     {
-                        if (connection.State != ConnectionState.Closed)
+                        if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
                         {
-                            connection.Close();
+                            DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
                         }
                     }
                 }
@@ -203,8 +204,8 @@ WHERE t.TABLE_TYPE = 'BASE TABLE'
                 modelTablesListBuilder.Append("edmMetadataContextTableName");
                 modelTablesListBuilder.Append("'");
 
-                using (var command = new InterceptableDbCommand(
-                    connection.CreateCommand(), context.InterceptionContext))
+                var dbCommand = connection.CreateCommand();
+                using (var command = new InterceptableDbCommand(dbCommand, context.InterceptionContext))
                 {
                     command.CommandText = @"
 SELECT Count(*)
@@ -218,14 +219,14 @@ WHERE t.TABLE_TYPE = 'TABLE'
                         return executionStrategy.Execute(
                             () =>
                                 {
-                                    if (connection.State == ConnectionState.Broken)
+                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Broken)
                                     {
-                                        connection.Close();
+                                        DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
                                     }
 
-                                    if (connection.State == ConnectionState.Closed)
+                                    if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) == ConnectionState.Closed)
                                     {
-                                        connection.Open();
+                                        DbInterception.Dispatch.Connection.Open(connection, context.InterceptionContext);
                                     }
 
                                     return (int)command.ExecuteScalar() > 0;
@@ -233,9 +234,9 @@ WHERE t.TABLE_TYPE = 'TABLE'
                     }
                     finally
                     {
-                        if (connection.State != ConnectionState.Closed)
+                        if (DbInterception.Dispatch.Connection.GetState(connection, context.InterceptionContext) != ConnectionState.Closed)
                         {
-                            connection.Close();
+                            DbInterception.Dispatch.Connection.Close(connection, context.InterceptionContext);
                         }
                     }
                 }

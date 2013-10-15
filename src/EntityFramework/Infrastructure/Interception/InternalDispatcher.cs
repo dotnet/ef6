@@ -94,6 +94,52 @@ namespace System.Data.Entity.Infrastructure.Interception
             return interceptionContext.MutableData.Result;
         }
 
+        public void Dispatch<TInterceptionContext>(
+            Action operation,
+            TInterceptionContext interceptionContext,
+            Action<TInterceptor> executing,
+            Action<TInterceptor> executed)
+            where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext
+        {
+            if (_interceptors.Count == 0)
+            {
+                operation();
+                return;
+            }
+
+            _interceptors.Each(executing);
+
+            if (!interceptionContext.MutableData.IsExecutionSuppressed)
+            {
+                try
+                {
+                    operation();
+                    interceptionContext.MutableData.HasExecuted = true;
+                }
+                catch (Exception ex)
+                {
+                    interceptionContext.MutableData.SetExceptionThrown(ex);
+
+                    _interceptors.Each(executed);
+
+                    if (ReferenceEquals(interceptionContext.MutableData.Exception, ex))
+                    {
+                        throw;
+                    }
+                }
+            }
+
+            if (interceptionContext.MutableData.OriginalException == null)
+            {
+                _interceptors.Each(executed);
+            }
+
+            if (interceptionContext.MutableData.Exception != null)
+            {
+                throw interceptionContext.MutableData.Exception;
+            }
+        }
+
         public TResult Dispatch<TInterceptionContext, TResult>(
             Func<TResult> operation,
             TInterceptionContext interceptionContext,
@@ -141,6 +187,66 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
 #if !NET40
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
+        public Task DispatchAsync<TInterceptionContext>(
+            Func<Task> operation,
+            TInterceptionContext interceptionContext,
+            Action<TInterceptor> executing,
+            Action<TInterceptor> executed)
+            where TInterceptionContext : DbInterceptionContext, IDbMutableInterceptionContext
+        {
+            if (_interceptors.Count == 0)
+            {
+                return operation();
+            }
+
+            _interceptors.Each(executing);
+
+            var task = interceptionContext.MutableData.IsExecutionSuppressed
+                ? Task.FromResult((object)null)
+                : operation();
+
+            var tcs = new TaskCompletionSource<object>();
+            task.ContinueWith(
+                t =>
+                {
+                    interceptionContext.MutableData.TaskStatus = t.Status;
+
+                    if (t.IsFaulted)
+                    {
+                        interceptionContext.MutableData.SetExceptionThrown(t.Exception.InnerException);
+                    }
+                    else if (!interceptionContext.MutableData.IsExecutionSuppressed)
+                    {
+                        interceptionContext.MutableData.HasExecuted = true;
+                    }
+
+                    try
+                    {
+                        _interceptors.Each(executed);
+                    }
+                    catch (Exception ex)
+                    {
+                        interceptionContext.MutableData.Exception = ex;
+                    }
+
+                    if (interceptionContext.MutableData.Exception != null)
+                    {
+                        tcs.SetException(interceptionContext.MutableData.Exception);
+                    }
+                    else if (t.IsCanceled)
+                    {
+                        tcs.SetCanceled();
+                    }
+                    else
+                    {
+                        tcs.SetResult(null);
+                    }
+                }, TaskContinuationOptions.ExecuteSynchronously);
+
+            return tcs.Task;
+        }
+
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public Task<TResult> DispatchAsync<TInterceptionContext, TResult>(
             Func<Task<TResult>> operation,

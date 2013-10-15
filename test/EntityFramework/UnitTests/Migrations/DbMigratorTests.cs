@@ -553,7 +553,7 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                migrator.ExecuteSql(mockTransaction.Object, statement);
+                migrator.ExecuteSql(mockTransaction.Object, statement, new DbInterceptionContext());
             }
             finally
             {
@@ -597,7 +597,7 @@ namespace System.Data.Entity.Migrations
 
             try
             {
-                migrator.ExecuteSql(mockTransaction.Object, statement);
+                migrator.ExecuteSql(mockTransaction.Object, statement, objectContext.InterceptionContext);
             }
             finally
             {

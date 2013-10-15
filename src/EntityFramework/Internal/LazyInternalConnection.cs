@@ -9,6 +9,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -35,8 +36,16 @@ namespace System.Data.Entity.Internal
         // The DbConnection object will be created lazily on demand and will be disposed when the LazyInternalConnection is disposed.
         // </summary>
         // <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public LazyInternalConnection(string nameOrConnectionString)
+            : this(null, nameOrConnectionString)
+        {
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public LazyInternalConnection(DbContext context, string nameOrConnectionString)
+            : base(context == null
+                ? null
+                : new DbInterceptionContext().WithDbContext(context))
         {
             DebugCheck.NotEmpty(nameOrConnectionString);
 
@@ -50,7 +59,8 @@ namespace System.Data.Entity.Internal
         // </summary>
         // <param name="connectionInfo"> The connection to target. </param>
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public LazyInternalConnection(DbConnectionInfo connectionInfo)
+        public LazyInternalConnection(DbContext context, DbConnectionInfo connectionInfo)
+            : base(new DbInterceptionContext().WithDbContext(context))
         {
             DebugCheck.NotNull(connectionInfo);
 
@@ -367,7 +377,8 @@ namespace System.Data.Entity.Internal
             {
                 CreateConnectionFromProviderName(providerInvariantName);
 
-                UnderlyingConnection.ConnectionString = appConfigConnection.ConnectionString;
+                DbInterception.Dispatch.Connection.SetConnectionString(UnderlyingConnection,
+                    new DbConnectionPropertyInterceptionContext<string>().WithValue(appConfigConnection.ConnectionString));
             }
         }
 

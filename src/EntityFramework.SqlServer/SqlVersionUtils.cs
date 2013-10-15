@@ -24,7 +24,10 @@ namespace System.Data.Entity.SqlServer
         internal static SqlVersion GetSqlVersion(DbConnection connection)
         {
             Debug.Assert(connection.State == ConnectionState.Open, "Expected an open connection");
-            var majorVersion = Int32.Parse(connection.ServerVersion.Substring(0, 2), CultureInfo.InvariantCulture);
+
+            var majorVersion = Int32.Parse(
+                DbInterception.Dispatch.Connection.GetServerVersion(connection, new DbInterceptionContext()).Substring(0, 2),
+                CultureInfo.InvariantCulture);
 
             if (majorVersion >= 11)
             {

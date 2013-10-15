@@ -5,12 +5,12 @@ namespace System.Data.Entity.Infrastructure.Interception
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Utilities;
 
-    internal class EntityConnectionDispatcher
+    internal class CancelableEntityConnectionDispatcher
     {
-        private readonly InternalDispatcher<IEntityConnectionInterceptor> _internalDispatcher
-            = new InternalDispatcher<IEntityConnectionInterceptor>();
+        private readonly InternalDispatcher<ICancelableEntityConnectionInterceptor> _internalDispatcher
+            = new InternalDispatcher<ICancelableEntityConnectionInterceptor>();
 
-        public InternalDispatcher<IEntityConnectionInterceptor> InternalDispatcher
+        public InternalDispatcher<ICancelableEntityConnectionInterceptor> InternalDispatcher
         {
             get { return _internalDispatcher; }
         }

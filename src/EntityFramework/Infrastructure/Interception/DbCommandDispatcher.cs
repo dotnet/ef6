@@ -11,7 +11,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
     /// <summary>
     /// Used for dispatching operations to a <see cref="DbCommand" /> such that any <see cref="IDbCommandInterceptor" />
-    /// interceptors that are registered on <see cref="DbInterception" /> will be notified before and after the
+    /// registered on <see cref="DbInterception" /> will be notified before and after the
     /// operation executes.
     /// Instances of this class are obtained through the the <see cref="DbInterception.Dispatch" /> fluent API.
     /// </summary>
@@ -36,8 +36,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.NonQueryExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteNonQuery" />.
         /// </summary>
         /// <remarks>
@@ -55,7 +55,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             var clonedInterceptionContext = new DbCommandInterceptionContext<int>(interceptionContext);
 
-            return _internalDispatcher.Dispatch(
+            return _internalDispatcher.Dispatch<DbCommandInterceptionContext<int>, int>(
                 command.ExecuteNonQuery,
                 clonedInterceptionContext,
                 i => i.NonQueryExecuting(command, clonedInterceptionContext),
@@ -64,8 +64,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.ScalarExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteScalar" />.
         /// </summary>
         /// <remarks>
@@ -83,7 +83,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
             var clonedInterceptionContext = new DbCommandInterceptionContext<object>(interceptionContext);
 
-            return _internalDispatcher.Dispatch(
+            return _internalDispatcher.Dispatch<DbCommandInterceptionContext<object>, object>(
                 command.ExecuteScalar,
                 clonedInterceptionContext,
                 i => i.ScalarExecuting(command, clonedInterceptionContext),
@@ -92,8 +92,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.ReaderExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteReader(CommandBehavior)" />.
         /// </summary>
         /// <remarks>
@@ -122,8 +122,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 #if !NET40
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.NonQueryExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.NonQueryExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteNonQueryAsync(CancellationToken)" />.
         /// </summary>
         /// <remarks>
@@ -157,8 +157,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.ScalarExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.ScalarExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteScalarAsync(CancellationToken)" />.
         /// </summary>
         /// <remarks>
@@ -192,8 +192,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Sends <see cref="IDbCommandInterceptor.ReaderExecuting" /> and
-        /// <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any  <see cref="IDbCommandInterceptor" />
-        /// interceptors that are registered on <see cref="DbInterception" /> before/after making a
+        /// <see cref="IDbCommandInterceptor.ReaderExecuted" /> to any <see cref="IDbCommandInterceptor" />
+        /// registered on <see cref="DbInterception" /> before/after making a
         /// call to <see cref="DbCommand.ExecuteReaderAsync(CommandBehavior, CancellationToken)" />.
         /// </summary>
         /// <remarks>

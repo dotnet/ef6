@@ -39,6 +39,7 @@ namespace System.Data.Entity.Infrastructure.Interception
         public DbCommandTreeInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
+            Check.NotNull(copyFrom, "copyFrom");
         }
 
         internal InterceptionContextMutableData<DbCommandTree> MutableData
@@ -58,7 +59,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// The original tree created by Entity Framework. Interceptors can change the
-        /// <see cref="Result" /> property to changes the tree that will be used, but the
+        /// <see cref="Result" /> property to change the tree that will be used, but the
         /// <see cref="OriginalResult" /> will always be the tree created by Entity Framework.
         /// </summary>
         public DbCommandTree OriginalResult
@@ -67,8 +68,8 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// The command tree that will be used by Entity Framework. This starts as tree contained in the 
-        /// the <see cref="OriginalResult"/> property but can be changed by interceptors to change
+        /// The command tree that will be used by Entity Framework. This starts as the tree contained in the 
+        /// the <see cref="OriginalResult"/> property but can be set by interceptors to change
         /// the tree that will be used by Entity Framework.
         /// </summary>
         public DbCommandTree Result

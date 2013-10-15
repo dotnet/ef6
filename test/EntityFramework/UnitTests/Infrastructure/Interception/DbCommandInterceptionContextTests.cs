@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Threading.Tasks;
@@ -27,7 +26,7 @@ namespace System.Data.Entity.Infrastructure
         public void Cloning_the_base_interception_context_preserves_contextual_information()
         {
             var objectContext = new ObjectContext();
-            var dbContext = CreateDbContext(objectContext);
+            var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
 
             var interceptionContext = new DbCommandInterceptionContext()
                 .WithDbContext(dbContext)
@@ -39,6 +38,14 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(new[] { dbContext }, interceptionContext.DbContexts);
             Assert.True(interceptionContext.IsAsync);
             Assert.Equal(CommandBehavior.SchemaOnly, interceptionContext.CommandBehavior);
+        }
+
+        [Fact]
+        public void Base_interception_context_constructor_throws_on_null()
+        {
+            Assert.Equal(
+                "copyFrom",
+                Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext(null)).ParamName);
         }
 
         [Fact]
@@ -74,7 +81,7 @@ namespace System.Data.Entity.Infrastructure
         public void Cloning_the_interception_context_preserves_contextual_information_but_not_mutable_state()
         {
             var objectContext = new ObjectContext();
-            var dbContext = CreateDbContext(objectContext);
+            var dbContext = DbContextMockHelper.CreateDbContext(objectContext);
 
             var interceptionContext = new DbCommandInterceptionContext<string>();
             
@@ -98,6 +105,14 @@ namespace System.Data.Entity.Infrastructure
             Assert.Null(interceptionContext.Exception);
             Assert.Null(interceptionContext.OriginalException);
             Assert.False(interceptionContext.IsExecutionSuppressed);
+        }
+
+        [Fact]
+        public void Interception_context_constructor_throws_on_null()
+        {
+            Assert.Equal(
+                "copyFrom",
+                Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext<int>(null)).ParamName);
         }
 
         [Fact]
@@ -217,15 +232,6 @@ namespace System.Data.Entity.Infrastructure
             Assert.Equal(
                 "context",
                 Assert.Throws<ArgumentNullException>(() => new DbCommandInterceptionContext<int>().WithDbContext(null)).ParamName);
-        }
-
-        private static DbContext CreateDbContext(ObjectContext objectContext)
-        {
-            var mockInternalContext = new Mock<InternalContextForMock>();
-            mockInternalContext.Setup(m => m.ObjectContext).Returns(objectContext);
-            var context = mockInternalContext.Object.Owner;
-            objectContext.InterceptionContext = objectContext.InterceptionContext.WithDbContext(context);
-            return context;
         }
     }
 }

@@ -311,8 +311,10 @@ namespace System.Data.Entity.Core.Common
                 connection = entityConnection.StoreConnection;
             }
 
+            var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext());
+
             // Using the type name of DbProviderFactory implementation instead of the provider invariant name for performance
-            var cacheKey = new ExecutionStrategyKey(providerFactory.GetType().FullName, connection.DataSource);
+            var cacheKey = new ExecutionStrategyKey(providerFactory.GetType().FullName, dataSource);
 
             var factory = _executionStrategyFactories.GetOrAdd(
                 cacheKey,
@@ -320,7 +322,7 @@ namespace System.Data.Entity.Core.Common
                 DbConfiguration.DependencyResolver.GetService<Func<IDbExecutionStrategy>>(
                     new ExecutionStrategyKey(
                     DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(providerFactory).Name,
-                    connection.DataSource)));
+                    dataSource)));
             return factory();
         }
 

@@ -7,6 +7,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -25,6 +26,13 @@ namespace System.Data.Entity.Internal
         private string _originalConnectionString;
         private string _originalDatabaseName;
         private string _originalDataSource;
+
+        public InternalConnection(DbInterceptionContext interceptionContext)
+        {
+            InterceptionContext = interceptionContext ?? new DbInterceptionContext();
+        }
+
+        protected DbInterceptionContext InterceptionContext { get; private set; }
 
         // <summary>
         // Returns the underlying DbConnection.
@@ -53,9 +61,12 @@ namespace System.Data.Entity.Internal
                 return _key
                        ??
                        (_key =
-                        String.Format(
-                            CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(),
-                            UnderlyingConnection.ConnectionString));
+                           String.Format(
+                               CultureInfo.InvariantCulture, "{0};{1}", UnderlyingConnection.GetType(),
+                               UnderlyingConnection is EntityConnection
+                                   ? UnderlyingConnection.ConnectionString
+                                   : DbInterception.Dispatch.Connection.GetConnectionString(
+                                       UnderlyingConnection, InterceptionContext)));
             }
         }
 
@@ -118,12 +129,20 @@ namespace System.Data.Entity.Internal
             {
                 Debug.Assert(UnderlyingConnection != null);
 
+                var databaseName = UnderlyingConnection is EntityConnection
+                    ? UnderlyingConnection.Database
+                    : DbInterception.Dispatch.Connection.GetDatabase(UnderlyingConnection, InterceptionContext);
+
+                var dataSource = UnderlyingConnection is EntityConnection
+                    ? UnderlyingConnection.DataSource
+                    : DbInterception.Dispatch.Connection.GetDataSource(UnderlyingConnection, InterceptionContext);
+
                 // Reset the original connection string if it has been changed.
                 // This helps in trying to use the correct connection if the connection string is mutated after it has
                 // been created.
                 if (!string.Equals(
-                    _originalDatabaseName, UnderlyingConnection.Database, StringComparison.OrdinalIgnoreCase)
-                    || !string.Equals(_originalDataSource, UnderlyingConnection.DataSource, StringComparison.OrdinalIgnoreCase))
+                    _originalDatabaseName, databaseName, StringComparison.OrdinalIgnoreCase)
+                    || !string.Equals(_originalDataSource, dataSource, StringComparison.OrdinalIgnoreCase))
                 {
                     OnConnectionInitialized();
                 }
@@ -177,7 +196,9 @@ namespace System.Data.Entity.Internal
 
             try
             {
-                _originalDatabaseName = UnderlyingConnection.Database;
+                _originalDatabaseName = UnderlyingConnection is EntityConnection
+                    ? UnderlyingConnection.Database
+                    : DbInterception.Dispatch.Connection.GetDatabase(UnderlyingConnection, InterceptionContext);
             }
             catch (NotImplementedException)
             {
@@ -185,7 +206,9 @@ namespace System.Data.Entity.Internal
 
             try
             {
-                _originalDataSource = UnderlyingConnection.DataSource;
+                _originalDataSource = UnderlyingConnection is EntityConnection
+                    ? UnderlyingConnection.DataSource
+                    : DbInterception.Dispatch.Connection.GetDataSource(UnderlyingConnection, InterceptionContext);
             }
             catch (NotImplementedException)
             {
@@ -196,14 +219,24 @@ namespace System.Data.Entity.Internal
         {
             DebugCheck.NotNull(connection);
 
-            var connectionString = connection.ConnectionString;
+            string connectionString;
 
             var entityConnection = connection as EntityConnection;
 
             if (entityConnection != null)
             {
                 connection = entityConnection.StoreConnection;
-                connectionString = (connection != null) ? connection.ConnectionString : null;
+                connectionString = (connection != null)
+                    ? DbInterception.Dispatch.Connection.GetConnectionString(
+                        connection,
+                        new DbInterceptionContext())
+                    : null;
+            }
+            else
+            {
+                connectionString = DbInterception.Dispatch.Connection.GetConnectionString(
+                    connection,
+                    new DbInterceptionContext());
             }
 
             return connectionString;

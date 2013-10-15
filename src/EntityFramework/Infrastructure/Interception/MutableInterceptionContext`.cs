@@ -2,47 +2,35 @@
 
 namespace System.Data.Entity.Infrastructure.Interception
 {
-    using System.ComponentModel;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Utilities;
-    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Represents contextual information associated with calls into <see cref="IDbCommandInterceptor" />
-    /// implementations including the result of the operation.
+    /// Represents contextual information associated with calls with return type <typeparamref name="TResult"/>.
     /// </summary>
-    /// <typeparam name="TResult">The type of the operation's results.</typeparam>
-    /// <remarks>
-    /// Instances of this class are publicly immutable for contextual information. To add
-    /// contextual information use one of the With... or As... methods to create a new
-    /// interception context containing the new information.
-    /// </remarks>
-    public class DbCommandInterceptionContext<TResult> : DbCommandInterceptionContext, IDbMutableInterceptionContext<TResult>
+    /// <typeparam name="TResult">The return type of the target method.</typeparam>
+    public abstract class MutableInterceptionContext<TResult> : DbInterceptionContext, IDbMutableInterceptionContext<TResult>
     {
         private readonly InterceptionContextMutableData<TResult> _mutableData
             = new InterceptionContextMutableData<TResult>();
 
         /// <summary>
-        /// Constructs a new <see cref="DbCommandInterceptionContext{TResult}" /> with no state.
+        /// Constructs a new <see cref="MutableInterceptionContext{TResult}" /> with no state.
         /// </summary>
-        public DbCommandInterceptionContext()
+        protected MutableInterceptionContext()
         {
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> by copying immutable state from the given
-        /// interception context. Also see <see cref="Clone" />
+        /// Creates a new <see cref="MutableInterceptionContext{TResult}" /> by copying immutable state from the given
+        /// interception context. Also see <see cref="DbInterceptionContext.Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
-        public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
+        protected MutableInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
-        }
-
-        InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
-        {
-            get { return _mutableData; }
+            Check.NotNull(copyFrom, "copyFrom");
         }
 
         InterceptionContextMutableData<TResult> IDbMutableInterceptionContext<TResult>.MutableData
@@ -50,7 +38,12 @@ namespace System.Data.Entity.Infrastructure.Interception
             get { return _mutableData; }
         }
 
-        internal InterceptionContextMutableData<TResult> MutableData
+        InterceptionContextMutableData IDbMutableInterceptionContext.MutableData
+        {
+            get { return _mutableData; }
+        }
+
+        internal InterceptionContextMutableData MutableData
         {
             get { return _mutableData; }
         }
@@ -153,85 +146,39 @@ namespace System.Data.Entity.Infrastructure.Interception
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
+        /// Creates a new <see cref="MutableInterceptionContext{TResult}" /> that contains all the contextual information in this
         /// interception context together with the <see cref="DbInterceptionContext.IsAsync" /> flag set to true.
         /// </summary>
         /// <returns>A new interception context associated with the async flag set.</returns>
-        public new DbCommandInterceptionContext<TResult> AsAsync()
+        public new MutableInterceptionContext<TResult> AsAsync()
         {
-            return (DbCommandInterceptionContext<TResult>)base.AsAsync();
+            return (MutableInterceptionContext<TResult>)base.AsAsync();
         }
 
         /// <summary>
-        /// Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        /// interception context together with the given <see cref="CommandBehavior" />.
-        /// </summary>
-        /// <param name="commandBehavior">The command behavior to associate.</param>
-        /// <returns>A new interception context associated with the given command behavior.</returns>
-        public new DbCommandInterceptionContext<TResult> WithCommandBehavior(CommandBehavior commandBehavior)
-        {
-            return (DbCommandInterceptionContext<TResult>)base.WithCommandBehavior(commandBehavior);
-        }
-
-        /// <inheritdoc />
-        protected override DbInterceptionContext Clone()
-        {
-            return new DbCommandInterceptionContext<TResult>(this);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
-        /// interception context with the addition of the given <see cref="DbContext" />.
-        /// </summary>
-        /// <param name="context">The context to associate.</param>
-        /// <returns>A new interception context associated with the given context.</returns>
-        public new DbCommandInterceptionContext<TResult> WithDbContext(DbContext context)
-        {
-            Check.NotNull(context, "context");
-
-            return (DbCommandInterceptionContext<TResult>)base.WithDbContext(context);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="DbCommandInterceptionContext{TResult}" /> that contains all the contextual information in this
+        /// Creates a new <see cref="MutableInterceptionContext{TResult}" /> that contains all the contextual information in this
         /// interception context with the addition of the given <see cref="ObjectContext" />.
         /// </summary>
         /// <param name="context">The context to associate.</param>
         /// <returns>A new interception context associated with the given context.</returns>
-        public new DbCommandInterceptionContext<TResult> WithObjectContext(ObjectContext context)
+        public new MutableInterceptionContext<TResult> WithDbContext(DbContext context)
         {
             Check.NotNull(context, "context");
 
-            return (DbCommandInterceptionContext<TResult>)base.WithObjectContext(context);
+            return (MutableInterceptionContext<TResult>)base.WithDbContext(context);
         }
 
-        /// <inheritdoc />
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override string ToString()
+        /// <summary>
+        /// Creates a new <see cref="MutableInterceptionContext{TResult}" /> that contains all the contextual information in this
+        /// interception context with the addition of the given <see cref="ObjectContext" />.
+        /// </summary>
+        /// <param name="context">The context to associate.</param>
+        /// <returns>A new interception context associated with the given context.</returns>
+        public new MutableInterceptionContext<TResult> WithObjectContext(ObjectContext context)
         {
-            return base.ToString();
-        }
+            Check.NotNull(context, "context");
 
-        /// <inheritdoc />
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        /// <inheritdoc />
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        /// <inheritdoc />
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        public new Type GetType()
-        {
-            return base.GetType();
+            return (MutableInterceptionContext<TResult>)base.WithObjectContext(context);
         }
     }
 }

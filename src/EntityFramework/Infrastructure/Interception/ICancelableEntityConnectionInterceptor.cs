@@ -4,7 +4,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.EntityClient;
 
-    internal interface IEntityConnectionInterceptor : IDbInterceptor
+    internal interface ICancelableEntityConnectionInterceptor : IDbInterceptor
     {
         bool ConnectionOpening(EntityConnection connection, DbInterceptionContext interceptionContext);
     }

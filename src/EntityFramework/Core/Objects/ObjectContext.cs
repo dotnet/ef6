@@ -941,10 +941,10 @@ namespace System.Data.Entity.Core.Objects
         /// When the <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
         /// <see
         ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        /// of the object’s
+        /// of the object
         /// <see
         ///     cref="T:System.Data.Entity.Core.EntityKey" />
-        /// or Wwen the entity is in a state other than
+        /// or when the entity is in a state other than
         /// <see
         ///     cref="F:System.Data.Entity.EntityState.Modified" />
         /// or
@@ -987,7 +987,7 @@ namespace System.Data.Entity.Core.Objects
         /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
         /// <see
         ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        /// of the object’s
+        /// of the object
         /// <see
         ///     cref="T:System.Data.Entity.Core.EntityKey" />
         ///  or the object is not in the
@@ -1061,7 +1061,7 @@ namespace System.Data.Entity.Core.Objects
         /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
         /// <see
         ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        /// of the object’s
+        /// of the object
         /// <see
         ///     cref="T:System.Data.Entity.Core.EntityKey" />
         ///  or an
@@ -1493,7 +1493,7 @@ namespace System.Data.Entity.Core.Objects
         /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" /> from  entitySetName  does not match the
         /// <see
         ///     cref="T:System.Data.Entity.Core.Metadata.Edm.EntitySet" />
-        /// of the object’s
+        /// of the object
         /// <see
         ///     cref="T:System.Data.Entity.Core.EntityKey" />
         ///  or the
@@ -1701,14 +1701,14 @@ namespace System.Data.Entity.Core.Objects
 
                 await EnsureContextIsEnlistedInCurrentTransaction(
                     currentTransaction, async () =>
-                        {
-                            await
-                                Connection.OpenAsync(cancellationToken).ConfigureAwait(
-                                    continueOnCapturedContext: false);
-                            _openedConnection = true;
-                            _connectionRequestCount++;
-                            return true;
-                        },
+                    {
+                        await
+                            Connection.OpenAsync(cancellationToken).ConfigureAwait(
+                                continueOnCapturedContext: false);
+                        _openedConnection = true;
+                        _connectionRequestCount++;
+                        return true;
+                    },
                     Task.FromResult(false)).ConfigureAwait(continueOnCapturedContext: false);
 
                 // If we get here, we have an open connection, either enlisted in the current
@@ -3709,16 +3709,16 @@ namespace System.Data.Entity.Core.Objects
                 // its GetEnumerator is called explicitly, and the resulting enumerator is never disposed.
                 var onReaderDisposeHasRun = false;
                 Action<object, EventArgs> onReaderDispose = (object sender, EventArgs e) =>
+                {
+                    if (!onReaderDisposeHasRun)
                     {
-                        if (!onReaderDisposeHasRun)
-                        {
-                            onReaderDisposeHasRun = true;
-                            // consume the store reader
-                            CommandHelper.ConsumeReader(storeReader);
-                            // trigger event callback
-                            entityCommand.NotifyDataReaderClosing();
-                        }
-                    };
+                        onReaderDisposeHasRun = true;
+                        // consume the store reader
+                        CommandHelper.ConsumeReader(storeReader);
+                        // trigger event callback
+                        entityCommand.NotifyDataReaderClosing();
+                    }
+                };
 
                 if (shaperOwnsReader)
                 {

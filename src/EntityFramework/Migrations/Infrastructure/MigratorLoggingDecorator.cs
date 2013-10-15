@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -48,7 +49,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             base.AutoMigrate(migrationId, sourceModel, targetModel, downgrading);
         }
 
-        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
+        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
@@ -74,7 +75,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                         });
             }
 
-            base.ExecuteSql(transaction, migrationStatement);
+            base.ExecuteSql(transaction, migrationStatement, interceptionContext);
         }
 
         internal override void Upgrade(

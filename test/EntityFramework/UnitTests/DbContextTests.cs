@@ -581,6 +581,7 @@ END");
             {
                 using (var newConnection =
                     new LazyInternalConnection(
+                        context,
                         new DbConnectionInfo(
                             @"Server=.\SQLEXPRESS;Database=NewReplaceConnectionContextDatabase;Trusted_Connection=True;",
                             "System.Data.SqlClient")))
@@ -608,6 +609,7 @@ END");
             {
                 using (var newConnection =
                     new LazyInternalConnection(
+                        context,
                         new DbConnectionInfo(
                             "Data Source=NewReplaceConnectionContextDatabase.sdf",
                             "System.Data.SqlServerCe.4.0")))
@@ -632,7 +634,7 @@ END");
         {
             using (var context = new ReplaceConnectionContext())
             {
-                using (var newConnection = new EagerInternalConnection(new EntityConnection(), connectionOwned: true))
+                using (var newConnection = new EagerInternalConnection(context, new EntityConnection(), connectionOwned: true))
                 {
                     Assert.Equal(
                         Strings.LazyInternalContext_CannotReplaceDbConnectionWithEfConnection,

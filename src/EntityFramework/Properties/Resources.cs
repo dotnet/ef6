@@ -13767,6 +13767,36 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Connection closed at {0}{1}"
+        // </summary>
+        internal static string ConnectionClosedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionClosedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Connection opened at {0}{1}"
+        // </summary>
+        internal static string ConnectionOpenedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Transaction started at {0}{1}"
+        // </summary>
+        internal static string TransactionLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.TransactionLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Connection opened asynchronously at {0}{1}"
+        // </summary>
+        internal static string ConnectionOpenedLogAsync(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenedLogAsync, p0, p1);
+        }
         // A string like "Unable to generate views because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model."
         // </summary>
         internal static string ViewGenContainersNotFound(object p0, object p1)
@@ -17173,6 +17203,10 @@ namespace System.Data.Entity.Resources
         internal const string ConfigEventTypeNotFound = "ConfigEventTypeNotFound";
         internal const string ConfigEventBadMethod = "ConfigEventBadMethod";
         internal const string ConfigEventCannotBind = "ConfigEventCannotBind";
+        internal const string ConnectionClosedLog = "ConnectionClosedLog";
+        internal const string ConnectionOpenedLog = "ConnectionOpenedLog";
+        internal const string TransactionLog = "TransactionLog";
+        internal const string ConnectionOpenedLogAsync = "ConnectionOpenedLogAsync";
         internal const string ViewGenContainersNotFound = "ViewGenContainersNotFound";
         internal const string HashCalcContainersNotFound = "HashCalcContainersNotFound";
         internal const string ViewGenMultipleContainers = "ViewGenMultipleContainers";

@@ -32,12 +32,14 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// Creates a new <see cref="DbCommandInterceptionContext" /> by copying state from the given
-        /// interception context. Also see <see cref="DbInterceptionContext.Clone" />
+        /// interception context. Also see <see cref="Clone" />
         /// </summary>
         /// <param name="copyFrom">The context from which to copy state.</param>
         public DbCommandInterceptionContext(DbInterceptionContext copyFrom)
             : base(copyFrom)
         {
+            Check.NotNull(copyFrom, "copyFrom");
+
             var asThisType = copyFrom as DbCommandInterceptionContext;
             if (asThisType != null)
             {
@@ -47,7 +49,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
         /// <summary>
         /// The <see cref="CommandBehavior" /> that will be used or has been used to execute the command with a
-        /// <see cref="DbDataReader" />. This property is only used for <see cref="DbCommand.ExecuteReader(CommandBehavior)" />
+        /// <see cref="DbDataReader" />. This property is only used for <see cref="DbCommand.ExecuteReader(System.Data.CommandBehavior)" />
         /// and its async counterparts.
         /// </summary>
         public CommandBehavior CommandBehavior

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Internal.MockingProxies;
     using Moq;
 
     /// <summary>
@@ -34,6 +35,18 @@ namespace System.Data.Entity.Internal
         public override ObjectContext ObjectContext
         {
             get { return _objectContext; }
+        }
+
+        public override ObjectContext GetObjectContextWithoutDatabaseInitialization()
+        {
+            return _objectContext;
+        }
+
+        public override ClonedObjectContext CreateObjectContextForDdlOps()
+        {
+            var clonedObjectContextMock = new Mock<ClonedObjectContext>();
+            clonedObjectContextMock.Setup(m => m.ObjectContext).Returns(new ObjectContextProxy(_objectContext));
+            return clonedObjectContextMock.Object;
         }
     }
 }

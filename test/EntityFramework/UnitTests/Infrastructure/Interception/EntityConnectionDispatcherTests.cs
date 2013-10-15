@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Infrastructure.Interception;
     using Moq;
     using Xunit;
 
@@ -15,10 +14,10 @@ namespace System.Data.Entity.Infrastructure
             var interceptionContext = new DbInterceptionContext();
             var connection = new Mock<EntityConnection>().Object;
 
-            var mockInterceptor = new Mock<IEntityConnectionInterceptor>();
+            var mockInterceptor = new Mock<ICancelableEntityConnectionInterceptor>();
             mockInterceptor.Setup(m => m.ConnectionOpening(connection, interceptionContext)).Returns(true);
 
-            var dispatcher = new EntityConnectionDispatcher();
+            var dispatcher = new CancelableEntityConnectionDispatcher();
             var internalDispatcher = dispatcher.InternalDispatcher;
             internalDispatcher.Add(mockInterceptor.Object);
 
@@ -30,16 +29,16 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Opening_returns_false_if_any_interceptor_returns_false()
         {
-            var mockInterceptor1 = new Mock<IEntityConnectionInterceptor>();
+            var mockInterceptor1 = new Mock<ICancelableEntityConnectionInterceptor>();
             mockInterceptor1.Setup(m => m.ConnectionOpening(It.IsAny<EntityConnection>(), It.IsAny<DbInterceptionContext>())).Returns(true);
 
-            var mockInterceptor2 = new Mock<IEntityConnectionInterceptor>();
+            var mockInterceptor2 = new Mock<ICancelableEntityConnectionInterceptor>();
             mockInterceptor2.Setup(m => m.ConnectionOpening(It.IsAny<EntityConnection>(), It.IsAny<DbInterceptionContext>())).Returns(false);
 
-            var mockInterceptor3 = new Mock<IEntityConnectionInterceptor>();
+            var mockInterceptor3 = new Mock<ICancelableEntityConnectionInterceptor>();
             mockInterceptor3.Setup(m => m.ConnectionOpening(It.IsAny<EntityConnection>(), It.IsAny<DbInterceptionContext>())).Returns(true);
 
-            var dispatcher = new EntityConnectionDispatcher();
+            var dispatcher = new CancelableEntityConnectionDispatcher();
             var internalDispatcher = dispatcher.InternalDispatcher;
             internalDispatcher.Add(mockInterceptor1.Object);
             internalDispatcher.Add(mockInterceptor2.Object);
@@ -51,7 +50,7 @@ namespace System.Data.Entity.Infrastructure
         [Fact]
         public void Opening_returns_true_if_no_interceptors_are_registered()
         {
-            Assert.True(new EntityConnectionDispatcher().Opening(new Mock<EntityConnection>().Object, new DbInterceptionContext()));
+            Assert.True(new CancelableEntityConnectionDispatcher().Opening(new Mock<EntityConnection>().Object, new DbInterceptionContext()));
         }
     }
 }

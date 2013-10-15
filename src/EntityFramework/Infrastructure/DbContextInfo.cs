@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Configuration;
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -218,7 +219,10 @@ namespace System.Data.Entity.Infrastructure
 
                     using (context)
                     {
-                        _connectionString = context.InternalContext.Connection.ConnectionString;
+                        _connectionString = 
+                            DbInterception.Dispatch.Connection.GetConnectionString(
+                            context.InternalContext.Connection,
+                            new DbInterceptionContext().WithDbContext(context));
                         _connectionStringName = context.InternalContext.ConnectionStringName;
                         _connectionProviderName = context.InternalContext.ProviderName;
                         _connectionStringOrigin = context.InternalContext.ConnectionStringOrigin;
@@ -366,13 +370,14 @@ namespace System.Data.Entity.Infrastructure
 
             if (_connectionInfo != null)
             {
-                context.InternalContext.OverrideConnection(new LazyInternalConnection(_connectionInfo));
+                context.InternalContext.OverrideConnection(new LazyInternalConnection(context, _connectionInfo));
             }
             else if (_modelProviderInfo != null
                      && _appConfig == AppConfig.DefaultInstance)
             {
                 context.InternalContext.OverrideConnection(
                     new EagerInternalConnection(
+                        context,
                         _resolver().GetService<DbProviderFactory>(
                             _modelProviderInfo.ProviderInvariantName).CreateConnection(), connectionOwned: true));
             }

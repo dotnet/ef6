@@ -117,6 +117,7 @@ namespace System.Data.Entity.WrappingProvider
             RegisterAdoNetProvider(typeof(WrappingAdoNetProvider<SqlClientFactory>));
             MutableResolver.AddResolver<DbProviderServices>(k => WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
             MutableResolver.AddResolver<Func<MigrationSqlGenerator>>(WrappingEfProvider<SqlClientFactory, SqlProviderServices>.Instance);
+            MutableResolver.AddResolver<IDbProviderFactoryResolver>(k => new WrappingProviderFactoryResolver<SqlClientFactory>());
 
             var log = WrappingAdoNetProvider<SqlClientFactory>.Instance.Log;
             log.Clear();

@@ -5475,6 +5475,18 @@
   <data name="ConfigEventCannotBind" xml:space="preserve">
     <value>The method '{0}' of type '{1}' registered in the application config file could not be used as a DbConfiguration.Loaded event handler. Make sure that the method matches the EventHandler&lt;DbConfigurationLoadedEventArgs&gt; signature. See inner exception for details.</value>
   </data>
+  <data name="ConnectionClosedLog" xml:space="preserve">
+    <value>Connection closed at {0}{1}</value>
+  </data>
+  <data name="ConnectionOpenedLog" xml:space="preserve">
+    <value>Connection opened at {0}{1}</value>
+  </data>
+  <data name="TransactionLog" xml:space="preserve">
+    <value>Transaction started at {0}{1}</value>
+  </data>
+  <data name="ConnectionOpenedLogAsync" xml:space="preserve">
+    <value>Connection opened asynchronously at {0}{1}</value>
+  </data>
   <data name="ViewGenContainersNotFound" xml:space="preserve">
     <value>Unable to generate views because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model.</value>
   </data>

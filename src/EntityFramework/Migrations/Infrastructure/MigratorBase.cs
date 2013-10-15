@@ -5,6 +5,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.Migrations.Sql;
     using System.Data.Entity.Resources;
@@ -165,12 +166,12 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return _this.CreateDiscoveryQueryTrees();
         }
 
-        internal virtual void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
+        internal virtual void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
 
-            _this.ExecuteSql(transaction, migrationStatement);
+            _this.ExecuteSql(transaction, migrationStatement, interceptionContext);
         }
 
         internal virtual void Upgrade(

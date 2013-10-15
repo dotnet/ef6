@@ -71,7 +71,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected DbContext()
         {
-            InitializeLazyInternalContext(new LazyInternalConnection(GetType().DatabaseName()));
+            InitializeLazyInternalContext(new LazyInternalConnection(this, GetType().DatabaseName()));
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(model, "model");
 
-            InitializeLazyInternalContext(new LazyInternalConnection(GetType().DatabaseName()), model);
+            InitializeLazyInternalContext(new LazyInternalConnection(this, GetType().DatabaseName()), model);
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace System.Data.Entity
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
 
-            InitializeLazyInternalContext(new LazyInternalConnection(nameOrConnectionString));
+            InitializeLazyInternalContext(new LazyInternalConnection(this, nameOrConnectionString));
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace System.Data.Entity
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
             Check.NotNull(model, "model");
 
-            InitializeLazyInternalContext(new LazyInternalConnection(nameOrConnectionString), model);
+            InitializeLazyInternalContext(new LazyInternalConnection(this, nameOrConnectionString), model);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace System.Data.Entity
         {
             Check.NotNull(existingConnection, "existingConnection");
 
-            InitializeLazyInternalContext(new EagerInternalConnection(existingConnection, contextOwnsConnection));
+            InitializeLazyInternalContext(new EagerInternalConnection(this, existingConnection, contextOwnsConnection));
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace System.Data.Entity
             Check.NotNull(existingConnection, "existingConnection");
             Check.NotNull(model, "model");
 
-            InitializeLazyInternalContext(new EagerInternalConnection(existingConnection, contextOwnsConnection), model);
+            InitializeLazyInternalContext(new EagerInternalConnection(this, existingConnection, contextOwnsConnection), model);
         }
 
         /// <summary>

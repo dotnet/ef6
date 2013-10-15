@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -24,7 +25,10 @@ namespace System.Data.Entity.Infrastructure
         {
             Check.NotNull(connection, "connection");
 
-            var key = Tuple.Create(connection.GetType(), connection.DataSource, connection.Database);
+            var interceptionContext = new DbInterceptionContext();
+            var key = Tuple.Create(connection.GetType(),
+                DbInterception.Dispatch.Connection.GetDataSource(connection, interceptionContext),
+                DbInterception.Dispatch.Connection.GetDatabase(connection, interceptionContext));
 
             return _cachedTokens.GetOrAdd(
                 key,

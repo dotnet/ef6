@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -92,6 +93,7 @@ namespace System.Data.Entity.Infrastructure
         /// </summary>
         /// <param name="nameOrConnectionString"> The database name or connection string. </param>
         /// <returns> An initialized DbConnection. </returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public DbConnection CreateConnection(string nameOrConnectionString)
         {
@@ -114,16 +116,22 @@ namespace System.Data.Entity.Infrastructure
             }
 
             DbConnection connection = null;
-
             try
             {
                 connection = ProviderFactory("System.Data.SqlClient").CreateConnection();
-                connection.ConnectionString = connectionString;
+
+                DbInterception.Dispatch.Connection.SetConnectionString(
+                    connection,
+                    new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));
             }
             catch
             {
                 // Fallback to hard-coded type if provider didn't work
-                connection = new SqlConnection(connectionString);
+                connection = new SqlConnection();
+
+                DbInterception.Dispatch.Connection.SetConnectionString(
+                    connection,
+                    new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));
             }
 
             return connection;

@@ -101,21 +101,24 @@ namespace System.Data.Entity.SqlServerCompact
 
             if (_isLocalProvider)
             {
-                return CommonUtils.DatabaseExists(connection.DataSource);
+                return CommonUtils.DatabaseExists(DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext()));
             }
             else
             {
                 Type rdpType;
 
                 // If we are working with RDP, then we will need to invoke the APIs through reflection.
-                var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(connection.ConnectionString, out rdpType);
+                var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(
+                    DbInterception.Dispatch.Connection.GetConnectionString(connection, new DbInterceptionContext()),
+                    out rdpType);
                 Debug.Assert(engine != null);
 
                 var mi = rdpType.GetMethod("FileExists", new[] { typeof(string), typeof(int?) });
                 Debug.Assert(mi != null);
 
                 // We will pass 'timeout' to RDP, this will be used as timeout period for connecting and executing on TDSServer.
-                return (bool)(mi.Invoke(engine, new object[] { connection.DataSource, timeOut }));
+                return (bool)(mi.Invoke(engine,
+                    new object[] { DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext()), timeOut }));
             }
         }
 
@@ -144,8 +147,7 @@ namespace System.Data.Entity.SqlServerCompact
             // Throw an exception if connection is open.
             // We should not close the connection because user could have result sets/data readers associated with this connection.
             // Thus, it is users responsiblity to close the connection before calling delete database.
-            //
-            if (connection.State
+            if (DbInterception.Dispatch.Connection.GetState(connection, new DbInterceptionContext())
                 == ConnectionState.Open)
             {
                 throw ADP1.DeleteDatabaseWithOpenConnection();
@@ -153,7 +155,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             if (_isLocalProvider)
             {
-                CommonUtils.DeleteDatabase(connection.DataSource);
+                CommonUtils.DeleteDatabase(DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext()));
             }
             else
             {
@@ -162,7 +164,9 @@ namespace System.Data.Entity.SqlServerCompact
                     Type rdpType;
 
                     // If we are working with RDP, then we will need to invoke the APIs through reflection.
-                    var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(connection.ConnectionString, out rdpType);
+                    var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(
+                        DbInterception.Dispatch.Connection.GetConnectionString(connection, new DbInterceptionContext()),
+                        out rdpType);
                     Debug.Assert(engine != null);
 
                     // Invoke the required method on SqlCeEngine.
@@ -170,7 +174,8 @@ namespace System.Data.Entity.SqlServerCompact
                     Debug.Assert(mi != null);
 
                     // We will pass 'timeout' to RDP, this will be used as timeout period for connecting and executing on TDSServer.
-                    mi.Invoke(engine, new object[] { connection.DataSource, timeOut });
+                    mi.Invoke(engine,
+                        new object[] { DbInterception.Dispatch.Connection.GetDataSource(connection, new DbInterceptionContext()), timeOut });
                 }
                 catch (Exception e)
                 {
@@ -207,7 +212,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             if (_isLocalProvider)
             {
-                var engine = new SqlCeEngine(connection.ConnectionString);
+                var engine = new SqlCeEngine(DbInterception.Dispatch.Connection.GetConnectionString(connection, new DbInterceptionContext()));
                 engine.CreateDatabase();
                 engine.Dispose();
             }
@@ -218,7 +223,9 @@ namespace System.Data.Entity.SqlServerCompact
                     Type rdpType;
 
                     // If we are working with RDP, then we will need to invoke the APIs through reflection.
-                    var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(connection.ConnectionString, out rdpType);
+                    var engine = RemoteProviderHelper.GetRemoteSqlCeEngine(
+                        DbInterception.Dispatch.Connection.GetConnectionString(connection, new DbInterceptionContext()),
+                        out rdpType);
                     Debug.Assert(engine != null);
 
                     // Invoke the required method on SqlCeEngine.
@@ -245,10 +252,10 @@ namespace System.Data.Entity.SqlServerCompact
             try
             {
                 // Open the connection.
-                connection.Open();
+                DbInterception.Dispatch.Connection.Open(connection, new DbInterceptionContext());
 
                 // Open a transaction and attach to the command.
-                transaction = connection.BeginTransaction();
+                transaction = DbInterception.Dispatch.Connection.BeginTransaction(connection, new BeginTransactionInterceptionContext());
                 command.Transaction = transaction;
 
                 // Execute each statement.
@@ -285,7 +292,7 @@ namespace System.Data.Entity.SqlServerCompact
                 }
                 if (connection != null)
                 {
-                    connection.Close();
+                    DbInterception.Dispatch.Connection.Close(connection, new DbInterceptionContext());
                 }
             }
         }

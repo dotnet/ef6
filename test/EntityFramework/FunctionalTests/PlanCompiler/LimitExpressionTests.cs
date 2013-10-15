@@ -67,7 +67,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -106,7 +106,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -148,7 +148,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -185,7 +185,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -224,7 +224,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -266,7 +266,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -303,7 +303,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -342,7 +342,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -384,7 +384,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -421,7 +421,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -460,7 +460,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -502,7 +502,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -539,7 +539,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -578,7 +578,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -620,7 +620,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -681,7 +681,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -740,7 +740,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -802,7 +802,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -859,7 +859,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -918,7 +918,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -980,7 +980,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1037,7 +1037,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1096,7 +1096,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1158,7 +1158,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1215,7 +1215,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1274,7 +1274,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1336,7 +1336,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1393,7 +1393,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1452,7 +1452,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 
@@ -1514,7 +1514,7 @@ namespace PlanCompilerTests
                 }
             }
             Assert.True(
-                QueryTestHelpers.StripFormatting(log.ToString()).StartsWith(QueryTestHelpers.StripFormatting(expectedSql)),
+                QueryTestHelpers.StripFormatting(log.ToString()).Contains(QueryTestHelpers.StripFormatting(expectedSql)),
                 "The resulting query is different from the expected value");
         }
 

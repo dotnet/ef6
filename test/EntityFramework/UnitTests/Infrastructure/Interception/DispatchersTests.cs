@@ -1,13 +1,9 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-namespace System.Data.Entity.Infrastructure
+namespace System.Data.Entity.Infrastructure.Interception
 {
     using System.Data.Common;
-    using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
-    using System.Data.Entity.Infrastructure.DependencyResolution;
-    using System.Data.Entity.Infrastructure.Interception;
-    using System.Threading.Tasks;
     using Moq;
     using Xunit;
 
@@ -30,7 +26,7 @@ namespace System.Data.Entity.Infrastructure
             dispatchers.CancelableCommand.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(3));
 
-            dispatchers.EntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            dispatchers.CancelableEntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             mockInterceptor.Verify(m => m.CallMe(), Times.Exactly(4));
         }
 
@@ -46,13 +42,13 @@ namespace System.Data.Entity.Infrastructure
             dispatchers.Command.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.CommandTree.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
             dispatchers.CancelableCommand.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
-            dispatchers.EntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
+            dispatchers.CancelableEntityConnection.InternalDispatcher.Dispatch(i => ((FakeInterceptor)i).CallMe());
 
             mockInterceptor.Verify(m => m.CallMe(), Times.Never());
         }
 
         internal abstract class FakeInterceptor : IDbCommandInterceptor, IDbCommandTreeInterceptor, ICancelableDbCommandInterceptor,
-                                                  IEntityConnectionInterceptor
+                                                  ICancelableEntityConnectionInterceptor
         {
             public abstract void CallMe();
 

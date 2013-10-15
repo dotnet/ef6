@@ -179,10 +179,16 @@ namespace System.Data.Entity.Migrations
                             _providerManifestToken)),
                             CreateConnection()));
 
+                var interceptionContext = new DbInterceptionContext();
+                if (_contextForInterception != null)
+                {
+                    interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+                }
+
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
-                        connection.DataSource,
-                        connection.Database,
+                        DbInterception.Dispatch.Connection.GetDataSource(connection, interceptionContext),
+                        DbInterception.Dispatch.Connection.GetDatabase(connection, interceptionContext),
                         _usersContextInfo.ConnectionProviderName,
                         _usersContextInfo.ConnectionStringOrigin == DbConnectionStringOrigin.DbContextInfo
                             ? Strings.LoggingExplicit
@@ -919,13 +925,23 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(migrationStatements);
             DebugCheck.NotNull(connection);
 
-            connection.Open();
+            var interceptionContext = new DbInterceptionContext();
+            if (_contextForInterception != null)
+            {
+                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+            }
+            
+            DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
-            using (var transaction = connection.BeginTransaction(IsolationLevel.Serializable))
+            var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
+                .WithIsolationLevel(IsolationLevel.Serializable);
+
+            using (var transaction = DbInterception.Dispatch.Connection.BeginTransaction(connection,
+                beginTransactionInterceptionContext))
             {
                 foreach (var migrationStatement in migrationStatements)
                 {
-                    base.ExecuteSql(transaction, migrationStatement);
+                    base.ExecuteSql(transaction, migrationStatement, interceptionContext);
                 }
 
                 try
@@ -940,7 +956,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement)
+        internal override void ExecuteSql(DbTransaction transaction, MigrationStatement migrationStatement, DbInterceptionContext interceptionContext)
         {
             DebugCheck.NotNull(transaction);
             DebugCheck.NotNull(migrationStatement);
@@ -949,10 +965,11 @@ namespace System.Data.Entity.Migrations
             {
                 return;
             }
-
+            
             if (!migrationStatement.SuppressTransaction)
             {
-                using (var command = ConfigureCommand(transaction.Connection.CreateCommand(), migrationStatement.Sql))
+                var dbCommand = transaction.Connection.CreateCommand();
+                using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql))
                 {
                     command.Transaction = transaction;
 
@@ -963,9 +980,10 @@ namespace System.Data.Entity.Migrations
             {
                 using (var connection = CreateConnection())
                 {
-                    using (var command = ConfigureCommand(connection.CreateCommand(), migrationStatement.Sql))
+                    var dbCommand = connection.CreateCommand();
+                    using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql))
                     {
-                        connection.Open();
+                        DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
                         command.ExecuteNonQuery();
                     }
@@ -1113,7 +1131,13 @@ namespace System.Data.Entity.Migrations
         {
             var connection = _providerFactory.CreateConnection();
 
-            connection.ConnectionString = _usersContextInfo.ConnectionString;
+            var interceptionContext = new DbConnectionPropertyInterceptionContext<string>().WithValue(_usersContextInfo.ConnectionString);
+            if (_contextForInterception != null)
+            {
+                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
+            }
+
+            DbInterception.Dispatch.Connection.SetConnectionString(connection, interceptionContext);
 
             return connection;
         }

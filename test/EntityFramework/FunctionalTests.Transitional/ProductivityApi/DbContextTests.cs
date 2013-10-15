@@ -29,6 +29,7 @@ namespace ProductivityApiTests
             using (var context = new ReplaceConnectionContext())
             {
                 using (var newConnection = new LazyInternalConnection(
+                    context,
                     new DbConnectionInfo(
                         SimpleConnectionString("NewReplaceConnectionContextDatabase"),
                         "System.Data.SqlClient")))
@@ -44,6 +45,7 @@ namespace ProductivityApiTests
             using (var context = new ReplaceConnectionContext())
             {
                 using (var newConnection = new LazyInternalConnection(
+                    context,
                     new DbConnectionInfo(
                         "Data Source=NewReplaceConnectionContextDatabase.sdf",
                         "System.Data.SqlServerCe.4.0")))

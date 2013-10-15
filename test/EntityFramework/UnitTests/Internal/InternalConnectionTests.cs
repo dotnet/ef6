@@ -24,7 +24,8 @@ namespace System.Data.Entity.Internal
         {
             using (var connection = new SqlConnection())
             {
-                using (var internalConnection = new EagerInternalConnection(connection, connectionOwned: false))
+                using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+                    connection, connectionOwned: false))
                 {
                     Assert.Same(connection, internalConnection.Connection);
                 }
@@ -328,7 +329,8 @@ namespace System.Data.Entity.Internal
             {
                 connection.Disposed += (_, __) => disposed = true;
 
-                using (var internalConnection = new EagerInternalConnection(connection, connectionOwned: false))
+                using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false)
+                    , connection, connectionOwned: false))
                 {
                     var _ = internalConnection.Connection;
                 }
@@ -346,7 +348,8 @@ namespace System.Data.Entity.Internal
 
             connection.Disposed += (_, __) => disposed = true;
 
-            using (var internalConnection = new EagerInternalConnection(connection, connectionOwned: true))
+            using (var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+                connection, connectionOwned: true))
             {
                 var _ = internalConnection.Connection;
             }
@@ -427,7 +430,8 @@ namespace System.Data.Entity.Internal
             {
                 connection.Disposed += (_, __) => disposed = true;
 
-                var internalConnection = new EagerInternalConnection(connection, connectionOwned: false);
+                var internalConnection = new EagerInternalConnection(new DbContext(connection, false),
+                    connection, connectionOwned: false);
                 try
                 {
                     Assert.Same(connection, internalConnection.Connection);
@@ -455,7 +459,8 @@ namespace System.Data.Entity.Internal
         {
             using (
                 var connection =
-                    new LazyInternalConnection(new DbConnectionInfo("Database=DatabaseFromDbConnectionInfo", "System.Data.SqlClient")))
+                    new LazyInternalConnection(new DbContext("Database=DatabaseFromDbConnectionInfo"),
+                        new DbConnectionInfo("Database=DatabaseFromDbConnectionInfo", "System.Data.SqlClient")))
             {
                 Assert.IsType<SqlConnection>(connection.Connection);
                 Assert.Equal("DatabaseFromDbConnectionInfo", connection.Connection.Database);
@@ -467,7 +472,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_create_connection_from_DbConnectionInfo_from_config_file()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("LazyConnectionTest")))
+            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"), new DbConnectionInfo("LazyConnectionTest")))
             {
                 Assert.IsType<SqlCeConnection>(connection.Connection);
                 Assert.Equal("ConnectionFromAppConfig.sdf", connection.Connection.Database);
@@ -479,7 +484,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_throws_when_cant_find_connection_from_DbConnectionInfo_in_config_file()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("YouWontFindMe")))
+            using (var connection = new LazyInternalConnection(new DbContext("YouWontFindMe"), new DbConnectionInfo("YouWontFindMe")))
             {
                 Assert.Equal(
                     Strings.DbConnectionInfo_ConnectionStringNotFound("YouWontFindMe"),
@@ -490,7 +495,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_create_connection_from_DbConnectionInfo_from_overridden_config_file()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("LazyConnectionTest")))
+            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"),
+                new DbConnectionInfo("LazyConnectionTest")))
             {
                 connection.AppConfig =
                     new AppConfig(
@@ -561,7 +567,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_calculate_ConnectionHasModel_false_from_DbConnectionInfo_without_initializing()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("LazyConnectionTest")))
+            using (var connection = new LazyInternalConnection(new DbContext("LazyConnectionTest"),
+                new DbConnectionInfo("LazyConnectionTest")))
             {
                 Assert.False(connection.ConnectionHasModel);
                 Assert.False(connection.IsInitialized);
@@ -571,7 +578,8 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_can_calculate_ConnectionHasModel_true_from_DbConnectionInfo_without_initializing()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("EntityConnectionString")))
+            using (var connection = new LazyInternalConnection(new DbContext("EntityConnectionString"),
+                new DbConnectionInfo("EntityConnectionString")))
             {
                 Assert.True(connection.ConnectionHasModel);
                 Assert.False(connection.IsInitialized);
@@ -616,7 +624,7 @@ namespace System.Data.Entity.Internal
         [Fact]
         public void LazyInternalConnection_ConnectionHasModel_without_initializing_throws_when_connection_not_in_config_DbConnectionInfo()
         {
-            using (var connection = new LazyInternalConnection(new DbConnectionInfo("WontFindMe")))
+            using (var connection = new LazyInternalConnection(new DbContext("WontFindMe"), new DbConnectionInfo("WontFindMe")))
             {
                 Assert.Equal(
                     Strings.DbConnectionInfo_ConnectionStringNotFound("WontFindMe"),
@@ -648,6 +656,7 @@ namespace System.Data.Entity.Internal
             using (
                 var connection =
                     new LazyInternalConnection(
+                        new DbContext("Data Source=ConnectionFromDbConnectionInfo.sdf"),
                         new DbConnectionInfo("Data Source=ConnectionFromDbConnectionInfo.sdf", "System.Data.SqlServerCe.4.0")))
             {
                 Assert.Equal("System.Data.SqlServerCe.4.0", connection.ProviderName);

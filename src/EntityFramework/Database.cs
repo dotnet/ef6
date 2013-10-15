@@ -206,7 +206,12 @@ namespace System.Data.Entity
                 {
                     if (_internalContext.DatabaseOperations.Exists(clonedObjectContext.ObjectContext))
                     {
-                        throw Error.Database_DatabaseAlreadyExists(_internalContext.Connection.Database);
+                        var interceptionContext = new DbInterceptionContext();
+                        interceptionContext = interceptionContext.WithDbContext(_internalContext.Owner);
+                        interceptionContext = interceptionContext.WithObjectContext(clonedObjectContext.ObjectContext);
+
+                        throw Error.Database_DatabaseAlreadyExists(
+                            DbInterception.Dispatch.Connection.GetDatabase(_internalContext.Connection, interceptionContext));
                     }
                     existenceState = DatabaseExistenceState.DoesNotExist;
                 }

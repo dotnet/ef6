@@ -47,7 +47,9 @@ namespace System.Data.Entity.Infrastructure.Interception
         /// <param name="copyFrom">The context from which to copy state.</param>
         protected DbInterceptionContext(DbInterceptionContext copyFrom)
         {
-            _dbContexts = copyFrom.DbContexts.Where(c => !c.InternalContext.IsDisposed).ToList();
+            Check.NotNull(copyFrom, "copyFrom");
+
+            _dbContexts = copyFrom.DbContexts.Where(c => c.InternalContext == null || !c.InternalContext.IsDisposed).ToList();
             _objectContexts = copyFrom.ObjectContexts.Where(c => !c.IsDisposed).ToList();
             _isAsync = copyFrom._isAsync;
         }

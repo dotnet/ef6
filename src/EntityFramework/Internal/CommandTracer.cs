@@ -10,7 +10,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
-    internal sealed class CommandTracer : ICancelableDbCommandInterceptor, IDbCommandTreeInterceptor, IEntityConnectionInterceptor, IDisposable
+    internal sealed class CommandTracer : ICancelableDbCommandInterceptor, IDbCommandTreeInterceptor, ICancelableEntityConnectionInterceptor, IDisposable
     {
         private readonly List<DbCommand> _commands = new List<DbCommand>();
         private readonly List<DbCommandTree> _commandTrees = new List<DbCommandTree>();

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Utilities;
 
     internal abstract class RepositoryBase
@@ -22,7 +23,8 @@ namespace System.Data.Entity.Internal
         protected DbConnection CreateConnection()
         {
             var connection = _providerFactory.CreateConnection();
-            connection.ConnectionString = _connectionString;
+            DbInterception.Dispatch.Connection.SetConnectionString(connection,
+                new DbConnectionPropertyInterceptionContext<string>().WithValue(_connectionString));
 
             return connection;
         }

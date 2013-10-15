@@ -3,6 +3,7 @@
 namespace System.Data.Entity
 {
     using System;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations;
@@ -740,11 +741,10 @@ namespace System.Data.Entity
         public void Database_Create_throws_and_does_not_call_CreateDatabase_if_database_exists()
         {
             var mockOperations = new Mock<DatabaseOperations>();
-            var mockContext = new Mock<InternalContextForMock<FakeContext>>();
+            var mockContext = new Mock<InternalContextForMock<FakeContext>>() { CallBase = true };
             mockContext.Setup(m => m.DatabaseOperations).Returns(mockOperations.Object);
-            mockContext.Setup(m => m.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
             mockContext.Setup(m => m.Connection).Returns(new SqlConnection("Database=Foo"));
-            mockOperations.Setup(m => m.Exists(null)).Returns(true);
+            mockOperations.Setup(m => m.Exists(It.IsAny<ObjectContext>())).Returns(true);
 
             Assert.Equal(
                 Strings.Database_DatabaseAlreadyExists("Foo"),

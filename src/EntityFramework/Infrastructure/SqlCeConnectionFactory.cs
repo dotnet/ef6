@@ -4,6 +4,7 @@ namespace System.Data.Entity.Infrastructure
 {
     using System.Data.Common;
     using System.Data.Entity.Infrastructure.DependencyResolution;
+    using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -126,9 +127,10 @@ namespace System.Data.Entity.Infrastructure
                 throw Error.DbContext_ProviderReturnedNullConnection();
             }
 
+            string connectionString;
             if (DbHelpers.TreatAsConnectionString(nameOrConnectionString))
             {
-                connection.ConnectionString = nameOrConnectionString;
+                connectionString = nameOrConnectionString;
             }
             else
             {
@@ -140,9 +142,13 @@ namespace System.Data.Entity.Infrastructure
                                 && DatabaseDirectory.EndsWith("|", StringComparison.Ordinal))
                                    ? DatabaseDirectory + nameOrConnectionString
                                    : Path.Combine(DatabaseDirectory, nameOrConnectionString);
-                connection.ConnectionString = String.Format(
-                    CultureInfo.InvariantCulture, "Data Source={0}; {1}", dataPath, BaseConnectionString);
+
+                connectionString = String.Format(CultureInfo.InvariantCulture, "Data Source={0}; {1}", dataPath, BaseConnectionString);
             }
+
+            DbInterception.Dispatch.Connection.SetConnectionString(
+                connection,
+                new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionString));
 
             return connection;
         }

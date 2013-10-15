@@ -23,77 +23,6 @@ namespace System.Data.Entity.Core.EntityClient
 
     public class EntityConnectionTests
     {
-        public class InterceptingOpen : TestBase
-        {
-            [Fact]
-            public void Open_should_dispatch_and_optionally_open_underlying_connection()
-            {
-                var mockConnection = new Mock<DbConnection>();
-
-                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
-
-                var dispatcher = new EntityConnectionDispatcher();
-                var mockConnectionInterceptor = new Mock<IEntityConnectionInterceptor>();
-                dispatcher.InternalDispatcher.Add(mockConnectionInterceptor.Object);
-
-                var mockStoreItemCollection = new Mock<StoreItemCollection>();
-
-                mockStoreItemCollection
-                    .SetupGet(m => m.ProviderFactory)
-                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
-
-                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
-
-                mockMetadataWorkspace
-                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
-                    .Returns(mockStoreItemCollection.Object);
-
-                var connection
-                    = new EntityConnection(
-                        mockMetadataWorkspace.Object,
-                        mockConnection.Object,
-                        true,
-                        true,
-                        dispatcher);
-
-                var objectContext = new ObjectContext();
-                connection.AssociateContext(objectContext);
-
-                mockConnectionInterceptor
-                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
-                    .Callback<EntityConnection, DbInterceptionContext>(
-                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
-                    .Returns(false);
-
-                connection.Open();
-
-                mockConnection.Verify(m => m.Open(), Times.Never());
-
-                Assert.Equal(ConnectionState.Open, connection.State);
-
-                mockConnectionInterceptor
-                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
-                    .Callback<EntityConnection, DbInterceptionContext>(
-                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
-                    .Returns(true);
-
-                mockConnection
-                    .Setup(m => m.Open())
-                    .Callback(
-                        () => mockConnection
-                                  .SetupGet(m => m.State).Returns(ConnectionState.Open)
-                                  .Raises(
-                                      m => m.StateChange += null,
-                                      new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open)));
-
-                connection.Open();
-
-                mockConnection.Verify(m => m.Open(), Times.Once());
-
-                Assert.Equal(ConnectionState.Open, connection.State);
-            }
-        }
-
         public class Constructors : TestBase
         {
             [Fact]
@@ -152,7 +81,13 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
+                dbConnectionMock.Setup(m => m.Open()).Callback(
+                    () =>
+                    {
+                        dbConnectionState = ConnectionState.Open;
+                        dbConnectionMock.Raise(
+                            conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                    });
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
@@ -162,8 +97,6 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
-                dbConnectionMock.Raise(
-                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -173,7 +106,12 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.Open()).Callback(() => dbConnectionState = ConnectionState.Open);
+                dbConnectionMock.Setup(m => m.Open()).Callback(() =>
+                {
+                    dbConnectionState = ConnectionState.Open;
+                    dbConnectionMock.Raise(
+                        conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                });
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
 
@@ -181,8 +119,6 @@ namespace System.Data.Entity.Core.EntityClient
                 var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
 
                 entityConnection.Open();
-                dbConnectionMock.Raise(
-                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.Open(), Times.Once());
             }
@@ -504,6 +440,135 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
+
+            [Fact]
+            public void Should_use_interception()
+            {
+                var mockConnection = new Mock<DbConnection>();
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+                mockConnection.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<IDbConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Opening(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts));
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Opened(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => mockConnection.Verify(m => m.Open(), Times.Once()));
+
+                mockConnection
+                    .Setup(m => m.Open())
+                    .Callback(
+                        () =>
+                        {
+                            mockConnection
+                                .SetupGet(m => m.State).Returns(ConnectionState.Open);
+                            mockConnection.Raise(
+                                m => m.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                        });
+
+                connection.Open();
+
+                mockConnectionInterceptor.Verify(m => m.Opening(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+                mockConnectionInterceptor.Verify(m => m.Opened(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+                
+                Assert.Equal(ConnectionState.Open, connection.State);
+            }
+
+            [Fact]
+            public void Should_dispatch_and_optionally_open_underlying_connection()
+            {
+                var mockConnection = new Mock<DbConnection>();
+
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<ICancelableEntityConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(false);
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Never());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(true);
+
+                mockConnection
+                    .Setup(m => m.Open())
+                    .Callback(
+                        () => mockConnection
+                                  .SetupGet(m => m.State).Returns(ConnectionState.Open)
+                                  .Raises(
+                                      m => m.StateChange += null,
+                                      new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open)));
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Once());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+            }
         }
 
 #if !NET40
@@ -580,16 +645,20 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
-                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                        () =>
+                        {
+                            dbConnectionState = ConnectionState.Open;
+                            dbConnectionMock.Raise(
+                                conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                            return Task.FromResult(1);
+                        });
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
-                dbConnectionMock.Raise(
-                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
             }
@@ -599,16 +668,20 @@ namespace System.Data.Entity.Core.EntityClient
             {
                 var dbConnectionState = ConnectionState.Closed;
                 var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
-                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Callback(
-                    () => dbConnectionState = ConnectionState.Open).Returns(Task.FromResult(1));
+                dbConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                        () =>
+                        {
+                            dbConnectionState = ConnectionState.Open;
+                            dbConnectionMock.Raise(
+                                conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+                            return Task.FromResult(1);
+                        });
                 dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
                 dbConnectionMock.SetupGet(m => m.DataSource).Returns("fake");
 
                 var entityConnection = new EntityConnection(CreateMetadataWorkspaceMock().Object, dbConnectionMock.Object, true, true);
 
                 entityConnection.OpenAsync().Wait();
-                dbConnectionMock.Raise(
-                    conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
 
                 dbConnectionMock.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once());
             }
@@ -977,9 +1050,170 @@ namespace System.Data.Entity.Core.EntityClient
                 Assert.Equal(ConnectionState.Open, entityConnection.State);
                 Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
             }
+
+            [Fact]
+            public void Should_use_interception()
+            {
+                var mockConnection = new Mock<DbConnection>();
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+                mockConnection.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<IDbConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Opening(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts));
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Opened(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => mockConnection.Verify(m => m.OpenAsync(It.IsAny<CancellationToken>()), Times.Once()));
+
+                mockConnection
+                    .Setup(m => m.OpenAsync(It.IsAny<CancellationToken>()))
+                    .Returns(
+                        () =>
+                        {
+                            mockConnection
+                                .SetupGet(m => m.State).Returns(ConnectionState.Open);
+                            mockConnection.Raise(
+                                m => m.StateChange += null, new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open));
+
+                            return Task.FromResult(true);
+                        });
+
+                connection.OpenAsync().Wait();
+
+                mockConnectionInterceptor.Verify(m => m.Opening(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+                mockConnectionInterceptor.Verify(m => m.Opened(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+            }
         }
 
 #endif
+
+        public class Close : TestBase
+        {
+            [Fact]
+            public void Noop_if_dbConnection_is_null()
+            {
+                var metadataWorkspaceMock = new Mock<MetadataWorkspace>(MockBehavior.Strict);
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, null, true, true);
+
+                entityConnection.Close();
+            }
+
+            [Fact]
+            public void Closing_EntityConnection_sets_its_State_to_Closed()
+            {
+                var dbConnectionState = ConnectionState.Open;
+                var dbConnectionMock = new Mock<DbConnection>(MockBehavior.Strict);
+                dbConnectionMock.Setup(m => m.Close()).Callback(
+                    () =>
+                    {
+                        dbConnectionState = ConnectionState.Closed;
+                        dbConnectionMock.Raise(
+                            conn => conn.StateChange += null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                    });
+                dbConnectionMock.SetupGet(m => m.State).Returns(() => dbConnectionState);
+                dbConnectionMock.SetupGet(m => m.DataSource).Returns(() => "foo");
+
+                var metadataWorkspaceMock = CreateMetadataWorkspaceMock();
+
+                var metadataWorkspace = metadataWorkspaceMock.Object;
+                var entityConnection = new EntityConnection(metadataWorkspace, dbConnectionMock.Object, true, true);
+
+                entityConnection.Close();
+
+                Assert.Equal(ConnectionState.Closed, entityConnection.State);
+            }
+
+            [Fact]
+            public void Should_use_interception()
+            {
+                var mockConnection = new Mock<DbConnection>();
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+                mockConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<IDbConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Closing(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts));
+
+                mockConnectionInterceptor
+                    .Setup(m => m.Closed(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()))
+                    .Callback<DbConnection, MutableInterceptionContext>(
+                        (_, c) => mockConnection.Verify(m => m.Close(), Times.Once()));
+
+                mockConnection
+                    .Setup(m => m.Close())
+                    .Callback(
+                        () =>
+                        {
+                            mockConnection.SetupGet(m => m.State).Returns(ConnectionState.Closed);
+                            mockConnection.Raise(
+                                m => m.StateChange += null, new StateChangeEventArgs(ConnectionState.Open, ConnectionState.Closed));
+                        });
+
+                connection.Close();
+
+                mockConnectionInterceptor.Verify(m => m.Closing(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+                mockConnectionInterceptor.Verify(m => m.Closing(mockConnection.Object, It.IsAny<DbConnectionInterceptionContext>()));
+
+                Assert.Equal(ConnectionState.Closed, connection.State);
+            }
+        }
 
         public class BeginTransaction : TestBase
         {
@@ -1042,6 +1276,140 @@ namespace System.Data.Entity.Core.EntityClient
                 }
 
                 executionStrategyMock.Verify(m => m.Execute(It.IsAny<Func<DbTransaction>>()), Times.Once());
+            }
+
+            [Fact]
+            public void Open_should_dispatch_and_optionally_open_underlying_connection()
+            {
+                var mockConnection = new Mock<DbConnection>();
+
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<ICancelableEntityConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(false);
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Never());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+
+                mockConnectionInterceptor
+                    .Setup(m => m.ConnectionOpening(connection, It.IsAny<DbInterceptionContext>()))
+                    .Callback<EntityConnection, DbInterceptionContext>(
+                        (_, c) => Assert.Equal(new[] { objectContext }, c.ObjectContexts))
+                    .Returns(true);
+
+                mockConnection
+                    .Setup(m => m.Open())
+                    .Callback(
+                        () => mockConnection
+                                  .SetupGet(m => m.State).Returns(ConnectionState.Open)
+                                  .Raises(
+                                      m => m.StateChange += null,
+                                      new StateChangeEventArgs(ConnectionState.Closed, ConnectionState.Open)));
+
+                connection.Open();
+
+                mockConnection.Verify(m => m.Open(), Times.Once());
+
+                Assert.Equal(ConnectionState.Open, connection.State);
+            }
+
+            [Fact]
+            public void Should_use_interception()
+            {
+                var mockConnection = new Mock<DbConnection>();
+                mockConnection.SetupGet(m => m.DataSource).Returns("Foo");
+                mockConnection.SetupGet(m => m.State).Returns(ConnectionState.Open);
+
+                var dispatchers = new DbDispatchers();
+                var mockConnectionInterceptor = new Mock<IDbConnectionInterceptor>();
+                dispatchers.AddInterceptor(mockConnectionInterceptor.Object);
+
+                var mockStoreItemCollection = new Mock<StoreItemCollection>();
+                mockStoreItemCollection
+                    .SetupGet(m => m.ProviderFactory)
+                    .Returns(DbProviderServices.GetProviderFactory(new SqlConnection()));
+
+                var mockMetadataWorkspace = new Mock<MetadataWorkspace>();
+                mockMetadataWorkspace
+                    .Setup(m => m.GetItemCollection(DataSpace.SSpace))
+                    .Returns(mockStoreItemCollection.Object);
+
+                var connection
+                    = new EntityConnection(
+                        mockMetadataWorkspace.Object,
+                        mockConnection.Object,
+                        true,
+                        true,
+                        dispatchers);
+
+                var objectContext = new ObjectContext();
+                connection.AssociateContext(objectContext);
+
+                var mockTransaction = new Mock<DbTransaction>();
+
+                mockConnectionInterceptor
+                    .Setup(m => m.BeginningTransaction(mockConnection.Object, It.IsAny<BeginTransactionInterceptionContext>()))
+                    .Callback<DbConnection, BeginTransactionInterceptionContext>(
+                        (_, c) =>
+                        {
+                            Assert.Equal(new[] { objectContext }, c.ObjectContexts);
+                            Assert.Equal(IsolationLevel.Chaos, c.IsolationLevel);
+                        });
+
+                mockConnectionInterceptor
+                    .Setup(m => m.BeganTransaction(mockConnection.Object, It.IsAny<BeginTransactionInterceptionContext>()))
+                    .Callback<DbConnection, BeginTransactionInterceptionContext>(
+                        (_, c) =>
+                        {
+                            Assert.Equal(new[] { objectContext }, c.ObjectContexts);
+                            Assert.Equal(IsolationLevel.Chaos, c.IsolationLevel);
+                            Assert.Same(mockTransaction.Object, c.Result);
+                        });
+
+                mockConnection
+                    .Protected()
+                    .Setup<DbTransaction>("BeginDbTransaction", ItExpr.IsAny<IsolationLevel>())
+                    .Returns(mockTransaction.Object);
+
+                connection.BeginTransaction(IsolationLevel.Chaos);
+
+                mockConnectionInterceptor.Verify(m => m.BeginningTransaction(mockConnection.Object, It.IsAny<BeginTransactionInterceptionContext>()));
+                mockConnectionInterceptor.Verify(m => m.BeganTransaction(mockConnection.Object, It.IsAny<BeginTransactionInterceptionContext>()));
+
+                Assert.Equal(ConnectionState.Open, connection.State);
             }
         }
 

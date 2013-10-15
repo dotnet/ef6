@@ -338,7 +338,7 @@ namespace System.Data.Entity.SqlServer
         {
             Check.NotNull(connection, "connection");
 
-            if (string.IsNullOrEmpty(connection.ConnectionString))
+            if (string.IsNullOrEmpty(DbInterception.Dispatch.Connection.GetConnectionString(connection, new DbInterceptionContext())))
             {
                 throw new ArgumentException(Strings.UnableToDetermineStoreVersion);
             }
@@ -973,7 +973,8 @@ namespace System.Data.Entity.SqlServer
         {
             DebugCheck.NotNull(sqlConnection);
 
-            var connectionStringBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
+            var connectionStringBuilder = new SqlConnectionStringBuilder(
+                DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()));
 
             // Get the file names
             var attachDBFile = connectionStringBuilder.AttachDBFilename;
@@ -1093,7 +1094,8 @@ namespace System.Data.Entity.SqlServer
             Check.NotNull(storeItemCollection, "storeItemCollection");
 
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
-            var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
+            var connectionBuilder = new SqlConnectionStringBuilder(
+                DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()));
 
             if (string.IsNullOrEmpty(connectionBuilder.InitialCatalog)
                 && string.IsNullOrEmpty(connectionBuilder.AttachDBFilename))
@@ -1193,7 +1195,8 @@ namespace System.Data.Entity.SqlServer
 
             var sqlConnection = SqlProviderUtilities.GetRequiredSqlConnection(connection);
 
-            var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString);
+            var connectionBuilder = new SqlConnectionStringBuilder(
+                DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()));
             var initialCatalog = connectionBuilder.InitialCatalog;
             var attachDBFile = connectionBuilder.AttachDBFilename;
 
@@ -1305,24 +1308,28 @@ namespace System.Data.Entity.SqlServer
 
         private static void UsingConnection(DbConnection sqlConnection, Action<DbConnection> act)
         {
+            var interceptionContext = new DbInterceptionContext();
             // remember the connection string so that we can reset if credentials are wiped
-            var holdConnectionString = sqlConnection.ConnectionString;
-            var openingConnection = sqlConnection.State == ConnectionState.Closed;
+            var holdConnectionString = DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext);
+            var openingConnection = DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext)
+                                    == ConnectionState.Closed;
             if (openingConnection)
             {
-                DbConfiguration.DependencyResolver.GetService<Func<IDbExecutionStrategy>>(
-                    new ExecutionStrategyKey(ProviderInvariantName, sqlConnection.DataSource))()
-                    .Execute(
+                GetExecutionStrategy(sqlConnection).Execute(
                         () =>
                         {
                             // If Open() fails the original credentials need to be restored before retrying
-                            if (sqlConnection.State == ConnectionState.Closed
-                                && !sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
+                            if (DbInterception.Dispatch.Connection.GetState(sqlConnection, new DbInterceptionContext())
+                                == ConnectionState.Closed
+                                && !DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
+                                    .Equals(holdConnectionString, StringComparison.Ordinal))
                             {
-                                sqlConnection.ConnectionString = holdConnectionString;
+                                DbInterception.Dispatch.Connection.SetConnectionString(
+                                    sqlConnection,
+                                    new DbConnectionPropertyInterceptionContext<string>().WithValue(holdConnectionString));
                             }
 
-                            sqlConnection.Open();
+                            DbInterception.Dispatch.Connection.Open(sqlConnection, interceptionContext);
                         });
             }
             try
@@ -1331,16 +1338,17 @@ namespace System.Data.Entity.SqlServer
             }
             finally
             {
-                if (openingConnection && sqlConnection.State == ConnectionState.Open)
+                if (openingConnection && DbInterception.Dispatch.Connection.GetState(sqlConnection, interceptionContext) == ConnectionState.Open)
                 {
                     // if we opened the connection, we should close it
-                    sqlConnection.Close();
+                    DbInterception.Dispatch.Connection.Close(sqlConnection, interceptionContext);
 
                     // Can only change the connection string if the connection is closed
-                    if (!sqlConnection.ConnectionString.Equals(holdConnectionString, StringComparison.Ordinal))
+                    if (!DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, interceptionContext)
+                        .Equals(holdConnectionString, StringComparison.Ordinal))
                     {
-                        Debug.Assert(true);
-                        sqlConnection.ConnectionString = holdConnectionString;
+                        DbInterception.Dispatch.Connection.SetConnectionString(sqlConnection,
+                            new DbConnectionPropertyInterceptionContext<string>().WithValue(holdConnectionString));
                     }
                 }
             }
@@ -1348,7 +1356,8 @@ namespace System.Data.Entity.SqlServer
 
         private static void UsingMasterConnection(DbConnection sqlConnection, Action<DbConnection> act)
         {
-            var connectionBuilder = new SqlConnectionStringBuilder(sqlConnection.ConnectionString)
+            var connectionBuilder = new SqlConnectionStringBuilder(
+                DbInterception.Dispatch.Connection.GetConnectionString(sqlConnection, new DbInterceptionContext()))
                 {
                     InitialCatalog = "master",
                     AttachDBFilename = string.Empty, // any AttachDB path specified is not relevant to master
@@ -1358,7 +1367,8 @@ namespace System.Data.Entity.SqlServer
             {
                 using (var masterConnection = GetProviderFactory(sqlConnection).CreateConnection())
                 {
-                    masterConnection.ConnectionString = connectionBuilder.ConnectionString;
+                    DbInterception.Dispatch.Connection.SetConnectionString(masterConnection,
+                        new DbConnectionPropertyInterceptionContext<string>().WithValue(connectionBuilder.ConnectionString));
                     UsingConnection(masterConnection, act);
                 }
             }
