@@ -14,8 +14,11 @@ namespace System.Data.Entity.Infrastructure.Interception
     using Moq.Protected;
     using Xunit;
 
-    public class DatabaseLogFormatterTests
+    public class DatabaseLogFormatterTests : TestBase
     {
+        private static readonly StringResourceVerifier _resourceVerifier = new StringResourceVerifier(
+            new AssemblyResourceLookup(EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources"));
+
         public class Constructors : TestBase
         {
             [Fact]
@@ -126,7 +129,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             public void ScalarExecuting_logs()
             {
                 var writer = new StringWriter();
-                new DatabaseLogFormatter(writer.Write).ScalarExecuting(CreateCommand("Sam I am"), new DbCommandInterceptionContext<object>());
+                new DatabaseLogFormatter(writer.Write).ScalarExecuting(
+                    CreateCommand("Sam I am"), new DbCommandInterceptionContext<object>());
 
                 Assert.Equal("Sam I am", GetSingleLine(writer));
             }
@@ -294,7 +298,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 var writer = new StringWriter();
                 var formatter = new DatabaseLogFormatter(writer.Write);
-                
+
                 var interceptionContext = new DbCommandInterceptionContext<string>().WithDbContext(context1);
                 interceptionContext.Result = "Sam-I-am";
                 formatter.Executed(CreateCommand(""), interceptionContext);
@@ -343,7 +347,8 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 Assert.Equal(
                     "command",
-                    Assert.Throws<ArgumentNullException>(() => formatter.LogCommand(null, new DbCommandInterceptionContext<int>())).ParamName);
+                    Assert.Throws<ArgumentNullException>(() => formatter.LogCommand(null, new DbCommandInterceptionContext<int>()))
+                        .ParamName);
                 Assert.Equal(
                     "interceptionContext",
                     Assert.Throws<ArgumentNullException>(() => formatter.LogCommand<int>(new Mock<DbCommand>().Object, null)).ParamName);
@@ -573,7 +578,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             public void LogResult_handles_completed_commands_with_int_results()
             {
                 var writer = new StringWriter();
-                new DatabaseLogFormatter(writer.Write).LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int> { Result = 77 });
+                new DatabaseLogFormatter(writer.Write).LogResult(
+                    new Mock<DbCommand>().Object, new DbCommandInterceptionContext<int> { Result = 77 });
 
                 Assert.Equal(Strings.CommandLogComplete(0, "77", ""), GetSingleLine(writer));
             }
@@ -592,7 +598,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             public void LogResult_handles_completed_commands_with_null_results()
             {
                 var writer = new StringWriter();
-                new DatabaseLogFormatter(writer.Write).LogResult(new Mock<DbCommand>().Object, new DbCommandInterceptionContext<DbDataReader>());
+                new DatabaseLogFormatter(writer.Write).LogResult(
+                    new Mock<DbCommand>().Object, new DbCommandInterceptionContext<DbDataReader>());
 
                 Assert.Equal(Strings.CommandLogComplete(0, "null", ""), GetSingleLine(writer));
             }
@@ -644,7 +651,7 @@ namespace System.Data.Entity.Infrastructure.Interception
 
                 formatter.LogResult(
                     new Mock<DbCommand>().Object,
-                    new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") } );
+                    new DbCommandInterceptionContext<int> { Exception = new Exception("I do not like them!") });
 
                 Assert.Equal(Strings.CommandLogFailed(elapsed, "I do not like them!", ""), GetSingleLine(writer));
             }
@@ -670,6 +677,257 @@ namespace System.Data.Entity.Infrastructure.Interception
                 Thread.Sleep(10);
                 formatter.Stopwatch.Stop();
                 return formatter.Stopwatch.ElapsedMilliseconds;
+            }
+        }
+
+        public class Committed : TestBase
+        {
+            [Fact]
+            public void Committed_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "transaction",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.Committed(null, new DbTransactionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.Committed(new Mock<DbTransaction>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void Committed_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Committed(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("TransactionCommittedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Committed_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbTransactionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).Committed(new Mock<DbTransaction>().Object, interceptionContext);
+                Assert.True(
+                    _resourceVerifier.IsMatch("TransactionCommitErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class RolledBack : TestBase
+        {
+            [Fact]
+            public void RolledBack_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "transaction",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.RolledBack(null, new DbTransactionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.RolledBack(new Mock<DbTransaction>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void RolledBack_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).RolledBack(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("TransactionRolledBackLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void RolledBack_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbTransactionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).RolledBack(new Mock<DbTransaction>().Object, interceptionContext);
+                Assert.True(
+                    _resourceVerifier.IsMatch("TransactionRollbackErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class Disposed : TestBase
+        {
+            [Fact]
+            public void Disposed_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "transaction",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.Disposed(null, new DbTransactionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.Disposed(new Mock<DbTransaction>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void Disposed_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Disposed(new Mock<DbTransaction>().Object, new DbTransactionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("TransactionRolledBackLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Disposed_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbTransactionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).Disposed(new Mock<DbTransaction>().Object, interceptionContext);
+                Assert.True(
+                    _resourceVerifier.IsMatch("TransactionRollbackErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class BeganTransaction : TestBase
+        {
+            [Fact]
+            public void BeganTransaction_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.BeganTransaction(null, new BeginTransactionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.BeganTransaction(new Mock<DbConnection>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void BeganTransaction_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).BeganTransaction(
+                    new Mock<DbConnection>().Object, new BeginTransactionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("TransactionStartedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void BeganTransaction_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new BeginTransactionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).BeganTransaction(new Mock<DbConnection>().Object, interceptionContext);
+                Assert.True(
+                    _resourceVerifier.IsMatch("TransactionStartErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class Closed : TestBase
+        {
+            [Fact]
+            public void Closed_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.Closed(null, new DbConnectionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.Closed(new Mock<DbConnection>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void Closed_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Closed(new Mock<DbConnection>().Object, new DbConnectionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("ConnectionClosedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Closed_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbConnectionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).Closed(new Mock<DbConnection>().Object, interceptionContext);
+                Assert.True(_resourceVerifier.IsMatch("ConnectionCloseErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+        }
+
+        public class Opened : TestBase
+        {
+            [Fact]
+            public void Opened_validates_arguments()
+            {
+                var formatter = new DatabaseLogFormatter(new StringWriter().Write);
+
+                Assert.Equal(
+                    "connection",
+                    Assert.Throws<ArgumentNullException>(
+                        () => formatter.Opened(null, new DbConnectionInterceptionContext()))
+                        .ParamName);
+                Assert.Equal(
+                    "interceptionContext",
+                    Assert.Throws<ArgumentNullException>(() => formatter.Opened(new Mock<DbConnection>().Object, null)).ParamName);
+            }
+
+            [Fact]
+            public void Opened_logs()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Opened(new Mock<DbConnection>().Object, new DbConnectionInterceptionContext());
+                Assert.True(_resourceVerifier.IsMatch("ConnectionOpenedLog", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Opened_logs_async()
+            {
+                var writer = new StringWriter();
+                new DatabaseLogFormatter(writer.Write).Opened(
+                    new Mock<DbConnection>().Object, new DbConnectionInterceptionContext().AsAsync());
+                Assert.True(_resourceVerifier.IsMatch("ConnectionOpenedLogAsync", GetSingleLine(writer), new AnyValueParameter(), ""));
+            }
+
+            [Fact]
+            public void Opened_logs_exceptions()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbConnectionInterceptionContext();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).Opened(new Mock<DbConnection>().Object, interceptionContext);
+                Assert.True(_resourceVerifier.IsMatch("ConnectionOpenErrorLog", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+
+            [Fact]
+            public void Opened_logs_exceptions_async()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbConnectionInterceptionContext().AsAsync();
+                interceptionContext.Exception = new Exception("Boo");
+                new DatabaseLogFormatter(writer.Write).Opened(new Mock<DbConnection>().Object, interceptionContext);
+                Assert.True(
+                    _resourceVerifier.IsMatch("ConnectionOpenErrorLogAsync", GetSingleLine(writer), new AnyValueParameter(), "Boo", ""));
+            }
+
+            [Fact]
+            public void Opened_logs_canceled()
+            {
+                var writer = new StringWriter();
+                var interceptionContext = new DbConnectionInterceptionContext().AsAsync();
+                interceptionContext.MutableData.TaskStatus = TaskStatus.Canceled;
+                new DatabaseLogFormatter(writer.Write).Opened(new Mock<DbConnection>().Object, interceptionContext);
+                Assert.True(_resourceVerifier.IsMatch("ConnectionOpenCanceledLog", GetSingleLine(writer), new AnyValueParameter(), ""));
             }
         }
 

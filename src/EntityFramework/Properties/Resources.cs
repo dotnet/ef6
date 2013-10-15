@@ -13767,36 +13767,6 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Connection closed at {0}{1}"
-        // </summary>
-        internal static string ConnectionClosedLog(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.ConnectionClosedLog, p0, p1);
-        }
-
-        // <summary>
-        // A string like "Connection opened at {0}{1}"
-        // </summary>
-        internal static string ConnectionOpenedLog(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.ConnectionOpenedLog, p0, p1);
-        }
-
-        // <summary>
-        // A string like "Transaction started at {0}{1}"
-        // </summary>
-        internal static string TransactionLog(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.TransactionLog, p0, p1);
-        }
-
-        // <summary>
-        // A string like "Connection opened asynchronously at {0}{1}"
-        // </summary>
-        internal static string ConnectionOpenedLogAsync(object p0, object p1)
-        {
-            return EntityRes.GetString(EntityRes.ConnectionOpenedLogAsync, p0, p1);
-        }
         // A string like "Unable to generate views because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model."
         // </summary>
         internal static string ViewGenContainersNotFound(object p0, object p1)
@@ -13834,6 +13804,110 @@ namespace System.Data.Entity.Resources
         internal static string BadConnectionWrapping
         {
             get { return EntityRes.GetString(EntityRes.BadConnectionWrapping); }
+        }
+
+        // <summary>
+        // A string like "Closed connection at {0}{1}"
+        // </summary>
+        internal static string ConnectionClosedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionClosedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to close connection at {0} with error: {1}{2}"
+        // </summary>
+        internal static string ConnectionCloseErrorLog(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionCloseErrorLog, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Opened connection at {0}{1}"
+        // </summary>
+        internal static string ConnectionOpenedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to open connection at {0} with error: {1}{2}"
+        // </summary>
+        internal static string ConnectionOpenErrorLog(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenErrorLog, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Opened connection asynchronously at {0}{1}"
+        // </summary>
+        internal static string ConnectionOpenedLogAsync(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenedLogAsync, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to open connection asynchronously at {0} with error: {1}{2}"
+        // </summary>
+        internal static string ConnectionOpenErrorLogAsync(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenErrorLogAsync, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Started transaction at {0}{1}"
+        // </summary>
+        internal static string TransactionStartedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.TransactionStartedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to start transaction at {0} with error: {1}{2}"
+        // </summary>
+        internal static string TransactionStartErrorLog(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.TransactionStartErrorLog, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Committed transaction at {0}{1}"
+        // </summary>
+        internal static string TransactionCommittedLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.TransactionCommittedLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to commit transaction at {0} with error: {1}{2}"
+        // </summary>
+        internal static string TransactionCommitErrorLog(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.TransactionCommitErrorLog, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Rolled back transaction at {0}{1}"
+        // </summary>
+        internal static string TransactionRolledBackLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.TransactionRolledBackLog, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Failed to rollback transaction at {0} with error: {1}{2}"
+        // </summary>
+        internal static string TransactionRollbackErrorLog(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.TransactionRollbackErrorLog, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "Cancelled open connection at {0}{1}"
+        // </summary>
+        internal static string ConnectionOpenCanceledLog(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConnectionOpenCanceledLog, p0, p1);
         }
     }
 
@@ -17203,15 +17277,24 @@ namespace System.Data.Entity.Resources
         internal const string ConfigEventTypeNotFound = "ConfigEventTypeNotFound";
         internal const string ConfigEventBadMethod = "ConfigEventBadMethod";
         internal const string ConfigEventCannotBind = "ConfigEventCannotBind";
-        internal const string ConnectionClosedLog = "ConnectionClosedLog";
-        internal const string ConnectionOpenedLog = "ConnectionOpenedLog";
-        internal const string TransactionLog = "TransactionLog";
-        internal const string ConnectionOpenedLogAsync = "ConnectionOpenedLogAsync";
         internal const string ViewGenContainersNotFound = "ViewGenContainersNotFound";
         internal const string HashCalcContainersNotFound = "HashCalcContainersNotFound";
         internal const string ViewGenMultipleContainers = "ViewGenMultipleContainers";
         internal const string HashCalcMultipleContainers = "HashCalcMultipleContainers";
         internal const string BadConnectionWrapping = "BadConnectionWrapping";
+        internal const string ConnectionClosedLog = "ConnectionClosedLog";
+        internal const string ConnectionCloseErrorLog = "ConnectionCloseErrorLog";
+        internal const string ConnectionOpenedLog = "ConnectionOpenedLog";
+        internal const string ConnectionOpenErrorLog = "ConnectionOpenErrorLog";
+        internal const string ConnectionOpenedLogAsync = "ConnectionOpenedLogAsync";
+        internal const string ConnectionOpenErrorLogAsync = "ConnectionOpenErrorLogAsync";
+        internal const string TransactionStartedLog = "TransactionStartedLog";
+        internal const string TransactionStartErrorLog = "TransactionStartErrorLog";
+        internal const string TransactionCommittedLog = "TransactionCommittedLog";
+        internal const string TransactionCommitErrorLog = "TransactionCommitErrorLog";
+        internal const string TransactionRolledBackLog = "TransactionRolledBackLog";
+        internal const string TransactionRollbackErrorLog = "TransactionRollbackErrorLog";
+        internal const string ConnectionOpenCanceledLog = "ConnectionOpenCanceledLog";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

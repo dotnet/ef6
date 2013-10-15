@@ -57,13 +57,18 @@ namespace System.Data.Entity.Interception
             const int asyncCount = 0;
             const int paramCount = 2;
             const int imALoggerCount = 0;
+            const int transactionCount = 1;
+            const int connectionCount = 3;
 #else
             const int selectCount = 5;
             const int updateCount = 1;
             const int asyncCount = 2;
             const int paramCount = 4;
             const int imALoggerCount = 1;
+            const int transactionCount = 2;
+            const int connectionCount = 4;
 #endif
+
             Assert.Equal(selectCount, logLines.Count(l => l.ToUpperInvariant().StartsWith("SELECT")));
             Assert.Equal(1, logLines.Count(l => l.ToUpperInvariant().StartsWith("INSERT")));
             Assert.Equal(updateCount, logLines.Count(l => l.ToUpperInvariant().StartsWith("UPDATE")));
@@ -77,6 +82,12 @@ namespace System.Data.Entity.Interception
 
             Assert.Equal(selectCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, new AnyValueParameter(), "SqlDataReader", "")));
             Assert.Equal(updateCount, logLines.Count(l => _resourceVerifier.IsMatch("CommandLogComplete", l, new AnyValueParameter(), "1", "")));
+
+            Assert.Equal(transactionCount, logLines.Count(l => _resourceVerifier.IsMatch("TransactionStartedLog", l, new AnyValueParameter(), "")));
+            Assert.Equal(transactionCount, logLines.Count(l => _resourceVerifier.IsMatch("TransactionRolledBackLog", l, new AnyValueParameter(), "")));
+
+            Assert.Equal(connectionCount, logLines.Count(l => _resourceVerifier.IsMatch("ConnectionOpenedLog", l, new AnyValueParameter(), "")));
+            Assert.Equal(connectionCount, logLines.Count(l => _resourceVerifier.IsMatch("ConnectionClosedLog", l, new AnyValueParameter(), "")));
         }
 
         [Fact]
@@ -92,9 +103,9 @@ namespace System.Data.Entity.Interception
 
             var logLines = log.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-            Assert.Equal(5, logLines.Length);
-            Assert.Equal("select * from No.Chance", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], new AnyValueParameter(), exception.Message, "");
+            Assert.Equal(7, logLines.Length);
+            Assert.Equal("select * from No.Chance", logLines[1]);
+            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[3], new AnyValueParameter(), exception.Message, "");
         }
 
 #if !NET40
@@ -113,12 +124,11 @@ namespace System.Data.Entity.Interception
 
             var logLines = log.ToString().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
-            Assert.Equal(5, logLines.Length);
-            Assert.Equal("select * from No.Chance", logLines[0]);
-            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[1], new AnyValueParameter(), "");
-            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[2], new AnyValueParameter(), exception.Message, "");
+            Assert.Equal(7, logLines.Length);
+            Assert.Equal("select * from No.Chance", logLines[1]);
+            _resourceVerifier.VerifyMatch("CommandLogAsync", logLines[2], new AnyValueParameter(), "");
+            _resourceVerifier.VerifyMatch("CommandLogFailed", logLines[3], new AnyValueParameter(), exception.Message, "");
         }
-
 #endif
 
         [Fact]
@@ -157,7 +167,6 @@ namespace System.Data.Entity.Interception
 
         public class TestDatabaseLogFormatter : DatabaseLogFormatter
         {
-
             public TestDatabaseLogFormatter(DbContext context, Action<string> writeAction)
                 : base(context, writeAction)
             {
@@ -179,6 +188,14 @@ namespace System.Data.Entity.Interception
                     string.Format(
                         CultureInfo.CurrentCulture, "Context '{0}' finished executing command{1}", Context.GetType().Name,
                         Environment.NewLine));
+            }
+
+            public override void Opened(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
+            }
+
+            public override void Closed(DbConnection connection, DbConnectionInterceptionContext interceptionContext)
+            {
             }
         }
     }

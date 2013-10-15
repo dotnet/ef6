@@ -126,8 +126,8 @@ namespace System.Data.Entity.Infrastructure.Interception
             InternalDispatcher.Dispatch(
                 transaction.Dispose,
                 clonedInterceptionContext,
-                i => i.RollingBack(transaction, clonedInterceptionContext),
-                i => i.RolledBack(transaction, clonedInterceptionContext));
+                i => i.Disposing(transaction, clonedInterceptionContext),
+                i => i.Disposed(transaction, clonedInterceptionContext));
         }
 
         /// <summary>
