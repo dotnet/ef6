@@ -453,7 +453,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // Make the default discriminator nullable if this type isn't using it but there is a base type
             var defaultDiscriminator = fragment.GetDefaultDiscriminator();
             if (defaultDiscriminator != null
-                && entityTypeMapping.EntityType.BaseType != null)
+                && entityTypeMapping.EntityType.BaseType != null
+                && !entityTypeMapping.EntityType.Abstract)
             {
                 var columnMapping =
                     _tableMappings[fragment.Table].ColumnMappings.SingleOrDefault(
@@ -468,6 +469,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     }
                 }
                 defaultDiscriminator.Nullable = true;
+            }
+
+            // The default TPH mapping may result in columns being created that are no longer required
+            // when an abstract type mapping to the table is removed, for example in TPC cases. We need
+            // to remove these columns.
+            if (entityTypeMapping.EntityType.Abstract)
+            {
+                foreach (var columnMapping in _tableMappings[fragment.Table].ColumnMappings.Where(
+                    cm => cm.PropertyMappings.All(pm => pm.EntityType == entityTypeMapping.EntityType)))
+                {
+                    fragment.Table.RemoveMember(columnMapping.Column);
+                }
             }
 
             entityTypeMapping.RemoveFragment(fragment);

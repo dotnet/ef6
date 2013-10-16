@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
 
     internal abstract class StructuralTypeMappingGenerator
@@ -133,10 +134,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 }
             }
 
-            if (entityTypeMapping == null)
-            {
-                throw Error.UnmappedAbstractType(entityType.GetClrType());
-            }
+            Debug.Assert(entityTypeMapping != null);
 
             return entityTypeMapping;
         }

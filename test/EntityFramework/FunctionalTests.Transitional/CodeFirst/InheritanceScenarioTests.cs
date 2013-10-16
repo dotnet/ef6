@@ -9,7 +9,9 @@ namespace FunctionalTests
     using System.Data.Entity;
     using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.SqlClient;
     using System.Linq;
     using FunctionalTests.Model;
     using Xunit;
@@ -1350,6 +1352,43 @@ namespace FunctionalTests
         {
             public string TitleB { get; set; }
         }
+
+        [Fact] // CodePlex 1747
+        public void Abstract_TPH_base_type_not_explicitly_added_to_the_model_is_mapped_correctly()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Message1747>();
+            modelBuilder.Entity<Comment1747>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            var mappings = databaseMapping.EntityContainerMappings.Single().EntitySetMappings.Single().EntityTypeMappings.ToList();
+
+            Assert.Equal(3, mappings.Count());
+            Assert.True(mappings.Single(x => x.EntityType.Name == "MessageBase1747").IsHierarchyMapping);
+            Assert.False(mappings.Single(x => x.EntityType.Name == "Message1747").IsHierarchyMapping);
+            Assert.False(mappings.Single(x => x.EntityType.Name == "Comment1747").IsHierarchyMapping);
+        }
+
+        public abstract class MessageBase1747
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string Contents { get; set; }
+        }
+
+        public class Message1747 : MessageBase1747
+        {
+        }
+
+        public class Comment1747 : MessageBase1747
+        {
+            public MessageBase1747 Parent { get; set; }
+            public int ParentId { get; set; }
+        }
+
     }
 
     #region Bug DevDiv#223284

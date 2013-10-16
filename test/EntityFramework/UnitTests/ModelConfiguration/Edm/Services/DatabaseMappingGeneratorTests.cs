@@ -426,6 +426,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             entityType.Abstract = true;
             entityType.Annotations.SetClrType(typeof(string));
+            
+            var derivedType = model.AddEntityType("D");
+            derivedType.BaseType = entityType;
+            derivedType.Annotations.SetClrType(typeof(object));
+
             model.AddEntitySet("ESet", entityType);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));

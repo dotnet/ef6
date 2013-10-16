@@ -10,6 +10,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Data.Entity.Migrations.Infrastructure.FunctionsModel;
     using System.Data.Entity.Spatial;
     using System.Linq;
+    using System.Xml;
     using Xunit;
 
     public class ModificationCommandTreeGeneratorTests : TestBase
@@ -784,7 +785,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
         {
             protected override void OnModelCreating(DbModelBuilder modelBuilder)
             {
-                modelBuilder.Entity<Weapon>();
                 modelBuilder.Entity<GearBase>().HasMany(g => g.Weapons).WithMany().MapToStoredProcedures();
             }
         }
@@ -836,6 +836,76 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var commandTrees
                 = commandTreeGenerator
                     .GenerateAssociationDelete(GetType().Namespace + ".GearBase_Weapons")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        public class Gear2
+        {
+            public int Id { get; set; }
+            public virtual ICollection<Weapon> Weapons { get; set; }
+        }
+
+        public class StandardWeapon : Weapon
+        {
+        }
+
+        public class GearsModel1289 : DbContext
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Gear2>().HasMany(g => g.Weapons).WithMany().MapToStoredProcedures();
+            }
+        }
+
+        [Fact] // CodePlex 1289
+        public void Can_generate_insert_association_tree_when_many_to_many_with_non_abstract_base_and_abstract_target()
+        {
+            DbModel model;
+
+            using (var context = new GearsModel1289())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationInsert(GetType().Namespace + ".Gear2_Weapons")
+                    .ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact] // CodePlex 1289
+        public void Can_generate_insert_association_tree_when_many_to_many_with_non_abstract_base_and_abstract_end()
+        {
+            DbModel model;
+
+            using (var context = new GearsModel1289())
+            {
+                model
+                    = context
+                        .InternalContext
+                        .CodeFirstModel
+                        .CachedModelBuilder
+                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator
+                = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees
+                = commandTreeGenerator
+                    .GenerateAssociationDelete(GetType().Namespace + ".Gear2_Weapons")
                     .ToList();
 
             Assert.Equal(1, commandTrees.Count());

@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Linq;
 
@@ -61,11 +62,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             foreach (var entityType in databaseMapping.Model.EntityTypes)
             {
-                if (!entityType.Abstract)
+                if (entityType.Abstract
+                    && databaseMapping.Model.EntityTypes.All(e => e.BaseType != entityType))
                 {
-                    new TableMappingGenerator(databaseMapping.ProviderManifest).
-                        Generate(entityType, databaseMapping);
+                    throw new InvalidOperationException(Strings.UnmappedAbstractType(entityType.GetClrType()));
                 }
+
+                new TableMappingGenerator(databaseMapping.ProviderManifest).
+                    Generate(entityType, databaseMapping);
             }
         }
 
