@@ -376,6 +376,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 var propertyPath = configuration.Key;
                 var propertyConfiguration = configuration.Value;
 
+                // The TableName comparison is necessary for entity splitting scenarios,
+                // when some properties of the same entity type (C-space) are mapped to
+                // one table while others are mapped to a different table. In that case
+                // only the property mappings that match the table name need to be configured
+                // at this stage.
                 propertyConfiguration.Configure(
                     propertyMappings.Where(
                         pm =>
