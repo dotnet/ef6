@@ -3042,7 +3042,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (null == _keylessEntityStore)
                 {
-                    _keylessEntityStore = new Dictionary<object, EntityEntry>(new ObjectReferenceEqualityComparer());
+                    _keylessEntityStore = new Dictionary<object, EntityEntry>(ObjectReferenceEqualityComparer.Default);
                 }
                 if (!_keylessEntityStore.ContainsKey(entry.Entity))
                 {

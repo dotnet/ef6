@@ -1815,7 +1815,7 @@ namespace System.Data.Entity.Core.Objects
 
             if (_originalComplexObjects == null)
             {
-                _originalComplexObjects = new Dictionary<object, Dictionary<int, object>>(new ObjectReferenceEqualityComparer());
+                _originalComplexObjects = new Dictionary<object, Dictionary<int, object>>(ObjectReferenceEqualityComparer.Default);
             }
             Dictionary<int, object> ordinal2complexObject;
             if (!_originalComplexObjects.TryGetValue(userObject, out ordinal2complexObject))
@@ -2345,7 +2345,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var val = WrappedEntity.GetNavigationPropertyValue(relatedEnd);
 
-                var current = new HashSet<object>(new ObjectReferenceEqualityComparer());
+                var current = new HashSet<object>(ObjectReferenceEqualityComparer.Default);
                 if (val != null)
                 {
                     if (n.ToEndMember.RelationshipMultiplicity

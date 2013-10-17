@@ -211,7 +211,7 @@ namespace System.Data.Entity.Internal
         // <param name="item"> The entity to locate in the set. The value can be null.</param>
         public new virtual bool Contains(TEntity item)
         {
-            IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
+            IEqualityComparer<TEntity> comparer = ObjectReferenceEqualityComparer.Default;
             foreach (var entity in Items)
             {
                 if (comparer.Equals(entity, item))
@@ -232,7 +232,7 @@ namespace System.Data.Entity.Internal
         // <param name="item"> The entity to remove from the set. The value can be null.</param>
         public new virtual bool Remove(TEntity item)
         {
-            IEqualityComparer<TEntity> comparer = new ObjectReferenceEqualityComparer();
+            IEqualityComparer<TEntity> comparer = ObjectReferenceEqualityComparer.Default;
 
             var index = 0;
             for (; index < Count; index++)

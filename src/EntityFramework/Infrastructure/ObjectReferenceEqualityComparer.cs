@@ -11,6 +11,16 @@ namespace System.Data.Entity.Infrastructure
     [Serializable]
     public sealed class ObjectReferenceEqualityComparer : IEqualityComparer<object>
     {
+        private static readonly ObjectReferenceEqualityComparer _default = new ObjectReferenceEqualityComparer();
+
+        /// <summary>
+        /// Gets the default instance.
+        /// </summary>
+        public static ObjectReferenceEqualityComparer Default
+        {
+            get { return _default; }
+        }
+
         bool IEqualityComparer<object>.Equals(object x, object y)
         {
             return ReferenceEquals(x, y);

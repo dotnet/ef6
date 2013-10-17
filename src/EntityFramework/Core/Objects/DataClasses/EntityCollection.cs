@@ -89,7 +89,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 if (null == _wrappedRelatedEntities)
                 {
-                    _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(new ObjectReferenceEqualityComparer());
+                    _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
                 }
                 return _wrappedRelatedEntities;
             }
@@ -880,7 +880,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             {
                 throw new InvalidOperationException(Strings.RelatedEnd_CannotSerialize("EntityCollection"));
             }
-            _relatedEntities = _wrappedRelatedEntities == null ? null : new HashSet<TEntity>(_wrappedRelatedEntities.Keys, new ObjectReferenceEqualityComparer());
+            _relatedEntities = _wrappedRelatedEntities == null ? null : new HashSet<TEntity>(_wrappedRelatedEntities.Keys, ObjectReferenceEqualityComparer.Default);
         }
 
         // This method is required to maintain compatibility with the v1 binary serialization format. 
@@ -901,7 +901,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // We need to call this here so that the hash set will be fully constructed
                 // ready for access.  Normally, this would happen later in the process.
                 _relatedEntities.OnDeserialization(null);
-                _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(new ObjectReferenceEqualityComparer());
+                _wrappedRelatedEntities = new Dictionary<TEntity, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
                 foreach (var entity in _relatedEntities)
                 {
                     _wrappedRelatedEntities.Add(entity, EntityWrapperFactory.WrapEntityUsingContext(entity, ObjectContext));

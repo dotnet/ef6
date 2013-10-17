@@ -114,7 +114,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             {
                 TrackProcessedEntities = true;
                 ProcessedEntities = new HashSet<IEntityWrapper>();
-                WrappedEntities = new Dictionary<object, IEntityWrapper>(new ObjectReferenceEqualityComparer());
+                WrappedEntities = new Dictionary<object, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
             }
         }
 
@@ -143,13 +143,13 @@ namespace System.Data.Entity.Core.Objects.Internal
             IsAttachTracking = true;
 
             PromotedRelationships = new Dictionary<RelatedEnd, IList<IEntityWrapper>>();
-            PromotedKeyEntries = new Dictionary<object, EntityEntry>(new ObjectReferenceEqualityComparer());
+            PromotedKeyEntries = new Dictionary<object, EntityEntry>(ObjectReferenceEqualityComparer.Default);
             PopulatedEntityReferences = new HashSet<EntityReference>();
             AlignedEntityReferences = new HashSet<EntityReference>();
 
             TrackProcessedEntities = true;
             ProcessedEntities = new HashSet<IEntityWrapper>();
-            WrappedEntities = new Dictionary<object, IEntityWrapper>(new ObjectReferenceEqualityComparer());
+            WrappedEntities = new Dictionary<object, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
 
             OriginalMergeOption = null; // this must be set explicitely to value!=null later when the merge option is known
         }
@@ -184,7 +184,7 @@ namespace System.Data.Entity.Core.Objects.Internal
             TrackProcessedEntities = true;
 
             ProcessedEntities = new HashSet<IEntityWrapper>();
-            WrappedEntities = new Dictionary<object, IEntityWrapper>(new ObjectReferenceEqualityComparer());
+            WrappedEntities = new Dictionary<object, IEntityWrapper>(ObjectReferenceEqualityComparer.Default);
 
             DeletedRelationshipsByGraph = new Dictionary<IEntityWrapper, Dictionary<RelatedEnd, HashSet<IEntityWrapper>>>();
             AddedRelationshipsByGraph = new Dictionary<IEntityWrapper, Dictionary<RelatedEnd, HashSet<IEntityWrapper>>>();

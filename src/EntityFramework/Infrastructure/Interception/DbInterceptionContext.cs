@@ -93,7 +93,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             var copy = Clone();
-            if (!copy._dbContexts.Contains(context, new ObjectReferenceEqualityComparer()))
+            if (!copy._dbContexts.Contains(context, ObjectReferenceEqualityComparer.Default))
             {
                 copy._dbContexts.Add(context);
             }
@@ -124,7 +124,7 @@ namespace System.Data.Entity.Infrastructure.Interception
             Check.NotNull(context, "context");
 
             var copy = Clone();
-            if (!copy._objectContexts.Contains(context, new ObjectReferenceEqualityComparer()))
+            if (!copy._objectContexts.Contains(context, ObjectReferenceEqualityComparer.Default))
             {
                 copy._objectContexts.Add(context);
             }
