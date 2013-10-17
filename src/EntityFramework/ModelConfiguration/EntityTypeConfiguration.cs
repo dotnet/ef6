@@ -221,6 +221,13 @@ namespace System.Data.Entity.ModelConfiguration
             Check.NotNull(derivedTypeMapConfigurationAction, "derivedTypeMapConfigurationAction");
 
             var entityMappingConfiguration = new EntityMappingConfiguration<TDerived>();
+
+            var tableName = _entityTypeConfiguration.GetTableName();
+            if (tableName != null)
+            {
+                entityMappingConfiguration.EntityMappingConfigurationInstance.TableName = tableName;
+            }
+
             derivedTypeMapConfigurationAction(entityMappingConfiguration);
 
             if (typeof(TDerived)
