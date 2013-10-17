@@ -385,7 +385,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                 .Skip(pm.Item1.PropertyPath.Count - propertyPath.Count)
                                 .Select(p => p.GetClrPropertyInfo()))
                             )
-                        && TableName.Equals(pm.Item2.GetTableName())),
+                        && Object.Equals(TableName, pm.Item2.GetTableName())),
                     providerManifest,
                     allowOverride,
                     fillFromExistingConfiguration: true);

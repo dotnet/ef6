@@ -6388,5 +6388,81 @@ namespace FunctionalTests
                     .HasNoForeignKeyColumns();
             }
         }
+
+        public class CodePlex1698 : TestBase
+        {
+            public abstract class Entity
+            {
+                public int ID { get; set; }
+                public string ShortName { get; set; }
+            }
+
+            public class FirstEntity : Entity
+            {
+                public int Value { get; set; }
+            }
+
+            public class SecondEntity : Entity
+            {
+                public int Height { get; set; }
+            }
+
+            public class EntityMapping : EntityTypeConfiguration<Entity>
+            {
+                public EntityMapping(string tableName)
+                {
+                    if (tableName != null)
+                    {
+                        ToTable(tableName);
+                    }
+
+                    Map<FirstEntity>(m =>
+                    {
+                        m.Property(t => t.Value).HasColumnName("Int1");
+                        m.Requires("TypeID").HasValue(1);
+                    });
+
+                    Map<SecondEntity>(m =>
+                    {
+                        m.Property(t => t.Height).HasColumnName("Int1");
+                        m.Requires("TypeID").HasValue(2);
+                    });
+                }
+            }
+
+            [Fact]
+            public void Columns_are_named_correctly_if_table_name_is_not_specified()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Configurations.Add(new EntityMapping(tableName: null));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<FirstEntity>("Entities")
+                    .HasColumns("ID", "ShortName", "Int1", "TypeID");
+                databaseMapping.Assert<SecondEntity>("Entities")
+                    .HasColumns("ID", "ShortName", "Int1", "TypeID");
+            }
+
+            [Fact]
+            public void Columns_are_named_correctly_if_table_name_is_specified_on_configuration_for_base_type()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Configurations.Add(new EntityMapping(tableName: "MyEntity"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<FirstEntity>("MyEntity")
+                    .HasColumns("ID", "ShortName", "Int1", "TypeID");
+                databaseMapping.Assert<SecondEntity>("MyEntity")
+                    .HasColumns("ID", "ShortName", "Int1", "TypeID");
+            }
+        }
     }
 }
