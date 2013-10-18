@@ -22,10 +22,6 @@
       <Destination>lib\net45</Destination>
     </NuGetContent>
     <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
-    <NuGetContent Include="EntityFramework.PowerShell.dll">
-      <Source>$(OutputPath)</Source>
-      <Destination>tools</Destination>
-    </NuGetContent>
     <NuGetContent Include="tools\*">
       <Destination>tools</Destination>
     </NuGetContent>
