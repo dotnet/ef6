@@ -765,8 +765,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                         dependentRoleEnd,
                                         null,
                                         Strings.EdmModel_Validator_Semantic_InvalidMultiplicityToRoleUpperBoundMustBeOne
-                                            (
-                                                dependentRoleEnd.Name, edmAssociationType.Name));
+                                            (dependentRoleEnd.Name, edmAssociationType.Name));
                                 }
                             }
                                 // if the principal role property is not the key, then the upper bound must be many i.e every parent (from property) can
@@ -793,19 +792,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
                             }
                             else
                             {
+                                var principalProperties = constraint.FromProperties.ToList();
+
                                 var count = dependentProperties.Count;
                                 for (var i = 0; i < count; i++)
                                 {
                                     // The principal Role End must be a primitive type
-                                    var principalProperty = keyProperties_PrincipalRoleEnd[i];
                                     var dependentProperty = dependentProperties[i];
+                                    var principalProperty =
+                                        keyProperties_PrincipalRoleEnd
+                                        .SingleOrDefault(p => p.Name == principalProperties[i].Name);
+
                                     if (principalProperty != null
                                         && dependentProperty != null
-                                        &&
-                                        principalProperty.TypeUsage != null
+                                        && principalProperty.TypeUsage != null
                                         && dependentProperty.TypeUsage != null
-                                        &&
-                                        principalProperty.IsPrimitiveType
+                                        && principalProperty.IsPrimitiveType
                                         && dependentProperty.IsPrimitiveType)
                                     {
                                         if (!IsPrimitiveTypesEqual(
@@ -818,10 +820,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
                                                 Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(
                                                     constraint.ToProperties.ToList()[i].Name,
                                                     dependentRoleEnd.GetEntityType().Name,
-                                                    keyProperties_PrincipalRoleEnd[i].Name,
+                                                    principalProperty.Name,
                                                     principalRoleEnd.GetEntityType().Name,
-                                                    edmAssociationType.Name
-                                                    ));
+                                                    edmAssociationType.Name));
                                         }
                                     }
                                 }
@@ -1276,12 +1277,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Debug.Assert(primitiveType1.IsPrimitiveType, "primitiveType1 must be a PrimitiveType");
             Debug.Assert(primitiveType2.IsPrimitiveType, "primitiveType2 must be a PrimitiveType");
 
-            if (primitiveType1.PrimitiveType.PrimitiveTypeKind
-                == primitiveType2.PrimitiveType.PrimitiveTypeKind)
-            {
-                return true;
-            }
-            return false;
+            return primitiveType1.PrimitiveType.PrimitiveTypeKind
+                   == primitiveType2.PrimitiveType.PrimitiveTypeKind;
         }
 
         private static bool IsEdmSystemNamespace(string namespaceName)
