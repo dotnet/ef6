@@ -305,5 +305,99 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.NotNull(errorEventArgs);
             Assert.True(entity.Properties.Any(p => p.Name == entity.Name));
         }
+
+        [Fact] // Codeplex 1735
+        public void EdmAssociationType_ValidateReferentialConstraint_validates_composite_key_properties_in_correct_order()
+        {
+            var principal = new EntityType(
+                "Principal", "N", DataSpace.CSpace,
+                new[] { "IdInt", "IdString" },
+                new EdmMember[]
+                {
+                    new EdmProperty("IdInt", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                    new EdmProperty("IdString", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String)))
+                });
+
+            var dependent = new EntityType(
+                "Dependent", "N", DataSpace.CSpace,
+                new[] { "Id" },
+                new EdmMember[]
+                {
+                    new EdmProperty("Id", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                    new EdmProperty("IdString", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))),
+                    new EdmProperty("IdInt", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))
+                });
+
+            var associationType = new AssociationType("AT", "N", true, DataSpace.CSpace);
+
+            var fromRole = new AssociationEndMember("Principal", new RefType(principal), RelationshipMultiplicity.ZeroOrOne);
+            var toRole = new AssociationEndMember("Dependent", new RefType(dependent), RelationshipMultiplicity.Many);
+            associationType.Constraint = new ReferentialConstraint(
+                fromRole, toRole,
+                new[] { principal.Properties["IdString"], principal.Properties["IdInt"] },
+                new[] { dependent.Properties["IdString"], dependent.Properties["IdInt"] });
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmAssociationType_ValidateReferentialConstraint
+                .Evaluate(validationContext, associationType);
+
+            Assert.Null(errorEventArgs);
+        }
+
+        [Fact] // Codeplex 1735
+        public void EdmAssociationType_ValidateReferentialConstraint_throws_if_types_of_related_properties_dont_match()
+        {
+            var principal = new EntityType(
+                "Principal", "N", DataSpace.CSpace,
+                new[] { "IdInt", "IdString" },
+                new EdmMember[]
+                {
+                    new EdmProperty("IdInt", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                    new EdmProperty("IdString", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))
+                });
+
+            var dependent = new EntityType(
+                "Dependent", "N", DataSpace.CSpace,
+                new[] { "Id" },
+                new EdmMember[]
+                {
+                    new EdmProperty("Id", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32))),
+                    new EdmProperty("IdString", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String))),
+                    new EdmProperty("IdInt", TypeUsage.Create(PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32)))
+                });
+
+            var associationType = new AssociationType("AT", "N", true, DataSpace.CSpace);
+
+            var fromRole = new AssociationEndMember("Principal", new RefType(principal), RelationshipMultiplicity.ZeroOrOne);
+            var toRole = new AssociationEndMember("Dependent", new RefType(dependent), RelationshipMultiplicity.Many);
+            associationType.Constraint = new ReferentialConstraint(
+                fromRole, toRole,
+                new[] { principal.Properties["IdString"], principal.Properties["IdInt"] },
+                new[] { dependent.Properties["IdString"], dependent.Properties["IdInt"] });
+
+            var validationContext
+                = new EdmModelValidationContext(new EdmModel(DataSpace.CSpace), true);
+
+            DataModelErrorEventArgs errorEventArgs = null;
+            validationContext.OnError += (_, e) => errorEventArgs = e;
+
+            EdmModelSemanticValidationRules
+                .EdmAssociationType_ValidateReferentialConstraint
+                .Evaluate(validationContext, associationType);
+
+            Assert.NotNull(errorEventArgs);
+
+            Assert.Equal(
+                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("IdString", "Dependent", "IdString", "Principal", "AT"),
+                errorEventArgs.ErrorMessage);
+
+            Assert.Same(associationType.Constraint, errorEventArgs.Item);
+        }
     }
 }
