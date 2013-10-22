@@ -14,6 +14,71 @@ namespace System.Data.Entity.ViewGeneration
 
     public class ViewGenerationTests : TestBase
     {
+        public class Account
+        {
+            public int Id { get; set; }
+            public Person Person { get; set; }
+        }
+
+        public class Address
+        {
+            public int Id { get; set; }
+            public string Street { get; set; }
+            public Person Person { get; set; }
+            public ICollection<Itinerary> Itineraries { get; set; }
+        }
+
+        public class Itinerary
+        {
+            public int Id { get; set; }
+            public ICollection<Address> Addresses { get; set; }
+        }
+
+        public class Person
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public Address Address { get; set; }
+        }
+
+        public class TableSplittingContext : DbContext
+        {
+            static TableSplittingContext()
+            {
+                Database.SetInitializer<TableSplittingContext>(null);
+            }
+
+            public IDbSet<Account> Accounts { get; set; }
+            public IDbSet<Person> Users { get; set; }
+            public IDbSet<Address> Addresses { get; set; }
+            public IDbSet<Itinerary> Itineraries { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Person>().ToTable("Users");
+                modelBuilder.Entity<Address>().ToTable("Users");
+                modelBuilder.Entity<Person>().HasRequired(u => u.Address).WithRequiredPrincipal(a => a.Person).WillCascadeOnDelete(true);
+                base.OnModelCreating(modelBuilder);
+            }
+        }
+
+        [Fact]
+        public void Bug_1611_table_splitting_causing_view_gen_validation_errors()
+        {
+            using (var ctx = new TableSplittingContext())
+            {
+                var storageMappingItemCollection
+                    = (StorageMappingItemCollection)((IObjectContextAdapter)ctx).ObjectContext
+                        .MetadataWorkspace.GetItemCollection(DataSpace.CSSpace);
+
+                var errors = new List<EdmSchemaError>();
+
+                storageMappingItemCollection.GenerateViews(errors);
+
+                Assert.Empty(errors);
+            }
+        }
+
         public class User
         {
             public int Id { get; set; }

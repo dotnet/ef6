@@ -287,8 +287,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
 
                 if (childEnd != null
                     && parentEnd != null
-                    &&
-                    FindEntitySetForColumnsMappedToEntityKeys(cells, primaryKeyFields) != null)
+                    && FindEntitySetForColumnsMappedToEntityKeys(cells, primaryKeyFields).Count > 0)
                 {
                     foundCell = true;
                     CheckConstraintWhenParentChildMapped(cell, errorLog, parentEnd, config);
@@ -509,9 +508,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // Check if the ParentColumns are mapped to endSet's keys
 
             // Find the entity set that they map to - if any
-            var entitySet = FindEntitySetForColumnsMappedToEntityKeys(cells, ParentColumns);
-            if (entitySet == null
-                || endSet.Equals(entitySet) == false)
+            var entitySets = FindEntitySetForColumnsMappedToEntityKeys(cells, ParentColumns);
+
+            if (!entitySets.Contains(endSet))
             {
                 if (errorList == null) //lazily initialize only if there is an error
                 {
@@ -530,11 +529,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             return true;
         }
 
-        // effects: Returns the entity set to which tableFields are mapped
-        // and if the mapped fields correspond precisely to the entity set's
+        // effects: Returns the entity sets to which tableColumns are mapped
+        // and if the mapped columns correspond precisely to the entity set's
         // keys. Else returns null
-        private static EntitySet FindEntitySetForColumnsMappedToEntityKeys(IEnumerable<Cell> cells, IEnumerable<MemberPath> tableColumns)
+        private static IList<EntitySet> FindEntitySetForColumnsMappedToEntityKeys(
+            IEnumerable<Cell> cells, IEnumerable<MemberPath> tableColumns)
         {
+            var entitySets = new List<EntitySet>();
+
             foreach (var cell in cells)
             {
                 var cQuery = cell.CQuery;
@@ -548,13 +550,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 {
                     continue;
                 }
+
                 // Now check if these fields correspond to the key fields of
                 // the entity set
-
-                var entitySet = cQuery.Extent as EntitySet;
+                var entitySet = (EntitySet)cQuery.Extent;
 
                 // Construct a List<EdmMember>
                 var propertyList = new List<EdmProperty>();
+
                 foreach (EdmProperty property in entitySet.ElementType.KeyMembers)
                 {
                     propertyList.Add(property);
@@ -563,10 +566,11 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
                 var keyMembers = new Set<EdmProperty>(propertyList).MakeReadOnly();
                 if (keyMembers.SetEquals(cSideMembers))
                 {
-                    return entitySet;
+                    entitySets.Add(entitySet);
                 }
             }
-            return null;
+
+            return entitySets;
         }
 
         // effects: Returns the end to which columns are exactly mapped in the
