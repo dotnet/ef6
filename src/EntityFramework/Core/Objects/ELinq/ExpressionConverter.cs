@@ -571,19 +571,20 @@ namespace System.Data.Entity.Core.Objects.ELinq
         /// <returns> Appropriate type usage, or null if this is a "no-op" </returns>
         private TypeUsage GetCastTargetType(TypeUsage fromType, Type toClrType, Type fromClrType, bool preserveCastForDateTime)
         {
-            // An inlined ObjectQuery or an IOrderedQueryable expression being cast to IQueryable for use in a sequence method is a no-op.
+            // An IQueryable can report its type as ObjectQuery, IQueryable, or IOrderedQueryable depending on how the type and
+            // expression tree were created. At this point in the translation, unwrapping of the DbQuery to ObjectQuery has already
+            // happened and checking for something other than ObjectQuery has already been done. Therefore, from a CQT translation
+            // perspective we can treat all these types as the same and this therefore becomes a no-op.
             if (fromClrType != null
-                &&
-                fromClrType.IsGenericType
+                && fromClrType.IsGenericType
                 && toClrType.IsGenericType
-                &&
-                (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
-                 || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
-                &&
-                (toClrType.GetGenericTypeDefinition() == typeof(IQueryable<>)
-                 || toClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
-                &&
-                fromClrType.GetGenericArguments()[0] == toClrType.GetGenericArguments()[0])
+                && (fromClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
+                    || fromClrType.GetGenericTypeDefinition() == typeof(IQueryable<>)
+                    || fromClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
+                && (toClrType.GetGenericTypeDefinition() == typeof(ObjectQuery<>)
+                    || toClrType.GetGenericTypeDefinition() == typeof(IQueryable<>)
+                    || toClrType.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>))
+                && fromClrType.GetGenericArguments()[0] == toClrType.GetGenericArguments()[0])
             {
                 return null;
             }
