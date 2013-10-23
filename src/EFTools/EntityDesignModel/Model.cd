@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFObject" Collapsed="true">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIBAAABQAADAAQAIAAAAQQAQAAAAAAGABEAAAAAggBA=</HashCode>
+      <FileName>Model\EFObject.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFContainer" Collapsed="true">
+    <Position X="2.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAgAAAAAACAAAAAEAAECAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Model\EFContainer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFElement" Collapsed="true">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAkEAAAACCkAAQEmAgAMAQAAABAAAKAAABAAAAAIgE=</HashCode>
+      <FileName>Model\EFElement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFAttribute" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Model\EFAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.DefaultableValue" Collapsed="true">
+    <Position X="2.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAIAACAAAAAAIAAAAAACAAAAIAAAAAAAAAAggDAEAA=</HashCode>
+      <FileName>Model\DefaultableValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.ItemBinding" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAQAIAAAAAAAAA=</HashCode>
+      <FileName>Model\ItemBinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFNameableItem" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAICAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\EFNameableItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFNormalizableItem" Collapsed="true">
+    <Position X="7.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAQAAAAAAAAAAAAAAAAAgBAAAAAAAAAA=</HashCode>
+      <FileName>Model\EFNormalizableItem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.DefaultableValue&lt;T&gt;" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAAABAAAAAAAoAIAAAACAAQAIBCAASAAAAgAADAEAA=</HashCode>
+      <FileName>Model\DefaultableValueT.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.SingleItemBinding&lt;T&gt;" Collapsed="true">
+    <Position X="5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAEEEAAAAUAACAAAACBQgICAAACQAABCACAAAAA=</HashCode>
+      <FileName>Model\SingleItemBinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.MultiItemBinding&lt;T&gt;" Collapsed="true">
+    <Position X="5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAEEAAAAEAAiAAAAABQgICAAACQAGBCACAAAAA=</HashCode>
+      <FileName>Model\MultiItemBinding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Design.Model.EFArtifact" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgEAEBACCAAAAAGGAMAAAgAGQAEECACEAAIAAQAAA=</HashCode>
+      <FileName>Model\EFArtifact.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

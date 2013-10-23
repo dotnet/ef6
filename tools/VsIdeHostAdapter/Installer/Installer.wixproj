@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\EFTools.version.settings"/>
+    
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <ProjectGuid>{0119e679-20f1-4e3f-b77e-14408c535555}</ProjectGuid>
+    <OutputName>VsIdeTestHost</OutputName>
+    <OutputType>Package</OutputType>
+    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <DefineConstants>FullProductVersion=$(FullProductVersion);BuildRevisionProductVersion=$(BuildRevisionProductVersion);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="VsIdeTestHost.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>    
+  </ItemGroup>
+  
+  <Target Name="Build">
+    <!-- Build target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed" />
+  </Target>  
+  
+  <Import 
+    Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" 
+    Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
+
+</Project>

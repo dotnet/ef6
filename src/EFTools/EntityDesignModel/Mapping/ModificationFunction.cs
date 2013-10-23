@@ -1,0 +1,389 @@
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+
+namespace Microsoft.Data.Entity.Design.Model.Mapping
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Xml.Linq;
+    using Microsoft.Data.Entity.Design.Model.Commands;
+    using Microsoft.Data.Entity.Design.Model.Entity;
+
+    internal enum ModificationFunctionType
+    {
+        None,
+        Delete,
+        Insert,
+        Update
+    }
+
+    /// <summary>
+    ///     Common base type of the DeleteFunction, InsertFunction and UpdateFunction elements
+    /// </summary>
+    internal abstract class ModificationFunction : EFElement
+    {
+        internal static readonly string AttributeFunctionName = "FunctionName";
+        internal static readonly string AttributeRowsAffectedParameter = "RowsAffectedParameter";
+
+        private readonly List<FunctionScalarProperty> _scalarProperties = new List<FunctionScalarProperty>();
+        private readonly List<FunctionComplexProperty> _complexProperties = new List<FunctionComplexProperty>();
+        private readonly List<FunctionAssociationEnd> _ends = new List<FunctionAssociationEnd>();
+        private readonly List<ResultBinding> _resultBindings = new List<ResultBinding>();
+        private SingleItemBinding<Function> _functionName;
+        private SingleItemBinding<Parameter> _rowsAffectedParameterAttr;
+        protected ModificationFunctionType _functionType = ModificationFunctionType.None;
+
+        internal ModificationFunction(EFElement parent, XElement element)
+            : base(parent, element)
+        {
+            Debug.Assert(parent is ModificationFunctionMapping, "parent should be a ModificationFunctionMapping");
+        }
+
+        internal ModificationFunctionMapping ModificationFunctionMapping
+        {
+            get
+            {
+                var parent = Parent as ModificationFunctionMapping;
+                Debug.Assert(parent != null, "this.Parent should be a ModificationFunctionMapping");
+                return parent;
+            }
+        }
+
+        internal ModificationFunctionType FunctionType
+        {
+            get { return _functionType; }
+        }
+
+        /// <summary>
+        ///     A bindable reference to the Function in the S-Space, and thus the referenced Function
+        /// </summary>
+        internal SingleItemBinding<Function> FunctionName
+        {
+            get
+            {
+                if (_functionName == null)
+                {
+                    _functionName = new SingleItemBinding<Function>(
+                        this,
+                        AttributeFunctionName,
+                        FunctionNameNormalizer.NameNormalizer);
+                }
+                return _functionName;
+            }
+        }
+
+        /// <summary>
+        ///     Manages the content of the RowsAffectedParameter attribute (optional)
+        /// </summary>
+        internal SingleItemBinding<Parameter> RowsAffectedParameter
+        {
+            get
+            {
+                if (_rowsAffectedParameterAttr == null)
+                {
+                    _rowsAffectedParameterAttr = new SingleItemBinding<Parameter>(
+                        this,
+                        AttributeRowsAffectedParameter,
+                        ParameterNameNormalizer.NameNormalizer);
+                }
+                return _rowsAffectedParameterAttr;
+            }
+        }
+
+        internal void AddScalarProperty(FunctionScalarProperty prop)
+        {
+            _scalarProperties.Add(prop);
+        }
+
+        internal IList<FunctionScalarProperty> ScalarProperties()
+        {
+            return _scalarProperties.AsReadOnly();
+        }
+
+        internal void AddComplexProperty(FunctionComplexProperty prop)
+        {
+            _complexProperties.Add(prop);
+        }
+
+        internal IList<FunctionComplexProperty> ComplexProperties()
+        {
+            return _complexProperties.AsReadOnly();
+        }
+
+        internal void AddAssociationEnd(FunctionAssociationEnd end)
+        {
+            _ends.Add(end);
+        }
+
+        internal IList<FunctionAssociationEnd> AssociationEnds()
+        {
+            return _ends.AsReadOnly();
+        }
+
+        internal void AddResultBinding(ResultBinding resultBinding)
+        {
+            _resultBindings.Add(resultBinding);
+        }
+
+        internal IList<ResultBinding> ResultBindings()
+        {
+            return _resultBindings.AsReadOnly();
+        }
+
+        internal FunctionComplexProperty FindFunctionComplexProperty(Property property)
+        {
+            foreach (var fcp in _complexProperties)
+            {
+                if (fcp.Name.Target == property)
+                {
+                    return fcp;
+                }
+            }
+
+            return null;
+        }
+
+        // we unfortunately get a warning from the compiler when we use the "base" keyword in "iterator" types generated by using the
+        // "yield return" keyword.  By adding this method, I was able to get around this.  Unfortunately, I wasn't able to figure out
+        // a way to implement this once and have derived classes share the implementation (since the "base" keyword is resolved at 
+        // compile-time and not at runtime.
+        private IEnumerable<EFObject> BaseChildren
+        {
+            get { return base.Children; }
+        }
+
+        internal override IEnumerable<EFObject> Children
+        {
+            get
+            {
+                foreach (var efobj in BaseChildren)
+                {
+                    yield return efobj;
+                }
+
+                foreach (var child in ScalarProperties())
+                {
+                    yield return child;
+                }
+
+                foreach (var child2 in ComplexProperties())
+                {
+                    yield return child2;
+                }
+
+                foreach (var child3 in AssociationEnds())
+                {
+                    yield return child3;
+                }
+
+                foreach (var child4 in ResultBindings())
+                {
+                    yield return child4;
+                }
+
+                yield return FunctionName;
+                yield return RowsAffectedParameter;
+            }
+        }
+
+        protected override void OnChildDeleted(EFContainer efContainer)
+        {
+            var sp = efContainer as FunctionScalarProperty;
+            if (sp != null)
+            {
+                _scalarProperties.Remove(sp);
+                return;
+            }
+
+            var cp = efContainer as FunctionComplexProperty;
+            if (cp != null)
+            {
+                _complexProperties.Remove(cp);
+                return;
+            }
+
+            var end = efContainer as FunctionAssociationEnd;
+            if (end != null)
+            {
+                _ends.Remove(end);
+                return;
+            }
+
+            // DeleteFunction elements don't have result bindings
+            if (_functionType == ModificationFunctionType.Insert
+                ||
+                _functionType == ModificationFunctionType.Update)
+            {
+                var resultBinding = efContainer as ResultBinding;
+                if (resultBinding != null)
+                {
+                    _resultBindings.Remove(resultBinding);
+                    return;
+                }
+            }
+
+            base.OnChildDeleted(efContainer);
+        }
+
+#if DEBUG
+        internal override ICollection<string> MyAttributeNames()
+        {
+            var s = base.MyAttributeNames();
+            s.Add(AttributeFunctionName);
+            s.Add(AttributeRowsAffectedParameter);
+            return s;
+        }
+#endif
+
+#if DEBUG
+        internal override ICollection<string> MyChildElementNames()
+        {
+            var s = base.MyChildElementNames();
+            s.Add(FunctionScalarProperty.ElementName);
+            s.Add(FunctionComplexProperty.ElementName);
+            s.Add(FunctionAssociationEnd.ElementName);
+            s.Add(ResultBinding.ElementName);
+            return s;
+        }
+#endif
+
+        protected override void PreParse()
+        {
+            Debug.Assert(State != EFElementState.Parsed, "this object should not already be in the parsed state");
+            Debug.Assert(_functionType != ModificationFunctionType.None, "_functionType should not be " + ModificationFunctionType.None);
+
+            ClearEFObject(_functionName);
+            _functionName = null;
+
+            ClearEFObject(_rowsAffectedParameterAttr);
+            _rowsAffectedParameterAttr = null;
+
+            ClearEFObjectCollection(_scalarProperties);
+            ClearEFObjectCollection(_complexProperties);
+            ClearEFObjectCollection(_ends);
+            ClearEFObjectCollection(_resultBindings);
+
+            base.PreParse();
+        }
+
+        internal override bool ParseSingleElement(ICollection<XName> unprocessedElements, XElement elem)
+        {
+            if (elem.Name.LocalName == FunctionScalarProperty.ElementName)
+            {
+                var prop = new FunctionScalarProperty(this, elem);
+                _scalarProperties.Add(prop);
+                prop.Parse(unprocessedElements);
+            }
+            else if (elem.Name.LocalName == FunctionComplexProperty.ElementName)
+            {
+                var prop = new FunctionComplexProperty(this, elem);
+                _complexProperties.Add(prop);
+                prop.Parse(unprocessedElements);
+            }
+            else if (elem.Name.LocalName == FunctionAssociationEnd.ElementName)
+            {
+                var end = new FunctionAssociationEnd(this, elem);
+                _ends.Add(end);
+                end.Parse(unprocessedElements);
+            }
+            else if (elem.Name.LocalName == ResultBinding.ElementName)
+            {
+                var resultBinding = new ResultBinding(this, elem);
+                _resultBindings.Add(resultBinding);
+                resultBinding.Parse(unprocessedElements);
+            }
+            else
+            {
+                return base.ParseSingleElement(unprocessedElements, elem);
+            }
+
+            return true;
+        }
+
+        protected override void DoResolve(EFArtifactSet artifactSet)
+        {
+            FunctionName.Rebind();
+            RowsAffectedParameter.Rebind();
+
+            // RowsAffectedParameter is optional so its Status might be Undefined
+            if (BindingStatus.Known == FunctionName.Status
+                && (BindingStatus.Known == RowsAffectedParameter.Status ||
+                    BindingStatus.Undefined == RowsAffectedParameter.Status))
+            {
+                State = EFElementState.Resolved;
+            }
+        }
+
+        internal override DeleteEFElementCommand GetDeleteCommand()
+        {
+            var cmd = new DeleteFunctionMappingCommand(this);
+            if (cmd == null)
+            {
+                // shouldn't happen, just to be safe
+                throw new InvalidOperationException();
+            }
+            return cmd;
+        }
+
+        internal static DeleteEFElementCommand GetDeleteCommand(
+            EntityType conceptualEntityType, Function function, ModificationFunctionType type)
+        {
+            var cmd = new DeleteFunctionMappingCommand(conceptualEntityType, function, type);
+            if (cmd == null)
+            {
+                // shouldn't happen, just to be safe
+                throw new InvalidOperationException();
+            }
+            return cmd;
+        }
+
+        internal static ModificationFunction GetModificationFunction(
+            EntityType conceptualEntityType, Function function, ModificationFunctionType type)
+        {
+            if (null == function
+                || null == conceptualEntityType)
+            {
+                Debug.Assert(null != function, typeof(ModificationFunction).Name + ".GetModificationFunction() requires non-null function");
+                Debug.Assert(
+                    null != conceptualEntityType,
+                    typeof(ModificationFunction).Name + ".GetModificationFunction() requires non-null conceptualEntityType");
+                return null;
+            }
+
+            foreach (var mf in function.GetAntiDependenciesOfType<ModificationFunction>())
+            {
+                if (mf.ModificationFunctionMapping.EntityTypeMapping.FirstBoundConceptualEntityType == conceptualEntityType
+                    && mf.FunctionType == type)
+                {
+                    return mf;
+                }
+            }
+
+            return null;
+        }
+
+        internal override void GetXLinqInsertPosition(EFElement child, out XNode insertAt, out bool insertBefore)
+        {
+            /// 557417: push these to the top so that they are always before any ResultBinding elements
+            if (child is FunctionAssociationEnd)
+            {
+                insertAt = FirstChildXElementOrNull();
+                insertBefore = true;
+            }
+            else if (child is FunctionScalarProperty)
+            {
+                insertAt = FirstChildXElementOrNull();
+                insertBefore = true;
+            }
+            else if (child is FunctionComplexProperty)
+            {
+                insertAt = FirstChildXElementOrNull();
+                insertBefore = true;
+            }
+            else
+            {
+                base.GetXLinqInsertPosition(child, out insertAt, out insertBefore);
+            }
+        }
+    }
+}

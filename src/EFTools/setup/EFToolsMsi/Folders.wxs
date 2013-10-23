@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir" />
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="DSTDIR" />
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="DSTDIR">
+      <Directory Id="common7" Name="Common7">
+        <Directory Id="ide" Name="IDE" />
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="ide">
+      <Directory Id="commonextensions" Name="CommonExtensions">
+        <Directory Id="commonextensions_datadesign" Name="DataDesign" />
+        <Directory Id="commonextensions_microsoft" Name="Microsoft">
+          <Directory Id="commonextensions_eftools" Name="EFTools" />
+        </Directory>
+      </Directory>
+      <Directory Id="ide_en" Name="en" />
+      <Directory Id="extensions" Name="Extensions">
+        <Directory Id="extensions_microsoft" Name="Microsoft">
+          <Directory Id="entityframeworktools" Name="Entity Framework Tools">
+            <Directory Id="eft_dbgen" Name="DBGen" />
+            <Directory Id="templates" Name="Templates">
+              <Directory Id="eft_templates_include" Name="Includes" />
+            </Directory>
+            <Directory Id="eft_nuget_pkg_dir" Name="NuGet Packages" />
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="itemtemplates" Name="ItemTemplates">
+        <Directory Id="itemtemplates_CSharp" Name="CSharp">
+          <Directory Id="itemtemplates_CS" Name="Data" />
+        </Directory>
+        <Directory Id="itemtemplates_VisualBasic" Name="VisualBasic">
+          <Directory Id="itemtemplates_VB" Name="Data" />
+        </Directory>
+        <Directory Id="itemtemplates_Web" Name="Web">
+          <Directory Id="itemtemplates_CSWS" Name="CSharp" />
+          <Directory Id="itemtemplates_VBWS" Name="VisualBasic" />
+        </Directory>
+      </Directory>
+      <Directory Id="publicassemblies" Name="PublicAssemblies">
+        <Directory Id="publicassemblies_en" Name="en" />
+      </Directory>
+      <Directory Id="vwdexpress" Name="VWDExpress">
+        <Directory Id="vwd_itemtemplates" Name="ItemTemplates">
+          <Directory Id="vwd_itemtemplates_CSharp" Name="CSharp">
+            <Directory Id="vwd_itemtemplates_CS" Name="Data" />
+          </Directory>
+          <Directory Id="vwd_itemtemplates_VisualBasic" Name="VisualBasic">
+            <Directory Id="vwd_itemtemplates_VB" Name="Data" />
+          </Directory>
+          <Directory Id="vwd_itemtemplates_Web" Name="Web">
+            <Directory Id="vwd_itemtemplates_CSWS" Name="CSharp" />
+            <Directory Id="vwd_itemtemplates_VBWS" Name="VisualBasic" />
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="wdexpress" Name="WDExpress">
+        <Directory Id="wd_itemtemplates" Name="ItemTemplates">
+          <Directory Id="wd_itemtemplates_CSharp" Name="CSharp">
+            <Directory Id="wd_itemtemplates_CS" Name="Data" />
+          </Directory>
+          <Directory Id="wd_itemtemplates_VisualBasic" Name="VisualBasic">
+            <Directory Id="wd_itemtemplates_VB" Name="Data" />
+          </Directory>
+          <Directory Id="wd_itemtemplates_Web" Name="Web">
+            <Directory Id="wd_itemtemplates_CSWS" Name="CSharp" />
+            <Directory Id="wd_itemtemplates_VBWS" Name="VisualBasic" />
+          </Directory>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="DSTDIR">
+      <Directory Id="xml" Name="Xml">
+        <Directory Id="vsschemas" Name="Schemas" />
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="DSTDIR">
+      <Directory Id="licenses" Name="Licenses" />
+    </DirectoryRef>
+  </Fragment>
+</Wix>

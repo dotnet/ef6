@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="entityFramework">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="defaultConnectionFactory" type="ElementWithTypeAndParameters_Type" minOccurs="0" maxOccurs="1" />
+        <xs:element name="providers" type="ProviderList_Type" minOccurs="0" maxOccurs="1" />
+        <xs:element name="contexts" type="ContextList_Type" minOccurs="0" maxOccurs="1" />
+      </xs:all>
+      <xs:attribute name="codeConfigurationType" type="NonEmptyString_Type" use="optional" />
+      <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="ProviderList_Type">
+    <xs:sequence>
+      <xs:element name="provider" type="Provider_Type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+  
+  <xs:complexType name="Provider_Type">
+    <xs:attribute name="invariantName" type="NonEmptyString_Type" use="required" />
+    <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ContextList_Type">
+    <xs:sequence>
+      <xs:element name="context" type="Context_Type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+
+  <xs:complexType name="Context_Type">
+    <xs:choice>
+      <xs:element name="databaseInitializer" type="ElementWithTypeAndParameters_Type" minOccurs="0" maxOccurs="1" />
+    </xs:choice>
+    <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
+    <xs:attribute name="disableDatabaseInitialization" type="SmallBoolean_Type" use="optional" />
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+
+  <xs:complexType name="ElementWithTypeAndParameters_Type">
+    <xs:choice>
+      <xs:element name="parameters" type="ParameterList_Type" minOccurs="0" maxOccurs="1" />
+    </xs:choice>
+    <xs:attribute name="type" type="NonEmptyString_Type" use="required" />
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+  
+  <xs:complexType name="ParameterList_Type">
+    <xs:sequence>
+      <xs:element name="parameter" type="Parameter_Type" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+
+  <xs:complexType name="Parameter_Type">
+    <xs:attribute name="value" type="NonEmptyString_Type" use="required" />
+    <xs:attribute name="type" type="NonEmptyString_Type" use="optional" />
+    <xs:anyAttribute namespace="http://schemas.microsoft.com/XML-Document-Transform" processContents="strict"/>
+  </xs:complexType>
+
+  <xs:simpleType name="SmallBoolean_Type">
+    <xs:restriction base="xs:NMTOKEN">
+      <xs:enumeration value="false" />
+      <xs:enumeration value="true" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NonEmptyString_Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

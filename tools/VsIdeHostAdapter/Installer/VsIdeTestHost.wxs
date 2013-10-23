@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?include Defines.wxi?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <Product 
+    Id="$(var.ProductId)"
+    Name="$(var.FullProductName)"
+    Language="$(var.LCID)"
+    Version="$(var.ProductVersion)"
+    UpgradeCode="$(var.UpgradeCode)"
+    Manufacturer="Microsoft Corporation">
+
+    <Package 
+      Comments="Allows to run Visual Studio tests inside VS IDE" 
+      InstallerVersion="200" Platform="x86" Compressed="yes" 
+      SummaryCodepage="1252" />
+
+    <!-- TODO: consider re-guiding COM objects and also all wix component ids for SxS -->
+
+    <!-- Where to get compiled binaries from. When running from build, we use command line: -dBinDir=... --> 
+    <?ifndef BinDir ?>
+      <?define BinDir = $(var.OutDir) ?>
+    <?endif?>
+    
+    <!-- Just a shortcut to simplify moving v->vNext. Can be used from command line: -dVsRegVersion=... -->
+    <?ifndef var.VisualStudioVersion ?>
+      <?define VSVersion = 11.0 ?>
+    <?else?>
+      <?define VSVersion = $(var.VisualStudioVersion)?>
+    <?endif?>
+
+    <!-- Just a shortcut to simplify moving v->vNext. Can be used from command line: -dVsRegVersion=... -->
+    <?ifndef VsRegVersion ?>
+      <?define VsRegVersion = $(var.VSVersion) ?>
+    <?endif?>
+
+    <!-- Just a shortcut to simplify moving v->vNext. Can be used from command line: -dVsAsmVersion=... -->
+    <?ifndef VsAsmVersion ?>
+      <?if $(var.VsRegVersion) = 11.0?>
+        <?define VsAsmVersion = 11.2.0.0?>
+      <?else?>
+        <?define VsAsmVersion = $(var.VSVersion).0.0?>
+      <?endif?>
+    <?endif?>
+    
+    <!-- Properties -->
+    <!-- Note: we cannot do App/RegSearch and assign properties directly because, alas, that always overwrites property value set on command line -->
+    <!--       Thus, what we do is: put AppSearch into temp property and use Custom/CustomAction to set the property from temp property-->
+    <Property Id="VSINSTALLDIR_APPSEARCH">
+      <RegistrySearch Id="__32D0211C42D747ACA8790B5D40184481" Root="HKLM" 
+        Key="SOFTWARE\Microsoft\VisualStudio\$(var.VsRegVersion)" Name="InstallDir" Type="raw" />
+    </Property>
+    <Property Id="VSUSERDOCUMENTS_APPSEARCH">
+      <RegistrySearch Id="__CE6870889BA944F7991389FF6893CEDE" Root="HKCU" 
+        Key="SOFTWARE\Microsoft\VisualStudio\$(var.VsRegVersion)" Name="VisualStudioLocation" Type="raw" />
+    </Property>    
+    <!-- ADDINXMLDIR is initialized by custom action -->
+
+    <!-- Install conditions -->
+    <Condition Message="Visual Studio must be installed"><![CDATA[VSINSTALLDIR <> ""]]></Condition>
+
+    <!-- Directories/files -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      
+      <!-- Registry values -->
+      <Component Id="RegistryEditorType" Guid="E0DC21E2-7E48-2816-B4A3-4742AB68F3F4">
+        <RegistryValue Id="RegistryEditorTypeRegistry" Root="HKLM"
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\HostAdapters\VS IDE" 
+           Name="EditorType" Type="string" KeyPath="yes" 
+           Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeHostAdapterRunConfigControl, Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddin" />
+      </Component>
+      <Component Id="RegistryType" Guid="6E7294DE-1752-B44C-42D1-A4F7F55CBB51">
+        <RegistryValue Id="RegistryTypeRegistry" Root="HKLM" 
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\HostAdapters\VS IDE" 
+           Name="Type" Type="string" KeyPath="yes" 
+           Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeHostAdapter, Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddin" />
+      </Component>
+      <Component Id="RegistryIsLoadTestCandidate" Guid="A58AE371-C3F9-425E-82B2-091BD7887ABC">
+        <RegistryValue Id="RegistryIsLoadTestCandidateRegistry" Root="HKLM" 
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\HostAdapters\VS IDE" 
+           Name="IsLoadTestCandidate" Type="integer" KeyPath="yes" 
+           Value="1" />
+      </Component>
+      <Component Id="XmlPersistanceRegistrationComponent" Guid="3C6E26BF-2F39-43d9-B491-F50CD4E29A74">
+        <RegistryValue Id="XmlPersistanceRegistrationRegistry" Root="HKLM" 
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\Xml\http://microsoft.com/schemas/VisualStudio/TeamTest/2010\ElementToClass" 
+           Name="VsIdeHostRunConfigData" Type="string" KeyPath="yes" 
+           Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeHostRunConfigData, Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn, PublicKeyToken=9c436c8448749490" />
+      </Component>
+
+      <!-- Hosting rules -->
+      <Component Id="HASupportedTestTypesAll" Guid="6E7294DE-1752-B44C-42D1-A4F7F55CBB52">
+        <RegistryValue Id="HASupportedTestTypesAllRegistry" Root="HKLM" 
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\HostAdapters\VS IDE\SupportedTestTypes"
+           Name="{13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b}" Type="string" KeyPath="yes" 
+           Value="Unit Test" />
+      </Component>
+      <Component Id="UnitTestSupportedHostAdapters" Guid="6E7294DE-1752-B44C-42D1-A4F7F55CBB53">
+        <RegistryValue Id="UnitTestSupportedHostAdaptersRegistry" Root="HKLM" 
+           Key="Software\Microsoft\VisualStudio\$(var.VsRegVersion)\EnterpriseTools\QualityTools\TestTypes\{13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b}\SupportedHostAdapters"
+           Name="VS IDE" Type="string" KeyPath="yes" 
+           Value="VS IDE Host Adapter" />
+      </Component>
+
+      <!-- Regasm data: Addin -->
+      <Component Id="C_Regasm2" Guid="ABBD2DE5-C00B-45C9-8EE9-9DD3909D496A">
+        <RegistryValue Id="Regasm2" Root="HKCR" Key="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" />
+      </Component>
+      <Component Id="C_Regasm1" Guid="FEC54CF5-1872-5451-2F38-B603348BB3E6">
+        <RegistryValue Id="Regasm1" Root="HKCR" Key="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin\CLSID" 
+        Type="string" KeyPath="yes" Value="{F4ABA8B2-0798-4E7D-827D-6D171283CB38}" />
+      </Component>
+      <Component Id="C_Regasm24" Guid="865C81B1-FAAD-6504-E0FD-F94D3804765A">
+        <RegistryValue Id="Regasm24" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" />
+      </Component>
+      <Component Id="C_Regasm18" Guid="E31F12B4-58CF-6B32-2B98-2FCEFF798E99">
+        <RegistryValue Id="Regasm18" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32" Name="Assembly" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn, Version=$(var.VsAsmVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </Component>
+      <Component Id="C_Regasm19" Guid="EC9E49B1-5C46-D84B-0AE5-610D42F386CA">
+        <RegistryValue Id="Regasm19" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32" Name="Class" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" />
+      </Component>
+      <Component Id="C_Regasm20" Guid="C407DA34-F10E-8D1C-8672-B5F328A1B61D">
+        <RegistryValue Id="Regasm20" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32" Type="string" 
+        KeyPath="yes" Value="mscoree.dll" />
+      </Component>
+      <Component Id="C_Regasm21" Guid="9C5C5D07-D19E-7B54-2950-7BDAA02930F5">
+        <RegistryValue Id="Regasm21" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32" Name="RuntimeVersion" 
+        Type="string" KeyPath="yes" Value="v4.0.30319" />
+      </Component>
+      <Component Id="C_Regasm22" Guid="EAE48061-44B8-EBEB-11B9-9FE929A88E42">
+        <RegistryValue Id="Regasm22" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32" Name="ThreadingModel" 
+        Type="string" KeyPath="yes" Value="Both" />
+      </Component>
+      <Component Id="C_Regasm15" Guid="CC413AA8-1B8A-F6B6-0CF9-739B70ECDE53">
+        <RegistryValue Id="Regasm15" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32\$(var.VsAsmVersion)" Name="Assembly" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn, Version=$(var.VsAsmVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </Component>
+      <Component Id="C_Regasm16" Guid="07891C68-A308-C0EC-BE19-369977D981C1">
+        <RegistryValue Id="Regasm16" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32\$(var.VsAsmVersion)" Name="Class" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" />
+      </Component>
+      <Component Id="C_Regasm17" Guid="303C63FB-3BA9-94D2-DA17-D9D7A0BBF4F4">
+        <RegistryValue Id="Regasm17" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\InprocServer32\$(var.VsAsmVersion)" Name="RuntimeVersion" 
+        Type="string" KeyPath="yes" Value="v4.0.30319" />
+      </Component>
+      <Component Id="C_Regasm23" Guid="9B17D1D3-A20E-FFB6-11A4-957301D5A55B">
+        <RegistryValue Id="Regasm23" Root="HKCR" Key="CLSID\{F4ABA8B2-0798-4E7D-827D-6D171283CB38}\ProgId" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostAddin" />
+      </Component>
+      
+      <!-- Regasm data: exception -->
+      <Component Id="C_Regasm4" Guid="64D23229-0405-2066-AC64-F74E875466D6">
+        <RegistryValue Id="Regasm4" Root="HKCR" Key="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" />
+      </Component>
+      <Component Id="C_Regasm3" Guid="15F31ACB-7AA2-DFC3-39C6-50DD099B66ED">
+        <RegistryValue Id="Regasm3" Root="HKCR" Key="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException\CLSID" 
+        Type="string" KeyPath="yes" Value="{76EB7283-7400-3CD7-8CA9-489A993BF18B}" />
+      </Component>
+      <Component Id="C_Regasm14" Guid="F5C24F9A-C4A5-A579-D177-4CFC2E3182B1">
+        <RegistryValue Id="Regasm14" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" />
+      </Component>
+      <Component Id="C_Regasm10" Guid="387AE51F-7F16-CDF1-8F79-9504F47A90FD">
+        <RegistryValue Id="Regasm10" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32" Name="Class" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" />
+      </Component>
+      <Component Id="C_Regasm12" Guid="B5691F7E-AB30-7B28-2BAA-3FCE8D2EFA55">
+        <RegistryValue Id="Regasm12" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32" Name="RuntimeVersion" 
+        Type="string" KeyPath="yes" Value="v4.0.30319" />
+      </Component>
+      <Component Id="C_Regasm13" Guid="C14B2348-87BA-9A04-A47C-B08C81F13E89">
+        <RegistryValue Id="Regasm13" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32" Name="ThreadingModel" 
+        Type="string" KeyPath="yes" Value="Both" />
+      </Component>
+      <Component Id="C_Regasm9" Guid="D48426A0-BD1D-96A9-B45E-5A074B18268D">
+        <RegistryValue Id="Regasm9" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32" Name="Assembly" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn, Version=$(var.VsAsmVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </Component>
+      <Component Id="C_Regasm6" Guid="8BE25A69-88D1-D2F7-AD5A-E4B875432FF8">
+        <RegistryValue Id="Regasm6" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32\$(var.VsAsmVersion)" Name="Assembly" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn, Version=$(var.VsAsmVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </Component>
+      <Component Id="C_Regasm7" Guid="01DD95EA-3B25-7720-193A-A6AD1F577F34">
+        <RegistryValue Id="Regasm7" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32\$(var.VsAsmVersion)" Name="Class" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" />
+      </Component>
+      <Component Id="C_Regasm8" Guid="DC8BF1DA-402D-D844-ECA9-0A30E6918813">
+        <RegistryValue Id="Regasm8" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\InprocServer32\$(var.VsAsmVersion)" Name="RuntimeVersion" 
+        Type="string" KeyPath="yes" Value="v4.0.30319" />
+      </Component>
+      <Component Id="C_Regasm5" Guid="98D85B24-4476-32EC-4D75-FEA695DE71B9">
+        <RegistryValue Id="Regasm5" Root="HKCR" Key="CLSID\{76EB7283-7400-3CD7-8CA9-489A993BF18B}\ProgId" 
+        Type="string" KeyPath="yes" Value="Microsoft.VisualStudio.TestTools.HostAdapters.VsIde.VsIdeTestHostException" />
+      </Component>
+
+      <!-- ADDINXMLDIR -->
+      <Directory Id="ADDINXMLDIR" Name="AddinXmlDir">
+        <Component Id="VsIdeTestHostAddin" Guid="4B08AD96-5B69-A476-0A2F-3E28F1B0EA12">
+          <File Id="VsIdeTestHostAddinFile" Name="VsIdeTestHost.AddIn" 
+             KeyPath="yes" DiskId="1" 
+             Source="VsIdeTestHost.AddIn" />
+          <util:XmlFile Id="AddAssemblyElement" Action="setValue" File="[#VsIdeTestHostAddinFile]" 
+             ElementPath="/Extensibility/Addin/Assembly" 
+             Value="[#VSIdeAddinDllFile]" Sequence="1" />
+        </Component>
+      </Directory>
+
+      <!-- Files under Visual Studio folder -->
+      <Directory Id="VSINSTALLDIR" Name="VsInstallDir">
+        <!-- How Framework.dll is installed:
+            - PublicAssemblies: Framework.dll and .pdb. Note that VS probing path tries PublicAssemblies first, then PrivateAssemblies.
+            - Nothing need to go to PrivateAssemblies because devenv, mstest and vstesthost are configured to load from PublicAsseblies.
+        -->
+
+        <Directory Id="PublicAssemblies" Name="PublicAssemblies">
+          <Component Id="VsIdeTestHostFrameworkDll" Guid="E4C4D506-AC78-110F-E955-7140D2561CF3">
+            <File Id="VsIdeTestHostFrameworkDllFile"
+               Name="Microsoft.VisualStudio.QualityTools.VsIdeTestHostFramework.dll" Vital="yes" 
+               KeyPath="yes" DiskId="1" 
+               Source="$(var.BinDir)\Microsoft.VisualStudio.QualityTools.VsIdeTestHostFramework.dll" />
+          </Component>
+          <Component Id="VSIdeTestHostFrameworkPdb" Guid="D790268C-180C-EE67-FE25-02241A5688B7">
+            <File Id="VSIdeTestHostFrameworkPdbFile"
+               Name="Microsoft.VisualStudio.QualityTools.VSIdeTestHostFramework.pdb" Vital="yes" 
+               KeyPath="yes" DiskId="1" 
+               Source="$(var.BinDir)\Microsoft.VisualStudio.QualityTools.VsIdeTestHostFramework.pdb" />
+          </Component>
+        </Directory>
+
+        <Directory Id="PrivateAssemblies" Name="PrivateAssemblies">
+          <Component Id="VSIdeAddinDll" Guid="2A5D1DB3-55F5-00E1-5C4C-473AABEAB1C5">
+            <File Id="VSIdeAddinDllFile"
+               Name="Microsoft.VisualStudio.QualityTools.HostAdapters.VSIdeAddin.dll" Vital="yes" 
+               KeyPath="yes" DiskId="1" 
+               Source="$(var.BinDir)\Microsoft.VisualStudio.QualityTools.HostAdapters.VSIdeAddin.dll" />
+          </Component>
+          <Component Id="VSIdeAddinPdb" Guid="F6738255-C35B-63A9-DB5A-381F9F83F277">
+            <File Id="VSIdeAddinPdbFile"
+               Name="Microsoft.VisualStudio.QualityTools.HostAdapters.VSIdeAddin.pdb" Vital="yes" 
+               KeyPath="yes" DiskId="1" 
+               Source="$(var.BinDir)\Microsoft.VisualStudio.QualityTools.HostAdapters.VSIdeAddin.pdb" />
+          </Component>
+        </Directory>
+        
+      </Directory> <!-- VSINSTALLDIR -->
+    </Directory>
+
+    <!-- Features -->
+    <Feature Id="DefaultFeature" Level="1" ConfigurableDirectory="TARGETDIR">
+      <ComponentRef Id="VSIdeAddinPdb" />
+      <ComponentRef Id="VsIdeTestHostAddin" />
+      <ComponentRef Id="VSIdeAddinDll" />
+      <ComponentRef Id="VsIdeTestHostFrameworkDll" />
+      <ComponentRef Id="VSIdeTestHostFrameworkPdb" />
+      <ComponentRef Id="RegistryEditorType" />
+      <ComponentRef Id="RegistryType" />
+      <ComponentRef Id="RegistryIsLoadTestCandidate" />
+      <ComponentRef Id="HASupportedTestTypesAll" />
+      <ComponentRef Id="UnitTestSupportedHostAdapters" />
+      <ComponentRef Id="XmlPersistanceRegistrationComponent" />
+      <ComponentRef Id="C_Regasm1" />
+      <ComponentRef Id="C_Regasm2" />
+      <ComponentRef Id="C_Regasm3" />
+      <ComponentRef Id="C_Regasm4" />
+      <ComponentRef Id="C_Regasm5" />
+      <ComponentRef Id="C_Regasm6" />
+      <ComponentRef Id="C_Regasm7" />
+      <ComponentRef Id="C_Regasm8" />
+      <ComponentRef Id="C_Regasm9" />
+      <ComponentRef Id="C_Regasm10" />
+      <ComponentRef Id="C_Regasm12" />
+      <ComponentRef Id="C_Regasm13" />
+      <ComponentRef Id="C_Regasm14" />
+      <ComponentRef Id="C_Regasm15" />
+      <ComponentRef Id="C_Regasm16" />
+      <ComponentRef Id="C_Regasm17" />
+      <ComponentRef Id="C_Regasm18" />
+      <ComponentRef Id="C_Regasm19" />
+      <ComponentRef Id="C_Regasm20" />
+      <ComponentRef Id="C_Regasm21" />
+      <ComponentRef Id="C_Regasm22" />
+      <ComponentRef Id="C_Regasm23" />
+      <ComponentRef Id="C_Regasm24" />
+    </Feature>
+
+    <Upgrade Id="DC4723DF-0ED8-4234-9DC8-6542FC075AB2">
+      <UpgradeVersion Minimum="1.0.0" Property="NEWERPRODUCTFOUND" OnlyDetect="yes" IncludeMinimum="yes" />
+    </Upgrade>
+    
+    <!-- Custom Actions -->
+    <CustomAction Id="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" Return="check" Execute="firstSequence" Property="VSINSTALLDIR" Value="[VSINSTALLDIR_APPSEARCH]" />
+    <CustomAction Id="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" Return="check" Execute="firstSequence" Property="VSUSERDOCUMENTS" Value="[VSUSERDOCUMENTS_APPSEARCH]" />
+    <CustomAction Id="DIRCA_ADDINXMLDIR" Return="check" Execute="firstSequence" Property="ADDINXMLDIR" Value="[VSUSERDOCUMENTS]\Addins\" />
+
+    <!-- Properties -->
+    <Property Id="ARPCONTACT"><![CDATA[http://entityframework.codeplex.com]]></Property>
+    <Property Id="ARPCOMMENTS"><![CDATA[Allows to run Visual Studio tests inside VS IDE]]></Property>
+
+    <!-- Sequences -->
+    <AdvertiseExecuteSequence>
+      <Custom Action="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" Before="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH"><![CDATA[VSINSTALLDIR=""]]></Custom>
+      <Custom Action="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" Before="DIRCA_ADDINXMLDIR"><![CDATA[VSUSERDOCUMENTS=""]]></Custom>
+      <Custom Action="DIRCA_ADDINXMLDIR" Before="CostInitialize"><![CDATA[ADDINXMLDIR=""]]></Custom>
+    </AdvertiseExecuteSequence>
+    <AdminExecuteSequence>
+      <Custom Action="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" Before="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH"><![CDATA[VSINSTALLDIR=""]]></Custom>
+      <Custom Action="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" Before="DIRCA_ADDINXMLDIR"><![CDATA[VSUSERDOCUMENTS=""]]></Custom>
+      <Custom Action="DIRCA_ADDINXMLDIR" Before="CostInitialize"><![CDATA[ADDINXMLDIR=""]]></Custom>
+    </AdminExecuteSequence>
+    <InstallExecuteSequence>
+      <AppSearch Before="FindRelatedProducts" />
+      <Custom Action="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" After="AppSearch"><![CDATA[VSINSTALLDIR=""]]></Custom>
+      <Custom Action="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" After="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH"><![CDATA[VSUSERDOCUMENTS=""]]></Custom>
+      <LaunchConditions After="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH"><![CDATA[NOT Installed]]></LaunchConditions>
+      <Custom Action="DIRCA_ADDINXMLDIR" After="ValidateProductID"><![CDATA[ADDINXMLDIR=""]]></Custom>
+      <RemoveExistingProducts After="InstallInitialize" />
+    </InstallExecuteSequence>
+    <AdminUISequence>
+      <Custom Action="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" Before="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH"><![CDATA[VSINSTALLDIR=""]]></Custom>
+      <Custom Action="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" Before="DIRCA_ADDINXMLDIR"><![CDATA[VSUSERDOCUMENTS=""]]></Custom>
+      <Custom Action="DIRCA_ADDINXMLDIR" Before="CostInitialize"><![CDATA[ADDINXMLDIR=""]]></Custom>
+    </AdminUISequence>
+    <InstallUISequence>
+      <!-- InstallUISequence is what MSI is using by default -->
+      <AppSearch Before="FindRelatedProducts" />
+      <Custom Action="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH" After="AppSearch"><![CDATA[VSINSTALLDIR=""]]></Custom>
+      <Custom Action="DIRCA_VSUSERDOCUMENTS_SETFROMAPPSEARCH" After="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH"><![CDATA[VSUSERDOCUMENTS=""]]></Custom>
+      <LaunchConditions After="DIRCA_VSINSTALLDIR_SETFROMAPPSEARCH"><![CDATA[NOT Installed]]></LaunchConditions>
+      <Custom Action="DIRCA_ADDINXMLDIR" After="ValidateProductID"><![CDATA[ADDINXMLDIR=""]]></Custom>
+    </InstallUISequence>
+
+    <Media Id="1" EmbedCab="yes" Cabinet="_3D2C8546E42CF638455F2D81BCE9997F" />
+  </Product>
+</Wix>

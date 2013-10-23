@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build">
+    <MSBuild Projects="EntityDesignBootstrapPackage\EntityDesignBootstrapPackage.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignExtensibility\EntityDesignExtensibility.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignModel\EntityDesignModel.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesign\EntityDesign.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignDataSourceWizardExtension\EntityDesignDataSourceWizardExtension.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignEntityDesigner\EntityDesigner.csproj" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignPackage\EntityDesignPackage.csproj" BuildInParallel="false" />    
+    <MSBuild Projects="EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj" BuildInParallel="false" />    
+    <MSBuild Projects="XmlCore\XmlCore.csproj" BuildInParallel="false" />
+    <MSBuild Projects="DesignXmlCore\DesignXmlCore.csproj" BuildInParallel="false" />    
+  </Target>
+  
+  <Target Name="Clean">
+    <MSBuild Projects="EntityDesignBootstrapPackage\EntityDesignBootstrapPackage.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignExtensibility\EntityDesignExtensibility.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignModel\EntityDesignModel.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesign\EntityDesign.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignDataSourceWizardExtension\EntityDesignDataSourceWizardExtension.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignEntityDesigner\EntityDesigner.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="EntityDesignPackage\EntityDesignPackage.csproj" Targets="Clean" BuildInParallel="false" />    
+    <MSBuild Projects="EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="XmlCore\XmlCore.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="DesignXmlCore\DesignXmlCore.csproj" Targets="Clean" BuildInParallel="false" />    
+  </Target>
+</Project>

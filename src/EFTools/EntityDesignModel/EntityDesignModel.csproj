@@ -1,0 +1,464 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Microsoft.Data.Entity.Design.Model</RootNamespace>
+    <AssemblyName>Microsoft.Data.Entity.Design.Model</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <!-- do we need this ?-->
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <AssemblyAttributeComVisible>false</AssemblyAttributeComVisible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ProjectGuid>{B44E942F-0AD1-4FB4-9146-DD1F8E17D4D8}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <DocumentationFile>..\..\..\bin\Debug\Microsoft.Data.Entity.Design.Model.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1591;1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
+    <RunCodeAnalysis Condition=" '$(RunCodeAnalysisForEFTools)' != '' And '$(RunCodeAnalysis)' == '' ">$(RunCodeAnalysisForEFTools)</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <DocumentationFile>..\..\..\bin\Release\Microsoft.Data.Entity.Design.Model.xml</DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\EntityFramework\Core\Mapping\MappingErrorCode.cs">
+      <Link>Validation\RuntimeErrorCodes\MappingErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\EntityFramework\Core\SchemaObjectModel\ErrorCode.cs">
+      <Link>Validation\RuntimeErrorCodes\ErrorCode.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="Commands\ChangeEnumUnderlyingTypeCommand.cs" />
+    <Compile Include="Commands\ChangePropertyGetterAccessCommand.cs" />
+    <Compile Include="Commands\ChangePropertySetterAccessCommand.cs" />
+    <Compile Include="Commands\CopyEnumTypeCommand.cs" />
+    <Compile Include="Commands\CreateEnumTypeCommand.cs" />
+    <Compile Include="Commands\CreateEnumTypeMemberCommand.cs" />
+    <Compile Include="Commands\CreateFunctionCommand.cs" />
+    <Compile Include="Commands\DeleteEnumTypeCommand.cs" />
+    <Compile Include="Commands\DeleteFunctionCommand.cs" />
+    <Compile Include="Commands\DeleteFunctionImportCommand.cs" />
+    <Compile Include="Commands\DeleteStaleFKsCommand.cs" />
+    <Compile Include="Commands\SetEnumFlagAttributeCommand.cs" />
+    <Compile Include="Commands\SetEnumTypeFacetCommand.cs" />
+    <Compile Include="Commands\UpdateEntityTypeTypeAccessCommand.cs" />
+    <Compile Include="Commands\ChangePropertyTypeLengthCommand.cs" />
+    <Compile Include="Commands\ChangePropertyTypeNullableCommand.cs" />
+    <Compile Include="Commands\ChangePropertyTypePrecisionCommand.cs" />
+    <Compile Include="Commands\ChangePropertyTypeScaleCommand.cs" />
+    <Compile Include="Commands\ChangeStorageEntitySetTableCommand.cs" />
+    <Compile Include="Commands\ReplaceCsdlAndMslCommand.cs" />
+    <Compile Include="Commands\DeleteEntityTypeShapeCommand.cs" />
+    <Compile Include="Commands\MovePropertiesCommand.cs" />
+    <Compile Include="Commands\MovePropertyCommand.cs" />
+    <Compile Include="Database\IRawDataSchemaProcedure.cs" />
+    <Compile Include="Database\IRawDataSchemaColumn.cs" />
+    <Compile Include="Database\IRawDataSchemaParameter.cs" />
+    <Compile Include="Designer\DiagramContextItem.cs" />
+    <Compile Include="Commands\CreateMatchingFunctionImportCommand.cs" />
+    <Compile Include="Database\DatabaseColumn.cs" />
+    <Compile Include="Database\DatabaseObject.cs" />
+    <Compile Include="Database\IDataSchemaColumn.cs" />
+    <Compile Include="Database\IDataSchemaObject.cs" />
+    <Compile Include="Database\IDataSchemaParameter.cs" />
+    <Compile Include="Database\IDataSchemaProcedure.cs" />
+    <Compile Include="Database\IDataSchemaServer.cs" />
+    <Compile Include="AnnotationManager.cs" />
+    <Compile Include="Designer\EntityDesignerDiagramConstant.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityDesignerDiagramConstant.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EdmxUtils.cs" />
+    <Compile Include="EntityQualifiedPropertyName.cs" />
+    <Compile Include="Entity\DefaultableEnumTypeMemberValue.cs" />
+    <Compile Include="Entity\EnumType.cs" />
+    <Compile Include="Entity\EnumTypeClipboardFormat.cs" />
+    <Compile Include="Entity\EnumTypeMember.cs" />
+    <Compile Include="Entity\EnumTypeMemberClipboardFormat.cs" />
+    <Compile Include="Entity\EnumTypeMembersClipboardFormat.cs" />
+    <Compile Include="Entity\ExternalTypeNameDefaultableValue.cs" />
+    <Compile Include="Entity\InheritanceMappingStrategy.cs" />
+    <Compile Include="Entity\EnumFlagAttributeDefaultableValue.cs" />
+    <Compile Include="Entity\ParameterDefinition.cs" />
+    <Compile Include="Entity\UnderlyingEnumTypeDefaultableValue.cs" />
+    <Compile Include="Entity\UseStrongSpatialTypesDefaultableValue.cs" />
+    <Compile Include="Integrity\PropagateStoragePropertyFacetsToConceptualModel.cs" />
+    <Compile Include="Integrity\PropagateStoreGeneratedPatternToStorageModel.cs" />
+    <Compile Include="Integrity\PropagateViewKeysToStorageModel.cs" />
+    <Compile Include="MetadataConverter\SsdlProviderAttributesHandler.cs" />
+    <Compile Include="MetadataConverter\UseStrongSpatialTypesHandler.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Commands\CreateFunctionComplexPropertyCommand.cs" />
+    <Compile Include="Commands\CreateFunctionScalarPropertyTreeCommand.cs" />
+    <Compile Include="Commands\SetConceptualPropertyAnnotationsCommand.cs" />
+    <Compile Include="Commands\SetStoreGeneratedPatternCommand.cs" />
+    <Compile Include="Designer\DiagramArtifact.cs" />
+    <Compile Include="Designer\DiagramElementNameCommittedArgs.cs" />
+    <Compile Include="FeatureState.cs" />
+    <Compile Include="SchemaQualifiedName.cs" />
+    <Compile Include="SchemaValidatioErrorCollector.cs" />
+    <Compile Include="Mapping\FunctionImportPropertyMappingNameNormalizer.cs" />
+    <Compile Include="Mapping\FunctionPropertyMappingNameNormalizer.cs" />
+    <Compile Include="HostContext.cs" />
+    <Compile Include="Commands\ChangeEntityContainerMappingCommand.cs" />
+    <Compile Include="Commands\DeleteUnmappedStorageEntitySetsCommand.cs" />
+    <Compile Include="Validation\UnrecoverableRuntimeErrors.cs" />
+    <Compile Include="Validation\ValidationHelper.cs" />
+    <Compile Include="Commands\CopyAnnotatableElementCommand.cs" />
+    <Compile Include="Commands\CreateOnDeleteActionCommand.cs" />
+    <Compile Include="Commands\CreateComplexTypeFromPropertiesCommand.cs" />
+    <Compile Include="Commands\CopyComplexTypePropertyCommand.cs" />
+    <Compile Include="Commands\CopyComplexTypeCommand.cs" />
+    <Compile Include="Commands\ChangeDesignerPropertyCommand.cs" />
+    <Compile Include="Commands\CreateFunctionImportScalarPropertyCommand.cs" />
+    <Compile Include="Commands\CreateFunctionImportTypeMappingCommand.cs" />
+    <Compile Include="Commands\DeleteReferentialConstraintCommand.cs" />
+    <Compile Include="Commands\DeleteReferentialConstraintPropertyRefCommand.cs" />
+    <Compile Include="EdmFeatureManager.cs" />
+    <Compile Include="LegacyCodeGenerationDriver.cs" />
+    <Compile Include="Entity\AnnotatableElementClipboardFormat.cs" />
+    <Compile Include="Entity\AnnotatableElement.cs" />
+    <Compile Include="Entity\ComplexTypeClipboardFormat.cs" />
+    <Compile Include="Entity\DocumentableAnnotatableElement.cs" />
+    <Compile Include="Entity\LazyLoadingDefaultableValue.cs" />
+    <Compile Include="Entity\ReferentialConstraintClipboardFormat.cs" />
+    <Compile Include="Entity\StoreGeneratedPatternDefaultableValue.cs" />
+    <Compile Include="Integrity\CreateForeignKeyProperties.cs" />
+    <Compile Include="Mapping\FunctionImportScalarProperty.cs" />
+    <Compile Include="Mapping\FunctionImportTypeMapping.cs" />
+    <Compile Include="Mapping\FunctionImportEntityTypeMapping.cs" />
+    <Compile Include="Mapping\FunctionImportComplexTypeMapping.cs" />
+    <Compile Include="Mapping\ResultMapping.cs" />
+    <Compile Include="MetadataConverter\MetadataConverterDriver.cs" />
+    <Compile Include="MetadataConverter\MetadataConverterHandler.cs" />
+    <Compile Include="MetadataConverter\NamespaceConverterHandler.cs" />
+    <Compile Include="MetadataConverter\VersionConverterHandler.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationSummary.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationIdentityForReferentialConstraint.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationIdentityForAssociationSetMapping.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationPropertyIdentity.cs" />
+    <Compile Include="UpdateFromDatabase\ReferentialConstraintIdentity.cs" />
+    <Compile Include="Commands\CannotLocateParentItemException.cs" />
+    <Compile Include="Commands\CannotLocateReferencedItemException.cs" />
+    <Compile Include="Commands\ChangeAssociationEndCommand.cs" />
+    <Compile Include="Commands\ChangeConditionColumnCommand.cs" />
+    <Compile Include="Commands\ChangeConditionPredicateCommand.cs" />
+    <Compile Include="Commands\ChangeEntityTypeAbstractCommand.cs" />
+    <Compile Include="Commands\ChangeFunctionImportCommand.cs" />
+    <Compile Include="Commands\ChangeFunctionScalarPropertyCommand.cs" />
+    <Compile Include="Commands\ChangeResultBindingCommand.cs" />
+    <Compile Include="Commands\ChangeScalarPropertyCommand.cs" />
+    <Compile Include="Commands\CommandValidation.cs" />
+    <Compile Include="Commands\ChangeComplexPropertyTypeCommand.cs" />
+    <Compile Include="Commands\DeleteComplexPropertyCommand.cs" />
+    <Compile Include="Commands\CreateDiagramItemForEFElementsCommand.cs" />
+    <Compile Include="Commands\CreateFragmentScalarPropertyTreeCommand.cs" />
+    <Compile Include="Commands\CreateComplexPropertyCommand.cs" />
+    <Compile Include="Commands\DeleteComplexTypeCommand.cs" />
+    <Compile Include="Commands\CreateFragmentComplexPropertyCommand.cs" />
+    <Compile Include="Commands\CreateComplexTypeCommand.cs" />
+    <Compile Include="Commands\CreateComplexTypePropertyCommand.cs " />
+    <Compile Include="Commands\CopyEntitiesCommand.cs" />
+    <Compile Include="Commands\CopyPropertyCommand.cs" />
+    <Compile Include="Commands\CopyEntityCommand.cs" />
+    <Compile Include="Commands\CopyPropertiesCommand.cs" />
+    <Compile Include="Commands\CreateNavigationPropertyCommand.cs" />
+    <Compile Include="Commands\CreateAssociationConnectorCommand.cs" />
+    <Compile Include="Commands\CreateAssociationSetMappingCommand.cs" />
+    <Compile Include="Commands\CreateConceptualAssociationCommand.cs" />
+    <Compile Include="Commands\CreateAssociationSetCommand.cs" />
+    <Compile Include="Commands\CreateDiagramCommand.cs" />
+    <Compile Include="Commands\CreateEndConditionCommand.cs" />
+    <Compile Include="Commands\CreateEndPropertyCommand.cs" />
+    <Compile Include="Commands\CreateEntityContainerMappingCommand.cs" />
+    <Compile Include="Commands\CreateEntitySetCommand.cs" />
+    <Compile Include="Commands\CreateEntitySetMappingCommand.cs" />
+    <Compile Include="Commands\CreateEntityTypeCommand.cs" />
+    <Compile Include="Commands\CreateEntityTypeMappingCommand.cs" />
+    <Compile Include="Commands\CreateEntityTypeShapeCommand.cs" />
+    <Compile Include="Commands\CreateFunctionImportCommand.cs" />
+    <Compile Include="Commands\CreateFragmentConditionCommand.cs" />
+    <Compile Include="Commands\CreateFragmentScalarPropertyCommand.cs" />
+    <Compile Include="Commands\CreateFunctionImportMappingCommand.cs" />
+    <Compile Include="Commands\CreateFunctionMappingCommand.cs" />
+    <Compile Include="Commands\CreateFunctionScalarPropertyCommand.cs" />
+    <Compile Include="Commands\CreateInheritanceCommand.cs" />
+    <Compile Include="Commands\CreateInheritanceConnectorCommand.cs" />
+    <Compile Include="Commands\CreateMappingFragmentCommand.cs" />
+    <Compile Include="Commands\CreateOrUpdateAssociationSetMappingCommand.cs" />
+    <Compile Include="Commands\CreateOrUpdateConceptualAssociationCommand.cs" />
+    <Compile Include="Commands\CreateOrUpdateConceptualConstraintOrMapping.cs" />
+    <Compile Include="Commands\CreateOrUpdateEndPropertyCommand.cs" />
+    <Compile Include="Commands\CreateOrUpdateReferentialConstraintCommand.cs" />
+    <Compile Include="Commands\CreateOrUpdateStorageAssociationCommand.cs" />
+    <Compile Include="Commands\CreatePropertyCommand.cs" />
+    <Compile Include="Commands\CreateReferentialConstraintCommand.cs" />
+    <Compile Include="Commands\CreateResultBindingCommand.cs" />
+    <Compile Include="Commands\CreateEndScalarPropertyCommand.cs" />
+    <Compile Include="Commands\CreateStorageAssociationCommand.cs" />
+    <Compile Include="Commands\DeleteAssociationCommand.cs" />
+    <Compile Include="Commands\DeleteChangedIdentityMappingsCommand.cs" />
+    <Compile Include="Commands\DeleteConditionCommand.cs" />
+    <Compile Include="Commands\DeleteDefaultableValueCommand.cs" />
+    <Compile Include="Commands\DeleteEntityTypeCommand.cs" />
+    <Compile Include="Commands\DeleteEntityTypeMappingCommand.cs" />
+    <Compile Include="Commands\DeleteFunctionImportMappingCommand.cs" />
+    <Compile Include="Commands\DeleteFunctionMappingCommand.cs" />
+    <Compile Include="Commands\DeleteFunctionScalarPropertyCommand.cs" />
+    <Compile Include="Commands\DeleteInheritanceCommand.cs" />
+    <Compile Include="Commands\DeleteMappingFragmentCommand.cs" />
+    <Compile Include="Commands\DeletePropertyCommand.cs" />
+    <Compile Include="Commands\DeleteScalarPropertyCommand.cs" />
+    <Compile Include="Commands\DeleteUnboundMappingsCommand.cs" />
+    <Compile Include="Commands\InvalidModelItemException.cs" />
+    <Compile Include="Commands\ParentItemCreationFailureException.cs" />
+    <Compile Include="Commands\ItemCreationFailureException.cs" />
+    <Compile Include="Commands\RefreshKeysCommand.cs" />
+    <Compile Include="Commands\RenameConceptualAliasCommand.cs" />
+    <Compile Include="Commands\RenameConceptualNamespaceCommand.cs" />
+    <Compile Include="Commands\ReplaceSsdlAndMslCommand.cs" />
+    <Compile Include="Commands\ReplaceSsdlCommand.cs" />
+    <Compile Include="Commands\RetargetXmlNamespaceCommand.cs" />
+    <Compile Include="Commands\SetConceptualPropertyFacetsCommand.cs" />
+    <Compile Include="Commands\SetConnectorPointsCommand.cs" />
+    <Compile Include="Commands\SetDocumentationLongDescriptionCommand.cs" />
+    <Compile Include="Commands\SetDocumentationSummaryCommand.cs" />
+    <Compile Include="Commands\SetFunctionImportSprocCommand.cs" />
+    <Compile Include="Commands\EntityDesignRenameCommand.cs" />
+    <Compile Include="Commands\SetKeyPropertyCommand.cs" />
+    <Compile Include="Commands\ChangePropertyTypeCommand.cs" />
+    <Compile Include="Commands\SetNavigationPropertyFacetsCommand.cs" />
+    <Compile Include="Commands\SetRowsAffectedParameterCommand.cs" />
+    <Compile Include="Commands\SetPropertyFacetsCommand.cs" />
+    <Compile Include="Commands\UpdateConceptualAndMappingModelsCommand.cs" />
+    <Compile Include="Commands\UpdateModelFromDatabaseCommand.cs" />
+    <Compile Include="EdmRuntimeSchemaResolver.cs" />
+    <Compile Include="EFExtensions.cs" />
+    <Compile Include="CopyPasteUtils.cs" />
+    <Compile Include="Designer\BaseDiagramObject.cs" />
+    <Compile Include="Designer\ConnectionDesignerInfo.cs" />
+    <Compile Include="Designer\Connector.cs" />
+    <Compile Include="Designer\ConnectorPoint.cs" />
+    <Compile Include="Designer\AssociationConnector.cs" />
+    <Compile Include="Designer\InheritanceConnector.cs" />
+    <Compile Include="Designer\EntityTypeShape.cs" />
+    <Compile Include="Designer\Diagram.cs" />
+    <Compile Include="Designer\Diagrams.cs" />
+    <Compile Include="Designer\DesignerInfoPropertySet.cs" />
+    <Compile Include="Designer\DesignerProperty.cs" />
+    <Compile Include="Designer\IDiagram.cs" />
+    <Compile Include="Designer\OptionsDesignerInfo.cs" />
+    <Compile Include="Designer\Visitor\VerifyDiagramModelIntegrityVisitor.cs" />
+    <Compile Include="EFArtifactFactory.cs" />
+    <Compile Include="EFNormalizableItemDefaults.cs" />
+    <Compile Include="EntityDesignArtifact.cs" />
+    <Compile Include="EntityDesignArtifactSet.cs" />
+    <Compile Include="EFArtifactSetFactory.cs" />
+    <Compile Include="EFDesignerInfoRoot.cs" />
+    <Compile Include="EFRuntimeModelRoot.cs" />
+    <Compile Include="Entity\ComplexConceptualProperty.cs" />
+    <Compile Include="Entity\NavigationPropertyClipboardFormat.cs" />
+    <Compile Include="Entity\PropertyBaseClipboardFormat.cs" />
+    <Compile Include="Entity\ComplexType.cs" />
+    <Compile Include="Entity\ConceptualEntitySet.cs" />
+    <Compile Include="Designer\DesignerInfo.cs" />
+    <Compile Include="Entity\AssociationClipboardFormat.cs" />
+    <Compile Include="Entity\ConceptualEntityType.cs" />
+    <Compile Include="Entity\ConceptualProperty.cs" />
+    <Compile Include="Entity\CommandTextBase.cs" />
+    <Compile Include="Entity\CommandText.cs" />
+    <Compile Include="Entity\DefiningQuery.cs" />
+    <Compile Include="Entity\TypeAccessDefaultableValue.cs" />
+    <Compile Include="Entity\EFDocumentableItem.cs" />
+    <Compile Include="Entity\EntitiesClipboardFormat.cs" />
+    <Compile Include="Entity\PropertiesClipboardFormat.cs" />
+    <Compile Include="Entity\DefaultableValueMaxLength.cs" />
+    <Compile Include="Entity\FunctionNameNormalizer.cs" />
+    <Compile Include="Entity\ParameterNameNormalizer.cs" />
+    <Compile Include="Entity\PropertyClipboardFormat.cs" />
+    <Compile Include="Entity\EntityTypeClipboardFormat.cs" />
+    <Compile Include="Entity\PropertyBase.cs" />
+    <Compile Include="Entity\LongDescription.cs" />
+    <Compile Include="Entity\StorageEntityType.cs" />
+    <Compile Include="Entity\StorageProperty.cs" />
+    <Compile Include="Entity\TextNode.cs" />
+    <Compile Include="Entity\Summary.cs" />
+    <Compile Include="Entity\Documentation.cs" />
+    <Compile Include="Entity\EntityTypeBaseType.cs" />
+    <Compile Include="Entity\StorageEntitySet.cs" />
+    <Compile Include="Entity\UsingElement.cs" />
+    <Compile Include="Integrity\EnforceAssociationSetMappingRules.cs" />
+    <Compile Include="Integrity\EnforceEntitySetMappingRules.cs" />
+    <Compile Include="Mapping\ComplexTypeMapping.cs" />
+    <Compile Include="Mapping\ComplexProperty.cs" />
+    <Compile Include="Mapping\FunctionComplexProperty.cs" />
+    <Compile Include="Mapping\DeleteFunction.cs" />
+    <Compile Include="Mapping\EntityTypeMappingKind.cs" />
+    <Compile Include="Mapping\FunctionAssociationEnd.cs" />
+    <Compile Include="Mapping\FunctionScalarProperty.cs" />
+    <Compile Include="Mapping\InsertFunction.cs" />
+    <Compile Include="Mapping\ChildCollectionBuilders\AssociationSetEndMappingBuilder.cs" />
+    <Compile Include="Mapping\MappingFragment.cs" />
+    <Compile Include="Mapping\ModificationFunction.cs" />
+    <Compile Include="Mapping\ModificationFunctionMapping.cs" />
+    <Compile Include="Mapping\QueryView.cs" />
+    <Compile Include="Mapping\ResultBinding.cs" />
+    <Compile Include="Mapping\UpdateFunction.cs" />
+    <Compile Include="ModelConstants.cs" />
+    <Compile Include="Integrity\InferReferentialContraints.cs" />
+    <Compile Include="ModelHelper.cs" />
+    <Compile Include="MultiItemBinding.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SingleItemBinding.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationEndIdentity.cs" />
+    <Compile Include="UpdateFromDatabase\AssociationIdentity.cs" />
+    <Compile Include="UpdateFromDatabase\EntityTypeIdentity.cs" />
+    <Compile Include="UpdateFromDatabase\ExistingModelSummary.cs" />
+    <Compile Include="UpdateFromDatabase\SortedListAllowDupes.cs" />
+    <Compile Include="UpdateFromDatabase\UpdatedModelSummary.cs" />
+    <Compile Include="UpdateFromDatabase\UpdateFromDatabaseUtils.cs" />
+    <Compile Include="Validation\EscherAttributeContentValidator.cs" />
+    <Compile Include="Validation\EscherModelValidator.cs" />
+    <Compile Include="Visitor\ModelVerifierVisitor.cs" />
+    <Compile Include="Entity\AssociationNameNormalizer.cs" />
+    <Compile Include="Entity\AssociationSetEndNameNormalizer.cs" />
+    <Compile Include="Entity\AssociationSetEndRoleNormalizer.cs" />
+    <Compile Include="Entity\AssociationSetEndEntitySetNormalizer.cs" />
+    <Compile Include="Entity\AssociationSetNameNormalizer.cs" />
+    <Compile Include="Entity\BaseEntityContainer.cs" />
+    <Compile Include="Entity\BaseEntityModel.cs" />
+    <Compile Include="Entity\ConceptualEntityContainer.cs" />
+    <Compile Include="Entity\ConceptualEntityModel.cs" />
+    <Compile Include="Entity\EntitySetNameNormalizer.cs" />
+    <Compile Include="Entity\EntityTypeNameNormalizer.cs" />
+    <Compile Include="Entity\Key.cs" />
+    <Compile Include="Entity\PropertyRef.cs" />
+    <Compile Include="Entity\PropertyRefContainer.cs" />
+    <Compile Include="Entity\ReferentialConstraint.cs" />
+    <Compile Include="Entity\ReferentialConstraintRole.cs" />
+    <Compile Include="Entity\StorageEntityContainer.cs" />
+    <Compile Include="Entity\StorageEntityModel.cs" />
+    <Compile Include="Mapping\FunctionImportMapping.cs" />
+    <Compile Include="Entity\NavigationProperty.cs" />
+    <Compile Include="Entity\Function.cs" />
+    <Compile Include="Entity\FunctionImport.cs" />
+    <Compile Include="Entity\FunctionImportNameNormalizer.cs" />
+    <Compile Include="Entity\Parameter.cs" />
+    <Compile Include="Entity\PropertyNameNormalizer.cs" />
+    <Compile Include="Mapping\AssociationSetMapping.cs" />
+    <Compile Include="Mapping\EndProperty.cs" />
+    <Compile Include="Mapping\EntityTypeMappingTypeNameBinding.cs" />
+    <Compile Include="Mapping\EntityTypeMappingTypeNameNormalizer.cs" />
+    <Compile Include="Mapping\PropertyMappingColumnNameNormalizer.cs" />
+    <Compile Include="Mapping\PropertyMappingNameNormalizer.cs" />
+    <Compile Include="EntityDesignModelManager.cs" />
+    <Compile Include="Entity\AssociationSet.cs" />
+    <Compile Include="Entity\AssociationSetEnd.cs" />
+    <Compile Include="Entity\AssociationEnd.cs" />
+    <Compile Include="Entity\Association.cs" />
+    <Compile Include="Entity\ActionBase.cs" />
+    <Compile Include="Entity\OnDeleteAction.cs" />
+    <Compile Include="Entity\EntitySet.cs" />
+    <Compile Include="Entity\EntityType.cs" />
+    <Compile Include="Entity\Property.cs" />
+    <Compile Include="Mapping\Alias.cs" />
+    <Compile Include="Mapping\Condition.cs" />
+    <Compile Include="Mapping\EntityContainerMapping.cs" />
+    <Compile Include="Mapping\EntitySetMapping.cs" />
+    <Compile Include="Mapping\EntityTypeMapping.cs" />
+    <Compile Include="Mapping\MappingModel.cs" />
+    <Compile Include="Mapping\PropertyMappingBase.cs" />
+    <Compile Include="Mapping\ScalarProperty.cs" />
+    <Compile Include="Validation\RuntimeMetadataValidator.cs" />
+    <Compile Include="Commands\ChangeNavigationPropertyCommand.cs" />
+    <Compile Include="EDMXModelChangeEventArgs.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Designer\EntityDesignerDiagramConstant.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntityDesignerDiagramConstant.cs</LastGenOutput>
+    </None>
+    <None Include="Model.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Microsoft.Data.Entity.Design.Edmx_1.xsd" />
+    <EmbeddedResource Include="Microsoft.Data.Entity.Design.Edmx_2.xsd" />
+    <EmbeddedResource Include="Microsoft.Data.Entity.Design.Edmx_3.xsd" />
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\EntityFramework\EntityFramework.csproj">
+      <Project>{e06d1c12-efe8-4413-a15c-ae01fc158f2f}</Project>
+      <Name>EntityFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
+      <Project>{0518e682-510d-48f8-bb14-7151c50a1850}</Project>
+      <Name>EntityDesignerVersioningFacade</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XmlCore\XmlCore.csproj">
+      <Project>{79b40a85-cdcc-4ac3-a583-77ca43cb5136}</Project>
+      <Name>XmlCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\tools\EFTools.common.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="Microsoft.Data.Entity.Design.Edmx_1.xsd" DestinationFolder="$(OutputPath)EntityDesigner\Schemas" />
+    <Copy SourceFiles="Microsoft.Data.Entity.Design.Edmx_2.xsd" DestinationFolder="$(OutputPath)EntityDesigner\Schemas" />
+    <Copy SourceFiles="Microsoft.Data.Entity.Design.Edmx_3.xsd" DestinationFolder="$(OutputPath)EntityDesigner\Schemas" />
+  </Target>
+</Project>

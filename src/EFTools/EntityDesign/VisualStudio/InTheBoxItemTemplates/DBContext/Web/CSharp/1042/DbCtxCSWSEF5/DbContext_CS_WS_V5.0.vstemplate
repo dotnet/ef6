@@ -1,0 +1,54 @@
+﻿<VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
+
+  <TemplateData>
+    <Name>EF 5.x DbContext 생성기</Name>
+    <Description>강력한 형식의 DbContext 클래스와 지속성 무시 엔터티 클래스를 생성하는 프로젝트 항목입니다. EF 5.x 릴리스에서 작업하는 경우 이 템플릿을 사용하십시오.</Description>
+    <DefaultName>Model.tt</DefaultName>
+    <ProjectType>Web</ProjectType>
+    <ProjectSubType>CSharp</ProjectSubType>
+    <Icon>__TemplateIcon.ico</Icon>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
+    <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
+    <SupportsCodeSeparation>false</SupportsCodeSeparation>
+    <SupportsMasterPage>false</SupportsMasterPage>
+    <RequiredFrameworkVersion>4.0</RequiredFrameworkVersion>
+    <TemplateID>Microsoft.Data.Entity.Design.DbContextInTheBox.CS_ASPNET_V5.0</TemplateID>
+  </TemplateData>
+
+  <TemplateContent>
+
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Data</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Data.Entity</Assembly>
+      </Reference>
+    </References>
+
+    <ProjectItem OpenInEditor="false" TargetFileName="$fileinputname$.Context.tt" ReplaceParameters="true">CSharpDbContext.Context.tt</ProjectItem>
+    <ProjectItem OpenInEditor="false" TargetFileName="$fileinputname$.tt" ReplaceParameters="true">CSharpDbContext.Types.tt</ProjectItem>
+  </TemplateContent>
+
+  <WizardExtension>
+    <Assembly>NuGet.VisualStudio.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</Assembly>
+    <FullClassName>NuGet.VisualStudio.TemplateWizard</FullClassName>
+  </WizardExtension>
+
+  <WizardExtension>
+    <Assembly>Microsoft.Data.Entity.Design, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</Assembly>
+    <FullClassName>Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard</FullClassName>
+  </WizardExtension>
+
+  <WizardData>
+    <packages repository="registry" keyName="NUGETEFTOOLSPACKAGESREGKEYNAMETOKEN" isPreunzipped="true">
+      <package id="EntityFramework" version="5.0.0" />
+      <package id="EntityFramework.ko" version="5.0.0" />
+    </packages>
+  </WizardData>
+
+</VSTemplate>

@@ -1,0 +1,512 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AllowSensitiveDataInfoText" xml:space="preserve">
+    <value>Yes, &amp;include the sensitive data in the connection string.</value>
+  </data>
+  <data name="ConnectionStringDuplicateIdentifer" xml:space="preserve">
+    <value>'{0}' conflicts with an existing property name in the Application Settings. Please choose a different name.</value>
+  </data>
+  <data name="EntityDataConnectionDialog_NoDataConnectionDialog" xml:space="preserve">
+    <value>Unable to get a DataConnectionDialog.</value>
+  </data>
+  <data name="EntityDataConnectionDialog_NoDataConnectionDialogFactory" xml:space="preserve">
+    <value>Unable to retrieve the DataConnectionDialogFactory service.</value>
+  </data>
+  <data name="ConnectionStringNonValidIdentifier" xml:space="preserve">
+    <value>'{0}' is not a valid property name. Please choose a different name.</value>
+  </data>
+  <data name="DbConfigPage_Title" xml:space="preserve">
+    <value>Choose Your Data Connection</value>
+  </data>
+  <data name="DbConnectionErrorText" xml:space="preserve">
+    <value>An error occurred while connecting to the database. The database might be unavailable. An exception of type '{0}' occurred. The error message is: '{1}'.</value>
+  </data>
+  <data name="DisallowSensitiveDataInfoText" xml:space="preserve">
+    <value>No, &amp;exclude sensitive data from the connection string. I will set it in my application code.</value>
+  </data>
+  <data name="EmptyModelOption" xml:space="preserve">
+    <value>Empty model</value>
+  </data>
+  <data name="Engine_AppConfigException" xml:space="preserve">
+    <value>Unable to update the App.Config file because of the following exception: '{0}'</value>
+  </data>
+  <data name="Engine_AppConfigSuccess" xml:space="preserve">
+    <value>Added the connection string to the App.Config file.</value>
+  </data>
+  <data name="Engine_WebConfigException" xml:space="preserve">
+    <value>Unable to update the Web.Config file because of the following exception: '{0}'</value>
+  </data>
+  <data name="Engine_WebConfigSuccess" xml:space="preserve">
+    <value>Added the connection string to the Web.Config file.</value>
+  </data>
+  <data name="Engine_WebConfigBPException" xml:space="preserve">
+    <value>Unable to register the build provider in the Web.Config file because of the following exception: '{0}'</value>
+  </data>
+  <data name="Engine_WebConfigBPSuccess" xml:space="preserve">
+    <value>Successfully registered the build provider in the Web.Config file.</value>
+  </data>
+  <data name="Engine_EmptyConnStringErrorMsg" xml:space="preserve">
+    <value>The model cannot have an empty connection string when generating from a database.</value>
+  </data>
+  <data name="Engine_ModelGenErrors" xml:space="preserve">
+    <value>The model was generated with warnings or errors.{0}Please see the Error List for more details. These issues must be fixed before running your application.</value>
+    <comment>The placeholder will be replaced by the newline character.</comment>
+  </data>
+  <data name="Engine_ModelGenException" xml:space="preserve">
+    <value>Unable to generate the model because of the following exception: '{0}'.</value>
+  </data>
+  <data name="Engine_ModelGenSuccess" xml:space="preserve">
+    <value>Generated model file: {0}.</value>
+  </data>
+  <data name="Engine_NullSettingsErrorMsg" xml:space="preserve">
+    <value>ModelBuilderEngine cannot have null settings.</value>
+  </data>
+  <data name="EntityConnectionStringLabel" xml:space="preserve">
+    <value>Entity connection string:</value>
+  </data>
+  <data name="GenerateFromDatabaseOption" xml:space="preserve">
+    <value>Generate from database</value>
+  </data>
+  <data name="NewDatabaseConnectionBtn" xml:space="preserve">
+    <value>New &amp;Connection...</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PageIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\pageicon.bmp;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SaveEntityConnectionLabel" xml:space="preserve">
+    <value>&amp;Save entity connection settings in App.Config as:</value>
+  </data>
+  <data name="SaveEntityConnectionLabelASP" xml:space="preserve">
+    <value>&amp;Save entity connection settings in Web.Config as:</value>
+  </data>
+  <data name="SelectTablesPage_ConfirmNoTables" xml:space="preserve">
+    <value>No database objects have been selected. This will result in an empty model. Are you sure you want to create an empty model? </value>
+  </data>
+  <data name="SelectTablesPage_StatusRetrievingTablesText" xml:space="preserve">
+    <value>Retrieving database information, please wait...</value>
+  </data>
+  <data name="SelectTablesPage_Title" xml:space="preserve">
+    <value>Choose Your Database Objects and Settings</value>
+  </data>
+  <data name="SelectTablesPage_TablesNode" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="SelectTablesPage_ViewsNode" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="SelectTablesPage_StoredProceduresNode" xml:space="preserve">
+    <value>Stored Procedures and Functions</value>
+  </data>
+  <data name="SensitiveDataInfoText" xml:space="preserve">
+    <value>This connection string appears to contain sensitive data (for example, a password) that is required to connect to the database. Storing sensitive data in the connection string can be a security risk. Do you want to include this sensitive data in the connection string?</value>
+  </data>
+  <data name="StartPage_EmptyModelText" xml:space="preserve">
+    <value>Creates an empty entity model as a starting point for visually designing a conceptual model from the toolbox. Object-layer code is generated from the model. Later, you can either update the model from a database or generate a storage model, mappings, and database script from the model.</value>
+  </data>
+  <data name="StartPage_GenerateFromDBText" xml:space="preserve">
+    <value>Creates an entity model from a database. Object-layer code is generated from the model. This option also lets you specify the database connection, settings for the model, and database objects to include in the model.</value>
+  </data>
+  <data name="StartPage_ListViewNoSelectionText" xml:space="preserve">
+    <value>Choose model contents from the items above.</value>
+  </data>
+  <data name="StartPage_PromptLabelText" xml:space="preserve">
+    <value>&amp;What should the model contain?</value>
+  </data>
+  <data name="StartPage_Title" xml:space="preserve">
+    <value>Choose Model Contents</value>
+  </data>
+  <data name="StartPage_AccessibleSelectionExplanation" xml:space="preserve">
+    <value>Selection explanation</value>
+  </data>
+  <data name="WhichDatabaseObjectsLabel" xml:space="preserve">
+    <value>&amp;Which database objects do you want to include in your model?</value>
+  </data>
+  <data name="WhichDataConnectionLabel" xml:space="preserve">
+    <value>&amp;Which data connection should your application use to connect to the database?</value>
+  </data>
+  <data name="WizardFormDialog_Title" xml:space="preserve">
+    <value>Entity Data Model Wizard</value>
+  </data>
+  <data name="EntityDataConnectionDialog_DataConnectionInvalid" xml:space="preserve">
+    <value>Failed to open a connection to the database
+
+Error message: '{0}'
+
+Check the connection and try again.</value>
+  </data>
+  <data name="SelectTablesPage_ModelNamespaceLabel" xml:space="preserve">
+    <value>&amp;Model Namespace:</value>
+  </data>
+  <data name="SelectTablesPage_ModelNamespaceInUse" xml:space="preserve">
+    <value>The model namespace '{0}' is already in use. Please choose a different namespace.</value>
+  </data>
+  <data name="GeneratingModelTimeMsg" xml:space="preserve">
+    <value>Generating the model took {0}.</value>
+  </data>
+  <data name="LoadingDBMetadataTimeMsg" xml:space="preserve">
+    <value>Loading metadata from the database took {0}.</value>
+  </data>
+  <data name="WritingModelTimeMsg" xml:space="preserve">
+    <value>Writing the .edmx file took {0}.</value>
+  </data>
+  <data name="Engine_WebConfigAssemblyException" xml:space="preserve">
+    <value>Unable to register the assembly '{0}' in the Web.Config file because of the following exception: '{1}'</value>
+  </data>
+  <data name="Engine_WebConfigAssemblySuccess" xml:space="preserve">
+    <value>Successfully registered the assembly '{0}' in the Web.Config file.</value>
+  </data>
+  <data name="SelectTablesPage_DeletedItemsNode" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="SelectTablesPage_NullSchemaDisplayName" xml:space="preserve">
+    <value>&lt;None&gt;</value>
+  </data>
+  <data name="SelectTablesPage_UpdatedItemsNode" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="SelectTablesPage_NewItemsNode" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="WhichDatabaseObjectsLabelForUpdateModel" xml:space="preserve">
+    <value>&amp;Select new objects to add. Existing and deleted items are automatically updated.</value>
+  </data>
+  <data name="NamespaceAndEntityContainerSame" xml:space="preserve">
+    <value>The property name in the Application Settings and the Model Namespace have the same case-insensitive value, '{0}'. These values must be different. Please choose a different value for one of these values.</value>
+  </data>
+  <data name="SelectTables_CannotDeselect" xml:space="preserve">
+    <value>Items for update and delete cannot be checked or unchecked.</value>
+  </data>
+  <data name="SelectTablesPage_ErrorRetrievingTablesText" xml:space="preserve">
+    <value>Error retrieving database information.
+
+Error message: '{0}'</value>
+  </data>
+  <data name="UpdateFromDatabase_AddDescription" xml:space="preserve">
+    <value>Select items to add to the model.</value>
+  </data>
+  <data name="UpdateFromDatabase_DeleteDescription" xml:space="preserve">
+    <value>These items could not be found in the database and will be removed from the model.</value>
+  </data>
+  <data name="UpdateFromDatabase_RefreshDescription" xml:space="preserve">
+    <value>These items were found in the database and will be refreshed in the model.</value>
+  </data>
+  <data name="UpdateFromDatabase_AddTabPageTitle" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="UpdateFromDatabase_DeleteTabPageTitle" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="UpdateFromDatabase_DescriptionLabelText" xml:space="preserve">
+    <value>&amp;Description</value>
+  </data>
+  <data name="UpdateFromDatabase_RefreshTabPageTitle" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="UpdateFromDatabase_AddTreeViewAccessibleName" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="UpdateFromDatabase_DeleteTreeViewAccessibleName" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="UpdateFromDatabase_RefreshTreeViewAccessibleName" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="UpdateFromDatabaseWizard_Title" xml:space="preserve">
+    <value>Update Wizard</value>
+  </data>
+  <data name="DbGenSummary_DDLTabDescription" xml:space="preserve">
+    <value>This is the DDL that will be written into the file '{0}'</value>
+  </data>
+  <data name="DbGenSummary_TablesTab" xml:space="preserve">
+    <value>Tables</value>
+  </data>
+  <data name="DbGenSummary_Title" xml:space="preserve">
+    <value>Summary and Settings</value>
+  </data>
+  <data name="DbGenWizard_Title" xml:space="preserve">
+    <value>Generate Database Wizard</value>
+  </data>
+  <data name="DescriptionLabel" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DbGenSummary_TablesTabDescription" xml:space="preserve">
+    <value>These are the tables that will be created by the DDL to represent your entity data model</value>
+  </data>
+  <data name="DbGenSummary_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DbGenSummary_StatusDeterminingDDL" xml:space="preserve">
+    <value>Generating DDL...</value>
+  </data>
+  <data name="ErrorResolvingDdlFileNameException" xml:space="preserve">
+    <value>There was an exception resolving the specified DDL file name: '{0}'. Please make sure the path is correct before continuing.</value>
+  </data>
+  <data name="ErrorDdlFileNameIsNull" xml:space="preserve">
+    <value>The specified DDL file name cannot be null</value>
+  </data>
+  <data name="DbGenSummary_ErrorWorkflowOutputNotFound" xml:space="preserve">
+    <value>The '{0}' output parameter required by the Generate Database wizard was not populated by the workflow. Please make sure the workflow file defines this parameter and the workflow populates it.</value>
+  </data>
+  <data name="SelectTables_PluralizeCheckbox" xml:space="preserve">
+    <value>Pluralize or &amp;singularize generated object names</value>
+  </data>
+  <data name="PluralizeCheckBoxToolTipText" xml:space="preserve">
+    <value>Makes names in the model more descriptive and accurate by ensuring that EntityType names are singular, EntitySet names are plural, and Navigation Properties are singular or plural based on their multiplicity.</value>
+  </data>
+  <data name="SelectTablesPage_IncludeForeignKeys" xml:space="preserve">
+    <value>Include foreign &amp;key columns in the model</value>
+  </data>
+  <data name="SelectTablesPage_IncludeForeignKeysToolTip" xml:space="preserve">
+    <value>Includes foreign key columns as properties in the model.  </value>
+  </data>
+  <data name="PluralizeCheckBoxDisabledToolTipText" xml:space="preserve">
+    <value>Pluralization services are only available on English versions of Visual Studio.</value>
+  </data>
+  <data name="SelectTablesPage_NotShownOnDragAndDrop" xml:space="preserve">
+    <value>Launch Wizard on &amp;Drag and Drop operations from Server Explorer</value>
+  </data>
+  <data name="ErrorCouldNotParseDdlFileName" xml:space="preserve">
+    <value>The given DDL file path, '{0}', could not be parsed due to the exception: '{1}'. Please take the appropriate steps to address this exception before proceeding.</value>
+  </data>
+  <data name="ErrorNoDdlParentDir" xml:space="preserve">
+    <value>The given DDL file path, '{0}', does not have a parent directory. Please specify a path that has an existing parent directory before proceeding.</value>
+  </data>
+  <data name="LocalDataConvertConnectionText" xml:space="preserve">
+    <value>The connection you selected uses a local data file that is not in the current project. Would you like to copy the file to your project and modify the connection?</value>
+  </data>
+  <data name="LocalDataErrorAddingFile" xml:space="preserve">
+    <value>An error occurred while adding the local data file {0} to the project {1}</value>
+  </data>
+  <data name="LocalDataExceptionCopyingFile" xml:space="preserve">
+    <value>Caught exception of type {0} attempting to copy file {1}. Error message: {2}</value>
+  </data>
+  <data name="ErrorDdlPathNotFile" xml:space="preserve">
+    <value>The file name could not be determined from the given DDL file path '{0}'. Please specify a valid path to a file before continuing.</value>
+  </data>
+  <data name="ErrorResolvingProjectFile" xml:space="preserve">
+    <value>There was an error resolving a URI from the project file path '{0}' in the process of resolving the DDL file path. This project type may be unsupported.</value>
+  </data>
+  <data name="SelectTablesPage_CreateFunctionImports" xml:space="preserve">
+    <value>&amp;Import selected stored procedures and functions into the entity model</value>
+  </data>
+  <data name="CreateFunctionImportsCheckBoxToolTipText" xml:space="preserve">
+    <value>Expose selected store procedures via the entity model, creating return types for them when they return more than one column. Uncheck this if stored procedures are used to insert/update/delete entity types.</value>
+  </data>
+  <data name="SelectTablesPage_DefaultStorageContainerFormat" xml:space="preserve">
+    <value>{0}Container</value>
+  </data>
+  <data name="SelectTablesPage_DefaultStorageNamespaceFormat" xml:space="preserve">
+    <value>{0}.Store</value>
+  </data>
+  <data name="SelectTablesPage_StoredProceduresNodeNotSupported" xml:space="preserve">
+    <value>Stored Procedures (not supported in the CTP2 release)</value>
+  </data>
+  <data name="SelectTablesPage_ViewsNodeNotSupported" xml:space="preserve">
+    <value>Views (not supported in the CTP2 release)</value>
+  </data>
+  <data name="SelectTablesPage_ModelNamespaceAccessibleName" xml:space="preserve">
+    <value>Model Namespace</value>
+  </data>
+  <data name="SelectTablesPage_ErrorSsdlFactoryInit" xml:space="preserve">
+    <value>Encountered errors while building the SSDL:</value>
+  </data>
+  <data name="EntityDataConnectionDialog_NoDataExplorerConnectionManager" xml:space="preserve">
+    <value>Unable to get the IVsDataExplorerConnectionManager to launch the data connections dialog</value>
+  </data>
+  <data name="EntityDataConnectionDialog_NoDataProviderManager" xml:space="preserve">
+    <value>Unable to get the IVsDataProviderManager to launch the data connections dialog</value>
+  </data>
+  <data name="Database" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\database.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="EmptyModel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\EmptyModel.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="database_schema" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\database_schema.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbAddedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DbAddedItems.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbDeletedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DbDeletedItems.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DBStoredProcs" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DBStoredProcs.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbTables" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DbTables.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbUpdatedItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DbUpdatedItems.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DbViews" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DbViews.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DeletedItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\DeletedItem.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StoredProc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\StoredProc.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Table" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\Table.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="View" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\View.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RuntimeConfigPage_Title" xml:space="preserve">
+    <value>Choose Your Version</value>
+  </data>
+  <data name="RuntimeConfig_BelowSixInstalled" xml:space="preserve">
+    <value>Your project references an older version of Entity Framework. To use the latest version, exit this wizard and upgrade before performing this action.</value>
+  </data>
+  <data name="RuntimeConfig_Net35" xml:space="preserve">
+    <value>Your project targets .NET Framework 3.5. To use the latest version of Entity Framework, exit this wizard and change your project's target framework to .NET Framework 4.0 or higher before performing this action.</value>
+  </data>
+  <data name="RuntimeConfig_NoProvider" xml:space="preserve">
+    <value>An Entity Framework database provider compatible with the latest version of Entity Framework could not be found for your data connection. To use the latest version of Entity Framework, exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
+  </data>
+  <data name="RuntimeConfig_SixInstalledButNoProvider" xml:space="preserve">
+    <value>Your project references the latest version of Entity Framework; however, an Entity Framework database provider compatible with this version could not be found for your data connection. Exit this wizard, install a compatible provider, and rebuild your project before performing this action.</value>
+  </data>
+  <data name="Error" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\Error.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Information" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\bitmaps\Information.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RuntimeConfig_Prompt" xml:space="preserve">
+    <value>&amp;Which version of Entity Framework do you want to use?</value>
+  </data>
+  <data name="RuntimeConfig_LearnMore" xml:space="preserve">
+    <value>Learn more about this</value>
+  </data>
+  <data name="RuntimeConfig_LearnProvidersUrl" xml:space="preserve">
+    <value>http://go.microsoft.com/fwlink/?LinkId=260882</value>
+  </data>
+  <data name="RuntimeConfig_LearnTargetingUrl" xml:space="preserve">
+    <value>http://go.microsoft.com/fwlink/?LinkId=317726</value>
+  </data>
+  <data name="RuntimeConfig_TargetingHint" xml:space="preserve">
+    <value>It is also possible to install and use other versions of Entity Framework.</value>
+  </data>
+</root>

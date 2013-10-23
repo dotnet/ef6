@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.Extensibility</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope">
+      <summary>Создает блок работ, который можно отменить или повторить с помощью кнопок Отменить и Повторить в Visual Studio.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Complete">
+      <summary>Фиксирует все операции, выполненные в пределах области.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope.Dispose">
+      <summary>Освобождает все ресурсы, используемые текущим экземпляром класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" />.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute">
+      <summary>Задает объекты в Конструкторе моделей EDM или в Браузере моделей, которые (если они выбраны пользователем) запускают вызов метода <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> класса с заметкой.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.#ctor(Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection)">
+      <summary>Создает новый экземпляр  <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute" /> класс. </summary>
+      <param name="entityDesignerSelection">объект в конструкторе моделей EDM 4ccd7ad6-b934-4f7c-82a0-cfd2d4a95faf или Обозреватель моделей 94e836e8-a5ea-47ff-aa3e-599d8a02ebfd, когда выбран пользователь, инициирует вызов из  <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" /> метод. </param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerExtendedPropertyAttribute.EntityDesignerSelection">
+      <summary>Объект в конструкторе моделей EDM или браузере моделей, который в случае выбора пользователем запускает вызов метода <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" />.</summary>
+      <returns>Объект в конструкторе моделей EDM, который (если он выбран пользователем) запускает вызов метода <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection">
+      <summary>Перечисление, используемое для задания того, какие типы объектов, будучи выбранными в конструкторе моделей EDM или в браузере моделей, запускают вызов метода <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> класса с заметками.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.DesignerSurface">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в конструкторе моделей EDM была выбрана поверхность конструктора Entity Data Model.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntitySet">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран набор сущностей концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociationSet">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран набор ассоциаций концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityContainer">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран контейнер сущностей концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelEntityType">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен вызываться в случае, если в конструкторе моделей EDM или в браузере моделей был выбран тип сущностей концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelProperty">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен вызываться в случае, если в конструкторе моделей EDM или в браузере моделей было выбрано свойство концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelNavigationProperty">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен вызываться в случае, если в конструкторе моделей EDM или в браузере моделей было выбрано свойство навигации концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelAssociation">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен вызываться в случае, если в конструкторе моделей EDM или в браузере моделей была выбрана ассоциация концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexType">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен вызываться в случае, если в конструкторе моделей EDM или в браузере моделей был выбран сложный тип концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelComplexProperty">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей было выбрано сложное свойство концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImport">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран импорт функции концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.ConceptualModelFunctionImportParameter">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран параметр импорта функции концептуальной модели.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityContainer">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран контейнер сущностей модели хранения.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelEntityType">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран тип сущностей модели хранения.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelProperty">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей было выбрано свойство модели хранения.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelAssociation">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей была выбрана ассоциация модели хранения.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunction">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей была выбрана функция модели хранения.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerSelection.StorageModelFunctionParameter">
+      <summary>Указывает, что метод <see cref="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)" /> должен быть вызван, если в браузере моделей был выбран параметр функции модели хранения.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext">
+      <summary>Базовый класс для классов <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />, <see cref="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />, <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" /> и <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.#ctor">
+      <summary>Создает новый экземпляр  <see cref="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.EntityFrameworkVersion">
+      <summary>Целевая версия платформы Entity Framework.</summary>
+      <returns>Целевая версия платформы Entity Framework.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionContext.Project">
+      <summary>Текущий проект Visual Studio.</summary>
+      <returns>Текущий проект Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError">
+      <summary>Инкапсулирует пользовательские сведения об ошибках для расширений Visual Studio, расширяющих функциональные возможности Конструктора модели EDM.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity)">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+      <param name="message">Сообщение, описывающее ошибку.</param>
+      <param name="errorCode">Код, связанный с ошибкой.</param>
+      <param name="severity">Серьезность ошибки.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.#ctor(System.String,System.Int32,Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity,System.Int32,System.Int32)">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+      <param name="message">Сообщение, описывающее ошибку.</param>
+      <param name="errorCode">Код, связанный с ошибкой.</param>
+      <param name="severity">Серьезность ошибки.</param>
+      <param name="line">Строка входного или выходного документа, в которой произошла ошибка.</param>
+      <param name="column">Столбец входного или выходного документа, в котором произошла ошибка.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Column">
+      <summary>Столбец входного или выходного документа, в котором произошла ошибка.</summary>
+      <returns>Столбец входного или выходного документа, в котором произошла ошибка.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.ErrorCode">
+      <summary>Код, связанный с ошибкой.</summary>
+      <returns>Код, связанный с ошибкой.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Line">
+      <summary>Строка входного или выходного документа, в которой произошла ошибка.</summary>
+      <returns>Строка входного или выходного документа, в которой произошла ошибка.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Message">
+      <summary>Сообщение, описывающее ошибку.</summary>
+      <returns>Сообщение, описывающее ошибку.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ExtensionError.Severity">
+      <summary>Серьезность ошибки.</summary>
+      <returns>Серьезность ошибки.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity">
+      <summary>Перечисление, описывающее важность <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Warning">
+      <summary>Указывает, что важность <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> равна: Предупреждение.Событие <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> с такой серьезностью будет выводиться в окне Список ошибок Visual Studio как предупреждение.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Error">
+      <summary>Указывает, что тяжесть  <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" />—   Ошибка.Событие <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> с такой серьезностью будет выводиться в окне Список ошибок Visual Studio как ошибка.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.ExtensionErrorSeverity.Message">
+      <summary>Указывает, что важность <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> равна: Сообщение.Событие <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ExtensionError" /> с такой серьезностью будет выводиться в окне Список ошибок Visual Studio как сообщение.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty">
+      <summary>Предоставляет методы для добавления свойств к объектам, видимым для пользователя в Конструкторе моделей EDM или в Браузере моделей.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerExtendedProperty.CreateProperty(System.Xml.Linq.XElement,Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext)">
+      <summary>Создает новое свойство для объекта, выбранного в Конструкторе моделей EDM или в Браузере моделей.</summary>
+      <returns>Объект, открытые свойства которого отображаются в окне Свойства Visual Studio.Дополнительные сведения см. в разделе <see cref="T:System.Windows.Forms.PropertyGrid" />.</returns>
+      <param name="xElement">Элемент в EDMX-файл, который определяет объект , который выбран в конструкторе моделей EDM 4ccd7ad6-b934-4f7c-82a0-cfd2d4a95faf или Обозреватель моделей 94e836e8-a5ea-47ff-aa3e-599d8a02ebfd </param>
+      <param name="context">Представляет файл и  Visual Studioсведения о проект . </param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension">
+      <summary>Предоставляет методы для преобразования пользовательского формата файлов в формат файлов EDMX, доступный для чтения в конструкторе моделей EDM, и обратно.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnAfterFileLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>Задает пользовательские функциональные возможности для загрузки файлов в пользовательском формате и преобразования их в формат EDMX.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelConversionExtension.OnBeforeFileSaved(Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext)">
+      <summary>Задает пользовательские функциональные возможности для преобразования EDMX-файла в файл в пользовательском формате до его сохранения.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension">
+      <summary>Предоставляет методы для настройки создания файлов EDMX.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelGenerated(Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext)">
+      <summary>Определяет пользовательские функциональные возможности, выполняющиеся после создания файла EDMX в конструкторе моделей EDM.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelGenerationExtension.OnAfterModelUpdated(Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext)">
+      <summary>Задает функциональные возможности, выполняемые после обновления файла EDMX Мастером обновления моделей.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension">
+      <summary>Предоставляет методы для расширения процессов загрузки и сохранения файлов EDMX.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnAfterModelLoaded(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>Определяет функциональные возможности для расширения процесса загрузки файла EDMX в конструкторе моделей EDM.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.IModelTransformExtension.OnBeforeModelSaved(Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext)">
+      <summary>Определяет функциональные возможности для расширения процесса сохранения файла EDMX в конструкторе моделей EDM.</summary>
+      <param name="context">Предоставляет сведения о файле и проекте Visual Studio.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext">
+      <summary>Предоставляет сведения о файлах и проектах расширениям Visual Studio, разрешающим загрузку и сохранение пользовательских форматов файлов.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.CurrentDocument">
+      <summary>Возвращает EDMX-документ после его преобразования из пользовательского формата файла.</summary>
+      <returns>EDMX-документ .edmx после его преобразования из пользовательского формата файла.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.Errors">
+      <summary>Список ошибок, которые могут выводиться в окне Список ошибок Visual Studio во время загрузки файла пользовательского формата и преобразования в пользовательский формат.</summary>
+      <returns>Список ошибок, которые могут выводиться в окне Список ошибок Visual Studio во время загрузки файла пользовательского формата и преобразования в пользовательский формат.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.FileInfo">
+      <summary>Возвращает сведения о пользовательском файле, обрабатываемом в конструкторе моделей EDM.</summary>
+      <returns>Сведения о пользовательском файле, обрабатываемом в конструкторе моделей EDM.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.OriginalDocument">
+      <summary>Возвращает оригинальный документ в том виде, в каком он был открыт или сохранен конструктором сущностей.</summary>
+      <returns>Оригинальный документ в том виде, в каком он был открыт или сохранен конструктором сущностей.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelConversionExtensionContext.ProjectItem">
+      <summary>Текущий элемент проекта Visual Studio.</summary>
+      <returns>Текущий элемент проекта Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute">
+      <summary>Задает пользовательское расширение файлов, которое можно загружать и сохранять в конструкторе моделей EDM.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.#ctor(System.String)">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute" />.</summary>
+      <param name="fileExtension">Расширение файла для пользовательских файлов, которые могут быть загружены и сохранены в конструкторе моделей EDM 4ccd7ad6-b934-4f7c-82a0-cfd2d4a95faf.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelFileExtensionAttribute.FileExtension">
+      <summary>Расширение пользовательских файлов, которые можно загружать и сохранять в конструкторе моделей EDM.</summary>
+      <returns>Расширение пользовательских файлов, которые можно загружать и сохранять в конструкторе моделей EDM.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext">
+      <summary>Предоставляет сведения о файлах и проектах расширениям Visual Studio, которые расширяют процесс создания файлов EDMX в конструкторе моделей EDM.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="M:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.CurrentDocument">
+      <summary>Представляет EDMX-документ для изменения.</summary>
+      <returns>Представляет EDMX-документ для изменения.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.GeneratedDocument">
+      <summary>Представляет исходный EDMX-файл, созданный мастером моделей EDM.</summary>
+      <returns>Представляет исходный EDMX-файл, созданный мастером моделей EDM.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelGenerationExtensionContext.WizardKind">
+      <summary>Мастер, который запустил процесс создания или обновления EDMX-файла.</summary>
+      <returns>Мастер, который запустил процесс создания или обновления EDMX-файла.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext">
+      <summary>Предоставляет сведения о файлах и проектах расширениям Visual Studio, которые расширяют загрузку и сохранение файлов EDMX в конструкторе моделей EDM.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="T:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.CurrentDocument">
+      <summary>Текущий EDMX-файл, с которым могут работать расширения Visual Studio.</summary>
+      <returns>Текущий EDMX-файл, с которым могут работать расширения Visual Studio.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.Errors">
+      <summary>Список ошибок, которые могут выводиться в окне Список ошибок Visual Studio, когда EDMX-файлы загружаются или сохраняются конструктором моделей EDM.</summary>
+      <returns>Список ошибок, которые могут выводиться в окне Список ошибок Visual Studio, когда EDMX-файлы загружаются или сохраняются конструктором моделей EDM.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.OriginalDocument">
+      <summary>Исходный EDMX-файл, загруженный в память.</summary>
+      <returns>Исходный EDMX-файл, загруженный в память.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.ModelTransformExtensionContext.ProjectItem">
+      <summary>Текущий элемент проекта Visual Studio.</summary>
+      <returns>Текущий элемент проекта Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext">
+      <summary>Предоставляет сведения о файлах и проектах расширениям Visual Studio, добавляющим пользовательские свойства объектам, видимым в конструкторе моделей EDM или в браузере моделей.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.CreateChangeScope(System.String)">
+      <summary>Создает объект <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" /> и задает строку, которая появится в раскрывающихся списках для кнопок Отменить и Повторить в Visual Studio.</summary>
+      <returns>Объект <see cref="T:Microsoft.Data.Entity.Design.Extensibility.EntityDesignerChangeScope" />.</returns>
+      <param name="undoRedoDescription">Строка, которая появится в раскрывающихся списках для кнопок Отменить и Повторить в Visual Studio.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.PropertyExtensionContext.ProjectItem">
+      <summary>Текущий элемент проекта Visual Studio.</summary>
+      <returns>Текущий элемент проекта Visual Studio.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext">
+      <summary>Предоставляет сведения о файлах и проектах расширениям Visual Studio, которые расширяют процесс обновления файлов EDMX в Мастере обновления моделей.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.#ctor">
+      <summary>Создает новый экземпляр класса <see cref="M:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.OriginalDocument">
+      <summary>Представляет EDMX-файл до запуска мастера обновления моделей.</summary>
+      <returns>Представляет EDMX-файл до запуска мастера обновления моделей.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.ProjectItem">
+      <summary>Текущий элемент проекта Visual Studio.</summary>
+      <returns>Текущий элемент проекта Visual Studio.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.UpdateModelExtensionContext.UpdateModelDocument">
+      <summary>Представляет EDMX-файл после запуска мастера обновления моделей.</summary>
+      <returns>Представляет EDMX-файл после запуска мастера обновления моделей.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.WizardKind">
+      <summary>Перечисление, предоставляющее сведения о том, какой мастер запустил процесс создания или обновления файла EDMX.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.None">
+      <summary>Указывает, что процесс создания файла EDMX не был запущен ни одним из мастеров.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.Generate">
+      <summary>Указывает, что Мастер моделей EDM запустил процесс создания файла EDMX.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.Extensibility.WizardKind.UpdateModel">
+      <summary>Указывает, что Мастер обновления моделей запустил процесс обновления файла EDMX.</summary>
+    </member>
+  </members>
+</doc>

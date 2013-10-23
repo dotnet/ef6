@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define LCID = 1033?>
+
+  <?if $(var.VisualStudioVersion) = 11.0?>
+    <?define ProductId = {710EEA0D-C40D-4245-B3FA-C883AAD83A65}?>
+    <?define UpgradeCode = {A2B578D1-0570-4BFF-9449-B6176E90A477}?>
+    <?define FullProductName = VS IDE Test Host for Visual Studio 2012?>
+    <?define ProductDescription = Allows to run tests inside VS IDE?>
+    <?define ProductVersion = 11.2.$(var.BuildRevisionProductVersion)?>
+  <?else?>
+    <?define ProductId = {D39AE4C3-21C4-40DE-9F35-53A83803F8DB}?>
+    <?define UpgradeCode = {E5F0BA71-D6E3-4085-BD1F-7BE363F9EBE7}?>
+    <?define FullProductName = VS IDE Test Host for Visual Studio 2013?>
+    <?define ProductDescription = Allows to run tests inside VS IDE?>
+    <?define ProductVersion = $(var.FullProductVersion)?>
+  <?endif?>
+</Include>

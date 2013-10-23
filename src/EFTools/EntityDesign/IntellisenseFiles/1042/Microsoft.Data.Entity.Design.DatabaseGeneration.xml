@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.DatabaseGeneration</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants">
+      <summary>개념적 모델에서 데이터베이스를 생성할 때 <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />, <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" /> 및 <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 네임스페이스의 클래스에 사용되는 상수를 정의합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants" /> 클래스의 새 인스턴스를 인스턴스화합니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.csdlInputName">
+      <summary>들어오는 CSDL(개념 스키마 정의 언어)을 나타내는 워크플로 in 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ddlOutputName">
+      <summary>생성된 DDL(데이터 정의 언어)을 나타내는 워크플로 out 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingMslInputName">
+      <summary>들어오는 MSL(매핑 사양 언어)을 나타내는 워크플로 in 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingSsdlInputName">
+      <summary>들어오는 SSDL을 나타내는 워크플로 in 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.mslOutputName">
+      <summary>생성된 MSL을 나타내는 워크플로 out 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ssdlOutputName">
+      <summary>생성된 SSDL을 나타내는 워크플로 out 인수의 이름인 읽기 전용 필드입니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension">
+      <summary>
+        <see cref="T:System.Data.Metadata.Edm.ItemCollection" />을 생성하고 유효성을 검사하기 위해 <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />, <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" /> 및 <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 네임스페이스의 클래스에 도우미 메서드를 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateEdmItemCollection(System.String,System.Version)">
+      <summary>CSDL(개념 스키마 정의 언어)의 문자열 표현을 <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" />으로 변환하고 유효성을 검사합니다.</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" />으로 표현된 CSDL</returns>
+      <param name="csdl">문자열로 표현된 개념적 모델 메타데이터입니다.</param>
+      <param name="targetFrameworkVersion">지정된 버전의 Entity Framework입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateStoreItemCollection(System.String,System.Version,System.Boolean,System.Boolean)">
+      <summary>SSDL(저장소 스키마 정의 언어)의 문자열 표현을 <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />으로 변환하고 유효성을 검사합니다.</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />으로 표현된 SSDL</returns>
+      <param name="ssdl">문자열로 표현된 SSDL입니다.</param>
+      <param name="targetFrameworkVersion">지정된 버전의 Entity Framework입니다.</param>
+      <param name="throwOnError">
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> 생성 및 유효성 검사 프로세스 중에 오류가 발생할 경우 예외를 throw해야 하는지 여부를 결정합니다. </param>
+      <param name="catchThrowNamingConflicts">생성된 <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />에서 이름이 충돌할 경우 예외를 throw해야 하는지 여부를 결정합니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateStoreItemCollection(System.String,System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+      <summary>SSDL(저장소 스키마 정의 언어)의 문자열 표현을 <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />으로 변환합니다.</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />으로 표현된 SSDL</returns>
+      <param name="ssdl">문자열로 표현된 SSDL입니다.</param>
+      <param name="targetFrameworkVersion">지정된 버전의 Entity Framework입니다.</param>
+      <param name="edmErrors">
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> 생성 중에 발생한 오류의 목록을 포함하는 출력 매개 변수입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.GetInvalidCharsException(System.String)">
+      <summary>SSDL로 제공된 이름에 대상 데이터베이스에 대해 유효하지 않은 문자가 있는 경우 데이터베이스 생성 프로세스의 지역화된 예외를 반환합니다.</summary>
+      <returns>SSDL로 제공된 이름에 대상 데이터베이스에 대해 유효하지 않은 문자가 있는 경우 데이터베이스 생성 프로세스의 지역화된 예외</returns>
+      <param name="userInput">잘못된 문자를 포함하는 개체 이름입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> 열거형에 정의되는 매개 변수에 대한 값을 제공합니다. </summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.#ctor(System.Threading.SynchronizationContext,Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader,System.Version,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag" />의 새 인스턴스를 만듭니다.</summary>
+      <param name="syncContext">Visual Studio에서 사용자 인터페이스 스레드의 상태입니다.</param>
+      <param name="assemblyLoader">프로젝트 및 웹 사이트 참조를 로드합니다.</param>
+      <param name="targetVersion">지정된 버전의 Entity Framework입니다.</param>
+      <param name="providerInvariantName">공급자의 고정 이름입니다.</param>
+      <param name="providerManifestToken">공급자의 매니페스트 토큰입니다.</param>
+      <param name="providerConnectionString">공급자의 연결 문자열입니다.</param>
+      <param name="databaseSchemaName">생성된 데이터베이스의 스키마 이름입니다.</param>
+      <param name="databaseName">생성된 데이터베이스의 이름입니다.</param>
+      <param name="ddlTemplatePath">생성된 DDL(데이터베이스 기술 이름)을 쓸 경로입니다.</param>
+      <param name="edmxPath">생성된 .edmx 파일을 쓸 경로입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.GetParameter``1(Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName)">
+      <summary>지정된 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" />에 대한 매개 변수의 값을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" />에 대한 매개 변수의 값</returns>
+      <param name="parameterName">매개 변수의 이름입니다.</param>
+      <typeparam name="T">이름이 <paramref name="parameterName" />인 매개 변수의 형식입니다.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName">
+      <summary>개념적 모델에서 데이터베이스를 생성할 때 <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 네임스페이스의 클래스에 사용되는 매개 변수 이름의 열거형입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.SynchronizationContext">
+      <summary>Visual Studio에서 사용자 인터페이스 스레드의 상태를 나타내는 <see cref="T:System.Threading.SynchronizationContext" />입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.AssemblyLoader">
+      <summary>지정된 이름의 어셈블리를 확인 및 로드하는 데 사용되는 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader" /> 매개 변수 개체의 이름입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.TargetVersion">
+      <summary>지정된 버전의 Entity Framework입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderInvariantName">
+      <summary>공급자의 고정 이름입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderManifestToken">
+      <summary>공급자의 매니페스트 토큰입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderConnectionString">
+      <summary>공급자 연결 문자열입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseSchemaName">
+      <summary>생성된 데이터베이스의 스키마 이름입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseName">
+      <summary>생성된 데이터베이스의 이름입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DDLTemplatePath">
+      <summary>DDL(데이터 정의 언어)를 생성하는 데 사용된 텍스트 템플릿의 경로입니다.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.EdmxPath">
+      <summary>데이터베이스 생성 마법사가 시작된 .edmx 파일의 경로입니다.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader">
+      <summary>워크플로 OutputGenerators를 확인합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader.LoadAssembly(System.String)">
+      <summary>어셈블리를 로드하려고 합니다.</summary>
+      <returns>확인된 어셈블리 참조입니다.</returns>
+      <param name="assemblyName">로드할 어셈블리의 이름입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions">
+      <summary>
+        <see cref="N:System.Data.Metadata.Edm" /> 네임스페이스에서 항목 컬렉션을 탐색하고 쿼리하는 확장 메서드를 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociations(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체의 열거 가능한 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체의 열거 가능한 컬렉션</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociationSets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> 개체의 열거 가능한 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> 개체의 열거 가능한 컬렉션</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntitySets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntitySet" /> 개체의 열거 가능한 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntitySet" /> 개체의 열거 가능한 컬렉션</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntityTypes(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntityType" /> 개체의 열거 가능한 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntityType" /> 개체의 열거 가능한 컬렉션</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllReferentialConstraints(System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> 개체의 열거 가능한 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />에 있는 모든 <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> 개체의 열거 가능한 컬렉션</returns>
+      <param name="storeItemCollection">저장소 모델 메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAssociation(System.Data.Metadata.Edm.AssociationSet)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationSet" />의 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체를 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationSet" />의 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체</returns>
+      <param name="associationSet">개념적 모델의 연결 집합입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetContainingTypes(System.Data.Metadata.Edm.EntitySet,System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" /> 및 <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> 내에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntityType" /> 개체의 컬렉션을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" /> 및 <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> 내에 있는 모든 <see cref="T:System.Data.Metadata.Edm.EntityType" /> 개체의 컬렉션</returns>
+      <param name="set">개념적 모델의 엔터티 집합입니다.</param>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDbProviderManifest(System.String,System.String)">
+      <summary>매니페스트 토큰이 있는 지정된 고정 이름의 공급자에 대한 <see cref="T:System.Data.Common.DbProviderManifest" />를 반환합니다.</summary>
+      <returns>매니페스트 토큰이 있는 지정된 고정 이름의 공급자에 대한 <see cref="T:System.Data.Common.DbProviderManifest" /></returns>
+      <param name="providerInvariantName">공급자의 고정 이름입니다.</param>
+      <param name="providerManifestToken">공급자의 매니페스트 토큰입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체의 종속 끝을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" /> 개체의 종속 끝</returns>
+      <param name="association">개념적 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Metadata.Edm.ReferentialConstraint)">
+      <summary>주 끝 속성에 해당하는 지정된 참조 제약 조건의 종속 끝 속성을 반환합니다.</summary>
+      <returns>주 끝 속성에 해당하는 지정된 참조 제약 조건의 종속 끝 속성</returns>
+      <param name="property">지정된 참조 제약 조건의 주 끝 속성입니다.</param>
+      <param name="refConstraint">개념적 모델의 참조 제약 조건입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd1(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" />의 <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> 속성에 있는 첫 번째 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />를 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" />의 <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> 속성에 있는 첫 번째 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /></returns>
+      <param name="association">개념적 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd2(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" />의 <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> 속성에 있는 두 번째 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />를 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationType" />의 <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> 속성에 있는 두 번째 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /></returns>
+      <param name="association">개념적 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityContainerName(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 EntityContainer 요소의 Name 특성 값을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 EntityContainer 요소의 Name 특성 값</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityType(System.Data.Metadata.Edm.RelationshipEndMember)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" />에 대한 <see cref="T:System.Data.Metadata.Edm.EntityType" />을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" />에 대한 <see cref="T:System.Data.Metadata.Edm.EntityType" /></returns>
+      <param name="end">연결의 한 쪽 End입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />와 연결된 <see cref="T:System.Data.Metadata.Edm.EntityType" />의 키 속성을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />와 연결된 <see cref="T:System.Data.Metadata.Edm.EntityType" />의 키 속성</returns>
+      <param name="end">개념적 모델에 있는 연결의 한 쪽 끝입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.EntityType)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.EntityType" />의 키 속성을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.EntityType" />의 키 속성</returns>
+      <param name="entityType">개념적 모델의 엔터티 형식입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetNamespace(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 첫 번째 <see cref="T:System.Data.Metadata.Edm.StructuralType" />의 네임스페이스 이름을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.ItemCollection" />에 있는 첫 번째 <see cref="T:System.Data.Metadata.Edm.StructuralType" />의 네임스페이스 이름</returns>
+      <param name="itemCollection">메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOnDelete(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>지정된 연결 End에 대한 OnDelete 요소의 값을 반환합니다.</summary>
+      <returns>지정된 연결 End에 대한 OnDelete 요소의 값</returns>
+      <param name="end">개념적 모델에 있는 연결의 한 쪽 End입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOtherEnd(System.Data.Metadata.Edm.AssociationType,System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>지정된 연결 End에 대한 다른 쪽 연결 End를 반환합니다.</summary>
+      <returns>지정된 연결 End에 대한 다른 쪽 연결 End</returns>
+      <param name="assoc">이동되는 연결입니다.</param>
+      <param name="end">지정된 연결의 한 쪽 끝입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetPrincipalEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 연결의 주 끝을 반환합니다.</summary>
+      <returns>지정된 연결의 주 끝</returns>
+      <param name="association">개념적 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetRootOrSelf(System.Data.Metadata.Edm.EntityType)">
+      <summary>상속 계층 구조의 루트에 있는 엔터티 형식을 반환합니다.</summary>
+      <returns>상속 계층 구조의 루트에 있는 엔터티 형식</returns>
+      <param name="entityType">개념적 모델의 엔터티 형식입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetSchemaName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" />에 대한 스키마 이름을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" />에 대한 스키마 이름</returns>
+      <param name="entitySet">엔터티 집합입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreGeneratedPatternValue(System.Data.Metadata.Edm.EdmMember,System.Version,System.Data.Metadata.Edm.DataSpace)">
+      <summary>개념적 모델 또는 저장소 모델에 있는 속성의 StoreGeneratedPattern 주석 또는 패싯의 값을 반환합니다.</summary>
+      <returns>개념적 모델 또는 저장소 모델에 있는 속성의 StoreGeneratedPattern 주석 또는 패싯의 값</returns>
+      <param name="property">StoreGeneratedPattern 패싯을 포함하는 속성입니다.</param>
+      <param name="targetVersion">지정된 버전의 Entity Framework입니다.</param>
+      <param name="dataSpace">지정된 속성이 있는 모델(개념적 모델 또는 저장소 모델)입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreType(System.Data.Metadata.Edm.EdmMember,System.Data.Common.DbProviderManifest)">
+      <summary>지정된 <see cref="T:System.Data.Common.DbProviderManifest" />를 검사하여 지정된 <see cref="T:System.Data.Metadata.Edm.EdmMember" />에 해당하는 저장소 형식을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.EdmMember" />에 해당하는 저장소 형식입니다.</returns>
+      <param name="edmMember">저장소(SSDL) 형식으로 변환할 EDM 형식을 포함하는 CSDL 멤버입니다.</param>
+      <param name="providerManifest">사용 중인 저장소 공급자입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetTableName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" />에 해당하는 테이블의 이름을 반환합니다.</summary>
+      <returns>지정된 <see cref="T:System.Data.Metadata.Edm.EntitySet" />에 해당하는 테이블의 이름</returns>
+      <param name="entitySet">엔터티 집합입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.InferSsdlFacetsForCsdlProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Common.DbProviderManifest)">
+      <summary>개념적 모델의 해당 속성을 기반으로 하는 저장소 모델의 속성에 대한 <see cref="T:System.Data.Metadata.Edm.Facet" />을 유추합니다.</summary>
+      <returns>개념적 모델의 해당 속성을 기반으로 하는 저장소 모델의 속성에 대한 <see cref="T:System.Data.Metadata.Edm.Facet" />의 목록</returns>
+      <param name="csdlProperty">개념적 모델의 속성입니다.</param>
+      <param name="providerManifest">사용 중인 저장소 공급자입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsComplexProperty(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>지정된 속성의 형식이 복합 형식인지 여부를 결정합니다.</summary>
+      <returns>지정된 속성이 <see cref="F:System.Data.Metadata.Edm.BuiltInTypeKind.ComplexType" />이면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="property">개념적 모델의 속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsDerivedType(System.Data.Metadata.Edm.EntityType)">
+      <summary>지정된 엔터티 형식이 파생 형식인지 여부를 결정합니다.</summary>
+      <returns>지정된 엔터티 형식에 기본 형식이 있으면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="entityType">개념적 모델의 엔터티 형식입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsJoinTable(System.Data.Metadata.Edm.EntityType,System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>지정된 저장소 모델 엔터티 형식이 데이터베이스의 조인 테이블을 나타내는지 여부를 결정합니다.</summary>
+      <returns>다음 조건이 모두 충족될 경우 true입니다.지정된 엔터티 형식에 해당 형식에서 시작되는 두 가지 연결이 있습니다.지정된 엔터티 형식의 두 연결 끝 복합성이 다(*)입니다.지정된 엔터티 형식에서 시작되는 두 연결의 다른 쪽 끝 복합성은 각각 일(1)입니다.지정된 엔터티 형식의 속성 수는 연결 끝의 모든 키 속성의 합과 같습니다.지정된 엔터티 형식의 모든 속성은 키 속성입니다.그렇지 않으면 false입니다.</returns>
+      <param name="entityType">저장소 모델의 엔터티 형식입니다.</param>
+      <param name="store">저장소 모델 메타데이터의 메모리 내 컬렉션입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsManyToMany(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 연결이 다대다(*:*) 연결인지 여부를 결정합니다.</summary>
+      <returns>지정된 연결의 양쪽 끝 복합성이 다(*)이면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="assoc">개념적 모델 또는 저장소 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsPKToPK(System.Data.Metadata.Edm.AssociationType)">
+      <summary>지정된 연결의 끝에 기본 키만 관련되는지 여부를 결정합니다.</summary>
+      <returns>연결이 일대일(1:1), 일대영 또는 일(1:0..1), 영 또는 일대영 또는 일(0..1:0..1) 관계이면 true이고, 그렇지 않으면 false입니다.</returns>
+      <param name="assoc">개념적 모델 또는 저장소 모델의 연결입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ToStoreType(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>지정된 속성의 개념적 모델 데이터 형식을 SQL Server 데이터 형식으로 변환합니다.</summary>
+      <returns>지정된 속성의 개념적 모델 데이터 형식에 해당하는 SQL Server 데이터 형식의 이름</returns>
+      <param name="property">개념적 모델의 속성입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)">
+      <summary>지정된 복합 형식 속성의 각 스칼라 속성에 대해 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate" />를 실행합니다.</summary>
+      <param name="property">복합 형식 속성입니다.</param>
+      <param name="visitorDelegate">각 스칼라 속성에 대해 실행되는 대리자입니다.</param>
+      <param name="delimiter">지정된 복합 형식 속성의 이름을 지정할 때 사용되는 구분 기호입니다.</param>
+      <param name="recursive">지정된 복합 형식 내의 중첩된 복합 형식 속성에서 <see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty" /> 메서드를 호출해야 하는지 여부를 지정합니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate">
+      <summary>
+        <see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)" /> 메서드가 개념적 모델에 있는 복합 형식 속성의 스칼라 속성이 생성된 저장소 모델에서 명명되는 방식에 대한 사용자 정의 제어를 허용하기 위해 사용하는 대리자 형식입니다.</summary>
+      <param name="namePrefix">모든 부모 CSDL 속성을 연결하는 형식의 중첩된 CSDL 속성 이름입니다.</param>
+      <param name="property">이 복합 속성의 복합 형식 내에서 현재 사용되고 있는 중첩된 CSDL 속성입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity">
+      <summary>개념적 모델을 기반으로 하는 저장소 모델과 매핑 정보를 생성하는 Windows Workflow 활동입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" /> 클래스의 새 인스턴스를 만듭니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput">
+      <summary>SSDL과 MSL이 생성되는 CSDL을 지정하는 Windows Workflow <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+      <returns>SSDL과 MSL이 생성되는 CSDL</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />의 CSDL에서 생성된 MSL을 지정하는 Windows Workflow <see cref="T:System.Activities.OutArgument`1" />입니다.</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> 속성의 CSDL에서 생성된 MSL</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutputGeneratorType">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> 속성의 CSDL에서 MSL을 생성하는 데 사용된 형식의 정규화된 어셈블리 이름입니다.</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> 속성의 CSDL에서 MSL을 생성하는 데 사용된 출력 생성기 형식의 정규화된 어셈블리 이름</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.SsdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> 속성의 CSDL에서 생성된 SSDL을 지정하는 Windows Workflow <see cref="T:System.Activities.OutArgument`1" />입니다.</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> 속성의 CSDL에서 생성된 SSDL</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl">
+      <summary>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 MSL(매핑 사양 언어)을 생성합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl" />의 새 인스턴스를 만듭니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 MSL(매핑 사양 언어)을 생성합니다.</summary>
+      <returns>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 T 형식의 MSL(매핑 사양 언어)입니다.</returns>
+      <param name="activity">현재 실행 중인 활동입니다.</param>
+      <param name="context">워크플로 상태를 포함하는 활동 컨텍스트입니다.</param>
+      <param name="inputs">들어오는 CSDL을 포함합니다.</param>
+      <typeparam name="T">활동 출력의 형식입니다.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl">
+      <summary>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 SSDL(저장소 스키마 정의 언어)을 생성합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl" />의 새 인스턴스를 만듭니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 SSDL(저장소 스키마 정의 언어)을 생성합니다.</summary>
+      <returns>제공된 CSDL(개념 스키마 정의 언어)을 기반으로 하는 T 형식의 SSDL(저장소 스키마 정의 언어)입니다.</returns>
+      <param name="activity">현재 실행 중인 활동입니다.</param>
+      <param name="context">워크플로 상태를 포함하는 활동 컨텍스트입니다.</param>
+      <param name="inputs">들어오는 CSDL을 포함합니다.</param>
+      <typeparam name="T">활동 출력의 형식입니다.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput">
+      <summary>지정된 입력에 대한 출력을 생성하는 메서드를 노출합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>지정된 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" />에 있는 입력에 대한 출력을 생성합니다.</summary>
+      <returns>지정된 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" />에 있는 입력에 대한 T 형식의 출력입니다.</returns>
+      <param name="owningActivity">이 메서드를 호출하고 있는 활동입니다.</param>
+      <param name="context">워크플로 상태를 포함하는 활동 컨텍스트입니다.</param>
+      <param name="inputs">키-값 쌍으로 표현된 활동에 대한 입력입니다.</param>
+      <typeparam name="T">활동 출력의 형식입니다.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" />의 기본 클래스입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" />의 새 인스턴스를 만듭니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>
+        <see cref="T:System.Activities.NativeActivityContext" />에 지정된 입력을 기반으로 하는 지정된 <see cref="T:System.Activities.NativeActivityContext" />에 제공되는 출력을 생성합니다.</summary>
+      <param name="context">현재 활동의 상태입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorOutput">
+      <summary>출력 생성기의 정규화된 어셈블리 형식 이름을 지정합니다.</summary>
+      <returns>출력 생성기의 정규화된 어셈블리 형식 이름</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorType">
+      <summary>출력 생성기의 정규화된 어셈블리 형식 이름을 지정하는 <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+      <returns>출력 생성기의 정규화된 어셈블리 형식 이름</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.ProcessOutputGenerator``1(System.String,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>지정된 출력 생성자 형식 이름의 출력 생성기에서 생성된 출력을 반환합니다.</summary>
+      <returns>지정된 출력 생성기 형식 이름과 함께 출력 생성기에서 생성된 출력</returns>
+      <param name="outputGeneratorTypeName">출력 생성기의 유형 이름입니다.</param>
+      <param name="context">현재 활동의 상태입니다.</param>
+      <param name="inputs">키-값 쌍으로 표현된 활동에 대한 입력입니다.</param>
+      <typeparam name="T">출력의 형식입니다.</typeparam>
+    </member>
+  </members>
+</doc>

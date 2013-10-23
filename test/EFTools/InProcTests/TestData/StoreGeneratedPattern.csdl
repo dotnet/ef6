@@ -1,0 +1,22 @@
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" Namespace="Model1" Alias="Self">
+        <EntityContainer Name="Model1Container12" >
+          <EntitySet Name="Entity1Set" EntityType="Model1.Entity1" />
+          </EntityContainer>
+        <EntityType Name="Entity1">
+          <Key>
+            <PropertyRef Name="IdIdentity" />
+          </Key>
+          <Property Type="Int32" Name="IdIdentity" Nullable="false" annotation:StoreGeneratedPattern="Identity"/>
+          <Property Type="String" Name="StringNone" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Type="Int64" Name="BigIntComputed" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Int16" Name="SmallIntNone" Nullable="false" />
+          <Property Type="Decimal" Name="DecimalComputed" Nullable="false" Precision="29" Scale="29" annotation:StoreGeneratedPattern="Computed" />
+          <Property Type="Double" Name="Double" Nullable="false" />
+          <Property Type="Single" Name="Single" Nullable="false" />
+          <Property Type="Byte" Name="Byte" Nullable="false" />
+          <Property Type="Decimal" Name="DecimalIdentity" Nullable="false" annotation:StoreGeneratedPattern="Identity" Precision="29" Scale="29" />
+          <Property Type="Decimal" Name="DecimalNone" Nullable="false" Precision="29" Scale="29" />
+          <Property Type="String" Name="StringIdentity" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="StringComputed" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+      </Schema>

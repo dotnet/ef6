@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>依據存放結構定義語言 (SSDL) 產生資料定義語言 (DDL) 的 Windows Workflow 活動。這個類別繼承自 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>創建新執行個體的<see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" />類別。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>指定資料定義語言 (DDL) 的 Windows Workflow <see cref="T:System.Activities.OutArgument`1" />，而此 DDL 是從 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 和 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 屬性中的存放結構定義語言 (SSDL) 產生。</summary>
+      <returns>從 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 和 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 屬性中的存放結構定義語言 (SSDL) 產生的資料定義語言 (DDL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>指定現有存放結構定義語言 (SSDL) 的 Windows Workflow <see cref="T:System.Activities.InArgument`1" />，而卸除現有資料庫物件的資料定義語言 (DDL) 是從這個 SSDL 產生的。</summary>
+      <returns>產生用於卸除現有資料庫物件之資料定義語言 (DDL) 的存放結構定義語言 (SSDL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>指定存放結構定義語言 (SSDL) 的 Windows Workflow <see cref="T:System.Activities.InArgument`1" />，而建立新資料庫物件的資料定義語言 (DDL) 是從這個 SSDL 產生的。</summary>
+      <returns>產生用於建立新資料庫物件之資料定義語言 (DDL) 的存放結構定義語言 (SSDL)。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="connectionId">僅限 Microsoft 內部使用。</param>
+      <param name="target">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="connectionId">僅限 Microsoft 內部使用。</param>
+      <param name="target">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="projectItem">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="project">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="projectItem">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="automationObject">僅限 Microsoft 內部使用。</param>
+      <param name="replacementsDictionary">僅限 Microsoft 內部使用。</param>
+      <param name="runKind">僅限 Microsoft 內部使用。</param>
+      <param name="customParams">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="filePath">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="projectItem">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="project">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="projectItem">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="automationObject">僅限 Microsoft 內部使用。</param>
+      <param name="replacementsDictionary">僅限 Microsoft 內部使用。</param>
+      <param name="runKind">僅限 Microsoft 內部使用。</param>
+      <param name="customParams">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="filePath">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="pbstrDefaultExtension">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="disposing">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="wszInputFilePath">僅限 Microsoft 內部使用。</param>
+      <param name="bstrInputFileContents">僅限 Microsoft 內部使用。</param>
+      <param name="wszDefaultNamespace">僅限 Microsoft 內部使用。</param>
+      <param name="rgbOutputFileContents">僅限 Microsoft 內部使用。</param>
+      <param name="pcbOutput">僅限 Microsoft 內部使用。</param>
+      <param name="pGenerateProgress">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="inputFileName">僅限 Microsoft 內部使用。</param>
+      <param name="inputFileContent">僅限 Microsoft 內部使用。</param>
+      <param name="defaultNamespace">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="warning">僅限 Microsoft 內部使用。</param>
+      <param name="level">僅限 Microsoft 內部使用。</param>
+      <param name="message">僅限 Microsoft 內部使用。</param>
+      <param name="line">僅限 Microsoft 內部使用。</param>
+      <param name="column">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="disposing">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="serviceType">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="riid">僅限 Microsoft 內部使用。</param>
+      <param name="ppvSite">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="pUnkSite">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <param name="itemId">僅限 Microsoft 內部使用。</param>
+      <param name="oldInputName">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>僅限 Microsoft 內部使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>僅限 Microsoft 內部使用。</summary>
+      <returns>僅限 Microsoft 內部使用。</returns>
+      <param name="inputFileName">僅限 Microsoft 內部使用。</param>
+      <param name="inputFileContent">僅限 Microsoft 內部使用。</param>
+      <param name="defaultNamespace">僅限 Microsoft 內部使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>提供轉換 Windows Workflow 中文字範本的功能。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>創建新執行個體的<see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />類別。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>透過呼叫 Visual Studio STextTemplatingService 轉換在 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 屬性中指定的文字範本。</summary>
+      <param name="context">目前活動的狀態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>填入用來提供輸入給文字範本的 <see cref="T:System.Collections.IDictionary" />。這個方去可以在衍生類別中被覆寫用來提供自訂輸入。這些輸入會放在 CallContext 中供文字範本使用。</summary>
+      <param name="context">目前活動的狀態。</param>
+      <param name="inputs">將輸入名稱關聯到輸入值供文字範本使用的字典。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>使用 Visual Studio 中的 STextTemplatingService 處理文字範本。</summary>
+      <returns>文字範本輸入，產生的方式是透過呼叫<see cref="M:Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating.ProcessTemplate(System.String,System.String,Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplatingCallback,System.Object)" /> 方法。</returns>
+      <param name="templatePath">要處理的文字範本的路徑。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>由 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 屬性指定之範本的輸出。</summary>
+      <returns>由 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 屬性指定之範本的輸出。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>所處理的文字範本的路徑。</summary>
+      <returns>所處理的文字範本的路徑。</returns>
+    </member>
+  </members>
+</doc>

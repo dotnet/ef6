@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="Microsoft.Data.Entity.Tools.Model.EFItem" Collapsed="true">
+    <Position X="2.75" Y="1" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.Base.Context.EditingContext" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.ItemDescriptor" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\ItemDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAAAAAQQAAAAAAAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.ItemDescriptor&lt;TEFItem&gt;" Collapsed="true">
+    <Position X="0.5" Y="5.25" Width="2" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\ItemDescriptorT.cs</FileName>
+      <HashCode>CAAACAAgCUAAUQAgAQAAAAQAABAEIAAQAERBAIAACAA=</HashCode>
+    </TypeIdentifier>
+    <Lollipop Position="1.263" />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.EFEntityTypeDescriptor" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\EFEntityTypeDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAIAAIAABAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.EFPropertyDescriptor" Collapsed="true">
+    <Position X="2.75" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\EFPropertyDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAAAAQAAAIAAAAQBQAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.CustomPropertyDescriptor" Collapsed="true">
+    <Position X="5.75" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\CustomPropertyDescriptor.cs</FileName>
+      <HashCode>AAAAAAAAJAAQAgAQQEAAAAIAAAAAABUAAABDAAAgAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.ComponentModel.PropertyDescriptor" Collapsed="true">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Microsoft.Data.Entity.Tools.UI.ViewModels.PropertyWindow.Descriptors.ReflectedPropertyDescriptor" Collapsed="true">
+    <Position X="5.75" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <FileName>ViewModels\PropertyWindow\Descriptors\ReflectedPropertyDescriptor.cs</FileName>
+      <HashCode>AAAAAgAIRAASAAAQQEAAAAIAAAAAAAAAAAQCAQAgAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>

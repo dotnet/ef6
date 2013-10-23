@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\..\tools\EFTools.version.settings"/>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>69ba80f1-e0eb-4109-a91a-6059f2954b2d</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>EFTools</OutputName>
+    <OutputType>Package</OutputType>
+    <Name>EFToolsMsi</Name>
+    <SolutionDir Condition="$(SolutionDir) == ''">..\..\..\..\</SolutionDir>
+    <PackagesDir Condition="$(PackagesDir) == ''">$(SolutionDir)packages</PackagesDir>
+    <RestorePackages>true</RestorePackages>
+    <EmbedCab Condition="$(EmbedCab) == ''">no</EmbedCab>
+    <OutputPath>$(SolutionDir)\bin\$(Configuration)\</OutputPath>
+    <IncludeLocalizedArtifacts Condition="$(IncludeLocalizedArtifacts) == ''">False</IncludeLocalizedArtifacts>
+    <DefineConstants>EmbedCab=$(EmbedCab);FullProductVersion=$(FullProductVersion);BuildRevisionProductVersion=$(BuildRevisionProductVersion);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2));AssemblyVersion=$(AssemblyVersion);PackagesDir=$(PackagesDir);EF6PackageVersion=$(EntityFrameworkPackageVersion)</DefineConstants>
+    <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <!-- Need to allow maximum version to be the same to allow developers to replace the same version during development -->
+    <SuppressIces>ICE61</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>$(DefineConstants);Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Core.wxs" />
+    <Compile Include="DatabaseGeneration.wxs" />
+    <Compile Include="Folders.wxs" />
+    <Compile Include="EFToolsMsi.wxs" />
+    <Compile Include="ItemTemplates.wxs" />
+    <Compile Include="Licenses.wxs" />
+    <Compile Include="NuGetPackages.wxs" />
+    <Compile Include="XmlSchemas.wxs" />
+    <Compile Include="SatelliteAssemblies.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Defines.wxi" />
+    <Content Include="packages.config" />
+    <Content Include="Resources\FirstPage.bmp" />
+    <Content Include="Resources\Header.bmp" />
+    <Content Include="Resources\License.rtf" />
+    <Content Include="Resources\Setup.ico" />
+    <Content Include="XmlSchemas\EntityFrameworkCatalog.xml" />
+    <Content Include="XmlSchemas\EntityFrameworkConfig_6_0_0.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.AnnotationSchema.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CodeGenerationSchema.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSDLSchema_1.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSDLSchema_1_1.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSDLSchema_2.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSDLSchema_3.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSMSL_1.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSMSL_2.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.CSMSL_3.xsd" />
+    <Content Include="XmlSchemas\system.data.resources.entitystoreschemagenerator.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.ProviderServices.ProviderManifest.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.SSDLSchema.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.SSDLSchema_2.xsd" />
+    <Content Include="XmlSchemas\System.Data.Resources.SSDLSchema_3.xsd" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixExtDir)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\EFToolsStrings.wxl" />
+    <EmbeddedResource Include="Resources\WixUI.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources" />
+    <Folder Include="XmlSchemas\" />
+  </ItemGroup>
+  <Target Name="Build">
+    <!-- Build target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed" />
+  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Build">
+  </Target>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets"
+          Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <Import Project="..\..\..\..\tools\EFTools.common.tasks" />
+  <PropertyGroup>
+    <BuildDependsOn>RestorePackages;ExtractNuspec;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="ExtractNuspec">
+    <ExtractNuspec PackagesConfigPath="$(PackagesConfig)" PackagesOutputPath="$(PackagesDir)" />
+  </Target>
+  <!--
+  To modify your build process, add your task inside one of the targets below and uncomment it.
+  Other similar extension points exist, see Wix.targets.
+  -->
+  <Target Name="BeforeBuild">
+    <ItemGroup>
+      <EFRuntimeDependency Include="$(SolutionDir)\entityframework\bin\$(Configuration)\EntityFramework.SqlServer.dll" />
+      <EFRuntimeDependency Include="$(SolutionDir)\entityframework\bin\$(Configuration)\EntityFramework.SqlServerCompact.dll" />
+    </ItemGroup>
+    <Copy Condition="!Exists('$(OutputPath)\%(Filename)%(Extension)')"
+          SourceFiles="@(EFRuntimeDependency)"
+          DestinationFolder="$(OutputPath)" />
+  </Target>
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.BootstrapPackage.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.DatabaseGeneration.pdb" />
+      <EFDesignerSymbolFiles Condition="$(VisualStudioVersion)=='11.0'" Include="$(OutputPath)Microsoft.Data.Entity.Design.DataSourceWizardExtension.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.EntityDesigner.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Extensibility.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Model.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.Package.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.VersioningFacade.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Tools.Design.XmlCore.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.VisualStudio.Data.Tools.Design.XmlCore.pdb" />
+      <EFDesignerSymbolFiles Include="$(OutputPath)EntityFramework.pdb" />
+    </ItemGroup>
+    <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(EFDesignerSymbolFiles)" DestinationFolder="$(OutputPath)\en\Symbols" />
+  </Target>
+</Project>

@@ -1,0 +1,152 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	x:Class="Microsoft.Data.Entity.Design.VisualStudio.AssemblyResources"
+	x:ClassModifier="internal"
+	>
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary>
+	<ControlTemplate x:Key="ErrorUI">
+		<Grid x:Name="Grid1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition />
+			</Grid.RowDefinitions>
+
+			<Rectangle Stroke="{x:Null}" RadiusX="0" RadiusY="0" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle2" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="0,0,1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto">
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+						<LinearGradientBrush.GradientStops>
+							<GradientStopCollection>
+								<GradientStop Color="sc#1.000000, 0.409554, 0.577990, 0.989760" Offset="0" />
+								<GradientStop Color="#FFFFFFFF" Offset="1" />
+							</GradientStopCollection>
+						</LinearGradientBrush.GradientStops>
+						<LinearGradientBrush.RelativeTransform>
+							<TransformGroup>
+								<TranslateTransform X="-0.5" Y="-0.5" />
+								<ScaleTransform ScaleX="1" ScaleY="1" />
+								<SkewTransform AngleX="0" AngleY="0" />
+								<RotateTransform Angle="90" />
+								<TranslateTransform X="0.5" Y="0.5" />
+							</TransformGroup>
+						</LinearGradientBrush.RelativeTransform>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Canvas x:Name="Group1" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Width="Auto" Height="Auto">
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 0.143976, 0.423902, 0.901320" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1" Canvas.Left="28" Canvas.Top="14" Width="117" Height="71" Opacity="0.39935926839575486" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 0.143976, 0.423902, 0.901320" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy1" Width="117" Height="71" Canvas.Left="143" Canvas.Top="86" Opacity="0.39935926839575486" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 0.143976, 0.423902, 0.901320" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy2" Width="117" Height="71" Canvas.Left="264" Canvas.Top="87" Opacity="0.39935926839575486" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 0.143976, 0.423902, 0.901320" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy3" Width="117" Height="71" Canvas.Left="262" Canvas.Top="9" Opacity="0.39935926839575486" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 0.143976, 0.423902, 0.901320" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy4" Width="117" Height="71" Canvas.Left="385" Canvas.Top="10" Opacity="0.39935926839575486" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+			</Canvas>
+			<TextBlock x:Name="TitleShadow" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1"
+			 Margin="15,2,33,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Height="74"
+			 AllowDrop="True" TextWrapping="Wrap"
+			 FontFamily="Trebuchet MS" FontSize="48" 
+			 Background="Transparent" Foreground="sc#1.000000, 0.033986, 0.000000, 0.000000" Opacity="0.3545730683242414">Whoops!</TextBlock>
+			<TextBlock x:Name="Title" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1"
+			 Margin="13,0,33,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Height="74"
+			 AllowDrop="True" TextWrapping="Wrap"
+			 FontFamily="Trebuchet MS" FontSize="48" 
+			 Background="Transparent" Foreground="sc#1.000000, 1.000000, 1.000000, 1.000000">Whoops!</TextBlock>
+			<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 1.000000, 1.000000" RadiusX="10" RadiusY="10" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle3" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="32,85,20,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Opacity="0.690469568860592"/>
+			<TextBlock x:Name="Description" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="45,100,38,60"
+			 HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
+			 AllowDrop="True" TextWrapping="Wrap"
+			 FontSize="12" FontFamily="Tahoma" FontStyle="Normal" FontWeight="400"
+			 Background="{x:Null}" Foreground="sc#1.000000, 0.000000, 0.003617, 0.194761">
+				Visual Studio has encountered an error reading the ADO.NET XML artifact file. The errors are shown in the task list. Make appropriate changes to the designer file and then click on the Design button to try again.<LineBreak/><LineBreak/>
+				You can click the button below to view the XML file.
+			</TextBlock>
+      <TextBox x:Name="ExceptionText" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1"
+       Margin="45,200,38,60" IsReadOnly="True"
+       Visibility="{Binding ExceptionTextVisible, Mode=OneTime}"
+       xml:space="preserve" Text="{Binding ExceptionText, Mode=OneTime}"/>
+			<Button x:Name="Button1" Content="Edit XML" Command="ApplicationCommands.Open" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="0,0,28,27.0000000000001" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+			</Button>
+		</Grid>
+	</ControlTemplate>
+
+	<ControlTemplate x:Key="BlankUI">
+		<Grid x:Name="Grid1">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+			<Rectangle Stroke="{x:Null}" RadiusX="0" RadiusY="0" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle2" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="0,0,1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto">
+				<Rectangle.Fill>
+					<LinearGradientBrush StartPoint="0,1.0" EndPoint="1,1.0">
+						<LinearGradientBrush.GradientStops>
+							<GradientStopCollection>
+								<GradientStop Color="sc#1.000000, 1.000000, 0.733333, 0.266666" Offset="0" />
+								<GradientStop Color="sc#1.000000, 1.000000, 0.858823, 0.560784" Offset="1" />
+							</GradientStopCollection>
+						</LinearGradientBrush.GradientStops>
+						<LinearGradientBrush.RelativeTransform>
+							<TransformGroup>
+								<TranslateTransform X="-0.5" Y="-0.5" />
+								<ScaleTransform ScaleX="1" ScaleY="1" />
+								<SkewTransform AngleX="0" AngleY="0" />
+								<RotateTransform Angle="90" />
+								<TranslateTransform X="0.5" Y="0.5" />
+							</TransformGroup>
+						</LinearGradientBrush.RelativeTransform>
+					</LinearGradientBrush>
+				</Rectangle.Fill>
+			</Rectangle>
+			<Canvas x:Name="Group1" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Width="Auto" Height="Auto">
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 0.607843, 0.192156" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1" Canvas.Left="28" Canvas.Top="14" Width="117" Height="71" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 0.607843, 0.192156" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy1" Width="117" Height="71" Canvas.Left="143" Canvas.Top="86" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 0.607843, 0.192156" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy2" Width="117" Height="71" Canvas.Left="264" Canvas.Top="87" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 0.607843, 0.192156" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy3" Width="117" Height="71" Canvas.Left="262" Canvas.Top="9" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+				<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 0.607843, 0.192156" RadiusX="24" RadiusY="24" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle1_Copy4" Width="117" Height="71" Canvas.Left="385" Canvas.Top="10" Margin="0,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+				</Rectangle>
+			</Canvas>
+			<TextBlock x:Name="TitleShadow" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="15,12,33,0"
+				HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Height="74"
+				AllowDrop="True" TextWrapping="Wrap" 
+				FontFamily="Trebuchet MS" FontSize="32"
+				Background="{x:Null}" Opacity="0.6">
+				This Page Intentionally Left Blank
+			</TextBlock>
+			<TextBlock x:Name="Title" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="13,10,33,0"
+				HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Height="74"
+				AllowDrop="True" TextWrapping="Wrap"
+				FontFamily="Trebuchet MS" FontSize="32"
+				Background="{x:Null}" Foreground="sc#1.000000, 1.000000, 1.000000, 1.000000">
+				This Page Intentionally Left Blank
+			</TextBlock>
+			<Rectangle Stroke="{x:Null}" Fill="sc#1.000000, 1.000000, 1.000000, 1.000000" RadiusX="10" RadiusY="10" StrokeThickness="1" StrokeMiterLimit="10" StrokeEndLineCap="Flat" StrokeStartLineCap="Flat" StrokeLineJoin="Miter" x:Name="Rectangle3" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="32,85,20,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Opacity="0.3">
+			</Rectangle>
+			<TextBlock x:Name="Description" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="45,100,38,60"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"
+				AllowDrop="True" TextWrapping="Wrap"
+				FontSize="12" FontFamily="Tahoma" FontStyle="Normal" FontWeight="400"
+				Background="{x:Null}" Foreground="sc#1.000000, 0.000000, 0.00000, 0.000000">
+				This is a placeholder. The visual designer for this type has not yet been implemented.<LineBreak/><LineBreak/>
+				You can click on the button below to edit the XAML file.
+			</TextBlock>
+			<Button x:Name="Button1" Content="Edit XAML" Command="ApplicationCommands.Open" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="0" Grid.RowSpan="1" Margin="0,0,28,27.0000000000001" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+			</Button>
+		</Grid>
+	</ControlTemplate>
+    </ResourceDictionary>
+  </ResourceDictionary.MergedDictionaries>
+  
+</ResourceDictionary>

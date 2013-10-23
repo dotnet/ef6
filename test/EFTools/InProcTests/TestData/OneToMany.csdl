@@ -1,0 +1,59 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="OneToMany" Alias="Self">
+  <EntityContainer Name="OneToManyContainer" >
+    <EntitySet Name="CustomerSet" EntityType="OneToMany.Customer" />
+    <EntitySet Name="OrderSet" EntityType="OneToMany.Order" />
+    <AssociationSet Name="Entity1Entity2Set" Association="OneToMany.Entity1Entity2">
+      <End Role="Entity1" EntitySet="CustomerSet" />
+      <End Role="Entity2" EntitySet="OrderSet" />
+    </AssociationSet>
+    <EntitySet Name="PersonSet" EntityType="OneToMany.Person" />
+    <EntitySet Name="OnlineIdentitySet" EntityType="OneToMany.OnlineIdentity" />
+    <AssociationSet Name="PersonOnlineIdentity" Association="OneToMany.PersonOnlineIdentity">
+      <End Role="Person" EntitySet="PersonSet" />
+      <End Role="OnlineIdentity" EntitySet="OnlineIdentitySet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <NavigationProperty Name="Entity2" Relationship="OneToMany.Entity1Entity2" FromRole="Entity1" ToRole="Entity2" />
+    <Property Type="String" Name="Name" Nullable="true" MaxLength="2147483647" Unicode="false" FixedLength="false" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="2147483647" Unicode="false" FixedLength="false" />
+    <Property Type="Int32" Name="Phone" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <NavigationProperty Name="Entity1" Relationship="OneToMany.Entity1Entity2" FromRole="Entity2" ToRole="Entity1" />
+    <Property Type="DateTime" Name="Date" Nullable="true" Precision="29" />
+  </EntityType>
+  <Association Name="Entity1Entity2">
+    <End Type="OneToMany.Customer" Role="Entity1" Multiplicity="1" />
+    <End Type="OneToMany.Order" Role="Entity2" Multiplicity="*" />
+  </Association>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="RealName" Nullable="true" MaxLength="100" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="OnlineIdentity" Relationship="OneToMany.PersonOnlineIdentity" FromRole="Person" ToRole="OnlineIdentity" />
+  </EntityType>
+  <EntityType Name="OnlineIdentity">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Username" Nullable="true" MaxLength="20" Unicode="false" FixedLength="false" />
+    <Property Type="String" Name="Password" Nullable="true" MaxLength="10" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="Person" Relationship="OneToMany.PersonOnlineIdentity" FromRole="OnlineIdentity" ToRole="Person" />
+  </EntityType>
+  <Association Name="PersonOnlineIdentity">
+    <End Type="OneToMany.Person" Role="Person" Multiplicity="0..1" />
+    <End Type="OneToMany.OnlineIdentity" Role="OnlineIdentity" Multiplicity="*" />
+  </Association>
+</Schema>

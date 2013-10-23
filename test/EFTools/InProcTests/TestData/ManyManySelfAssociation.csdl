@@ -1,0 +1,21 @@
+<Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" Namespace="Model1" Alias="Self">
+        <EntityContainer Name="Model1Container" >
+          <EntitySet Name="EmployeeSet" EntityType="Model1.Employee" />
+          <AssociationSet Name="EmployeeManagers" Association="Model1.EmployeeManagers">
+            <End Role="Employee" EntitySet="EmployeeSet" />
+            <End Role="Manager" EntitySet="EmployeeSet" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <NavigationProperty Name="Employees" Relationship="Model1.EmployeeManagers" FromRole="Employee" ToRole="Manager" />
+          <NavigationProperty Name="Managers" Relationship="Model1.EmployeeManagers" FromRole="Manager" ToRole="Employee" />
+        </EntityType>
+        <Association Name="EmployeeManagers">
+          <End Type="Model1.Employee" Role="Employee" Multiplicity="*" />
+          <End Type="Model1.Employee" Role="Manager" Multiplicity="*" />
+        </Association>
+      </Schema>

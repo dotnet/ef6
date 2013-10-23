@@ -1,0 +1,47 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="ComplexInheritanceHierarchy" Alias="Self">
+  <EntityContainer Name="ComplexInheritanceHierarchyContainer" >
+    <EntitySet Name="CarPartSet" EntityType="ComplexInheritanceHierarchy.CarPart" />
+  </EntityContainer>
+  <EntityType Name="CarPart">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Manufacturer" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="4" Unicode="false" FixedLength="true" />
+    <Property Type="String" Name="Manufacturer" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Type="Decimal" Name="Cost" Nullable="true" Precision="29" Scale="4" />
+    <Property Type="DateTime" Name="DateCreated" Nullable="true" Precision="29" />
+  </EntityType>
+  <EntityType Name="EnginePart" BaseType="ComplexInheritanceHierarchy.CarPart">
+    <Property Type="Guid" Name="CompatibleCylinders" Nullable="true" />
+  </EntityType>
+  <EntityType Name="SafetyPart" BaseType="ComplexInheritanceHierarchy.CarPart">
+    <Property Type="String" Name="Protects" Nullable="true" MaxLength="100" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Airbag" BaseType="ComplexInheritanceHierarchy.SafetyPart">
+    <Property Type="Int32" Name="TimeToDeploy" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Brake" BaseType="ComplexInheritanceHierarchy.SafetyPart">
+    <Property Type="Int32" Name="TimeToBrake" Nullable="true" />
+    <Property Type="String" Name="BrakeMaterial" Nullable="true" MaxLength="100" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="AntiLockBrake" BaseType="ComplexInheritanceHierarchy.Brake">
+    <Property Type="Boolean" Name="RainTest" Nullable="true" />
+  </EntityType>
+  <EntityType Name="SparkPlug" BaseType="ComplexInheritanceHierarchy.EnginePart">
+    <Property Type="Int32" Name="IgnitionResponseTime" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Turbocharger" BaseType="ComplexInheritanceHierarchy.EnginePart">
+    <Property Type="Int32" Name="TurbineRadius" Nullable="false" />
+    <Property Type="Double" Name="MaxAirIntake" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Valve" BaseType="ComplexInheritanceHierarchy.EnginePart">
+    <Property Type="Byte" Name="CompressionLeakage" Nullable="true" />
+    <Property Type="Binary" Name="SealData" Nullable="true" MaxLength="2000000" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Supercharger" BaseType="ComplexInheritanceHierarchy.Turbocharger">
+    <Property Type="Int64" Name="PlacementOnEngine" Nullable="true" />
+  </EntityType>
+</Schema>

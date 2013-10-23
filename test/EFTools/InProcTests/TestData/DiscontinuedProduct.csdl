@@ -1,0 +1,39 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="DiscProductModel" Alias="Self">
+  <EntityContainer Name="DiscProductModelContainer" >
+    <EntitySet Name="DiscontinuedCategorySet" EntityType="DiscProductModel.DiscontinuedCategory" />
+    <EntitySet Name="ProductSet" EntityType="DiscProductModel.Product" />
+    <AssociationSet Name="DiscontinuedCategoryDiscontinuedProduct" Association="DiscProductModel.DiscontinuedCategoryDiscontinuedProduct">
+      <End Role="DiscontinuedCategory" EntitySet="DiscontinuedCategorySet" />
+      <End Role="DiscontinuedProduct" EntitySet="ProductSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DiscontinuedCategory">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="DiscontinuedProduct" Relationship="DiscProductModel.DiscontinuedCategoryDiscontinuedProduct" FromRole="DiscontinuedCategory" ToRole="DiscontinuedProduct" />
+    <Property Name="Name" Type="String" Nullable="false" />
+    <Property Name="Description" Type="Int32" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="Property" Type="Int32" Nullable="true" />
+    <Property Name="Name" Type="String" Nullable="true" />
+    <Property Name="Description" Type="String" Nullable="true" />
+    <Property Name="NumInStock" Type="Int32" Nullable="true" />
+    <Property Name="Price" Type="Decimal" Nullable="true" />
+  </EntityType>
+  <EntityType Name="DiscontinuedProduct" BaseType="DiscProductModel.Product">
+    <NavigationProperty Name="DiscontinuedCategory" Relationship="DiscProductModel.DiscontinuedCategoryDiscontinuedProduct" FromRole="DiscontinuedProduct" ToRole="DiscontinuedCategory" />
+    <Property Name="DateDiscontinued" Type="DateTime" Nullable="true" />
+  </EntityType>
+  <Association Name="DiscontinuedCategoryDiscontinuedProduct">
+    <End Type="DiscProductModel.DiscontinuedCategory" Role="DiscontinuedCategory" Multiplicity="1" />
+    <End Type="DiscProductModel.DiscontinuedProduct" Role="DiscontinuedProduct" Multiplicity="*" />
+  </Association>
+</Schema>

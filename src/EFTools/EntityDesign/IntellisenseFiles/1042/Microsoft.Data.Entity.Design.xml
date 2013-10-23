@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>SSDL(저장소 스키마 정의 언어)을 기반으로 DDL(데이터 정의 언어)을 생성하는 Windows Workflow 활동입니다. 이 클래스는 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />에서 상속됩니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>새인스턴스를 만듭니다 합니다  <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" />클래스. </summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 및 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 속성을 사용하여 SSDL(저장소 스키마 정의 언어)에서 생성된 DDL(데이터 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.OutArgument`1" />입니다.</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> 및 <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> 속성을 사용하여 SSDL(저장소 스키마 정의 언어)에서 생성된 DDL(데이터 정의 언어)입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>기존 데이터베이스 개체의 삭제를 위한 DDL(데이터 정의 언어)이 생성되는 기존 SSDL(저장소 스키마 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+      <returns>기존 데이터베이스 개체의 삭제를 위한 DDL(데이터 정의 언어)이 생성되는 SSDL(저장소 스키마 정의 언어)입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>새 데이터베이스 개체 만들기를 위한 DDL(데이터 정의 언어)이 생성되는 SSDL(저장소 스키마 정의 언어)을 지정하는 Windows Workflow <see cref="T:System.Activities.InArgument`1" />입니다.</summary>
+      <returns>새 데이터베이스 개체 만들기를 위한 DDL(데이터 정의 언어)이 생성되는 SSDL(저장소 스키마 정의 언어)입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="connectionId">Microsoft 내부용입니다.</param>
+      <param name="target">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="connectionId">Microsoft 내부용입니다.</param>
+      <param name="target">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="projectItem">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="project">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="projectItem">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="automationObject">Microsoft 내부용입니다.</param>
+      <param name="replacementsDictionary">Microsoft 내부용입니다.</param>
+      <param name="runKind">Microsoft 내부용입니다.</param>
+      <param name="customParams">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="filePath">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="projectItem">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="project">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="projectItem">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="automationObject">Microsoft 내부용입니다.</param>
+      <param name="replacementsDictionary">Microsoft 내부용입니다.</param>
+      <param name="runKind">Microsoft 내부용입니다.</param>
+      <param name="customParams">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="filePath">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="pbstrDefaultExtension">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="disposing">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="wszInputFilePath">Microsoft 내부용입니다.</param>
+      <param name="bstrInputFileContents">Microsoft 내부용입니다.</param>
+      <param name="wszDefaultNamespace">Microsoft 내부용입니다.</param>
+      <param name="rgbOutputFileContents">Microsoft 내부용입니다.</param>
+      <param name="pcbOutput">Microsoft 내부용입니다.</param>
+      <param name="pGenerateProgress">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="inputFileName">Microsoft 내부용입니다.</param>
+      <param name="inputFileContent">Microsoft 내부용입니다.</param>
+      <param name="defaultNamespace">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="warning">Microsoft 내부용입니다.</param>
+      <param name="level">Microsoft 내부용입니다.</param>
+      <param name="message">Microsoft 내부용입니다.</param>
+      <param name="line">Microsoft 내부용입니다.</param>
+      <param name="column">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="disposing">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="serviceType">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="riid">Microsoft 내부용입니다.</param>
+      <param name="ppvSite">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="pUnkSite">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <param name="itemId">Microsoft 내부용입니다.</param>
+      <param name="oldInputName">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>Microsoft 내부용입니다.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Microsoft 내부용입니다.</summary>
+      <returns>Microsoft 내부용입니다.</returns>
+      <param name="inputFileName">Microsoft 내부용입니다.</param>
+      <param name="inputFileContent">Microsoft 내부용입니다.</param>
+      <param name="defaultNamespace">Microsoft 내부용입니다.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>Windows Workflow 내에서 텍스트 템플릿 변환을 위한 기능을 제공합니다.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>새인스턴스를 만듭니다 합니다  <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />클래스. </summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Visual Studio STextTemplatingService를 호출하여 <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 속성에 지정된 텍스트 템플릿을 변환합니다. </summary>
+      <param name="context">현재 활동의 상태입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>텍스트 템플릿에 입력을 제공하는 데 사용되는 <see cref="T:System.Collections.IDictionary" />를 채웁니다.사용자 지정 입력을 제공하기 위해 파생 클래스에서 이 메서드를 재정의할 수 있습니다.이러한 입력은 텍스트 템플릿에서 사용할 수 있도록 CallContext에 배치됩니다.</summary>
+      <param name="context">현재 활동의 상태입니다.</param>
+      <param name="inputs">텍스트 템플릿에 사용할 수 있도록 입력 이름을 입력 값과 연결하는 사전입니다.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Visual Studio에서 STextTemplatingService를 사용하여 텍스트 템플릿을 처리합니다.</summary>
+      <returns>텍스트 템플릿 출력은<see cref="M:Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating.ProcessTemplate(System.String,System.String,Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplatingCallback,System.Object)" /> 메서드를 호출하여 생성됩니다.</returns>
+      <param name="templatePath">처리할 텍스트 템플릿의 경로입니다.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 속성에 지정된 템플릿의 출력입니다.</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> 속성에 지정된 템플릿의 출력입니다.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>처리되는 텍스트 템플릿의 경로입니다.</summary>
+      <returns>처리되는 텍스트 템플릿의 경로입니다.</returns>
+    </member>
+  </members>
+</doc>

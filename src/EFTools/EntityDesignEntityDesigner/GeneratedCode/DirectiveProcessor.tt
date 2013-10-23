@@ -1,0 +1,5 @@
+<#
+	string directiveName = "EntityFramework";
+#>
+<#@ include file="%DslTemplatesSrc%\Dsl\ModelDirectiveProcessor.tt" #>
+<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\..\Microsoft.Data.Entity.Design.EntityDesigner\DslDefinition.dsl'" #>

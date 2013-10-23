@@ -1,0 +1,30 @@
+<#@ Dsl processor="DslDirectiveProcessor" requires="fileName='..\..\Microsoft.Data.Entity.Design.EntityDesigner\DslDefinition.dsl'" #>
+<#
+	//DSL assembly name - used for toolbox item registration. Adjust if the DSL assembly was renamed.
+	string dslAssembly = "Microsoft.Data.Entity.Design.EntityDesigner.dll";
+#>
+<#@ include file="%DslTemplatesSrc%\DslPackage\Package.tt" #>
+<#
+	string directiveName = "EntityFramework";
+#>
+//
+// Package attributes which may need to change are placed on the partial class below, rather than in the main include file.
+//
+namespace <#= CodeGenerationUtilities.GetPackageNamespace(this.Dsl) #>
+{
+	/// <summary>
+	/// Double-derived class to allow easier code customization.
+	/// </summary>
+	/// <remarks>
+	/// A package load key is required to allow this package to load when the Visual Studio SDK is not installed.
+	/// Package load keys may be obtained from http://msdn.microsoft.com/vstudio/extend.
+	/// Consult the Visual Studio SDK documentation for more information.
+	/// [VSShell::ProvideLoadKey("Standard", Constants.ProductVersion, Constants.ProductName, Constants.CompanyName, 1)]
+	/// </remarks>
+	[VSShell::ProvideToolboxItems(1)]
+	//[VSTextTemplatingHost::ProvideDirectiveProcessor(typeof(global::<#= this.Dsl.Namespace #>.<#= directiveName #>DirectiveProcessor), global::<#= this.Dsl.Namespace #>.<#= directiveName #>DirectiveProcessor.<#= directiveName #>DirectiveProcessorName, "A directive processor that provides access to <#= directiveName #> files")]
+	[global::System.Runtime.InteropServices.Guid(Constants.<#= dslName #>PackageId)]
+	internal sealed partial class <#= dslName #>Package : <#= dslName #>PackageBase
+	{
+	}
+}

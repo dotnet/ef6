@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <Target Name="Build">
+    <MSBuild Projects="Framework\VsIdeTestHostFramework.csproj" BuildInParallel="false" />
+    <MSBuild Projects="TargetAddIn\VsIdeTestHostAddin.csproj" BuildInParallel="false" />
+    <MSBuild Projects="Installer\Installer.wixproj" BuildInParallel="false" />
+  </Target>
+
+  <Target Name="Clean">
+    <MSBuild Projects="Framework\VsIdeTestHostFramework.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="TargetAddIn\VsIdeTestHostAddin.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="Installer\Installer.wixproj" Targets="Clean" BuildInParallel="false" />
+  </Target>
+    
+</Project>

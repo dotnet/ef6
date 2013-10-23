@@ -1,0 +1,25 @@
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" Namespace="Model1" Alias="Self">
+        <EntityContainer Name="Model1Container" >
+          <EntitySet Name="Entity2Set" EntityType="Model1.Entity2" />
+        </EntityContainer>
+        <EntityType Name="Entity2">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntityProperty" Type="Model1.ComplexType3" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="ComplexType1">
+          <Property Type="String" Name="ScalarProperty_1" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ComplexType2">
+          <Property Type="Model1.ComplexType1" Name="ComplexProperty_2" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="ComplexType3">
+          <Property Name="ComplexProperty_3" Nullable="false" Type="Model1.ComplexType2" />
+          <Property Name="ComplexProperty_2" Nullable="false" Type="Model1.ComplexType2" />
+        </ComplexType>
+        <EntityType Name="Entity1" BaseType="Model1.Entity2">
+          <Property Type="Int32" Name="Property" Nullable="false" />
+        </EntityType>
+      </Schema>

@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.DatabaseGeneration</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants">
+      <summary>Definisce le costanti utilizzate dalle classi negli spazi dei nomi <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />, <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" /> e <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> durante la generazione di un database da un modello concettuale.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.#ctor">
+      <summary>Crea una nuova istanza della classe <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants" />.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.csdlInputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento in del flusso di lavoro che rappresenta il contenuto CSDL (Conceptual Schema Definition Language) in ingresso.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ddlOutputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento out del flusso di lavoro che rappresenta il contenuto DDL (Data Definition Language) generato.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingMslInputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento in del flusso di lavoro che rappresenta il contenuto MSL (Mapping Specification Language) in ingresso, se disponibile.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingSsdlInputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento in del flusso di lavoro che rappresenta il contenuto SSDL (Storage Schema Definition Language) in ingresso, se disponibile.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.mslOutputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento out del flusso di lavoro che rappresenta il contenuto MSL (Mapping Specification Language) generato.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ssdlOutputName">
+      <summary>Campo di sola lettura che è il nome dell'argomento out del flusso di lavoro che rappresenta il contenuto SSDL (Storage Schema Definition Language) generato.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension">
+      <summary>Fornisce metodi di supporto alle classi negli spazi dei nomi <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />, <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" /> e <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> per la generazione e la convalida degli oggetti <see cref="T:System.Data.Metadata.Edm.ItemCollection" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateEdmItemCollection(System.String,System.Version)">
+      <summary>Converte una rappresentazione di stringa di contenuto CSDL (Conceptual Schema Definition Language) in un oggetto <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" /> e lo convalida.</summary>
+      <returns>Contenuto CDSL sotto forma di oggetto <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" />.</returns>
+      <param name="csdl">Metadati del modello concettuale sotto forma di stringa.</param>
+      <param name="targetFrameworkVersion">Versione di destinazione di Entity Framework.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateStoreItemCollection(System.String,System.Version,System.Boolean,System.Boolean)">
+      <summary>Converte una rappresentazione di stringa di contenuto SSDL (Store Schema Definition Language) in un oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> e lo convalida.</summary>
+      <returns>Concetto SSDL sotto forma di oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />.</returns>
+      <param name="ssdl">Contenuto SSDL sotto forma di stringa.</param>
+      <param name="targetFrameworkVersion">Versione di destinazione di Entity Framework.</param>
+      <param name="throwOnError">Determina se generare eccezioni in caso di errori durante il processo di generazione e di convalida dell'oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />. </param>
+      <param name="catchThrowNamingConflicts">Determina se generare eccezioni in caso di conflitti di denominazione nell'oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> generato.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateStoreItemCollection(System.String,System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+      <summary>Converte una rappresentazione di stringa di contenuto SSDL (Store Schema Definition Language) in un oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />.</summary>
+      <returns>Concetto SSDL sotto forma di oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />.</returns>
+      <param name="ssdl">Contenuto SSDL sotto forma di stringa.</param>
+      <param name="targetFrameworkVersion">Versione di destinazione di Entity Framework.</param>
+      <param name="edmErrors">Parametro di output contenente un elenco di errori che si sono verificati durante la generazione dell'oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" />.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.GetInvalidCharsException(System.String)">
+      <summary>Restituisce un'eccezione localizzata dal processo di generazione del database se il nome fornito in SSDL (Store Schema Definition Language) contiene caratteri non validi per il database di destinazione.</summary>
+      <returns>Eccezione localizzata dal processo di generazione del database se il nome fornito in SSDL (Store Schema Definition Language) contiene caratteri non validi per il database di destinazione.</returns>
+      <param name="userInput">Nome dell'oggetto contente caratteri non validi.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag">
+      <summary>Fornisce valori per i parametri definiti nell'enumerazione <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" />. </summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.#ctor(System.Threading.SynchronizationContext,Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader,System.Version,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+      <summary>Crea una nuova istanza di <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag" />.</summary>
+      <param name="syncContext">Stato del thread dell'interfaccia utente in Visual Studio.</param>
+      <param name="assemblyLoader">Carica i riferimenti a progetti e a siti Web.</param>
+      <param name="targetVersion">Versione di Entity Framework di destinazione.</param>
+      <param name="providerInvariantName">Nome invariante del provider.</param>
+      <param name="providerManifestToken">Token del manifesto del provider.</param>
+      <param name="providerConnectionString">Stringa di connessione del provider.</param>
+      <param name="databaseSchemaName">Nome dello schema del database generato.</param>
+      <param name="databaseName">Nome del database generato.</param>
+      <param name="ddlTemplatePath">Percorso nel quale verrà scritto il contenuto DDL (Data Definition Language) generato.</param>
+      <param name="edmxPath">Percorso in cui verrà scritto il file edmx generato.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.GetParameter``1(Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName)">
+      <summary>Restituisce il valore del parametro per l'enumerazione <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> specificata.</summary>
+      <returns>Valore del parametro per l'enumerazione <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> specificata.</returns>
+      <param name="parameterName">Nome del parametro.</param>
+      <typeparam name="T">Tipo del parametro con nome <paramref name="parameterName" />.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName">
+      <summary>Enumerazione di nomi di parametro utilizzati dalle classi nello spazio dei nomi <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> durante la generazione di un database da un modello concettuale.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.SynchronizationContext">
+      <summary>Oggetto <see cref="T:System.Threading.SynchronizationContext" /> che rappresenta lo stato del thread dell'interfaccia utente in Visual Studio.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.AssemblyLoader">
+      <summary>Nome dell'oggetto parametro <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader" /> utilizzato per risolvere e caricare un assembly in base al relativo nome.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.TargetVersion">
+      <summary>Versione di destinazione di Entity Framework.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderInvariantName">
+      <summary>Nome invariante del provider.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderManifestToken">
+      <summary>Token del manifesto del provider.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderConnectionString">
+      <summary>Stringa di connessione del provider.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseSchemaName">
+      <summary>Nome dello schema del database generato.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseName">
+      <summary>Nome del database generato.</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DDLTemplatePath">
+      <summary>Percorso del modello di testo utilizzato per generare il contenuto DDL (Data Definition Language).</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.EdmxPath">
+      <summary>Percorso del file edmx dal quale è stata avviata la procedura guidata Crea database.</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader">
+      <summary>Risolve i tipi OutputGenerator del flusso di lavoro.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader.LoadAssembly(System.String)">
+      <summary>Tenta di caricare un assembly.</summary>
+      <returns>Riferimento all'assembly risolto.</returns>
+      <param name="assemblyName">Nome dell'assembly da caricare.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions">
+      <summary>Fornisce metodi di estensione per la navigazione e l'esecuzione di query sulle raccolte di elementi nello spazio dei nomi <see cref="N:System.Data.Metadata.Edm" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociations(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce una raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.AssociationType" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.AssociationType" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociationSets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce una raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntitySets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce una raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntitySet" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntitySet" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntityTypes(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce una raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntityType" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntityType" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllReferentialConstraints(System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>Restituisce una raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> specificato.</summary>
+      <returns>Raccolta enumerabile di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> presenti nell'oggetto <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> specificato.</returns>
+      <param name="storeItemCollection">Raccolta in memoria di metadati del modello di archiviazione.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAssociation(System.Data.Metadata.Edm.AssociationSet)">
+      <summary>Restituisce l'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> nell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> specificato.</summary>
+      <returns>Oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> presente nell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> specificato.</returns>
+      <param name="associationSet">Set di associazioni in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetContainingTypes(System.Data.Metadata.Edm.EntitySet,System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce una raccolta di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntityType" /> presenti negli oggetti <see cref="T:System.Data.Metadata.Edm.EntitySet" /> e <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificati.</summary>
+      <returns>Raccolta di tutti gli oggetti <see cref="T:System.Data.Metadata.Edm.EntityType" /> presenti negli oggetti <see cref="T:System.Data.Metadata.Edm.EntitySet" /> e <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificati.</returns>
+      <param name="set">Set di entità in un modello concettuale.</param>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDbProviderManifest(System.String,System.String)">
+      <summary>Restituisce l'oggetto <see cref="T:System.Data.Common.DbProviderManifest" /> per il provider con il nome invariante e il token del manifesto specificati.</summary>
+      <returns>Oggetto <see cref="T:System.Data.Common.DbProviderManifest" /> per il provider con il nome invariante e il token del manifesto specificati.</returns>
+      <param name="providerInvariantName">Nome invariante del provider.</param>
+      <param name="providerManifestToken">Token del manifesto del provider.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Restituisce l'entità finale dipendente dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</summary>
+      <returns>Entità finale dipendente dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</returns>
+      <param name="association">Associazione in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Metadata.Edm.ReferentialConstraint)">
+      <summary>Restituisce la proprietà nell'entità finale dipendente del vincolo referenziale specificato che corrisponde alla proprietà nell'entità finale principale.</summary>
+      <returns>Proprietà nell'entità finale dipendente del vincolo referenziale specificato che corrisponde alla proprietà nell'entità finale principale.</returns>
+      <param name="property">Proprietà nell'entità finale principale del vincolo referenziale specificato.</param>
+      <param name="refConstraint">Vincolo referenziale in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd1(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Restituisce il primo oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> nella proprietà <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</summary>
+      <returns>Primo oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> nella proprietà <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</returns>
+      <param name="association">Associazione in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd2(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Restituisce il secondo oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> nella proprietà <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</summary>
+      <returns>Secondo oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> nella proprietà <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> dell'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationType" /> specificato.</returns>
+      <param name="association">Associazione in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityContainerName(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce il valore dell'attributo Name dell'elemento EntityContainer nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Valore dell'attributo Name dell'elemento EntityContainer nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityType(System.Data.Metadata.Edm.RelationshipEndMember)">
+      <summary>Restituisce l'oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> per l'oggetto <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" /> specificato.</summary>
+      <returns>Oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> per l'oggetto <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" /> specificato.</returns>
+      <param name="end">Entità finale di un'associazione.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>Restituisce le proprietà chiave dell'oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> associato all'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> specificato.</summary>
+      <returns>Proprietà chiave dell'oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> associato all'oggetto <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> specificato.</returns>
+      <param name="end">Entità finale di un'associazione in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.EntityType)">
+      <summary>Restituisce le proprietà chiave dell'oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> specificato.</summary>
+      <returns>Proprietà chiave dell'oggetto <see cref="T:System.Data.Metadata.Edm.EntityType" /> specificato.</returns>
+      <param name="entityType">Tipo di entità nel modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetNamespace(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>Restituisce lo spazio dei nomi del primo oggetto <see cref="T:System.Data.Metadata.Edm.StructuralType" /> trovato nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</summary>
+      <returns>Spazio dei nomi del primo oggetto <see cref="T:System.Data.Metadata.Edm.StructuralType" /> trovato nell'oggetto <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> specificato.</returns>
+      <param name="itemCollection">Raccolta in memoria di metadati.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOnDelete(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>Restituisce il valore dell'elemento OnDelete per l'elemento End dell'associazione specificata.</summary>
+      <returns>Valore dell'elemento OnDelete per l'elemento End dell'associazione specificata.</returns>
+      <param name="end">Entità finale di un'associazione in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOtherEnd(System.Data.Metadata.Edm.AssociationType,System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>Restituisce l'altro elemento End dell'associazione per l'elemento End dell'associazione specificata.</summary>
+      <returns>Altro elemento End dell'associazione per l'elemento End dell'associazione specificata.</returns>
+      <param name="assoc">Associazione attraversata.</param>
+      <param name="end">Entità finale dell'associazione specificata.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetPrincipalEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Restituisce l'entità finale principale dell'associazione specificata.</summary>
+      <returns>Entità finale principale dell'associazione specificata.</returns>
+      <param name="association">Associazione nel modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetRootOrSelf(System.Data.Metadata.Edm.EntityType)">
+      <summary>Restituisce il tipo di entità alla radice di una gerarchia di ereditarietà.</summary>
+      <returns>Tipo di entità alla radice di una gerarchia di ereditarietà.</returns>
+      <param name="entityType">Tipo di entità in un modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetSchemaName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>Restituisce il nome dello schema per l'oggetto <see cref="T:System.Data.Metadata.Edm.EntitySet" /> specificato.</summary>
+      <returns>Nome dello schema per l'oggetto <see cref="T:System.Data.Metadata.Edm.EntitySet" /> specificato.</returns>
+      <param name="entitySet">Set di entità.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreGeneratedPatternValue(System.Data.Metadata.Edm.EdmMember,System.Version,System.Data.Metadata.Edm.DataSpace)">
+      <summary>Restituisce il valore dell'annotazione o del facet StoreGeneratedPattern di una proprietà nel modello concettuale o di archiviazione.</summary>
+      <returns>Valore dell'annotazione o del facet StoreGeneratedPattern di una proprietà nel modello concettuale o di archiviazione.</returns>
+      <param name="property">Proprietà contenente il facet StoreGeneratedPattern.</param>
+      <param name="targetVersion">Versione di destinazione di Entity Framework.</param>
+      <param name="dataSpace">Modello (concettuale o di archiviazione) in cui esiste la proprietà specificata.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreType(System.Data.Metadata.Edm.EdmMember,System.Data.Common.DbProviderManifest)">
+      <summary>Restituisce il tipo di archiviazione corrispondente all'oggetto <see cref="T:System.Data.Metadata.Edm.EdmMember" /> specificato mediante un esame dell'oggetto <see cref="T:System.Data.Common.DbProviderManifest" /> specificato.</summary>
+      <returns>Tipo di archiviazione corrispondente all'oggetto <see cref="T:System.Data.Metadata.Edm.EdmMember" /> specificato.</returns>
+      <param name="edmMember">Membro CSDL contenente il tipo EDM che sarà convertito nel tipo di archivio (SSDL).</param>
+      <param name="providerManifest">Provider di archiviazione utilizzato.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetTableName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>Restituisce il nome della tabella che corrisponde all'oggetto <see cref="T:System.Data.Metadata.Edm.EntitySet" /> specificato.</summary>
+      <returns>Nome della tabella che corrisponde all'oggetto <see cref="T:System.Data.Metadata.Edm.EntitySet" /> specificato.</returns>
+      <param name="entitySet">Set di entità.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.InferSsdlFacetsForCsdlProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Common.DbProviderManifest)">
+      <summary>Deduce oggetti <see cref="T:System.Data.Metadata.Edm.Facet" /> per una proprietà nel modello di archiviazione basata sulla proprietà corrispondente nel modello concettuale.</summary>
+      <returns>Elenco di oggetti <see cref="T:System.Data.Metadata.Edm.Facet" /> per una proprietà nel modello di archiviazione basata sulla proprietà corrispondente nel modello concettuale.</returns>
+      <param name="csdlProperty">Proprietà nel modello concettuale.</param>
+      <param name="providerManifest">Provider di archiviazione utilizzato.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsComplexProperty(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>Determina se il tipo della proprietà specificata è un tipo complesso.</summary>
+      <returns>true se la proprietà specificata è un tipo <see cref="F:System.Data.Metadata.Edm.BuiltInTypeKind.ComplexType" />; in caso contrario, false.</returns>
+      <param name="property">Proprietà nel modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsDerivedType(System.Data.Metadata.Edm.EntityType)">
+      <summary>Determina se il tipo di entità specificato è un tipo derivato.</summary>
+      <returns>true se il tipo di entità specificato dispone di un tipo di base; in caso contrario, false.</returns>
+      <param name="entityType">Tipo di entità nel modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsJoinTable(System.Data.Metadata.Edm.EntityType,System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>Determina se il tipo di entità del modello di archiviazione specificato rappresenta una tabella di join del database.</summary>
+      <returns>true se vengono soddisfatte tutte le condizioni seguenti:Il tipo di entità specificato dà origine a due associazioni.Le entità finali delle due associazioni nel tipo di entità specificato hanno una molteplicità di tipo molti (*).Le altre entità finali delle due associazioni che hanno origine nel tipo di entità specificato hanno ciascuna una molteplicità di tipo uno (1).Il numero di proprietà nel tipo di entità specificato è uguale alla somma di tutte le proprietà chiave nelle entità finali delle associazioni.Tutte le proprietà nel tipo di entità specificato sono proprietà chiave.In caso contrario, false.</returns>
+      <param name="entityType">Tipo di entità nel modello di archiviazione.</param>
+      <param name="store">Raccolta in memoria di metadati del modello di archiviazione.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsManyToMany(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Determina se l'associazione specificata è un'associazione molti-a-molti (*:*).</summary>
+      <returns>true se entrambe le entità finali dell'associazione hanno una molteplicità di tipo molti (*); in caso contrario, false.</returns>
+      <param name="assoc">Associazione nel modello concettuale o di archiviazione.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsPKToPK(System.Data.Metadata.Edm.AssociationType)">
+      <summary>Determina se le entità finali dell'associazione specificata includono solo chiavi primarie.</summary>
+      <returns>true se l'associazione è una relazione uno-a-uno (1:1), uno-a-zero-o-uno (1:0..1) o zero-o-uno-a-zero-o-uno (0..1:0..1); in caso contrario, false.</returns>
+      <param name="assoc">Associazione nel modello concettuale o di archiviazione.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ToStoreType(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>Converte il tipo di dati del modello concettuale della proprietà specificata in un tipo di dati SQL Server.</summary>
+      <returns>Nome del tipo di dati SQL Server corrispondente al tipo di dati del modello concettuale della proprietà specificata.</returns>
+      <param name="property">Proprietà nel modello concettuale.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)">
+      <summary>Esegue l'oggetto <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate" /> su ogni proprietà scalare della proprietà del tipo complesso specificata.</summary>
+      <param name="property">Proprietà del tipo complesso.</param>
+      <param name="visitorDelegate">Delegato eseguito su ogni proprietà scalare.</param>
+      <param name="delimiter">Delimitatore utilizzato in caso di assegnazione del nome a proprietà delle proprietà del tipo complesso specificate.</param>
+      <param name="recursive">Specifica se il metodo <see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty" /> deve essere chiamato sulle proprietà del tipo complesso annidate all'interno del tipo complesso specificato.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate">
+      <summary>Tipo delegato utilizzato dal metodo <see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)" /> per consentire all'utente di controllare il modo in cui le proprietà scalari di una proprietà del tipo complesso nel modello concettuale vengono denominate nel modello di archiviazione generato.</summary>
+      <param name="namePrefix">Nome della proprietà CSDL annidata in un formato che concatena tutte le proprietà CSDL padre.</param>
+      <param name="property">Proprietà CSDL annidata visitata attualmente all'interno del tipo complesso di questa proprietà complessa.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity">
+      <summary>Attività flusso di lavoro di Windows che genera un modello di archiviazione e informazioni sul mapping in base un modello concettuale.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.#ctor">
+      <summary>Crea una nuova istanza della classe <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" />.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput">
+      <summary>Oggetto <see cref="T:System.Activities.InArgument`1" /> del flusso di lavoro di Windows che specifica il contenuto CSDL (Conceptual Schema Definition Language) in base al quale viene generato il contenuto SSDL (Store Schema Definition Language) e MSDL (Mapping Specification Language).</summary>
+      <returns>Contenuto CSDL (Conceptual Schema Definition Language) in base al quale viene generato il contenuto SSDL (Store Schema Definition Language) e MSDL (Mapping Specification Language).</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutput">
+      <summary>Oggetto <see cref="T:System.Activities.OutArgument`1" /> del flusso di lavoro di Windows che specifica il contenuto MSDL (Mapping Specification Language) generato in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</summary>
+      <returns>Contenuto MSDL (Mapping Specification Language) generato in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutputGeneratorType">
+      <summary>Nome completo di assembly del tipo utilizzato per generare il contenuto MSL (Mapping Specification Language) in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</summary>
+      <returns>Nome completo di assembly del tipo del generatore di output utilizzato per generare il contenuto MSL (Mapping Specification Language) in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.SsdlOutput">
+      <summary>Oggetto <see cref="T:System.Activities.OutArgument`1" /> del flusso di lavoro di Windows che specifica il contenuto SSDL (Store Schema Definition Language) generato in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</summary>
+      <returns>Contenuto SSDL (Store Schema Definition Language) generato in base al contenuto CSDL (Conceptual Schema Definition Language) nella proprietà <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" />.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl">
+      <summary>Genera il contenuto MSL (Mapping Specification Language) in base al contenuto SSDL (Store Schema Definition Language) fornito.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.#ctor">
+      <summary>Crea una nuova istanza di <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Genera il contenuto MSL (Mapping Specification Language) in base al contenuto SSDL (Store Schema Definition Language) fornito.</summary>
+      <returns>MSL (Mapping Specification Language) di tipo T in base al contenuto CSDL (Conceptual Schema Definition Language) fornito.</returns>
+      <param name="activity">Attività attualmente in esecuzione.</param>
+      <param name="context">Contesto dell'attività contenente lo stato del flusso di lavoro.</param>
+      <param name="inputs">Contiene il contenuto CSDL in ingresso.</param>
+      <typeparam name="T">Tipo dell'attività di output.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl">
+      <summary>Genera il contenuto SSDL (Store Schema Definition Language) in base al contenuto CSDL (Conceptual Schema Definition Language) fornito.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.#ctor">
+      <summary>Crea una nuova istanza di <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Genera il contenuto SSDL (Store Schema Definition Language) in base al contenuto CSDL (Conceptual Schema Definition Language) fornito.</summary>
+      <returns>SSDL (Store Schema Definition Language) di tipo T in base al contenuto CSDL (Conceptual Schema Definition Language) fornito.</returns>
+      <param name="activity">Attività attualmente in esecuzione.</param>
+      <param name="context">Contesto dell'attività contenente lo stato del flusso di lavoro.</param>
+      <param name="inputs">Contiene il contenuto CSDL in ingresso.</param>
+      <typeparam name="T">Tipo dell'attività di output.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput">
+      <summary>Espone metodi che generano l'output per un input specificato.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Genera l'output per l'input nell'oggetto <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> specificato.</summary>
+      <returns>Output di tipo T per l'input nell'oggetto <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> specificato.</returns>
+      <param name="owningActivity">Attività che chiama questo metodo.</param>
+      <param name="context">Contesto dell'attività contenente lo stato del flusso di lavoro.</param>
+      <param name="inputs">Input per l'attività come coppie chiave-valore.</param>
+      <typeparam name="T">Tipo dell'attività di output.</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity">
+      <summary>Classe di base per la classe <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.#ctor">
+      <summary>Crea una nuova istanza di <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Genera l'output da fornire all'oggetto specificato <see cref="T:System.Activities.NativeActivityContext" /> in base all'input specificato nell'oggetto <see cref="T:System.Activities.NativeActivityContext" />.</summary>
+      <param name="context">Stato dell'attività corrente.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorOutput">
+      <summary>Specifica il nome del tipo completo di assembly del generatore di output.</summary>
+      <returns>Nome del tipo completo di assembly del generatore di output.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorType">
+      <summary>Oggetto <see cref="T:System.Activities.InArgument`1" /> che specifica il nome del tipo completo di assembly del generatore di output.</summary>
+      <returns>Nome del tipo completo di assembly del generatore di output.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.ProcessOutputGenerator``1(System.String,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Restituisce l'output prodotto dal generatore di output con il nome del tipo del generatore di output specificato.</summary>
+      <returns>Output prodotto dal generatore di output insieme al nome del tipo del generatore di output specificato.</returns>
+      <param name="outputGeneratorTypeName">Nome del tipo del generatore di output.</param>
+      <param name="context">Stato dell'attività corrente.</param>
+      <param name="inputs">Input per l'attività come coppie chiave-valore.</param>
+      <typeparam name="T">Tipo dell'output.</typeparam>
+    </member>
+  </members>
+</doc>

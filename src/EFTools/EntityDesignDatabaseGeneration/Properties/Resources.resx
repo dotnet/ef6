@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ErrorCouldNotFindCSDL" xml:space="preserve">
+    <value>The CSDL input could not be found. Make sure that a previous activity has supplied this CSDL and that the current activity has declared that it will receive the CSDL as input.</value>
+  </data>
+  <data name="ErrorCouldNotFindProviderManifest" xml:space="preserve">
+    <value>Could not load the DbProviderManifest from the provider invariant name '{0}' and provider manifest token '{1}'.</value>
+  </data>
+  <data name="ErrorCouldNotFindSSDL" xml:space="preserve">
+    <value>The SSDL input could not be found. Make sure that a previous activity has supplied this SSDL and that the current activity has declared that it will receive the SSDL as input.</value>
+  </data>
+  <data name="ErrorFindingEntityTypeForEnd" xml:space="preserve">
+    <value>Could not find the EntityType for the AssociationEnd.</value>
+  </data>
+  <data name="ErrorNonValidAssociationEnds" xml:space="preserve">
+    <value>AssociationEnds are not properly defined in the Association '{0}'. Verify that there are exactly two AssociationEnds in the Association.</value>
+  </data>
+  <data name="ErrorNoEntityContainer" xml:space="preserve">
+    <value>No EntityContainer was found in the supplied ItemCollection.</value>
+  </data>
+  <data name="ErrorNoParameterDefined" xml:space="preserve">
+    <value>The necessary Workflow parameter '{0}' is not defined</value>
+  </data>
+  <data name="ErrorNonValidSsdl" xml:space="preserve">
+    <value>The SSDL generated by the activity called 'CsdlToSsdlAndMslActivity' is not valid and has the following errors: 
+{0}</value>
+  </data>
+  <data name="ErrorIncompatibleTypeForProvider" xml:space="preserve">
+    <value>The type '{0}' of the Property '{1}' is not supported by the specified database. Choose a different type or a different target database.</value>
+  </data>
+  <data name="ErrorGetDependentEndOnManyToMany" xml:space="preserve">
+    <value>Cannot call GetDependentEnd on a many-to-many association. Verify that the Association is many-to-many before calling this method.</value>
+  </data>
+  <data name="ErrorNoEdmItemCollection" xml:space="preserve">
+    <value>Could not find the CSDL generated by the activity called 'CsdlToSsdlAndMslActivity'. Try re-running the workflow.</value>
+  </data>
+  <data name="ErrorNoPropertyInRefConstraint" xml:space="preserve">
+    <value>Could not find the property '{0}' among the principal keys in the ReferentialConstraint between role '{1}' and role '{2}'.</value>
+  </data>
+  <data name="CodeViewFKConstraintDerivedType" xml:space="preserve">
+    <value>FK_{0}_inherits_{1}</value>
+  </data>
+  <data name="ErrorNameCollision" xml:space="preserve">
+    <value>The database generation process encountered a naming conflict while attempting to generate the SSDL. Usually this is because a generated SSDL name conflicts with an existing name in the CSDL. Try again after performing the appropriate renames in the CSDL. Naming conflicts can occur when:
+- Generating table names from derived types
+- Generating scalar property names from properties within complex types
+- Generating the names of properties corresponding to foreign keys
+
+The specific error message is: {0}</value>
+  </data>
+  <data name="ErrorComplexTypeCycle" xml:space="preserve">
+    <value>The supplied CSDL contains a circular reference among complex types. The complex type '{1}' contains complex property '{0}', which is of complex type '{1}'.</value>
+  </data>
+  <data name="ErrorNonSpecificComplexTypeCycle" xml:space="preserve">
+    <value>The supplied CSDL contains a circular reference among complex types. The complex property '{0}' is of a complex type which contains this same complex property.</value>
+  </data>
+  <data name="CodeViewManyToManyAssocName" xml:space="preserve">
+    <value>FK_{0}_{1}</value>
+  </data>
+  <data name="ErrorCsdlNotValid" xml:space="preserve">
+    <value>The supplied CSDL is not valid because of the following errors: {0}</value>
+  </data>
+  <data name="ErrorCouldNotCreateCSDL" xml:space="preserve">
+    <value>An EdmItemCollection could not be created from the supplied CSDL.</value>
+  </data>
+  <data name="ErrorNonValidTargetVersion" xml:space="preserve">
+    <value>The specified TargetVersion parameter '{0}' is not valid.</value>
+  </data>
+  <data name="TargetVersionSchemaVersionMismatch" xml:space="preserve">
+    <value>The target Entity Framework version requires the edmx schema version {0} or lower. The specified schema is version {1}.</value>
+  </data>
+  <data name="ErrorNoEdmParameterBag" xml:space="preserve">
+    <value>The EdmParameterBag was not found in the Workflow. Verify that it was added to the SymbolResolver, which is added as an Extension to the Workflow.</value>
+  </data>
+  <data name="ErrorNonValidDataSpace" xml:space="preserve">
+    <value>Unable to retrieve the StoreGeneratedPattern attribute from the non-valid DataSpace '{0}'.</value>
+  </data>
+  <data name="ErrorProviderManifestEx_ProviderInvariantName" xml:space="preserve">
+    <value>Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider invariant name '{0}' is not valid.</value>
+  </data>
+  <data name="ErrorProviderManifestEx_ProviderManifestToken" xml:space="preserve">
+    <value>Could not find the appropriate DbProviderManifest to generate the SSDL. The supplied provider manifest token '{0}' is not valid.</value>
+  </data>
+  <data name="ErrorSerializing_CsdlToMsl" xml:space="preserve">
+    <value>Could not generate the MSL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}'</value>
+  </data>
+  <data name="ErrorSerializing_CsdlToSsdl" xml:space="preserve">
+    <value>Could not generate the SSDL from the supplied CSDL because of XML exceptions. Verify that the input does not have non-valid XML characters. The specific error message is: '{0}'</value>
+  </data>
+  <data name="ErrorNoCodeViewType" xml:space="preserve">
+    <value>The OutputGeneratorType '{0}' defined in the workflow could not be found and loaded. Please make sure the OutputGeneratorType attribute on the activity is valid.</value>
+  </data>
+  <data name="ErrorInvalidCharsException" xml:space="preserve">
+    <value>DDL generation failed because the name '{0}' was found to contain one of the following illegal strings:;, --, /*, */ or starts with 'xp_'.</value>
+  </data>
+</root>

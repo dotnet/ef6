@@ -1,0 +1,236 @@
+﻿<# 
+//---------------------------------------------------------------------
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+//---------------------------------------------------------------------
+// This T4 template generates T-SQL from an instance of 
+// System.Data.Metadata.Edm.StoreItemCollection, an object representation
+// of the SSDL. This T-SQL is compatible with SQL 2012, 2008, 2005, CE, and Azure databases.
+//---------------------------------------------------------------------
+// Note: We will resolve all paths in assembly directives at runtime, taking 
+// macros and environment variables into account (e.g. $(ProjectDir), %VERSIONED_VSCOMNTOOLS_ENV_VAR% etc.)
+#>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll"#>
+<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.dll"#>
+<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.SqlServer.dll" #>
+<#@ assembly name="%VERSIONED_VSCOMNTOOLS_ENV_VAR%..\IDE\EntityFramework.SqlServerCompact.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity" #>
+<#@ import namespace="System.Data.Entity.Core.Metadata.Edm" #>
+<#@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" #>
+<#@ import namespace="System.Runtime.Remoting.Messaging" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ template language="C#" debug="true" hostspecific="true" #>
+<#@ include file="GenerateTSQL.Utility.ttinclude"#>
+<#@ output extension = ".sql" #>
+<#
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++
+// Setup for the template (initializing variables, etc.)
+// +++++++++++++++++++++++++++++++++++++++++++++++++
+
+    string databaseName = this.GetInput<string>(EdmParameterBag.ParameterName.DatabaseName.ToString());
+    string edmxPath = this.GetInput<string>(EdmParameterBag.ParameterName.EdmxPath.ToString());
+    Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
+
+    DbConfiguration.SetConfiguration(new TemplateDbConfiguration());
+
+    if (false == InitializeAndValidateExistingStore()) 
+    {
+#>
+-- Warning: There were errors validating the existing SSDL. Drop statements
+-- will not be generated.
+<#
+    }
+#>
+-- --------------------------------------------------
+<#
+    if (this.IsSQLCE) {
+#>
+-- Entity Designer DDL Script for SQL Server Compact Edition
+<#
+    } else {
+#>
+-- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
+<#
+    }
+#>
+-- --------------------------------------------------
+-- Date Created: <#=DateTime.Now#>
+<#
+    if (!String.IsNullOrEmpty(edmxPath))
+    {
+#>
+-- Generated from EDMX file: <#=Id(edmxPath)#>
+<#
+    }
+#>
+-- --------------------------------------------------
+
+<#  if (!this.IsSQLCE) 
+    { 
+#>
+SET QUOTED_IDENTIFIER OFF;
+GO
+<#  if (!String.IsNullOrEmpty(databaseName))
+    {
+#>
+USE [<#=Id(databaseName)#>];
+GO
+<#
+    }
+    foreach (string unescapedSchemaName in (from es in Store.GetAllEntitySets() select es.GetSchemaName()).Distinct())
+    {
+#>
+IF SCHEMA_ID(N'<#=Lit(unescapedSchemaName)#>') IS NULL EXECUTE(N'CREATE SCHEMA [<#=Id(unescapedSchemaName)#>]');
+<#
+    }
+#>
+GO
+<#  } #>
+
+-- --------------------------------------------------
+-- Dropping existing FOREIGN KEY constraints
+<#  if (this.IsSQLCE)
+    {
+#>
+-- NOTE: if the constraint does not exist, an ignorable error will be reported.
+<#  } #>
+-- --------------------------------------------------
+
+<#
+    foreach (AssociationSet associationSet in ExistingStore.GetAllAssociationSets())
+    {
+        ReferentialConstraint constraint = associationSet.ElementType.ReferentialConstraints.Single();
+        string constraintName = Id(WriteFKConstraintName(constraint));
+        AssociationSetEnd dependentSetEnd = associationSet.AssociationSetEnds.Where(ase => ase.CorrespondingAssociationEndMember == constraint.ToRole).Single();
+        string schemaName = Id(dependentSetEnd.EntitySet.GetSchemaName());
+        string dependentTableName = Id(dependentSetEnd.EntitySet.GetTableName());
+        
+        if (!this.IsSQLCE)
+        {
+#>
+IF OBJECT_ID(N'[<#=Lit(schemaName)#>].[<#=Lit(constraintName)#>]', 'F') IS NOT NULL
+<#      } #>
+    ALTER TABLE <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=dependentTableName#>] DROP CONSTRAINT [<#=constraintName#>];
+GO
+<#
+    }
+#>
+
+-- --------------------------------------------------
+-- Dropping existing tables
+<#  if (this.IsSQLCE)
+    {
+#>
+-- NOTE: if the table does not exist, an ignorable error will be reported.
+<#  } #>
+-- --------------------------------------------------
+
+<#
+    foreach (EntitySet entitySet in ExistingStore.GetAllEntitySets())
+    { 
+        string schemaName = Id(entitySet.GetSchemaName());
+        string tableName = Id(entitySet.GetTableName());
+        
+        if (!this.IsSQLCE)
+        {
+#>
+IF OBJECT_ID(N'[<#=Lit(schemaName)#>].[<#=Lit(tableName)#>]', 'U') IS NOT NULL
+<#      } #>
+    DROP TABLE <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=tableName#>];
+GO
+<#
+    }
+#>
+
+-- --------------------------------------------------
+-- Creating all tables
+-- --------------------------------------------------
+
+<#
+    foreach (EntitySet entitySet in Store.GetAllEntitySets())
+    {
+        string schemaName = Id(entitySet.GetSchemaName());
+        string tableName = Id(entitySet.GetTableName());
+#>
+-- Creating table '<#=tableName#>'
+CREATE TABLE <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=tableName#>] (
+<#
+        for (int p = 0; p < entitySet.ElementType.Properties.Count; p++)
+        {
+            EdmProperty prop = entitySet.ElementType.Properties[p];
+#>
+    [<#=Id(prop.Name)#>] <#=prop.ToStoreType()#> <#=WriteIdentity(prop, targetVersion)#> <#=WriteNullable(prop.Nullable)#><#=(p < entitySet.ElementType.Properties.Count - 1) ? "," : ""#>
+<#
+        }
+#>
+);
+GO
+
+<# 
+    } 
+#>
+-- --------------------------------------------------
+-- Creating all PRIMARY KEY constraints
+-- --------------------------------------------------
+
+<#
+    foreach (EntitySet entitySet in Store.GetAllEntitySets())
+    {
+        string schemaName = Id(entitySet.GetSchemaName());
+        string tableName = Id(entitySet.GetTableName());
+#>
+-- Creating primary key on <#=WriteColumns(entitySet.ElementType.GetKeyProperties(), ',')#> in table '<#=tableName#>'
+ALTER TABLE <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=tableName#>]
+ADD CONSTRAINT [PK_<#=tableName#>]
+    PRIMARY KEY <# if (!IsSQLCE) {#>CLUSTERED <#}#>(<#=WriteColumns(entitySet.ElementType.GetKeyProperties(), ',')#> <# if (!IsSQLCE) {#>ASC<#}#>);
+GO
+
+<#
+    }
+#>
+-- --------------------------------------------------
+-- Creating all FOREIGN KEY constraints
+-- --------------------------------------------------
+
+<#
+    foreach (AssociationSet associationSet in Store.GetAllAssociationSets())
+    {
+        ReferentialConstraint constraint = associationSet.ElementType.ReferentialConstraints.Single();
+        AssociationSetEnd dependentSetEnd = associationSet.AssociationSetEnds.Where(ase => ase.CorrespondingAssociationEndMember == constraint.ToRole).Single();
+        AssociationSetEnd principalSetEnd = associationSet.AssociationSetEnds.Where(ase => ase.CorrespondingAssociationEndMember == constraint.FromRole).Single();
+        string schemaName = Id(dependentSetEnd.EntitySet.GetSchemaName());
+        string dependentTableName = Id(dependentSetEnd.EntitySet.GetTableName());
+        string principalTableName = Id(principalSetEnd.EntitySet.GetTableName());
+#>
+-- Creating foreign key on <#=WriteColumns(constraint.ToProperties, ',')#> in table '<#=dependentTableName#>'
+ALTER TABLE <#if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=dependentTableName#>]
+ADD CONSTRAINT [<#=WriteFKConstraintName(constraint)#>]
+    FOREIGN KEY (<#=WriteColumns(constraint.ToProperties, ',')#>)
+    REFERENCES <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=principalTableName#>]
+        (<#=WriteColumns(constraint.FromProperties, ',')#>)
+    ON DELETE <#=GetDeleteAction(constraint)#> ON UPDATE NO ACTION;
+<#      
+        // if the foreign keys are part of the primary key on the dependent end, then we should not add a constraint.
+        if (!dependentSetEnd.EntitySet.ElementType.GetKeyProperties().Take(constraint.ToProperties.Count()).OrderBy(r => r.Name).SequenceEqual(constraint.ToProperties.OrderBy(r => r.Name)))
+        {
+#>
+
+-- Creating non-clustered index for FOREIGN KEY '<#=WriteFKConstraintName(constraint)#>'
+CREATE INDEX [IX_<#=WriteFKConstraintName(constraint)#>]
+ON <#if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=dependentTableName#>]
+    (<#=WriteColumns(constraint.ToProperties, ',')#>);
+<#      
+        }
+#>
+GO
+
+<#
+    }
+#>
+-- --------------------------------------------------
+-- Script has ended
+-- --------------------------------------------------

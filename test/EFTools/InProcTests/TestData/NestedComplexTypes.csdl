@@ -1,0 +1,54 @@
+﻿<Schema Namespace="CustomerComplexAddress"
+        Alias="Self"
+        xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+
+  <EntityContainer Name="CustomerComplexAddressContext">
+    <EntitySet Name="CCustomers" EntityType="CustomerComplexAddress.CCustomer" />
+    <EntitySet Name="OrderSet" EntityType="CustomerComplexAddress.Order" />
+    <AssociationSet Name="CCustomerOrder" Association="CustomerComplexAddress.CCustomerOrder">
+      <End Role="CCustomer" EntitySet="CCustomers" />
+      <End Role="Order" EntitySet="OrderSet" />
+    </AssociationSet>
+  </EntityContainer>
+
+  <EntityType Name="CCustomer">
+    <Key>
+      <PropertyRef Name="CustomerId" />
+    </Key>
+    <Property Name="CustomerId" Type="Int32" Nullable="false" />
+    <Property Name="CompanyName" Type="String" />
+    <Property Name="ContactName" Type="String" />
+    <Property Name="ContactTitle" Type="String" />
+    <Property Name="Address" Type="Self.CAddress" Nullable="false" />
+    <NavigationProperty Name="Order" Relationship="CustomerComplexAddress.CCustomerOrder" FromRole="CCustomer" ToRole="Order" />
+  </EntityType>
+
+  <ComplexType Name="CAddress">
+    <Property Name="City" Type="String" />
+    <Property Name="Region" Type="String" />
+    <Property Name="PostalCode" Type="String" />
+    <Property Name="Country" Type="String" />
+    <Property Name="Phone" Type="String" />
+    <Property Name="Fax" Type="String" />
+    <Property Type="CustomerComplexAddress.CStreetAddress" Name="StreetAddress" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="CStreetAddress" >
+    <Property Type="Int32" Name="AptNumber" Nullable="false" />
+    <Property Type="String" Name="StreetName" Nullable="false" />
+  </ComplexType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <NavigationProperty Name="CCustomer" Relationship="CustomerComplexAddress.CCustomerOrder" FromRole="Order" ToRole="CCustomer" />
+    <Property Name="BillingAddress" Type="CustomerComplexAddress.CAddress" Nullable="false" />
+  </EntityType>
+  <Association Name="CCustomerOrder">
+    <End Type="CustomerComplexAddress.CCustomer" Role="CCustomer" Multiplicity="1" />
+    <End Type="CustomerComplexAddress.Order" Role="Order" Multiplicity="*" />
+  </Association>
+  <EntityType Name="SpecialOrder" BaseType="CustomerComplexAddress.Order">
+    <Property Name="HiddenAddress" Type="CustomerComplexAddress.CAddress" Nullable="false" />
+  </EntityType>
+</Schema>

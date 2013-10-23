@@ -20,9 +20,10 @@
         <!-- Package sources used to restore packages. By default, registered sources under %APPDATA%\NuGet\NuGet.Config will be used -->
         <!-- The official NuGet package source (https://www.nuget.org/api/v2/) will be excluded if package sources are specified and it does not appear in the list -->
         <PackageSource Include="https://www.nuget.org/api/v2/" />
+        <PackageSource Include="https://www.myget.org/F/aspnetwebstacknightly/" />
         <PackageSource Include="https://www.myget.org/F/30de4ee06dd54956a82013fa17a3accb/" />
     </ItemGroup>
-
+    
     <PropertyGroup Condition=" '$(OS)' == 'Windows_NT'">
         <!-- Windows specific commands -->
         <NuGetToolsPath>$([System.IO.Path]::Combine($(SolutionDir), ".nuget"))</NuGetToolsPath>

@@ -1,0 +1,69 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="PkToPk" Alias="Self">
+  <EntityContainer Name="PkToPkContainer" >
+    <EntitySet Name="DiscontinuedProductSet" EntityType="PkToPk.DiscontinuedProduct" />
+    <EntitySet Name="DiscontinuedItemSet" EntityType="PkToPk.DiscontinuedItem" />
+    <AssociationSet Name="DiscontinuedProductDiscontinuedItem" Association="PkToPk.DiscontinuedProductDiscontinuedItem">
+      <End Role="DiscontinuedProduct" EntitySet="DiscontinuedProductSet" />
+      <End Role="DiscontinuedItem" EntitySet="DiscontinuedItemSet" />
+    </AssociationSet>
+    <EntitySet Name="PersonSet" EntityType="PkToPk.Person" />
+    <AssociationSet Name="SelfTestSelfTest" Association="PkToPk.SelfTestSelfTest">
+      <End Role="Boyfriend" EntitySet="PersonSet" />
+      <End Role="Girlfriend" EntitySet="PersonSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DiscontinuedProduct">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="DateTime" Name="DiscontinuedDate" Nullable="true" Precision="29" />
+    <NavigationProperty Name="DiscontinuedItem" Relationship="PkToPk.DiscontinuedProductDiscontinuedItem" FromRole="DiscontinuedProduct" ToRole="DiscontinuedItem" />
+  </EntityType>
+  <EntityType Name="DiscontinuedItem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="Int32" Name="ItemName" Nullable="true" />
+    <NavigationProperty Name="DiscontinuedProduct" Relationship="PkToPk.DiscontinuedProductDiscontinuedItem" FromRole="DiscontinuedItem" ToRole="DiscontinuedProduct" />
+  </EntityType>
+  <Association Name="DiscontinuedProductDiscontinuedItem">
+    <End Type="PkToPk.DiscontinuedProduct" Role="DiscontinuedProduct" Multiplicity="1" />
+    <End Type="PkToPk.DiscontinuedItem" Role="DiscontinuedItem" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="DiscontinuedProduct">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="DiscontinuedItem">
+        <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="Int32" Name="Name" Nullable="false" />
+    <Property Type="String" Name="Description" Nullable="true" MaxLength="2000" Unicode="false" FixedLength="false" />
+    <NavigationProperty Name="Girlfriend" Relationship="PkToPk.SelfTestSelfTest" FromRole="Boyfriend" ToRole="Girlfriend" />
+    <NavigationProperty Name="Boyfriend" Relationship="PkToPk.SelfTestSelfTest" FromRole="Girlfriend" ToRole="Boyfriend" />
+    <Property Type="String" Name="Title" Nullable="true" MaxLength="1000" Unicode="false" FixedLength="false" />
+  </EntityType>
+  <Association Name="SelfTestSelfTest">
+    <End Type="PkToPk.Person" Role="Boyfriend" Multiplicity="1" />
+    <End Type="PkToPk.Person" Role="Girlfriend" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Boyfriend">
+        <PropertyRef Name="Id" />
+        <PropertyRef Name="Name" />
+      </Principal>
+      <Dependent Role="Girlfriend">
+        <PropertyRef Name="Id" />
+        <PropertyRef Name="Name" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>A Windows Workflow activity that generates data definition language (DDL) based on store schema definition language (SSDL).This class inherits from <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>Creates a new instance of the <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" /> class.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>A Windows Workflow <see cref="T:System.Activities.OutArgument`1" /> that specifies the data definition language (DDL) that is generated from the store schema definition language (SSDL) in the <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> and <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> properties.</summary>
+      <returns>The data definition language (DDL) that is generated from store schema definition language (SSDL) in the <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> and <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> properties.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>A Windows Workflow <see cref="T:System.Activities.InArgument`1" /> that specifies the existing store schema definition language (SSDL) from which the data definition language (DDL) for dropping existing database objects is generated.</summary>
+      <returns>The store schema definition language (SSDL) from which the data definition language (DDL) for dropping existing database objects is generated.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>A Windows Workflow <see cref="T:System.Activities.InArgument`1" /> that specifies the store schema definition language (SSDL) from which the data definition language (DDL) for creating new database objects is generated.</summary>
+      <returns>The store schema definition language (SSDL) from which the data definition language (DDL) for creating new database objects is generated.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="connectionId">Microsoft internal use only.</param>
+      <param name="target">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="connectionId">Microsoft internal use only.</param>
+      <param name="target">Microsoft internal use only.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="projectItem">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="project">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="projectItem">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Microsoft internal use only.</summary>
+      <param name="automationObject">Microsoft internal use only.</param>
+      <param name="replacementsDictionary">Microsoft internal use only.</param>
+      <param name="runKind">Microsoft internal use only.</param>
+      <param name="customParams">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="filePath">Microsoft internal use only.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="projectItem">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="project">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="projectItem">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>Microsoft internal use only.</summary>
+      <param name="automationObject">Microsoft internal use only.</param>
+      <param name="replacementsDictionary">Microsoft internal use only.</param>
+      <param name="runKind">Microsoft internal use only.</param>
+      <param name="customParams">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="filePath">Microsoft internal use only.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="pbstrDefaultExtension">Microsoft internal use only.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="disposing">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="wszInputFilePath">Microsoft internal use only.</param>
+      <param name="bstrInputFileContents">Microsoft internal use only.</param>
+      <param name="wszDefaultNamespace">Microsoft internal use only.</param>
+      <param name="rgbOutputFileContents">Microsoft internal use only.</param>
+      <param name="pcbOutput">Microsoft internal use only.</param>
+      <param name="pGenerateProgress">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="inputFileName">Microsoft internal use only.</param>
+      <param name="inputFileContent">Microsoft internal use only.</param>
+      <param name="defaultNamespace">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="warning">Microsoft internal use only.</param>
+      <param name="level">Microsoft internal use only.</param>
+      <param name="message">Microsoft internal use only.</param>
+      <param name="line">Microsoft internal use only.</param>
+      <param name="column">Microsoft internal use only.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="disposing">Microsoft internal use only.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="serviceType">Microsoft internal use only.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="riid">Microsoft internal use only.</param>
+      <param name="ppvSite">Microsoft internal use only.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="pUnkSite">Microsoft internal use only.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>Microsoft internal use only.</summary>
+      <param name="itemId">Microsoft internal use only.</param>
+      <param name="oldInputName">Microsoft internal use only.</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>Microsoft internal use only.</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>Microsoft internal use only.</summary>
+      <returns>Microsoft internal use only.</returns>
+      <param name="inputFileName">Microsoft internal use only.</param>
+      <param name="inputFileContent">Microsoft internal use only.</param>
+      <param name="defaultNamespace">Microsoft internal use only.</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>Provides functionality for transforming text templates within a Windows Workflow.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>Creates a new instance of the <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> class.</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Transforms a text template that is specified in the <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> property by calling the Visual Studio STextTemplatingService. </summary>
+      <param name="context">The state of the current activity.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Populates an <see cref="T:System.Collections.IDictionary" /> that is used to provide inputs to a text template. This method can be overridden in derived classes to provide custom inputs. These inputs are placed into CallContext for use by the text template.</summary>
+      <param name="context">The state of the current activity.</param>
+      <param name="inputs">A dictionary that relates input names to input values for use by a text template.</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Processes a text template by using the STextTemplatingService in Visual Studio.</summary>
+      <returns>The text template output that is generated by calling the<see cref="M:Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating.ProcessTemplate(System.String,System.String,Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplatingCallback,System.Object)" /> method.</returns>
+      <param name="templatePath">The path to the text template to be processed.</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>The output of the template that is specified by the <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> property.</summary>
+      <returns>The output of the template that is specified by the <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> property.</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>The path of the text template being processed.</summary>
+      <returns>The path of the text template being processed.</returns>
+    </member>
+  </members>
+</doc>

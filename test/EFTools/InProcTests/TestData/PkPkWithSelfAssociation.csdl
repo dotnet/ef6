@@ -1,0 +1,40 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="PkToPk" Alias="Self">
+  <EntityContainer Name="PkToPkContainer" >
+    <EntitySet Name="DiscontinuedProductSet" EntityType="PkToPk.DiscontinuedProduct" />
+    <EntitySet Name="DiscontinuedItemSet" EntityType="PkToPk.DiscontinuedItem" />
+    <AssociationSet Name="DiscontinuedProductDiscontinuedItem" Association="PkToPk.DiscontinuedProductDiscontinuedItem">
+      <End Role="DiscontinuedProduct" EntitySet="DiscontinuedProductSet" />
+      <End Role="DiscontinuedItem" EntitySet="DiscontinuedItemSet" />
+    </AssociationSet>
+    <AssociationSet Name="DiscontinuedProductDiscontinuedProduct" Association="PkToPk.DiscontinuedProductDiscontinuedProduct">
+      <End Role="DiscontinuedProduct" EntitySet="DiscontinuedProductSet" />
+      <End Role="DiscontinuedProduct1" EntitySet="DiscontinuedProductSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DiscontinuedProduct">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="DateTime" Name="DiscontinuedDate" Nullable="true" Precision="29" />
+    <NavigationProperty Name="DiscontinuedItem" Relationship="PkToPk.DiscontinuedProductDiscontinuedItem" FromRole="DiscontinuedProduct" ToRole="DiscontinuedItem" />
+    <NavigationProperty Name="DiscontinuedProduct_1" Relationship="PkToPk.DiscontinuedProductDiscontinuedProduct" FromRole="DiscontinuedProduct" ToRole="DiscontinuedProduct1" />
+    <NavigationProperty Name="DiscontinuedProduct_2" Relationship="PkToPk.DiscontinuedProductDiscontinuedProduct" FromRole="DiscontinuedProduct1" ToRole="DiscontinuedProduct" />
+  </EntityType>
+  <EntityType Name="DiscontinuedItem">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+    <Property Type="Int32" Name="ItemName" Nullable="true" />
+    <NavigationProperty Name="DiscontinuedProduct" Relationship="PkToPk.DiscontinuedProductDiscontinuedItem" FromRole="DiscontinuedItem" ToRole="DiscontinuedProduct" />
+  </EntityType>
+  <Association Name="DiscontinuedProductDiscontinuedItem">
+    <End Type="PkToPk.DiscontinuedProduct" Role="DiscontinuedProduct" Multiplicity="1" />
+    <End Type="PkToPk.DiscontinuedItem" Role="DiscontinuedItem" Multiplicity="1" />
+  </Association>
+  <Association Name="DiscontinuedProductDiscontinuedProduct">
+    <End Type="PkToPk.DiscontinuedProduct" Role="DiscontinuedProduct" Multiplicity="1" />
+    <End Type="PkToPk.DiscontinuedProduct" Role="DiscontinuedProduct1" Multiplicity="1" />
+  </Association>
+</Schema>

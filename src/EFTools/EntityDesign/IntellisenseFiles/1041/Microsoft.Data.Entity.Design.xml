@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity">
+      <summary>ストア スキーマ定義言語 (SSDL) に基づいてデータ定義言語 (DDL) を生成する Windows Workflow Activity。このクラスは <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" /> から継承します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.#ctor">
+      <summary>新しいインスタンスを作成、 <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity" />クラス。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.DdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> プロパティと <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> プロパティでストア スキーマ定義言語 (SSDL) から生成されるデータ定義言語 (DDL) を指定する Windows Workflow <see cref="T:System.Activities.OutArgument`1" />。</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput" /> プロパティと <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput" /> プロパティでストア スキーマ定義言語 (SSDL) から生成されるデータ定義言語 (DDL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.ExistingSsdlInput">
+      <summary>既存のデータベース オブジェクトを破棄するデータ定義言語 (DDL) の生成元である、既存のストア スキーマ定義言語 (SSDL) を指定する Windows Workflow <see cref="T:System.Activities.InArgument`1" />。</summary>
+      <returns>既存のデータベース オブジェクトを破棄するデータ定義言語 (DDL) の生成元であるストア スキーマ定義言語 (SSDL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.SsdlToDdlActivity.SsdlInput">
+      <summary>新しいデータベース オブジェクトを作成するデータ定義言語 (DDL) の生成元であるストア スキーマ定義言語 (SSDL) を指定する Windows Workflow <see cref="T:System.Activities.InArgument`1" />。</summary>
+      <returns>新しいデータベース オブジェクトを作成するデータ定義言語 (DDL) の生成元であるストア スキーマ定義言語 (SSDL)。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerConversionData.FileExtension">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.Extensibility.IEntityDesignerPropertyData.EntityDesignerSelection">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.InitializeComponent">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IComponentConnector#Connect(System.Int32,System.Object)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="connectionId">マイクロソフト内部でのみ使用。</param>
+      <param name="target">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.UI.Views.Explorer.EntityDesignExplorerContent.System#Windows#Markup#IStyleConnector#Connect(System.Int32,System.Object)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="connectionId">マイクロソフト内部でのみ使用。</param>
+      <param name="target">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="projectItem">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="project">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="projectItem">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunFinished">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="automationObject">マイクロソフト内部でのみ使用。</param>
+      <param name="replacementsDictionary">マイクロソフト内部でのみ使用。</param>
+      <param name="runKind">マイクロソフト内部でのみ使用。</param>
+      <param name="customParams">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.AddArtifactGeneratorWizard.ShouldAddProjectItem(System.String)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="filePath">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.BeforeOpeningFile(EnvDTE.ProjectItem)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="projectItem">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectFinishedGenerating(EnvDTE.Project)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="project">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ProjectItemFinishedGenerating(EnvDTE.ProjectItem)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="projectItem">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunFinished">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.RunStarted(System.Object,System.Collections.Generic.Dictionary{System.String,System.String},Microsoft.VisualStudio.TemplateWizard.WizardRunKind,System.Object[])">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="automationObject">マイクロソフト内部でのみ使用。</param>
+      <param name="replacementsDictionary">マイクロソフト内部でのみ使用。</param>
+      <param name="runKind">マイクロソフト内部でのみ使用。</param>
+      <param name="customParams">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.ModelObjectItemWizard.ShouldAddProjectItem(System.String)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="filePath">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtension(System.String@)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="pbstrDefaultExtension">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.DefaultExtensionString">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Dispose(System.Boolean)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="disposing">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Finalize">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.Generate(System.String,System.String,System.String,System.IntPtr[],System.UInt32@,Microsoft.VisualStudio.Shell.Interop.IVsGeneratorProgress)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="wszInputFilePath">マイクロソフト内部でのみ使用。</param>
+      <param name="bstrInputFileContents">マイクロソフト内部でのみ使用。</param>
+      <param name="wszDefaultNamespace">マイクロソフト内部でのみ使用。</param>
+      <param name="rgbOutputFileContents">マイクロソフト内部でのみ使用。</param>
+      <param name="pcbOutput">マイクロソフト内部でのみ使用。</param>
+      <param name="pGenerateProgress">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="inputFileName">マイクロソフト内部でのみ使用。</param>
+      <param name="inputFileContent">マイクロソフト内部でのみ使用。</param>
+      <param name="defaultNamespace">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGenerator.GeneratorErrorCallback(System.Boolean,System.Int32,System.String,System.Int32,System.Int32)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="warning">マイクロソフト内部でのみ使用。</param>
+      <param name="level">マイクロソフト内部でのみ使用。</param>
+      <param name="message">マイクロソフト内部でのみ使用。</param>
+      <param name="line">マイクロソフト内部でのみ使用。</param>
+      <param name="column">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.CodeProvider">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Dispose(System.Boolean)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="disposing">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ErrorList">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetService(System.Type)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="serviceType">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.GetSite(System.Guid@,System.IntPtr@)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="riid">マイクロソフト内部でのみ使用。</param>
+      <param name="ppvSite">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.Project">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.ProjectItem">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SetSite(System.Object)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="pUnkSite">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.BaseCodeGeneratorWithSite.SiteServiceProvider">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.#ctor">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.AddNameOfItemToBeRenamed(System.UInt32,System.String)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <param name="itemId">マイクロソフト内部でのみ使用。</param>
+      <param name="oldInputName">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.CodeGenToolName">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.DefaultExtensionString">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.SingleFileGenerator.EntityModelCodeGenerator.GenerateCode(System.String,System.String,System.String)">
+      <summary>マイクロソフト内部でのみ使用。</summary>
+      <returns>マイクロソフト内部でのみ使用。</returns>
+      <param name="inputFileName">マイクロソフト内部でのみ使用。</param>
+      <param name="inputFileContent">マイクロソフト内部でのみ使用。</param>
+      <param name="defaultNamespace">マイクロソフト内部でのみ使用。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity">
+      <summary>Windows Workflow 内でテキスト テンプレートを変換する機能を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.#ctor">
+      <summary>新しいインスタンスを作成、 <see cref="T:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity" />クラス。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>Visual Studio STextTemplatingService を呼び出して、<see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> プロパティで指定されたテキスト テンプレートを変換します。</summary>
+      <param name="context">現在のアクティビティの状態。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.OnGetTemplateInputs(System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>テキスト テンプレートへの入力を提供するために使用される <see cref="T:System.Collections.IDictionary" /> を設定します。このメソッドは、カスタム入力を提供するために派生クラスでオーバーライドできます。これらの入力は、テキスト テンプレートで使用できるように CallContext に書き込まれます。</summary>
+      <param name="context">現在のアクティビティの状態。</param>
+      <param name="inputs">テキスト テンプレートで使用するために入力名を入力値に関連付けるディクショナリ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.ProcessTemplate(System.String)">
+      <summary>Visual Studio の STextTemplatingService を使用してテキスト テンプレートを処理します。</summary>
+      <returns>メソッド <see cref="M:Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplating.ProcessTemplate(System.String,System.String,Microsoft.VisualStudio.TextTemplating.VSHost.ITextTemplatingCallback,System.Object)" /> を呼び出すと生成されるテキスト テンプレート出力。</returns>
+      <param name="templatePath">処理されるテキスト テンプレートのパス。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplateOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> プロパティで指定されるテンプレートの出力。</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath" /> プロパティで指定されるテンプレートの出力。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.VisualStudio.TextTemplating.TemplateActivity.TemplatePath">
+      <summary>処理されるテキスト テンプレートのパス。</summary>
+      <returns>処理されるテキスト テンプレートのパス。</returns>
+    </member>
+  </members>
+</doc>

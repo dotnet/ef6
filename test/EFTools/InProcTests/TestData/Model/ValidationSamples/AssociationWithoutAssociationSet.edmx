@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:Designer>
+    <edmx:Connection />
+    <edmx:Options />
+    <edmx:Diagrams />
+  </edmx:Designer>
+  <edmx:Runtime>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pubsModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm">
+        <EntityContainer Name="pubsEntities">
+          <EntitySet Name="discounts" EntityType="pubsModel.discounts" />
+          <EntitySet Name="stores" EntityType="pubsModel.stores" />
+          <!--
+          <AssociationSet Name="FK__discounts__stor___15502E78" Association="pubsModel.FK__discounts__stor___15502E78">
+            <End Role="stores" EntitySet="stores" />
+            <End Role="discounts" EntitySet="discounts" />
+          </AssociationSet>
+-->
+        </EntityContainer>
+        <EntityType Name="discounts">
+          <Key>
+            <PropertyRef Name="discounttype" />
+            <PropertyRef Name="discount" />
+          </Key>
+          <Property Name="discounttype" Type="String" Nullable="false" />
+          <Property Name="discount" Type="Decimal" Nullable="false" />
+          <NavigationProperty Name="stores" Relationship="pubsModel.FK__discounts__stor___15502E78" FromRole="discounts" ToRole="stores" />
+        </EntityType>
+        <EntityType Name="stores">
+          <Key>
+            <PropertyRef Name="stor_id" />
+          </Key>
+          <Property Name="stor_id" Type="String" Nullable="false" />
+          <Property Name="stor_name" Type="String" />
+          <NavigationProperty Name="discounts" Relationship="pubsModel.FK__discounts__stor___15502E78" FromRole="stores" ToRole="discounts" />
+        </EntityType>
+        <Association Name="FK__discounts__stor___15502E78">
+          <End Role="stores" Type="pubsModel.stores" Multiplicity="0..1" />
+          <End Role="discounts" Type="pubsModel.discounts" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="pubsModel.Store" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2006/04/edm/ssdl" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="dbo">
+          <EntitySet Name="discounts" EntityType="pubsModel.Store.discounts">
+            <DefiningQuery>SELECT 
+      [discounts].[discounttype] AS [discounttype], 
+      [discounts].[stor_id] AS [stor_id], 
+      [discounts].[lowqty] AS [lowqty], 
+      [discounts].[highqty] AS [highqty], 
+      [discounts].[discount] AS [discount]
+      FROM [dbo].[discounts] AS [discounts]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="stores" EntityType="pubsModel.Store.stores" />
+          <AssociationSet Name="FK__discounts__stor___15502E78" Association="pubsModel.Store.FK__discounts__stor___15502E78">
+            <End Role="stores" EntitySet="stores" />
+            <End Role="discounts" EntitySet="discounts" />
+          </AssociationSet>
+        </EntityContainer>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'pubs.dbo.discounts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="discounts">
+          <Key>
+            <PropertyRef Name="discounttype" />
+            <PropertyRef Name="discount" />
+          </Key>
+          <Property Name="discounttype" Type="varchar" Nullable="false" MaxLength="40" />
+          <Property Name="stor_id" Type="char" MaxLength="4" />
+          <Property Name="discount" Type="decimal" Nullable="false" Precision="4" Scale="2" />
+        </EntityType>
+        <EntityType Name="stores">
+          <Key>
+            <PropertyRef Name="stor_id" />
+          </Key>
+          <Property Name="stor_id" Type="char" Nullable="false" MaxLength="4" />
+          <Property Name="stor_name" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'pubs.dbo.titleview' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <Association Name="FK__discounts__stor___15502E78">
+          <End Role="stores" Type="pubsModel.Store.stores" Multiplicity="0..1" />
+          <End Role="discounts" Type="pubsModel.Store.discounts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="stores">
+              <PropertyRef Name="stor_id" />
+            </Principal>
+            <Dependent Role="discounts">
+              <PropertyRef Name="stor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="byroyalty" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="percentage" Type="int" Mode="In" />
+        </Function>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="urn:schemas-microsoft-com:windows:storage:mapping:CS">
+        <EntityContainerMapping StorageEntityContainer="dbo" CdmEntityContainer="pubsEntities">
+          <EntitySetMapping Name="discounts">
+            <EntityTypeMapping TypeName="IsTypeOf(pubsModel.discounts)">
+              <MappingFragment StoreEntitySet="discounts">
+                <ScalarProperty Name="discounttype" ColumnName="discounttype" />
+                <ScalarProperty Name="discount" ColumnName="discount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="stores">
+            <EntityTypeMapping TypeName="IsTypeOf(pubsModel.stores)">
+              <MappingFragment StoreEntitySet="stores">
+                <ScalarProperty Name="stor_id" ColumnName="stor_id" />
+                <ScalarProperty Name="stor_name" ColumnName="stor_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <!--
+          <AssociationSetMapping Name="FK__discounts__stor___15502E78" TypeName="pubsModel.FK__discounts__stor___15502E78" StoreEntitySet="discounts">
+            <EndProperty Name="stores">
+              <ScalarProperty Name="stor_id" ColumnName="stor_id" />
+            </EndProperty>
+            <EndProperty Name="discounts">
+              <ScalarProperty Name="discounttype" ColumnName="discounttype" />
+              <ScalarProperty Name="discount" ColumnName="discount" />
+            </EndProperty>
+            <Condition ColumnName="stor_id" IsNull="false" />
+          </AssociationSetMapping>
+-->
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+</edmx:Edmx>

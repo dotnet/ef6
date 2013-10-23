@@ -1,0 +1,401 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{488B84C2-9358-4B90-BC2D-ED688939E6BB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Microsoft.Data.Entity.Design.EntityDesigner</AssemblyName>
+    <RootNamespace>Microsoft.Data.Entity.Design.EntityDesigner</RootNamespace>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <FileAlignment>512</FileAlignment>
+    <!-- needed ? can it be public?
+    <DslTemplatesSrc>$(ExtPath)\DslToolkit\vs10rtm\DSLTemplates</DslTemplatesSrc>
+    -->
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\bin\Debug\</OutputPath>
+    <DocumentationFile>..\..\..\bin\Debug\Microsoft.Data.Entity.Design.EntityDesigner.xml</DocumentationFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1591;1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
+    <RunCodeAnalysis Condition=" '$(RunCodeAnalysisForEFTools)' != '' And '$(RunCodeAnalysis)' == '' ">$(RunCodeAnalysisForEFTools)</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\bin\Release\</OutputPath>
+    <DocumentationFile>..\..\..\bin\Release\Microsoft.Data.Entity.Design.EntityDesigner.xml</DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);WIZARD_EXTENSION_PAGE;</DefineConstants>
+    <DefineConstants Condition="$(VisualStudioVersion)=='12.0'">$(DefineConstants);VS12</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\..\..\tools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+  </PropertyGroup>
+  <Import Project="..\..\..\EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Package.LanguageService.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Shell.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Modeling.Sdk.Diagrams.GraphObject.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.VSHost.$(VisualStudioVersion)" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="EnvDte" />
+    <Reference Include="EnvDTE80" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.9.0" />
+    <Reference Include="VsWebSite.Interop" />
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" />
+    <Reference Include="Microsoft.XmlEditor, Version=$(VisualStudioVersion).0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="CustomCode\ConnectionBuilders\InheritanceToolConnectAction.cs" />
+    <Compile Include="CustomCode\Connectors\AssociationConnector.cs" />
+    <Compile Include="CustomCode\Connectors\InheritanceConnector.cs" />
+    <Compile Include="CustomCode\CustomSerializer\BaseTranslatorStrategy.cs" />
+    <Compile Include="CustomCode\CustomSerializer\EntityModelToDslModelTranslatorStrategy.cs" />
+    <Compile Include="CustomCode\CustomSerializer\ModelToDesignerModelXRef.cs" />
+    <Compile Include="CustomCode\CustomSerializer\ModelToDesignerModelXRefItem.cs" />
+    <Compile Include="CustomCode\CustomSerializer\ModelTranslator.cs" />
+    <Compile Include="CustomCode\CustomSerializer\ModelTranslatorContextItem.cs" />
+    <Compile Include="CustomCode\Diagram\AutoArrangeHelper.cs" />
+    <Compile Include="CustomCode\Diagram\DSLDesignerNavigationHelper.cs" />
+    <Compile Include="CustomCode\Diagram\EntityDesignerDiagram.cs" />
+    <Compile Include="CustomCode\Dialogs\CustomZoomDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomCode\Dialogs\CustomZoomDialog.designer.cs">
+      <DependentUpon>CustomZoomDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomCode\DomainClasses\Association.cs" />
+    <Compile Include="CustomCode\DomainClasses\DomainClassExtension.cs" />
+    <Compile Include="CustomCode\DomainClasses\ScalarProperty.cs" />
+    <Compile Include="CustomCode\DomainClasses\NavigationProperty.cs" />
+    <Compile Include="CustomCode\DomainClasses\EntityDesignerViewModel.cs" />
+    <Compile Include="CustomCode\DomainClasses\EntityTypeBase.cs" />
+    <Compile Include="CustomCode\DomainClasses\EntityType.cs" />
+    <Compile Include="CustomCode\DomainClasses\Property.cs" />
+    <Compile Include="CustomCode\DomainModel\MicrosoftDataEntityDesignDomainModel.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationConnectorAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationConnectorChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationConnectorDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\AssociationConnectorModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityDesignerDiagramAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeShapeAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeShapeChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeShapeDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityType_AddFromDialog.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceConnectorAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceConnectorChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceConnectorDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\NavigationPropertyAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\NavigationPropertyChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\NavigationPropertyDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\PropertyAdd.cs" />
+    <Compile Include="CustomCode\ModelChanges\PropertyChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\PropertyDelete.cs" />
+    <Compile Include="CustomCode\ModelChanges\PropertyModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityDesignerDiagramModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\EntityTypeShapeModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceConnectorModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\InheritanceModelChange.cs" />
+    <Compile Include="CustomCode\ModelChanges\ScalarPropertyChange.cs" />
+    <Compile Include="CustomCode\NameProviders\NameableItemNameProvider.cs" />
+    <Compile Include="CustomCode\Rules\Association_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\AssociationConnectorRules.cs" />
+    <Compile Include="CustomCode\Rules\NavigationProperty_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\ScalarProperty_ChangeRule.cs" />
+    <Compile Include="CustomCode\Rules\Inheritance_DeleteRule.cs" />
+    <Compile Include="CustomCode\Rules\EntityTypeShapeRules.cs" />
+    <Compile Include="CustomCode\Rules\InheritanceConnectorRules.cs" />
+    <Compile Include="CustomCode\Rules\EntityDesignerViewModel_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\EntityType_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\EntityType_ChangeRule.cs" />
+    <Compile Include="CustomCode\Rules\EntityDesignerDiagram_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\Inheritance_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\ModelChanges.cs" />
+    <Compile Include="CustomCode\Rules\NavigationProperty_ChangeRule.cs" />
+    <Compile Include="CustomCode\Rules\Property_AddRule.cs" />
+    <Compile Include="CustomCode\Rules\Property_ChangeRule.cs" />
+    <Compile Include="CustomCode\SerializationHelper\MicrosoftDataEntityDesignSerializationHelper.cs" />
+    <Compile Include="CustomCode\Diagram\EmphasizedShapes.cs" />
+    <Compile Include="CustomCode\Diagram\EntityTypeElementListCompartment.cs" />
+    <Compile Include="CustomCode\Diagram\EntityTypeElementListCompartmentDescription.cs" />
+    <Compile Include="CustomCode\Shapes\EntityTypeShape.cs" />
+    <Compile Include="CustomCode\DescriptionProviders\AssociationDescriptionProvider.cs" />
+    <Compile Include="CustomCode\DescriptionProviders\NameableItemDescriptionProvider.cs" />
+    <Compile Include="CustomCode\DomainClasses\IContainRelatedElementsToEmphasizeWhenSelected.cs" />
+    <Compile Include="CustomCode\Shapes\EntityTypeShapeBase.cs" />
+    <Compile Include="CustomCode\Utils\StyleSetExtensions.cs" />
+    <Compile Include="CustomCode\Utils\Constants.cs" />
+    <Compile Include="CustomCode\Utils\FileUtils.cs" />
+    <Compile Include="CustomCode\Utils\ModelUtils.cs" />
+    <Compile Include="CustomCode\Validation\Association.cs" />
+    <Compile Include="CustomCode\Validation\EntityDesignerViewModel.cs" />
+    <Compile Include="CustomCode\Validation\EntityType.cs" />
+    <Compile Include="CustomCode\Validation\Property.cs" />
+    <Compile Include="GeneratedCode\ConnectionBuilders.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ConnectionBuilders.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\Connectors.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Connectors.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\Diagram.cs">
+      <DependentUpon>Diagram.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="GeneratedCode\DomainClasses.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainClasses.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\DomainRelationships.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainRelationships.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\HelpKeywordHelper.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HelpKeywordHelper.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\MultiplicityValidation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MultiplicityValidation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\PropertiesGrid.cs">
+      <DependentUpon>PropertiesGrid.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="GeneratedCode\SerializationHelper.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SerializationHelper.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\Shapes.cs">
+      <DependentUpon>Shapes.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="GeneratedCode\ToolboxHelper.cs">
+      <DependentUpon>ToolboxHelper.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="GeneratedCode\DomainModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GeneratedCode\Serializer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Serializer.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\ChevronCollapsed.bmp" />
+    <Content Include="Resources\ChevronExpanded.bmp" />
+    <Content Include="Resources\ComplexProperty.bmp" />
+    <Content Include="Resources\ComplexType.bmp" />
+    <None Include="DslDefinition.dsl.diagram">
+      <DependentUpon>DslDefinition.dsl</DependentUpon>
+    </None>
+    <None Include="GeneratedCode\ConnectionBuilders.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ConnectionBuilders.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\Diagram.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Diagram.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\DomainRelationships.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DomainRelationships.cs</LastGenOutput>
+    </None>
+    <None Include="DslDefinition.dsl">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="GeneratedCode\Connectors.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Connectors.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\DomainClasses.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DomainClasses.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\DomainModelResx.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DomainModelResx.resx</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\HelpKeywordHelper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>HelpKeywordHelper.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\MultiplicityValidation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MultiplicityValidation.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\PropertiesGrid.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PropertiesGrid.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\EntityFrameworkSchema.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EntityFrameworkSchema.xsd</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\DomainModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DomainModel.cs</LastGenOutput>
+    </None>
+    <Content Include="GeneratedCode\EntityFrameworkSchema.xsd">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EntityFrameworkSchema.tt</DependentUpon>
+      <SubType>
+      </SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="GeneratedCode\SerializationHelper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SerializationHelper.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\Serializer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Serializer.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\Shapes.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shapes.cs</LastGenOutput>
+    </None>
+    <None Include="GeneratedCode\ToolboxHelper.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ToolboxHelper.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GeneratedCode\DomainModelResx.resx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DomainModelResx.tt</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\AssociationTool.bmp" />
+    <Content Include="Resources\BaseTypeIcon.bmp" />
+    <Content Include="Resources\EntityGlyph.bmp" />
+    <Content Include="Resources\EntityTool.bmp" />
+    <Content Include="Resources\EntityTool.gif" />
+    <Content Include="Resources\InheritanceTool.bmp" />
+    <Content Include="Resources\navigationproperty.bmp" />
+    <Content Include="Resources\PrimaryKey.bmp" />
+    <Content Include="Resources\property.bmp" />
+    <Content Include="Resources\propertypk.bmp" />
+    <EmbeddedResource Include="CustomCode\Dialogs\CustomZoomDialog.resx">
+      <DependentUpon>CustomZoomDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\ConnectorSourceSearch.cur" />
+    <EmbeddedResource Include="Resources\ConnectorTargetSearch.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DesignXmlCore\DesignXmlCore.csproj">
+      <Project>{6c80dbca-16c8-48c9-9019-ab6fded788de}</Project>
+      <Name>DesignXmlCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XmlCore\XmlCore.csproj">
+      <Project>{79b40a85-cdcc-4ac3-a583-77ca43cb5136}</Project>
+      <Name>XmlCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntityDesignModel\EntityDesignModel.csproj">
+      <Project>{b44e942f-0ad1-4fb4-9146-dd1f8e17d4d8}</Project>
+      <Name>EntityDesignModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EntityDesign\EntityDesign.csproj">
+      <Project>{f904b4be-c7cf-4e4f-85b7-b006a2d1c561}</Project>
+      <Name>EntityDesign</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\tools\EFTools.common.targets" />
+</Project>

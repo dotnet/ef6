@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build">
+    <MSBuild Projects="TestInfrastructure\TestInfrastructure.csproj" BuildInParallel="false" />
+    <MSBuild Projects="FunctionalTests\FunctionalTests.csproj" BuildInParallel="false" />
+    <MSBuild Projects="InProcTests\InProcTests.csproj" BuildInParallel="false" />
+    <MSBuild Projects="UnitTests\UnitTests.csproj" BuildInParallel="false" />
+  </Target>
+  
+  <Target Name="Clean">
+    <MSBuild Projects="TestInfrastructure\TestInfrastructure.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="FunctionalTests\FunctionalTests.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="InProcTests\InProcTests.csproj" Targets="Clean" BuildInParallel="false" />
+    <MSBuild Projects="UnitTests\UnitTests.csproj" Targets="Clean" BuildInParallel="false" />
+  </Target>
+  
+</Project>

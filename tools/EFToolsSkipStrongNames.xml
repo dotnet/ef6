@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assemblies defaultPublicKeyToken="b03f5f7f11d50a3a">
+
+  <assembly name="EntityFramework" publicKeyToken="b77a5c561934e089" />
+  <assembly name="EntityFramework.SqlServer" publicKeyToken="b77a5c561934e089" />
+  <assembly name="EntityFramework.SqlServerCompact" publicKeyToken="b77a5c561934e089" />
+
+  <assembly name="Microsoft.Data.Entity.Design.BootstrapPackage" />
+  <assembly name="Microsoft.Data.Entity.Design.DatabaseGeneration" />
+  <assembly name="Microsoft.Data.Entity.Design.DataSourceWizardExtension" />
+  <assembly name="Microsoft.Data.Entity.Design" />
+  <assembly name="Microsoft.Data.Entity.Design.EntityDesigner" />
+  <assembly name="Microsoft.Data.Entity.Design.Extensibility" />
+  <assembly name="Microsoft.Data.Entity.Design.Model" />
+  <assembly name="Microsoft.Data.Entity.Design.Package" />
+  <assembly name="Microsoft.Data.Entity.Design.VersioningFacade" />
+  <assembly name="Microsoft.Data.Tools.Design.XmlCore" />
+  <assembly name="Microsoft.VisualStudio.Data.Tools.Design.XmlCore" />
+
+  <assembly name="Microsoft.VisualStudio.QualityTools.VsIdeTestHostFramework" />
+  <assembly name="Microsoft.VisualStudio.QualityTools.HostAdapters.VsIdeAddIn" />
+
+  <assembly name="EFDesigner.TestInfrastructure" />
+  <assembly name="EFDesigner.UnitTests" />
+  <assembly name="EFDesigner.InProcTests" />
+  <assembly name="EFDesigner.FunctionalTests" />
+
+</assemblies>

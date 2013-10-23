@@ -1,0 +1,14 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="Model1" Alias="Self">
+  <EntityContainer Name="Model1Container" >
+    <EntitySet Name="Entity1Set" EntityType="Model1.Entity1" />
+  </EntityContainer>
+  <EntityType Name="Entity1">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Type="Int32" Name="Id" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Entity2" BaseType="Model1.Entity1">
+    <Property Type="Int32" Name="Name" Nullable="true" />
+  </EntityType>
+</Schema>

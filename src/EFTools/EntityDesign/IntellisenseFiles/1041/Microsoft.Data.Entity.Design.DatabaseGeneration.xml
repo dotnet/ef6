@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>Microsoft.Data.Entity.Design.DatabaseGeneration</name>
+  </assembly>
+  <members>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants">
+      <summary>概念モデルからデータベースを生成するときに <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />、<see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" />、および <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 名前空間のクラスによって使用される定数を定義します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants" /> クラスの新しいインスタンスを生成します。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.csdlInputName">
+      <summary>入力用の概念スキーマ定義言語 (CSDL) を表すワークフローの入力引数の名前である読み取り専用フィールド。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ddlOutputName">
+      <summary>生成されたデータ定義言語 (DDL) を表すワークフローの出力引数の名前である読み取り専用フィールド。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingMslInputName">
+      <summary>入力用のマッピング仕様言語 (MSL) を表すワークフローの入力引数の名前である読み取り専用フィールド。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.existingSsdlInputName">
+      <summary>入力用のストレージ スキーマ定義言語 (SSDL) を表すワークフローの入力引数の名前である読み取り専用フィールド (存在する場合)。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.mslOutputName">
+      <summary>生成されたマッピング仕様言語 (MSL) を表すワークフローの出力引数の名前である読み取り専用フィールド。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmConstants.ssdlOutputName">
+      <summary>生成されたストレージ スキーマ定義言語 (SSDL) を表すワークフローの出力引数の名前である読み取り専用フィールド。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension">
+      <summary>
+        <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> を生成および検証する場合に、<see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration" />、<see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities" /> および <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 名前空間のクラスにヘルパー メソッドを提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateEdmItemCollection(System.String,System.Version)">
+      <summary>概念スキーマ定義言語 (CSDL) の文字列表現を <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" /> に変換して検証します。</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.EdmItemCollection" /> としての CSDL。</returns>
+      <param name="csdl">文字列としての概念モデルのメタデータ。</param>
+      <param name="targetFrameworkVersion">Entity Framework の対象のバージョン。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateAndValidateStoreItemCollection(System.String,System.Version,System.Boolean,System.Boolean)">
+      <summary>ストア スキーマ定義言語 (SSDL) の文字列表現を <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> に変換して検証します。</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> としての SSDL。</returns>
+      <param name="ssdl">文字列としての SSDL。</param>
+      <param name="targetFrameworkVersion">Entity Framework の対象のバージョン。</param>
+      <param name="throwOnError">
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> の生成および検証プロセスの実行中にエラーが発生した場合に、例外をスローするかどうかを判断します。</param>
+      <param name="catchThrowNamingConflicts">生成された <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> に名前の競合が存在する場合に、例外をスローするかどうかを判断します。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.CreateStoreItemCollection(System.String,System.Version,System.Collections.Generic.IList{System.Data.Metadata.Edm.EdmSchemaError}@)">
+      <summary>ストア スキーマ定義言語 (SSDL) の文字列表現を <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> に変換します。</summary>
+      <returns>
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> としての SSDL。</returns>
+      <param name="ssdl">文字列としての SSDL。</param>
+      <param name="targetFrameworkVersion">Entity Framework の対象のバージョン。</param>
+      <param name="edmErrors">
+        <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> の生成中に発生したエラーの一覧を含む出力パラメーター。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmExtension.GetInvalidCharsException(System.String)">
+      <summary>ストア スキーマ定義言語 (SSDL) に入力された対象のデータベースの名前に無効な文字が含まれる場合は、データベース生成プロセスからローカライズされた例外が返されます。</summary>
+      <returns>ストア スキーマ定義言語 (SSDL) に入力された対象のデータベースの名前に無効な文字が含まれる場合に返されるデータベース生成プロセスからのローカライズされた例外。</returns>
+      <param name="userInput">無効な文字が含まれるオブジェクト名。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> 列挙型に定義されているパラメーターに値を提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.#ctor(System.Threading.SynchronizationContext,Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader,System.Version,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag" /> の新しいインスタンスを作成します。</summary>
+      <param name="syncContext">Visual Studio のユーザー インターフェイス スレッドの状態。</param>
+      <param name="assemblyLoader">プロジェクトと Web サイトの参照を読み込みます。</param>
+      <param name="targetVersion">対象とする Entity Framework のバージョン。</param>
+      <param name="providerInvariantName">プロバイダーの不変名。</param>
+      <param name="providerManifestToken">プロバイダー マニフェスト トークン。</param>
+      <param name="providerConnectionString">プロバイダーの接続文字列。</param>
+      <param name="databaseSchemaName">生成されたデータベースのスキーマの名前。</param>
+      <param name="databaseName">生成されたデータベースの名前。</param>
+      <param name="ddlTemplatePath">生成されたデータ記述言語 (DDL) を書き込むパス。</param>
+      <param name="edmxPath">生成された .edmx ファイルを書き込むパス。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.GetParameter``1(Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName)">
+      <summary>指定した <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> のパラメーターの値を返します。</summary>
+      <returns>指定した <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName" /> のパラメーターの値。</returns>
+      <param name="parameterName">パラメーターの名前。</param>
+      <typeparam name="T">
+        <paramref name="parameterName" /> という名前のパラメーターの型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName">
+      <summary>概念モデルからデータベースを生成するときに <see cref="N:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators" /> 名前空間のクラスによって使用されるパラメーター名の列挙型。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.SynchronizationContext">
+      <summary>Visual Studio のユーザー インターフェイス スレッドの状態を表す <see cref="T:System.Threading.SynchronizationContext" />。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.AssemblyLoader">
+      <summary>名前を指定されたアセンブリの解決および読み込みに使用される <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader" /> パラメーター オブジェクトの名前。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.TargetVersion">
+      <summary>Entity Framework の対象のバージョン。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderInvariantName">
+      <summary>プロバイダーの不変名。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderManifestToken">
+      <summary>プロバイダーのマニフェスト トークン。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.ProviderConnectionString">
+      <summary>プロバイダーの接続文字列。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseSchemaName">
+      <summary>生成されたデータベースのスキーマの名前。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DatabaseName">
+      <summary>生成されたデータベースの名前。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.DDLTemplatePath">
+      <summary>データ定義言語 (DDL) の生成に使用されるテキスト テンプレートへのパス。</summary>
+    </member>
+    <member name="F:Microsoft.Data.Entity.Design.DatabaseGeneration.EdmParameterBag.ParameterName.EdmxPath">
+      <summary>データベース生成ウィザードが起動された .edmx ファイルへのパス。</summary>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader">
+      <summary>OutputGenerators ワークフローを解決します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.IAssemblyLoader.LoadAssembly(System.String)">
+      <summary>アセンブリの読み込みを試行します。</summary>
+      <returns>解決されたアセンブリ参照。</returns>
+      <param name="assemblyName">読み込まれるアセンブリの名前。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions">
+      <summary>
+        <see cref="N:System.Data.Metadata.Edm" /> 名前空間で項目コレクションのナビゲートとクエリを実行する場合の拡張メソッドを提供します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociations(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクトの列挙可能なコレクションを返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクトの列挙可能なコレクション。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllAssociationSets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> オブジェクトの列挙可能なコレクションを返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> オブジェクトの列挙可能なコレクション。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntitySets(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.EntitySet" /> オブジェクトの列挙可能なコレクションを返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.EntitySet" /> オブジェクトの列挙可能なコレクション。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllEntityTypes(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.EntityType" /> オブジェクトの列挙可能なコレクションを返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.EntityType" /> オブジェクトの列挙可能なコレクション。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAllReferentialConstraints(System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> オブジェクトの列挙可能なコレクションを返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.StoreItemCollection" /> のすべての <see cref="T:System.Data.Metadata.Edm.ReferentialConstraint" /> オブジェクトの列挙可能なコレクション。</returns>
+      <param name="storeItemCollection">ストレージ モデルのメタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetAssociation(System.Data.Metadata.Edm.AssociationSet)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> の <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクトを返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.AssociationSet" /> の <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクト。</returns>
+      <param name="associationSet">概念モデルのアソシエーション セット</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetContainingTypes(System.Data.Metadata.Edm.EntitySet,System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> および <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> 内のすべての <see cref="T:System.Data.Metadata.Edm.EntityType" /> オブジェクトのコレクションを返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> および <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> 内のすべての <see cref="T:System.Data.Metadata.Edm.EntityType" /> オブジェクトのコレクション。</returns>
+      <param name="set">概念モデルのエンティティ セット。</param>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDbProviderManifest(System.String,System.String)">
+      <summary>指定した不変名とマニフェスト トークンを持つプロバイダーの <see cref="T:System.Data.Common.DbProviderManifest" /> を返します。</summary>
+      <returns>指定した不変名とマニフェスト トークンを持つプロバイダーの <see cref="T:System.Data.Common.DbProviderManifest" />。</returns>
+      <param name="providerInvariantName">プロバイダーの不変名。</param>
+      <param name="providerManifestToken">プロバイダー マニフェスト トークン。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクトの依存 End を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> オブジェクトの依存 End。</returns>
+      <param name="association">概念モデルのアソシエーション</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetDependentProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Metadata.Edm.ReferentialConstraint)">
+      <summary>プリンシパル End のプロパティに対応する、指定した参照制約の依存 End のプロパティを返します。</summary>
+      <returns>プリンシパル End のプロパティに対応する、指定した参照制約の依存 End のプロパティ。</returns>
+      <param name="property">指定した参照制約のプリンシパル End のプロパティ。</param>
+      <param name="refConstraint">概念モデルの参照制約。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd1(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> の <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> プロパティにある最初の <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> の <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> プロパティにある最初の <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />。</returns>
+      <param name="association">概念モデルのアソシエーション</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEnd2(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> の <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> プロパティにある 2 番目の <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.AssociationType" /> の <see cref="P:System.Data.Metadata.Edm.AssociationType.AssociationEndMembers" /> プロパティにある 2 番目の <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" />。</returns>
+      <param name="association">概念モデルのアソシエーション</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityContainerName(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> の EntityContainer 要素の Name 属性の値を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> の EntityContainer 要素の Name 属性の値。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetEntityType(System.Data.Metadata.Edm.RelationshipEndMember)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" /> の <see cref="T:System.Data.Metadata.Edm.EntityType" /> を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.RelationshipEndMember" /> の <see cref="T:System.Data.Metadata.Edm.EntityType" />。</returns>
+      <param name="end">アソシエーションの一方の End。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> に関連付けられた <see cref="T:System.Data.Metadata.Edm.EntityType" /> のキー プロパティを返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.AssociationEndMember" /> に関連付けられた <see cref="T:System.Data.Metadata.Edm.EntityType" /> のキー プロパティ。</returns>
+      <param name="end">概念モデルのアソシエーションの一方の End。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetKeyProperties(System.Data.Metadata.Edm.EntityType)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.EntityType" /> のキー プロパティを返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.EntityType" /> のキー プロパティ。</returns>
+      <param name="entityType">概念モデルのエンティティ型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetNamespace(System.Data.Metadata.Edm.ItemCollection)">
+      <summary>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> で見つかった最初の <see cref="T:System.Data.Metadata.Edm.StructuralType" /> の名前空間の名前を返します。</summary>
+      <returns>指定された <see cref="T:System.Data.Metadata.Edm.ItemCollection" /> で見つかった最初の <see cref="T:System.Data.Metadata.Edm.StructuralType" /> の名前空間の名前。</returns>
+      <param name="itemCollection">メタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOnDelete(System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>指定したアソシエーション End の OnDelete 要素の値を返します。</summary>
+      <returns>指定したアソシエーション End の OnDelete 要素の値。</returns>
+      <param name="end">概念モデルのアソシエーションの一方の End。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetOtherEnd(System.Data.Metadata.Edm.AssociationType,System.Data.Metadata.Edm.AssociationEndMember)">
+      <summary>指定したアソシエーション End のもう一方のアソシエーション End を返します。</summary>
+      <returns>指定したアソシエーション End のもう一方のアソシエーション End。</returns>
+      <param name="assoc">走査対象のアソシエーション。</param>
+      <param name="end">指定したアソシエーションの一方の End。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetPrincipalEnd(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定したアソシエーションのプリンシパル End を返します。</summary>
+      <returns>指定したアソシエーションのプリンシパル End。</returns>
+      <param name="association">概念モデルのアソシエーション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetRootOrSelf(System.Data.Metadata.Edm.EntityType)">
+      <summary>継承階層のルートのエンティティ型を返します。</summary>
+      <returns>継承階層のルートのエンティティ型。</returns>
+      <param name="entityType">概念モデルのエンティティ型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetSchemaName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> のスキーマ名を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> のスキーマ名。</returns>
+      <param name="entitySet">エンティティ セット。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreGeneratedPatternValue(System.Data.Metadata.Edm.EdmMember,System.Version,System.Data.Metadata.Edm.DataSpace)">
+      <summary>概念モデルまたはストレージ モデルの StoreGeneratedPattern の注釈の値、またはプロパティのファセットを返します。</summary>
+      <returns>概念モデルまたはストレージ モデルの StoreGeneratedPattern の注釈の値、またはプロパティのファセット。</returns>
+      <param name="property">StoreGeneratedPattern ファセットを含むプロパティ。</param>
+      <param name="targetVersion">Entity Framework の対象のバージョン。</param>
+      <param name="dataSpace">指定したプロパティが存在する概念モデルまたはストレージ モデル。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetStoreType(System.Data.Metadata.Edm.EdmMember,System.Data.Common.DbProviderManifest)">
+      <summary>指定した <see cref="T:System.Data.Common.DbProviderManifest" /> を調べることによって、指定した <see cref="T:System.Data.Metadata.Edm.EdmMember" /> に対応するストレージ型を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.EdmMember" /> に対応するストレージ型。</returns>
+      <param name="edmMember">ストア (SSDL) 型に変換される EDM 型を含む CSDL メンバー。</param>
+      <param name="providerManifest">使用しているストレージ プロバイダー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.GetTableName(System.Data.Metadata.Edm.EntitySet)">
+      <summary>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> に対応するテーブル名を返します。</summary>
+      <returns>指定した <see cref="T:System.Data.Metadata.Edm.EntitySet" /> に対応するテーブル名。</returns>
+      <param name="entitySet">エンティティ セット。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.InferSsdlFacetsForCsdlProperty(System.Data.Metadata.Edm.EdmProperty,System.Data.Common.DbProviderManifest)">
+      <summary>概念モデルの対応するプロパティに基づいて、ストレージ モデルのプロパティの <see cref="T:System.Data.Metadata.Edm.Facet" /> を推論します。</summary>
+      <returns>概念モデルの対応するプロパティに基づいて、ストレージ モデルのプロパティの <see cref="T:System.Data.Metadata.Edm.Facet" /> の一覧。</returns>
+      <param name="csdlProperty">概念モデルのプロパティ。</param>
+      <param name="providerManifest">使用しているストレージ プロバイダー。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsComplexProperty(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>指定したプロパティの型が複合型かどうかを確認します。</summary>
+      <returns>指定したプロパティが <see cref="F:System.Data.Metadata.Edm.BuiltInTypeKind.ComplexType" /> である場合は true、それ以外の場合は false。</returns>
+      <param name="property">概念モデルのプロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsDerivedType(System.Data.Metadata.Edm.EntityType)">
+      <summary>指定したエンティティ型が派生型かどうかを判断します。</summary>
+      <returns>指定したエンティティ型が基本型を持つ場合は true、それ以外の場合は false。</returns>
+      <param name="entityType">概念モデルのエンティティ型。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsJoinTable(System.Data.Metadata.Edm.EntityType,System.Data.Metadata.Edm.StoreItemCollection)">
+      <summary>指定したストレージ モデルのエンティティ型が、データベースの結合テーブルを表しているかどうかを確認します。</summary>
+      <returns>次のすべての条件が満たされている場合は true になります。指定したエンティティ型に、その型から生じた 2 つのアソシエーションがある。指定したエンティティ型の 2 つのアソシエーション End の多重度が多数 (*) である。指定したエンティティ型から生じたの 2 つのアソシエーションの一方の End の多重度が 1 (1) である。指定したエンティティ型のプロパティ数が、アソシエーション End のすべてのキー プロパティの合計と同じである。指定したエンティティ型のすべてのプロパティがキー プロパティである。それ以外の場合は false です。</returns>
+      <param name="entityType">ストレージ モデルのエンティティ型。</param>
+      <param name="store">ストレージ モデルのメタデータのメモリ内コレクション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsManyToMany(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定したアソシエーションが多対多 (*.*) のアソシエーションかどうかを判断します。</summary>
+      <returns>指定されたアソシエーションの両方の End の多重度が多数 (*) である場合は true。それ以外の場合は false。</returns>
+      <param name="assoc">概念モデルまたはストレージ モデルのアソシエーション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.IsPKToPK(System.Data.Metadata.Edm.AssociationType)">
+      <summary>指定したアソシエーションの End に主キーのみが含まれるかどうかを判断します。</summary>
+      <returns>アソシエーションが 1 対 1 (1:1)、1 対 0 または 1 (1:0..1)、あるいは 0 または 1 対 0 または 1 (0..1:0..1) の関係である場合は true、それ以外の場合は false です。</returns>
+      <param name="assoc">概念モデルまたはストレージ モデルのアソシエーション。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ToStoreType(System.Data.Metadata.Edm.EdmProperty)">
+      <summary>概念モデルの指定したプロパティのデータ型を SQL Server データ型に変換します。</summary>
+      <returns>概念モデルの指定したプロパティのデータ型に対応する SQL Server データ型の名前。</returns>
+      <param name="property">概念モデルのプロパティ。</param>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)">
+      <summary>指定した複合型のプロパティの各スカラー プロパティで <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate" /> を実行します。</summary>
+      <param name="property">複合型プロパティ。</param>
+      <param name="visitorDelegate">各スカラー プロパティで実行されるデリゲート。</param>
+      <param name="delimiter">指定した複合型プロパティに名前を付ける場合に使用される区切り記号。</param>
+      <param name="recursive">指定した複合型内の入れ子になった複合型プロパティで、<see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty" /> メソッドを呼び出すかどうかを指定します。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate">
+      <summary>
+        <see cref="M:Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.VisitComplexProperty(System.Data.Metadata.Edm.EdmProperty,Microsoft.Data.Entity.Design.DatabaseGeneration.MetadataWorkspaceExtensions.ScalarInComplexPropertyVisitorDelegate,System.String,System.Boolean)" /> メソッドが使用するデリゲート型。生成されたストレージ モデルで、概念モデルの複合型プロパティのスカラー プロパティに名前を付ける方法に対して、ユーザー定義のコントロールを使用できるようにします。</summary>
+      <param name="namePrefix">すべての親 CSDL プロパティを連結する形式で入れ子になった CSDL プロパティの名前。</param>
+      <param name="property">この複合プロパティの複合型内で現在アクセスされている、入れ子になった CSDL プロパティ。</param>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity">
+      <summary>概念モデルに基づいてストレージ モデルおよびマッピング情報を生成する Windows Workflow アクティビティ。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" /> クラスの新しいインスタンスを作成します。</summary>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput">
+      <summary>ストア スキーマ定義言語 (SSDL)、およびマッピング仕様言語 (MSL) を生成する概念スキーマ定義言語 (CSDL) を指定する Windows Workflow の <see cref="T:System.Activities.InArgument`1" />。</summary>
+      <returns>ストア スキーマ定義言語 (SSDL) とマッピング仕様言語 (MSL) を生成する概念スキーマ定義言語 (CSDL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) から生成されるマッピング仕様言語 (MSL) を指定する Windows Workflow の <see cref="T:System.Activities.OutArgument`1" />。</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) から生成されるマッピング仕様言語 (MSL)。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.MslOutputGeneratorType">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) からマッピング仕様言語 (MSL) を生成する際に使用される型のアセンブリ修飾名。</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) からマッピング仕様言語 (MSL) を生成する際に使用される出力ジェネレーター型のアセンブリ修飾名。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.SsdlOutput">
+      <summary>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) から生成されるストア スキーマ定義言語 (SSDL) を指定する Windows Workflow の <see cref="T:System.Activities.OutArgument`1" />。</summary>
+      <returns>
+        <see cref="P:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity.CsdlInput" /> プロパティで概念スキーマ定義言語 (CSDL) から生成されるストア スキーマ定義言語 (SSDL)。</returns>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl">
+      <summary>提供された概念スキーマ定義言語 (CSDL) に基づいてマッピング仕様言語 (MSL) を生成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl" /> の新しいインスタンスを作成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToMsl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>提供された概念スキーマ定義言語 (CSDL) に基づいてマッピング仕様言語 (MSL) を生成します。</summary>
+      <returns>提供された概念スキーマ定義言語 (CSDL) に基づいた T 型のマッピング仕様言語 (MSL)。</returns>
+      <param name="activity">現在実行中のアクティビティ。</param>
+      <param name="context">ワークフローの状態を含むアクティビティのコンテキスト。</param>
+      <param name="inputs">入力の CSDL を含みます。</param>
+      <typeparam name="T">アクティビティの出力の型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl">
+      <summary>提供された概念スキーマ定義言語 (CSDL) に基づいてストア スキーマ定義言語 (SSDL) を生成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl" /> の新しいインスタンスを作成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.CsdlToSsdl.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>提供された概念スキーマ定義言語 (CSDL) に基づいてストア スキーマ定義言語 (SSDL) を生成します。</summary>
+      <returns>提供された概念スキーマ定義言語 (CSDL) に基づいた T 型のストア スキーマ定義言語 (SSDL)。</returns>
+      <param name="activity">現在実行中のアクティビティ。</param>
+      <param name="context">ワークフローの状態を含むアクティビティのコンテキスト。</param>
+      <param name="inputs">入力の CSDL を含みます。</param>
+      <typeparam name="T">アクティビティの出力の型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput">
+      <summary>指定した入力に対する出力を生成するメソッドを公開します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.IGenerateActivityOutput.GenerateActivityOutput``1(Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>指定した <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> の入力に対する出力を生成します。</summary>
+      <returns>指定した <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> の入力に対する T 型の出力。</returns>
+      <param name="owningActivity">このメソッドを呼び出しているアクティビティ。</param>
+      <param name="context">ワークフローの状態を含むアクティビティのコンテキスト。</param>
+      <param name="inputs">キー/値ペアとしてのアクティビティの入力。</param>
+      <typeparam name="T">アクティビティの出力の型。</typeparam>
+    </member>
+    <member name="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.Activities.CsdlToSsdlAndMslActivity" /> の基本クラスです。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.#ctor">
+      <summary>
+        <see cref="T:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity" /> の新しいインスタンスを作成します。</summary>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.Execute(System.Activities.NativeActivityContext)">
+      <summary>
+        <see cref="T:System.Activities.NativeActivityContext" /> に指定した入力に基づいて、指定した <see cref="T:System.Activities.NativeActivityContext" /> に渡す出力を生成します。</summary>
+      <param name="context">現在のアクティビティの状態。</param>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorOutput">
+      <summary>出力ジェネレーターのアセンブリ修飾型名を指定します。</summary>
+      <returns>出力ジェネレーターのアセンブリ修飾型名。</returns>
+    </member>
+    <member name="P:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.OutputGeneratorType">
+      <summary>出力ジェネレーターのアセンブリ修飾型名を指定する <see cref="T:System.Activities.InArgument`1" />。</summary>
+      <returns>出力ジェネレーターのアセンブリ修飾型名。</returns>
+    </member>
+    <member name="M:Microsoft.Data.Entity.Design.DatabaseGeneration.OutputGenerators.OutputGeneratorActivity.ProcessOutputGenerator``1(System.String,System.Activities.NativeActivityContext,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>指定した出力ジェネレーターの型の名前を持つ出力ジェネレーターによって生成された出力を返します。</summary>
+      <returns>指定した出力ジェネレーターの型の名前を持つ出力ジェネレーターによって生成された出力。</returns>
+      <param name="outputGeneratorTypeName">出力ジェネレーターの型の名前。</param>
+      <param name="context">現在のアクティビティの状態。</param>
+      <param name="inputs">キー/値ペアとしてのアクティビティの入力。</param>
+      <typeparam name="T">出力の型。</typeparam>
+    </member>
+  </members>
+</doc>

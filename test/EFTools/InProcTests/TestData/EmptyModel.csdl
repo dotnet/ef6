@@ -1,0 +1,4 @@
+<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self">
+        <EntityContainer Name="Model1Container" >
+        </EntityContainer>
+      </Schema>

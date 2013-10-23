@@ -1,0 +1,229 @@
+<#
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+// NOTE: This include template also requires an assembly
+// reference to %VERSIONED_VSCOMNTOOLS_ENV_VAR%\Microsoft.Data.Entity.Design.DatabaseGeneration.dll
+// and a namespace reference to Microsoft.Data.Entity.Design.DatabaseGeneration 
+// in the parent template. Commented-out examples are provided below (replace '!' with '#'):
+// <!@ assembly name="%VS110COMNTOOLS%..\IDE\Microsoft.Data.Entity.Design.DatabaseGeneration.dll" !>
+// <!@ import namespace="Microsoft.Data.Entity.Design.DatabaseGeneration" !>
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+#>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.Entity" #>
+<#@ import namespace="System.Data.Entity.Core.Metadata.Edm" #>
+<#@ import namespace="System.Data.Entity.SqlServer" #>
+<#@ import namespace="System.Data.Entity.SqlServerCompact" #>
+<#@ import namespace="System.Runtime.Remoting.Messaging" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+// Common Helper properties and methods for the T4 templates 
+// used by the 'Generate Database' feature
+// in the Entity Designer.
+// ++++++++++++++++++++++++++++++++++++++++++++++++++
+
+private static readonly string PROVIDER_NAME_SQLCE_PREFIX = "System.Data.SqlServerCe"; // this is the runtime provider name - all versions start with this prefix
+private string _providerInvariantName;
+private StoreItemCollection _store;
+private StoreItemCollection _existingStore;
+
+/// <summary>
+/// DbConfiguration used to register the ADO.NET providers for SQL and SQL CE.
+/// </summary>
+private class TemplateDbConfiguration : DbConfiguration
+{
+    public TemplateDbConfiguration()
+    {
+        SetProviderServices(SqlProviderServices.ProviderInvariantName, SqlProviderServices.Instance);
+        SetProviderServices(SqlCeProviderServices.ProviderInvariantName, SqlCeProviderServices.Instance);
+    }
+}
+
+/// <summary>
+/// Lazily loads the StoreItemCollection based on the new, generated SSDL from CallContext
+/// and the TargetVersion, also obtained from CallContext.
+/// </summary>
+private StoreItemCollection Store
+{
+    get
+    {
+        if (_store == null)
+        {
+            string ssdl = this.GetInput<string>(EdmConstants.ssdlOutputName);
+            Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
+            _store = EdmExtension.CreateAndValidateStoreItemCollection(ssdl, targetVersion, null, false);
+        }
+        return _store;
+    }
+}
+
+/// <summary>
+/// Retrieves the existing SSDL from CallContext, attempts to create a StoreItemCollection
+/// given the TargetVersion in CallContext, and populates ExistingStore.
+/// Returns true if there are no errors in creation, and false otherwise.
+/// </summary>
+private bool InitializeAndValidateExistingStore()
+{
+    string ssdl = this.GetInput<string>(EdmConstants.existingSsdlInputName);
+    Version targetVersion = this.GetInput<Version>(EdmParameterBag.ParameterName.TargetVersion.ToString());
+    IList<EdmSchemaError> existingSsdlErrors;
+    _existingStore = EdmExtension.CreateStoreItemCollection(ssdl, targetVersion, null, out existingSsdlErrors);
+    return (existingSsdlErrors.Count == 0);
+}
+
+/// <summary>
+/// Retrieves the StoreItemCollection constructed from the existing SSDL.
+/// NOTE: InitializeAndValidateExistingStore() must be called beforehand to populate the ExistingStore
+/// </summary>
+private StoreItemCollection ExistingStore 
+{
+    get
+    { 
+        return _existingStore;
+    }
+}
+
+/// <summary>
+/// Retrieves the ProviderInvariantName from CallContext
+/// </summary>
+private string ProviderInvariantName
+{
+    get 
+    {
+        if (_providerInvariantName == null)
+        {
+            _providerInvariantName = this.GetInput<string>(EdmParameterBag.ParameterName.ProviderInvariantName.ToString());
+        }
+        return _providerInvariantName;
+    }
+}
+
+/// <summary>
+/// Determine if the given provider invariant name is SQL CE
+/// </summary>
+private bool IsSQLCE
+{
+    get
+    {
+        return (this.ProviderInvariantName.StartsWith(PROVIDER_NAME_SQLCE_PREFIX, StringComparison.Ordinal));
+    }
+}
+
+/// <summary>
+/// Retrieve data of type T from CallContext given a string-based identity.
+/// This is used to pass data from a workflow into the template since the workflow
+/// utilizes the VS TextTemplatingService which runs the template in a separate AppDomain.
+/// </summary>
+private T GetInput<T>(string identity) where T : class
+{
+    return CallContext.GetData(identity) as T;
+}
+
+/// <summary>
+/// Escape identifiers enclosed by square brackets within the template
+/// </summary>
+private static string Id(string userIdentifier) 
+{
+    return userIdentifier.Replace("]", "]]");
+}
+
+/// <summary>
+/// Escape literals enclosed by single quotes within the template
+/// </summary>
+private static string Lit(string userLiteral)
+{
+    return userLiteral.Replace("'", "''");
+}
+
+/// <summary>
+/// Write the FK constraint name based on a ReferentialConstraint given the following rules:
+/// 1. The FK constraint name will be based off of the 'From' role (the principal role).
+/// 2. We will add an 'FK_' prefix if there isn't one already.
+/// </summary>
+private static string WriteFKConstraintName(ReferentialConstraint constraint)
+{
+    string fqName = String.Empty;
+    if (!constraint.FromRole.DeclaringType.Name.StartsWith("FK_", StringComparison.InvariantCultureIgnoreCase))
+    {
+        fqName = "FK_";
+    }
+    return fqName + constraint.FromRole.DeclaringType.Name;
+}
+
+/// <summary>
+/// If the property has a StoreGeneratedPattern=Identity annotation and
+/// is of an integer or decimal type, write 'IDENTITY(1,1)', otherwise an empty string
+/// </summary>
+private static string WriteIdentity(EdmProperty property, Version targetVersion)
+{
+    if (property.GetStoreGeneratedPatternValue(targetVersion, DataSpace.SSpace) == StoreGeneratedPattern.Identity
+        && true == IsIntegerOrDecimalType(property))
+    {
+        return "IDENTITY(1,1)";
+    }
+    return String.Empty;
+}
+
+/// <summary>
+/// Determine whether the given Property is of a type that is one of the following:
+/// "int", "bigint", "smallint", "double", "decimal", "float", "real", "tinyint"
+/// </summary>
+private static bool IsIntegerOrDecimalType(EdmProperty property)
+{
+    HashSet<string> sqlIntegerOrDecimalTypes = new HashSet<string>() { "int", "bigint", "smallint", "double", "decimal", "float", "real", "tinyint" };
+    TypeUsage typeUsage = property.TypeUsage;
+    if (typeUsage != null)
+    {
+        EdmType edmType = typeUsage.EdmType;
+        if (edmType != null)
+        {
+            return (sqlIntegerOrDecimalTypes.Contains(edmType.Name));
+        }
+    }
+    return false;
+}
+
+/// <summary>
+/// Given a ReferentialConstraint, return "CASCADE" or "NO ACTION" depending
+/// on the OperationAction of the FromRole's DeleteBehavior.
+/// </summary>
+private static string GetDeleteAction(ReferentialConstraint refConstraint)
+{
+    OperationAction deleteAction = refConstraint.FromRole.DeleteBehavior;
+    switch (deleteAction)
+    {
+        case OperationAction.Cascade:
+            return "CASCADE";
+        case OperationAction.None:
+        default:
+            return "NO ACTION";
+    }
+}
+
+/// <summary>
+/// Write out the columns of a table given the Properties of an EntityType,
+/// escaping the identifier names.
+/// </summary>
+private static string WriteColumns(IEnumerable<EdmProperty> properties, char delimiter)
+{
+    StringBuilder serializedProperties = new StringBuilder();
+    foreach (EdmProperty property in properties)
+    {
+        serializedProperties.Append(string.Format("[{0}]", Id(property.Name)));
+        serializedProperties.Append(delimiter + " ");
+    }
+    return serializedProperties.ToString().Trim().TrimEnd(delimiter);
+}
+
+/// <summary>
+/// Write "NULL" or "NOT NULL" depending on the boolean flag passed in
+/// </summary>
+private static string WriteNullable(bool isNull)
+{
+    return (true == isNull) ? "NULL" : "NOT NULL";
+}
+        
+#>

@@ -1,0 +1,45 @@
+﻿<Schema xmlns="http://schemas.microsoft.com/ado/2006/04/edm" Namespace="ManyManyAssociationBetweenSubtypes" Alias="Self">
+  <EntityContainer Name="ManyManyAssociationBetweenSubtypesContainer" >
+    <EntitySet Name="StudentSet" EntityType="ManyManyAssociationBetweenSubtypes.Student" />
+    <EntitySet Name="BookSet" EntityType="ManyManyAssociationBetweenSubtypes.Book" />
+    <AssociationSet Name="CompSciStudentCompSciBook" Association="ManyManyAssociationBetweenSubtypes.CompSciStudentCompSciBook">
+      <End Role="CompSciStudent" EntitySet="StudentSet" />
+      <End Role="CompSciBook" EntitySet="BookSet" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="PersonId" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Type="Int32" Name="PersonId" Nullable="false" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="2147483647" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="2147483647" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="Phone" Nullable="true" />
+  </EntityType>
+  <EntityType Name="CompSciStudent" BaseType="ManyManyAssociationBetweenSubtypes.Student">
+    <Property Type="Int32" Name="HoursCoded" Nullable="true" />
+    <Property Type="Int32" Name="NumProjects" Nullable="true" />
+    <NavigationProperty Name="CompSciBook" Relationship="ManyManyAssociationBetweenSubtypes.CompSciStudentCompSciBook" FromRole="CompSciStudent" ToRole="CompSciBook" />
+  </EntityType>
+  <EntityType Name="Book">
+    <Key>
+      <PropertyRef Name="ISBN" />
+    </Key>
+    <Property Type="Int32" Name="ISBN" Nullable="false" />
+    <Property Type="String" Name="Title" Nullable="true" MaxLength="2147483647" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="Author" Nullable="true" MaxLength="2147483647" FixedLength="false" Unicode="false" />
+    <Property Type="String" Name="Description" Nullable="true" MaxLength="2147483647" FixedLength="false" Unicode="false" />
+    <Property Type="Int32" Name="Pages" Nullable="true" />
+    <Property Type="Decimal" Name="Cost" Nullable="true" Precision="29" Scale="29" />
+  </EntityType>
+  <EntityType Name="CompSciBook" BaseType="ManyManyAssociationBetweenSubtypes.Book">
+    <Property Type="Boolean" Name="ACMAward" Nullable="true" />
+    <Property Type="Int32" Name="NumCodingExercises" Nullable="true" />
+    <NavigationProperty Name="CompSciStudent" Relationship="ManyManyAssociationBetweenSubtypes.CompSciStudentCompSciBook" FromRole="CompSciBook" ToRole="CompSciStudent" />
+  </EntityType>
+  <Association Name="CompSciStudentCompSciBook">
+    <End Type="ManyManyAssociationBetweenSubtypes.CompSciStudent" Role="CompSciStudent" Multiplicity="*" />
+    <End Type="ManyManyAssociationBetweenSubtypes.CompSciBook" Role="CompSciBook" Multiplicity="*" />
+  </Association>
+</Schema>
