@@ -238,6 +238,7 @@
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
+    <Compile Include="Query\LinqToEntities\ProjectionTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />
     <Compile Include="TestDoubles\InMemoryDbSetTests.cs" />
     <Compile Include="TestDoubles\InMemoryNonGenericDbSet.cs" />
