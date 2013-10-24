@@ -2,10 +2,11 @@
 
 namespace System.Data.Entity.Infrastructure
 {
+    using System.Data.Common;
     using System.Runtime.Serialization;
 
     /// <summary>
-    /// Thrown when an error occurs commiting a transaction.
+    /// Thrown when an error occurs commiting a <see cref="DbTransaction"/>.
     /// </summary>
     [Serializable]
     public class CommitFailedException : DataException

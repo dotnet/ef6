@@ -154,7 +154,7 @@ namespace System.Data.Entity.Internal.Linq
 
 #endif
 
-        private InternalSet<TEntity> CreateInternalSet<TEntity>(Mock<ObjectContextForMock> objectContextMock, TEntity value)
+        private InternalSet<TEntity> CreateInternalSet<TEntity>(Mock<ObjectContext> objectContextMock, TEntity value)
             where TEntity : class
         {
             var shaperMock = MockHelper.CreateShaperMock<TEntity>();

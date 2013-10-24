@@ -4,8 +4,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
     using System.Collections.Generic;
     using System.Data.Common;
-    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -43,6 +43,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             _databaseInitializerResolver = databaseInitializerResolver;
 
+            _resolvers.Add(new TransactionContextInitializerResolver());
             _resolvers.Add(_databaseInitializerResolver);
             _resolvers.Add(new DefaultExecutionStrategyResolver());
             _resolvers.Add(new CachingDependencyResolver(defaultProviderServicesResolver));
@@ -55,6 +56,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             _resolvers.Add(new SingletonDependencyResolver<IPluralizationService>(new EnglishPluralizationService()));
             _resolvers.Add(new SingletonDependencyResolver<AttributeProvider>(new AttributeProvider()));
             _resolvers.Add(new SingletonDependencyResolver<Func<DbContext, Action<string>, DatabaseLogFormatter>>((c, w) => new DatabaseLogFormatter(c, w)));
+            _resolvers.Add(new SingletonDependencyResolver<Func<DbConnection, TransactionContext>>(c => new TransactionContext(c)));
+            _resolvers.Add(new SingletonDependencyResolver<Func<TransactionHandler>>(() => new DefaultTransactionHandler()));
 
 #if NET40
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryResolver>(new Net40DefaultDbProviderFactoryResolver()));

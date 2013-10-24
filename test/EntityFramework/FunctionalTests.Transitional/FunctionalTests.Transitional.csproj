@@ -161,6 +161,7 @@
     <Compile Include="TestHelpers\CodeFirstScaffoldingContextWithConnection.cs" />
     <Compile Include="TestHelpers\DatabaseTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
+    <Compile Include="TestHelpers\DbDispatchersHelpers.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DefaultUnitTestsConnectionFactory.cs" />
     <Compile Include="TestHelpers\DynamicAssembly.cs" />

@@ -3,6 +3,7 @@
 namespace System.Data.Entity.Core.EntityClient
 {
     using System.Data.Common;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -111,7 +112,8 @@ namespace System.Data.Entity.Core.EntityClient
             }
             catch (Exception e)
             {
-                if (e.IsCatchableExceptionType())
+                if (e.IsCatchableExceptionType()
+                    && !(e is CommitFailedException))
                 {
                     throw new EntityException(Strings.EntityClient_ProviderSpecificError(@"Commit"), e);
                 }

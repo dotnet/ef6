@@ -571,8 +571,7 @@ namespace System.Data.Entity.Core.Objects
                         var disposableEnumerable = GetResults(null);
                         try
                         {
-                            var result = disposableEnumerable.GetEnumerator();
-                            return result;
+                            return disposableEnumerable.GetEnumerator();
                         }
                         catch
                         {

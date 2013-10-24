@@ -110,9 +110,7 @@
       <HintPath>..\..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Design\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.csdl" />
     <EmbeddedResource Include="Core\Metadata\Edm\MetadataCacheTests.msl" />
@@ -486,7 +484,6 @@
     <Compile Include="Core\Objects\DataClasses\EntityReferenceTests.cs" />
     <Compile Include="Core\Objects\DataClasses\RelatedEndTests.cs" />
     <Compile Include="Core\Objects\ObjectContextTests.cs" />
-    <Compile Include="Core\Objects\TestHelpers\ObjectContextForMock.cs" />
     <Compile Include="Internal\ConfigFile\EntityFrameworkSectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Internal\DatabaseCreatorTests.cs" />

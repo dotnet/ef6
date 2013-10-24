@@ -65,6 +65,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             _requiredEntities = new Dictionary<EntityKey, AssociationSet>();
             _optionalEntities = new Set<EntityKey>();
             _includedValueEntities = new Set<EntityKey>();
+            _interceptionContext = new DbInterceptionContext();
 
             // ancillary propagation services
             _recordConverter = new RecordConverter(this);

@@ -103,6 +103,8 @@ namespace System.Data.Entity.Core.Objects
         private static readonly ConcurrentDictionary<Type, bool> _contextTypesWithViewCacheInitialized
             = new ConcurrentDictionary<Type, bool>();
 
+        private TransactionHandler _transactionHandler;
+
         #endregion Fields
 
         #region Constructors
@@ -194,8 +196,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
-        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors",
-            Justification = "Class is internal and methods are made virtual for testing purposes only. They cannot be overrided by user.")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         internal ObjectContext(
             EntityConnection connection,
             bool isConnectionConstructor,
@@ -254,7 +255,7 @@ namespace System.Data.Entity.Core.Objects
         }
 
         // <summary>
-        // For testing porpoises only.
+        // For testing purposes only.
         // </summary>
         internal ObjectContext(
             ObjectQueryExecutionPlanFactory objectQueryExecutionPlanFactory = null,
@@ -463,6 +464,14 @@ namespace System.Data.Entity.Core.Objects
         {
             get { return this; }
         }
+
+        /// <summary>
+        /// Gets the transaction handler in use by this context. May be null if no transaction have been started.
+        /// </summary>
+        /// <value>
+        /// The transaction handler.
+        /// </value>
+        public TransactionHandler TransactionHandler { get { return _transactionHandler; } }
 
         internal DbInterceptionContext InterceptionContext
         {
@@ -1624,6 +1633,8 @@ namespace System.Data.Entity.Core.Objects
         // </exception>
         internal virtual void EnsureConnection()
         {
+            EnsureTransactionHandlerRegistered();
+
             if (Connection.State == ConnectionState.Broken)
             {
                 Connection.Close();
@@ -1680,6 +1691,7 @@ namespace System.Data.Entity.Core.Objects
         internal virtual async Task EnsureConnectionAsync(CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
+            EnsureTransactionHandlerRegistered();
 
             if (Connection.State == ConnectionState.Broken)
             {
@@ -1727,6 +1739,27 @@ namespace System.Data.Entity.Core.Objects
         }
 
 #endif
+
+        private void EnsureTransactionHandlerRegistered()
+        {
+            if (_transactionHandler == null
+                && !InterceptionContext.DbContexts.Any(dbc => dbc is TransactionContext))
+            {
+                var storeMetadata = (StoreItemCollection)MetadataWorkspace.GetItemCollection(DataSpace.SSpace);
+
+                var providerInvariantName =
+                    DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(storeMetadata.ProviderFactory).Name;
+
+                var transactionHandlerFactory = DbConfiguration.DependencyResolver.GetService<Func<TransactionHandler>>(
+                    new StoreKey(providerInvariantName, Connection.DataSource));
+
+                if (transactionHandlerFactory != null)
+                {
+                    _transactionHandler = transactionHandlerFactory();
+                    _transactionHandler.Initialize(this);
+                }
+            }
+        }
 
         private T EnsureContextIsEnlistedInCurrentTransaction<T>(Transaction currentTransaction, Func<T> openConnection, T defaultValue)
         {
@@ -2066,14 +2099,23 @@ namespace System.Data.Entity.Core.Objects
             GC.SuppressFinalize(this);
         }
 
-        /// <summary>Releases the resources used by the object context.</summary>
-        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        /// <summary>
+        /// Releases the resources used by the object context.
+        /// </summary>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed)
             {
                 if (disposing)
                 {
+                    if (_transactionHandler != null)
+                    {
+                        _transactionHandler.Dispose();
+                    }
+
                     // Release managed resources here.
                     if (_connection != null)
                     {
@@ -2949,6 +2991,11 @@ namespace System.Data.Entity.Core.Objects
         /// <exception cref="T:System.Data.Entity.Core.OptimisticConcurrencyException">An optimistic concurrency violation has occurred while saving changes.</exception>
         public virtual int SaveChanges(SaveOptions options)
         {
+            return SaveChanges(options, executeInExistingTransaction: false);
+        }
+
+        internal int SaveChanges(SaveOptions options, bool executeInExistingTransaction)
+        {
             AsyncMonitor.EnsureNotEntered();
 
             PrepareToSaveChanges(options);
@@ -2958,9 +3005,16 @@ namespace System.Data.Entity.Core.Objects
             // if there are no changes to save, perform fast exit to avoid interacting with or starting of new transactions
             if (ObjectStateManager.HasChanges())
             {
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
-                entriesAffected = executionStrategy.Execute(
-                    () => SaveChangesToStore(options, executionStrategy));
+                if (executeInExistingTransaction)
+                {
+                    entriesAffected = SaveChangesToStore(options, null, startLocalTransaction: false);
+                }
+                else
+                {
+                    var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
+                    entriesAffected = executionStrategy.Execute(
+                        () => SaveChangesToStore(options, executionStrategy, startLocalTransaction: true));
+                }
             }
 
             ObjectStateManager.AssertAllForeignKeyIndexEntriesAreValid();
@@ -3069,7 +3123,7 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
-        private int SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy)
+        private int SaveChangesToStore(SaveOptions options, IDbExecutionStrategy executionStrategy, bool startLocalTransaction)
         {
             // only accept changes after the local transaction commits
             _adapter.AcceptChangesDuringUpdate = false;
@@ -3080,7 +3134,7 @@ namespace System.Data.Entity.Core.Objects
                 = ExecuteInTransaction(
                     () => _adapter.Update(),
                     executionStrategy,
-                    startLocalTransaction: true,
+                    startLocalTransaction,
                     releaseConnectionOnSuccess: true);
 
             if ((SaveOptions.AcceptAllChangesAfterSave & options) != 0)
@@ -3166,7 +3220,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 needLocalTransaction = startLocalTransaction;
             }
-            else if (executionStrategy.RetriesOnFailure)
+            else if (executionStrategy != null
+                && executionStrategy.RetriesOnFailure)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_ExistingTransaction(executionStrategy.GetType().Name));
             }
@@ -3186,14 +3241,7 @@ namespace System.Data.Entity.Core.Objects
                 if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
-                    try
-                    {
-                        localTransaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new CommitFailedException(Strings.CommitFailed, ex);
-                    }
+                    localTransaction.Commit();
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
 
@@ -3275,14 +3323,7 @@ namespace System.Data.Entity.Core.Objects
                 if (localTransaction != null)
                 {
                     // we started the local transaction; so we also commit it
-                    try
-                    {
-                        localTransaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new CommitFailedException(Strings.CommitFailed, ex);
-                    }
+                    localTransaction.Commit();
                 }
                 // else on success with no exception is thrown, caller generally commits the transaction
 

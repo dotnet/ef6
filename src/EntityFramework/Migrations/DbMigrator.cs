@@ -180,10 +180,7 @@ namespace System.Data.Entity.Migrations
                             CreateConnection()));
 
                 var interceptionContext = new DbInterceptionContext();
-                if (_contextForInterception != null)
-                {
-                    interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
-                }
+                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
 
                 _targetDatabase
                     = Strings.LoggingTargetDatabaseFormat(
@@ -925,32 +922,60 @@ namespace System.Data.Entity.Migrations
             DebugCheck.NotNull(migrationStatements);
             DebugCheck.NotNull(connection);
 
+            var context = _contextForInterception ?? _usersContextInfo.CreateInstance();
+
             var interceptionContext = new DbInterceptionContext();
-            if (_contextForInterception != null)
-            {
-                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
-            }
-            
+            interceptionContext = interceptionContext.WithDbContext(context);
+
             DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
-            var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
-                .WithIsolationLevel(IsolationLevel.Serializable);
-
-            using (var transaction = DbInterception.Dispatch.Connection.BeginTransaction(connection,
-                beginTransactionInterceptionContext))
+            TransactionHandler transactionHandler = null;
+            try
             {
-                foreach (var migrationStatement in migrationStatements)
+                if (!(context is TransactionContext))
                 {
-                    base.ExecuteSql(transaction, migrationStatement, interceptionContext);
+                    var providerInvariantName =
+                        DbConfiguration.DependencyResolver.GetService<IProviderInvariantName>(
+                            DbProviderServices.GetProviderFactory(connection))
+                            .Name;
+
+                    var dataSource = DbInterception.Dispatch.Connection.GetDataSource(connection, interceptionContext);
+
+                    var transactionHandlerFactory = DbConfiguration.DependencyResolver.GetService<Func<TransactionHandler>>(
+                        new StoreKey(providerInvariantName, dataSource));
+
+                    if (transactionHandlerFactory != null)
+                    {
+                        transactionHandler = transactionHandlerFactory();
+                        transactionHandler.Initialize(context, connection);
+                    }
                 }
 
-                try
+                var beginTransactionInterceptionContext = new BeginTransactionInterceptionContext(interceptionContext)
+                    .WithIsolationLevel(IsolationLevel.Serializable);
+
+                using (var transaction = DbInterception.Dispatch.Connection.BeginTransaction(
+                    connection,
+                    beginTransactionInterceptionContext))
                 {
+                    foreach (var migrationStatement in migrationStatements)
+                    {
+                        base.ExecuteSql(transaction, migrationStatement, interceptionContext);
+                    }
+
                     DbInterception.Dispatch.Transaction.Commit(transaction, interceptionContext);
                 }
-                catch (Exception ex)
+            }
+            finally
+            {
+                if (transactionHandler != null)
                 {
-                    throw new CommitFailedException(Strings.CommitFailed, ex);
+                    transactionHandler.Dispose();
+                }
+
+                if (_contextForInterception == null)
+                {
+                    context.Dispose();
                 }
             }
         }
@@ -969,7 +994,7 @@ namespace System.Data.Entity.Migrations
             if (!migrationStatement.SuppressTransaction)
             {
                 var dbCommand = DbInterception.Dispatch.Transaction.GetConnection(transaction, interceptionContext).CreateCommand();
-                using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql))
+                using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
                 {
                     command.Transaction = transaction;
 
@@ -981,7 +1006,7 @@ namespace System.Data.Entity.Migrations
                 using (var connection = CreateConnection())
                 {
                     var dbCommand = connection.CreateCommand();
-                    using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql))
+                    using (var command = ConfigureCommand(dbCommand, migrationStatement.Sql, interceptionContext))
                     {
                         DbInterception.Dispatch.Connection.Open(connection, interceptionContext);
 
@@ -992,7 +1017,7 @@ namespace System.Data.Entity.Migrations
         }
 
         [SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        private InterceptableDbCommand ConfigureCommand(DbCommand command, string commandText)
+        private InterceptableDbCommand ConfigureCommand(DbCommand command, string commandText, DbInterceptionContext interceptionContext)
         {
             command.CommandText = commandText;
 
@@ -1001,11 +1026,6 @@ namespace System.Data.Entity.Migrations
                 command.CommandTimeout = _configuration.CommandTimeout.Value;
             }
 
-            var interceptionContext = new DbInterceptionContext();
-            if (_contextForInterception != null)
-            {
-                interceptionContext = interceptionContext.WithDbContext(_contextForInterception);
-            }
             return new InterceptableDbCommand(command, interceptionContext);
         }
 

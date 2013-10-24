@@ -26,7 +26,9 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         /// <summary>
         /// Initializes a new instance of <see cref="ExecutionStrategyResolver{T}" />
         /// </summary>
-        /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used. </param>
+        /// <param name="providerInvariantName">
+        /// The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this execution strategy will be used.
+        /// </param>
         /// <param name="serverName">
         /// A string that will be matched against the server name in the connection string. <c>null</c> will match anything.
         /// </param>
@@ -87,7 +89,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         /// <param name="type">The service type to resolve.</param>
         /// <param name="key">A key used to make a determination of the service to return.</param>
         /// <returns>
-        /// An <see cref="Func{IExecutionStrategy}" />, or an empty enumeration.
+        /// An enumerable of <see cref="Func{IExecutionStrategy}" />, or an empty enumeration.
         /// </returns>
         public IEnumerable<object> GetServices(Type type, object key)
         {

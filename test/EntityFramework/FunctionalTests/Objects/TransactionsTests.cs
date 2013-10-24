@@ -13,7 +13,6 @@ namespace System.Data.Entity.Objects
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
     using System.Linq;
-    using System.Reflection;
     using System.Transactions;
     using SimpleModel;
     using Xunit;
@@ -2153,9 +2152,7 @@ namespace System.Data.Entity.Objects
         private TransactionDbContext CreateTransactionDbContext(
             SqlConnection connection, DbCompiledModel compiledModel, bool contextOwnsConnection)
         {
-            var ctx = new TransactionDbContext(connection, compiledModel, contextOwnsConnection);
-
-            return ctx;
+            return new TransactionDbContext(connection, compiledModel, contextOwnsConnection);
         }
 
         private int LogEntriesCount()

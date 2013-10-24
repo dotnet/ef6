@@ -32,7 +32,7 @@ namespace System.Data.Entity.Migrations
 
         protected static InfoContext CreateInfoContext(DbConnection connection, bool supportsSchema = true)
         {
-            var info = new InfoContext(connection, supportsSchema);
+            var info = new InfoContext(connection, true, supportsSchema);
             info.Database.Initialize(force: false);
 
             return info;

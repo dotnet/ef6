@@ -62,7 +62,7 @@ namespace System.Data.Entity
 
         public InfoContext GetInfoContext(DbContext context)
         {
-            var infoContext = new InfoContext(context.Database.Connection);
+            var infoContext = new InfoContext(context.Database.Connection, contextOwnsConnection: false);
             infoContext.Database.Initialize(force: false);
             return infoContext;
         }

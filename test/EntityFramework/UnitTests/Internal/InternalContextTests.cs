@@ -173,7 +173,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m => m.ExecuteStoreQuery<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
                     .Returns(
@@ -215,7 +215,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m => m.ExecuteStoreQuery<Random>(It.IsAny<string>(), It.IsAny<ExecutionOptions>(), It.IsAny<object[]>()))
                     .Returns(
@@ -259,7 +259,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m =>
                     m.ExecuteStoreQueryAsync<Random>(
@@ -303,7 +303,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m =>
                     m.ExecuteStoreQueryAsync<Random>(
@@ -340,7 +340,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m => m.ExecuteStoreCommand(It.IsAny<TransactionalBehavior>(), It.IsAny<string>(), It.IsAny<object[]>()));
 
@@ -362,7 +362,7 @@ namespace System.Data.Entity.Internal
                     {
                         CallBase = true
                     }.Object;
-                var objectContextMock = Mock.Get((ObjectContextForMock)internalContext.ObjectContext);
+                var objectContextMock = Mock.Get(internalContext.ObjectContext);
                 objectContextMock.Setup(
                     m => m.ExecuteStoreCommandAsync(
                         It.IsAny<TransactionalBehavior>(),

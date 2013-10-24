@@ -187,7 +187,7 @@ namespace System.Data.Entity.Core.Objects
             var executionPlanMock = Mock.Get(objectQuery.QueryState.GetExecutionPlan(MergeOption.AppendOnly));
 
             var executionStrategyMock = new Mock<IDbExecutionStrategy>();
-            var objectContextMock = Mock.Get((ObjectContextForMock)objectQuery.QueryState.ObjectContext);
+            var objectContextMock = Mock.Get(objectQuery.QueryState.ObjectContext);
 
             // Verify that ExecuteInTransaction calls ObjectQueryExecutionPlan.Execute
             if (async)

@@ -101,22 +101,43 @@ namespace System.Data.Entity.Core.Objects
                 recordStateFactories: recordStateFactories);
         }
 
-        internal static ObjectContextForMock CreateMockObjectContext<TEntity>(IEntityAdapter entityAdapter = null)
+        internal static ObjectContext CreateMockObjectContext<TEntity>(EntityConnection entityConnection = null, IEntityAdapter entityAdapter = null)
         {
-            var dbConnectionMock = new Mock<DbConnection>();
-            dbConnectionMock.Setup(m => m.DataSource).Returns("fakeDb");
-            var entityConnectionMock = new Mock<EntityConnection>();
-            entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
-            var entityConnection = entityConnectionMock.Object;
+            if (entityConnection == null)
+            {
+                var dbConnectionMock = new Mock<DbConnection>();
+                dbConnectionMock.Setup(m => m.DataSource).Returns("fakeDb");
+                var entityConnectionMock = new Mock<EntityConnection>();
+                entityConnectionMock.SetupGet(m => m.StoreConnection).Returns(dbConnectionMock.Object);
+                entityConnection = entityConnectionMock.Object;
 
-            var objectContextMock = new Mock<ObjectContextForMock>(entityConnection, entityAdapter)
+                var state = ConnectionState.Closed;
+                entityConnectionMock.Setup(m => m.Close()).Callback(() => { state = ConnectionState.Closed; });
+                entityConnectionMock.Setup(m => m.Open()).Callback(
+                    () =>
+                    {
+                        state = ConnectionState.Open;
+                    });
+                
+#if !NET40
+                entityConnectionMock.Setup(m => m.OpenAsync(It.IsAny<CancellationToken>())).Returns(
+                    () =>
+                        {
+                            state = ConnectionState.Open;
+                            return Task.FromResult(true);
+                        });
+#endif
+                entityConnectionMock.Setup(m => m.State).Returns(() => state);
+            }
+
+            var objectContextMock = new Mock<ObjectContext>(null, null, null, entityAdapter)
                                         {
                                             CallBase = true
                                         };
             objectContextMock.Setup(m => m.Connection).Returns(entityConnection);
-            objectContextMock.Setup(m => m.EnsureConnection());
+            //objectContextMock.Setup(m => m.EnsureConnection());
 #if !NET40
-            objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
+            //objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult<object>(null));
 #endif
 
             var model = EdmModel.CreateStoreModel(
@@ -146,11 +167,6 @@ namespace System.Data.Entity.Core.Objects
 
             objectContextMock.Setup(m => m.CreateQuery<TEntity>(It.IsAny<string>(), It.IsAny<ObjectParameter[]>())).Returns(
                 () => mockObjectQuery.Object);
-
-#if !NET40
-            objectContextMock.Setup(m => m.EnsureConnectionAsync(It.IsAny<CancellationToken>()))
-                             .Returns(Task.FromResult<object>(null));
-#endif
 
             return objectContextMock.Object;
         }

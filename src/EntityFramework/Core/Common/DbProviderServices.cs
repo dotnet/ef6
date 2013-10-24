@@ -17,7 +17,6 @@ namespace System.Data.Entity.Core.Common
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Reflection;
     using System.Transactions;
     using System.Xml;
 

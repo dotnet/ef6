@@ -240,7 +240,11 @@
     <Compile Include="Core\Metadata\Edm\DbModelExtensions.cs" />
     <Compile Include="Core\Metadata\Edm\IEdmModelAdapter.cs" />
     <Compile Include="Core\Metadata\Edm\RelationshipMultiplicityConverter.cs" />
-    <Compile Include="Infrastructure\CommitFailedException.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionContextInitializerResolver.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionContextResolver.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\TransactionHandlerResolver.cs" />
+    <Compile Include="Infrastructure\StoreKey.cs" />
+    <Compile Include="Infrastructure\Transactions\CommitFailedException.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\ClrTypeAnnotationSerializer.cs" />
@@ -317,6 +321,12 @@
     <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactory.cs" />
     <Compile Include="Internal\ConfigFile\ConfigLoadedCollection.cs" />
     <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElement.cs" />
+    <Compile Include="Infrastructure\Transactions\DefaultTransactionHandler.cs" />
+    <Compile Include="Infrastructure\Transactions\TransactionContext.cs" />
+    <Compile Include="Infrastructure\Transactions\CommitFailureHandler.cs" />
+    <Compile Include="Infrastructure\Transactions\TransactionContextInitializer.cs" />
+    <Compile Include="Infrastructure\Transactions\TransactionHandler.cs" />
+    <Compile Include="Infrastructure\Transactions\TransactionRow.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />

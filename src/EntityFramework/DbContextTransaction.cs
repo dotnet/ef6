@@ -93,9 +93,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Cleans up this transaction object
+        /// Releases the resources used by this transaction object
         /// </summary>
-        /// <param name="disposing"> true to release both managed and unmanaged resources; false to release only unmanaged resources </param>
+        /// <param name="disposing">
+        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.
+        /// </param>
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

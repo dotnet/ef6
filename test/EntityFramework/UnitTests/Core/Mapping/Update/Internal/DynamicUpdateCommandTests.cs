@@ -22,7 +22,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
             public void Returns_rows_affected_when_there_is_no_reader()
             {
                 var timeout = 43;
-                var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var mockUpdateTranslator = new Mock<UpdateTranslator> { CallBase = true };
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(timeout);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);
@@ -75,7 +75,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 var entityType = new EntityType("", "", DataSpace.CSpace, Enumerable.Empty<string>(), new[] { edmProperty });
                 entityType.SetReadOnly();
 
-                var mockUpdateTranslator = new Mock<UpdateTranslator>(MockBehavior.Strict);
+                var mockUpdateTranslator = new Mock<UpdateTranslator> { CallBase = true };
                 mockUpdateTranslator.Setup(m => m.CommandTimeout).Returns(() => null);
                 var entityConnection = new Mock<EntityConnection>().Object;
                 mockUpdateTranslator.Setup(m => m.Connection).Returns(entityConnection);

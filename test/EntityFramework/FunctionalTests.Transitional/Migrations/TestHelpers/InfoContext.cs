@@ -17,8 +17,8 @@ namespace System.Data.Entity.Migrations
             Database.SetInitializer<InfoContext>(null);
         }
 
-        public InfoContext(DbConnection connection, bool supportsSchema = true)
-            : base(connection, true)
+        public InfoContext(DbConnection connection, bool contextOwnsConnection, bool supportsSchema = true)
+            : base(connection, contextOwnsConnection: contextOwnsConnection)
         {
             _supportsSchema = supportsSchema;
         }
