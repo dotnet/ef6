@@ -240,5 +240,22 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => entityTypeMapping.RemoveIsOfType(entityType)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var entitySet = new EntitySet();
+            var entityTypeMapping
+                = new EntityTypeMapping(
+                    new EntitySetMapping(
+                        entitySet,
+                        new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace))));
+            var fragment = new MappingFragment(entitySet, entityTypeMapping, false);
+            entityTypeMapping.AddFragment(fragment);
+
+            Assert.False(fragment.IsReadOnly);
+            entityTypeMapping.SetReadOnly();
+            Assert.True(fragment.IsReadOnly);
+        }
     }
 }

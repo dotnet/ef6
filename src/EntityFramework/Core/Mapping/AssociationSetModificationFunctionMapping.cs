@@ -11,32 +11,51 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     public sealed class AssociationSetModificationFunctionMapping : MappingItem
     {
-        internal AssociationSetModificationFunctionMapping(
+        private readonly AssociationSet _associationSet;
+        private readonly ModificationFunctionMapping _deleteFunctionMapping;
+        private readonly ModificationFunctionMapping _insertFunctionMapping;
+
+        /// <summary>
+        /// Initalizes a new AssociationSetModificationFunctionMapping instance.
+        /// </summary>
+        /// <param name="associationSet">An association set.</param>
+        /// <param name="deleteFunctionMapping">A delete function mapping.</param>
+        /// <param name="insertFunctionMapping">An insert function mapping.</param>
+        public AssociationSetModificationFunctionMapping(
             AssociationSet associationSet,
             ModificationFunctionMapping deleteFunctionMapping,
             ModificationFunctionMapping insertFunctionMapping)
         {
-            DebugCheck.NotNull(associationSet);
+            Check.NotNull(associationSet, "associationSet");
 
-            AssociationSet = associationSet;
-            DeleteFunctionMapping = deleteFunctionMapping;
-            InsertFunctionMapping = insertFunctionMapping;
+            _associationSet = associationSet;
+            _deleteFunctionMapping = deleteFunctionMapping;
+            _insertFunctionMapping = insertFunctionMapping;
         }
 
-        // <summary>
-        // Association set these functions handles.
-        // </summary>
-        internal readonly AssociationSet AssociationSet;
+        /// <summary>
+        /// Gets the association set.
+        /// </summary>
+        public AssociationSet AssociationSet
+        {
+            get { return _associationSet; }
+        }
 
-        // <summary>
-        // Delete function for this association set.
-        // </summary>
-        internal readonly ModificationFunctionMapping DeleteFunctionMapping;
+        /// <summary>
+        /// Gets the delete function mapping.
+        /// </summary>
+        public ModificationFunctionMapping DeleteFunctionMapping
+        {
+            get { return _deleteFunctionMapping; }
+        }
 
-        // <summary>
-        // Insert function for this association set.
-        // </summary>
-        internal readonly ModificationFunctionMapping InsertFunctionMapping;
+        /// <summary>
+        /// Gets the insert function mapping.
+        /// </summary>
+        public ModificationFunctionMapping InsertFunctionMapping
+        {
+            get { return _insertFunctionMapping; }
+        }
 
         /// <inheritdoc />
         public override string ToString()
@@ -45,6 +64,14 @@ namespace System.Data.Entity.Core.Mapping
                 CultureInfo.InvariantCulture,
                 "AS{{{0}}}:{3}DFunc={{{1}}},{3}IFunc={{{2}}}", AssociationSet, DeleteFunctionMapping,
                 InsertFunctionMapping, Environment.NewLine + "  ");
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_deleteFunctionMapping);
+            SetReadOnly(_insertFunctionMapping);
+
+            base.SetReadOnly();
         }
     }
 }

@@ -111,7 +111,6 @@ namespace System.Data.Entity.Core.Mapping
                 ThrowIfReadOnly();
 
                 _modificationFunctionMapping = value; 
-                
             }
         }
 
@@ -239,6 +238,14 @@ namespace System.Data.Entity.Core.Mapping
             {
                 SingleFragment.RemoveCondition(condition);
             }
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_associationTypeMapping);
+            SetReadOnly(_modificationFunctionMapping);
+
+            base.SetReadOnly();
         }
     }
 }

@@ -78,5 +78,24 @@ namespace System.Data.Entity.Core.Mapping
                     () => resultMapping.RemoveTypeMapping(typeMapping)).Message);
         }
 
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var resultMapping = new FunctionImportResultMapping();
+
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+
+            var typeMapping = new FunctionImportEntityTypeMapping(
+                Enumerable.Empty<EntityType>(),
+                new[] { entityType },
+                new Collection<FunctionImportReturnTypePropertyMapping>(),
+                Enumerable.Empty<FunctionImportEntityTypeMappingCondition>());
+
+            resultMapping.AddTypeMapping(typeMapping);
+
+            Assert.False(typeMapping.IsReadOnly);
+            resultMapping.SetReadOnly();
+            Assert.True(typeMapping.IsReadOnly);
+        }
     }
 }

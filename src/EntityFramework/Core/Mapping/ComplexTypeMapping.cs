@@ -181,6 +181,14 @@ namespace System.Data.Entity.Core.Mapping
             m_conditionProperties.Remove(condition.Property ?? condition.Column);
         }
 
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(m_properties.Values);
+            SetReadOnly(m_conditionProperties.Values);
+
+            base.SetReadOnly();
+        }
+
         // <summary>
         // Add a condition property mapping as a child of this complex property mapping
         // Condition Property Mapping specifies a Condition either on the C side property or S side property.

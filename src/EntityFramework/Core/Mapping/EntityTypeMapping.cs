@@ -221,6 +221,15 @@ namespace System.Data.Entity.Core.Mapping
             _fragments.Remove(fragment);
         }
 
+        internal override void SetReadOnly()
+        {
+            _fragments.TrimExcess();
+
+            SetReadOnly(_fragments);
+
+            base.SetReadOnly();
+        }
+
         internal EntityType GetContainerType(string memberName)
         {
             foreach (var type in m_entityTypes.Values)

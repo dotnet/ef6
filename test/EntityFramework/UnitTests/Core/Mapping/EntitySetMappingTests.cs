@@ -235,5 +235,51 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => entitySetMapping.RemoveModificationFunctionMapping(entityFunctionMappings)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entitySet = new EntitySet("S", "N", null, null, entityType);
+            var function = new EdmFunction(
+                "F", "N", DataSpace.CSpace,
+                new EdmFunctionPayload
+                {
+                    IsFunctionImport = true
+                });
+
+            var container = new EntityContainer("C", DataSpace.CSpace);
+            container.AddEntitySetBase(entitySet);
+            container.AddFunctionImport(function);
+
+            var entitySetMapping =
+                new EntitySetMapping(
+                    entitySet,
+                    new EntityContainerMapping(container));
+
+            var functionMapping =
+                new ModificationFunctionMapping(
+                    entitySet,
+                    entityType,
+                    function,
+                    Enumerable.Empty<ModificationFunctionParameterBinding>(),
+                    null,
+                    null);
+
+            var entityFunctionMapping =
+                new EntityTypeModificationFunctionMapping(entityType, functionMapping, null, null);
+
+            entitySetMapping.AddModificationFunctionMapping(entityFunctionMapping);
+
+            var entityTypeMapping = new EntityTypeMapping(entitySetMapping);
+
+            entitySetMapping.AddTypeMapping(entityTypeMapping);
+
+            Assert.False(entityTypeMapping.IsReadOnly);
+            Assert.False(entityFunctionMapping.IsReadOnly);
+            entitySetMapping.SetReadOnly();
+            Assert.True(entityTypeMapping.IsReadOnly);
+            Assert.True(entityFunctionMapping.IsReadOnly);
+        }
     }
 }

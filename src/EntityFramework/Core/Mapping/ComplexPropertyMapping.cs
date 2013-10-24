@@ -103,5 +103,14 @@ namespace System.Data.Entity.Core.Mapping
 
             _typeMappings.Remove(typeMapping);
         }
+
+        internal override void SetReadOnly()
+        {
+            _typeMappings.TrimExcess();
+
+            SetReadOnly(_typeMappings);
+
+            base.SetReadOnly();
+        }
     }
 }

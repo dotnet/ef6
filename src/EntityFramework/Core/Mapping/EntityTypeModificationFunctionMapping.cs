@@ -13,36 +13,42 @@ namespace System.Data.Entity.Core.Mapping
     /// </summary>
     public sealed class EntityTypeModificationFunctionMapping : MappingItem
     {
+        private readonly EntityType _entityType;
         private readonly ModificationFunctionMapping _deleteFunctionMapping;
         private readonly ModificationFunctionMapping _insertFunctionMapping;
         private readonly ModificationFunctionMapping _updateFunctionMapping;
 
-        internal EntityTypeModificationFunctionMapping()
-        {
-            // Testing
-        }
-
-        internal EntityTypeModificationFunctionMapping(
+        /// <summary>
+        /// Initializes a new EntityTypeModificationFunctionMapping instance.
+        /// </summary>
+        /// <param name="entityType">An entity type.</param>
+        /// <param name="deleteFunctionMapping">A delete function mapping.</param>
+        /// <param name="insertFunctionMapping">An insert function mapping.</param>
+        /// <param name="updateFunctionMapping">An updated function mapping.</param>
+        public EntityTypeModificationFunctionMapping(
             EntityType entityType,
             ModificationFunctionMapping deleteFunctionMapping,
             ModificationFunctionMapping insertFunctionMapping,
             ModificationFunctionMapping updateFunctionMapping)
         {
-            DebugCheck.NotNull(entityType);
+            Check.NotNull(entityType, "entityType");
 
-            EntityType = entityType;
+            _entityType = entityType;
             _deleteFunctionMapping = deleteFunctionMapping;
             _insertFunctionMapping = insertFunctionMapping;
             _updateFunctionMapping = updateFunctionMapping;
         }
 
-        // <summary>
-        // Gets (specific) entity type these functions handle.
-        // </summary>
-        internal readonly EntityType EntityType;
+        /// <summary>
+        /// Gets the entity type.
+        /// </summary>
+        public EntityType EntityType
+        {
+            get { return _entityType; }
+        }
 
         /// <summary>
-        /// Gets delete function for the current entity type.
+        /// Gets the delete function mapping.
         /// </summary>
         public ModificationFunctionMapping DeleteFunctionMapping
         {
@@ -50,7 +56,7 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets insert function for the current entity type.
+        /// Gets the insert function mapping.
         /// </summary>
         public ModificationFunctionMapping InsertFunctionMapping
         {
@@ -58,11 +64,29 @@ namespace System.Data.Entity.Core.Mapping
         }
 
         /// <summary>
-        /// Gets update function for the current entity type.
+        /// Gets hte update function mapping.
         /// </summary>
         public ModificationFunctionMapping UpdateFunctionMapping
         {
             get { return _updateFunctionMapping; }
+        }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return String.Format(
+                CultureInfo.InvariantCulture,
+                "ET{{{0}}}:{4}DFunc={{{1}}},{4}IFunc={{{2}}},{4}UFunc={{{3}}}", EntityType, DeleteFunctionMapping,
+                InsertFunctionMapping, UpdateFunctionMapping, Environment.NewLine + "  ");
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_deleteFunctionMapping);
+            SetReadOnly(_insertFunctionMapping);
+            SetReadOnly(_updateFunctionMapping);
+
+            base.SetReadOnly();
         }
 
         internal IEnumerable<ModificationFunctionParameterBinding> PrimaryParameterBindings
@@ -88,18 +112,6 @@ namespace System.Data.Entity.Core.Mapping
 
                 return result;
             }
-        }
-
-        /// <summary>
-        /// ToString
-        /// </summary>
-        /// <returns>A string that represents the current object.</returns>
-        public override string ToString()
-        {
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                "ET{{{0}}}:{4}DFunc={{{1}}},{4}IFunc={{{2}}},{4}UFunc={{{3}}}", EntityType, DeleteFunctionMapping,
-                InsertFunctionMapping, UpdateFunctionMapping, Environment.NewLine + "  ");
         }
     }
 }

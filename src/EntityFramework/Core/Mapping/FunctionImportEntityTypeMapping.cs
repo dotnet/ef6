@@ -42,7 +42,8 @@ namespace System.Data.Entity.Core.Mapping
 
         internal FunctionImportEntityTypeMapping(
             IEnumerable<EntityType> isOfTypeEntityTypes,
-            IEnumerable<EntityType> entityTypes, IEnumerable<FunctionImportEntityTypeMappingCondition> conditions,
+            IEnumerable<EntityType> entityTypes, 
+            IEnumerable<FunctionImportEntityTypeMappingCondition> conditions,
             Collection<FunctionImportReturnTypePropertyMapping> columnsRenameList,
             LineInfo lineInfo)
             : base(columnsRenameList, lineInfo)
@@ -78,6 +79,13 @@ namespace System.Data.Entity.Core.Mapping
         public ReadOnlyCollection<FunctionImportEntityTypeMappingCondition> Conditions
         {
             get { return _conditions; }
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_conditions);
+
+            base.SetReadOnly();
         }
 
         // <summary>

@@ -43,5 +43,97 @@ namespace System.Data.Entity.Core.Mapping
 
             Assert.Equal(2, storageEntityTypeModificationFunctionMapping.PrimaryParameterBindings.Count());
         }
+
+        [Fact]
+        public void Can_retrieve_properties_and_set_read_only()
+        {
+            var entitySet = new EntitySet();
+            entitySet.ChangeEntityContainerWithoutCollectionFixup(new EntityContainer("C", DataSpace.CSpace));
+
+            var deleteModificationFunctionMapping
+                = new ModificationFunctionMapping(
+                    entitySet,
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
+                    new[]
+                        {
+                            new ModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new ModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        new EdmProperty("M")
+                                    },
+                                null),
+                                false)
+                        },
+                    null,
+                    null);
+
+            var insertModificationFunctionMapping
+                = new ModificationFunctionMapping(
+                    entitySet,
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
+                    new[]
+                        {
+                            new ModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new ModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        new EdmProperty("M")
+                                    },
+                                null),
+                                false)
+                        },
+                    null,
+                    null);
+
+            var updateModificationFunctionMapping
+                = new ModificationFunctionMapping(
+                    entitySet,
+                    new EntityType("E", "N", DataSpace.CSpace),
+                    new EdmFunction("F", "N", DataSpace.SSpace),
+                    new[]
+                        {
+                            new ModificationFunctionParameterBinding(
+                                new FunctionParameter(),
+                                new ModificationFunctionMemberPath(
+                                new EdmMember[]
+                                    {
+                                        new EdmProperty("M")
+                                    },
+                                null),
+                                false)
+                        },
+                    null,
+                    null);
+
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var entityTypeModificationFunctionMapping
+                = new EntityTypeModificationFunctionMapping(
+                    entityType,
+                    deleteModificationFunctionMapping,
+                    insertModificationFunctionMapping,
+                    updateModificationFunctionMapping);
+
+            Assert.Same(entityTypeModificationFunctionMapping.EntityType, entityType);
+            Assert.Same(entityTypeModificationFunctionMapping.DeleteFunctionMapping, deleteModificationFunctionMapping);
+            Assert.Same(entityTypeModificationFunctionMapping.InsertFunctionMapping, insertModificationFunctionMapping);
+            Assert.Same(entityTypeModificationFunctionMapping.UpdateFunctionMapping, updateModificationFunctionMapping);
+
+            Assert.False(entityTypeModificationFunctionMapping.IsReadOnly);
+            Assert.False(deleteModificationFunctionMapping.IsReadOnly);
+            Assert.False(insertModificationFunctionMapping.IsReadOnly);
+            Assert.False(updateModificationFunctionMapping.IsReadOnly);
+
+            entityTypeModificationFunctionMapping.SetReadOnly();
+
+            Assert.True(entityTypeModificationFunctionMapping.IsReadOnly);
+            Assert.True(deleteModificationFunctionMapping.IsReadOnly);
+            Assert.True(insertModificationFunctionMapping.IsReadOnly);
+            Assert.True(updateModificationFunctionMapping.IsReadOnly);
+        }
     }
 }

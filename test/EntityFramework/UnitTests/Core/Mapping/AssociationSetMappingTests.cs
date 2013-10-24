@@ -207,5 +207,23 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => associationSetMapping.RemoveCondition(conditionPropertyMapping)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var entityType = new EntityType("ET", "N", DataSpace.SSpace);
+            var entitySet = new EntitySet("ES", "S", "T", "Q", entityType);
+            var associationSet = new AssociationSet("AS", new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace));
+            var associationSetMapping = new AssociationSetMapping(associationSet, entitySet, null);
+            var modificationFunctionMapping = new AssociationSetModificationFunctionMapping(associationSet, null, null);
+
+            associationSetMapping.ModificationFunctionMapping = modificationFunctionMapping;
+
+            Assert.False(associationSetMapping.AssociationTypeMapping.IsReadOnly);
+            Assert.False(modificationFunctionMapping.IsReadOnly);
+            associationSetMapping.SetReadOnly();
+            Assert.True(associationSetMapping.AssociationTypeMapping.IsReadOnly);
+            Assert.True(modificationFunctionMapping.IsReadOnly);
+        }
     }
 }

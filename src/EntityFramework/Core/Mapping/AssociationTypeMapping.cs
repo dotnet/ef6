@@ -139,5 +139,12 @@ namespace System.Data.Entity.Core.Mapping
         {
             get { return new ReadOnlyCollection<EntityTypeBase>(new List<EntityTypeBase>()); }
         }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_mappingFragment);
+
+            base.SetReadOnly();
+        }
     }
 }

@@ -64,5 +64,12 @@ namespace System.Data.Entity.Core.Mapping
                 CultureInfo.InvariantCulture,
                 "@{0}->{1}{2}", Parameter, IsCurrent ? "+" : "-", MemberPath);
         }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_memberPath);
+
+            base.SetReadOnly();
+        }
     }
 }

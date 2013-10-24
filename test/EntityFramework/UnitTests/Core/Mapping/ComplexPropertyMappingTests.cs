@@ -99,5 +99,20 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => mapping.RemoveTypeMapping(typeMapping)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var complexType = ComplexType.Create("CT", "NS", DataSpace.CSpace, new EdmMember[0], null);
+            var property = EdmProperty.CreateComplex("P", complexType);
+            var mapping = new ComplexPropertyMapping(property);
+
+            var typeMapping = new ComplexTypeMapping(isPartial: false);
+            mapping.AddTypeMapping(typeMapping);
+
+            Assert.False(typeMapping.IsReadOnly);
+            mapping.SetReadOnly();
+            Assert.True(typeMapping.IsReadOnly);
+        }
     }
 }

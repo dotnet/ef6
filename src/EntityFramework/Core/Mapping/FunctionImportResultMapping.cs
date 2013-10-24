@@ -9,7 +9,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Represents a result mapping for a function import.
     /// </summary>
-    public class FunctionImportResultMapping : MappingItem
+    public sealed class FunctionImportResultMapping : MappingItem
     {
         private readonly List<FunctionImportStructuralTypeMapping> _typeMappings
             = new List<FunctionImportStructuralTypeMapping>();
@@ -44,6 +44,15 @@ namespace System.Data.Entity.Core.Mapping
             ThrowIfReadOnly();
 
             _typeMappings.Remove(typeMapping);
+        }
+
+        internal override void SetReadOnly()
+        {
+            _typeMappings.TrimExcess();
+
+            SetReadOnly(_typeMappings);
+
+            base.SetReadOnly();
         }
 
         internal List<FunctionImportStructuralTypeMapping> SourceList

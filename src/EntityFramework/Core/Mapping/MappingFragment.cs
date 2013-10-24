@@ -426,6 +426,16 @@ namespace System.Data.Entity.Core.Mapping
             m_conditionProperties.Clear();
         }
 
+        internal override void SetReadOnly()
+        {
+            m_properties.TrimExcess();
+
+            SetReadOnly(m_properties);
+            SetReadOnly(m_conditionProperties.Values);
+
+            base.SetReadOnly();
+        }
+
         internal void RemoveConditionProperty(ConditionPropertyMapping condition)
         {
             DebugCheck.NotNull(condition);

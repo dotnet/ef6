@@ -72,5 +72,23 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<ArgumentNullException>(
                     () => new AssociationTypeMapping(null)).ParamName);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var associationType = new AssociationType("A", XmlConstants.ModelNamespace_3, false, DataSpace.CSpace);
+            var associationSet = new AssociationSet("AS", associationType);
+            var associationSetMapping
+                = new AssociationSetMapping(
+                    associationSet,
+                    new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)));
+            var associationTypeMapping = new AssociationTypeMapping(associationSetMapping);
+            var fragment = new MappingFragment(new EntitySet(), associationTypeMapping, false);
+            associationTypeMapping.MappingFragment = fragment;
+
+            Assert.False(fragment.IsReadOnly);
+            associationTypeMapping.SetReadOnly();
+            Assert.True(fragment.IsReadOnly);
+        }
     }
 }

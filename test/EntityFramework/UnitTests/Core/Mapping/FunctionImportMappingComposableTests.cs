@@ -492,6 +492,10 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Same(resultMapping, functionImportMapping.ResultMapping);
             Assert.Equal(1, functionImportMapping.StructuralTypeMappings.Count);
             Assert.Equal(1, functionImportMapping.TvfKeys.Length);
+
+            Assert.False(resultMapping.IsReadOnly);
+            functionImportMapping.SetReadOnly();
+            Assert.True(resultMapping.IsReadOnly);
         }
 
         [Fact]

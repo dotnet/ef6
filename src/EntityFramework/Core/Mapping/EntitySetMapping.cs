@@ -141,8 +141,11 @@ namespace System.Data.Entity.Core.Mapping
 
             _modificationFunctionMappings.Add(modificationFunctionMapping);
 
-            _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
-                InitializeImplicitlyMappedAssociationSetEnds);
+            if (_implicitlyMappedAssociationSetEnds.IsValueCreated)
+            {
+                _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
+                    InitializeImplicitlyMappedAssociationSetEnds);
+            }
         }
 
         /// <summary>
@@ -156,8 +159,27 @@ namespace System.Data.Entity.Core.Mapping
 
             _modificationFunctionMappings.Remove(modificationFunctionMapping);
 
-            _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
-                InitializeImplicitlyMappedAssociationSetEnds);
+            if (_implicitlyMappedAssociationSetEnds.IsValueCreated)
+            {
+                _implicitlyMappedAssociationSetEnds = new Lazy<List<AssociationSetEnd>>(
+                    InitializeImplicitlyMappedAssociationSetEnds);
+            }
+        }
+
+        internal override void SetReadOnly()
+        {
+            _entityTypeMappings.TrimExcess();
+            _modificationFunctionMappings.TrimExcess();
+
+            if (_implicitlyMappedAssociationSetEnds.IsValueCreated)
+            {
+                _implicitlyMappedAssociationSetEnds.Value.TrimExcess();
+            }
+
+            SetReadOnly(_entityTypeMappings);
+            SetReadOnly(_modificationFunctionMappings);
+
+            base.SetReadOnly();
         }
 
         // Requires:
@@ -202,6 +224,11 @@ namespace System.Data.Entity.Core.Mapping
                     implicitlyMappedAssociationSetEnds.AddRange(
                         modificationFunctionMapping.UpdateFunctionMapping.CollocatedAssociationSetEnds);
                 }
+            }
+
+            if (IsReadOnly)
+            {
+                implicitlyMappedAssociationSetEnds.TrimExcess();
             }
 
             return implicitlyMappedAssociationSetEnds;

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Mapping
 {
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Linq;
+    using System.Runtime.Remoting.Channels;
     using FunctionalTests.Model;
     using Xunit;
     using System.Data.Entity.Resources;
@@ -131,6 +132,54 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<ArgumentNullException>(
                     () => new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)).AddFunctionImportMapping(null))
                       .ParamName);
+        }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var conceptualContainer = new EntityContainer("C", DataSpace.CSpace);
+            var storeContainer = new EntityContainer("S", DataSpace.CSpace);
+            var containerMapping = new EntityContainerMapping(conceptualContainer, storeContainer, null, false);
+
+            var entitySet
+                = new EntitySet(
+                    "ES", "S", "T", "Q",
+                    new EntityType("ET", "N", DataSpace.SSpace));
+            var entitySetMapping = new EntitySetMapping(entitySet, containerMapping);
+            var associationSetMapping
+                = new AssociationSetMapping(
+                    new AssociationSet(
+                        "AS",
+                        new AssociationType("AT", "N", false, DataSpace.CSpace)),
+                    entitySet);
+            var functionImporMapping 
+                = new FunctionImportMappingFake(
+                    new EdmFunction("FI", "N", DataSpace.CSpace),
+                    new EdmFunction("TF", "N", DataSpace.SSpace));
+
+            containerMapping.AddSetMapping(entitySetMapping);
+            containerMapping.AddSetMapping(associationSetMapping);
+            containerMapping.AddFunctionImportMapping(functionImporMapping);
+
+            Assert.False(containerMapping.IsReadOnly);
+            Assert.False(entitySetMapping.IsReadOnly);
+            Assert.False(associationSetMapping.IsReadOnly);
+            Assert.False(functionImporMapping.IsReadOnly);
+
+            containerMapping.SetReadOnly();
+
+            Assert.True(containerMapping.IsReadOnly);
+            Assert.True(entitySetMapping.IsReadOnly);
+            Assert.True(associationSetMapping.IsReadOnly);
+            Assert.True(functionImporMapping.IsReadOnly);
+        }
+
+        private class FunctionImportMappingFake : FunctionImportMapping
+        {
+            public FunctionImportMappingFake(EdmFunction functionImport, EdmFunction targetFunction)
+                : base(functionImport, targetFunction)
+            {
+            }
         }
     }
 }

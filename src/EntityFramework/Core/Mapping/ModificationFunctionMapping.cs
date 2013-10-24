@@ -132,6 +132,14 @@ namespace System.Data.Entity.Core.Mapping
                 StringUtil.ToCommaSeparatedStringSorted(ResultBindings));
         }
 
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_parameterBindings);
+            SetReadOnly(_resultBindings);
+
+            base.SetReadOnly();
+        }
+
         // requires: entitySet must not be null
         // Yields all referenced association set ends in this mapping.
         private static IEnumerable<AssociationSetEnd> GetReferencedAssociationSetEnds(

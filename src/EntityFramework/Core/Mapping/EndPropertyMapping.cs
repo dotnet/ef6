@@ -130,5 +130,14 @@ namespace System.Data.Entity.Core.Mapping
 
             _properties.Remove(propertyMapping);
         }
+
+        internal override void SetReadOnly()
+        {
+            _properties.TrimExcess();
+
+            SetReadOnly(_properties);
+
+            base.SetReadOnly();
+        }
     }
 }

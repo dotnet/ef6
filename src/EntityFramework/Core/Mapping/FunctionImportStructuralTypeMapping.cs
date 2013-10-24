@@ -7,7 +7,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Specifies a function import structural type mapping.
     /// </summary>
-    public abstract class FunctionImportStructuralTypeMapping
+    public abstract class FunctionImportStructuralTypeMapping : MappingItem
     {
         internal readonly LineInfo LineInfo;
         internal readonly Collection<FunctionImportReturnTypePropertyMapping> ColumnsRenameList;
@@ -25,6 +25,13 @@ namespace System.Data.Entity.Core.Mapping
         public ReadOnlyCollection<FunctionImportReturnTypePropertyMapping> Properties
         {
             get { return new ReadOnlyCollection<FunctionImportReturnTypePropertyMapping>(ColumnsRenameList); }
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(ColumnsRenameList);
+
+            base.SetReadOnly();
         }
     }
 }

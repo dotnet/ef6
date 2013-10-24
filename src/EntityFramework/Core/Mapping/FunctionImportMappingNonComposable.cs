@@ -126,6 +126,13 @@ namespace System.Data.Entity.Core.Mapping
             get { return _resultMappings; }
         }
 
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_resultMappings);
+
+            base.SetReadOnly();
+        }
+
         // <summary>
         // If no return mappings were specified in the MSL return an empty return type mapping knowledge base.
         // Otherwise return the resultSetIndexth return type mapping knowledge base, or throw if resultSetIndex is out of range

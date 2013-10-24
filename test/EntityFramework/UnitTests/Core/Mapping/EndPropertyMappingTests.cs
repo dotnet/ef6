@@ -100,5 +100,19 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => mapping.RemoveProperty(scalarPropertyMapping)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var associationEnd = new AssociationEndMember("E", new EntityType("E", "N", DataSpace.CSpace));
+            var mapping = new EndPropertyMapping(associationEnd);
+            var scalarPropertyMapping
+                = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
+            mapping.AddProperty(scalarPropertyMapping);
+
+            Assert.False(scalarPropertyMapping.IsReadOnly);
+            mapping.SetReadOnly();
+            Assert.True(scalarPropertyMapping.IsReadOnly);
+        }
     }
 }

@@ -351,7 +351,7 @@ namespace System.Data.Entity.Core.Mapping
         public void AddSetMapping(EntitySetMapping setMapping)
         {
             Check.NotNull(setMapping, "setMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             if (!m_entitySetMappings.ContainsKey(setMapping.Set.Name))
             {
@@ -366,7 +366,7 @@ namespace System.Data.Entity.Core.Mapping
         public void RemoveSetMapping(EntitySetMapping setMapping)
         {
             Check.NotNull(setMapping, "setMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             m_entitySetMappings.Remove(setMapping.Set.Name);
         }
@@ -378,7 +378,7 @@ namespace System.Data.Entity.Core.Mapping
         public void AddSetMapping(AssociationSetMapping setMapping)
         {
             Check.NotNull(setMapping, "setMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             if (!m_associationSetMappings.ContainsKey(setMapping.Set.Name))
             {
@@ -393,7 +393,7 @@ namespace System.Data.Entity.Core.Mapping
         public void RemoveSetMapping(AssociationSetMapping setMapping)
         {
             Check.NotNull(setMapping, "setMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             m_associationSetMappings.Remove(setMapping.Set.Name);
         }
@@ -414,7 +414,7 @@ namespace System.Data.Entity.Core.Mapping
         public void AddFunctionImportMapping(FunctionImportMapping functionImportMapping)
         {
             Check.NotNull(functionImportMapping, "functionImportMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             m_functionImportMappings.Add(functionImportMapping.FunctionImport, functionImportMapping);
         }
@@ -426,9 +426,18 @@ namespace System.Data.Entity.Core.Mapping
         public void RemoveFunctionImportMapping(FunctionImportMapping functionImportMapping)
         {
             Check.NotNull(functionImportMapping, "functionImportMapping");
-            //Util.ThrowIfReadOnly(this);
+            Util.ThrowIfReadOnly(this);
 
             m_functionImportMappings.Remove(functionImportMapping.FunctionImport);
+        }
+
+        internal override void SetReadOnly()
+        {
+            MappingItem.SetReadOnly(m_entitySetMappings.Values);
+            MappingItem.SetReadOnly(m_associationSetMappings.Values);
+            MappingItem.SetReadOnly(m_functionImportMappings.Values);
+
+            base.SetReadOnly();
         }
 
         // <summary>

@@ -21,7 +21,7 @@ namespace System.Data.Entity.Core.Mapping
     /// <summary>
     /// Represents a mapping from a model function import to a store composable function.
     /// </summary>
-    public class FunctionImportMappingComposable : FunctionImportMapping
+    public sealed class FunctionImportMappingComposable : FunctionImportMapping
     {
         private readonly FunctionImportResultMapping _resultMapping;
         private readonly EntityContainerMapping _containerMapping;
@@ -227,6 +227,13 @@ namespace System.Data.Entity.Core.Mapping
         public FunctionImportResultMapping ResultMapping
         {
             get { return _resultMapping; }
+        }
+
+        internal override void SetReadOnly()
+        {
+            SetReadOnly(_resultMapping);
+
+            base.SetReadOnly();
         }
 
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]

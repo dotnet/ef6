@@ -157,8 +157,10 @@
     <Compile Include="Core\EntityClient\TestHelpers\MockHelper.cs" />
     <Compile Include="Core\EntitySqlExceptionTests.cs" />
     <Compile Include="Core\FieldNameLookupTests.cs" />
+    <Compile Include="Core\Mapping\AssociationSetModificationFunctionMappingTests.cs" />
     <Compile Include="Core\Mapping\ColumnMappingBuilderTests.cs" />
     <Compile Include="Core\Mapping\ComplexPropertyMappingTests.cs" />
+    <Compile Include="Core\Mapping\FunctionImportEntityTypeMappingTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingComposableTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportEntityTypeMappingConditionValueTests.cs" />
     <Compile Include="Core\Mapping\FunctionImportMappingNonComposableTests.cs" />

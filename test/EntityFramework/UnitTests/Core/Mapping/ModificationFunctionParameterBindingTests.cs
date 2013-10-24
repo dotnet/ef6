@@ -39,5 +39,17 @@ namespace System.Data.Entity.Core.Mapping
             Assert.Same(memberPath, parameterBinding.MemberPath);
             Assert.Equal(true, parameterBinding.IsCurrent);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var parameter = new FunctionParameter();
+            var memberPath = new ModificationFunctionMemberPath(Enumerable.Empty<EdmMember>(), null);
+            var parameterBinding = new ModificationFunctionParameterBinding(parameter, memberPath, true);
+
+            Assert.False(memberPath.IsReadOnly);
+            parameterBinding.SetReadOnly();
+            Assert.True(memberPath.IsReadOnly);
+        }
     }
 }

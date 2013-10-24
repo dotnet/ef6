@@ -468,5 +468,28 @@ namespace System.Data.Entity.Core.Mapping
                 Assert.Throws<InvalidOperationException>(
                     () => mappingFragment.RemoveCondition(conditionMapping)).Message);
         }
+
+        [Fact]
+        public void SetReadOnly_is_called_on_child_mapping_items()
+        {
+            var mappingFragment
+                = new MappingFragment(
+                    new EntitySet(),
+                    new EntityTypeMapping(
+                        new EntitySetMapping(
+                            new EntitySet(),
+                            new EntityContainerMapping(new EntityContainer("C", DataSpace.CSpace)))), false);
+            var scalarPropertyMapping = new ScalarPropertyMapping(new EdmProperty("P"), new EdmProperty("C", TypeUsage.Create(new PrimitiveType() { DataSpace = DataSpace.SSpace })));
+            var conditionMapping = new IsNullConditionMapping(new EdmProperty("P"), true);
+
+            mappingFragment.AddProperty(scalarPropertyMapping);
+            mappingFragment.AddCondition(conditionMapping);
+
+            Assert.False(scalarPropertyMapping.IsReadOnly);
+            Assert.False(conditionMapping.IsReadOnly);
+            mappingFragment.SetReadOnly();
+            Assert.True(scalarPropertyMapping.IsReadOnly);
+            Assert.True(conditionMapping.IsReadOnly);
+        }
     }
 }
