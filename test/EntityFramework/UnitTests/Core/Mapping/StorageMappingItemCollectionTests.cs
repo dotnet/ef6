@@ -362,13 +362,21 @@ using System.Data.Entity.Infrastructure;
         public void GenerateViews_generates_views_for_all_containers_that_contain_mappings()
         {
             var storageMappingItemCollection = 
-                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { SchoolMsl, Msl});
+                CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl});
 
-            var containerMapping = storageMappingItemCollection.GetItems<EntityContainerMapping>().First();
-            foreach (var entityTypeMapping in containerMapping.EntitySetMappings.SelectMany(m => m.EntityTypeMappings).ToList())
-            {
-                entityTypeMapping.EntitySetMapping.RemoveTypeMapping(entityTypeMapping);
-            }
+            // Add second container mapping without type mappings.
+            var conceptualEntityContainer = storageMappingItemCollection.EdmItemCollection.GetItems<EntityContainer>()[1];
+            var storeEntityContainer = storageMappingItemCollection.StoreItemCollection.GetItems<EntityContainer>()[1];
+            var storeEntitySet = storeEntityContainer.EntitySets.First();
+
+            var containerMapping = new EntityContainerMapping(
+                conceptualEntityContainer, storeEntityContainer, storageMappingItemCollection, false);
+
+            var entitySetMapping = new EntitySetMapping(storeEntitySet, containerMapping);
+            containerMapping.AddSetMapping(entitySetMapping);
+
+            containerMapping.SetReadOnly();
+            storageMappingItemCollection.AddInternal(containerMapping);
 
             var errors = new List<EdmSchemaError>();
             var views = storageMappingItemCollection.GenerateViews("AdventureWorksEntities3", "AdventureWorksModelStoreContainer", errors);

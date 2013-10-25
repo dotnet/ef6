@@ -1165,6 +1165,7 @@ namespace System.Data.Entity.Core.Mapping
                 if (MetadataHelper.CheckIfAllErrorsAreWarnings(errors)
                     && !Contains(containerMapping))
                 {
+                    containerMapping.SetReadOnly();
                     AddInternal(containerMapping);
                 }
             }

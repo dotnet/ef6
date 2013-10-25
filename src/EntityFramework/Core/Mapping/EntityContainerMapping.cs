@@ -65,6 +65,7 @@ namespace System.Data.Entity.Core.Mapping
         internal EntityContainerMapping(
             EntityContainer entityContainer, EntityContainer storageEntityContainer,
             StorageMappingItemCollection storageMappingItemCollection, bool validate, bool generateUpdateViews)
+            : base(MetadataFlags.CSSpace)
         {
             Check.NotNull(entityContainer, "entityContainer");
 
