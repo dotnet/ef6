@@ -13717,6 +13717,30 @@ namespace System.Data.Entity.Resources
         {
             get { return EntityRes.GetString(EntityRes.CommitFailed); }
         }
+
+        // <summary>
+        // A string like "The type '{0}' registered in the application config file as a DbConfiguration.Loaded event handler could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application."
+        // </summary>
+        internal static string ConfigEventTypeNotFound(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ConfigEventTypeNotFound, p0);
+        }
+
+        // <summary>
+        // A string like "The method '{0}' of type '{1}' registered in the application config file as a DbConfiguration.Loaded event handler could not be found, is not static, or does not match the EventHandler<DbConfigurationLoadedEventArgs> signature."
+        // </summary>
+        internal static string ConfigEventBadMethod(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConfigEventBadMethod, p0, p1);
+        }
+
+        // <summary>
+        // A string like "The method '{0}' of type '{1}' registered in the application config file could not be used as a DbConfiguration.Loaded event handler. Make sure that the method matches the EventHandler<DbConfigurationLoadedEventArgs> signature. See inner exception for details."
+        // </summary>
+        internal static string ConfigEventCannotBind(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConfigEventCannotBind, p0, p1);
+        }
     }
 
     // <summary>
@@ -17079,6 +17103,9 @@ namespace System.Data.Entity.Resources
         internal const string LightweightPrimitivePropertyConfiguration_NonLength = "LightweightPrimitivePropertyConfiguration_NonLength";
         internal const string UnableToUpgradeHistoryWhenCustomFactory = "UnableToUpgradeHistoryWhenCustomFactory";
         internal const string CommitFailed = "CommitFailed";
+        internal const string ConfigEventTypeNotFound = "ConfigEventTypeNotFound";
+        internal const string ConfigEventBadMethod = "ConfigEventBadMethod";
+        internal const string ConfigEventCannotBind = "ConfigEventCannotBind";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

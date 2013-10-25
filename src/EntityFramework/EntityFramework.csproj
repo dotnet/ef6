@@ -294,6 +294,8 @@
     <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheFactory.cs" />
     <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheTypeAttribute.cs" />
     <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactory.cs" />
+    <Compile Include="Internal\ConfigFile\ConfigLoadedCollection.cs" />
+    <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElement.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
     <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
@@ -486,7 +488,6 @@
     <Compile Include="Infrastructure\RetryLimitExceededException.cs" />
     <Compile Include="Infrastructure\DefaultExecutionStrategy.cs" />
     <Compile Include="Internal\CommandTracer.cs" />
-    <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElement.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerable.cs" />
     <Compile Include="Infrastructure\IDbAsyncEnumerableExtensions.cs" />
     <Compile Include="Infrastructure\DbSqlQuery.cs" />

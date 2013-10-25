@@ -52,6 +52,12 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                         var configuration = _newConfiguration
                                             ?? _newConfigurationType.CreateInstance<DbConfiguration>(
                                                 Strings.CreateInstance_BadDbConfigurationType);
+
+                        foreach (var handler in _loader.GetOnLoadedHandlers(AppConfig.DefaultInstance))
+                        {
+                            configuration.InternalConfiguration.AddOnLoadedHandler(handler);
+                        }
+
                         configuration.InternalConfiguration.Lock();
                         return configuration.InternalConfiguration;
                     });
@@ -84,11 +90,17 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
         {
             DebugCheck.NotNull(configuration);
 
-            var handler = _loadedHandler;
+            var eventArgs = new DbConfigurationLoadedEventArgs(configuration);
 
+            var handler = _loadedHandler;
             if (handler != null)
             {
-                handler(configuration.Owner, new DbConfigurationLoadedEventArgs(configuration));
+                handler(configuration.Owner, eventArgs);
+            }
+
+            foreach (var handlerFromConfigFile in configuration.OnLoadedHandlers)
+            {
+                handlerFromConfigFile(configuration.Owner, eventArgs);
             }
         }
 
@@ -233,6 +245,11 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 
             configuration.SwitchInRootResolver(_configuration.Value.RootResolver);
             configuration.AddAppConfigResolver(new AppConfigDependencyResolver(config, configuration));
+
+            foreach (var handler in _loader.GetOnLoadedHandlers(config))
+            {
+                configuration.AddOnLoadedHandler(handler);
+            }
 
             lock (_lock)
             {

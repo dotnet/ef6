@@ -14,6 +14,7 @@ namespace System.Data.Entity.Internal.ConfigFile
         private const string ContextsKey = "contexts";
         private const string ProviderKey = "providers";
         private const string ConfigurationTypeKey = "codeConfigurationType";
+        private const string ConfigLoadedKey = "loadedConfigEvents";
 
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         [ConfigurationProperty(DefaultConnectionFactoryKey)]
@@ -40,6 +41,12 @@ namespace System.Data.Entity.Internal.ConfigFile
         public virtual ContextCollection Contexts
         {
             get { return (ContextCollection)base[ContextsKey]; }
+        }
+
+        [ConfigurationProperty(ConfigLoadedKey)]
+        public virtual ConfigLoadedCollection ConfigLoadedHandlers
+        {
+            get { return (ConfigLoadedCollection)base[ConfigLoadedKey]; }
         }
     }
 }

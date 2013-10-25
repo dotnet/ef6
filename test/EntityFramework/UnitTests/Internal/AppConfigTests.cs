@@ -8,6 +8,7 @@ namespace System.Data.Entity.Internal
     using System.Data.Common;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal.ConfigFile;
     using System.Data.Entity.Resources;
     using Moq;
@@ -266,6 +267,32 @@ namespace System.Data.Entity.Internal
                 mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
 
                 Assert.Null(new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigurationTypeName);
+            }
+        }
+
+        public class ConfigLoadedHandlers : TestBase
+        {
+            [Fact]
+            public void ConfigLoadedHandlers_returns_all_registered_config_loaded_event_handlers()
+            {
+                EventHandler<DbConfigurationLoadedEventArgs> handler1 = (_, __) => { };
+                EventHandler<DbConfigurationLoadedEventArgs> handler2 = (_, __) => { };
+                var mockLoadedCollection = new Mock<ConfigLoadedCollection>();
+                mockLoadedCollection.Setup(m => m.RegisteredHandlers).Returns(new[] { handler1, handler2 });
+
+                var mockEFSection = new Mock<EntityFrameworkSection>();
+                mockEFSection.Setup(m => m.DefaultConnectionFactory).Returns(new DefaultConnectionFactoryElement());
+                mockEFSection.Setup(m => m.ConfigLoadedHandlers).Returns(mockLoadedCollection.Object);
+
+                Assert.Equal(
+                    new[] { handler1, handler2 },
+                    new AppConfig(new ConnectionStringSettingsCollection(), null, mockEFSection.Object).ConfigLoadedHandlers);
+            }
+
+            [Fact]
+            public void ConfigLoadedHandlers_returns_empty_if_no_handlers_are_registered()
+            {
+                Assert.Empty(new AppConfig(new ConnectionStringSettingsCollection(), null, null).ConfigLoadedHandlers);
             }
         }
     }

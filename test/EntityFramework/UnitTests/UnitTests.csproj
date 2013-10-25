@@ -351,6 +351,8 @@
     <Compile Include="Infrastructure\DbReferenceEntryTests.cs" />
     <Compile Include="Infrastructure\ExecutionStrategyKeyTests.cs" />
     <Compile Include="Internal\CommandTracerTests.cs" />
+    <Compile Include="Internal\ConfigFile\ConfigLoadedCollectionTests.cs" />
+    <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElementTests.cs" />
     <Compile Include="Internal\DatabaseTableCheckerTests.cs" />
     <Compile Include="Internal\DbHelpersTests.cs" />
     <Compile Include="Internal\EagerInternalContextTests.cs" />
@@ -469,7 +471,6 @@
     <Compile Include="Core\Objects\ObjectContextTests.cs" />
     <Compile Include="Core\Objects\TestHelpers\ObjectContextForMock.cs" />
     <Compile Include="Internal\ConfigFile\EntityFrameworkSectionTests.cs" />
-    <Compile Include="Internal\ConfigFile\MigrationSqlGeneratorElementTests.cs" />
     <Compile Include="Internal\ConfigFile\ProviderElementTests.cs" />
     <Compile Include="Internal\DatabaseCreatorTests.cs" />
     <Compile Include="Internal\DefaultModelCacheKeyFactoryTests.cs" />

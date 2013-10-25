@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Infrastructure.DependencyResolution
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Internal;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -42,6 +43,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             DebugCheck.NotNull(config);
 
             return !string.IsNullOrWhiteSpace(config.ConfigurationTypeName);
+        }
+
+        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> GetOnLoadedHandlers(AppConfig config)
+        {
+            DebugCheck.NotNull(config);
+
+            return config.ConfigLoadedHandlers;
         }
     }
 }

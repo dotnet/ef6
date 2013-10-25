@@ -5457,4 +5457,13 @@
   <data name="CommitFailed" xml:space="preserve">
     <value>An error was reported while committing a database transaction but it could not be determined whether the transaction succeeded or failed on the database server. See the inner exception and http://go.microsoft.com/fwlink/?LinkId=313468 for more information.</value>
   </data>
+  <data name="ConfigEventTypeNotFound" xml:space="preserve">
+    <value>The type '{0}' registered in the application config file as a DbConfiguration.Loaded event handler could not be loaded. Make sure that the assembly-qualified name is used and that the assembly is available to the running application.</value>
+  </data>
+  <data name="ConfigEventBadMethod" xml:space="preserve">
+    <value>The method '{0}' of type '{1}' registered in the application config file as a DbConfiguration.Loaded event handler could not be found, is not static, or does not match the EventHandler&lt;DbConfigurationLoadedEventArgs&gt; signature.</value>
+  </data>
+  <data name="ConfigEventCannotBind" xml:space="preserve">
+    <value>The method '{0}' of type '{1}' registered in the application config file could not be used as a DbConfiguration.Loaded event handler. Make sure that the method matches the EventHandler&lt;DbConfigurationLoadedEventArgs&gt; signature. See inner exception for details.</value>
+  </data>
 </root>

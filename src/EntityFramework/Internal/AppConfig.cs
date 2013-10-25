@@ -171,5 +171,10 @@ namespace System.Data.Entity.Internal
         {
             get { return _providerServices.Value; }
         }
+
+        public virtual IEnumerable<EventHandler<DbConfigurationLoadedEventArgs>> ConfigLoadedHandlers
+        {
+            get { return _entityFrameworkSettings.ConfigLoadedHandlers.RegisteredHandlers; }
+        }
     }
 }
