@@ -26,8 +26,8 @@ namespace System.Data.Entity.ConnectionFactoryConfig
         // Hard-coding this rather than getting it dynamically because the product code gets it dynamically
         // and the tests need to make sure it gets the correct thing. This will need to be updated when the
         // assembly version number is incremented.
-        private static readonly Version _net45EntityFrameworkVersion = new Version("6.1.0.0");
-        private static readonly Version _net40EntityFrameworkVersion = new Version("6.1.0.0");
+        private static readonly Version _net45EntityFrameworkVersion = new Version("6.0.0.0");
+        private static readonly Version _net40EntityFrameworkVersion = new Version("6.0.0.0");
 
         private const string EntityFrameworkSectionFormat =
             "System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version={0}, Culture=neutral, PublicKeyToken=b77a5c561934e089";

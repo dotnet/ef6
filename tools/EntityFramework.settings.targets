@@ -40,6 +40,10 @@ Project global pre-settings.
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     <StyleCopOverrideSettingsFile>$(RepositoryRoot)Settings.StyleCop</StyleCopOverrideSettingsFile>
   </PropertyGroup>
+  
+  <PropertyGroup>
+    <UseRuntimeAssemblyVersionFormat>true</UseRuntimeAssemblyVersionFormat>
+  </PropertyGroup>
 
   <PropertyGroup>
     <!-- Use CustomAfterMicrosoftCommonTargets property (Microsoft.Common.targets) to inject project post-targets  -->
