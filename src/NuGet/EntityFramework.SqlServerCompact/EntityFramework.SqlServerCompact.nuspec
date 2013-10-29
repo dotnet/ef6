@@ -7,8 +7,8 @@
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF SQL Compact CE</tags>
-    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=320540</projectUrl>
-    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=320539</licenseUrl>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</projectUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=262998</licenseUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Allows SQL Server Compact 4.0 to be used with Entity Framework.</description>
     <summary>Allows SQL Server Compact 4.0 to be used with Entity Framework.</summary>
