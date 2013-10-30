@@ -569,6 +569,7 @@
     <Compile Include="TestHelpers\AdventureWorksModelBuilder.cs" />
     <Compile Include="TestHelpers\DynamicTypeDescriptor.cs" />
     <Compile Include="TestHelpers\DbDatabaseMappingExtensions.cs" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="! DON%27T ADD TESTS HERE\ReadMe.txt" />
