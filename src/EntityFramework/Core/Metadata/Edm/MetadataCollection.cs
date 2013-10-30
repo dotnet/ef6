@@ -149,7 +149,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             set
             {
                 ThrowIfReadOnly();
-                Debug.Assert(_collectionData.IdentityDictionary.Value == null);
+                Debug.Assert(_collectionData.IdentityDictionary == null);
 
                 _collectionData.OrderedList[index] = value;
             }
@@ -215,8 +215,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public void InvalidateCache()
         {
-            _collectionData.IdentityDictionary
-                = new Lazy<Dictionary<string, OrderedIndex>>(
+            _collectionData.ResetDictionary(
                 () =>
                 {
                     if (_collectionData.OrderedList.Count > UseSortedListCrossover)
@@ -373,11 +372,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             int index;
             var listCount = collectionData.OrderedList.Count;
-            if (null != collectionData.IdentityDictionary.Value)
+            if (null != collectionData.IdentityDictionary)
             {
                 index
                     = AddToDictionary(
-                        collectionData.IdentityDictionary.Value,
+                        collectionData.IdentityDictionary,
                         collectionData.OrderedList,
                         item.Identity,
                         listCount,
@@ -401,27 +400,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     // This is a new item to be inserted. Grow if we must before adding to ordered list.
                     if (UseSortedListCrossover <= listCount)
                     {
-                        collectionData.IdentityDictionary
-                            = new Lazy<Dictionary<string, OrderedIndex>>(
-                                () =>
+                        collectionData.ResetDictionary(
+                            () =>
+                            {
+                                var identityDictionary
+                                    = new Dictionary<string, OrderedIndex>(
+                                        collectionData.OrderedList.Count + 1,
+                                        StringComparer.OrdinalIgnoreCase);
+
+                                for (var i = 0; i < collectionData.OrderedList.Count; ++i)
                                 {
-                                    var identityDictionary
-                                        = new Dictionary<string, OrderedIndex>(
-                                            collectionData.OrderedList.Count + 1,
-                                            StringComparer.OrdinalIgnoreCase);
+                                    AddToDictionary(
+                                        identityDictionary,
+                                        collectionData.OrderedList,
+                                        collectionData.OrderedList[i].Identity,
+                                        i,
+                                        false);
+                                }
 
-                                    for (var i = 0; i < collectionData.OrderedList.Count; ++i)
-                                    {
-                                        AddToDictionary(
-                                            identityDictionary,
-                                            collectionData.OrderedList,
-                                            collectionData.OrderedList[i].Identity,
-                                            i,
-                                            false);
-                                    }
-
-                                    return identityDictionary;
-                                });
+                                return identityDictionary;
+                            });
                     }
                 }
             }
@@ -566,11 +564,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             DebugCheck.NotNull(identity);
 
             var index = -1;
-            if (null != collectionData.IdentityDictionary.Value)
+            if (null != collectionData.IdentityDictionary)
             {
                 // OrdinalIgnoreCase dictionary lookup
                 OrderedIndex orderIndex;
-                if (collectionData.IdentityDictionary.Value.TryGetValue(identity, out orderIndex))
+                if (collectionData.IdentityDictionary.TryGetValue(identity, out orderIndex))
                 {
                     if (ignoreCase)
                     {
@@ -771,8 +769,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
             /// an OrderedIndex structure with other case-insensitive matches for the
             /// entry.  See additional comments in AddInternal.
             /// </summary>
-            internal Lazy<Dictionary<string, OrderedIndex>> IdentityDictionary
-                = new Lazy<Dictionary<string, OrderedIndex>>(() => null);
+            // NOTE: The original implementation used Lazy<T> for the identity dictionary.
+            // The Lazy<T>.Value getter calls Debugger.NotifyOfCrossThreadDependency which causes
+            // significant slowdown when the debugger is attached, considering the heavy usage of 
+            // the MetadataCollection<T> class.
+            internal volatile Dictionary<string, OrderedIndex> _identityDictionary;
+            internal volatile bool _dictionaryInitialized;
+            internal Func<Dictionary<string, OrderedIndex>> _dictionaryFactory;
 
             internal readonly List<T> OrderedList;
 
@@ -797,33 +800,62 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
                 if (UseSortedListCrossover <= OrderedList.Capacity)
                 {
-                    IdentityDictionary
-                        = new Lazy<Dictionary<string, OrderedIndex>>(
-                            () =>
-                            {
-                                var identityDictionary
-                                    = new Dictionary<string, OrderedIndex>(
-                                        OrderedList.Capacity,
-                                        StringComparer.OrdinalIgnoreCase);
+                    _dictionaryFactory
+                        = () =>
+                          {
+                              var identityDictionary
+                                  = new Dictionary<string, OrderedIndex>(
+                                      OrderedList.Capacity,
+                                      StringComparer.OrdinalIgnoreCase);
 
-                                if (null != original.IdentityDictionary.Value)
-                                {
-                                    foreach (var pair in original.IdentityDictionary.Value)
-                                    {
-                                        identityDictionary.Add(pair.Key, pair.Value);
-                                    }
-                                }
-                                else
-                                {
-                                    for (var i = 0; i < OrderedList.Count; ++i)
-                                    {
-                                        AddToDictionary(identityDictionary, OrderedList, OrderedList[i].Identity, i, false);
-                                    }
-                                }
+                              if (null != original.IdentityDictionary)
+                              {
+                                  foreach (var pair in original.IdentityDictionary)
+                                  {
+                                      identityDictionary.Add(pair.Key, pair.Value);
+                                  }
+                              }
+                              else
+                              {
+                                  for (var i = 0; i < OrderedList.Count; ++i)
+                                  {
+                                      AddToDictionary(identityDictionary, OrderedList, OrderedList[i].Identity, i, false);
+                                  }
+                              }
 
-                                return identityDictionary;
-                            });
+                              return identityDictionary;
+                          };
                 }
+            }
+
+            internal Dictionary<string, OrderedIndex> IdentityDictionary
+            {
+                get
+                {
+                    if (!_dictionaryInitialized)
+                    {
+                        lock (this)
+                        {
+                            if (!_dictionaryInitialized)
+                            {
+                                _identityDictionary = _dictionaryFactory != null ? _dictionaryFactory() : null;
+                                _dictionaryInitialized = true;
+                                _dictionaryFactory = null;
+                            }
+                        }
+                    }
+
+                    return _identityDictionary;
+                }
+            }
+
+            internal void ResetDictionary(Func<Dictionary<string, OrderedIndex>> dictionaryFactory)
+            {
+                DebugCheck.NotNull(dictionaryFactory);
+
+                _identityDictionary = null;
+                _dictionaryInitialized = false;
+                _dictionaryFactory = dictionaryFactory;
             }
         }
     }
