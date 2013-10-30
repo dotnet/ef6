@@ -28,7 +28,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             get { return Database.ProviderManifest; }
         }
 
-        internal IList<EntityContainerMapping> EntityContainerMappings
+        internal ReadOnlyCollection<EntityContainerMapping> EntityContainerMappings
         {
             get { return new ReadOnlyCollection<EntityContainerMapping>(_entityContainerMappings); }
         }
