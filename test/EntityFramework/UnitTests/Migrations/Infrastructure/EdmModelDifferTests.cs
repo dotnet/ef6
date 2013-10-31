@@ -139,53 +139,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(operations.Any(o => o is AddColumnOperation));
         }
 
-        public class WorldContext_Invalid : ModificationCommandTreeGeneratorTests.WorldContext_Fk
-        {
-            static WorldContext_Invalid()
-            {
-                Database.SetInitializer<WorldContext_Invalid>(null);
-            }
-
-            protected override void OnModelCreating(DbModelBuilder modelBuilder)
-            {
-                base.OnModelCreating(modelBuilder);
-
-                modelBuilder
-                    .Entity<ModificationCommandTreeGeneratorTests.Thing>()
-                    .Property(t => t.Id)
-                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            }
-        }
-
-        [MigrationsTheory]
-        public void Update_exceptions_should_be_wrapped_when_generating_sproc_bodies()
-        {
-            var modelBuilder = new DbModelBuilder();
-
-            var model1 = modelBuilder.Build(ProviderInfo);
-
-            var context = new WorldContext_Invalid();
-
-            var commandTreeGenerator
-                = new ModificationCommandTreeGenerator(
-                    context
-                        .InternalContext
-                        .CodeFirstModel
-                        .CachedModelBuilder
-                        .BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo));
-
-            Assert.Throws<InvalidOperationException>(
-                () => new EdmModelDiffer()
-                    .Diff(
-                        model1.GetModel(),
-                        context.GetModel(),
-                        new Lazy<ModificationCommandTreeGenerator>(() => commandTreeGenerator),
-                        new SqlServerMigrationSqlGenerator())
-                    .OfType<CreateProcedureOperation>()
-                    .ToList())
-                .ValidateMessage("ErrorGeneratingCommandTree", "Thing_Insert", "Thing");
-        }
-
         public class TypeBase
         {
             public int Id { get; set; }

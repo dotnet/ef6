@@ -154,7 +154,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
         }
 
         [Fact]
-        public void Apply_should_not_match_required_self_ref()
+        public void Apply_should_match_required_self_ref()
         {
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
@@ -162,20 +162,17 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             entityType.AddKeyMember(property);
 
-            var associationType
-                = model.AddAssociationType(
+            model.AddAssociationType(
                     "A",
                     entityType, RelationshipMultiplicity.One,
                     entityType, RelationshipMultiplicity.Many);
 
-            model.AddAssociationType(associationType);
-
             (new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new DbModel(model, null));
 
-            Assert.Null(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
+            Assert.NotNull(entityType.KeyProperties.Single().GetStoreGeneratedPattern());
         }
-
+        
         [Fact]
         public void Apply_should_match_optional_self_ref()
         {
@@ -185,13 +182,10 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
             entityType.AddKeyMember(property);
 
-            var associationType
-                = model.AddAssociationType(
+            model.AddAssociationType(
                     "A",
                     entityType, RelationshipMultiplicity.ZeroOrOne,
                     entityType, RelationshipMultiplicity.Many);
-
-            model.AddAssociationType(associationType);
 
             (new StoreGeneratedIdentityKeyConvention())
                 .Apply(entityType, new DbModel(model, null));

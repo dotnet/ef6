@@ -42,27 +42,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
                     if (!model.GetConceptualModel().AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
-                        && !ParentOfTpc(item, model.GetConceptualModel())
-                        && !HasRequiredSelfRef(item, model.GetConceptualModel()))
+                        && !ParentOfTpc(item, model.GetConceptualModel()))
                     {
                         property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
                     }
                 }
             }
         }
-
-        private static bool HasRequiredSelfRef(EntityType entityType, EdmModel model)
-        {
-            DebugCheck.NotNull(entityType);
-            DebugCheck.NotNull(model);
-
-            return model.AssociationTypes
-                .Any(
-                    at => at.SourceEnd.GetEntityType().GetRootType() == entityType.GetRootType()
-                          && at.TargetEnd.GetEntityType().GetRootType() == entityType.GetRootType()
-                          && (at.SourceEnd.IsRequired() || at.TargetEnd.IsRequired()));
-        }
-
+        
         /// <summary>
         /// Checks for the PK property being an FK in a different table. A PK which is also an FK but
         /// in the same table is used for table splitting and can still be an identity column because
