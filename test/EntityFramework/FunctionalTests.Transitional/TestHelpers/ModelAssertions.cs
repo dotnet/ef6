@@ -393,6 +393,13 @@ namespace System.Data.Entity
                 return this;
             }
 
+            public TypeAssertions ColumnCountEquals(int expectedCount)
+            {
+                Xunit.Assert.Equal(expectedCount, _table.Properties.Count);
+
+                return this;
+            }
+
             public ColumnAssertions Column(string column)
             {
                 return new ColumnAssertions(_table.Properties.Single(c => c.Name == column));

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
@@ -333,13 +333,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static MappingFragment FindConditionTypeMappingFragment(
-            EntitySet tableSet, MappingFragment propertiesTypeMappingFragment, EntityTypeMapping conditionTypeMapping)
+            EntitySet tableSet, MappingFragment propertiesTypeMappingFragment,
+            EntityTypeMapping conditionTypeMapping)
         {
             var table = tableSet.ElementType;
 
             var conditionTypeMappingFragment
                 = conditionTypeMapping.MappingFragments
-                                      .SingleOrDefault(x => x.Table == table);
+                    .SingleOrDefault(x => x.Table == table);
 
             if (conditionTypeMappingFragment == null)
             {

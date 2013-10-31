@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
@@ -12,7 +12,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
     using System.Globalization;
     using System.Linq;
 
-    internal class TablePrimitiveOperations
+    internal static class TablePrimitiveOperations
     {
         public static void AddColumn(EntityType table, EdmProperty column)
         {
@@ -49,13 +49,12 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static EdmProperty IncludeColumn(
-            EntityType table, EdmProperty templateColumn, bool useExisting)
+            EntityType table, EdmProperty templateColumn, Func<EdmProperty, bool> isCompatible, bool useExisting)
         {
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(templateColumn);
 
-            var existingColumn =
-                table.Properties.SingleOrDefault(c => string.Equals(c.Name, templateColumn.Name, StringComparison.Ordinal));
+            var existingColumn = table.Properties.SingleOrDefault(isCompatible);
 
             if (existingColumn == null)
             {
@@ -75,9 +74,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             return templateColumn;
         }
+
+        public static Func<EdmProperty, bool> GetNameMatcher(string name)
+        {
+            return c => string.Equals(c.Name, name, StringComparison.Ordinal);
+        }
     }
 
-    internal class ForeignKeyPrimitiveOperations
+    internal static class ForeignKeyPrimitiveOperations
     {
         public static void UpdatePrincipalTables(
             DbDatabaseMapping databaseMapping,
@@ -412,8 +416,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             EntityType fromTable,
             EntityType toTable,
             EdmProperty column,
-            bool useExisting,
-            bool allowPkConstraintCopy)
+            Func<EdmProperty, bool> isCompatible,
+            bool useExisting)
         {
             DebugCheck.NotNull(fromTable);
             DebugCheck.NotNull(toTable);
@@ -423,8 +427,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             if (fromTable != toTable)
             {
-                movedColumn = TablePrimitiveOperations.IncludeColumn(toTable, column, useExisting);
-                if (allowPkConstraintCopy || !movedColumn.IsPrimaryKeyColumn)
+                movedColumn = TablePrimitiveOperations.IncludeColumn(toTable, column, isCompatible, useExisting);
+                if (!movedColumn.IsPrimaryKeyColumn)
                 {
                     ForeignKeyPrimitiveOperations.CopyAllForeignKeyConstraintsForColumn(
                         database, fromTable, toTable, column, movedColumn);
@@ -445,7 +449,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             if (fromTable != toTable)
             {
-                movedColumn = TablePrimitiveOperations.IncludeColumn(toTable, column, useExisting);
+                movedColumn = TablePrimitiveOperations.IncludeColumn(
+                    toTable, column, TablePrimitiveOperations.GetNameMatcher(column.Name), useExisting);
                 TablePrimitiveOperations.RemoveColumn(fromTable, column);
                 ForeignKeyPrimitiveOperations.MoveAllForeignKeyConstraintsForColumn(fromTable, toTable, column);
             }
@@ -454,7 +459,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
     }
 
-    internal class EntityMappingOperations
+    internal static class EntityMappingOperations
     {
         public static MappingFragment CreateTypeMappingFragment(
             EntityTypeMapping entityTypeMapping, MappingFragment templateFragment, EntitySet tableSet)
@@ -467,13 +472,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             foreach (
                 var pkPropertyMapping in templateFragment.ColumnMappings.Where(pm => pm.ColumnProperty.IsPrimaryKeyColumn))
             {
-                CopyPropertyMappingToFragment(pkPropertyMapping, fragment, true);
+                CopyPropertyMappingToFragment(
+                    pkPropertyMapping, fragment, TablePrimitiveOperations.GetNameMatcher(pkPropertyMapping.ColumnProperty.Name),
+                    useExisting: true);
+
             }
             return fragment;
         }
 
         private static void UpdatePropertyMapping(
-            EdmModel database,
+            DbDatabaseMapping databaseMapping,
             ColumnMappingBuilder propertyMappingBuilder,
             EntityType fromTable,
             EntityType toTable,
@@ -481,27 +489,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             propertyMappingBuilder.ColumnProperty
                 = TableOperations.CopyColumnAndAnyConstraints(
-                    database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, useExisting, false);
+                    databaseMapping.Database, fromTable, toTable, propertyMappingBuilder.ColumnProperty, GetPropertyPathMatcher(databaseMapping, propertyMappingBuilder), useExisting);
 
             propertyMappingBuilder.SyncNullabilityCSSpace();
         }
 
+        private static Func<EdmProperty, bool> GetPropertyPathMatcher(DbDatabaseMapping databaseMapping, ColumnMappingBuilder propertyMappingBuilder)
+        {
+            return c =>
+                databaseMapping.EntityContainerMappings.Single()
+                    .EntitySetMappings.SelectMany(esm => esm.EntityTypeMappings)
+                    .SelectMany(etm => etm.MappingFragments)
+                    .SelectMany(etmf => etmf.ColumnMappings)
+                    .Any(
+                        pm => pm.PropertyPath.SequenceEqual(propertyMappingBuilder.PropertyPath)
+                              && pm.ColumnProperty == c);
+        }
+
         public static void UpdatePropertyMappings(
-            EdmModel database,
+            DbDatabaseMapping databaseMapping,
             EntityType fromTable,
             MappingFragment fragment,
             bool useExisting)
         {
-            // move the column from the formTable to the table in fragment
+            // move the column from the fromTable to the table in fragment
             if (fromTable != fragment.Table)
             {
                 fragment.ColumnMappings.Each(
-                    pm => UpdatePropertyMapping(database, pm, fromTable, fragment.Table, useExisting));
+                    pm => UpdatePropertyMapping(databaseMapping, pm, fromTable, fragment.Table, useExisting));
             }
         }
 
         public static void MovePropertyMapping(
-            EdmModel database,
+            DbDatabaseMapping databaseMapping,
             MappingFragment fromFragment,
             MappingFragment toFragment,
             ColumnMappingBuilder propertyMappingBuilder,
@@ -511,7 +531,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             // move the column from the formTable to the table in fragment
             if (requiresUpdate && fromFragment.Table != toFragment.Table)
             {
-                UpdatePropertyMapping(database, propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
+                UpdatePropertyMapping(databaseMapping, propertyMappingBuilder, fromFragment.Table, toFragment.Table, useExisting);
             }
 
             // move the propertyMapping
@@ -520,10 +540,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         public static void CopyPropertyMappingToFragment(
-            ColumnMappingBuilder propertyMappingBuilder, MappingFragment fragment, bool useExisting)
+            ColumnMappingBuilder propertyMappingBuilder, MappingFragment fragment,
+            Func<EdmProperty, bool> isCompatible, bool useExisting)
         {
             // Ensure column is in the fragment's table
-            var column = TablePrimitiveOperations.IncludeColumn(fragment.Table, propertyMappingBuilder.ColumnProperty, useExisting);
+            var column = TablePrimitiveOperations.IncludeColumn(fragment.Table, propertyMappingBuilder.ColumnProperty, isCompatible, useExisting);
 
             // Add the property mapping
             fragment.AddColumnMapping(
@@ -538,16 +559,18 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             {
                 fragment.ColumnConditions.Each(
                     cc =>
-                        {
-                            cc.Column
-                                = TableOperations.CopyColumnAndAnyConstraints(
-                                    database, fromTable, fragment.Table, cc.Column, true, false);
-                        });
+                    {
+                        cc.Column
+                            = TableOperations.CopyColumnAndAnyConstraints(
+                                database, fromTable, fragment.Table, cc.Column,
+                                TablePrimitiveOperations.GetNameMatcher(cc.Column.Name),
+                                useExisting: true);
+                    });
             }
         }
     }
 
-    internal class AssociationMappingOperations
+    internal static class AssociationMappingOperations
     {
         private static void MoveAssociationSetMappingDependents(
             AssociationSetMapping associationSetMapping,
@@ -642,7 +665,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
     }
 
-    internal class DatabaseOperations
+    internal static class DatabaseOperations
     {
         public static void AddTypeConstraint(
             EdmModel database,

@@ -8,13 +8,19 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.SqlClient;
     using System.Linq;
+    using System.Text;
+    using System.Transactions;
+    using System.Xml;
     using FunctionalTests.Model;
+    using SimpleModel;
     using Xunit;
+    using Product = FunctionalTests.Model.Product;
 
     public class InheritanceScenarioTests : TestBase
     {
@@ -1416,6 +1422,187 @@ namespace FunctionalTests
             public int ParentId { get; set; }
         }
 
+    }
+
+
+    public class Issue1776 : TestBase
+    {
+        [Fact]
+        public void FK_name_uniquification_is_not_triggered_on_different_tables()
+        {
+            Database.SetInitializer(new DomainModelContextInitializer());
+
+            using (var context = new DomainModelContext(
+                        @"Data Source=.\Sqlexpress;Initial Catalog=Issue1776;Integrated Security=True;MultipleActiveResultSets=True"))
+            {
+                context.CustomOnModelCreating = modelBuilder =>
+                {
+                    var databaseMapping = BuildMapping(modelBuilder);
+
+                    databaseMapping.AssertValid();
+
+                    databaseMapping.Assert<COSwap>("COSwap")
+                        .ColumnCountEquals(2);
+                    databaseMapping.Assert<COSwap>(b => b.ReceiveLegId).DbEqual("ReceiveLegId", c => c.Name);
+                    databaseMapping.Assert<COSwap>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+                    
+                    databaseMapping.Assert<IRSwap>("LoanDeposit");
+                    databaseMapping.Assert<IRSwap>(b => b.ReceiveLegId).DbEqual("ReceiveLegId", c => c.Name);
+                    databaseMapping.Assert<IRSwap>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+
+                    databaseMapping.Assert<Swaption>("LoanDeposit");
+                    databaseMapping.Assert<Swaption>(b => b.ReceiveLegId).DbEqual("ReceiveLegId", c => c.Name);
+                    databaseMapping.Assert<Swaption>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+
+                    databaseMapping.Assert<LoanDeposit>("LoanDeposit")
+                        .ColumnCountEquals(3);
+                };
+                context.Set<LoanDeposit>().Where(ld => ld.Id == 0).ToList();
+            }
+        }
+
+        public class DomainModelContextInitializer : IDatabaseInitializer<DomainModelContext>
+        {
+            public void InitializeDatabase(DomainModelContext context)
+            {
+                if (!context.Database.Exists())
+                {
+                    context.Database.Delete();
+
+                    new EmptyContext(context.Database.Connection.ConnectionString).Database.Create();
+                    context.Database.ExecuteSqlCommand(CreateTablesScript);
+                }
+            }
+
+            private const string CreateTablesScript =
+                @"CREATE TABLE [dbo].[Instrument] 
+                    (
+                        [Id] int CONSTRAINT [DF_Instrument_Id]  NOT NULL,
+                        CONSTRAINT [PK_Instrument] PRIMARY KEY CLUSTERED ([Id] ASC)
+                    );
+
+                    CREATE TABLE [dbo].[COSwap] 
+                    (
+                        [Id] int NOT NULL,
+                        [ReceiveLegId] int NOT NULL,
+                        CONSTRAINT [PK_COSwap] PRIMARY KEY CLUSTERED ([Id] ASC),
+                        CONSTRAINT [FK_COSwap_Instrument] FOREIGN KEY ([Id]) REFERENCES [dbo].[Instrument] ([Id]) ON DELETE CASCADE
+                    );
+
+                    CREATE TABLE [dbo].[LoanDeposit]
+                    (
+                        [Id] int NOT NULL,
+                        [Discriminator] TINYINT NOT NULL,
+                        [ReceiveLegId] int NULL,
+                        CONSTRAINT [PK_LoanDeposit] PRIMARY KEY CLUSTERED ([Id] ASC),
+                        CONSTRAINT [FK_LoanDeposit_ReceiveLeg] FOREIGN KEY ([ReceiveLegId]) REFERENCES [dbo].[LoanDeposit] ([Id])
+                    );";
+        }
+
+        public class DomainModelContext : DbContext
+        {
+            public DomainModelContext(string connectionString)
+                : base(connectionString)
+            {
+            }
+
+            public Action<DbModelBuilder> CustomOnModelCreating { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<Instrument>().HasKey(p => p.Id);
+                modelBuilder.Entity<Instrument>()
+                    .Property(p => p.Id)
+                    .IsRequired()
+                    .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
+
+                modelBuilder.Entity<Instrument>().ToTable(typeof(Instrument).Name);
+
+                modelBuilder.Entity<LoanDeposit>().Map<LoanDeposit>(m => m.Requires("Discriminator").HasValue(1));
+                modelBuilder.Entity<LoanDeposit>().Map<IRSwap>(m => m.Requires("Discriminator").HasValue(3));
+                modelBuilder.Entity<LoanDeposit>().Map<Swaption>(m => m.Requires("Discriminator").HasValue(4));
+                modelBuilder.Entity<LoanDeposit>().ToTable(typeof(LoanDeposit).Name);
+
+                modelBuilder.Entity<COSwap>().ToTable(typeof(COSwap).Name);
+
+                modelBuilder.Ignore<NewLoanDeposit>();
+
+                if (CustomOnModelCreating != null)
+                {
+                    CustomOnModelCreating(modelBuilder);
+                }
+            }
+        }
+
+        public class Instrument
+        {
+            public int Id { get; set; }
+        }
+
+        public class COSwap : Instrument
+        {
+            public int ReceiveLegId { get; set; }
+            public Instrument ReceiveLeg { get; set; }
+        }
+
+        public class LoanDeposit : Instrument
+        {
+        }
+
+        public class IRSwap : LoanDeposit
+        {
+            public int? ReceiveLegId { get; set; }
+
+            public LoanDeposit ReceiveLeg { get; set; }
+        }
+
+        public class Swaption : IRSwap
+        {
+        }
+
+        [Fact]
+        public void Clashing_properties_in_TPH_are_uniquified()
+        {
+            var modelBuilder = new DbModelBuilder();
+            modelBuilder.Entity<Instrument>().ToTable(typeof(Instrument).Name);
+
+            modelBuilder.Entity<LoanDeposit>().Map<LoanDeposit>(m => m.Requires("Discriminator").HasValue(0));
+            modelBuilder.Entity<LoanDeposit>().Map<NewLoanDeposit>(m => m.Requires("Discriminator").HasValue(1));
+            modelBuilder.Entity<LoanDeposit>().Map<IRSwap>(m => m.Requires("Discriminator").HasValue(2));
+            modelBuilder.Entity<LoanDeposit>().Map<Swaption>(m => m.Requires("Discriminator").HasValue(3));
+            modelBuilder.Entity<LoanDeposit>().ToTable(typeof(LoanDeposit).Name);
+
+            modelBuilder.Entity<COSwap>().ToTable(typeof(COSwap).Name);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<COSwap>("COSwap")
+                .ColumnCountEquals(2);
+            databaseMapping.Assert<COSwap>(b => b.ReceiveLegId).DbEqual("ReceiveLegId", c => c.Name);
+            databaseMapping.Assert<COSwap>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+
+            databaseMapping.Assert<NewLoanDeposit>("LoanDeposit");
+            databaseMapping.Assert<NewLoanDeposit>(b => b.ReceiveLegId).DbEqual("ReceiveLegId", c => c.Name);
+            databaseMapping.Assert<NewLoanDeposit>(b => b.ReceiveLegId).DbEqual("uniqueidentifier", c => c.TypeName);
+
+            databaseMapping.Assert<IRSwap>("LoanDeposit");
+            databaseMapping.Assert<IRSwap>(b => b.ReceiveLegId).DbEqual("ReceiveLegId1", c => c.Name);
+            databaseMapping.Assert<IRSwap>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+
+            databaseMapping.Assert<Swaption>("LoanDeposit");
+            databaseMapping.Assert<Swaption>(b => b.ReceiveLegId).DbEqual("ReceiveLegId1", c => c.Name);
+            databaseMapping.Assert<Swaption>(b => b.ReceiveLegId).DbEqual("int", c => c.TypeName);
+            
+            databaseMapping.Assert<LoanDeposit>("LoanDeposit")
+                .ColumnCountEquals(4);
+        }
+
+        public class NewLoanDeposit : LoanDeposit
+        {
+            public Guid? ReceiveLegId { get; set; }
+        }
     }
 
     #region Bug DevDiv#223284
