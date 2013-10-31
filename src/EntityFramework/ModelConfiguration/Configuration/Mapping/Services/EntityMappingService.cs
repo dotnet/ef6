@@ -333,13 +333,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         }
 
         private static StorageMappingFragment FindConditionTypeMappingFragment(
-            EntitySet tableSet, StorageMappingFragment propertiesTypeMappingFragment, StorageEntityTypeMapping conditionTypeMapping)
+            EntitySet tableSet, StorageMappingFragment propertiesTypeMappingFragment,
+            StorageEntityTypeMapping conditionTypeMapping)
         {
             var table = tableSet.ElementType;
 
             var conditionTypeMappingFragment
                 = conditionTypeMapping.MappingFragments
-                                      .SingleOrDefault(x => x.Table == table);
+                    .SingleOrDefault(x => x.Table == table);
 
             if (conditionTypeMappingFragment == null)
             {

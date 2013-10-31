@@ -293,8 +293,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                     var extraFragment
                         = EntityMappingOperations
-                            .CreateTypeMappingFragment(
-                                entityTypeMapping, fragment, databaseMapping.Database.GetEntitySet(extraTable));
+                            .CreateTypeMappingFragment(entityTypeMapping, fragment, databaseMapping.Database.GetEntitySet(extraTable));
 
                     var requiresUpdate = extraTable != fromTable;
 
@@ -302,7 +301,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                     {
                         // move the property mapping from toFragment to extraFragment
                         EntityMappingOperations.MovePropertyMapping(
-                            databaseMapping.Database, fragment, extraFragment, pm, requiresUpdate, true);
+                            databaseMapping, fragment, extraFragment, pm, requiresUpdate, true);
                     }
                 }
                 else
@@ -335,7 +334,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                         var requiresUpdate = extraTable != fromTable;
                         EntityMappingOperations.MovePropertyMapping(
-                            databaseMapping.Database, fragment, extraFragment, pm, requiresUpdate, true);
+                            databaseMapping, fragment, extraFragment, pm, requiresUpdate, true);
                     }
                 }
             }
@@ -345,7 +344,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             //           FK names should be uniquified
             //           declared properties are moved, inherited ones are copied (duplicated)
             EntityMappingOperations.UpdatePropertyMappings(
-                databaseMapping.Database, fromTable, fragment, !isTableSharing);
+                databaseMapping, fromTable, fragment, !isTableSharing);
 
             // Configure Conditions for the fragment
             ConfigureDefaultDiscriminator(entityType, fragment);
@@ -684,6 +683,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 fragment.TableSet = databaseMapping.Database.GetEntitySet(toTable);
 
+                // Make sure that the fragment points to any existing key columns as these shouldn't be duplicated
+                foreach (var columnMapping in fragment.ColumnMappings.Where(cm => cm.ColumnProperty.IsPrimaryKeyColumn))
+                {
+                    var column = toTable.Properties.SingleOrDefault(
+                            c => string.Equals(c.Name, columnMapping.ColumnProperty.Name, StringComparison.Ordinal));
+                    columnMapping.ColumnProperty = column ?? columnMapping.ColumnProperty;
+                }
+
                 toTable.SetTableName(TableName);
             }
 
@@ -822,10 +829,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 foreach (var column in table.Properties.ToArray())
                 {
                     if (entityFragments.SelectMany(f => f.ColumnMappings).All(pm => pm.ColumnProperty != column)
-                        &&
-                        entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.ColumnProperty != column)
-                        &&
-                        associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column)
+                        && entityFragments.SelectMany(f => f.ColumnConditions).All(cc => cc.ColumnProperty != column)
+                        && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column)
                         && associationMappings.SelectMany(am => am.SourceEndMapping.PropertyMappings).All(pm => pm.ColumnProperty != column))
                     {
                         // Remove table FKs that refer to this column, and then remove the column

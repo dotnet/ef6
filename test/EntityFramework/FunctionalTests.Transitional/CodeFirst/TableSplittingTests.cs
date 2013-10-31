@@ -80,14 +80,16 @@ namespace System.Data.Entity.CodeFirst
                 .HasColumn("P1")
                 .HasColumn("P2")
                 .HasForeignKeyColumn("E1_E3Id", "T2")
-                .HasForeignKeyColumn("E2_E3Id", "T2");
+                .HasForeignKeyColumn("E2_E3Id", "T2")
+                .ColumnCountEquals(5);
 
             databaseMapping.Assert<E2>("T1")
                 .HasColumn("Id")
                 .HasColumn("P1")
                 .HasColumn("P2")
                 .HasForeignKeyColumn("E1_E3Id", "T2")
-                .HasForeignKeyColumn("E2_E3Id", "T2");
+                .HasForeignKeyColumn("E2_E3Id", "T2")
+                .ColumnCountEquals(5);
 
             databaseMapping.Assert<E3>("T2")
                 .HasColumn("Id");
