@@ -19,7 +19,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(enumType);
             DebugCheck.NotNull(type);
 
-            enumType.Annotations.SetClrType(type);
+            enumType.GetMetadataProperties().SetClrType(type);
         }
     }
 }

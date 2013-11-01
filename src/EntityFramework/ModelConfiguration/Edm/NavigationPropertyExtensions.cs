@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(navigationProperty);
 
-            navigationProperty.Annotations.SetConfiguration(configuration);
+            navigationProperty.GetMetadataProperties().SetConfiguration(configuration);
         }
 
         public static AssociationEndMember GetFromEnd(this NavigationProperty navProp)

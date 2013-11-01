@@ -37,7 +37,7 @@ namespace System.Data.Entity
 
             Type type = new MockType(name);
 
-            _entityType.Annotations.SetClrType(type);
+            _entityType.GetMetadataProperties().SetClrType(type);
 
             if (addSet)
             {

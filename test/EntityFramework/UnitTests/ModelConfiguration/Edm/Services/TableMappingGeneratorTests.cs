@@ -16,7 +16,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
 
             new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
@@ -40,7 +40,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
 
             new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 
@@ -68,7 +68,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entitySet = databaseMapping.Model.AddEntitySet("ESet", entityType);
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
 
             new TableMappingGenerator(ProviderRegistry.Sql2008_ProviderManifest).Generate(entityType, databaseMapping);
 

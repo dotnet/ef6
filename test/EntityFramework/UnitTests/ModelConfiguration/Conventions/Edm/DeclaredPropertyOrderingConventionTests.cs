@@ -30,7 +30,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
             var type = typeof(SimpleEntity);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
 
             var property1 = EdmProperty.CreatePrimitive("PrivateProperty", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 

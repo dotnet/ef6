@@ -35,7 +35,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
                         });
             var type = typeof(object);
 
-            complexType.Annotations.SetClrType(type);
+            complexType.GetMetadataProperties().SetClrType(type);
 
             entityTypeMappingFragment.AddColumnMapping(propertyMapping1);
 
@@ -67,10 +67,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var entitySetMapping = databaseMapping.AddEntitySetMapping(entitySet);
 
             var complexType1 = new ComplexType();
-            complexType1.Annotations.SetClrType(typeof(string));
+            complexType1.GetMetadataProperties().SetClrType(typeof(string));
 
             var complexType2 = new ComplexType();
-            complexType2.Annotations.SetClrType(typeof(object));
+            complexType2.GetMetadataProperties().SetClrType(typeof(object));
 
             var storageModificationFunctionMapping
                 = new ModificationFunctionMapping(
@@ -183,7 +183,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Db.Mapping
             var entityType = new EntityType("Foo", "N", DataSpace.CSpace);
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             var entityTypeMapping = new EntityTypeMapping(null);
             entityTypeMapping.AddType(entityType);
             entityTypeMapping.SetClrType(typeof(object));

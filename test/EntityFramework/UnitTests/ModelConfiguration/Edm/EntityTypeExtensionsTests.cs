@@ -47,7 +47,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
 
-            entityType.Annotations.SetConfiguration(42);
+            entityType.GetMetadataProperties().SetConfiguration(42);
 
             Assert.Equal(42, entityType.GetConfiguration());
         }
@@ -61,7 +61,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
 
             Assert.Equal(typeof(object), entityType.GetClrType());
         }

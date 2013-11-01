@@ -21,7 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(property);
 
-            property.Annotations.SetClrPropertyInfo(propertyInfo);
+            property.GetMetadataProperties().SetClrPropertyInfo(propertyInfo);
         }
 
         public static IEnumerable<T> GetClrAttributes<T>(this EdmMember property) where T : Attribute

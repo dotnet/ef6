@@ -14,7 +14,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             Assert.Null(((EdmType)entityType).GetClrType());
 
-            entityType.Annotations.SetClrType(typeof(Random));
+            entityType.GetMetadataProperties().SetClrType(typeof(Random));
 
             Assert.Same(typeof(Random), ((EdmType)entityType).GetClrType());
         }
@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             Assert.Null(((EdmType)complexType).GetClrType());
 
-            complexType.Annotations.SetClrType(typeof(Random));
+            complexType.GetMetadataProperties().SetClrType(typeof(Random));
 
             Assert.Same(typeof(Random), ((EdmType)complexType).GetClrType());
         }
@@ -38,7 +38,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             Assert.Null(((EdmType)enumType).GetClrType());
 
-            enumType.Annotations.SetClrType(typeof(Random));
+            enumType.GetMetadataProperties().SetClrType(typeof(Random));
 
             Assert.Same(typeof(Random), ((EdmType)enumType).GetClrType());
         }

@@ -28,7 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
@@ -60,7 +60,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             model.AddEntitySet("ESet", entityType);
 
             var property
@@ -99,7 +99,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             model.AddEntitySet("ESet", entityType);
 
             var property
@@ -138,7 +138,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             model.AddEntitySet("ESet", entityType);
 
             var property
@@ -177,7 +177,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var entityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            entityType.Annotations.SetClrType(type);
+            entityType.GetMetadataProperties().SetClrType(type);
             var property = EdmProperty.CreatePrimitive("Id", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType.AddMember(property);
@@ -202,7 +202,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var principalEntityType = model.AddEntityType("P");
             var type = typeof(object);
 
-            principalEntityType.Annotations.SetClrType(type);
+            principalEntityType.GetMetadataProperties().SetClrType(type);
             var property = EdmProperty.CreatePrimitive("Id1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             principalEntityType.AddMember(property);
@@ -216,7 +216,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var dependentEntityType = model.AddEntityType("D");
             var type1 = typeof(string);
 
-            dependentEntityType.Annotations.SetClrType(type1);
+            dependentEntityType.GetMetadataProperties().SetClrType(type1);
             model.AddEntitySet("PSet", principalEntityType);
             model.AddEntitySet("DSet", dependentEntityType);
             var associationType
@@ -250,10 +250,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var model = new EdmModel(DataSpace.CSpace);
 
             var principalEntityType = model.AddEntityType("P");
-            principalEntityType.Annotations.SetClrType(typeof(object));
+            principalEntityType.GetMetadataProperties().SetClrType(typeof(object));
 
             var dependentEntityType = model.AddEntityType("D");
-            dependentEntityType.Annotations.SetClrType(typeof(string));
+            dependentEntityType.GetMetadataProperties().SetClrType(typeof(string));
 
             var dependentProperty1 = EdmProperty.CreatePrimitive("FK1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
             dependentProperty1.Nullable = false;
@@ -304,7 +304,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var rootEntityType = model.AddEntityType("E");
             var type = typeof(object);
 
-            rootEntityType.Annotations.SetClrType(type);
+            rootEntityType.GetMetadataProperties().SetClrType(type);
             var property = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             rootEntityType.AddMember(property);
@@ -318,12 +318,12 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             entityType2.AddMember(property2);
             var type1 = typeof(string);
 
-            entityType2.Annotations.SetClrType(type1);
+            entityType2.GetMetadataProperties().SetClrType(type1);
             entityType2.BaseType = rootEntityType;
             var entityType3 = model.AddEntityType("E3");
             var type2 = typeof(int);
 
-            entityType3.Annotations.SetClrType(type2);
+            entityType3.GetMetadataProperties().SetClrType(type2);
             var property3 = EdmProperty.CreatePrimitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType3.AddMember(property3);
@@ -364,7 +364,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
 
             var rootEntityType = model.AddEntityType("E");
 
-            rootEntityType.Annotations.SetClrType(typeof(object));
+            rootEntityType.GetMetadataProperties().SetClrType(typeof(object));
 
             var property0
                 = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
@@ -385,13 +385,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                 = EdmProperty.CreatePrimitive("P3", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
             entityType2.AddMember(property2);
-            entityType2.Annotations.SetClrType(typeof(string));
+            entityType2.GetMetadataProperties().SetClrType(typeof(string));
             entityType2.Abstract = true;
             entityType2.BaseType = rootEntityType;
 
             var entityType3 = model.AddEntityType("E3");
 
-            entityType3.Annotations.SetClrType(typeof(int));
+            entityType3.GetMetadataProperties().SetClrType(typeof(int));
 
             var property3
                 = EdmProperty.CreatePrimitive("P4", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
@@ -425,11 +425,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
             entityType.Abstract = true;
-            entityType.Annotations.SetClrType(typeof(string));
+            entityType.GetMetadataProperties().SetClrType(typeof(string));
             
             var derivedType = model.AddEntityType("D");
             derivedType.BaseType = entityType;
-            derivedType.Annotations.SetClrType(typeof(object));
+            derivedType.GetMetadataProperties().SetClrType(typeof(object));
 
             model.AddEntitySet("ESet", entityType);
 
@@ -448,11 +448,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
             var model = new EdmModel(DataSpace.CSpace);
 
             var entityType1 = model.AddEntityType("E1");
-            entityType1.Annotations.SetClrType(typeof(string));
+            entityType1.GetMetadataProperties().SetClrType(typeof(string));
             model.AddEntitySet("E1Set", entityType1);
 
             var entityType2 = model.AddEntityType("E2");
-            entityType2.Annotations.SetClrType(typeof(string));
+            entityType2.GetMetadataProperties().SetClrType(typeof(string));
             model.AddEntitySet("E2Set", entityType2);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));

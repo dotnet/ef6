@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
 
@@ -131,9 +132,15 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(metadataProperties);
             DebugCheck.NotEmpty(name);
 
-            var annotation = metadataProperties.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
+            var property = metadataProperties.SingleOrDefault(p => p.Name.Equals(name, StringComparison.Ordinal));
 
-            return annotation != null ? annotation.Value : null;
+            if (property == null)
+            {
+                return null;
+            }
+
+            Debug.Assert(property.IsAnnotation);
+            return property.Value;
         }
 
         // <summary>
@@ -149,16 +156,17 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotEmpty(name);
             DebugCheck.NotNull(value);
 
-            var annotation = metadataProperties.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
+            var property = metadataProperties.SingleOrDefault(p => p.Name.Equals(name, StringComparison.Ordinal));
 
-            if (annotation == null)
+            if (property == null)
             {
-                annotation = MetadataProperty.CreateAnnotation(name, value);
-                metadataProperties.Add(annotation);
+                property = MetadataProperty.CreateAnnotation(name, value);
+                metadataProperties.Add(property);
             }
             else
             {
-                annotation.Value = value;
+                Debug.Assert(property.IsAnnotation);
+                property.Value = value;
             }
         }
 
@@ -172,12 +180,13 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(metadataProperties);
             DebugCheck.NotEmpty(name);
 
-            var annotationToRemove =
-                metadataProperties.SingleOrDefault(a => a.Name.Equals(name, StringComparison.Ordinal));
+            var property =
+                metadataProperties.SingleOrDefault(p => p.Name.Equals(name, StringComparison.Ordinal));
 
-            if (annotationToRemove != null)
+            if (property != null)
             {
-                metadataProperties.Remove(annotationToRemove);
+                Debug.Assert(property.IsAnnotation);
+                metadataProperties.Remove(property);
             }
         }
 

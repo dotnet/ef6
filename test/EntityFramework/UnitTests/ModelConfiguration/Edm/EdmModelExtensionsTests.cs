@@ -86,10 +86,10 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             var type1 = typeof(object);
             var tempQualifier1 = model.AddEntityType("A");
 
-            tempQualifier1.Annotations.SetClrType(type1);
+            tempQualifier1.GetMetadataProperties().SetClrType(type1);
             var type = typeof(string);
 
-            model.AddEntityType("B").Annotations.SetClrType(type);
+            model.AddEntityType("B").GetMetadataProperties().SetClrType(type);
 
             Assert.Equal(2, model.GetClrTypes().Count());
         }

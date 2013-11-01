@@ -48,7 +48,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             var model = new EdmModel(DataSpace.CSpace);
 
             var entityType = model.AddEntityType("E");
-            entityType.Annotations.SetClrType(typeof(object));
+            entityType.GetMetadataProperties().SetClrType(typeof(object));
 
             model.AddEntitySet("ESet", entityType);
 
@@ -222,7 +222,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                                  };
             var type = typeof(string);
 
-            entityType.BaseType.Annotations.SetClrType(type);
+            entityType.BaseType.GetMetadataProperties().SetClrType(type);
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));
             entityTypeConfiguration.Key(new MockPropertyInfo(typeof(int), "Id"));
 

@@ -103,7 +103,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 MapStructuralElements(
                     type,
-                    complexType.Annotations,
+                    complexType.GetMetadataProperties(),
                     (m, p) => m.Map(p, complexType, complexTypeConfiguration),
                     false,
                     complexTypeConfiguration);
@@ -165,7 +165,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
 
                 MapStructuralElements(
                     type,
-                    entityType.Annotations,
+                    entityType.GetMetadataProperties(),
                     (m, p) =>
                     {
                         if (!m.MapIfNotNavigationProperty(p, entityType, entityTypeConfiguration))

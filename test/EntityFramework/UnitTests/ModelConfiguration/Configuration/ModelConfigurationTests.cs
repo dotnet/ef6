@@ -40,11 +40,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var entityA = model.AddEntityType("A");
-            entityA.Annotations.SetClrType(typeA);
+            entityA.GetMetadataProperties().SetClrType(typeA);
             entityA.SetConfiguration(modelConfiguration.Entity(typeA));
 
             var entityB = model.AddEntityType("B");
-            entityB.Annotations.SetClrType(typeB);
+            entityB.GetMetadataProperties().SetClrType(typeB);
             entityB.SetConfiguration(modelConfiguration.Entity(typeB));
 
             model.AddEntitySet("AS", entityA);
@@ -82,11 +82,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var entityA = model.AddEntityType("A");
-            entityA.Annotations.SetClrType(typeof(AType1));
+            entityA.GetMetadataProperties().SetClrType(typeof(AType1));
             entityA.SetConfiguration(modelConfiguration.Entity(typeof(AType1)));
 
             var entityB = model.AddEntityType("B");
-            entityB.Annotations.SetClrType(typeof(BType1));
+            entityB.GetMetadataProperties().SetClrType(typeof(BType1));
             entityB.SetConfiguration(modelConfiguration.Entity(typeof(BType1)));
 
             model.AddEntitySet("AS", entityA);
@@ -141,14 +141,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var rootEntity = model.AddEntityType("Root");
-            rootEntity.Annotations.SetClrType(typeof(CType2));
+            rootEntity.GetMetadataProperties().SetClrType(typeof(CType2));
 
             var middleEntity = model.AddEntityType("Middle");
-            middleEntity.Annotations.SetClrType(typeof(BType2));
+            middleEntity.GetMetadataProperties().SetClrType(typeof(BType2));
             middleEntity.BaseType = rootEntity;
 
             var leafEntity = model.AddEntityType("Leaf");
-            leafEntity.Annotations.SetClrType(typeof(AType2));
+            leafEntity.GetMetadataProperties().SetClrType(typeof(AType2));
             leafEntity.BaseType = middleEntity;
 
             modelConfiguration.Configure(model);
@@ -181,10 +181,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var baseEntity = model.AddEntityType("Base");
-            baseEntity.Annotations.SetClrType(typeof(BType2));
+            baseEntity.GetMetadataProperties().SetClrType(typeof(BType2));
 
             var derivedEntity = model.AddEntityType("Derived");
-            derivedEntity.Annotations.SetClrType(typeof(AType2));
+            derivedEntity.GetMetadataProperties().SetClrType(typeof(AType2));
             derivedEntity.BaseType = baseEntity;
 
             Assert.Equal(
@@ -204,11 +204,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
 
             var baseEntity = model.AddEntityType("Base");
-            baseEntity.Annotations.SetClrType(typeof(BType2));
+            baseEntity.GetMetadataProperties().SetClrType(typeof(BType2));
             baseEntity.Abstract = true;
 
             var derivedEntity = model.AddEntityType("Derived");
-            derivedEntity.Annotations.SetClrType(typeof(CType2));
+            derivedEntity.GetMetadataProperties().SetClrType(typeof(CType2));
             derivedEntity.BaseType = baseEntity;
 
             modelConfiguration.Configure(model);
@@ -328,10 +328,10 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var model = new EdmModel(DataSpace.CSpace);
             var entityType = model.AddEntityType("E");
 
-            entityType.Annotations.SetClrType(mockEntityType);
+            entityType.GetMetadataProperties().SetClrType(mockEntityType);
             var complexType = model.AddComplexType("C");
 
-            complexType.Annotations.SetClrType(mockComplexType);
+            complexType.GetMetadataProperties().SetClrType(mockComplexType);
 
             var modelConfiguration = new ModelConfiguration();
             var mockComplexTypeConfiguration = new Mock<ComplexTypeConfiguration>(mockComplexType.Object);

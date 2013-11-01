@@ -427,7 +427,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 }
                 else
                 {
-                    property.Annotations.SetClrAttributes(
+                    property.GetMetadataProperties().SetClrAttributes(
                         new List<Attribute>
                             {
                                 a

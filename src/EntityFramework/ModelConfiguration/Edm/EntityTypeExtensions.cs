@@ -29,7 +29,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(configuration);
 
-            table.Annotations.SetConfiguration(configuration);
+            table.GetMetadataProperties().SetConfiguration(configuration);
         }
 
         public static DatabaseName GetTableName(this EntityType table)
@@ -44,7 +44,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(tableName);
 
-            table.Annotations.SetAnnotation(TableNameAnnotation, tableName);
+            table.GetMetadataProperties().SetAnnotation(TableNameAnnotation, tableName);
         }
 
         public static EntityType GetKeyNamesType(this EntityType table)
@@ -59,7 +59,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(table);
             DebugCheck.NotNull(entityType);
 
-            table.Annotations.SetAnnotation(KeyNamesTypeAnnotation, entityType);
+            table.GetMetadataProperties().SetAnnotation(KeyNamesTypeAnnotation, entityType);
         }
 
         internal static IEnumerable<EntityType> ToHierarchy(this EntityType edmType)

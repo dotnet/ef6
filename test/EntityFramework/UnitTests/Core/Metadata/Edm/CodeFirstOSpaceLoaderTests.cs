@@ -102,7 +102,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static T SetupEdmType<T>(T edmType, Type clrType) where T : GlobalItem
         {
             edmType.DataSpace = DataSpace.CSpace;
-            edmType.Annotations.SetClrType(clrType);
+            edmType.GetMetadataProperties().SetClrType(clrType);
             edmType.SetReadOnly();
             return edmType;
         }

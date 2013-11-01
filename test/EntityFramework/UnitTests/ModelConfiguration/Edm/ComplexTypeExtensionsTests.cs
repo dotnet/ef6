@@ -46,7 +46,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
 
             var type = typeof(object);
 
-            complexType.Annotations.SetClrType(type);
+            complexType.GetMetadataProperties().SetClrType(type);
 
             Assert.Equal(typeof(object), complexType.GetClrType());
         }

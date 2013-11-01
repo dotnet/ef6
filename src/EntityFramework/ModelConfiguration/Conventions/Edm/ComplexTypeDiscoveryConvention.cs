@@ -91,7 +91,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                 foreach (var annotation in candidate.EntityType.Annotations)
                 {
-                    complexType.Annotations.Add(annotation);
+                    complexType.GetMetadataProperties().Add(annotation);
                 }
 
                 foreach (var association in candidate.MatchingAssociations)
@@ -108,7 +108,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
 
                             foreach (var annotation in navigationProperty.Annotations)
                             {
-                                complexProperty.Annotations.Add(annotation);
+                                complexProperty.GetMetadataProperties().Add(annotation);
                             }
                         }
                     }

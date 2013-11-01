@@ -26,7 +26,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         internal virtual void Configure(ComplexType complexType)
         {
-            Configure(complexType.Name, complexType.Properties, complexType.Annotations);
+            Configure(complexType.Name, complexType.Properties, complexType.GetMetadataProperties());
         }
     }
 }

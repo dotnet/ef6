@@ -188,11 +188,11 @@ namespace System.Data.Entity.ModelConfiguration.Edm.Services
                     .Initialize(new EdmModel(DataSpace.CSpace), new EdmModel(DataSpace.SSpace));
 
             var entityType1 = databaseMapping.Model.AddEntityType("E1");
-            entityType1.Annotations.SetClrType(typeof(string));
+            entityType1.GetMetadataProperties().SetClrType(typeof(string));
             databaseMapping.Model.AddEntitySet("E1Set", entityType1);
 
             var entityType2 = databaseMapping.Model.AddEntityType("E2");
-            entityType2.Annotations.SetClrType(typeof(string));
+            entityType2.GetMetadataProperties().SetClrType(typeof(string));
             databaseMapping.Model.AddEntitySet("E2Set", entityType2);
 
             var entityTypeConfiguration = new EntityTypeConfiguration(typeof(object));

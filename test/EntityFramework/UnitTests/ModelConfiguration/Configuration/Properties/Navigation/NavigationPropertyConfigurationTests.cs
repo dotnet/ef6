@@ -112,7 +112,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            associationType.SourceEnd.GetEntityType().Annotations.SetClrType(mockType);
+            associationType.SourceEnd.GetEntityType().GetMetadataProperties().SetClrType(mockType);
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many;
             var property1 = EdmProperty.CreatePrimitive("P", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.String));
 
@@ -145,7 +145,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             associationType.SourceEnd = new AssociationEndMember("S", new EntityType("E", "N", DataSpace.CSpace));
             associationType.TargetEnd = new AssociationEndMember("T", new EntityType("E", "N", DataSpace.CSpace));
 
-            associationType.SourceEnd.GetEntityType().Annotations.SetClrType(mockType);
+            associationType.SourceEnd.GetEntityType().GetMetadataProperties().SetClrType(mockType);
             associationType.SourceEnd.RelationshipMultiplicity = RelationshipMultiplicity.Many; // make this the principal
             associationType.TargetEnd.RelationshipMultiplicity = RelationshipMultiplicity.ZeroOrOne;
 

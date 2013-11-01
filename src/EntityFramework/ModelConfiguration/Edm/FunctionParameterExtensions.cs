@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(functionParameter);
 
-            functionParameter.Annotations.SetConfiguration(configuration);
+            functionParameter.GetMetadataProperties().SetConfiguration(configuration);
         }
     }
 }

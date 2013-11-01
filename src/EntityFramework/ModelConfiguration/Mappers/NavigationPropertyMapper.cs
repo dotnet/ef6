@@ -70,7 +70,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                     _typeMapper.MappingContext.ModelConfiguration);
 
                 new AttributeMapper(_typeMapper.MappingContext.AttributeProvider)
-                    .Map(propertyInfo, navigationProperty.Annotations);
+                    .Map(propertyInfo, navigationProperty.GetMetadataProperties());
             }
         }
     }

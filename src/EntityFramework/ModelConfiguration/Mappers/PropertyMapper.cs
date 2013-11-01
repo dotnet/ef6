@@ -110,7 +110,7 @@ namespace System.Data.Entity.ModelConfiguration.Mappers
                 property.SetClrPropertyInfo(propertyInfo);
 
                 new AttributeMapper(_typeMapper.MappingContext.AttributeProvider)
-                    .Map(propertyInfo, property.Annotations);
+                    .Map(propertyInfo, property.GetMetadataProperties());
 
                 if (!property.IsComplexType)
                 {

@@ -27,14 +27,14 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(fk);
 
-            fk.Annotations.SetAnnotation(IsTypeConstraint, true);
+            fk.GetMetadataProperties().SetAnnotation(IsTypeConstraint, true);
         }
 
         public static void SetIsSplitConstraint(this ForeignKeyBuilder fk)
         {
             DebugCheck.NotNull(fk);
 
-            fk.Annotations.SetAnnotation(IsSplitConstraint, true);
+            fk.GetMetadataProperties().SetAnnotation(IsSplitConstraint, true);
         }
 
         public static AssociationType GetAssociationType(this ForeignKeyBuilder fk)
@@ -50,7 +50,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(fk);
             DebugCheck.NotNull(associationType);
 
-            fk.Annotations.SetAnnotation(AssociationType, associationType);
+            fk.GetMetadataProperties().SetAnnotation(AssociationType, associationType);
         }
     }
 }

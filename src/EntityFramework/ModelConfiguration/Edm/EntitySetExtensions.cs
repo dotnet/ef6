@@ -18,7 +18,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(entitySet);
 
-            entitySet.Annotations.SetConfiguration(configuration);
+            entitySet.GetMetadataProperties().SetConfiguration(configuration);
         }
     }
 }

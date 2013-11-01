@@ -404,7 +404,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             DebugCheck.NotNull(model);
 
             ConfigureKey(entityType);
-            Configure(entityType.Name, entityType.Properties, entityType.Annotations);
+            Configure(entityType.Name, entityType.Properties, entityType.GetMetadataProperties());
             ConfigureAssociations(entityType, model);
             ConfigureEntitySetName(entityType, model);
         }

@@ -83,7 +83,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             EntityType declaringEntityType;
             EntityType complexEntityType;
             var model = CreateModelFixture(out declaringEntityType, out complexEntityType);
-            complexEntityType.Annotations.SetConfiguration(
+            complexEntityType.GetMetadataProperties().SetConfiguration(
                 new EntityTypeConfiguration(typeof(object))
                     {
                         IsExplicitEntity = true

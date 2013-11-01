@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                                              RelationshipType = associationType
                                          };
             var foreignKeyAnnotation = new ForeignKeyAttribute("AId");
-            navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
+            navigationProperty.GetMetadataProperties().SetClrAttributes(new[] { foreignKeyAnnotation });
 
             (new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new DbModel(model, null));
@@ -90,7 +90,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property);
             var fkProperty = property;
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk");
-            navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
+            navigationProperty.GetMetadataProperties().SetClrAttributes(new[] { foreignKeyAnnotation });
 
             (new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new DbModel(model, null));
@@ -118,7 +118,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             entityType.AddMember(property1);
             var fkProperty2 = property1;
             var foreignKeyAnnotation = new ForeignKeyAttribute("Fk2,Fk1");
-            navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
+            navigationProperty.GetMetadataProperties().SetClrAttributes(new[] { foreignKeyAnnotation });
 
             (new ForeignKeyNavigationPropertyAttributeConvention())
                 .Apply(navigationProperty, new DbModel(model, null));
@@ -134,14 +134,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
 
-            entityType.Annotations.SetClrType(mockType);
+            entityType.GetMetadataProperties().SetClrType(mockType);
             var associationType = model.AddAssociationType(
                 "A",
                 entityType, RelationshipMultiplicity.ZeroOrOne,
                 entityType, RelationshipMultiplicity.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
             var foreignKeyAnnotation = new ForeignKeyAttribute("_Fk");
-            navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
+            navigationProperty.GetMetadataProperties().SetClrAttributes(new[] { foreignKeyAnnotation });
 
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_InvalidKey("N", mockType.Object, "_Fk", mockType.Object),
@@ -157,14 +157,14 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             var entityType = model.AddEntityType("E");
             var mockType = new MockType();
 
-            entityType.Annotations.SetClrType(mockType);
+            entityType.GetMetadataProperties().SetClrType(mockType);
             var associationType = model.AddAssociationType(
                 "A",
                 entityType, RelationshipMultiplicity.ZeroOrOne,
                 entityType, RelationshipMultiplicity.Many);
             var navigationProperty = entityType.AddNavigationProperty("N", associationType);
             var foreignKeyAnnotation = new ForeignKeyAttribute(",");
-            navigationProperty.Annotations.SetClrAttributes(new[] { foreignKeyAnnotation });
+            navigationProperty.GetMetadataProperties().SetClrAttributes(new[] { foreignKeyAnnotation });
 
             Assert.Equal(
                 Strings.ForeignKeyAttributeConvention_EmptyKey("N", mockType.Object),

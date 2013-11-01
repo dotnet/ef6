@@ -15,7 +15,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(associationType);
 
-            associationType.Annotations.SetAnnotation(IsIndependentAnnotation, true);
+            associationType.GetMetadataProperties().SetAnnotation(IsIndependentAnnotation, true);
         }
 
         public static bool IsIndependent(this AssociationType associationType)
@@ -32,7 +32,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(associationType);
 
-            associationType.Annotations.SetAnnotation(IsPrincipalConfiguredAnnotation, true);
+            associationType.GetMetadataProperties().SetAnnotation(IsPrincipalConfiguredAnnotation, true);
         }
 
         public static bool IsPrincipalConfigured(this AssociationType associationType)
@@ -67,7 +67,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(associationType);
 
-            associationType.Annotations.SetConfiguration(configuration);
+            associationType.GetMetadataProperties().SetConfiguration(configuration);
         }
 
         public static bool IsRequiredToMany(this AssociationType associationType)
