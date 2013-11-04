@@ -159,6 +159,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var renamedModificationFunctions = FindRenamedModificationFunctions().ToList();
             var movedModificationFunctions = FindMovedModificationFunctions().ToList();
 
+            RemoveSymmetricTableOperations(addedTables, removedTables);
+            
             return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
@@ -179,6 +181,36 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(changedModificationFunctions)
                 .Concat(removedModificationFunctions)
                 .ToList();
+        }
+
+        private void RemoveSymmetricTableOperations(List<CreateTableOperation> addedTables, List<DropTableOperation> removedTables)
+        {
+            DebugCheck.NotNull(addedTables);
+            DebugCheck.NotNull(removedTables);
+
+            if (!addedTables.Any()
+                || !removedTables.Any())
+            {
+                return;
+            }
+
+            for (var i = addedTables.Count - 1; i >= 0; i--)
+            {
+                var createTableOperation = addedTables[i];
+
+                for (var j = removedTables.Count - 1; j >= 0; j--)
+                {
+                    var removeTableOperation = removedTables[j];
+
+                    if (createTableOperation.Name.EqualsIgnoreCase(removeTableOperation.Name))
+                    {
+                        addedTables.RemoveAt(i);
+                        removedTables.RemoveAt(j);
+
+                        break;
+                    }
+                }
+            }
         }
 
         private static IEnumerable<RenameTableOperation> HandleTransitiveRenameDependencies(
