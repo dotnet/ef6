@@ -60,7 +60,7 @@ namespace System.Data.Entity.Migrations
         }
 
         /// <summary>
-        /// Gets or sets a value indicating if automatic migrations can be used when migration the database.
+        /// Gets or sets a value indicating if automatic migrations can be used when migrating the database.
         /// </summary>
         public bool AutomaticMigrationsEnabled { get; set; }
 
