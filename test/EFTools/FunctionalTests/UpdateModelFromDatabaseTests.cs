@@ -96,11 +96,8 @@ namespace EFDesigner.FunctionalTests
             hostContext.Setup(hc => hc.LogMessage(It.IsAny<string>())).Callback(Console.WriteLine);
             hostContext.Setup(hc => hc.DispatchToModelGenerationExtensions()).Callback(() => { });
 
-            var modelBuilderEngine = new Mock<UpdateModelFromDatabaseModelBuilderEngine>(
-                hostContext.Object,
-                settings,
-                artifact.Uri);
-            modelBuilderEngine.SetupGet(mbe => mbe.XDocument).Returns(XDocument.Load(artifact.Uri.ToString()));
+            var modelBuilderEngine = new Mock<UpdateModelFromDatabaseModelBuilderEngine>();
+            modelBuilderEngine.SetupGet(mbe => mbe.Model).Returns(XDocument.Load(artifact.Uri.ToString()));
 
             settings.ModelBuilderEngine = modelBuilderEngine.Object;
 

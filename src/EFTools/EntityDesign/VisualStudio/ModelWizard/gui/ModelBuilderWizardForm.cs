@@ -10,7 +10,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Globalization;
     using System.Windows.Forms;
     using EnvDTE;
-    using Microsoft.Data.Entity.Design.Extensibility;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Microsoft.Data.Entity.Design.VisualStudio.Package;
@@ -31,19 +30,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             PerformDatabaseConfigAndDBGenSummary
         }
 
+        // Used for testing only
+        internal ModelBuilderWizardForm(ModelBuilderSettings modelBuilderSettings, WizardMode wizardMode)
+        {
+            _wizardMode = wizardMode;
+            _modelBuilderSettings = modelBuilderSettings;
+        }
+
         /// <summary>
         ///     Constructor to start the wizard in the specified mode
         /// </summary>
         public ModelBuilderWizardForm(
-            IServiceProvider serviceProvider, Project project, ICollection<string> metadataFileNames,
+            IServiceProvider serviceProvider,
             ModelBuilderSettings modelBuilderSettings, WizardMode wizardMode)
         {
             _wizardMode = wizardMode;
             _serviceProvider = serviceProvider;
-            _project = project;
-            _metadataFileNames = metadataFileNames;
 
-            // use ModelBuilderSettings passed in as parameter
+            Debug.Assert(modelBuilderSettings.Project != null, "modelBuilderSettings.Project != null");
+
             _modelBuilderSettings = modelBuilderSettings;
 
             Initialize();
@@ -53,15 +58,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         // you get the same page back even if you use "Previous"/"Next" buttons
         private readonly List<WizardPage> _standardPages = new List<WizardPage>();
 
-// WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-        private readonly List<WizardPage> _preModelGenerationPages = new List<WizardPage>();
-        private readonly List<WizardPage> _postModelGenerationPages = new List<WizardPage>();
-#endif
-
         private readonly ModelBuilderSettings _modelBuilderSettings;
-        private readonly Project _project;
-        private readonly ICollection<string> _metadataFileNames;
         private readonly IServiceProvider _serviceProvider;
         private readonly WizardMode _wizardMode;
 
@@ -81,12 +78,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         public Project Project
         {
-            get { return _project; }
-        }
+            get
+            {
+                Debug.Assert(_modelBuilderSettings.Project != null, "Project must be set");
 
-        public ICollection<string> MetadataFileNames
-        {
-            get { return _metadataFileNames; }
+                return _modelBuilderSettings.Project;
+            }
         }
 
         public bool WizardCancelled
@@ -109,25 +106,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             get { return _wizardMode; }
         }
 
+        internal bool FileAlreadyExistsError { get; set; }
+
         public IEnumerable<WizardPage> RegisteredPages
         {
             get
             {
-                foreach (var p in _standardPages)
-                {
-                    yield return p;
-                }
-// WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-                foreach (var p in _preModelGenerationPages)
-                {
-                    yield return p;
-                }
-                foreach (var p in _postModelGenerationPages)
-                {
-                    yield return p;
-                }
-#endif
+                return _standardPages;
             }
         }
 
@@ -176,76 +161,38 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             {
                 case WizardMode.PerformDatabaseConfigAndSelectTables:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
-                    RegisterStandardPage(new WizardPageDbConfig(this));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
-                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this));
+                    RegisterStandardPage(new WizardPageDbConfig(this,  PackageManager.Package));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this, PackageManager.Package));
                     break;
 
                 case WizardMode.PerformSelectTablesOnly:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
-                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this));
+                    RegisterStandardPage(new WizardPageUpdateFromDatabase(this, PackageManager.Package));
                     break;
 
                 case WizardMode.PerformDatabaseConfigAndDBGenSummary:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateDatabaseScript;
-                    RegisterStandardPage(new WizardPageDbConfig(this));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
-                    RegisterStandardPage(new WizardPageDbGenSummary(this));
+                    RegisterStandardPage(new WizardPageDbConfig(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageDbGenSummary(this, PackageManager.Package));
                     break;
 
                 case WizardMode.PerformDBGenSummaryOnly:
                     ModelBuilderSettings.GenerationOption = ModelGenerationOption.GenerateDatabaseScript;
-                    RegisterStandardPage(new WizardPageDbGenSummary(this));
+                    RegisterStandardPage(new WizardPageDbGenSummary(this, PackageManager.Package));
                     break;
 
                 case WizardMode.PerformAllFunctionality:
                 default:
                     // Add the Start Page
                     // rest of pages will be added by the start page (if needed)
-                    RegisterStandardPage(new WizardPageStart(this));
-                    RegisterStandardPage(new WizardPageDbConfig(this));
-                    RegisterStandardPage(new WizardPageRuntimeConfig(this));
-                    RegisterStandardPage(new WizardPageSelectTables(this));
+                    RegisterStandardPage(new WizardPageStart(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageDbConfig(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageRuntimeConfig(this, PackageManager.Package));
+                    RegisterStandardPage(new WizardPageSelectTables(this, PackageManager.Package));
                     break;
             }
-
-// WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-            var wizardExtensionPages = EscherExtensionPointManager.LoadWizardPageExtensions();
-            foreach (var importInfo in wizardExtensionPages)
-            {
-                try
-                {
-                    var metadata = importInfo.Metadata;
-                    if (_wizardMode == metadata.WizardMode)
-                    {
-                        var wpfactory = importInfo.Value;
-                        WizardPage wp = wpfactory.CreatePage(this, ModelBuilderSettings.ExtensionData);
-
-                        if (wp != null)
-                        {
-                            if (metadata.WizardStage == WizardStage.PostModelGeneration)
-                            {
-                                RegisterPostModelGenerationPage(wp);
-                            }
-                            else if (metadata.WizardStage == WizardStage.PreModelGeneration)
-                            {
-                                RegisterPreModelGenerationPage(wp);
-                            }
-                            else
-                            {
-                                Debug.Fail("Unexpected wizard stage found");
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.Fail("Exception caught initializing wizard pages: " + e);
-                }
-            }
-
-#endif
 
             foreach (var page in RegisteredPages)
             {
@@ -257,19 +204,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
             _standardPages.Add(page);
         }
-
-// WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-        protected void RegisterPreModelGenerationPage(WizardPage page)
-        {
-            _preModelGenerationPages.Add(page);
-        }
-
-        protected void RegisterPostModelGenerationPage(WizardPage page)
-        {
-            _postModelGenerationPages.Add(page);
-        }
-#endif
 
         public override void OnCancel()
         {
@@ -411,14 +345,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         internal bool IsLastPreModelGenerationPageActive()
         {
-// WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-            if (_preModelGenerationPages.Count > 0)
-            {
-                return (ActivePage == _preModelGenerationPages[_preModelGenerationPages.Count - 1]);
-            }
-#endif
-
             return (ActivePageIndex == PageCount - 1);
         }
     }

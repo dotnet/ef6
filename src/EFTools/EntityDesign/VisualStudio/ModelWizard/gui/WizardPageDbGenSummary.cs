@@ -38,8 +38,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private const string RegKeyNameEdmxOverwriteWarning = "DbGenShowEdmxOverwriteWarning";
         private const string RegKeyNameCustomWorkflowWarning = "DbGenShowCustomWorkflowWarning";
 
-        internal WizardPageDbGenSummary(ModelBuilderWizardForm wizard)
-            : base(wizard)
+        internal WizardPageDbGenSummary(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+            : base(wizard, serviceProvider)
         {
             InitializeComponent();
 
@@ -92,13 +92,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 if (Wizard.Mode == ModelBuilderWizardForm.WizardMode.PerformDBGenSummaryOnly
                     && _addedDbConfigPage == false)
                 {
-                    Wizard.InsertPageBefore(Id, new WizardPageDbConfig(Wizard));
+                    Wizard.InsertPageBefore(Id, new WizardPageDbConfig(Wizard, PackageManager.Package));
                     _addedDbConfigPage = true;
                 }
 
                 // Display the default path for the DDL
                 var artifactProjectItem = VsUtils.GetProjectItemForDocument(
-                    Wizard.ModelBuilderSettings.Artifact.Uri.LocalPath, Services.ServiceProvider);
+                    Wizard.ModelBuilderSettings.Artifact.Uri.LocalPath, PackageManager.Package);
                 if (artifactProjectItem != null)
                 {
                     txtSaveDdlAs.Text = DatabaseGenerationEngine.CreateDefaultDdlFileName(artifactProjectItem) + _ddlFileExtension;
@@ -470,10 +470,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             using (new VsUtils.HourglassHelper())
             {
                 // Now we output the DDL, update app/web.config, update the edmx, and open the SQL file that gets produced
-                return DatabaseGenerationEngine.UpdateEdmxAndEnvironment(
-                    Wizard.Project,
-                    Wizard.MetadataFileNames,
-                    Wizard.ModelBuilderSettings);
+                return DatabaseGenerationEngine.UpdateEdmxAndEnvironment(Wizard.ModelBuilderSettings);
             }
         }
 

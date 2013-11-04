@@ -7,29 +7,27 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
     internal class VSModelBuilderEngineHostContext : ModelBuilderEngineHostContext
     {
-        private readonly Project _project;
         private readonly ModelBuilderSettings _settings;
 
-        internal VSModelBuilderEngineHostContext(Project project, ModelBuilderSettings settings)
+        internal VSModelBuilderEngineHostContext(ModelBuilderSettings settings)
         {
-            _project = project;
             _settings = settings;
         }
 
         internal override void LogMessage(string statusMessage)
         {
-            VsUtils.LogOutputWindowPaneMessage(_project, statusMessage);
+            VsUtils.LogOutputWindowPaneMessage(_settings.Project, statusMessage);
         }
 
         internal override void DispatchToModelGenerationExtensions()
         {
-            var fromDBDocument = new XDocument(_settings.ModelBuilderEngine.XDocument);
+            var fromDBDocument = new XDocument(_settings.ModelBuilderEngine.Model);
             var dispatcher =
                 new ModelGenerationExtensionDispatcher(
                     _settings.WizardKind,
                     fromDBDocument,
-                    _settings.ModelBuilderEngine.XDocument,
-                    _project);
+                    _settings.ModelBuilderEngine.Model,
+                    _settings.Project);
 
             dispatcher.Dispatch();
             _settings.HasExtensionChangedModel = dispatcher.HasCurrentChanged;

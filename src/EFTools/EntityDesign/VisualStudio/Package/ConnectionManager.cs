@@ -853,15 +853,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             return mapProperty;
         }
 
-        internal static string[] GetMetadataFileNamesFromArtifactFileName(Project project, string filename)
+        internal static string[] GetMetadataFileNamesFromArtifactFileName(
+            Project project, string filename, IServiceProvider serviceProvider)
+        {
+            return GetMetadataFileNamesFromArtifactFileName(project, filename, serviceProvider, VsUtils.GetProjectItemForDocument);
+        }
+
+        internal static string[] GetMetadataFileNamesFromArtifactFileName(
+            Project project, string filename, IServiceProvider serviceProvider,
+            Func<string, IServiceProvider, ProjectItem> getProjectItemForDocument)
         {
             var unescapedArtifactPath = Uri.UnescapeDataString(filename);
             var edmxFileInfo = new FileInfo(unescapedArtifactPath);
             var modelName = Path.GetFileNameWithoutExtension(edmxFileInfo.FullName);
-            var projectRootDirInfo = VsUtils.GetProjectRoot(project, Services.ServiceProvider);
+            var projectRootDirInfo = VsUtils.GetProjectRoot(project, serviceProvider);
             string relativeFolderPath;
-            var projectItem = VsUtils.GetProjectItemForDocument(edmxFileInfo.FullName, PackageManager.Package);
-            Debug.Assert(projectItem != null, "ProjectItem for file: " + edmxFileInfo.FullName + " not found");
+
+            var projectItem = getProjectItemForDocument(edmxFileInfo.FullName, serviceProvider);
+            // when generating model from the database project the item will be null 
+            // since the actual model is generated in the very last step
             if (projectItem != null)
             {
                 // since the given file can be a link, create the directory path by combining parent directories names
@@ -884,8 +894,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             {
                 relativeFolderPath = EdmUtils.GetRelativePath(edmxFileInfo.Directory, projectRootDirInfo);
             }
+
             var folderPath = Path.Combine(projectRootDirInfo.FullName, relativeFolderPath);
-            return EdmUtils.GetRelativeMetadataPaths(folderPath, project, modelName, EdmUtils.CsdlSsdlMslExtensions);
+            return EdmUtils.GetRelativeMetadataPaths(folderPath, project, modelName, EdmUtils.CsdlSsdlMslExtensions, serviceProvider);
         }
 
         /// <summary>
@@ -1620,7 +1631,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                                        string
                                      : string.Empty;
 
-                var metadataFileNames = GetMetadataFileNamesFromArtifactFileName(args.ProjectObj, args.Artifact.Uri.LocalPath);
+                var metadataFileNames = GetMetadataFileNamesFromArtifactFileName(args.ProjectObj, args.Artifact.Uri.LocalPath, PackageManager.Package);
                 var mapProperty = GetMetadataPropertyFromArtifact(args.Artifact);
                 string mapPropertyValue;
                 if (mapProperty != null)
@@ -1773,7 +1784,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                             if (mapProperty != null)
                             {
                                 var metadataFileNames = GetMetadataFileNamesFromArtifactFileName(
-                                    args.ProjectObj, args.Artifact.Uri.LocalPath);
+                                    args.ProjectObj, args.Artifact.Uri.LocalPath, PackageManager.Package);
                                 var applicationType = VsUtils.GetApplicationType(Services.ServiceProvider, args.ProjectObj);
                                 var outputPath = (VisualStudioProjectSystem.WebApplication == applicationType)
                                                      ? args.ProjectObj.ConfigurationManager.ActiveConfiguration.Properties.Item(

@@ -68,16 +68,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 settings.ModelNamespace = artifact.ConceptualModel().Namespace.Value;
             }
-
-            var hostContext = new VSModelBuilderEngineHostContext(project, settings);
-            settings.ModelBuilderEngine =
-                new UpdateModelFromDatabaseModelBuilderEngine(hostContext, settings, artifact.Uri);
-
-            // construct metadata file-names
-            var metadataFileNames = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(project, artifact.Uri.LocalPath);
+            
+            settings.ModelBuilderEngine = new UpdateModelFromDatabaseModelBuilderEngine();
 
             // call the ModelBuilderWizardForm
-            var form = new ModelBuilderWizardForm(serviceProvider, project, metadataFileNames, settings, startMode);
+            var form = new ModelBuilderWizardForm(serviceProvider, settings, startMode);
 
             try
             {
@@ -102,7 +97,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
 
             // Update the app. or web.config, register build providers etc
-            ConfigFileUtils.UpdateConfig(settings, project, metadataFileNames);
+            ConfigFileUtils.UpdateConfig(settings);
 
             // clear all previous errors for this document first
             ErrorListHelper.ClearErrorsForDocAcrossLists(settings.Artifact.Uri);
@@ -415,7 +410,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 using (var sw = new StreamWriter(fs, Encoding.UTF8))
                 {
-                    sw.Write(settings.ModelBuilderEngine.XDocument.ToString());
+                    sw.Write(settings.ModelBuilderEngine.Model.ToString());
                 }
             }
             return new FileInfo(tempFilePath);
@@ -433,7 +428,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 _settings = settings;
                 _artifact = settings.Artifact;
-                _fromDbDocument = settings.ModelBuilderEngine.XDocument;
+                _fromDbDocument = settings.ModelBuilderEngine.Model;
                 _projectItem = VsUtils.GetProjectItemForDocument(_artifact.Uri.LocalPath, PackageManager.Package);
 
                 // make a copy of the artifact before any chagnes are done to it.  This is the "original document" that will be passed to extensions

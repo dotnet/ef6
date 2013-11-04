@@ -53,8 +53,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         #region Constructors
 
-        internal WizardPageDbConfig(ModelBuilderWizardForm wizard)
-            : base(wizard)
+        internal WizardPageDbConfig(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+            : base(wizard, serviceProvider)
         {
             InitializeComponent();
 
@@ -683,9 +683,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             var translatedConnectionString = ConnectionManager.TranslateConnectionString(
                 Wizard.Project, designTimeProviderInvariantName, maskedConnectionString, true);
 
+            var metadataFiles = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
+                Wizard.ModelBuilderSettings.Project, Wizard.ModelBuilderSettings.ModelPath, PackageManager.Package);
+
             var connStringText = ConnectionManager.CreateEntityConnectionString(
                 Wizard.Project,
-                Wizard.MetadataFileNames,
+                metadataFiles,
                 translatedConnectionString,
                 runtimeProviderInvariantName,
                 true /* assume true; this is just for display purposes */).Text;

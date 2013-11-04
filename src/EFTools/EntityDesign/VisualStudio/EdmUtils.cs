@@ -163,9 +163,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
         }
 
         internal static string[] GetRelativeMetadataPaths(
-            string folderPath, Project project, string modelRootName, string[] extensionsWithDots)
+            string folderPath, Project project, string modelRootName, string[] extensionsWithDots, IServiceProvider serviceProvider)
         {
-            var projectRootFileInfo = VsUtils.GetProjectRoot(project, Services.ServiceProvider);
+            var projectRootFileInfo = VsUtils.GetProjectRoot(project, serviceProvider);
 
             var relativePathsList = new List<string>(extensionsWithDots.Length);
             foreach (var extensionWithDot in extensionsWithDots)

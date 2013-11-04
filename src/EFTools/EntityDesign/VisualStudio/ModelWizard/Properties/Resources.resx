@@ -175,9 +175,6 @@
   <data name="Engine_ModelGenSuccess" xml:space="preserve">
     <value>Generated model file: {0}.</value>
   </data>
-  <data name="Engine_NullSettingsErrorMsg" xml:space="preserve">
-    <value>ModelBuilderEngine cannot have null settings.</value>
-  </data>
   <data name="EntityConnectionStringLabel" xml:space="preserve">
     <value>Entity connection string:</value>
   </data>

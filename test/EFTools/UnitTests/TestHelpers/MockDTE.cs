@@ -162,6 +162,11 @@ namespace UnitTests.TestHelpers
             return _projectItemId;
         }
 
+        public void SetProjectProperties(IDictionary<string, object> properties)
+        {
+            SetProjectProperties(Mock.Get(Project), properties);
+        }
+
         private static IVsHierarchy CreateVsHierarchy(object targetFrameworkMoniker, object project)
         {
             var mockHierarchy = new Mock<IVsHierarchy>();
@@ -202,18 +207,7 @@ namespace UnitTests.TestHelpers
             mockProject.SetupGet(p => p.Object).Returns(vsProject);
             mockProject.SetupGet(p => p.Kind).Returns(kind);
 
-            if (properties != null)
-            {
-                var propertyList = properties.Select(p => CreateProperty(p.Key, p.Value)).ToList();
-
-                var projectProperties = new Mock<Properties>();
-                projectProperties.As<IEnumerable>().Setup(p => p.GetEnumerator())
-                    .Returns(() => propertyList.GetEnumerator());
-                projectProperties.Setup(p => p.Item(It.IsAny<string>()))
-                    .Returns<string>(n => propertyList.FirstOrDefault(p => p.Name == n));
-
-                mockProject.SetupGet(p => p.Properties).Returns(projectProperties.Object);
-            }
+            SetProjectProperties(mockProject, properties);
 
             if (configurationProperties != null)
             {
@@ -235,6 +229,7 @@ namespace UnitTests.TestHelpers
 
             return mockProject.Object;
         }
+
 
         private static VSProject2 CreateVsProject2(IEnumerable<Reference> references)
         {
@@ -271,6 +266,22 @@ namespace UnitTests.TestHelpers
             vsWebSite.SetupGet(p => p.References).Returns(vsAssemblyReferences.Object);
 
             return vsWebSite.Object;
+        }
+
+        private static void SetProjectProperties(Mock<Project> mockProject, IDictionary<string, object> properties)
+        {
+            if (properties != null)
+            {
+                var propertyList = properties.Select(p => CreateProperty(p.Key, p.Value)).ToList();
+
+                var projectProperties = new Mock<Properties>();
+                projectProperties.As<IEnumerable>().Setup(p => p.GetEnumerator())
+                    .Returns(() => propertyList.GetEnumerator());
+                projectProperties.Setup(p => p.Item(It.IsAny<string>()))
+                    .Returns<string>(n => propertyList.FirstOrDefault(p => p.Name == n));
+
+                mockProject.SetupGet(p => p.Properties).Returns(projectProperties.Object);
+            }
         }
 
         private static Property CreateProperty(string name, object value)

@@ -8,6 +8,7 @@ namespace EFDesigner.InProcTests
     using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
     using System.Windows.Automation;
     using EFDesignerTestInfrastructure;
@@ -24,18 +25,16 @@ namespace EFDesigner.InProcTests
     [TestClass]
     public class E2ETests
     {
-        private readonly IEdmPackage _package;
         private readonly ResourcesHelper _resourceHelper;
 
         /// <summary>
         ///     Number of retries for UI operation if it fails
         /// </summary>
-        private const int numRetry = 5;
+        private const int NumRetry = 5;
 
         public E2ETests()
         {
             PackageManager.LoadEDMPackage(VsIdeTestHostContext.ServiceProvider);
-            _package = PackageManager.Package;
             _resourceHelper = new ResourcesHelper();
         }
 
@@ -77,22 +76,22 @@ namespace EFDesigner.InProcTests
             // taking up the main thread
             var wizardDiscoveryThread = ExecuteThreadedAction(
                 () =>
+                {
+                    try
                     {
-                        try
-                        {
-                            Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
 
-                            // This method polls for the the wizard to show up
-                            var wizard = GetWizard();
+                        // This method polls for the the wizard to show up
+                        var wizard = GetWizard();
 
-                            // Walk thru the Empty model selection
-                            CreateEmptyModel(wizard);
-                        }
-                        catch (Exception ex)
-                        {
-                            exceptionCaught = ex;
-                        }
-                    }, "UIExecutor");
+                        // Walk thru the Empty model selection
+                        CreateEmptyModel(wizard);
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptionCaught = ex;
+                    }
+                }, "UIExecutor");
 
             // On the main thread create a project
             var project = Dte.CreateProject(
@@ -138,22 +137,22 @@ namespace EFDesigner.InProcTests
             // taking up the main thread
             var wizardDiscoveryThread = ExecuteThreadedAction(
                 () =>
+                {
+                    try
                     {
-                        try
-                        {
-                            Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
 
-                            // This method polls for the the wizard to show up
-                            var wizard = GetWizard();
+                        // This method polls for the the wizard to show up
+                        var wizard = GetWizard();
 
-                            // Walk thru the Wizard with existing DB option
-                            CreateModelFromDB(wizard, "Library");
-                        }
-                        catch (Exception ex)
-                        {
-                            exceptionCaught = ex;
-                        }
-                    }, "UIExecutor");
+                        // Walk thru the Wizard with existing DB option
+                        CreateModelFromDB(wizard, "Library");
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptionCaught = ex;
+                    }
+                }, "UIExecutor");
 
             // On the main thread create a project
             var project = Dte.CreateProject(
@@ -188,7 +187,7 @@ namespace EFDesigner.InProcTests
             Assert.IsNotNull(ttFile, "ttfile is null");
 
             var bookfile = project.GetProjectItemByName("book.cs");
-            Assert.IsNotNull(ttFile, "bookfile is null");
+            //Assert.IsNotNull(bookfile, "bookfile is null");
         }
 
         /// <summary>
@@ -204,22 +203,21 @@ namespace EFDesigner.InProcTests
             {
             }
 
-            var createDatabase = "CREATE DATABASE Library";
-            var createTable = "CREATE TABLE Books (BookID INTEGER PRIMARY KEY IDENTITY," +
-                              "Title CHAR(50) NOT NULL , Author CHAR(50), " +
-                              "PageCount INTEGER,Topic CHAR(30),Code CHAR(15))";
-            var insertFirstRow = "INSERT INTO BOOKS (TITLE,AUTHOR,PAGECOUNT,TOPIC,CODE)"
-                                 + "VALUES('Test Book','Test Author', 100, 'Test Topic', 'Test Code');";
+            const string createDatabase = "CREATE DATABASE Library";
+            const string createTable = "CREATE TABLE Books (BookID INTEGER PRIMARY KEY IDENTITY," +
+                                       "Title CHAR(50) NOT NULL , Author CHAR(50), " +
+                                       "PageCount INTEGER,Topic CHAR(30),Code CHAR(15))";
+            const string insertFirstRow = "INSERT INTO BOOKS (TITLE,AUTHOR,PAGECOUNT,TOPIC,CODE)"
+                                          + "VALUES('Test Book','Test Author', 100, 'Test Topic', 'Test Code');";
 
             ExecuteSqlCommand(
                 @"Data Source=(localdb)\v11.0;initial catalog=Master;integrated security=True",
                 createDatabase);
 
-            var connectionString =
-                @"Data Source=(localdb)\v11.0;initial catalog=Library;integrated security=True;Pooling=false";
+            const string connectionString = @"Data Source=(localdb)\v11.0;initial catalog=Library;integrated security=True;Pooling=false";
 
-            InvokeOperationWithRetry(() => { ExecuteSqlCommand(connectionString, createTable); });
-            InvokeOperationWithRetry(() => { ExecuteSqlCommand(connectionString, insertFirstRow); });
+            InvokeOperationWithRetry(() => ExecuteSqlCommand(connectionString, createTable));
+            InvokeOperationWithRetry(() => ExecuteSqlCommand(connectionString, insertFirstRow));
         }
 
         /// <summary>
@@ -240,10 +238,7 @@ namespace EFDesigner.InProcTests
                 {
                     mycon.ConnectionString = connectionString;
 
-                    var mycomm = new SqlCommand();
-                    mycomm.CommandType = CommandType.Text;
-                    mycomm.CommandText = commandString;
-                    mycomm.Connection = mycon;
+                    var mycomm = new SqlCommand { CommandType = CommandType.Text, CommandText = commandString, Connection = mycon };
 
                     mycon.Open();
                     SqlConnection.ClearAllPools();
@@ -270,9 +265,9 @@ namespace EFDesigner.InProcTests
                 Process.GetCurrentProcess().Id,
                 PropertyConditionFlags.None);
 
-            var VisualStudio = AutomationElement.RootElement.FindFirst(TreeScope.Children, condition);
+            var visualStudio = AutomationElement.RootElement.FindFirst(TreeScope.Children, condition);
 
-            if (VisualStudio == null)
+            if (visualStudio == null)
             {
                 Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Could not find VS");
                 throw new InvalidOperationException("InGetWizard:Could not find VS");
@@ -282,8 +277,8 @@ namespace EFDesigner.InProcTests
 
             // try to find the wizard   
             var wizard = FindElement(
-                VisualStudio,
-                _resourceHelper.GetModelWizardResourceString("WizardFormDialog_Title"));
+                visualStudio,
+                _resourceHelper.GetEntityDesignResourceString("WizardFormDialog_Title"));
 
             return wizard;
         }
@@ -296,19 +291,19 @@ namespace EFDesigner.InProcTests
             // Select the empty model option
             SelectModelOption(
                 wizard,
-                _resourceHelper.GetModelWizardResourceString("EmptyModelOption"));
+                _resourceHelper.GetEntityDesignResourceString("EmptyModelOption"));
 
             InvokeOperationWithRetry(
                 () =>
-                    {
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Finding finish button");
-                        var finishButton = FindElement(
-                            wizard,
-                            _resourceHelper.GetWizardResourceString("ButtonFinishText"));
+                {
+                    Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Finding finish button");
+                    var finishButton = FindElement(
+                        wizard,
+                        _resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText"));
 
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Invoking Finish button");
-                        InvokeClick(finishButton);
-                    });
+                    Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Invoking Finish button");
+                    InvokeClick(finishButton);
+                });
         }
 
         /// <summary>
@@ -319,12 +314,12 @@ namespace EFDesigner.InProcTests
             // Select the 'Generate from Database' option
             SelectModelOption(
                 wizard,
-                _resourceHelper.GetModelWizardResourceString("GenerateFromDatabaseOption"));
+                _resourceHelper.GetEntityDesignResourceString("GenerateFromDatabaseOption"));
 
             ClickNextButton(wizard);
             var newConnectionButton = FindElement(
                 wizard,
-                _resourceHelper.GetModelWizardResourceString("NewDatabaseConnectionBtn"));
+                _resourceHelper.GetEntityDesignResourceString("NewDatabaseConnectionBtn"));
 
             InvokeClick(newConnectionButton);
 
@@ -341,15 +336,15 @@ namespace EFDesigner.InProcTests
 
             InvokeOperationWithRetry(
                 () =>
-                    {
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Finding finish button");
-                        var finishButton = FindElement(
-                            wizard,
-                            _resourceHelper.GetWizardResourceString("ButtonFinishText"));
+                {
+                    Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Finding finish button");
+                    var finishButton = FindElement(
+                        wizard,
+                        _resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText"));
 
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Invoking Finish button");
-                        InvokeClick(finishButton);
-                    });
+                    Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Invoking Finish button");
+                    InvokeClick(finishButton);
+                });
         }
 
         // checks all the checkboxes on the "which database objects to select" dialog
@@ -359,20 +354,19 @@ namespace EFDesigner.InProcTests
             var retryCount = 10;
             AutomationElementCollection list = null;
             var milisecondsToSleep = 300;
-            AutomationElement dbObjects = null;
 
             while (retryCount-- > 0)
             {
+                AutomationElement dbObjects;
                 try
                 {
                     dbObjects = FindElement(
                         wizard,
-                        _resourceHelper.GetModelWizardResourceString("WhichDatabaseObjectsLabel"));
+                        _resourceHelper.GetEntityDesignResourceString("WhichDatabaseObjectsLabel"));
                 }
                 catch
                 {
                     SystemThread.Sleep(milisecondsToSleep);
-                    milisecondsToSleep += 300;
                     break;
                 }
 
@@ -386,7 +380,6 @@ namespace EFDesigner.InProcTests
                 }
                 else
                 {
-                    retryCount = 0;
                     break;
                 }
             }
@@ -397,9 +390,10 @@ namespace EFDesigner.InProcTests
                 throw new InvalidOperationException("Checking all the boxes failed");
             }
 
-            foreach (AutomationElement checkbox in list)
+            foreach (
+                var togglePattern in
+                    from AutomationElement checkbox in list select (TogglePattern)checkbox.GetCurrentPattern(TogglePattern.Pattern))
             {
-                var togglePattern = (TogglePattern)checkbox.GetCurrentPattern(TogglePattern.Pattern);
                 togglePattern.Toggle();
             }
         }
@@ -409,32 +403,32 @@ namespace EFDesigner.InProcTests
         {
             var serverNameText = FindTextBox(
                 wizard,
-                _resourceHelper.GetConnectionDialogResourceString("serverLabel.Text"));
+                _resourceHelper.GetConnectionUIDialogResourceString("serverLabel.Text"));
             EnterText(serverNameText, @"(localdb)\v11.0");
 
             var refreshButton = FindElement(
                 wizard,
-                _resourceHelper.GetConnectionDialogResourceString("refreshButton.Text"));
+                _resourceHelper.GetConnectionUIDialogResourceString("refreshButton.Text"));
             refreshButton.SetFocus();
 
             var dbNameText = FindTextBox(
                 wizard,
-                _resourceHelper.GetConnectionDialogResourceString("selectDatabaseRadioButton.Text"));
+                _resourceHelper.GetConnectionUIDialogResourceString("selectDatabaseRadioButton.Text"));
             EnterText(dbNameText, dbName);
 
             var okButton = FindElement(
                 wizard,
-                _resourceHelper.GetConnectionDialogResourceString("acceptButton.Text"));
+                _resourceHelper.GetConnectionUIDialogResourceString("acceptButton.Text"));
             InvokeClick(okButton);
         }
 
         // This method finds the element with 'elementName' in all the descendants of parent element
-        private AutomationElement FindElement(AutomationElement parent, string elementName)
+        private static AutomationElement FindElement(AutomationElement parent, string elementName)
         {
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ": In Find Element " + elementName);
 
             // The loop will be exited either if time runs out or the dialog is found
-            var retryCount = numRetry;
+            var retryCount = NumRetry;
             var milisecondsToSleep = 100;
             AutomationElement element = null;
             Exception exceptionCaught = null;
@@ -479,7 +473,7 @@ namespace EFDesigner.InProcTests
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":trying to find option list");
             var optionList = FindElement(
                 wizard,
-                _resourceHelper.GetModelWizardResourceString("StartPage_PromptLabelText"));
+                _resourceHelper.GetEntityDesignResourceString("StartPage_PromptLabelText"));
 
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Option list found, finding " + modelOption);
             var model = FindElement(optionList, modelOption);
@@ -489,14 +483,14 @@ namespace EFDesigner.InProcTests
             var selectionPattern = (SelectionItemPattern)model.GetCurrentPattern(SelectionItemPattern.Pattern);
 
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Selecting the option");
-            InvokeOperationWithRetry(() => selectionPattern.Select());
+            InvokeOperationWithRetry(selectionPattern.Select);
         }
 
         // Finds textbox with given name, find element doesnt work as it finds the label
         // not the text box
-        private AutomationElement FindTextBox(AutomationElement parent, string elementName)
+        private static AutomationElement FindTextBox(AutomationElement parent, string elementName)
         {
-            var retryCount = numRetry;
+            var retryCount = NumRetry;
             var milisecondsToSleep = 100;
             AutomationElement element = null;
             Exception exceptionCaught = null;
@@ -540,22 +534,22 @@ namespace EFDesigner.InProcTests
         }
 
         // Invokes click on a button
-        private void InvokeClick(AutomationElement button)
+        private static void InvokeClick(AutomationElement button)
         {
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Invoking button");
             InvokeOperationWithRetry(
                 () =>
+                {
+                    var invokePattern = (InvokePattern)button.GetCurrentPattern(InvokePattern.Pattern);
+                    if (invokePattern != null)
                     {
-                        var invokePattern = (InvokePattern)button.GetCurrentPattern(InvokePattern.Pattern);
-                        if (invokePattern != null)
-                        {
-                            invokePattern.Invoke();
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException("Invoke click failed:Invoke pattern null");
-                        }
-                    });
+                        invokePattern.Invoke();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Invoke click failed:Invoke pattern null");
+                    }
+                });
         }
 
         // Invokes click on next button
@@ -563,31 +557,31 @@ namespace EFDesigner.InProcTests
         {
             var nextButton = FindElement(
                 wizard,
-                _resourceHelper.GetWizardResourceString("ButtonNextText"));
+                _resourceHelper.GetWizardFrameworkResourceString("ButtonNextText"));
 
             InvokeClick(nextButton);
         }
 
         // Enters text in the text box
-        private void EnterText(AutomationElement textBox, string text)
+        private static void EnterText(AutomationElement textBox, string text)
         {
             InvokeOperationWithRetry(
                 () =>
+                {
+                    var valuePattern = (ValuePattern)textBox.GetCurrentPattern(ValuePattern.Pattern);
+                    if (valuePattern != null)
                     {
-                        var valuePattern = (ValuePattern)textBox.GetCurrentPattern(ValuePattern.Pattern);
-                        if (valuePattern != null)
-                        {
-                            valuePattern.SetValue(text);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException("Value pattern null");
-                        }
-                    });
+                        valuePattern.SetValue(text);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("Value pattern null");
+                    }
+                });
         }
 
         // Creates a new thred for action and starts it
-        private SystemThread ExecuteThreadedAction(Action action, string threadName = "Worker")
+        private static SystemThread ExecuteThreadedAction(Action action, string threadName = "Worker")
         {
             var thread = new SystemThread(
                 new ThreadStart(action)) { Name = threadName };
@@ -598,7 +592,7 @@ namespace EFDesigner.InProcTests
         // Invokes a given operation with retry
         private static void InvokeOperationWithRetry(Action operation)
         {
-            var retryCount = numRetry;
+            var retryCount = NumRetry;
             var milisecondsToSleep = 100;
             Exception exceptionCaught = null;
             while (retryCount-- > 0)

@@ -16,7 +16,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
     using EnvDTE;
     using EnvDTE80;
     using Microsoft.Data.Entity.Design.Base.Context;
-    using Microsoft.Data.Tools.XmlDesignerBase.Base.Util;
     using Microsoft.Data.Entity.Design.Extensibility;
     using Microsoft.Data.Entity.Design.Model;
     using Microsoft.Data.Entity.Design.Model.Commands;
@@ -54,18 +53,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
         private ProjectItem _edmxItem;
         private Project _activeSolutionProject;
-        private string[] _projectRootRelativeMetadataFileNames;
         internal const string EntityDeployBuildActionName = "EntityDeploy";
         internal const string ItemTypePropertyName = "ItemType";
-        // EDMX template content cache.
-        private static readonly IDictionary<string, string> _templateContent = new Dictionary<string, string>();
 
         private ModelBuilderSettings _modelBuilderSettings;
-
-        private ICollection<string> MetadataFileNames
-        {
-            get { return _projectRootRelativeMetadataFileNames; }
-        }
 
         /// <summary>
         ///     This method is called before opening any item that has the OpenInEditor attribute
@@ -124,78 +115,32 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             EnsureCanStartWizard(serviceProvider);
 
             // get file name the user chose 
-            string edmxFileName;
-            replacementsDictionary.TryGetValue("$rootname$", out edmxFileName);
-            Debug.Assert(edmxFileName != null, "Unable to get $rootname$ from replacementsDictionary");
-
-            // set up the file names that this wizard is going to use
-            var modelName = Path.ChangeExtension(edmxFileName, null); // passing null removes any extension
-            var fileExtension = Path.GetExtension(edmxFileName); // NOTE: this method includes the "." in the returned string
-
-            // make sure that the name the user chose ends in .edmx (or one of the converter extensions)
-            if (!VSArtifact.GetVSArtifactFileExtensions().Contains(fileExtension))
-            {
-                VsUtils.ShowErrorDialog(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.ModelObjectItemWizard_WrongExtension,
-                        EntityDesignArtifact.EXTENSION_EDMX));
-                Marshal.ThrowExceptionForHR(VSConstants.E_ABORT);
-            }
+            string modelName;
+            replacementsDictionary.TryGetValue("$rootname$", out modelName);
+            Debug.Assert(modelName != null, "Unable to get $rootname$ from replacementsDictionary");
 
             PopluateReplacementDictionary(replacementsDictionary, modelName);
 
-            //  set up the metadata paths relative to the project root
-            var folderPath = GetFolderNameForNewItems(dte, _activeSolutionProject);
-            _projectRootRelativeMetadataFileNames = EdmUtils.GetRelativeMetadataPaths(
-                folderPath,
-                _activeSolutionProject,
-                modelName,
-                EdmUtils.CsdlSsdlMslExtensions);
-
-            // check if we are going to overwrite any files, and bail out if we are
-            var edmxFileInfo = new FileInfo(Path.Combine(folderPath, edmxFileName));
-            if (edmxFileInfo.Exists)
-            {
-                VsUtils.ShowErrorDialog(
-                    string.Format(
-                        CultureInfo.CurrentCulture,
-                        Resources.ModelObjectItemWizard_FileAlreadyExists,
-                        edmxFileName));
-                Marshal.ThrowExceptionForHR(VSConstants.E_ABORT);
-            }
-
-            // load the template edmx file into memory.  In the event that something goes wrong 
-            // the exception will be propagated up the stack and the wizard will be canceled 
-            // (it won't crash VS, which is why we let the exception throw).
-            Debug.Assert(customParams.Length > 0, "Unexpected length of custom params.  Length is " + customParams.Length);
-            var vstemplatePath = customParams[0] as string;
-            Debug.Assert(vstemplatePath != null, "Unexpected type of customParams[0].  Type is " + customParams[0].GetType().Name);
-            var fileContents = GetEdmxTemplateContent(vstemplatePath, fileExtension);
-
             _modelBuilderSettings = new ModelBuilderSettings
-                {
-                    VSApplicationType = VsUtils.GetApplicationType(serviceProvider, _activeSolutionProject),
-                    WizardKind = WizardKind.Generate,
-                    TargetSchemaVersion =
-                        EdmUtils.GetEntityFrameworkVersion(_activeSolutionProject, serviceProvider, useLatestIfNoEF: false)
-                };
-
-            var hostContext = new VSModelBuilderEngineHostContext(_activeSolutionProject, _modelBuilderSettings);
-            _modelBuilderSettings.ModelBuilderEngine = new InMemoryModelBuilderEngine(
-                hostContext,
-                _modelBuilderSettings,
-                new LazyInitialModelContentsFactory(
-                    fileContents,
-                    replacementsDictionary),
-                Utils.FileName2Uri(edmxFileInfo.FullName));
+            {
+                VSApplicationType = VsUtils.GetApplicationType(serviceProvider, _activeSolutionProject),
+                WizardKind = WizardKind.Generate,
+                TargetSchemaVersion =
+                    EdmUtils.GetEntityFrameworkVersion(_activeSolutionProject, serviceProvider, useLatestIfNoEF: false),
+                NewItemFolder = GetFolderNameForNewItems(dte, _activeSolutionProject),
+                Project = _activeSolutionProject,
+                ModelName = modelName,
+                VsTemplatePath = customParams[0] as string, 
+                ReplacementDictionary =  replacementsDictionary
+            };
 
             var form = new ModelBuilderWizardForm(
                 serviceProvider,
-                _activeSolutionProject,
-                MetadataFileNames,
                 _modelBuilderSettings,
-                ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
+                ModelBuilderWizardForm.WizardMode.PerformAllFunctionality)
+            {
+                FileAlreadyExistsError = false
+            };
 
             try
             {
@@ -208,8 +153,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                         CultureInfo.CurrentCulture,
                         Resources.ModelObjectItemWizard_UnexpectedExceptionHasOccurred,
                         ex.Message));
-                PackageManager.Package.ModelGenErrorCache.RemoveErrors(edmxFileInfo.FullName);
+
+                ClearErrors();
+
                 throw new WizardCancelledException();
+            }
+
+
+            // the form.FileAlreadyExistsError flag is set in the WizardPageStart. We do it because if we 
+            // threw this exception directly from the WizardPageStart it would be swallowed and the
+            // "Add New Item" dialog would not show up. Throwing the exception from here will make
+            // the "Add New Item" dialog re-appear which allows the user to enter a different model name.
+            if (form.FileAlreadyExistsError)
+            {
+                Marshal.ThrowExceptionForHR(VSConstants.E_ABORT);   
             }
 
             // if they cancelled or they didn't cancel, and we didn't log that Finish was pressed, 
@@ -217,18 +174,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             if (form.WizardCancelled
                 || !form.WizardFinished)
             {
-                PackageManager.Package.ModelGenErrorCache.RemoveErrors(edmxFileInfo.FullName);
+                ClearErrors();
                 throw new WizardCancelledException();
             }
 
             Debug.Assert(ReferenceEquals(_modelBuilderSettings, form.ModelBuilderSettings));
+        }
 
-            // Add replacement values for empty model
-            if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.EmptyModel)
+        private void ClearErrors()
+        {
+            if (_modelBuilderSettings.ModelPath != null)
             {
-                LazyInitialModelContentsFactory.AddSchemaSpecificReplacements(
-                    replacementsDictionary,
-                    _modelBuilderSettings.TargetSchemaVersion);
+                PackageManager.Package.ModelGenErrorCache.RemoveErrors(_modelBuilderSettings.ModelPath);
             }
         }
 
@@ -327,17 +284,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
 
                 try
                 {
-                    ConfigFileUtils.UpdateConfig(
-                        _modelBuilderSettings,
-                        _edmxItem.ContainingProject,
-                        MetadataFileNames);
+                    ConfigFileUtils.UpdateConfig(_modelBuilderSettings);
 
                     // save the model generated in the wizard UI.
                     if (_modelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
                     {
                         var writingModelWatch = new Stopwatch();
                         writingModelWatch.Start();
-                        var mbe = (InMemoryModelBuilderEngine)_modelBuilderSettings.ModelBuilderEngine;
+                        var mbe = _modelBuilderSettings.ModelBuilderEngine;
 
                         if (!string.Equals(fileExtension, EntityDesignArtifact.EXTENSION_EDMX, StringComparison.OrdinalIgnoreCase))
                         {
@@ -348,7 +302,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem,
                                 edmxFileInfo,
                                 _modelBuilderSettings.TargetSchemaVersion,
-                                mbe.XDocument);
+                                mbe.Model);
                             VSArtifact.DispatchToConversionExtensions(
                                 EscherExtensionPointManager.LoadModelConversionExtensions(),
                                 fileExtension,
@@ -363,7 +317,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
                                 _edmxItem.FileNames[1],
                                 new XmlWriterSettings { Indent = true }))
                             {
-                                mbe.XDocument.WriteTo(modelWriter);
+                                mbe.Model.WriteTo(modelWriter);
                             }
                         }
 
@@ -655,23 +609,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard
             }
 
             return path;
-        }
-
-        /// <summary>
-        ///     Return EDMX template content.
-        ///     The method will return the template cache value if available.
-        /// </summary>
-        private static string GetEdmxTemplateContent(string vstemplatePath, string fileExtension)
-        {
-            if (!_templateContent.ContainsKey(fileExtension))
-            {
-                var fi = new FileInfo(vstemplatePath);
-                Debug.Assert(fi.Exists, "vstemplate file does not exist");
-                var di = fi.Directory;
-                var fileContent = File.ReadAllText(Path.Combine(di.FullName, "ProjectItem" + fileExtension));
-                _templateContent.Add(fileExtension, fileContent);
-            }
-            return _templateContent[fileExtension];
         }
     }
 }

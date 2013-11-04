@@ -60,6 +60,7 @@
     <Compile Include="EFDesigner\EFArtifactHelper.cs" />
     <Compile Include="EFDesigner\EntityTypeExtensions.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
+    <Compile Include="AssemblyResourceLookup.cs" />
     <Compile Include="ResourcesHelper.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="VS\DesignerUtilities.cs" />

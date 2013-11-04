@@ -46,7 +46,6 @@
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);WIZARD_EXTENSION_PAGE</DefineConstants>
     <DefineConstants Condition="$(VisualStudioVersion)=='12.0'">$(DefineConstants);VS12</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>

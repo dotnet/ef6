@@ -8,25 +8,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System.Diagnostics;
     using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.VersioningFacade;
+    using Microsoft.VisualStudio.OLE.Interop;
 
     internal class InMemoryModelBuilderEngine : ModelBuilderEngine
     {
-        private XDocument _xdocument;
-        private readonly Uri _uri;
+        private XDocument _model;
         private readonly List<EdmSchemaError> _errors = new List<EdmSchemaError>();
         private readonly IInitialModelContentsFactory _initialModelContentsFactory;
 
-        /// <param name="hostContext">The context in which this model is being generated</param>
-        /// <param name="settings">The ModelBuidlerSettings to use when generating the model</param>
         /// <param name="initialModelContentsFactory">A factory that creates the "basic" contents of an empty edmx file</param>
-        /// <param name="uri">The uri of the file when it will be saved to disk.  Note that this Uri points to a file that may not yet exist on disk!</param>
-        internal InMemoryModelBuilderEngine(
-            ModelBuilderEngineHostContext hostContext, ModelBuilderSettings settings,
-            IInitialModelContentsFactory initialModelContentsFactory, Uri uri)
-            :
-                base(hostContext, settings)
+        internal InMemoryModelBuilderEngine(IInitialModelContentsFactory initialModelContentsFactory)
         {
-            _uri = uri;
             _initialModelContentsFactory = initialModelContentsFactory;
         }
 
@@ -35,32 +27,28 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             _errors.AddRange(errors);
         }
 
-        /// <summary>
-        ///     This is the Uri of the file.  Note that it may not yet exist on disk!
-        /// </summary>
-        protected override Uri Uri
+        protected override void InitializeModelContents(Version targetSchemaVersion)
         {
-            get { return _uri; }
+            Debug.Assert(EntityFrameworkVersion.IsValidVersion(targetSchemaVersion));
+            Debug.Assert(_model == null, "overwriting already initialized edmx???");
+
+            _model = XDocument.Parse(
+                _initialModelContentsFactory.GetInitialModelContents(targetSchemaVersion));
+
+            Debug.Assert(
+                SchemaManager.GetSchemaVersion(_model.Root.Name.Namespace) == targetSchemaVersion,
+                "Schema version should not change or we should not cache the document");            
         }
 
         /// <summary>
         ///     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
         /// </summary>
-        internal override XDocument XDocument
+        internal override XDocument Model
         {
             get
             {
-                if (_xdocument == null)
-                {
-                    _xdocument = XDocument.Parse(
-                        _initialModelContentsFactory.GetInitialModelContents(Settings.TargetSchemaVersion));
-                }
-
-                Debug.Assert(
-                    SchemaManager.GetSchemaVersion(_xdocument.Root.Name.Namespace) == Settings.TargetSchemaVersion,
-                    "Schema version should not change or we should not cache the documen");
-
-                return _xdocument;
+                Debug.Assert(_model != null, "Model document has not been initialized.");
+                return _model;
             }
         }
 

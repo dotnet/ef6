@@ -1,13 +1,12 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
   <TemplateData>
     <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
-    <DefaultName>Model.edmx</DefaultName>
+    <DefaultName>Model</DefaultName>
     <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
     <ProjectType>Web</ProjectType>
     <ProjectSubType>CSharp</ProjectSubType>
     <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
     <ProvideDefaultName>true</ProvideDefaultName>
-    <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
     <SupportsLanguageDropdown>false</SupportsLanguageDropdown>
     <SupportsCodeSeparation>false</SupportsCodeSeparation>
     <SupportsMasterPage>false</SupportsMasterPage>

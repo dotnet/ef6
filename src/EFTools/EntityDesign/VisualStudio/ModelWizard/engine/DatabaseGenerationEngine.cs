@@ -138,10 +138,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     ModelBuilderWizardForm.WizardMode.PerformDatabaseConfigAndDBGenSummary,
                     ModelBuilderWizardForm.WizardMode.PerformDBGenSummaryOnly, out startMode, out settings);
 
-                // construct metadata file-names
-                var metadataFileNames = ConnectionManager.GetMetadataFileNamesFromArtifactFileName(project, artifact.Uri.LocalPath);
-
-                form = new ModelBuilderWizardForm(sp, project, metadataFileNames, settings, startMode);
+                form = new ModelBuilderWizardForm(sp, settings, startMode);
             }
 
             var originalSchemaVersion = settings.TargetSchemaVersion;
@@ -186,10 +183,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-        internal static bool UpdateEdmxAndEnvironment(
-            Project project,
-            ICollection<string> metadataFileNames,
-            ModelBuilderSettings settings)
+        internal static bool UpdateEdmxAndEnvironment(ModelBuilderSettings settings)
         {
             var artifact = settings.Artifact as EntityDesignArtifact;
             if (artifact == null)
@@ -199,7 +193,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             }
 
             // Update the app. or web.config, register build providers etc
-            ConfigFileUtils.UpdateConfig(settings, project, metadataFileNames);
+            ConfigFileUtils.UpdateConfig(settings);
 
             if (settings.SsdlStringReader != null
                 && settings.MslStringReader != null)
@@ -296,9 +290,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 // Add DDL file to the project if it is inside the project
                 string relativePath;
-                if (VsUtils.TryGetRelativePathInProject(project, canonicalFilePath, out relativePath))
+                if (VsUtils.TryGetRelativePathInProject(settings.Project, canonicalFilePath, out relativePath))
                 {
-                    AddDDLFileToProject(project, canonicalFilePath);
+                    AddDDLFileToProject(settings.Project, canonicalFilePath);
                 }
 
                 // Open the DDL file if it is not already open

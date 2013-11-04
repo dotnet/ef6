@@ -17,12 +17,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         {
         }
 
-        public WizardPageBase(ModelBuilderWizardForm wizard)
+        public WizardPageBase(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
             : base(wizard)
         {
             _wizard = wizard;
             // Set the default font to VS shell font.
-            var vsFont = VSHelpers.GetVSFont(Services.ServiceProvider);
+            var vsFont = VSHelpers.GetVSFont(serviceProvider);
             if (vsFont != null)
             {
                 Font = vsFont;
@@ -76,17 +76,22 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                         // generate the model
                         if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
                         {
-                            using (new VsUtils.HourglassHelper())
-                            {
-                                var mbe = Wizard.ModelBuilderSettings.ModelBuilderEngine;
-                                mbe.GenerateModel();
-                            }
+                            GenerateModel(Wizard.ModelBuilderSettings);
                         }
                     }
                 }
             }
 
             return base.OnDeactivate();
+        }
+
+        protected static void GenerateModel(ModelBuilderSettings settings)
+        {
+            using (new VsUtils.HourglassHelper())
+            {
+                var mbe = settings.ModelBuilderEngine;
+                mbe.GenerateModel(settings);
+            }            
         }
 
         protected override void OnHelpRequested(HelpEventArgs hevent)

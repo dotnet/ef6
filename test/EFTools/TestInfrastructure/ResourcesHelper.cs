@@ -2,81 +2,136 @@
 
 namespace EFDesignerTestInfrastructure
 {
+    using System;
     using System.Globalization;
     using System.IO;
     using System.Reflection;
-    using System.Resources;
     using Microsoft.Win32;
 
     public class ResourcesHelper
     {
 #if VS12
-        private static string vsInstallDir = (string)Microsoft.Win32.Registry.GetValue(
-            Microsoft.Win32.Registry.LocalMachine + "\\SOFTWARE\\Microsoft\\VisualStudio\\12.0", 
-            "InstallDir", 
+        private static readonly string _vsInstallDir = (string)Registry.GetValue(
+            Registry.LocalMachine + "\\SOFTWARE\\Microsoft\\VisualStudio\\12.0",
+            "InstallDir",
             null);
 #else
-        private static readonly string vsInstallDir = (string)Registry.GetValue(
+        private static readonly string _vsInstallDir = (string)Registry.GetValue(
             Registry.LocalMachine + "\\SOFTWARE\\Microsoft\\VisualStudio\\11.0",
             "InstallDir",
             null);
 #endif
 
-        private readonly ResourceManager _dataConnectionDialogResources;
-        private readonly ResourceManager _sqlConnectionUIControlResources;
-        private readonly ResourceManager _modelWizardResources;
-        private readonly ResourceManager _wizardResources;
-        private static CultureInfo _currentCulture;
+        private readonly AssemblyResourceLookup _dataConnectionDialogResourceLookup;
+        private readonly AssemblyResourceLookup _sqlConnectionUIControlResourceLookup;
+        private readonly AssemblyResourceLookup _wizardFrameworkResourceLookup;
+        private readonly AssemblyResourceLookup _modelWizardResourceLookup;
+        private readonly AssemblyResourceLookup _designPackageResourceLookup;
+        private readonly AssemblyResourceLookup _viewsDialogsResourceLookup;
+        private readonly AssemblyResourceLookup _entityDesignResourceLookup;
 
         public ResourcesHelper()
         {
-            var filepath = Path.Combine(vsInstallDir, "Microsoft.Data.ConnectionUI.Dialog.dll");
-            var assembly = Assembly.LoadFile(filepath);
-            _dataConnectionDialogResources = new ResourceManager("Microsoft.Data.ConnectionUI.DataConnectionDialog", assembly);
-            _sqlConnectionUIControlResources = new ResourceManager("Microsoft.Data.ConnectionUI.SqlConnectionUIControl", assembly);
+            var filepath = Path.Combine(_vsInstallDir, "Microsoft.Data.ConnectionUI.Dialog.dll");
+            _dataConnectionDialogResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.ConnectionUI.DataConnectionDialog");
+            _sqlConnectionUIControlResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.ConnectionUI.SqlConnectionUIControl");
 
-            filepath = Path.Combine(vsInstallDir, "Microsoft.WizardFramework.dll");
-            assembly = Assembly.LoadFile(filepath);
-            _wizardResources = new ResourceManager("Microsoft.WizardFramework.Properties.Resources", assembly);
+            filepath = Path.Combine(_vsInstallDir, "Microsoft.WizardFramework.dll");
+            _wizardFrameworkResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.WizardFramework.Properties.Resources");
 
-            assembly = Assembly.LoadFile(Path.Combine(Path.GetDirectoryName(vsInstallDir), "Microsoft.Data.Entity.Design.dll"));
+            filepath = Path.Combine(_vsInstallDir, "Microsoft.Data.Entity.Design.Package.dll");
+            _designPackageResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.Entity.Design.Package.Resources");
 
-            _modelWizardResources = new ResourceManager(
-                "Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources",
-                assembly);
-
-            _currentCulture = CultureInfo.CurrentCulture;
+            filepath = Path.Combine(_vsInstallDir, "Microsoft.Data.Entity.Design.dll");
+            _modelWizardResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties.Resources");
+            _viewsDialogsResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.Entity.Design.UI.Views.Dialogs.DialogsResource");
+            _entityDesignResourceLookup = new AssemblyResourceLookup(
+                Assembly.LoadFile(filepath), "Microsoft.Data.Entity.Design.Resources");
         }
 
-        public string GetConnectionDialogResourceString(string key)
+        /// <summary>
+        ///     Look up resource string in all relevant resource tables for the
+        ///     Microsoft.Data.ConnectionUI.Dialog.dll reference file.
+        /// </summary>
+        /// <param name="key">Resource string key</param>
+        /// <returns>Real display string</returns>
+        public string GetConnectionUIDialogResourceString(string key)
         {
-            var value = GetResourceString(_sqlConnectionUIControlResources, key);
-            if (value == null)
+            foreach (var resourceLookup in new[] { _sqlConnectionUIControlResourceLookup, _dataConnectionDialogResourceLookup })
             {
-                return GetResourceString(_dataConnectionDialogResources, key);
+                try
+                {
+                    return GetResourceString(resourceLookup, key);
+                }
+                catch (ArgumentException)
+                {
+                    // In order to check multiple tables with a single function, we have to handle
+                    // this exception (meaning the key wasn't found in the table) between checks
+                }
             }
 
-            return value;
+            return "";
         }
 
-        public string GetModelWizardResourceString(string key)
+        /// <summary>
+        ///     Look up resource string in all relevant resource tables for the
+        ///     Microsoft.Data.Entity.Design.dll reference file.
+        /// </summary>
+        /// <param name="key">Resource string key</param>
+        /// <returns>Real display string</returns>
+        public string GetEntityDesignResourceString(string key)
         {
-            return GetResourceString(_modelWizardResources, key);
+            foreach (
+                var resourceLookup in
+                    new[]
+                    { _modelWizardResourceLookup, _designPackageResourceLookup, _entityDesignResourceLookup, _viewsDialogsResourceLookup })
+            {
+                try
+                {
+                    return GetResourceString(resourceLookup, key);
+                }
+                catch (ArgumentException)
+                {
+                    // In order to check multiple tables with a single function, we have to handle
+                    // this exception (meaning the key wasn't found in the table) between checks
+                }
+            }
+
+            return "";
         }
 
-        public string GetWizardResourceString(string key)
+        /// <summary>
+        ///     Look up resource string in all relevant resource tables for the
+        ///     Microsoft.WizardFramework.dll reference file.
+        /// </summary>
+        /// <param name="key">Resource string key</param>
+        /// <returns>Real display string</returns>
+        public string GetWizardFrameworkResourceString(string key)
         {
-            return GetResourceString(_wizardResources, key);
+            try
+            {
+                return GetResourceString(_wizardFrameworkResourceLookup, key);
+            }
+            catch (ArgumentException)
+            {
+                return "";
+            }
         }
 
-        private string GetResourceString(ResourceManager resourceManager, string key)
+        private string GetResourceString(AssemblyResourceLookup resourceLookup, string key)
         {
             if (string.IsNullOrEmpty(key))
             {
                 return string.Empty;
             }
 
-            var value = resourceManager.GetString(key, _currentCulture);
+            var value = resourceLookup.LookupString(key);
             return RemoveAmpersands(value);
         }
 
@@ -95,7 +150,7 @@ namespace EFDesignerTestInfrastructure
                 return value;
             }
 
-            var ch = '\u0001'.ToString();
+            var ch = '\u0001'.ToString(CultureInfo.InvariantCulture);
             return value.Replace("&&", ch).Replace("&", "").Replace(ch, "&");
         }
     }

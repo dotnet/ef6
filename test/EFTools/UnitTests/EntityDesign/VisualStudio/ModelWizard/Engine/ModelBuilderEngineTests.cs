@@ -34,18 +34,18 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     .Setup(p => p.DesignTimeConnectionString)
                     .Returns("fakeConnectionString");
 
-                var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
-                var mockModelBuilderEngine =
-                    new Mock<ModelBuilderEngine>(mockHostContext.Object, mockModelBuilderSettings.Object)
-                        {
-                            CallBase = true
-                        };
-                mockModelBuilderEngine.Setup(m => m.XDocument).Returns(new XDocument());
-                mockModelBuilderEngine.Setup(m => m.GenerateModel(It.IsAny<EdmxHelper>()));
+                var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
+                mockModelBuilderEngine.Setup(m => m.Model).Returns(new XDocument());
+                mockModelBuilderEngine.Setup(
+                    m => m.GenerateModel(
+                        It.IsAny<EdmxHelper>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()));
 
-                mockModelBuilderEngine.Object.GenerateModel();
+                mockModelBuilderEngine.Object.GenerateModel(mockModelBuilderSettings.Object);
 
-                mockModelBuilderEngine.Verify(m => m.GenerateModel(It.IsAny<EdmxHelper>()), Times.Once());
+                mockModelBuilderEngine.Verify(
+                    m => m.GenerateModel(
+                        It.IsAny<EdmxHelper>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()),
+                        Times.Once());
             }
 
             [Fact]
@@ -56,24 +56,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 mockPackage.Setup(p => p.ModelGenErrorCache).Returns(mockModelGenCache.Object);
                 PackageManager.Package = mockPackage.Object;
 
-                var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
                 var mockModelBuilderSettings = CreateMockModelBuilderSettings();
                 mockModelBuilderSettings.Object.ModelNamespace = "myModel";
 
-                var mockModelBuilderEngine =
-                    new Mock<ModelBuilderEngine>(mockHostContext.Object, mockModelBuilderSettings.Object)
-                        {
-                            CallBase = true
-                        };
+                var mockHostContext = new Mock<VSModelBuilderEngineHostContext>(mockModelBuilderSettings.Object);
+
+                var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
 
                 mockModelBuilderEngine
-                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<List<EdmSchemaError>>()))
+                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
-
-                mockModelBuilderEngine
-                    .Protected()
-                    .SetupGet<Uri>("Uri")
-                    .Returns(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "temp.edmx")));
 
                 var mockEdmxHelper = new Mock<EdmxHelper>(new XDocument());
                 mockEdmxHelper.Setup(
@@ -93,14 +85,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                         It.IsAny<DbModel>()))
                     .Returns(true);
 
-                mockModelBuilderEngine.Object.GenerateModel(mockEdmxHelper.Object);
+                mockModelBuilderEngine.Object
+                    .GenerateModel(mockEdmxHelper.Object, mockModelBuilderSettings.Object, mockHostContext.Object);
 
                 mockModelBuilderEngine
-                    .Verify(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<List<EdmSchemaError>>()), Times.Once());
+                    .Verify(m => m.GenerateModels(
+                        It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()), Times.Once());
+
                 mockHostContext.Verify(h => h.DispatchToModelGenerationExtensions(), Times.Once());
                 mockModelBuilderEngine
                     .Protected()
-                    .Verify("UpdateDesignerInfo", Times.Once(), ItExpr.IsAny<EdmxHelper>());
+                    .Verify("UpdateDesignerInfo", Times.Once(), ItExpr.IsAny<EdmxHelper>(), ItExpr.IsAny<ModelBuilderSettings>());
                 mockHostContext.Verify(h => h.LogMessage(It.IsAny<string>()), Times.Exactly(3));
                 mockHostContext
                     .Verify(h => h.LogMessage(It.IsRegex(Resources.Engine_ModelGenSuccess)), Times.Once());
@@ -125,42 +120,35 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 PackageManager.Package = mockPackage.Object;
                 var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
                 var mockModelBuilderSettings = CreateMockModelBuilderSettings();
-                var mockModelBuilderEngine =
-                    new Mock<ModelBuilderEngine>(mockHostContext.Object, mockModelBuilderSettings.Object)
-                        {
-                            CallBase = true
-                        };
+                var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
 
                 var error = new EdmSchemaError("testError", 42, EdmSchemaErrorSeverity.Warning);
 
                 mockModelBuilderEngine
-                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<List<EdmSchemaError>>()))
+                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Callback(
-                        (string storeModelNamespace, List<EdmSchemaError> errors) => errors.Add(error))
+                        (string storeModelNamespace, ModelBuilderSettings settings, List<EdmSchemaError> errors) => errors.Add(error))
                     .Returns(new DbModel(new DbProviderInfo("System.Data.SqlClient", "2008"), Mock.Of<DbProviderManifest>()));
-
-                mockModelBuilderEngine
-                    .Protected()
-                    .SetupGet<Uri>("Uri")
-                    .Returns(new Uri(@"C:\temp.edmx"));
 
                 var mockEdmxHelper = new Mock<EdmxHelper>(new XDocument());
 
-                mockModelBuilderEngine.Object.GenerateModel(mockEdmxHelper.Object);
+                mockModelBuilderEngine.Object.GenerateModel(mockEdmxHelper.Object, mockModelBuilderSettings.Object, mockHostContext.Object);
 
                 mockModelBuilderEngine
-                    .Verify(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<List<EdmSchemaError>>()), Times.Once());
+                    .Verify(m => m.GenerateModels(
+                        It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()), Times.Once());
+
                 mockHostContext.Verify(h => h.DispatchToModelGenerationExtensions(), Times.Once());
                 mockModelBuilderEngine
                     .Protected()
-                    .Verify("UpdateDesignerInfo", Times.Once(), ItExpr.IsAny<EdmxHelper>());
+                    .Verify("UpdateDesignerInfo", Times.Once(), ItExpr.IsAny<EdmxHelper>(), ItExpr.IsAny<ModelBuilderSettings>());
                 mockHostContext.Verify(h => h.LogMessage(It.IsAny<string>()), Times.Exactly(3));
                 mockHostContext
                     .Verify(h => h.LogMessage(It.IsRegex(Resources.Engine_ModelGenErrors.Substring(1, 20))), Times.Once());
                 mockHostContext
                     .Verify(h => h.LogMessage(It.IsRegex(Resources.Engine_ModelGenException)), Times.Never());
 
-                Assert.Same(error, modelGenCache.GetErrors(@"C:\temp.edmx").Single());
+                Assert.Same(error, modelGenCache.GetErrors(mockModelBuilderSettings.Object.ModelPath).Single());
             }
 
             [Fact]
@@ -172,25 +160,20 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
                 var mockModelBuilderSettings = CreateMockModelBuilderSettings();
-                var mockModelBuilderEngine =
-                    new Mock<ModelBuilderEngine>(mockHostContext.Object, mockModelBuilderSettings.Object)
-                        {
-                            CallBase = true
-                        };
+                var mockModelBuilderEngine = new Mock<ModelBuilderEngine> { CallBase = true };
 
                 mockModelBuilderEngine
-                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<List<EdmSchemaError>>()))
+                    .Setup(m => m.GenerateModels(It.IsAny<string>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<List<EdmSchemaError>>()))
                     .Callback(
-                        (string storeModelNamespace, List<EdmSchemaError> errors) => { throw new Exception("Test exception"); });
-
-                mockModelBuilderEngine
-                    .Protected()
-                    .SetupGet<Uri>("Uri")
-                    .Returns(new Uri(@"C:\temp.edmx"));
+                        (string storeModelNamespace, ModelBuilderSettings settings, List<EdmSchemaError> errors) =>
+                        {
+                            throw new Exception("Test exception");
+                        });
 
                 var mockEdmxHelper = new Mock<EdmxHelper>(new XDocument());
 
-                mockModelBuilderEngine.Object.GenerateModel(mockEdmxHelper.Object);
+                mockModelBuilderEngine.Object
+                    .GenerateModel(mockEdmxHelper.Object, mockModelBuilderSettings.Object, mockHostContext.Object);
 
                 mockHostContext.Verify(h => h.LogMessage(It.IsAny<string>()), Times.Exactly(3));
                 mockHostContext
@@ -209,18 +192,10 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
                 var mockHostContext = new Mock<ModelBuilderEngineHostContext>();
                 var mockModelBuilderSettings = CreateMockModelBuilderSettings();
-                var mockModelBuilderEngine =
-                    new Mock<ModelBuilderEngine>(mockHostContext.Object, mockModelBuilderSettings.Object)
-                        {
-                            CallBase = true
-                        };
+                var mockModelBuilderEngine = new Mock<ModelBuilderEngine>{CallBase = true};
 
-                mockModelBuilderEngine
-                    .Protected()
-                    .SetupGet<Uri>("Uri")
-                    .Returns(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "temp.edmx")));
-
-                mockModelBuilderEngine.Object.GenerateModel(new EdmxHelper(new XDocument()));
+                mockModelBuilderEngine.Object
+                    .GenerateModel(new EdmxHelper(new XDocument()), mockModelBuilderSettings.Object, mockHostContext.Object);
 
                 mockModelGenCache.Verify(c => c.RemoveErrors(It.IsAny<string>()), Times.Once());
             }
@@ -229,9 +204,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 var mockModelBuilderSettings = new Mock<ModelBuilderSettings>();
                 mockModelBuilderSettings.Object.GenerationOption = ModelGenerationOption.GenerateFromDatabase;
+                mockModelBuilderSettings.Object.ModelPath = Path.Combine(Directory.GetCurrentDirectory(), "temp.edmx");
                 mockModelBuilderSettings
                     .Setup(p => p.DesignTimeConnectionString)
                     .Returns("fakeConnectionString");
+                
                 return mockModelBuilderSettings;
             }
         }
@@ -243,7 +220,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 #region not important
 
                 public ModelBuilderEngineFake()
-                    : base(new Mock<ModelBuilderEngineHostContext>().Object, new ModelBuilderSettings())
                 {
                 }
 
@@ -257,21 +233,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     get { throw new NotImplementedException(); }
                 }
 
-                protected override Uri Uri
+                internal override XDocument Model
                 {
                     get { throw new NotImplementedException(); }
                 }
 
-                internal override XDocument XDocument
+                protected override void InitializeModelContents(Version targetSchemaVersion)
                 {
-                    get { throw new NotImplementedException(); }
+                    throw new NotImplementedException();
                 }
 
                 #endregion
 
-                internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper)
+                internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper, ModelBuilderSettings settings)
                 {
-                    UpdateDesignerInfo(edmxHelper);
+                    UpdateDesignerInfo(edmxHelper, settings);
                 }
             }
 
@@ -279,7 +255,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             public void UpdateDesignerInfo_updates_properties_in_designer_section()
             {
                 var mockEdmxHelper = new Mock<EdmxHelper>(new XDocument());
-                new ModelBuilderEngineFake().UpdateDesignerInfoInvoker(mockEdmxHelper.Object);
+                new ModelBuilderEngineFake().UpdateDesignerInfoInvoker(mockEdmxHelper.Object, new ModelBuilderSettings());
 
                 mockEdmxHelper
                     .Verify(h => h.UpdateDesignerOptionProperty(It.IsAny<string>(), It.IsAny<bool>()), Times.Exactly(3));

@@ -18,13 +18,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             {
                 #region not important
 
-                public UpdateModelFromDatabaseModelBuilderEngineFake()
-                    : base(new Mock<ModelBuilderEngineHostContext>().Object,
-                        new ModelBuilderSettings(),
-                        new Uri("http://My.Fake.Uri"))
-                {
-                }
-
                 protected override void AddErrors(IEnumerable<EdmSchemaError> errors)
                 {
                     throw new NotImplementedException();
@@ -35,21 +28,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     get { throw new NotImplementedException(); }
                 }
 
-                protected override Uri Uri
-                {
-                    get { throw new NotImplementedException(); }
-                }
-
-                internal override XDocument XDocument
+                internal override XDocument Model
                 {
                     get { throw new NotImplementedException(); }
                 }
 
                 #endregion
 
-                internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper)
+                internal void UpdateDesignerInfoInvoker(EdmxHelper edmxHelper, ModelBuilderSettings settings)
                 {
-                    UpdateDesignerInfo(edmxHelper);
+                    UpdateDesignerInfo(edmxHelper, settings);
                 }
             }
 
@@ -57,7 +45,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             public void UpdateDesignerInfo_updates_no_properties_in_designer_section()
             {
                 var mockEdmxHelper = new Mock<EdmxHelper>(new XDocument());
-                new UpdateModelFromDatabaseModelBuilderEngineFake().UpdateDesignerInfoInvoker(mockEdmxHelper.Object);
+                new UpdateModelFromDatabaseModelBuilderEngineFake()
+                    .UpdateDesignerInfoInvoker(mockEdmxHelper.Object, new ModelBuilderSettings());
 
                 mockEdmxHelper
                     .Verify(h => h.UpdateDesignerOptionProperty(It.IsAny<string>(), It.IsAny<bool>()), Times.Never());

@@ -31,14 +31,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
 
             if (serviceProvider != null)
             {
-                var hr = VSConstants.S_OK;
                 try
                 {
                     var hostLocale = serviceProvider.GetService(typeof(SUIHostLocale)) as IUIHostLocale2;
                     if (hostLocale != null)
                     {
                         var fonts = new UIDLGLOGFONT[1];
-                        hr = hostLocale.GetDialogFont(fonts);
+                        var hr = hostLocale.GetDialogFont(fonts);
                         ErrorHandler.ThrowOnFailure(hr);
 
                         if (ErrorHandler.Succeeded(hr)

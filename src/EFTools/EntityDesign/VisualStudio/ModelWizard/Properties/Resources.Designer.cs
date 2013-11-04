@@ -368,15 +368,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ModelBuilderEngine cannot have null settings..
-        /// </summary>
-        internal static string Engine_NullSettingsErrorMsg {
-            get {
-                return ResourceManager.GetString("Engine_NullSettingsErrorMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Unable to register the assembly &apos;{0}&apos; in the Web.Config file because of the following exception: &apos;{1}&apos;.
         /// </summary>
         internal static string Engine_WebConfigAssemblyException {

@@ -392,31 +392,25 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
         {
             if (_artifactFileExtensions == null)
             {
-                _artifactFileExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase); // case insensitive hash-set.
-
-                // seed this with our extension
-                _artifactFileExtensions.Add(EXTENSION_EDMX);
-                _artifactFileExtensions.Add(EXTENSION_DIAGRAM);
+                _artifactFileExtensions =
+                    new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+                    { EXTENSION_EDMX, EXTENSION_DIAGRAM };
 
                 // add any other extensions registered by converters
-                var exports = EscherExtensionPointManager.LoadModelConversionExtensions();
-                if (exports.Length > 0)
+                foreach (var exportInfo in EscherExtensionPointManager.LoadModelConversionExtensions())
                 {
-                    foreach (var exportInfo in exports)
+                    var fileExtension = exportInfo.Metadata.FileExtension;
+
+                    // ensure that the extension starts with a '.'
+                    if (fileExtension.StartsWith(".", StringComparison.Ordinal) == false)
                     {
-                        var fileExtension = exportInfo.Metadata.FileExtension;
+                        fileExtension = "." + fileExtension;
+                    }
 
-                        // ensure that the extension starts with a '.'
-                        if (fileExtension.StartsWith(".", StringComparison.Ordinal) == false)
-                        {
-                            fileExtension = "." + fileExtension;
-                        }
-
-                        // add it if it isn't already in the list (duplicates will be checked for during load/save)
-                        if (_artifactFileExtensions.Contains(fileExtension) == false)
-                        {
-                            _artifactFileExtensions.Add(fileExtension);
-                        }
+                    // add it if it isn't already in the list (duplicates will be checked for during load/save)
+                    if (_artifactFileExtensions.Contains(fileExtension) == false)
+                    {
+                        _artifactFileExtensions.Add(fileExtension);
                     }
                 }
             }

@@ -73,8 +73,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         private readonly Stopwatch _stopwatch;
         private Control _controlWithToolTipShown;
 
-        internal WizardPageUpdateFromDatabase(ModelBuilderWizardForm wizard)
-            : base(wizard)
+        internal WizardPageUpdateFromDatabase(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+            : base(wizard, serviceProvider)
         {
             InitializeComponent();
 
@@ -297,24 +297,9 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             UpdateSettingsFromGui();
             UpdateNewFunctionFilterEntries(); // only needs to be done once when wizard finishes
 
-            // generate the model
-#if WIZARD_EXTENSION_PAGE
-            // WizardExtensionPage feature currently not shipping
-            // If we re-enable we will need to find a way to ensure that the model is only generated
-            // once in the whole set of (standard pages + pre-model-gen extension pages + post-model-gen extension pages)
-            // while not breaking the ability with just the standard pages to press Previous and then Finish on what
-            // may not be the last of the standard pages
-            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
-                && Wizard.IsLastPreModelGenerationPageActive())
-#else
-            if (this.Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
-#endif
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
             {
-                using (new VsUtils.HourglassHelper())
-                {
-                    var mbe = Wizard.ModelBuilderSettings.ModelBuilderEngine;
-                    mbe.GenerateModel();
-                }
+                GenerateModel(Wizard.ModelBuilderSettings);
             }
 
             return true;

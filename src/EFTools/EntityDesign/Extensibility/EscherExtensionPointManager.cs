@@ -80,14 +80,6 @@ namespace Microsoft.Data.Entity.Design.Extensibility
             return LoadLayerFilteredExtensions<IModelGenerationExtension>().ToArray();
         }
 
-        // WizardExtensionPage feature not shipping for Dev10
-#if WIZARD_EXTENSION_PAGE
-        internal static IEnumerable<Lazy<IEntityDesignerWizardPageFactory, IWizardExtensionPageData>> LoadWizardPageExtensions()
-        {
-            return LoadLayerFilteredExtensions<IEntityDesignerWizardPageFactory, IWizardExtensionPageData>();
-        }
-#endif
-
         private static IEnumerable<Lazy<T>> LoadLayerFilteredExtensions<T>(bool excludeLayers = false, bool excludeNonLayers = false)
         {
             // if a layer manager exists, then use it to filter the extension based on what layers are enabled

@@ -20,8 +20,11 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         ///     Updates app. or web.config to include connection strings, registers the build provider
         ///     for WebSite projects and the assembly for WebApp projects
         /// </summary>
-        internal static void UpdateConfig(ModelBuilderSettings settings, Project containingProject, ICollection<string> metadataFileNames)
+        internal static void UpdateConfig(ModelBuilderSettings settings)
         {
+            var metadataFileNames = 
+                ConnectionManager.GetMetadataFileNamesFromArtifactFileName(settings.Project, settings.ModelPath, PackageManager.Package);
+
             if (settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
                 || settings.GenerationOption == ModelGenerationOption.GenerateDatabaseScript)
             {
@@ -29,15 +32,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                     && !settings.SaveToWebConfig)
                 {
                     // save connection string in App Config
-                    UpdateAppConfig(containingProject, metadataFileNames, settings);
+                    UpdateAppConfig(metadataFileNames, settings);
                 }
                 else if (settings.SaveConnectionStringInAppConfig
                          && settings.SaveToWebConfig)
                 {
                     // save connection string in Web Config
-                    UpdateWebConfig(containingProject, metadataFileNames, settings);
+                    UpdateWebConfig(metadataFileNames, settings);
                 }
             }
+
+            var containingProject = settings.Project;
 
             // regardless of GenerationOption we always need to register the build
             // provider for web site projects and the assembly for web app projects
@@ -78,13 +83,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
         ///     Update App.Config with connection string if specified in ModelBuilderSettings
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static void UpdateAppConfig(Project project, ICollection<string> metadataFiles, ModelBuilderSettings settings)
+        private static void UpdateAppConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
         {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
             if (settings.SaveConnectionStringInAppConfig)
             {
                 var statusMessage = string.Empty;
@@ -93,7 +93,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 {
                     var manager = PackageManager.Package.ConnectionManager;
                     manager.AddConnectionString(
-                        project,
+                        settings.Project,
                         metadataFiles,
                         settings.AppConfigConnectionPropertyName,
                         settings.AppConfigConnectionString,
@@ -112,18 +112,13 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                         Resources.Engine_AppConfigException,
                         e.Message);
                 }
-                VsUtils.LogOutputWindowPaneMessage(project, statusMessage);
+                VsUtils.LogOutputWindowPaneMessage(settings.Project, statusMessage);
             }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        private static void UpdateWebConfig(Project project, ICollection<string> metadataFiles, ModelBuilderSettings settings)
+        private static void UpdateWebConfig(ICollection<string> metadataFiles, ModelBuilderSettings settings)
         {
-            if (null == project)
-            {
-                throw new ArgumentNullException("project");
-            }
-
             if (settings.SaveConnectionStringInAppConfig)
             {
                 var statusMessage = string.Empty;
@@ -132,7 +127,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 {
                     var manager = PackageManager.Package.ConnectionManager;
                     manager.AddConnectionString(
-                        project,
+                        settings.Project,
                         metadataFiles,
                         settings.AppConfigConnectionPropertyName,
                         settings.AppConfigConnectionString,
@@ -151,7 +146,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                         Resources.Engine_WebConfigException,
                         e.Message);
                 }
-                VsUtils.LogOutputWindowPaneMessage(project, statusMessage);
+                VsUtils.LogOutputWindowPaneMessage(settings.Project, statusMessage);
             }
         }
 

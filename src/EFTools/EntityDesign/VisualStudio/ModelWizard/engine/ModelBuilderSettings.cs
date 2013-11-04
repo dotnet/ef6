@@ -274,6 +274,21 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
 
         public bool UseLegacyProvider { get; set; }
 
+        //  Path to the selected item (project or folder) that we are adding new items into
+        public string NewItemFolder { get; set; }
+
+        public Project Project { get; set; }
+
+        public string ModelName { get; set; }
+
+        // Path to the file containing model - note that the file may not exist yet (e.g. when reverse
+        // engineering db we calculate the path at the begining but save the model when the wizard completes)
+        public string ModelPath { get; set; }
+
+        public string VsTemplatePath { get; set; }
+
+        public IDictionary<string, string> ReplacementDictionary { get; set; }
+
         #endregion Properties
     }
 }

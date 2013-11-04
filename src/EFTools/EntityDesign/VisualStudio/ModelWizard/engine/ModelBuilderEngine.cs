@@ -37,8 +37,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     internal abstract class ModelBuilderEngine
     {
         private static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings();
-        private readonly ModelBuilderEngineHostContext _hostContext;
-        protected readonly ModelBuilderSettings Settings;
 
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static ModelBuilderEngine()
@@ -49,128 +47,113 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
             WriterSettings.NewLineChars += "      ";
         }
 
-        internal ModelBuilderEngine(ModelBuilderEngineHostContext hostContext, ModelBuilderSettings settings)
-        {
-            if (null == hostContext)
-            {
-                throw new ArgumentNullException("hostContext");
-            }
-            if (null == settings)
-            {
-                throw new ArgumentNullException(Resources.Engine_NullSettingsErrorMsg);
-            }
-
-            _hostContext = hostContext;
-            Settings = settings;
-        }
-
         protected abstract void AddErrors(IEnumerable<EdmSchemaError> errors);
         internal abstract IEnumerable<EdmSchemaError> Errors { get; }
 
         /// <summary>
-        ///     This is the Uri of the file.  Note that it may not yet exist on disk!
-        /// </summary>
-        protected abstract Uri Uri { get; }
-
-        /// <summary>
         ///     This is the XDocument of the model in memory.  No assumptions should be made that it exists on disk.
         /// </summary>
-        internal abstract XDocument XDocument { get; }
+        internal abstract XDocument Model { get; }
+
+        protected abstract void InitializeModelContents(Version targetSchemaVersion);
 
         /// <summary>
         ///     Generates EDMX file.
         /// </summary>
-        public void GenerateModel()
+        public void GenerateModel(ModelBuilderSettings settings)
         {
-            if (Settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
-                && String.IsNullOrEmpty(Settings.DesignTimeConnectionString))
+            if (settings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
+                && String.IsNullOrEmpty(settings.DesignTimeConnectionString))
             {
                 throw new ArgumentOutOfRangeException(Resources.Engine_EmptyConnStringErrorMsg);
             }
 
-            GenerateModel(new EdmxHelper(XDocument));
+            InitializeModelContents(settings.TargetSchemaVersion);
+
+            GenerateModel(new EdmxHelper(Model), settings, new VSModelBuilderEngineHostContext(settings));
         }
 
         // internal virtual to allow mocking
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
-        internal virtual void GenerateModel(EdmxHelper edmxHelper)
+        internal virtual void GenerateModel(EdmxHelper edmxHelper, ModelBuilderSettings settings, ModelBuilderEngineHostContext hostContext)
         {
             var generatingModelWatch = Stopwatch.StartNew();
 
             // Clear out the ModelGenErrorCache before ModelGen begins
-            PackageManager.Package.ModelGenErrorCache.RemoveErrors(Uri.LocalPath);
+            PackageManager.Package.ModelGenErrorCache.RemoveErrors(settings.ModelPath);
 
             var errors = new List<EdmSchemaError>();
             try
             {
-                var storeModelNamespace = GetStoreNamespace();
-                var model = GenerateModels(storeModelNamespace, errors);
+                var storeModelNamespace = GetStoreNamespace(settings);
+                var model = GenerateModels(storeModelNamespace, settings, errors);
 
-                edmxHelper.UpdateEdmxFromModel(model, storeModelNamespace, Settings.ModelNamespace, errors);
+                edmxHelper.UpdateEdmxFromModel(model, storeModelNamespace, settings.ModelNamespace, errors);
 
                 // load extensions that want to update model after the wizard has run. 
-                _hostContext.DispatchToModelGenerationExtensions();
+                hostContext.DispatchToModelGenerationExtensions();
 
-                UpdateDesignerInfo(edmxHelper);
+                UpdateDesignerInfo(edmxHelper, settings);
 
-                LogMessage(
+                hostContext.LogMessage(
+                    FormatMessage(
                     errors.Any()
                         ? Resources.Engine_ModelGenErrors
                         : Resources.Engine_ModelGenSuccess,
-                    Path.GetFileName(Uri.LocalPath));
+                    Path.GetFileName(settings.ModelPath)));
 
                 if (errors.Any())
                 {
-                    PackageManager.Package.ModelGenErrorCache.AddErrors(Uri.LocalPath, errors);
+                    PackageManager.Package.ModelGenErrorCache.AddErrors(settings.ModelPath, errors);
                 }
             }
             catch (Exception e)
             {
-                LogMessage(Resources.Engine_ModelGenException, e);
+                hostContext.LogMessage(FormatMessage(Resources.Engine_ModelGenException, e));
             }
 
             generatingModelWatch.Stop();
 
-            LogMessage(Resources.LoadingDBMetadataTimeMsg, Settings.LoadingDBMetatdataTime);
-            LogMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed);
+            hostContext.LogMessage(FormatMessage(Resources.LoadingDBMetadataTimeMsg, settings.LoadingDBMetatdataTime));
+            hostContext.LogMessage(FormatMessage(Resources.GeneratingModelTimeMsg, generatingModelWatch.Elapsed));
         }
 
         // internal virtual to allow mocking
-        internal virtual DbModel GenerateModels(string storeModelNamespace, List<EdmSchemaError> errors)
+        internal virtual DbModel GenerateModels(string storeModelNamespace, ModelBuilderSettings settings, List<EdmSchemaError> errors)
         {
-            return new ModelGenerator(Settings, storeModelNamespace).GenerateModel(errors);
+            return new ModelGenerator(settings, storeModelNamespace).GenerateModel(errors);
         }
 
-        private void LogMessage(string resourcestringName, params object[] args)
+        private static string FormatMessage(string resourcestringName, params object[] args)
         {
-            _hostContext.LogMessage(
+            return
                 String.Format(
                     CultureInfo.CurrentCulture,
                     resourcestringName,
-                    args));
+                    args);
         }
 
-        private string GetStoreNamespace()
+        private static string GetStoreNamespace(ModelBuilderSettings settings)
         {
             return
-                string.IsNullOrEmpty(Settings.StorageNamespace)
+                string.IsNullOrEmpty(settings.StorageNamespace)
                     ? String.Format(
                         CultureInfo.CurrentCulture,
                         Resources.SelectTablesPage_DefaultStorageNamespaceFormat,
-                        Settings.ModelNamespace)
-                    : Settings.StorageNamespace;
+                        settings.ModelNamespace)
+                    : settings.StorageNamespace;
         }
 
-        protected virtual void UpdateDesignerInfo(EdmxHelper edmxHelper)
+        protected virtual void UpdateDesignerInfo(EdmxHelper edmxHelper, ModelBuilderSettings settings)
         {
             Debug.Assert(edmxHelper != null);
 
             edmxHelper.UpdateDesignerOptionProperty(
-                OptionsDesignerInfo.AttributeEnablePluralization, Settings.UsePluralizationService);
+                OptionsDesignerInfo.AttributeEnablePluralization, settings.UsePluralizationService);
             edmxHelper.UpdateDesignerOptionProperty(
-                OptionsDesignerInfo.AttributeIncludeForeignKeysInModel, Settings.IncludeForeignKeysInModel);
+                OptionsDesignerInfo.AttributeIncludeForeignKeysInModel, settings.IncludeForeignKeysInModel);
             edmxHelper.UpdateDesignerOptionProperty(
-                OptionsDesignerInfo.AttributeUseLegacyProvider, Settings.UseLegacyProvider);
+                OptionsDesignerInfo.AttributeUseLegacyProvider, settings.UseLegacyProvider);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
@@ -203,6 +186,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 OptionsDesignerInfo.UseLegacyProviderDefault,
                 artifact);
             settings.TargetSchemaVersion = artifact.SchemaVersion;
+            settings.Project = project;
+            settings.ModelPath = artifact.Uri.LocalPath;
 
             // Get the provider manifest token from the existing SSDL.
             // We don't want to attempt to get it from provider services since this requires a connection

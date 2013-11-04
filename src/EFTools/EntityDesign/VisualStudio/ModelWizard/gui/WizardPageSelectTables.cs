@@ -2,6 +2,14 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using EnvDTE;
+    using Microsoft.Data.Entity.Design.Model;
+    using Microsoft.Data.Entity.Design.VersioningFacade;
+    using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
+    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
+    using Microsoft.Data.Entity.Design.VisualStudio.Package;
+    using Microsoft.VisualStudio.Shell.Interop;
+    using Microsoft.WizardFramework;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -12,15 +20,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     using System.Security;
     using System.Windows.Forms;
     using System.Xml;
-    using EnvDTE;
-    using Microsoft.Data.Entity.Design.Model;
-    using Microsoft.Data.Entity.Design.VersioningFacade;
-    using Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
-    using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Properties;
-    using Microsoft.Data.Entity.Design.VisualStudio.Package;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using Microsoft.WizardFramework;
     using Resources = Microsoft.Data.Entity.Design.Resources;
 
     /// <summary>
@@ -44,8 +43,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 
         #region Constructors
 
-        internal WizardPageSelectTables(ModelBuilderWizardForm wizard)
-            : base(wizard)
+        internal WizardPageSelectTables(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+            : base(wizard, serviceProvider)
         {
             InitializeComponent();
 
@@ -309,9 +308,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
                 }
             }
 
-            // generate the model
-            GenerateModel(Wizard);
 
+            if (Wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
+            {
+                GenerateModel(Wizard.ModelBuilderSettings);
+            }
+            
             return true;
         }
 
@@ -614,28 +616,5 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         }
 
         #endregion Methods
-
-        internal static void GenerateModel(ModelBuilderWizardForm wizard)
-        {
-#if WIZARD_EXTENSION_PAGE
-            // WizardExtensionPage feature currently not shipping
-            // If we re-enable we will need to find a way to ensure that the model is only generated
-            // once in the whole set of (standard pages + pre-model-gen extension pages + post-model-gen extension pages)
-            // while not breaking the ability with just the standard pages to press Previous and then Finish on what
-            // may not be the last of the standard pages
-
-            if (wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase
-                && wizard.IsLastPreModelGenerationPageActive())
-#else
-            if (wizard.ModelBuilderSettings.GenerationOption == ModelGenerationOption.GenerateFromDatabase)
-#endif
-            {
-                using (new VsUtils.HourglassHelper())
-                {
-                    var mbe = wizard.ModelBuilderSettings.ModelBuilderEngine;
-                    mbe.GenerateModel();
-                }
-            }
-        }
     }
 }

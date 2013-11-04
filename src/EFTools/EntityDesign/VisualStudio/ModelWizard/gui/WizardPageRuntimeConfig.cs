@@ -19,8 +19,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
     {
         private RuntimeConfigState _state;
 
-        internal WizardPageRuntimeConfig(ModelBuilderWizardForm wizard)
-            : base(wizard)
+        internal WizardPageRuntimeConfig(ModelBuilderWizardForm wizard, IServiceProvider serviceProvider)
+            : base(wizard, serviceProvider)
         {
             InitializeComponent();
 

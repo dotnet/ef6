@@ -6,47 +6,39 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
     using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Moq;
+    using Moq.Protected;
     using Xunit;
 
     public class InMemoryModelBuilerEngineTests
     {
         [Fact]
-        public void XDocument_uses_latest_value_of_schema_version_when_invoked_the_first_time()
+        public void InMemoryModelBuilerEngine_InitializeModelContents_initializes_model()
         {
             const string edmxString = "<edmx xmlns=\"http://schemas.microsoft.com/ado/2009/11/edmx\" />";
-            var settings = new ModelBuilderSettings { TargetSchemaVersion = EntityFrameworkVersion.Version1 };
+            var mockSettings = new Mock<ModelBuilderSettings>();
+            mockSettings.Setup(s => s.DesignTimeConnectionString).Returns("fakeConnString");
+            mockSettings.Object.TargetSchemaVersion = EntityFrameworkVersion.Version3;
+
             var mockContentsFactory = new Mock<IInitialModelContentsFactory>();
             mockContentsFactory.Setup(f => f.GetInitialModelContents(It.IsAny<Version>())).Returns(edmxString);
 
-            var builderEngine = new InMemoryModelBuilderEngine(
-                new Mock<ModelBuilderEngineHostContext>().Object, settings,
-                mockContentsFactory.Object, new Uri("http://tempUri"));
+            var mockInMemoryBuilderEngine = new Mock<InMemoryModelBuilderEngine>(
+                mockContentsFactory.Object)
+            {
+                CallBase = true
+            };
 
-            settings.TargetSchemaVersion = EntityFrameworkVersion.Version3;
+            mockInMemoryBuilderEngine.Setup(
+                e => e.GenerateModel(It.IsAny<EdmxHelper>(), It.IsAny<ModelBuilderSettings>(), It.IsAny<ModelBuilderEngineHostContext>()));
 
-            Assert.True(XNode.DeepEquals(XDocument.Parse(edmxString), builderEngine.XDocument));
-            mockContentsFactory.Verify(f => f.GetInitialModelContents(It.IsAny<Version>()), Times.Once());
-            mockContentsFactory.Verify(f => f.GetInitialModelContents(EntityFrameworkVersion.Version3), Times.Once());
-        }
+            mockInMemoryBuilderEngine.Object.GenerateModel(mockSettings.Object);
 
-        [Fact]
-        public void InMemoryModelBuilerEngine_caches_XDocument()
-        {
-            const string edmxString = "<edmx xmlns=\"http://schemas.microsoft.com/ado/2009/11/edmx\" />";
-            var settings = new ModelBuilderSettings { TargetSchemaVersion = EntityFrameworkVersion.Version1 };
-            var mockContentsFactory = new Mock<IInitialModelContentsFactory>();
-            mockContentsFactory.Setup(f => f.GetInitialModelContents(It.IsAny<Version>())).Returns(edmxString);
-
-            var builderEngine = new InMemoryModelBuilderEngine(
-                new Mock<ModelBuilderEngineHostContext>().Object, settings,
-                mockContentsFactory.Object, new Uri("http://tempUri"));
-
-            settings.TargetSchemaVersion = EntityFrameworkVersion.Version3;
-            Assert.True(XNode.DeepEquals(XDocument.Parse(edmxString), builderEngine.XDocument));
-            Assert.True(XNode.DeepEquals(XDocument.Parse(edmxString), builderEngine.XDocument));
+            Assert.True(XNode.DeepEquals(XDocument.Parse(edmxString), mockInMemoryBuilderEngine.Object.Model));
 
             mockContentsFactory.Verify(f => f.GetInitialModelContents(It.IsAny<Version>()), Times.Once());
             mockContentsFactory.Verify(f => f.GetInitialModelContents(EntityFrameworkVersion.Version3), Times.Once());
+
+            mockInMemoryBuilderEngine.Protected().Verify("InitializeModelContents", Times.Once(), EntityFrameworkVersion.Version3);
         }
     }
 }

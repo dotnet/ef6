@@ -2128,15 +2128,6 @@ namespace Microsoft.Data.Entity.Design {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your model file name must end with the extension &apos;{0}&apos;..
-        /// </summary>
-        public static string ModelObjectItemWizard_WrongExtension {
-            get {
-                return ResourceManager.GetString("ModelObjectItemWizard_WrongExtension", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Inheriting &apos;{0}&apos; from &apos;{1}&apos; will remove all the entity keys defined in &apos;{0}&apos; and its subtypes.\nContinue?.
         /// </summary>
         public static string MsgBox_InheritanceWillRemoveKeys {

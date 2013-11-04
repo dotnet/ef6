@@ -1,12 +1,11 @@
 <VSTemplate Version="3.0.0" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005" Type="Item">
   <TemplateData>
     <Name Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="500" />
-    <DefaultName>Model.edmx</DefaultName>
+    <DefaultName>Model</DefaultName>
     <Description Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="501" />
     <ProjectType>VisualBasic</ProjectType>
     <Icon Package="{8889e051-b7f9-4781-bb33-2a36a9bdb3a5}" ID="502" />
     <ProvideDefaultName>true</ProvideDefaultName>
-    <AppendDefaultFileExtension>true</AppendDefaultFileExtension>
     <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
     <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
     <TemplateID>Microsoft.Data.Entity.Design.VSTemplate.VB</TemplateID> <!-- Template ID max length is 63 characters -->

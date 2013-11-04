@@ -2,10 +2,12 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.Package
 {
+    using System.Collections.Generic;
     using System.Data.Common;
     using EnvDTE;
     using Moq;
     using UnitTests.TestHelpers;
+    using VSLangProj;
     using Xunit;
 
     public class ConnectionManagerTests
@@ -64,6 +66,44 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 null, null, null);
 
             Assert.Equal("EntityFramework", connectionStringBuilder["App"]);
+        }
+
+        [Fact]
+        public void GetMetadataFileNamesFromArtifactFileName_creates_metadata_file_names_for_non_null_edmx_ProjectItem()
+        {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
+            mockDte.SetProjectProperties(new Dictionary<string, object> { { "FullPath", @"D:\Projects\Project\Folder" } });
+            var mockParentProjectItem = new Mock<ProjectItem>();
+            mockParentProjectItem.Setup(p => p.Collection).Returns(new Mock<ProjectItems>().Object);
+            mockParentProjectItem.Setup(p => p.Name).Returns("Folder");
+
+            var mockModelProjectItem = new Mock<ProjectItem>();
+            var mockCollection = new Mock<ProjectItems>();
+            mockCollection.Setup(p => p.Parent).Returns(mockParentProjectItem.Object);
+            mockModelProjectItem.Setup(p => p.Collection).Returns(mockCollection.Object);
+
+            var metadataFileNames =
+                ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
+                mockDte.Project, @"c:\temp\myModel.edmx", mockDte.ServiceProvider, (_, __) => mockModelProjectItem.Object);
+
+            Assert.Equal(@".\Folder\myModel.csdl", metadataFileNames[0]);
+            Assert.Equal(@".\Folder\myModel.ssdl", metadataFileNames[1]);
+            Assert.Equal(@".\Folder\myModel.msl", metadataFileNames[2]);
+        }
+
+        [Fact]
+        public void GetMetadataFileNamesFromArtifactFileName_creates_metadata_file_names_for_null_edmx_ProjectItem()
+        {
+            var mockDte = new MockDTE(".NETFramework, Version=v4.5", references: new Reference[0]);
+            mockDte.SetProjectProperties(new Dictionary<string, object> { { "FullPath", @"C:\Projects\Project\Folder" } });
+            
+            var metadataFileNames =
+                ConnectionManager.GetMetadataFileNamesFromArtifactFileName(
+                mockDte.Project, @"c:\temp\myModel.edmx", mockDte.ServiceProvider, (_, __) => null);
+
+            Assert.Equal(@".\..\..\..\temp\myModel.csdl", metadataFileNames[0]);
+            Assert.Equal(@".\..\..\..\temp\myModel.ssdl", metadataFileNames[1]);
+            Assert.Equal(@".\..\..\..\temp\myModel.msl", metadataFileNames[2]);
         }
     }
 }
