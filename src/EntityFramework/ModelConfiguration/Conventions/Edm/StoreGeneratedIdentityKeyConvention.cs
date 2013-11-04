@@ -42,8 +42,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
                     && _applicableTypes.Contains(property.PrimitiveType.PrimitiveTypeKind))
                 {
                     if (!model.GetConceptualModel().AssociationTypes.Any(a => IsNonTableSplittingForeignKey(a, property))
-                        && !ParentOfTpc(item, model.GetConceptualModel())
-                        && !HasRequiredSelfRef(item, model.GetConceptualModel()))
+                        && !ParentOfTpc(item, model.GetConceptualModel()))
                     {
                         property.SetStoreGeneratedPattern(StoreGeneratedPattern.Identity);
                     }

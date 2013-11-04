@@ -18,6 +18,33 @@ namespace FunctionalTests
 
     public class InheritanceScenarioTests : TestBase
     {
+        public abstract class MessageBase
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string Contents { get; set; }
+        }
+
+        public class Comment : MessageBase
+        {
+            public MessageBase Parent { get; set; }
+            public int ParentId { get; set; }
+        }
+
+        [Fact]
+        public void Identity_convention_applied_when_self_ref()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<MessageBase>();
+            modelBuilder.Entity<Comment>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<MessageBase>("MessageBases").Column("Id").DbEqual(StoreGeneratedPattern.Identity, c => c.StoreGeneratedPattern);
+        }
+
         public class Person1545
         {
             public int Id { get; set; }

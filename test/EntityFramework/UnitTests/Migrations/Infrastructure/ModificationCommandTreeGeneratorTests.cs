@@ -15,6 +15,152 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
     public class ModificationCommandTreeGeneratorTests : TestBase
     {
+        private class WorldContext_Identity : WorldContext_Fk
+        {
+            static WorldContext_Identity()
+            {
+                Database.SetInitializer<WorldContext_Identity>(null);
+            }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                base.OnModelCreating(modelBuilder);
+
+                modelBuilder.Entity<Thing>().Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_self_ref_direct()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Identity())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateInsert(GetType().Namespace + ".Thing").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_self_ref_direct()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Identity())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateUpdate(GetType().Namespace + ".Thing").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_self_ref_direct()
+        {
+            DbModel model;
+
+            using (var context = new WorldContext_Identity())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateDelete(GetType().Namespace + ".Thing").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        public abstract class MessageBase
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+            public string Contents { get; set; }
+        }
+
+        public class Message : MessageBase
+        {
+        }
+
+        public class Comment : MessageBase
+        {
+            public MessageBase Parent { get; set; }
+            public int ParentId { get; set; }
+        }
+
+        public class SelfRefInheritanceContext : DbContext
+        {
+            public DbSet<Comment> Comments { get; set; }
+            public DbSet<MessageBase> MessageBases { get; set; }
+            public DbSet<Message> Messages { get; set; }
+
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MessageBase>().MapToStoredProcedures();
+            }
+        }
+
+        [Fact]
+        public void Can_generate_insert_tree_when_self_ref_inheritance()
+        {
+            DbModel model;
+
+            using (var context = new SelfRefInheritanceContext())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateInsert(GetType().Namespace + ".Comment").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_update_tree_when_self_ref_inheritance()
+        {
+            DbModel model;
+
+            using (var context = new SelfRefInheritanceContext())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateUpdate(GetType().Namespace + ".Comment").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
+        [Fact]
+        public void Can_generate_delete_tree_when_self_ref_inheritance()
+        {
+            DbModel model;
+
+            using (var context = new SelfRefInheritanceContext())
+            {
+                model = context.InternalContext.CodeFirstModel.CachedModelBuilder.BuildDynamicUpdateModel(ProviderRegistry.Sql2008_ProviderInfo);
+            }
+
+            var commandTreeGenerator = new ModificationCommandTreeGenerator(model);
+
+            var commandTrees = commandTreeGenerator.GenerateDelete(GetType().Namespace + ".Comment").ToList();
+
+            Assert.Equal(1, commandTrees.Count());
+        }
+
         public class Landmark
         {
             public int Id { get; set; }

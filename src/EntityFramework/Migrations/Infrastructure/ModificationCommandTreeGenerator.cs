@@ -131,9 +131,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var entity = InstantiateEntity(entityType, context, clrType, set);
 
             SetFakeReferenceKeyValues(entity, entityType);
+            SetFakeKeyValues(entity, entityType);
 
             set.Attach(entity);
-
+            
             return entity;
         }
 
@@ -384,7 +385,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 if (value != null)
                 {
-                    clrPropertyInfo.SetValue(entity, value, null);
+                    clrPropertyInfo.GetPropertyInfoForSet().SetValue(entity, value, null);
                 }
             }
         }
@@ -421,7 +422,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                 Debug.Assert(value != null);
 
-                clrPropertyInfo.SetValue(entity, value, null);
+                clrPropertyInfo.GetPropertyInfoForSet().SetValue(entity, value, null);
             }
         }
 
@@ -504,7 +505,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
                     InstantiateComplexProperties(complexObject, property.ComplexType.Properties);
 
-                    clrPropertyInfo.SetValue(structuralObject, complexObject, null);
+                    clrPropertyInfo.GetPropertyInfoForSet().SetValue(structuralObject, complexObject, null);
                 }
             }
         }
