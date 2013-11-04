@@ -1,7 +1,4 @@
-﻿****************************************************************************************************
-Project global pre-settings.
-**************************************************************************************************** -->
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(CustomBeforeEntityFrameworkTargets)" Condition="Exists('$(CustomBeforeEntityFrameworkTargets)')" Label="Pre-targets Build Extensibility Point."/>
   
   <!--- Configurable properties -->
