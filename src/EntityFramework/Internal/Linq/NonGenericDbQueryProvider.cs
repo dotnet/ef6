@@ -25,9 +25,9 @@ namespace System.Data.Entity.Internal.Linq
         // <summary>
         // Creates a provider that wraps the given provider.
         // </summary>
-        // <param name="provider"> The provider to wrap. </param>
-        public NonGenericDbQueryProvider(InternalContext internalContext, ObjectQueryProvider provider)
-            : base(internalContext, provider)
+        // <param name="internalQuery"> The internal query to wrap. </param>
+        public NonGenericDbQueryProvider(InternalContext internalContext, IInternalQuery internalQuery)
+            : base(internalContext, internalQuery)
         {
         }
 
