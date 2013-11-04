@@ -94,6 +94,14 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
         public string Name { get; set; }
     }
 
+    public class Person
+    {
+        public int Id { get; set; }
+
+        [ConcurrencyCheck]
+        public DateTime BirthDate { get; set; }
+    }
+
     public class TestContext : DbContext
     {
         static TestContext()
@@ -249,7 +257,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                                         c.Parameter(o => o.Key, "key_for_update");
                                         c.Result(o => o.OrderNo, "order_fu");
                                     });
-                            m.Delete(c => { c.Parameter(o => o.Key, "key_for_delete"); });
+                            m.Delete(c => c.Parameter(o => o.Key, "key_for_delete"));
                         })
                 .Property(so => so.Id)
                 .HasColumnName("xid");
@@ -260,6 +268,10 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
 
             modelBuilder
                 .Entity<Vehicle>()
+                .MapToStoredProcedures();
+
+            modelBuilder
+                .Entity<Person>()
                 .MapToStoredProcedures();
         }
     }
@@ -283,7 +295,7 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
             modelBuilder
                 .Entity<SpecialOrder>()
                 .MapToStoredProcedures(
-                    m => { m.Insert(c => c.Result(o => o.OrderNo, "order_fu2")); });
+                    m => m.Insert(c => c.Result(o => o.OrderNo, "order_fu2")));
         }
     }
 
