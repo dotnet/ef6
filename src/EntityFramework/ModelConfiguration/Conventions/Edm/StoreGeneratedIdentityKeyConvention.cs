@@ -50,18 +50,6 @@ namespace System.Data.Entity.ModelConfiguration.Conventions
             }
         }
 
-        private static bool HasRequiredSelfRef(EntityType entityType, EdmModel model)
-        {
-            DebugCheck.NotNull(entityType);
-            DebugCheck.NotNull(model);
-
-            return model.AssociationTypes
-                .Any(
-                    at => at.SourceEnd.GetEntityType().GetRootType() == entityType.GetRootType()
-                          && at.TargetEnd.GetEntityType().GetRootType() == entityType.GetRootType()
-                          && (at.SourceEnd.IsRequired() || at.TargetEnd.IsRequired()));
-        }
-
         // <summary>
         // Checks for the PK property being an FK in a different table. A PK which is also an FK but
         // in the same table is used for table splitting and can still be an identity column because
