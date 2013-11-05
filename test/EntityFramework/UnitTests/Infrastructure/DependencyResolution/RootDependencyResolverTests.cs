@@ -6,6 +6,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -210,6 +211,19 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
                 Assert.IsType<DatabaseLogFormatter>(formatter);
                 Assert.Same(context, formatter.Context);
                 Assert.Same(sink, formatter.WriteAction);
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_the_ClrTypeAnnotationSerializer()
+            {
+                Assert.IsType<ClrTypeAnnotationSerializer>(
+                    new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>(XmlConstants.ClrTypeAnnotation));
+            }
+
+            [Fact]
+            public void The_root_resolver_does_not_return_a_serializer_for_unknown_annotations()
+            {
+                Assert.Null(new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>("A:B"));
             }
         }
 

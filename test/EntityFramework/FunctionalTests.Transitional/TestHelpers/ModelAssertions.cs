@@ -20,14 +20,14 @@ namespace System.Data.Entity
                     .OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
+                            a => a.Name == XmlConstants.ClrTypeAnnotation
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var property
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Where(
                         i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
+                            a => a.Name == XmlConstants.ClrTypeAnnotation
                                  && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
                     .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                         i => i.Annotations.Any(
@@ -51,7 +51,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == "ClrType"
+                        a => a.Name == XmlConstants.ClrTypeAnnotation
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var table
@@ -72,7 +72,7 @@ namespace System.Data.Entity
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                     .Single(
                         i => i.Annotations.Any(
-                            a => a.Name == "ClrType"
+                            a => a.Name == XmlConstants.ClrTypeAnnotation
                                  && (Type)a.Value == typeof(TStructuralType)));
 
             var table
@@ -106,7 +106,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == "ClrType"
+                        a => a.Name == XmlConstants.ClrTypeAnnotation
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments
@@ -131,7 +131,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == "ClrType"
+                        a => a.Name == XmlConstants.ClrTypeAnnotation
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragment
@@ -149,7 +149,7 @@ namespace System.Data.Entity
             var entityType
                 = databaseMapping.Model.EntityTypes.Single(
                     i => i.Annotations.Any(
-                        a => a.Name == "ClrType"
+                        a => a.Name == XmlConstants.ClrTypeAnnotation
                              && (Type)a.Value == typeof(TStructuralType)));
 
             databaseMapping
@@ -168,7 +168,7 @@ namespace System.Data.Entity
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>()
                                  .Where(
                                      i => i.Annotations.Any(
-                                         a => a.Name == "ClrType"
+                                         a => a.Name == XmlConstants.ClrTypeAnnotation
                                               && ((Type)a.Value).IsAssignableFrom(typeof(TStructuralType))))
                                  .SelectMany(th => th.Members.OfType<EdmProperty>()).Distinct().Single(
                                      i => i.Annotations.Any(
@@ -218,7 +218,7 @@ namespace System.Data.Entity
             var structuralType
                 = databaseMapping.Model.NamespaceItems.OfType<StructuralType>().Single(
                     i => i.Annotations.Any(
-                        a => a.Name == "ClrType"
+                        a => a.Name == XmlConstants.ClrTypeAnnotation
                              && (Type)a.Value == typeof(TStructuralType)));
 
             var fragments

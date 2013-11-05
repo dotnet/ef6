@@ -5,12 +5,21 @@ namespace ProductivityApiTests
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Common;
     using System.Data.Entity;
+    using System.Data.Entity.Core.EntityClient;
+    using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Core.Objects.DataClasses;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Interception;
     using System.Data.Entity.TestHelpers;
     using System.Linq;
+    using System.Text;
+    using System.Xml;
+    using System.Xml.Linq;
+    using FunctionalTests.Bug178568;
     using Xunit;
 
     public class NamespaceAndNestingTests : FunctionalTestBase
@@ -19,11 +28,46 @@ namespace ProductivityApiTests
         [UseDefaultExecutionStrategy]
         public void Code_First_can_use_types_that_have_the_same_name_but_different_namespaces()
         {
+            Can_use_types_that_have_the_same_name_but_different_namespaces(() => new MoonContext(), () => new EarthContext());
+        }
+
+        [Fact]
+        [UseDefaultExecutionStrategy]
+        public void Context_from_EDMX_with_ClrType_annotations_can_use_types_that_have_the_same_name_but_different_namespaces()
+        {
+            MetadataWorkspace moonWorkspace;
+            using (var context = new MoonContext())
+            {
+                context.Database.Initialize(force: false);
+
+                moonWorkspace = CreateEdmxBasedWorkspace(context);
+            }
+
+            MetadataWorkspace earthWorkspace;
+            using (var context = new EarthContext())
+            {
+                context.Database.Initialize(force: false);
+
+                earthWorkspace = CreateEdmxBasedWorkspace(context);
+            }
+
+            Can_use_types_that_have_the_same_name_but_different_namespaces(
+                () => new MoonContext(
+                    new ObjectContext(
+                        new EntityConnection(moonWorkspace, SimpleConnection<MoonContext>()), contextOwnsConnection: true)),
+                () => new EarthContext(
+                    new ObjectContext(
+                        new EntityConnection(earthWorkspace, SimpleConnection<EarthContext>()), contextOwnsConnection: true)));
+        }
+
+        private void Can_use_types_that_have_the_same_name_but_different_namespaces(
+            Func<MoonContext> createMoon, Func<EarthContext> createEarth)
+        {
             // This test excerises queries and updates using models with a variety of types
             // including enums and complex types where the types have the same names but
             // are in different namespaces.
 
-            using (var moon = new MoonContext())
+            using (var moon = createMoon())
             {
                 var cheese = moon.Cheeses.Single();
 
@@ -47,7 +91,7 @@ namespace ProductivityApiTests
                 }
             }
 
-            using (var earth = new EarthContext())
+            using (var earth = createEarth())
             {
                 var cheese = earth.Cheeses.Single();
 
@@ -85,6 +129,16 @@ namespace ProductivityApiTests
                 Database.SetInitializer(new MoonInitializer());
             }
 
+            public MoonContext()
+            {
+            }
+
+            public MoonContext(ObjectContext objectContext)
+                : base(objectContext, dbContextOwnsObjectContext: true)
+            {
+                Configuration.LazyLoadingEnabled = true;
+            }
+
             public DbSet<TheMoon.Cheese> Cheeses { get; set; }
             public DbSet<TheMoon.Pickle> Pickles { get; set; }
         }
@@ -120,6 +174,16 @@ namespace ProductivityApiTests
                 Database.SetInitializer(new EarthInitializer());
             }
 
+            public EarthContext()
+            {
+            }
+
+            public EarthContext(ObjectContext objectContext)
+                : base(objectContext, dbContextOwnsObjectContext: true)
+            {
+                Configuration.LazyLoadingEnabled = true;
+            }
+
             public DbSet<TheEarth.Cheese> Cheeses { get; set; }
             public DbSet<TheEarth.Pickle> Pickles { get; set; }
         }
@@ -146,6 +210,36 @@ namespace ProductivityApiTests
                                 }
                         });
             }
+        }
+
+        private static MetadataWorkspace CreateEdmxBasedWorkspace(DbContext context)
+        {
+            var edmxBuilder = new StringBuilder();
+            EdmxWriter.WriteEdmx(context, XmlWriter.Create(edmxBuilder));
+            var edmx = XDocument.Parse(edmxBuilder.ToString());
+
+            var edmItemCollection = new EdmItemCollection(
+                new[]
+                {
+                    edmx.Descendants(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/11/edm")).Single().CreateReader()
+                });
+
+            var storeItemCollection = new StoreItemCollection(
+                new[]
+                {
+                    edmx.Descendants(XName.Get("Schema", "http://schemas.microsoft.com/ado/2009/11/edm/ssdl")).Single().CreateReader()
+                });
+
+            var mapping = new StorageMappingItemCollection(
+                edmItemCollection,
+                storeItemCollection,
+                new[]
+                {
+                    new XElement(edmx.Descendants(XName.Get("Mapping", "http://schemas.microsoft.com/ado/2009/11/mapping/cs")).Single())
+                        .CreateReader()
+                });
+
+            return new MetadataWorkspace(() => edmItemCollection, () => storeItemCollection, () => mapping);
         }
 
         [Fact]

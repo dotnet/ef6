@@ -10,6 +10,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -168,6 +169,30 @@ namespace System.Data.Entity.Core.Metadata.Edm
             if (OSpaceTypesLoaded)
             {
                 return true;
+            }
+
+            // If all the containers (usually only one) have the UseClrTypes annotation then use the Code First loader even
+            // when using an EDMX.
+            if (edmItemCollection != null)
+            {
+                var containers = edmItemCollection.GetItems<EntityContainer>();
+                if (containers.Any()
+                    && containers.All(
+                        c => c.Annotations.Any(
+                            a => a.Name == XmlConstants.UseClrTypesAnnotation
+                                 && ((string)a.Value).ToUpperInvariant() == "TRUE")))
+                {
+                    lock (LoadAssemblyLock)
+                    {
+                        if (!OSpaceTypesLoaded)
+                        {
+                            new CodeFirstOSpaceLoader().LoadTypes(edmItemCollection, this);
+
+                            Debug.Assert(OSpaceTypesLoaded);
+                        }
+                        return true;
+                    }
+                }
             }
 
             // Check if its loaded in the cache - if the call is for loading referenced assemblies, make sure that all referenced

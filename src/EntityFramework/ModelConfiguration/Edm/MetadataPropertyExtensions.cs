@@ -14,7 +14,6 @@ namespace System.Data.Entity.ModelConfiguration.Edm
     // </summary>
     internal static class MetadataPropertyExtensions
     {
-        private const string ClrTypeAnnotation = "ClrType";
         private const string ClrPropertyInfoAnnotation = "ClrPropertyInfo";
         private const string ClrAttributesAnnotation = "ClrAttributes";
         private const string ConfiguationAnnotation = "Configuration";
@@ -80,7 +79,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         {
             DebugCheck.NotNull(metadataProperties);
 
-            return (Type)metadataProperties.GetAnnotation(ClrTypeAnnotation);
+            return (Type)metadataProperties.GetAnnotation(XmlConstants.ClrTypeAnnotation);
         }
 
         // <summary>
@@ -93,7 +92,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             DebugCheck.NotNull(metadataProperties);
             DebugCheck.NotNull(type);
 
-            metadataProperties.SetAnnotation(ClrTypeAnnotation, type);
+            metadataProperties.SetAnnotation(XmlConstants.ClrTypeAnnotation, type);
         }
 
         // <summary>

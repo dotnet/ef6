@@ -2,8 +2,10 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Collections.Generic;
     using System.Text;
     using System.Xml;
+    using Moq;
     using Xunit;
 
     public class EdmXmlSchemaWriterTests
@@ -295,7 +297,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fixture = new Fixture();
             fixture.Writer.WriteSchemaElementHeader("test");
 
-            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation""", 
+            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation""", 
             fixture.ToString());
         }
         
@@ -305,7 +307,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fixture = new Fixture(2.0);
             fixture.Writer.WriteSchemaElementHeader("test");
 
-            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation""",
+            Assert.Equal(@"<Schema Namespace=""test"" Alias=""Self"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation""",
             fixture.ToString());
         }
 
@@ -315,7 +317,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fixture = new Fixture(2.0);
             fixture.Writer.WriteSchemaElementHeader("Room.Store", "fakeProvider", "42", true);
 
-            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self"" xmlns:store=""http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator""",
+            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self"" xmlns:store=""http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation""",
             fixture.ToString());
         }
 
@@ -325,7 +327,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var fixture = new Fixture(2.0);
             fixture.Writer.WriteSchemaElementHeader("Room.Store", "fakeProvider", "42", false);
 
-            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self""",
+            Assert.Equal(@"<Schema Namespace=""Room.Store"" Provider=""fakeProvider"" ProviderManifestToken=""42"" Alias=""Self"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation""",
             fixture.ToString());
         }
 
@@ -348,35 +350,139 @@ namespace System.Data.Entity.Core.Metadata.Edm
             fixture.Writer.WriteEntityContainerElementHeader(container);
 
             Assert.Equal(
-                @"<Schema Namespace=""ns"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">" + 
+                @"<Schema Namespace=""ns"" Alias=""Self"" annotation:UseStrongSpatialTypes=""false"" xmlns:annotation=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation"" xmlns=""http://schemas.microsoft.com/ado/2009/11/edm"">" +
                 @"<EntityContainer Name=""C"" annotation:LazyLoadingEnabled=""true""",
             fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteEntityTypeElementHeader_writes_annotations()
+        {
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+
+            var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
+            mockEntityType.Setup(m => m.Name).Returns("E");
+            mockEntityType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteEntityTypeElementHeader(mockEntityType.Object);
+
+            Assert.Equal(
+                @"<EntityType Name=""E"" p1:ClrType=""System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089""",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteComplexTypeElementHeader_writes_annotations()
+        {
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+
+            var mockComplexType = new Mock<ComplexType>("C", "ns", DataSpace.CSpace);
+            mockComplexType.Setup(m => m.Name).Returns("C");
+            mockComplexType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteComplexTypeElementHeader(mockComplexType.Object);
+
+            Assert.Equal(
+                @"<ComplexType Name=""C"" p1:ClrType=""System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089""",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteEnumTypeElementHeader_writes_annotations()
+        {
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+
+            var mockEnumType = new Mock<EnumType>();
+            mockEnumType.Setup(m => m.Name).Returns("E");
+            mockEnumType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.Writer.WriteEnumTypeElementHeader(mockEnumType.Object);
+
+            Assert.Equal(
+                @"<EnumType Name=""E"" IsFlags=""false"" p1:ClrType=""System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"" UnderlyingType=""Int32""",
+                fixture.ToString());
+        }
+        
+        [Fact]
+        public void WriteExtendedProperties_writes_annotations_using_serializer_to_serialize_if_available()
+        {
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.ClrTypeAnnotation, typeof(Random));
+
+            var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
+            mockEntityType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.UnderlyingWriter.WriteStartElement(XmlConstants.EntityType);
+            fixture.Writer.WriteExtendedProperties(mockEntityType.Object);
+
+            Assert.Equal(
+                @"<EntityType p1:ClrType=""System.Random, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089""",
+                fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteExtendedProperties_writes_annotations_using_ToString_if_serializer_not_available()
+        {
+            var property = MetadataProperty.CreateAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
+
+            var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
+            mockEntityType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.UnderlyingWriter.WriteStartElement(XmlConstants.EntityType);
+            fixture.Writer.WriteExtendedProperties(mockEntityType.Object);
+
+            Assert.Equal(@"<EntityType p1:UseClrTypes=""true""", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteExtendedProperties_does_not_write_annotations_that_do_not_have_a_name_containing_a_colon()
+        {
+            var property = MetadataProperty.CreateAnnotation("Foo", "true");
+
+            var mockEntityType = new Mock<EntityType>("E", "ns", DataSpace.CSpace);
+            mockEntityType.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { property }));
+
+            var fixture = new Fixture(2.0);
+            fixture.UnderlyingWriter.WriteStartElement(XmlConstants.EntityType);
+            fixture.Writer.WriteExtendedProperties(mockEntityType.Object);
+
+            Assert.Equal(@"<EntityType", fixture.ToString());
         }
 
         private class Fixture
         {
             public readonly EdmXmlSchemaWriter Writer;
+            public readonly XmlWriter UnderlyingWriter;
 
             private readonly StringBuilder _stringBuilder;
-            private readonly XmlWriter _xmlWriter;
 
             public Fixture(double version = 3.0)
             {
                 _stringBuilder = new StringBuilder();
 
-                _xmlWriter = XmlWriter.Create(
+                UnderlyingWriter = XmlWriter.Create(
                     _stringBuilder,
                     new XmlWriterSettings
                         {
                             OmitXmlDeclaration = true
                         });
 
-                Writer = new EdmXmlSchemaWriter(_xmlWriter, version, false);
+                Writer = new EdmXmlSchemaWriter(UnderlyingWriter, version, false);
             }
 
             public override string ToString()
             {
-                _xmlWriter.Flush();
+                UnderlyingWriter.Flush();
 
                 return _stringBuilder.ToString();
             }
