@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesignXmlCore", "src\EFTools\DesignXmlCore\DesignXmlCore.csproj", "{6C80DBCA-16C8-48C9-9019-AB6FDED788DE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XmlCore", "src\EFTools\XmlCore\XmlCore.csproj", "{79B40A85-CDCC-4AC3-A583-77CA43CB5136}"
@@ -43,6 +45,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFramework.SqlServerCompact", "src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj", "{1EF9C524-7122-4677-B111-DD14BB2A9EA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VsIdeTestHostFramework", "tools\VsIdeHostAdapter\Framework\VsIdeTestHostFramework.csproj", "{614AC98E-A68E-4EB4-AF27-1CEDBA7CA3B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E2ETests", "test\EFTools\E2ETests\E2ETests.csproj", "{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -204,6 +208,14 @@ Global
 		{614AC98E-A68E-4EB4-AF27-1CEDBA7CA3B4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{614AC98E-A68E-4EB4-AF27-1CEDBA7CA3B4}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
 		{614AC98E-A68E-4EB4-AF27-1CEDBA7CA3B4}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.DebugNet40|Any CPU.ActiveCfg = Debug|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.DebugNet40|Any CPU.Build.0 = Debug|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.ReleaseNet40|Any CPU.ActiveCfg = Release|Any CPU
+		{D57EA46B-C581-4DE9-98C0-9FBEAF1F549A}.ReleaseNet40|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -61,6 +61,7 @@
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\FunctionalTests\*.csproj" />
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\UnitTests\*.csproj" />
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\InProcTests\*.csproj" />
+	    <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\E2ETests\*.csproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
         <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
