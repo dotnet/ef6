@@ -36,6 +36,10 @@
     </CoreCompileDependsOn>
   </PropertyGroup>
   
+  <PropertyGroup>
+    <DefineConstants Condition="'$(Configuration)' == 'Release'">$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
+  </PropertyGroup>
+  
   <Target Name="GenerateAssemblyVersion">
     <PropertyGroup>
       <AssemblyVersionFileName>$(TEMP)\$([System.Guid]::NewGuid()).cs</AssemblyVersionFileName>
