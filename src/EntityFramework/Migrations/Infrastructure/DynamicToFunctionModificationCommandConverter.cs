@@ -24,6 +24,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
         private EdmProperty _currentProperty;
         private List<EdmProperty> _storeGeneratedKeys;
         private int _nextStoreGeneratedKey;
+        private bool _useOriginalValues;
 
         public DynamicToFunctionModificationCommandConverter(
             EntityTypeModificationFunctionMapping entityTypeModificationFunctionMapping,
@@ -100,12 +101,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             _currentFunctionMapping = _entityTypeModificationFunctionMapping.UpdateFunctionMapping;
 
+            _useOriginalValues = true;
+
+            var predicate = commandTree.Predicate.Accept(this);
+
+            _useOriginalValues = false;
+
             return
                 new DbUpdateCommandTree(
                     commandTree.MetadataWorkspace,
                     commandTree.DataSpace,
                     commandTree.Target,
-                    commandTree.Predicate.Accept(this),
+                    predicate,
                     VisitSetClauses(commandTree.SetClauses),
                     commandTree.Returning != null ? commandTree.Returning.Accept(this) : null);
         }
@@ -177,7 +184,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             if (_currentProperty != null)
             {
-                var parameter = GetParameter(_currentProperty);
+                var parameter = GetParameter(_currentProperty, originalValue: _useOriginalValues);
 
                 if (parameter != null)
                 {

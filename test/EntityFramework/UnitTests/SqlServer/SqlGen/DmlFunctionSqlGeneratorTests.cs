@@ -335,6 +335,34 @@ SET @rows_affected = @@ROWCOUNT",
         }
 
         [Fact]
+        public void Update_value_type_concurrency_token()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Person");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateUpdate(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .OfType<DbUpdateCommandTree>()
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"UPDATE [dbo].[People]
+SET [BirthDate] = @BirthDate
+WHERE (([Id] = @Id) AND ([BirthDate] = @BirthDate_Original))",
+                functionSqlGenerator.GenerateUpdate(convertedTrees, null));
+        }
+
+
+        [Fact]
         public void Delete_simple_entity()
         {
             var modificationFunctionMapping
@@ -394,6 +422,32 @@ AND @@ROWCOUNT > 0
 
 SET @rows_affected = @@ROWCOUNT",
                 functionSqlGenerator.GenerateDelete(convertedTrees, "rows_affected"));
+        }
+
+        [Fact]
+        public void Delete_value_type_concurrency_token()
+        {
+            var modificationFunctionMapping
+                = TestContext.GetModificationFunctionMapping("Person");
+
+            var commandTrees
+                = new ModificationCommandTreeGenerator(TestContext.CreateDynamicUpdateModel())
+                    .GenerateDelete(modificationFunctionMapping.Item1.EntityType.FullName);
+
+            var convertedTrees
+                = new DynamicToFunctionModificationCommandConverter(
+                    modificationFunctionMapping.Item1, modificationFunctionMapping.Item2)
+                    .Convert(commandTrees)
+                    .OfType<DbDeleteCommandTree>()
+                    .ToList();
+
+            var functionSqlGenerator
+                = new DmlFunctionSqlGenerator(new SqlGenerator());
+
+            Assert.Equal(
+                @"DELETE [dbo].[People]
+WHERE (([Id] = @Id) AND ([BirthDate] = @BirthDate_Original))",
+                functionSqlGenerator.GenerateDelete(convertedTrees, null));
         }
     }
 }
