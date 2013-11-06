@@ -268,6 +268,7 @@ ADD CONSTRAINT [FK_OrderProduct]
     REFERENCES [dbo].[OrderSet]
         ([Id])
     ON DELETE CASCADE ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_OrderProduct'
 CREATE INDEX [IX_FK_OrderProduct]

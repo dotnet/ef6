@@ -135,6 +135,7 @@ ADD CONSTRAINT [FK_UserProfile]
     REFERENCES [dbo].[UserSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_UserProfile'
 CREATE INDEX [IX_FK_UserProfile]

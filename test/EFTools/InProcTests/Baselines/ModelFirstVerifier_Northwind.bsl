@@ -1049,6 +1049,7 @@ ADD CONSTRAINT [FK_Products_Categories]
     REFERENCES [dbo].[Categories]
         ([CategoryID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Products_Categories'
 CREATE INDEX [IX_FK_Products_Categories]
@@ -1063,6 +1064,7 @@ ADD CONSTRAINT [FK_Orders_Customers]
     REFERENCES [dbo].[Customers]
         ([CustomerID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Orders_Customers'
 CREATE INDEX [IX_FK_Orders_Customers]
@@ -1077,6 +1079,7 @@ ADD CONSTRAINT [FK_Employees_Employees]
     REFERENCES [dbo].[Employees]
         ([EmployeeID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Employees_Employees'
 CREATE INDEX [IX_FK_Employees_Employees]
@@ -1091,6 +1094,7 @@ ADD CONSTRAINT [FK_Orders_Employees]
     REFERENCES [dbo].[Employees]
         ([EmployeeID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Orders_Employees'
 CREATE INDEX [IX_FK_Orders_Employees]
@@ -1114,6 +1118,7 @@ ADD CONSTRAINT [FK_Order_Details_Products]
     REFERENCES [dbo].[Products]
         ([ProductID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Order_Details_Products'
 CREATE INDEX [IX_FK_Order_Details_Products]
@@ -1128,6 +1133,7 @@ ADD CONSTRAINT [FK_Orders_Shippers]
     REFERENCES [dbo].[Shippers]
         ([ShipperID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Orders_Shippers'
 CREATE INDEX [IX_FK_Orders_Shippers]
@@ -1142,6 +1148,7 @@ ADD CONSTRAINT [FK_Products_Suppliers]
     REFERENCES [dbo].[Suppliers]
         ([SupplierID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Products_Suppliers'
 CREATE INDEX [IX_FK_Products_Suppliers]
@@ -1156,6 +1163,7 @@ ADD CONSTRAINT [FK_Territories_Region]
     REFERENCES [dbo].[Region]
         ([RegionID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Territories_Region'
 CREATE INDEX [IX_FK_Territories_Region]
@@ -1179,6 +1187,7 @@ ADD CONSTRAINT [FK_CustomerCustomerDemo_Customers]
     REFERENCES [dbo].[Customers]
         ([CustomerID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CustomerCustomerDemo_Customers'
 CREATE INDEX [IX_FK_CustomerCustomerDemo_Customers]
@@ -1202,6 +1211,7 @@ ADD CONSTRAINT [FK_EmployeeTerritories_Territories]
     REFERENCES [dbo].[Territories]
         ([TerritoryID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EmployeeTerritories_Territories'
 CREATE INDEX [IX_FK_EmployeeTerritories_Territories]

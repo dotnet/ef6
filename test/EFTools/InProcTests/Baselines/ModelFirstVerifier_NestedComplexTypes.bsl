@@ -261,6 +261,7 @@ ADD CONSTRAINT [FK_CCustomerOrder]
     REFERENCES [dbo].[CCustomers]
         ([CustomerId])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CCustomerOrder'
 CREATE INDEX [IX_FK_CCustomerOrder]

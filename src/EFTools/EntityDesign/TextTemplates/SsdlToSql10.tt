@@ -213,22 +213,21 @@ ADD CONSTRAINT [<#=WriteFKConstraintName(constraint)#>]
     REFERENCES <# if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=principalTableName#>]
         (<#=WriteColumns(constraint.FromProperties, ',')#>)
     ON DELETE <#=GetDeleteAction(constraint)#> ON UPDATE NO ACTION;
+GO
+
 <#      
         // if the foreign keys are part of the primary key on the dependent end, then we should not add a constraint.
         if (!dependentSetEnd.EntitySet.ElementType.GetKeyProperties().Take(constraint.ToProperties.Count()).OrderBy(r => r.Name).SequenceEqual(constraint.ToProperties.OrderBy(r => r.Name)))
         {
 #>
-
 -- Creating non-clustered index for FOREIGN KEY '<#=WriteFKConstraintName(constraint)#>'
 CREATE INDEX [IX_<#=WriteFKConstraintName(constraint)#>]
 ON <#if (!IsSQLCE) {#>[<#=schemaName#>].<#}#>[<#=dependentTableName#>]
     (<#=WriteColumns(constraint.ToProperties, ',')#>);
-<#      
-        }
-#>
 GO
 
-<#
+<#      
+        }
     }
 #>
 -- --------------------------------------------------

@@ -421,6 +421,7 @@ ADD CONSTRAINT [FK_Department_Administrator]
     REFERENCES [dbo].[People]
         ([PersonID])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Department_Administrator'
 CREATE INDEX [IX_FK_Department_Administrator]

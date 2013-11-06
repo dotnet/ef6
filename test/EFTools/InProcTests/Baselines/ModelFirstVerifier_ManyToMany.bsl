@@ -218,6 +218,7 @@ ADD CONSTRAINT [FK_CustomerCustomerDemo_Customers]
     REFERENCES [dbo].[Customers]
         ([CustomerID], [CompanyName], [ContactName])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CustomerCustomerDemo_Customers'
 CREATE INDEX [IX_FK_CustomerCustomerDemo_Customers]

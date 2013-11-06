@@ -304,6 +304,7 @@ ADD CONSTRAINT [FK_CompSciStudentCompSciBook_CompSciBook]
     REFERENCES [dbo].[BookSet_CompSciBook]
         ([ISBN])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CompSciStudentCompSciBook_CompSciBook'
 CREATE INDEX [IX_FK_CompSciStudentCompSciBook_CompSciBook]

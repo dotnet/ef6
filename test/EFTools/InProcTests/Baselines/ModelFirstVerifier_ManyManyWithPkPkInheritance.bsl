@@ -274,6 +274,7 @@ ADD CONSTRAINT [FK_Entity1Entity2_Entity2]
     REFERENCES [dbo].[ProductSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Entity1Entity2_Entity2'
 CREATE INDEX [IX_FK_Entity1Entity2_Entity2]
@@ -288,6 +289,7 @@ ADD CONSTRAINT [FK_DiscontinuedProductDiscontinuedItem]
     REFERENCES [dbo].[DiscontinuedItemSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DiscontinuedProductDiscontinuedItem'
 CREATE INDEX [IX_FK_DiscontinuedProductDiscontinuedItem]

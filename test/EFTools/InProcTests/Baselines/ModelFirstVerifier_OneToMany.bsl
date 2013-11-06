@@ -226,6 +226,7 @@ ADD CONSTRAINT [FK_Entity1Entity2]
     REFERENCES [dbo].[CustomerSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_Entity1Entity2'
 CREATE INDEX [IX_FK_Entity1Entity2]
@@ -240,6 +241,7 @@ ADD CONSTRAINT [FK_PersonOnlineIdentity]
     REFERENCES [dbo].[PersonSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_PersonOnlineIdentity'
 CREATE INDEX [IX_FK_PersonOnlineIdentity]
