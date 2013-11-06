@@ -96,8 +96,27 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 Check.NotEmpty(value, "value");
 
-                _name = value;
+                SetName(value);
             }
+        }
+
+        private void SetName(string name)
+        {
+            DebugCheck.NotEmpty(name);
+
+            _name = name;
+
+            if (DeclaringFunction == null)
+            {
+                return;
+            }
+
+            var parameterCollection =
+                (Mode == ParameterMode.ReturnValue)
+                    ? DeclaringFunction.ReturnParameters.Source
+                    : DeclaringFunction.Parameters.Source;
+
+            parameterCollection.InvalidateCache();
         }
 
         /// <summary>
