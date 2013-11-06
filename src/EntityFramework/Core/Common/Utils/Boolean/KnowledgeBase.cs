@@ -32,6 +32,11 @@ namespace System.Data.Entity.Core.Common.Utils.Boolean
             _context = IdentifierService<T_Identifier>.Instance.CreateConversionContext();
         }
 
+        protected IEnumerable<BoolExpr<T_Identifier>> Facts
+        {
+            get { return _facts; }
+        }
+
         /// <summary>
         /// Adds all facts from another knowledge base
         /// </summary>

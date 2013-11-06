@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 {
@@ -27,8 +27,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
     internal class FragmentQueryKBChaseSupport : FragmentQueryKB
     {
         // Index of facts derivable from conditions, maintained via the CacheImplications method
-        private readonly Dictionary<DomainTermExpr, DomainBoolExpr> _implications =
-            new Dictionary<DomainTermExpr, DomainBoolExpr>();
+        private Dictionary<DomainTermExpr, DomainBoolExpr> _implications;
 
         private readonly AtomicConditionRuleChase _chase;
         private Set<DomainBoolExpr> _residualFacts = new Set<DomainBoolExpr>();
@@ -42,12 +41,38 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             _chase = new AtomicConditionRuleChase(this);
         }
 
+        internal Dictionary<DomainTermExpr, DomainBoolExpr> Implications
+        {
+            get
+            {
+                if (_implications == null)
+                {
+                    _implications = new Dictionary<DomainTermExpr, DomainBoolExpr>();
+
+                    foreach (var fact in Facts)
+                    {
+                        CacheFact(fact);
+                    }
+                }
+
+                return _implications;
+            }
+        }
+
         internal override void AddFact(DomainBoolExpr fact)
         {
             base.AddFact(fact);
 
             _kbSize += fact.CountTerms();
 
+            if (_implications != null)
+            {
+                CacheFact(fact);
+            }
+        }
+
+        private void CacheFact(DomainBoolExpr fact)
+        {
             var implication = fact as Implication;
             var equivalence = fact as Equivalence;
             if (implication != null)
@@ -63,14 +88,6 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             {
                 CacheResidualFact(fact);
             }
-        }
-
-        /// <summary>
-        /// Returns KB rules which cannot be used for chasing.
-        /// </summary>
-        internal DomainBoolExpr Residue
-        {
-            get { return new AndExpr<DomainConstraint>(ResidueInternal); }
         }
 
         private IEnumerable<DomainBoolExpr> ResidueInternal
@@ -107,7 +124,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         internal DomainBoolExpr Chase(DomainTermExpr expression)
         {
             DomainBoolExpr implication;
-            _implications.TryGetValue(expression, out implication);
+            Implications.TryGetValue(expression, out implication);
 
             return new AndExpr<DomainConstraint>(expression, implication ?? TrueExpr<DomainConstraint>.Value);
         }
@@ -159,7 +176,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         /// </param>
         internal DomainBoolExpr Chase(DomainBoolExpr expression)
         {
-            return _implications.Count == 0 ? expression : _chase.Chase(Normalizer.ToNnfAndSplitRange(expression));
+            return Implications.Count == 0 ? expression : _chase.Chase(Normalizer.ToNnfAndSplitRange(expression));
         }
 
         /// <summary>
@@ -210,7 +227,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
             // For instance, consider the KB {c->a, b->c, !b->a} and the condition "!a".
             // chase(!a, KB) = !a, but !a ^ KB is unsatisfiable.
 
-            foreach (var premise in _implications.Keys)
+            foreach (var premise in Implications.Keys)
             {
                 if (premise.Identifier.Variable.Equals(condition.Identifier.Variable)
                     &&
@@ -233,13 +250,13 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
             // Construct a fake knowledge base for this sake
             var kb = new FragmentQueryKBChaseSupport();
-            kb._implications[condition] = dnfImpl;
+            kb.Implications[condition] = dnfImpl;
 
             var newKey = true;
 
-            foreach (var key in new Set<TermExpr<DomainConstraint>>(_implications.Keys))
+            foreach (var key in new Set<TermExpr<DomainConstraint>>(Implications.Keys))
             {
-                var chasedRuleImpl = kb.Chase(_implications[key]);
+                var chasedRuleImpl = kb.Chase(Implications[key]);
 
                 if (key.Equals(condition))
                 {
@@ -248,14 +265,14 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
                 }
 
                 // Simplify using the solver
-                _implications[key] = new Converter<DomainConstraint>(
+                Implications[key] = new Converter<DomainConstraint>(
                     chasedRuleImpl,
                     IdentifierService<DomainConstraint>.Instance.CreateConversionContext()).Dnf.Expr;
             }
 
             if (newKey)
             {
-                _implications[condition] = dnfImpl;
+                Implications[condition] = dnfImpl;
             }
 
             // Invalidate residue
@@ -273,7 +290,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
         private void PrepareResidue()
         {
             var residueSize = 0;
-            if (_implications.Count > 0
+            if (Implications.Count > 0
                 && _residualFacts.Count > 0)
             {
                 var newResidualFacts = new Set<DomainBoolExpr>();
