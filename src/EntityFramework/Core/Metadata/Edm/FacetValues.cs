@@ -206,7 +206,15 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         facetValues.Nullable = (bool?)facet.Value;
                         break;
                     case DbProviderManifest.MaxLengthFacetName:
-                        facetValues.MaxLength = (int?)facet.Value;
+                        var unboundedLength = facet.Value as EdmConstants.Unbounded;
+                        if (unboundedLength != null)
+                        {
+                            facetValues.MaxLength = unboundedLength;
+                        }
+                        else
+                        {
+                            facetValues.MaxLength = (int?)facet.Value;
+                        }
                         break;
                     case DbProviderManifest.UnicodeFacetName:
                         facetValues.Unicode = (bool?)facet.Value;
@@ -215,10 +223,26 @@ namespace System.Data.Entity.Core.Metadata.Edm
                         facetValues.FixedLength = (bool?)facet.Value;
                         break;
                     case DbProviderManifest.PrecisionFacetName:
-                        facetValues.Precision = (byte?)facet.Value;
+                        var unboundedPrecision = facet.Value as EdmConstants.Unbounded;
+                        if (unboundedPrecision != null)
+                        {
+                            facetValues.Precision = unboundedPrecision;
+                        }
+                        else
+                        {
+                            facetValues.Precision = (byte?)facet.Value;
+                        }
                         break;
                     case DbProviderManifest.ScaleFacetName:
-                        facetValues.Scale = (byte?)facet.Value;
+                        var unboundedScale = facet.Value as EdmConstants.Unbounded;
+                        if (unboundedScale != null)
+                        {
+                            facetValues.Scale = unboundedScale;
+                        }
+                        else
+                        {
+                            facetValues.Scale = (byte?)facet.Value;
+                        }
                         break;
                     case DbProviderManifest.DefaultValueFacetName:
                         facetValues.DefaultValue = facet.Value;

@@ -11,6 +11,7 @@ namespace System.Data.Entity
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal.ConfigFile;
+    using System.Data.Entity.Migrations;
     using System.Data.Entity.SqlServer;
     using System.Data.Entity.TestHelpers;
     using System.Data.SqlClient;
@@ -56,6 +57,13 @@ namespace System.Data.Entity
             var clone = modelBuilder.Clone();
 
             return clone.Build(ProviderRegistry.SqlCe4_ProviderInfo).DatabaseMapping;
+        }
+
+        public InfoContext GetInfoContext(DbContext context)
+        {
+            var infoContext = new InfoContext(context.Database.Connection);
+            infoContext.Database.Initialize(force: false);
+            return infoContext;
         }
 
         protected static DataRow CreateProviderRow(string name, string invariantName, string assemblyQualifiedName)

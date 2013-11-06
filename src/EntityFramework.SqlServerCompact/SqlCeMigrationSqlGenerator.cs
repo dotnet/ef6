@@ -33,11 +33,6 @@ namespace System.Data.Entity.SqlServerCompact
 
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
-        private const int DefaultMaxLength = 128;
-        private const int DefaultNumericPrecision = 18;
-        private const byte DefaultTimePrecision = 7;
-        private const byte DefaultScale = 0;
-
         private DbProviderManifest _providerManifest;
         private List<MigrationStatement> _statements;
 
@@ -819,12 +814,11 @@ namespace System.Data.Entity.SqlServerCompact
             DebugCheck.NotNull(propertyModel);
 
             var originalStoreTypeName = propertyModel.StoreType;
+            var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage);
 
             if (string.IsNullOrWhiteSpace(originalStoreTypeName))
             {
-                var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage).EdmType;
-
-                originalStoreTypeName = typeUsage.Name;
+                originalStoreTypeName = typeUsage.EdmType.Name;
             }
 
             var storeTypeName = originalStoreTypeName;
@@ -844,13 +838,14 @@ namespace System.Data.Entity.SqlServerCompact
             {
                 case "decimal":
                 case "numeric":
-                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultNumericPrecision)
-                                     + ", " + (propertyModel.Scale ?? DefaultScale) + ")";
+                    storeTypeName += "(" +
+                                     (propertyModel.Precision ?? (byte)typeUsage.Facets[DbProviderManifest.PrecisionFacetName].Value)
+                                     + ", " + (propertyModel.Scale ?? (byte)typeUsage.Facets[DbProviderManifest.ScaleFacetName].Value) + ")";
                     break;
                 case "datetime2":
                 case "datetimeoffset":
                 case "time":
-                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultTimePrecision) + ")";
+                    storeTypeName += "(" + (propertyModel.Precision ?? (byte)typeUsage.Facets[DbProviderManifest.PrecisionFacetName].Value) + ")";
                     break;
                 case "binary":
                 case "varbinary":
@@ -858,7 +853,7 @@ namespace System.Data.Entity.SqlServerCompact
                 case "varchar":
                 case "char":
                 case "nchar":
-                    storeTypeName += "(" + (propertyModel.MaxLength ?? DefaultMaxLength) + ")";
+                    storeTypeName += "(" + (propertyModel.MaxLength ?? (int)typeUsage.Facets[DbProviderManifest.MaxLengthFacetName].Value) + ")";
                     break;
             }
 

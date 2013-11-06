@@ -36,11 +36,6 @@ namespace System.Data.Entity.SqlServer
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
-        private const int DefaultMaxLength = 128;
-        private const int DefaultNumericPrecision = 18;
-        private const byte DefaultTimePrecision = 7;
-        private const byte DefaultScale = 0;
-
         private DbProviderManifest _providerManifest;
         private SqlGenerator _sqlGenerator;
         private List<MigrationStatement> _statements;
@@ -1263,12 +1258,11 @@ namespace System.Data.Entity.SqlServer
             DebugCheck.NotNull(propertyModel);
 
             var originalStoreTypeName = propertyModel.StoreType;
+            var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage);
 
             if (string.IsNullOrWhiteSpace(originalStoreTypeName))
             {
-                var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage).EdmType;
-
-                originalStoreTypeName = typeUsage.Name;
+                originalStoreTypeName = typeUsage.EdmType.Name;
             }
 
             var storeTypeName = originalStoreTypeName;
@@ -1288,13 +1282,13 @@ namespace System.Data.Entity.SqlServer
             {
                 case "decimal":
                 case "numeric":
-                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultNumericPrecision)
-                                     + ", " + (propertyModel.Scale ?? DefaultScale) + ")";
+                    storeTypeName += "(" + (propertyModel.Precision ?? typeUsage.GetPrecision())
+                                     + ", " + (propertyModel.Scale ?? typeUsage.GetScale()) + ")";
                     break;
                 case "datetime2":
                 case "datetimeoffset":
                 case "time":
-                    storeTypeName += "(" + (propertyModel.Precision ?? DefaultTimePrecision) + ")";
+                    storeTypeName += "(" + (propertyModel.Precision ?? typeUsage.GetPrecision()) + ")";
                     break;
                 case "binary":
                 case "varbinary":
@@ -1302,7 +1296,7 @@ namespace System.Data.Entity.SqlServer
                 case "varchar":
                 case "char":
                 case "nchar":
-                    storeTypeName += "(" + (propertyModel.MaxLength ?? DefaultMaxLength) + ")";
+                    storeTypeName += "(" + (propertyModel.MaxLength ?? typeUsage.GetMaxLength()) + ")";
                     break;
             }
 

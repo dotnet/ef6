@@ -20,6 +20,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
         {
             Test_create_copies_value(DbProviderManifest.MaxLengthFacetName, value: 1);
         }
+        
+        [Fact]
+        public void Create_copies_unbounded_value_from_MaxLengthFacet()
+        {
+            Test_create_copies_value(GetFacetDescription<int>(DbProviderManifest.MaxLengthFacetName),
+                value: EdmConstants.UnboundedValue);
+        }
 
         [Fact]
         public void Create_copies_value_from_UnicodeFacet()
@@ -40,9 +47,22 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         [Fact]
+        public void Create_copies_unbounded_value_from_PrecisionFacet()
+        {
+            Test_create_copies_value(GetFacetDescription<byte>(DbProviderManifest.PrecisionFacetName),
+                value: EdmConstants.UnboundedValue);
+        }
+
+        [Fact]
         public void Create_copies_value_from_ScaleFacet()
         {
             Test_create_copies_value(DbProviderManifest.ScaleFacetName, value: (byte)1);
+        }
+        [Fact]
+        public void Create_copies_unbounded_value_from_ScaleFacet()
+        {
+            Test_create_copies_value(GetFacetDescription<byte>(DbProviderManifest.ScaleFacetName),
+                value: EdmConstants.UnboundedValue);
         }
 
         [Fact]
@@ -90,6 +110,17 @@ namespace System.Data.Entity.Core.Metadata.Edm
         private static void Test_create_copies_value<T>(string facetName, T value)
         {
             var description = GetFacetDescription<T>(facetName);
+            var facet = Facet.Create(description, value: value);
+
+            var values = FacetValues.Create(new List<Facet> { facet });
+
+            Facet returnedFacet = null;
+            Assert.True(values.TryGetFacet(description, out returnedFacet));
+            Assert.Equal(facet.Value, returnedFacet.Value);
+        }
+
+        private static void Test_create_copies_value<T>(FacetDescription description, T value)
+        {
             var facet = Facet.Create(description, value: value);
 
             var values = FacetValues.Create(new List<Facet> { facet });
