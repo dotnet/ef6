@@ -107,19 +107,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                             {
                                 continue;
                             }
+
+                            // if we find an old command with the same cmdId remove it and replace
+                            // with the new one to force VS to refresh the text
                             var cmdId = new CommandID(
                                 PackageConstants.guidEscherCmdSet, PackageConstants.cmdIdExplorerAddComplexPropertyBase + i);
                             var cmd = MenuCommandService.FindCommand(cmdId);
-                            if (cmd == null)
+                            if (cmd != null)
                             {
-                                cmd = new DynamicStatusMenuCommand(OnStatusAddComplexTypeProperty, OnMenuAddComplexTypeProperty, cmdId);
-                                cmd.Properties[PackageConstants.guidEscherCmdSet] = complexType;
-                                MenuCommandService.AddCommand(cmd);
+                                MenuCommandService.RemoveCommand(cmd);
                             }
-                            else
-                            {
-                                cmd.Properties[PackageConstants.guidEscherCmdSet] = complexType;
-                            }
+                            cmd = new DynamicStatusMenuCommand(OnStatusAddComplexTypeProperty, OnMenuAddComplexTypeProperty, cmdId);
+                            cmd.Properties[PackageConstants.guidEscherCmdSet] = complexType;
+                            MenuCommandService.AddCommand(cmd);
 
                             i++;
                             if (i >= AddComplexPropertyCommandMaxCount)
