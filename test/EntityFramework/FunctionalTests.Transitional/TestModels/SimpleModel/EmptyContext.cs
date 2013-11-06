@@ -2,6 +2,7 @@
 
 namespace SimpleModel
 {
+    using System;
     using System.Data.Common;
     using System.Data.Entity;
 
@@ -19,6 +20,16 @@ namespace SimpleModel
         public EmptyContext(DbConnection connection, bool contextOwnsConnection = false)
             : base(connection, contextOwnsConnection)
         {
+        }
+
+        public Action<DbModelBuilder> CustomOnModelCreating { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            if (CustomOnModelCreating != null)
+            {
+                CustomOnModelCreating(modelBuilder);
+            }
         }
     }
 }

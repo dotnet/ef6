@@ -222,7 +222,6 @@
     <Compile Include="Migrations\TestHelpers\DatabaseProviderFixture.cs" />
     <Compile Include="Migrations\TestHelpers\DbMigratorExtensions.cs" />
     <Compile Include="Migrations\TestHelpers\DbTestCase.cs" />
-    <Compile Include="Migrations\TestHelpers\InfoContext.cs" />
     <Compile Include="Migrations\TestHelpers\MigrationCompiler.cs" />
     <Compile Include="Migrations\TestHelpers\MigrationsTheoryAttribute.cs" />
     <Compile Include="Migrations\TestHelpers\MigrationsTheoryCommand.cs" />

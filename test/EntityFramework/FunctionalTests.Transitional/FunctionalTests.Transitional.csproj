@@ -147,6 +147,7 @@
     <Compile Include="CodeFirst\TptMappingTests.cs" />
     <Compile Include="Design\BasicDesignTimeScenarios.cs" />
     <Compile Include="MetadataMapping\EnumOCMappingTests.cs" />
+    <Compile Include="Migrations\TestHelpers\InfoContext.cs" />
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />

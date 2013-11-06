@@ -13,7 +13,10 @@ namespace FunctionalTests
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
+    using ProductivityApiTests;
+    using SimpleModel;
     using Xunit;
+    using Product = FunctionalTests.Model.Product;
 
     public class DataAnnotationScenarioTests : TestBase, IDisposable
     {
@@ -522,7 +525,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Key_column_and_MaxLength_work_together()
+        public void Key_nvarchar_column_and_MaxLength_64_produce_nvarchar_64()
         {
             using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<ColumnKeyAnnotationClass>())
             {
@@ -544,7 +547,47 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void Key_column_and_MaxLength_work_together_in_an_IA()
+        public void Key_nvarchar_column_and_unbounded_MaxLength_produce_nvarchar_max()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<ColumnKeyAnnotationClass>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(c => c.PersonFirstName, new MaxLengthAttribute());
+
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<ColumnKeyAnnotationClass>();
+
+                var databaseMapping = BuildMapping(modelBuilder);
+                databaseMapping.AssertValid();
+
+                databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
+                    .DbEqual("dsdsd", c => c.Name)
+                    .DbEqual("nvarchar", c => c.TypeName)
+                    .DbEqual(true, f => f.IsMaxLength)
+                    .DbEqual(null, f => f.MaxLength)
+                    .DbEqual(true, c => c.IsPrimaryKeyColumn);
+            }
+        }
+
+        [Fact]
+        public void Key_nvarchar_column_and_no_MaxLength_produce_nvarchar_128()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<ColumnKeyAnnotationClass>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<ColumnKeyAnnotationClass>(x => x.PersonFirstName)
+                .DbEqual("dsdsd", c => c.Name)
+                .DbEqual("nvarchar", c => c.TypeName)
+                .DbEqual(128, f => f.MaxLength)
+                .DbEqual(true, c => c.IsPrimaryKeyColumn);
+        }
+
+        [Fact]
+        public void Key_nvarchar_column_and_MaxLength_work_together_in_an_IA()
         {
             using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<ColumnKeyAnnotationClass>())
             {
@@ -582,6 +625,233 @@ namespace FunctionalTests
         {
             public int Id { get; set; }
             public ColumnKeyAnnotationClass Person { get; set; }
+        }
+        
+        [Fact]
+        public void Nvarchar_max_column_produces_nvarchar_max()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(c => c.BaseData,
+                    new ColumnAttribute { TypeName = "nvarchar(max)" });
+
+                using (var context = new NvarcharMaxContext())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar(max)", c => c.TypeName)
+                            .DbEqual(false, f => f.IsMaxLength)
+                            .DbEqual(int.MaxValue / 2, f => f.MaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                }
+            }
+        }
+
+        public class NvarcharMaxContext : EmptyContext
+        {
+        }
+
+        [Fact]
+        public void Nvarchar_max_column_and_unbounded_MaxLength_produce_nvarchar_max()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(
+                    c => c.BaseData,
+                    new MaxLengthAttribute(), new ColumnAttribute { TypeName = "nvarchar(max)" });
+
+                using (var context = new NvarcharMaxMaxContext())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar(max)", c => c.TypeName)
+                            .DbEqual(false, f => f.IsMaxLength)
+                            .DbEqual(int.MaxValue / 2, f => f.MaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                }
+            }
+        }
+
+        public class NvarcharMaxMaxContext : EmptyContext
+        {
+        }
+
+        [Fact]
+        public void Nvarchar_max_column_and_MaxLength_64_produce_nvarchar_max()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(
+                    c => c.BaseData,
+                    new MaxLengthAttribute(64), new ColumnAttribute { TypeName = "nvarchar(max)" });
+
+                using (var context = new NvarcharMax64Context())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar(max)", c => c.TypeName)
+                            .DbEqual(false, f => f.IsMaxLength)
+                            .DbEqual(int.MaxValue / 2, f => f.MaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                }
+            }
+        }
+
+        public class NvarcharMax64Context : EmptyContext
+        {
+        }
+
+        [Fact]
+        public void Nvarchar_column_produces_nvarchar_4000()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(
+                    c => c.BaseData,
+                    new ColumnAttribute { TypeName = "nvarchar" });
+
+                using (var context = new NvarcharContext())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar", c => c.TypeName)
+                            .DbEqual(4000, f => f.MaxLength)
+                            .DbEqual(false, f => f.IsMaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(4000, column.MaxLength);
+                }
+            }
+        }
+
+        public class NvarcharContext : EmptyContext
+        {
+        }
+
+        [Fact]
+        public void Nvarchar_column_and_unbounded_MaxLength_produce_nvarchar_4000()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(
+                    c => c.BaseData,
+                    new MaxLengthAttribute(), new ColumnAttribute { TypeName = "nvarchar" });
+
+                using (var context = new NvarcharUnboundedContext())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar", c => c.TypeName)
+                            .DbEqual(null, f => f.MaxLength)
+                            .DbEqual(true, f => f.IsMaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(4000, column.MaxLength);
+                }
+            }
+        }
+
+        public class NvarcharUnboundedContext : EmptyContext
+        {
+        }
+
+        [Fact]
+        public void Nvarchar_column_and_MaxLength_64_produce_nvarchar_64()
+        {
+            using (var entityClassConfiguration = new DynamicTypeDescriptionConfiguration<TNAttrBase>())
+            {
+                entityClassConfiguration.SetPropertyAttributes(
+                    c => c.BaseData,
+                    new MaxLengthAttribute(64), new ColumnAttribute { TypeName = "nvarchar" });
+
+                using (var context = new Nvarchar64Context())
+                {
+                    context.CustomOnModelCreating = modelBuilder =>
+                    {
+                        modelBuilder.Entity<TNAttrBase>();
+
+                        var databaseMapping = BuildMapping(modelBuilder);
+                        databaseMapping.AssertValid();
+
+                        databaseMapping.Assert<TNAttrBase>(x => x.BaseData)
+                            .DbEqual("nvarchar", c => c.TypeName)
+                            .DbEqual(64, f => f.MaxLength)
+                            .DbEqual(false, f => f.IsMaxLength);
+                    };
+
+                    context.Database.CreateIfNotExists();
+
+                    var column = GetInfoContext(context).Columns.Single(c => c.Name == "BaseData");
+
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(64, column.MaxLength);
+                }
+            }
+        }
+
+        public class Nvarchar64Context : EmptyContext
+        {
         }
 
         [Fact]
