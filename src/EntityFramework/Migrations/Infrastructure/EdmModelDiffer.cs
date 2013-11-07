@@ -183,7 +183,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .ToList();
         }
 
-        private void RemoveSymmetricTableOperations(List<CreateTableOperation> addedTables, List<DropTableOperation> removedTables)
+        private static void RemoveSymmetricTableOperations(List<CreateTableOperation> addedTables, List<DropTableOperation> removedTables)
         {
             DebugCheck.NotNull(addedTables);
             DebugCheck.NotNull(removedTables);
