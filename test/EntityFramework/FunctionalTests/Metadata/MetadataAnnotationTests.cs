@@ -11,10 +11,11 @@ namespace System.Data.Entity.Metadata
     using System.Xml.Linq;
     using Xunit;
 
-    public class MetadataAnnotationTests
+    public class MetadataAnnotationTests : FunctionalTestBase
     {
         private const string CustomAnnotationNamespace = "http://schemas.microsoft.com/ado/2013/11/edm/customannotation";
 
+        [Fact]
         public void ClrType_annotations_are_serialized_to_and_from_XML()
         {
             var edmxBuilder = new StringBuilder();
