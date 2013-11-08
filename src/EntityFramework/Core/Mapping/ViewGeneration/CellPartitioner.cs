@@ -8,6 +8,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
     using System.Data.Entity.Core.Mapping.ViewGeneration.Structures;
     using System.Data.Entity.Core.Mapping.ViewGeneration.Validation;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.ModelConfiguration.Edm;
     using System.Linq;
     using System.Text;
     using CellGroup = System.Data.Entity.Core.Common.Utils.Set<Structures.Cell>;
@@ -59,14 +60,24 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var associationSetExtent = cell.CQuery.Extent as AssociationSet;
                 if (associationSetExtent != null)
                 {
-                    EntitySetBase prev = null;
-                    foreach (var end in associationSetExtent.AssociationSetEnds)
+                    if (associationSetExtent.ElementType.IsManyToMany())
                     {
-                        if (prev != null)
+                        foreach (var end in associationSetExtent.AssociationSetEnds)
                         {
-                            extentGraph.AddEdge(prev, end.EntitySet);
+                            extentGraph.AddEdge(end.EntitySet, associationSetExtent);
                         }
-                        prev = end.EntitySet;
+                    }
+                    else
+                    {
+                        EntitySetBase prev = null;
+                        foreach (var end in associationSetExtent.AssociationSetEnds)
+                        {
+                            if (prev != null)
+                            {
+                                extentGraph.AddEdge(prev, end.EntitySet);
+                            }
+                            prev = end.EntitySet;
+                        }
                     }
                 }
             }
