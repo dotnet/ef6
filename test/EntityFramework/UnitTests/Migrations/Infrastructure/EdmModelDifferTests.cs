@@ -25,6 +25,39 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public class Fish
+        {
+            public int Id { get; set; }
+        }
+
+        public class Ghoti
+        {
+            public int Id { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_table_drop_when_ospace_rename()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Fish>().ToTable("Fishes");
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+            
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Ghoti>().ToTable("Fishes");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel())
+                    .ToList();
+
+            Assert.Equal(0, operations.Count());
+        }
+
         public class B
         {
             public int Id { get; set; }
