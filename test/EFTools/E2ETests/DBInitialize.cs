@@ -20,7 +20,7 @@ namespace EFDesigner.E2ETests
             this.SetDatabaseInitializer<SchoolEntities>(new Initializer1());
         }
     }
-    public partial class Course
+    public class Course
     {
         public Course()
         {
@@ -38,7 +38,7 @@ namespace EFDesigner.E2ETests
         public virtual ICollection<Person> People { get; set; }
     }
 
-    public partial class Department
+    public class Department
     {
         public Department()
         {
@@ -55,7 +55,7 @@ namespace EFDesigner.E2ETests
         public virtual ICollection<Course> Courses { get; set; }
     }
 
-    public partial class OfficeAssignment
+    public class OfficeAssignment
     {
         [Key]
         public int InstructorID { get; set; }
@@ -65,19 +65,19 @@ namespace EFDesigner.E2ETests
         public virtual Person Person { get; set; }
     }
 
-    public partial class OnlineCourse : Course
+    public class OnlineCourse : Course
     {
         public string URL { get; set; }
     }
 
-    public partial class OnsiteCourse : Course
+    public class OnsiteCourse : Course
     {
         public string Location { get; set; }
         public string Days { get; set; }
         public System.DateTime Time { get; set; }
     }
 
-    public partial class Person
+    public class Person
     {
         public Person()
         {
@@ -97,7 +97,7 @@ namespace EFDesigner.E2ETests
         public virtual ICollection<Course> Courses { get; set; }
     }
 
-    public partial class StudentGrade
+    public class StudentGrade
     {
         [Key]
         public int EnrollmentID { get; set; }
@@ -109,7 +109,7 @@ namespace EFDesigner.E2ETests
         public virtual Person Person { get; set; }
     }
 
-    public partial class GetStudentGrades_Result
+    public class GetStudentGrades_Result
     {
         public int EnrollmentID { get; set; }
         public Nullable<decimal> Grade { get; set; }
@@ -117,7 +117,7 @@ namespace EFDesigner.E2ETests
         public int StudentID { get; set; }
     }
 
-    public partial class SchoolEntities : DbContext
+    public class SchoolEntities : DbContext
     {
         public SchoolEntities()
             :base("School")

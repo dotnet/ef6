@@ -6,11 +6,9 @@ namespace EFDesigner.E2ETests
 {
     using System;
     using System.Collections.Generic;
-    using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
-    using System.Security.Cryptography;
     using System.Threading;
     using System.Windows.Automation;
     using System.Xml.Linq;
@@ -45,9 +43,6 @@ namespace EFDesigner.E2ETests
 
         // Define model db attributes
         private const string ModelName = "SchoolModel";
-        
-        
-        private const string EntityName = "Person";
 
         private static readonly List<string> _entityNames = new List<string>
         {
@@ -111,17 +106,30 @@ namespace EFDesigner.E2ETests
             Exception exceptionCaught = null;
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
 
-            // We need to create this thread to keep polling for wizard to show up and
-            // walk thru the wizard. DTE call just launches the wizard and stays there
-            // taking up the main thread
+            var project = Dte.CreateProject(
+                TestContext.TestRunDirectory,
+                "EmptyModelTest",
+                DteExtensions.ProjectKind.Executable,
+                DteExtensions.ProjectLanguage.CSharp);
+
+            Assert.IsNotNull(project, "Could not create project");
+
             var wizardDiscoveryThread = ExecuteThreadedAction(
                 () =>
                 {
                     try
                     {
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+                        _visualStudio = Application.Attach(Process.GetCurrentProcess().Id);
+                        _visualStudioMainWindow = _visualStudio.GetWindow(
+                            SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                            InitializeOption.NoCache);
 
-                        // This method polls for the the wizard to show up
+                        var newItemWindow = _visualStudioMainWindow.Popup; //.Get<Window>(SearchCriteria.ByAutomationId("NewItemDialog"));
+                        var extensions = newItemWindow.Get<ListView>(SearchCriteria.ByText("Extensions"));
+                        extensions.Select("ADO.NET Entity Data Model");
+                        var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
+                        addButton.Click();
+
                         _wizard = GetWizard();
 
                         // Walk thru the Empty model selection
@@ -133,17 +141,7 @@ namespace EFDesigner.E2ETests
                     }
                 }, "UIExecutor");
 
-            // On the main thread create a project
-            var project = Dte.CreateProject(
-                TestContext.TestRunDirectory,
-                "EmptyModelTest",
-                DteExtensions.ProjectKind.Executable,
-                DteExtensions.ProjectLanguage.CSharp);
-
-            Assert.IsNotNull(project, "Could not create project");
-
-            // Launch the Model wizard
-            DteExtensions.AddNewItem(Dte, @"Data\ADO.NET Entity Data Model", "Model1.edmx", project);
+            Dte.ExecuteCommand("Project.AddNewItem");
 
             wizardDiscoveryThread.Join();
 
@@ -244,14 +242,14 @@ namespace EFDesigner.E2ETests
                 Dte.ExecuteCommand("View.EntityDataModelBrowser");
                 ((SelectionItemPattern)childNode.AutomationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
 
-                string currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
+                var currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
 
-                if (!string.IsNullOrEmpty(currentNode) && !currentNode.Contains("Migration"))
+                if (!string.IsNullOrEmpty(currentNode)
+                    && !currentNode.Contains("Migration"))
                 {
                     CheckProperties(ModelName + "." + currentNode + ":EntityType");
                     Assert.AreEqual("EntityTypeShape " + currentNode, childNode.Text);
                 }
-                
             }
 
             // See if entities exist in model and have expected properties
@@ -333,7 +331,6 @@ namespace EFDesigner.E2ETests
             // Build the project
             var errors = Build();
             Assert.IsTrue(errors == null || errors.Count == 0);
-
         }
 
         private void CheckProperties(string property)
@@ -377,19 +374,23 @@ namespace EFDesigner.E2ETests
             Assert.AreEqual((string)element.Attribute("Provider"), "System.Data.SqlClient");
 
             var entityTypes = from el in element.Elements(ssdl + "EntityType")
-                select el.Attribute("Name").Value.ToString();
+                select el.Attribute("Name").Value;
 
-            foreach (string entityName in _entityNames)
+            foreach (var entityName in _entityNames)
             {
                 if (!entityName.Contains("Migration"))
                 {
                     Assert.IsTrue(entityTypes.Any(el => el.Equals(entityName)), string.Format("Looking for Entity name:" + entityName));
                 }
             }
-            
-            element = (from el in element.Elements(ssdl + "EntityType").Where(el => el.Attribute("Name").Value.ToString().Equals("People")).Descendants(ssdl + "Property")
-                       where (string)el.Attribute("Name") == "PersonID"
-                       select el).First();
+
+            element =
+                (from el in
+                    element.Elements(ssdl + "EntityType")
+                        .Where(el => el.Attribute("Name").Value.Equals("People", StringComparison.CurrentCulture))
+                        .Descendants(ssdl + "Property")
+                    where (string)el.Attribute("Name") == "PersonID"
+                    select el).First();
 
             Assert.AreEqual((string)element.Attribute("Type"), "int");
             Assert.AreEqual((string)element.Attribute("StoreGeneratedPattern"), "Identity");
@@ -410,7 +411,7 @@ namespace EFDesigner.E2ETests
             ((ExpandCollapsePattern)node.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
             foreach (var childNode in node.Nodes)
             {
-                string currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
+                var currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
                 if (!string.IsNullOrEmpty(currentNode))
                 {
                     Assert.AreEqual(string.Format(entityType, currentNode), childNode.Text);
@@ -541,6 +542,11 @@ namespace EFDesigner.E2ETests
             }
 
             ClickNextButton(wizard);
+            var versionsPanel = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("versionsPanel"));
+            var selectionButton =
+                versionsPanel.Get<RadioButton>(
+                    SearchCriteria.ByText(String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
+            Assert.IsTrue(selectionButton.IsSelected);
             ClickNextButton(wizard);
 
             wizard.WaitTill(WaitTillDBTablesLoaded, new TimeSpan(0, 1, 0));
@@ -554,10 +560,8 @@ namespace EFDesigner.E2ETests
 
         private void ChangeDefaultValues(Window wizard)
         {
-            var pluralizeCheck = wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkPluralize"));
-            pluralizeCheck.Toggle();
-            var includeForeignKeys = wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkIncludeForeignKeys"));
-            includeForeignKeys.Toggle();
+            wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkPluralize")).Toggle();
+            wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkIncludeForeignKeys")).Toggle();
             var functionImports = wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkCreateFunctionImports"));
 
             if (functionImports.Enabled)
@@ -714,20 +718,20 @@ namespace EFDesigner.E2ETests
 
             var multiplicity1ComboBox = addAssociation.Get<ComboBox>(SearchCriteria.ByAutomationId("multiplicity1ComboBox"));
             var multiplicity2ComboBox = addAssociation.Get<ComboBox>(SearchCriteria.ByAutomationId("multiplicity2ComboBox"));
-            if (associationType == AssociationType.OneToOne)
+            switch (associationType)
             {
-                multiplicity1ComboBox.Select(0);
-                multiplicity2ComboBox.Select(0);
-            }
-            else if (associationType == AssociationType.OneToMany)
-            {
-                multiplicity1ComboBox.Select(0);
-                multiplicity2ComboBox.Select(2);
-            }
-            else if (associationType == AssociationType.ManyToMany)
-            {
-                multiplicity1ComboBox.Select(2);
-                multiplicity2ComboBox.Select(2);
+                case AssociationType.OneToOne:
+                    multiplicity1ComboBox.Select(0);
+                    multiplicity2ComboBox.Select(0);
+                    break;
+                case AssociationType.OneToMany:
+                    multiplicity1ComboBox.Select(0);
+                    multiplicity2ComboBox.Select(2);
+                    break;
+                case AssociationType.ManyToMany:
+                    multiplicity1ComboBox.Select(2);
+                    multiplicity2ComboBox.Select(2);
+                    break;
             }
 
             var okButton =
@@ -813,43 +817,43 @@ namespace EFDesigner.E2ETests
             Assert.AreEqual((string)conceptualElement.Attribute("Namespace"), "Model1");
 
             var entity1Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                                  where (string)el.Attribute("Name") == "Entity_1"
-                                  select el).First();
+                where (string)el.Attribute("Name") == "Entity_1"
+                select el).First();
             Assert.IsNotNull(entity1Element);
 
             var entity2Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                                  where (string)el.Attribute("Name") == "Entity_2"
-                                  select el).First();
+                where (string)el.Attribute("Name") == "Entity_2"
+                select el).First();
             Assert.IsNotNull(entity2Element);
 
             var entity3Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                                  where (string)el.Attribute("Name") == "Entity_3"
-                                  select el).First();
+                where (string)el.Attribute("Name") == "Entity_3"
+                select el).First();
             Assert.IsNotNull(entity3Element);
 
             var entity4Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                                  where (string)el.Attribute("Name") == "Entity_4"
-                                  select el).First();
+                where (string)el.Attribute("Name") == "Entity_4"
+                select el).First();
             Assert.IsNotNull(entity4Element);
 
             var association1Element = (from el in conceptualElement.Descendants(edm + "Association")
-                                      where (string)el.Attribute("Name") == "Entity_1Entity_2"
-                                      select el).First();
+                where (string)el.Attribute("Name") == "Entity_1Entity_2"
+                select el).First();
             Assert.IsNotNull(association1Element);
 
             var association2Element = (from el in conceptualElement.Descendants(edm + "Association")
-                                      where (string)el.Attribute("Name") == "Entity_3Entity_4"
-                                      select el).First();
+                where (string)el.Attribute("Name") == "Entity_3Entity_4"
+                select el).First();
             Assert.IsNotNull(association2Element);
 
             var association3Element = (from el in conceptualElement.Descendants(edm + "Association")
-                                      where (string)el.Attribute("Name") == "Entity_1Entity_3"
-                                      select el).First();
+                where (string)el.Attribute("Name") == "Entity_1Entity_3"
+                select el).First();
             Assert.IsNotNull(association3Element);
 
             var enumElement = (from el in conceptualElement.Descendants(edm + "EnumType")
-                               where (string)el.Attribute("Name") == "EnumType5"
-                               select el).First();
+                where (string)el.Attribute("Name") == "EnumType5"
+                select el).First();
             Assert.IsNotNull(enumElement);
         }
 
@@ -901,7 +905,21 @@ namespace EFDesigner.E2ETests
         {
             var dte2 = (DTE2)Dte;
             Dte.ExecuteCommand("View.ErrorList", string.Empty);
-            return dte2.ToolWindows.ErrorList.ErrorItems;
+            var errorItems = dte2.ToolWindows.ErrorList.ErrorItems;
+            if (errorItems != null
+                || errorItems.Count != 0)
+            {
+                Trace.WriteLine(string.Format("THere are {0} Build Errors", errorItems.Count));
+                for (var i = 1; i <= errorItems.Count; i++)
+                {
+                    Trace.WriteLine(
+                        string.Format(
+                            "File: {0}\tDescription:{1}\tLine:{2}", errorItems.Item(i).FileName, errorItems.Item(i).Description,
+                            errorItems.Item(i).Line));
+                }
+            }
+
+            return errorItems;
         }
     }
 }

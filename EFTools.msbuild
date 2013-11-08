@@ -60,7 +60,6 @@
         <ItemGroup>
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\FunctionalTests\*.csproj" />
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\UnitTests\*.csproj" />
-            <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\InProcTests\*.csproj" />
 	    <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\E2ETests\*.csproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
@@ -135,10 +134,12 @@
     <Target Name="Test" DependsOnTargets="Install;InstallTestHost">
         <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
-        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
+	<Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
-	      <Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
-              WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
+        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
+              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
+	<Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx'
+              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
     </Target>
 
     <Target Name="ReRunTests">
@@ -147,8 +148,11 @@
                  Properties="Configuration=$(Configuration);BuildPackages=false" />
         <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
-        <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx /TestCaseFilter:"TestCategory!=DoNotRunOnCI"'
+        <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
+        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
+              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
+	<Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx'
+              WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
     </Target>
-
 </Project>
