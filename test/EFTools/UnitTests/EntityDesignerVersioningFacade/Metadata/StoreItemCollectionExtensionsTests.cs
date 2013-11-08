@@ -12,8 +12,9 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.Metadata
     public class StoreItemCollectionExtensionsTests
     {
         private const string SsdlTemplate =
+            @"<?xml version=""1.0"" encoding=""utf-16""?>" +
             @"<Schema Namespace=""Model.Store"" Provider=""System.Data.SqlClient"" " +
-            @"    ProviderManifestToken=""2008"" Alias=""Self"" xmlns=""{0}"">" +
+            @"    ProviderManifestToken=""2008"" Alias=""Self"" xmlns:customannotation=""http://schemas.microsoft.com/ado/2013/11/edm/customannotation""  xmlns=""{0}"">" +
             @"    <EntityContainer Name=""TestContainer"" />" +
             @"</Schema>";
 
