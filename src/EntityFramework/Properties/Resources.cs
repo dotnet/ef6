@@ -13495,7 +13495,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The entity type '{0}' on which the navigation property '{1}' is declared is not the same as the type '{2}' referred to by the inverse navigation property '{3}'."
+        // A string like "The entity type '{0}' on which the navigation property '{1}' is declared is not a base type for the type '{2}' referred to by the inverse navigation property '{3}'."
         // </summary>
         internal static string LightweightEntityConfiguration_InvalidInverseNavigationProperty(object p0, object p1, object p2, object p3)
         {
@@ -13503,7 +13503,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The entity type '{0}' to which the navigation property '{1}' refers is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared."
+        // A string like "The entity type '{0}' to which the navigation property '{1}' refers does not derive from the type '{2}' on which the inverse navigation property '{3}' is declared."
         // </summary>
         internal static string LightweightEntityConfiguration_MismatchedInverseNavigationProperty(object p0, object p1, object p2, object p3)
         {

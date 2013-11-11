@@ -5373,10 +5373,10 @@
     <value>The property '{0}' cannot be configured as a navigation property. The property must be a valid entity type and the property should have a non-abstract getter and setter. For collection properties the type must implement ICollection&lt;T&gt; where T is a valid entity type.</value>
   </data>
   <data name="LightweightEntityConfiguration_InvalidInverseNavigationProperty" xml:space="preserve">
-    <value>The entity type '{0}' on which the navigation property '{1}' is declared is not the same as the type '{2}' referred to by the inverse navigation property '{3}'.</value>
+    <value>The entity type '{0}' on which the navigation property '{1}' is declared is not a base type for the type '{2}' referred to by the inverse navigation property '{3}'.</value>
   </data>
   <data name="LightweightEntityConfiguration_MismatchedInverseNavigationProperty" xml:space="preserve">
-    <value>The entity type '{0}' to which the navigation property '{1}' refers is not the same as the type '{2}' on which the inverse navigation property '{3}' is declared.</value>
+    <value>The entity type '{0}' to which the navigation property '{1}' refers does not derive from the type '{2}' on which the inverse navigation property '{3}' is declared.</value>
   </data>
   <data name="DuplicateParameterName" xml:space="preserve">
     <value>Duplicate parameter name: {0}</value>

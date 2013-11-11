@@ -153,7 +153,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                         Strings.LightweightEntityConfiguration_InvalidNavigationProperty(inverseNavigationProperty.Name));
                 }
 
-                if (_configuration.NavigationProperty.PropertyType.GetTargetType() != inverseNavigationProperty.DeclaringType)
+                if (!inverseNavigationProperty.DeclaringType.IsAssignableFrom(_configuration.NavigationProperty.PropertyType.GetTargetType()))
                 {
                     throw new InvalidOperationException(
                         Strings.LightweightEntityConfiguration_MismatchedInverseNavigationProperty(
@@ -161,7 +161,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
                             inverseNavigationProperty.DeclaringType.FullName, inverseNavigationProperty.Name));
                 }
 
-                if (inverseNavigationProperty.PropertyType.GetTargetType() != _configuration.NavigationProperty.DeclaringType)
+                if (!_configuration.NavigationProperty.DeclaringType.IsAssignableFrom(inverseNavigationProperty.PropertyType.GetTargetType()))
                 {
                     throw new InvalidOperationException(
                         Strings.LightweightEntityConfiguration_InvalidInverseNavigationProperty(
