@@ -7,21 +7,56 @@ Project global post-settings and targets.
   <!-- Set computed properties after all dependent properties have been resolved -->
   <PropertyGroup>
     <DefineConstants Condition="'$(InternalsInvisible)' == 'true'">$(DefineConstants);INTERNALS_INVISIBLE</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '11.0'">$(DefineConstants);VS11</DefineConstants>
+    <DefineConstants Condition="'$(VisualStudioVersion)' == '12.0'">$(DefineConstants);VS12</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'" >
+    <VsSDKDir Condition="'$(VisualStudioVersion)' == '12.0'">$(VSSDK120Install)</VsSDKDir>
+    <VsSDKDir Condition="'$(VisualStudioVersion)' == '11.0'">$(VSSDK110Install)</VsSDKDir>
+    <AssemblySearchPaths>
+      $(VsSDKDir)VisualStudioIntegration\Common\Assemblies\v4.0\;
+      $(VsSDKDir)VisualStudioIntegration\Common\Assemblies\v2.0\;
+      $(DevEnvDir)ReferenceAssemblies\v4.5\;
+      $(DevEnvDir)ReferenceAssemblies\v4.0\;
+      $(DevEnvDir)ReferenceAssemblies\v2.0\;
+      $(DevEnvDir)PublicAssemblies\;
+      $(DevEnvDir);
+      $(AssemblySearchPaths)
+    </AssemblySearchPaths>
+  </PropertyGroup>
+
+
+  <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
+    <BuildDependsOn>ValidateVisualStudioVersion;$(BuildDependsOn)</BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="ValidateVisualStudioVersion">
+    <PropertyGroup>
+      <VisualStudioVersionError Condition="'$(VisualStudioVersion)' == '' OR ('$(VisualStudioVersion)' != '11.0' AND '$(VisualStudioVersion)' != '12.0')">true</VisualStudioVersionError>
+    </PropertyGroup>
+    <Error Condition="'$(VisualStudioVersionError)' == 'true'" Text="VisualStudioVersion property value is invalid or not supported: '$(VisualStudioVersion)'" />
+  </Target>
+
+  <PropertyGroup>
     <BuildDependsOn>SetComputedProperties;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
   <Target Name="SetComputedProperties">
     <PropertyGroup>
-      <EFPackageVersion Condition="'$(EFPackageVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionRelease)</EFPackageVersion>
-      <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(EFPackageVersion)</NuGetPackageVersion>
-      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EFPackageVersion=$(EFPackageVersion)</NuSpecProperties>
+      <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
+      <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
+      <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
+      <!-- TODO: FIX SETUP TO PICK UP NUGET PACKAGES FROM BUILD and remove the following hardcoded definition -->
+      <NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)-21025</NuGetPackageVersion>
+      <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
+      <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>
+      <EF5NuGetPackageVersion>5.0.0</EF5NuGetPackageVersion>
+      <NuSpecProperties>NuGetPackageVersion=$(NuGetPackageVersion);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion)</NuSpecProperties>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.wixproj'" Label="Properties used in setup">
+      <!-- WixID must not contain hyphens -->
+      <EF6NuGetPackageWixId>$(EF6NuGetPackageVersion.Replace('-', '_'))</EF6NuGetPackageWixId>
     </PropertyGroup>
   </Target>
-  
-  <PropertyGroup Condition="'$(Configuration45)' == 'Debug'">
-    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
-  </PropertyGroup>
-
-  <Import Project="EF.stylecop.targets" Condition="Exists('..\packages\StyleCop.4.7.10.0\lib\StyleCop.dll')" />
 
   <!-- GetNuGetContentFromProject: Gets the Compile item collection (source files) from projects into the NuGetContent item. -->
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.nuproj'">
@@ -53,6 +88,8 @@ Project global post-settings and targets.
     </ItemGroup>
   </Target>
 
+  <Import Project="EF.stylecop.targets" Condition="Exists('..\packages\StyleCop.4.7.10.0\lib\StyleCop.dll')" />
+  <Import Project="EFTools.common.tasks" Condition="'$(BuildingToolingProject)' == 'true'" />
   <Import Project="$(CustomAfterEntityFrameworkTargets)" Condition="Exists('$(CustomAfterEntityFrameworkTargets)')" Label="Post-targets Build Extensibility Point." />
 </Project>
 

@@ -1,22 +1,52 @@
-﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<!--
+****************************************************************************************************
+Project global pre-settings.
+**************************************************************************************************** -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(CustomBeforeEntityFrameworkTargets)" Condition="Exists('$(CustomBeforeEntityFrameworkTargets)')" Label="Pre-targets Build Extensibility Point."/>
-  
+
   <!--- Configurable properties -->
   
-  <PropertyGroup>
-    <VersionMajor>6</VersionMajor>
-    <VersionMinor>1</VersionMinor>
-    <VersionRelease>0-alpha1</VersionRelease>
+  <PropertyGroup >
+    <RuntimeVersionMajor>6</RuntimeVersionMajor>
+    <RuntimeVersionMinor>1</RuntimeVersionMinor>
+    <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '11.0'">11</ToolingVersionMajor>
+    <ToolingVersionMajor Condition="'$(VisualStudioVersion)' == '12.0'">12</ToolingVersionMajor>
+    <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '11.0'">2</ToolingVersionMinor>
+    <ToolingVersionMinor Condition="'$(VisualStudioVersion)' == '12.0'">0</ToolingVersionMinor>
   </PropertyGroup>
 
   <!-- Default properties -->
- 
+
+  <PropertyGroup>
+    <BuildingToolingProject Condition="'$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EFToolsPublicKey.snk))' != ''">true</BuildingToolingProject>
+    <BuildingRuntimeProject Condition="'$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), EcmaPublicKey.snk))' != ''">true</BuildingRuntimeProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionMajor Condition="'$(BuildingRuntimeProject)' == 'true'">$(RuntimeVersionMajor)</VersionMajor>
+    <VersionMajor Condition="'$(BuildingToolingProject)' == 'true'">$(ToolingVersionMajor)</VersionMajor>
+    <VersionMinor Condition="'$(BuildingRuntimeProject)' == 'true'">$(RuntimeVersionMinor)</VersionMinor>
+    <VersionMinor Condition="'$(BuildingToolingProject)' == 'true'">$(ToolingVersionMinor)</VersionMinor>
+    <VersionBuild>0</VersionBuild>
+    <VersionRevision>0</VersionRevision>
+    <VersionRelease>0-alpha1</VersionRelease>
+    <VersionReleaseName>Alpha 1</VersionReleaseName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(BuildingToolingProject)' == 'true'">
+    <WixFullProductName_Dev11>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRevision) Tools $(VersionReleaseName) for Visual Studio 2012</WixFullProductName_Dev11>
+    <WixFullProductName_Dev12>Entity Framework $(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRevision) Tools $(VersionReleaseName) for Visual Studio 2013</WixFullProductName_Dev12>
+    <WixProductDescription_Dev11>$(WixFullProductName_Dev11)</WixProductDescription_Dev11>
+    <WixProductDescription_Dev12>$(WixFullProductName_Dev12)</WixProductDescription_Dev12>
+  </PropertyGroup>
+
   <PropertyGroup>
     <RepositoryRoot Condition="'$(RepositoryRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\</RepositoryRoot>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <OutputPath Condition="'$(OutputPath)' == ''">$(RepositoryRoot)bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <Configuration45>$([System.Text.RegularExpressions.Regex]::Replace('$(Configuration)', 'Net40', '', System.Text.RegularExpressions.RegexOptions.IgnoreCase))</Configuration45>
     <Configuration40>$(Configuration45)Net40</Configuration40>
@@ -31,19 +61,21 @@
     <OutputPath45>$([System.Text.RegularExpressions.Regex]::Replace('$(OutputPath)', 'Net40', '', System.Text.RegularExpressions.RegexOptions.IgnoreCase))</OutputPath45>
     <OutputPath40>$(OutputPath45.TrimEnd('\'))Net40\</OutputPath40>
   </PropertyGroup>
-  
+
+  <PropertyGroup Condition="'$(Configuration45)' == 'Debug'">
+    <StyleCopEnabled Condition="'$(StyleCopEnabled)' == ''">false</StyleCopEnabled>
+  </PropertyGroup>
+
   <PropertyGroup>
     <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     <StyleCopOverrideSettingsFile>$(RepositoryRoot)Settings.StyleCop</StyleCopOverrideSettingsFile>
   </PropertyGroup>
   
   <PropertyGroup>
-    <UseRuntimeAssemblyVersionFormat>true</UseRuntimeAssemblyVersionFormat>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <!-- Use CustomAfterMicrosoftCommonTargets property (Microsoft.Common.targets) to inject project post-targets  -->
+    <!-- Note: this is how common properties are defined that must be set _after_ the properties in the .csproj files e.g. VS11 -->
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
     <CustomAfterNuGetProjTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterNuGetProjTargets>
+    <CustomAfterWixTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterWixTargets>
   </PropertyGroup>
 </Project>

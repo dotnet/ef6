@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Test" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets"/>
+
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -26,6 +28,9 @@
         <Projects Include="$(SolutionDir)src\EFTools\EntityDesignExtensibility\EntityDesignExtensibility.csproj" />
         <Projects Include="$(SolutionDir)src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj" />
         <Projects Include="$(SolutionDir)src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(BuildCoreOnly)' != 'true'">
         <Projects Include="$(SolutionDir)test\EFTools\InProcTests\InProcTests.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\E2ETests\E2ETests.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\FunctionalTests\FunctionalTests.csproj" />
@@ -39,7 +44,7 @@
         <TestHostProjects Include="$(SolutionDir)tools\VsIdeHostAdapter\Installer\Installer.wixproj" />
     </ItemGroup>
 
-    <Import Project="$(SolutionDir)\tools\EFTools.common.targets" />
+    <Import Project="$(SolutionDir)\tools\EFTools.common.tasks" />
     <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
 
     <Target Name="Clean">
@@ -49,12 +54,6 @@
                  Projects="@(TestHostProjects)" />
         <MSBuild Targets="Clean"
                  Projects="$(SolutionDir)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj" />
-    </Target>
-
-    <Target Name="Scorch">
-        <MSBuild Targets="SafeGitClean"
-                 Projects="$(MSBuildProjectFile)"
-                 Properties="BackupDir=$(SolutionDir)\ScorchSave\;DeleteBackupDir=true" />
     </Target>
 
     <Target Name="CreateDirectories">
@@ -68,7 +67,7 @@
         <ItemGroup>
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\FunctionalTests\*.csproj" />
             <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\UnitTests\*.csproj" />
-	    <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\E2ETests\*.csproj" />
+            <RestoreProjFiles Include="$(SolutionDir)\test\EFTools\E2ETests\*.csproj" />
         </ItemGroup>
         <Message Text="Restoring NuGet packages..." Importance="High" />
         <MSBuild Projects="@(RestoreProjFiles)" Targets="RestorePackages" Properties="RequireRestoreConsent=$(RequireRestoreConsent)" />
@@ -133,12 +132,11 @@
             <TestHostInstalled>$(TestHostQuery.StartsWith('VS IDE Test Host for Visual Studio'))</TestHostInstalled>
         </PropertyGroup>
         <Exec Condition="'$(TestHostInstalled)'!='True'"
-              Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log'
-              IgnoreExitCode='true' />
+              Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
     </Target>
 
     <Target Name="Install" DependsOnTargets="Rebuild">
-        <Exec Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
+        <Exec Command='msiexec /qb /i $(OutputPath)en\EFTools.msi SKIPENVIRONMENTSETUP="$(SkipEnvSetup)" /L*v $(LogsDir)EFTools.msi.log' />
     </Target>
 
     <Target Name="Test" DependsOnTargets="Install;InstallTestHost">
@@ -152,17 +150,23 @@
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
     </Target>
 
-    <Target Name="ReRunTests">
-        <MSBuild Targets="$(BuildTargets)"
-                 Projects="$(MSBuildThisFileDirectory)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj"
-                 Properties="Configuration=$(Configuration);BuildPackages=false" />
+
+    <Target Name="ReRunXUnitTests">
         <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
+    </Target>
+
+    <Target Name="ReRunInProcTests">
         <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
+    </Target>
+
+    <Target Name="ReRunE2ETests">
         <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
-	<Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx'
+        <Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
     </Target>
+
+    <Target Name="ReRunTests" DependsOnTargets="BuildDesigner;ReRunXUnitTests;ReRunInProcTests;ReRunE2ETests" />
 </Project>

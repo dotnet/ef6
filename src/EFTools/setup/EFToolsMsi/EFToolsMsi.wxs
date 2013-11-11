@@ -13,10 +13,10 @@
              InstallScope="perMachine" />
 
     <Upgrade Id="$(var.UpgradeCode)">
-      <UpgradeVersion Maximum="$(var.FullProductVersion)"
+      <UpgradeVersion Maximum="$(var.AssemblyFileVersion)"
                       Property="OLDERVERSIONFOUND"
                       IncludeMaximum="yes" />
-      <UpgradeVersion Minimum="$(var.FullProductVersion)"
+      <UpgradeVersion Minimum="$(var.AssemblyFileVersion)"
                       Property="NEWERVERSIONFOUND"
                       OnlyDetect="yes"
                       IncludeMinimum="no" />
@@ -41,22 +41,22 @@
     <Property Id="DSTDIR" Secure='yes'>
       <RegistrySearch Id="WD_DSTDIR"
                       Root="HKLM"
-                      Key="Software\Microsoft\wdexpress\$(env.VisualStudioVersion)\Setup\VS"
+                      Key="Software\Microsoft\wdexpress\$(var.VisualStudioVersion)\Setup\VS"
                       Name="ProductDir"
                       Type="raw" />
       <RegistrySearch Id="VWD_DSTDIR"
                       Root="HKLM"
-                      Key="Software\Microsoft\vwdexpress\$(env.VisualStudioVersion)\Setup\VS"
+                      Key="Software\Microsoft\vwdexpress\$(var.VisualStudioVersion)\Setup\VS"
                       Name="ProductDir"
                       Type="raw" />
       <RegistrySearch Id="VS_DSTDIR"
                       Root="HKLM"
-                      Key="Software\Microsoft\VisualStudio\$(env.VisualStudioVersion)\Setup\VS"
+                      Key="Software\Microsoft\VisualStudio\$(var.VisualStudioVersion)\Setup\VS"
                       Name="ProductDir"
                       Type="raw" />
     </Property>
 
-    <?if $(env.VisualStudioVersion) = 11.0?>
+    <?if $(var.VisualStudioVersion) = 11.0?>
       <Property Id="EF6BETAFOUND">
         <ProductSearch UpgradeCode="$(var.UpgradeCode)" Maximum="11.2.20529.0" Minimum="11.2.20529.0" ExcludeLanguages="yes" IncludeMaximum="yes" />
       </Property>
@@ -91,7 +91,7 @@
 
     <Condition Message="!(loc.VisualStudioProductDirNotFound)">Installed OR DSTDIR</Condition>
 
-    <?if $(env.VisualStudioVersion) = 11.0?>
+    <?if $(var.VisualStudioVersion) = 11.0?>
       <Condition Message="!(loc.Dev11EF6PreviewInstalled)">Installed OR NOT EF6BETAFOUND</Condition>
     <?endif?>
 
@@ -141,10 +141,10 @@
       <ComponentGroupRef Id="NuGetPackageComponents" />
       <ComponentGroupRef Id="XmlSchemaComponents" />
 
-      <?if $(var.IncludeLocalizedArtifacts) = True ?>
+      <?if $(var.IncludeLocalizedArtifacts) = true ?>
         <ComponentGroupRef Id="SatelliteAssemblyComponents" />
       
-        <?if $(env.VisualStudioVersion) = 12.0?>
+        <?if $(var.VisualStudioVersion) = 12.0?>
           <ComponentGroupRef Id="LicenseComponents" />
         <?endif?>
       <?endif?>

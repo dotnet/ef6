@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <UsingTask TaskName="RegexReplaceInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <PropertyGroup>
+    <CodeTaskFactoryAssemblyFile Condition=" '$(CodeTaskFactoryAssemblyFile)' == '' And '$(MSBuildToolsVersion)' == '12.0' ">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll</CodeTaskFactoryAssemblyFile>
+    <CodeTaskFactoryAssemblyFile Condition=" '$(CodeTaskFactoryAssemblyFile)' == ''">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</CodeTaskFactoryAssemblyFile>
+  </PropertyGroup>
+
+  <UsingTask TaskName="RegexReplaceInFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
     <ParameterGroup>
       <InputFilename ParameterType="System.String" Required="true" />
       <OutputFilename ParameterType="System.String" Required="true" />
@@ -39,7 +44,7 @@
     </Task>
   </UsingTask>
   
-  <UsingTask TaskName="Zip" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="Zip" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
     <ParameterGroup>
       <InputFileNames ParameterType="Microsoft.Build.Framework.ITaskItem[]" Required="true" />
       <OutputFileName ParameterType="System.String" Required="true" />
@@ -82,7 +87,7 @@
     </Task>
   </UsingTask>
   
-  <UsingTask TaskName="ExtractNuspec" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="ExtractNuspec" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
     <ParameterGroup>
       <PackagesConfigPath ParameterType="System.String" Required="true" />
       <PackagesOutputPath ParameterType="System.String" Required="true" />

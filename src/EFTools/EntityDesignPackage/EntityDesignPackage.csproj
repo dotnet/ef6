@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets"/>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -7,6 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Microsoft.Data.Entity.Design.Package</AssemblyName>
+    <DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
     <RootNamespace>Microsoft.Data.Entity.Design.Package</RootNamespace>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
@@ -20,44 +22,37 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DocumentationFile>..\..\..\bin\Debug\Microsoft.Data.Entity.Design.Package.xml</DocumentationFile>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1591;1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
     <RunCodeAnalysis Condition=" '$(RunCodeAnalysisForEFTools)' != '' And '$(RunCodeAnalysis)' == '' ">$(RunCodeAnalysisForEFTools)</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(RepositoryRoot)src\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DocumentationFile>..\..\..\bin\Release\Microsoft.Data.Entity.Design.Package.xml</DocumentationFile>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>1573;1572;1570;1711;1712;1587;1584;1571;1589</NoWarn>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(RepositoryRoot)src\Strict.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="$(VisualStudioVersion)=='12.0'">$(DefineConstants);VS12</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\tools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(RepositoryRoot)src\EFTools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <Import Project="..\..\..\EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)tools\EFToolsDev12References.settings.targets" Condition="$(VisualStudioVersion)=='12.0'" />
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.Shell.$(VisualStudioVersion)" />
     <Reference Include="Microsoft.VisualStudio.Package.LanguageService.$(VisualStudioVersion)" />
@@ -269,7 +264,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(ProgramFiles)\MSBuild\Microsoft\VisualStudio\v$(VisualStudioVersion)\VSSDK\Microsoft.VsSDK.targets" />
-  <Import Project="..\..\..\tools\EFTools.common.targets" />
   <Target Name="AfterBuild">
     <MakeDir Directories="$(OutputPath)PkgDefData" />
     <RegexReplaceInFile InputFileName="PkgDefData\Microsoft.Data.Entity.Design.Package.pkgdef" OutputFileName="$(OutputPath)PkgDefData\Microsoft.Data.Entity.Design.Package.pkgdef" Patterns="EFDESIGNERVERSIONTOKEN" Replacements="$(AssemblyVersion)" />

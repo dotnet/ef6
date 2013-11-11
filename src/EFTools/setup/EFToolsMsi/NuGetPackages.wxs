@@ -3,11 +3,11 @@
   <Fragment>
     <?define NuGetLangs = de;es;fr;it;ja;ko;ru;zh-Hans;zh-Hant?>
     <!--If a package version is added with a hyphen then it must also be included in the hyphen checks below.-->
-    <?define PackageVersions = 5.0.0;6.1.0-alpha1-21025?>
+    <?define PackageVersions = $(var.EF5NuGetPackageVersion);$(var.EF6NuGetPackageVersion)?>
     <DirectoryRef Id="eft_nuget_pkg_dir">
       <?foreach PackageVersion in $(var.PackageVersions)?>
-        <?if $(var.PackageVersion) = 6.1.0-alpha1-21025?>
-          <?define packageVersionId = 6.1.0_alpha1_21025?>
+        <?if $(var.PackageVersion) = $(var.EF6NuGetPackageVersion)?>
+          <?define packageVersionId = $(var.EF6NuGetPackageWixId)?>
         <?else?>
           <?define packageVersionId = $(var.PackageVersion)?>
         <?endif?>
@@ -45,7 +45,7 @@
             <Component Id="migrate.exe_$(var.packageVersionId)">
               <File Id="migrate.exe_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\migrate.exe"/>
             </Component>
-            <?if $(var.PackageVersion) = 5.0.0?>
+            <?if $(var.PackageVersion) = $(var.EF5NuGetPackageVersion)?>
               <Component Id="EntityFramework.PS3.psd1_$(var.packageVersionId)">
                 <File Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\tools\EntityFramework.PS3.psd1"/>
               </Component>
@@ -65,7 +65,7 @@
               <Component Id="EntityFramework.xml_$(var.packageVersionId)">
                 <File Id="EntityFramework.xml_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.xml"/>
               </Component>
-              <?if $(var.PackageVersion) != 5.0.0?>
+              <?if $(var.PackageVersion) != $(var.EF5NuGetPackageVersion)?>
                 <Component Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)">
                   <File Id="EntityFramework.SqlServerProvider.dll_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net40\EntityFramework.SqlServer.dll"/>
                 </Component>
@@ -81,7 +81,7 @@
               <Component Id="entityframeworkxml_1_$(var.packageVersionId)">
                 <File Id="entityframeworkxml_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.xml"/>
               </Component>
-              <?if $(var.PackageVersion) != 5.0.0?>
+              <?if $(var.PackageVersion) != $(var.EF5NuGetPackageVersion)?>
                 <Component Id="EntityFramework.SqlServerProvider.dll_1_$(var.packageVersionId)">
                   <File Id="EntityFramework.SqlServerProvider.dll_1_$(var.packageVersionId)" Source="$(var.PackagesDir)\EntityFramework.$(var.PackageVersion)\lib\net45\EntityFramework.SqlServer.dll"/>
                 </Component>
@@ -103,12 +103,12 @@
 
       <?if $(var.IncludeLocalizedArtifacts) = True ?>
         <?foreach PackageVersion in $(var.PackageVersions)?>
-          <?if $(var.PackageVersion) = 6.1.0-alpha1-21025?>
-            <?define packageVersionId = 6.1.0_alpha1_21025?>
+          <?if $(var.PackageVersion) = $(var.EF6NuGetPackageVersion)?>
+            <?define packageVersionId = $(var.EF6NuGetPackageWixId)?>
           <?else?>
             <?define packageVersionId = $(var.PackageVersion)?>
           <?endif?>
-
+      
           <?foreach NuGetLang in $(var.NuGetLangs)?>
             <!-- WIX Ids cannot have hyphens, so we need to handle zh langs differently -->
             <?if $(var.NuGetLang) = zh-Hans?>
@@ -161,8 +161,8 @@
         <RegistryValue Key="Software\NuGet\Repository" Name="EntityFrameworkVisualStudio$(var.MajorVisualStudioVersion)Tools" Root="HKLM" Type="string" Value="[DSTDIR]Common7\IDE\Extensions\Microsoft\Entity Framework Tools\NuGet Packages"/>
       </Component>
       <?foreach PackageVersion in $(var.PackageVersions)?>
-        <?if $(var.PackageVersion) = 6.1.0-alpha1-21025?>
-          <?define packageVersionId = 6.1.0_alpha1_21025?>
+        <?if $(var.PackageVersion) = $(var.EF6NuGetPackageVersion)?>
+          <?define packageVersionId = $(var.EF6NuGetPackageWixId)?>
         <?else?>
           <?define packageVersionId = $(var.PackageVersion)?>
         <?endif?>
@@ -184,7 +184,7 @@
         <ComponentRef Id="EntityFramework.$(var.packageVersionId).nupkg"/>
         <ComponentRef Id="EntityFramework.$(var.packageVersionId).nuspec"/>
 
-        <?if $(var.PackageVersion) = 5.0.0?>
+        <?if $(var.PackageVersion) = $(var.EF5NuGetPackageVersion)?>
           <ComponentRef Id="EntityFramework.PS3.psd1_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.config_$(var.packageVersionId)"/>
           <ComponentRef Id="Redirect.VS11.config_$(var.packageVersionId)"/>

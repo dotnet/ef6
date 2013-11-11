@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\..\..\tools\EFTools.version.settings"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <AssemblyPath Condition="'$(AssemblyPath)' == ''">$(OutputPath)</AssemblyPath>
     <ProductVersion>3.7</ProductVersion>
     <ProjectGuid>69ba80f1-e0eb-4109-a91a-6059f2954b2d</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
@@ -14,20 +15,16 @@
     <PackagesDir Condition="$(PackagesDir) == ''">$(SolutionDir)packages</PackagesDir>
     <RestorePackages>true</RestorePackages>
     <EmbedCab Condition="$(EmbedCab) == ''">no</EmbedCab>
-    <OutputPath>$(SolutionDir)\bin\$(Configuration)\</OutputPath>
-    <IncludeLocalizedArtifacts Condition="$(IncludeLocalizedArtifacts) == ''">False</IncludeLocalizedArtifacts>
-    <DefineConstants>EmbedCab=$(EmbedCab);FullProductVersion=$(FullProductVersion);BuildRevisionProductVersion=$(BuildRevisionProductVersion);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2));AssemblyVersion=$(AssemblyVersion);PackagesDir=$(PackagesDir);EF6PackageVersion=$(EntityFrameworkPackageVersion)</DefineConstants>
+    <IncludeLocalizedArtifacts Condition="$(IncludeLocalizedArtifacts) == ''">false</IncludeLocalizedArtifacts>
     <SetMsiAssemblyNameFileVersion>true</SetMsiAssemblyNameFileVersion>
-    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <DefineSolutionProperties Label="turn off warning about making VS IDE properties available when building from command window.">false</DefineSolutionProperties>
     <!-- Need to allow maximum version to be the same to allow developers to replace the same version during development -->
     <SuppressIces>ICE61</SuppressIces>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>$(DefineConstants);Debug</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Core.wxs" />
@@ -43,6 +40,7 @@
   <ItemGroup>
     <Content Include="Defines.wxi" />
     <Content Include="packages.config" />
+    <Content Include="Resources\EFToolsStrings.wxl.tokenized" />
     <Content Include="Resources\FirstPage.bmp" />
     <Content Include="Resources\Header.bmp" />
     <Content Include="Resources\License.rtf" />
@@ -82,7 +80,7 @@
     <!-- Build target from WiX would have overwritten this target if wix had been installed -->
     <Error Text="Wix Toolset not installed" />
   </Target>
-    <Target Name="Clean">
+  <Target Name="Clean">
     <!-- Clean target from WiX would have overwritten this target if wix had been installed -->
     <Error Text="Wix Toolset not installed" />
   </Target>
@@ -91,27 +89,35 @@
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets"
           Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
-  <Import Project="..\..\..\..\tools\EFTools.common.tasks" />
   <PropertyGroup>
-    <BuildDependsOn>RestorePackages;ExtractNuspec;$(BuildDependsOn)</BuildDependsOn>
+    <BuildDependsOn>RestorePackages;ExtractNuspec;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
   <Target Name="ExtractNuspec">
     <ExtractNuspec PackagesConfigPath="$(PackagesConfig)" PackagesOutputPath="$(PackagesDir)" />
+  </Target>
+  <Target Name="ReplaceEFToolsStrings">
+    <RegexReplaceInFile InputFileName="Resources\EFToolsStrings.wxl.tokenized"
+                        OutputFileName="Resources\EFToolsStrings.wxl"
+                        Patterns="WIX_FULL_PRODUCT_NAME_DEV11;WIX_FULL_PRODUCT_NAME_DEV12;WIX_PRODUCT_DESCRIPTION_DEV11;WIX_PRODUCT_DESCRIPTION_DEV12"
+                        Replacements="$(WixFullProductName_Dev11);$(WixFullProductName_Dev12);$(WixProductDescription_Dev11);$(WixProductDescription_Dev12)" />
   </Target>
   <!--
   To modify your build process, add your task inside one of the targets below and uncomment it.
   Other similar extension points exist, see Wix.targets.
   -->
   <Target Name="BeforeBuild">
-    <ItemGroup>
-      <EFRuntimeDependency Include="$(SolutionDir)\entityframework\bin\$(Configuration)\EntityFramework.SqlServer.dll" />
-      <EFRuntimeDependency Include="$(SolutionDir)\entityframework\bin\$(Configuration)\EntityFramework.SqlServerCompact.dll" />
-    </ItemGroup>
-    <Copy Condition="!Exists('$(OutputPath)\%(Filename)%(Extension)')"
-          SourceFiles="@(EFRuntimeDependency)"
-          DestinationFolder="$(OutputPath)" />
+    <PropertyGroup>
+      <!-- WIX authoring inputs. This target ensures dependency properties has been resolved.  -->
+      <DefineConstants>$(DefineConstants);AssemblyFileVersion=$(AssemblyFileVersion);BuildRevisionProductVersion=$(VersionBuild).$(VersionRevision)</DefineConstants>
+      <DefineConstants>$(DefineConstants);AssemblyVersion=$(AssemblyVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);VisualStudioVersion=$(VisualStudioVersion);MajorVisualStudioVersion=$(VisualStudioVersion.Substring(0, 2))</DefineConstants>
+      <DefineConstants>$(DefineConstants);EF6NuGetPackageVersion=$(EF6NuGetPackageVersion);EF6NuGetPackageWixId=$(EF6NuGetPackageWixId);EF5NuGetPackageVersion=$(EF5NuGetPackageVersion)</DefineConstants>
+      <DefineConstants>$(DefineConstants);EmbedCab=$(EmbedCab);SolutionDir=$(SolutionDir);PackagesDir=$(PackagesDir);AssemblyPath=$(AssemblyPath)</DefineConstants>
+      <DefineConstants>$(DefineConstants);SatelliteAssemblyPath=$(SatelliteAssemblyPath);IncludeLocalizedArtifacts=$(IncludeLocalizedArtifacts)</DefineConstants>
+    </PropertyGroup>
   </Target>
   <Target Name="AfterBuild">
+    <!-- This is here so that we have the correct .PDBs for the last EFTools _installed_ (not just built) -->
     <ItemGroup>
       <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.BootstrapPackage.pdb" />
       <EFDesignerSymbolFiles Include="$(OutputPath)Microsoft.Data.Entity.Design.DatabaseGeneration.pdb" />

@@ -2,10 +2,10 @@
 <WixLocalization Culture="en" xmlns="http://schemas.microsoft.com/wix/2006/localization">
   <String Id="CompanyName">Microsoft Corporation</String>
   <String Id="ShortProductName">DataFxTools</String>
-  <String Id="FullProductName_Dev11">Entity Framework 6.1.0 Tools Alpha 1 for Visual Studio 2012</String>
-  <String Id="FullProductName_Dev12">Entity Framework 6.1.0 Tools Alpha 1 for Visual Studio 2013</String>
-  <String Id="ProductDescription_Dev11">Entity Framework 6.1.0 Tools Alpha 1 for Visual Studio 2012</String>
-  <String Id="ProductDescription_Dev12">Entity Framework 6.1.0 Tools Alpha 1 for Visual Studio 2013</String>
+  <String Id="FullProductName_Dev11">WIX_FULL_PRODUCT_NAME_DEV11</String>
+  <String Id="FullProductName_Dev12">WIX_FULL_PRODUCT_NAME_DEV12</String>
+  <String Id="ProductDescription_Dev11">WIX_PRODUCT_DESCRIPTION_DEV11</String>
+  <String Id="ProductDescription_Dev12">WIX_PRODUCT_DESCRIPTION_DEV12</String>
   <String Id="ElevatedPrivilegeRequired">You need to be an administrator to install this product.</String>
   <String Id="NewerAlreadyInstalled">A newer version of this product already installed. Installation of this version cannot continue. To configure or remove the existing version of this product, use Add/Remove Programs on the Control Panel.</String>
   <String Id="VisualStudioProductDirNotFound">Visual Studio product directory is not found.</String>

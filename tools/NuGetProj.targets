@@ -50,6 +50,11 @@ Relevant parameters:
     <ProjectPath>$(IntermediateOutputPath)$(NuSpecFileName)</ProjectPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <CodeTaskFactoryAssemblyFile Condition=" '$(CodeTaskFactoryAssemblyFile)' == '' And '$(MSBuildToolsVersion)' == '12.0' ">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll</CodeTaskFactoryAssemblyFile>
+    <CodeTaskFactoryAssemblyFile Condition=" '$(CodeTaskFactoryAssemblyFile)' == '' ">$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll</CodeTaskFactoryAssemblyFile>
+  </PropertyGroup>
+
   <!-- 
   NuGet package layout conventions http://docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package#Package_Conventions 
   NuSpec metadata schema https://nuget.codeplex.com/wikipage?title=.nuspec%20v1.2%20Format
@@ -219,7 +224,7 @@ GenerateNuSpecFile: generates the final nuspec file for the package.
  ==================================================================================================
   Generates final nuspec file combining/replacing values from project nuspec file if provided.
  ==================================================================================================-->
-    <UsingTask TaskName="GenerateNuSpecFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <UsingTask TaskName="GenerateNuSpecFile" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
     <ParameterGroup>
       <NuSpecFile Required="true" ParameterType="System.String" />
       <MetadataItems Required="false" ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
@@ -311,7 +316,7 @@ GenerateNuSpecFile: generates the final nuspec file for the package.
 ****************************************************************************************************
 NormalizeNuGetContent: Normalize NuGetContent items full path and destination for packing.
 ****************************************************************************************************-->
-  <UsingTask TaskName="NormalizeNuGetContent" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+  <UsingTask TaskName="NormalizeNuGetContent" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
     <ParameterGroup>
       <NuGetContent Required="true" ParameterType="Microsoft.Build.Framework.ITaskItem[]" />
       <NuGetContentNormalized Output="true" ParameterType="Microsoft.Build.Framework.ITaskItem[]" />

@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -16,8 +17,8 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,18 +41,15 @@
     <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
   </PropertyGroup>
   <PropertyGroup>
-    <DefineConstants Condition="$(VisualStudioVersion)=='12.0'">$(DefineConstants);VS12</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\tools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(RepositoryRoot)src\EFTools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <Import Project="..\..\..\EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
@@ -82,7 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomaticDbContextTests.cs" />
-    <Compile Include="E2ETests.cs" />
     <Compile Include="EntityTypeShapeColorTest.cs" />
     <Compile Include="Extensions\DiagramExtensions.cs" />
     <Compile Include="Extensions\EFArtifactExtensions.cs" />
@@ -96,43 +93,43 @@
     <Compile Include="WorkflowActivityTestsRemote.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EntityFramework\EntityFramework.csproj">
       <Project>{e06d1c12-efe8-4413-a15c-ae01fc158f2f}</Project>
       <Name>EntityFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\DesignXmlCore\DesignXmlCore.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\DesignXmlCore\DesignXmlCore.csproj">
       <Project>{6c80dbca-16c8-48c9-9019-ab6fded788de}</Project>
       <Name>DesignXmlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
       <Project>{0518e682-510d-48f8-bb14-7151c50a1850}</Project>
       <Name>EntityDesignerVersioningFacade</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\XmlCore\XmlCore.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\XmlCore\XmlCore.csproj">
       <Project>{79b40a85-cdcc-4ac3-a583-77ca43cb5136}</Project>
       <Name>XmlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj">
       <Project>{15000b5c-c005-473a-ba65-eaf37e660b2c}</Project>
       <Name>EntityDesignDatabaseGeneration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignEntityDesigner\EntityDesigner.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignEntityDesigner\EntityDesigner.csproj">
       <Project>{488b84c2-9358-4b90-bc2d-ed688939e6bb}</Project>
       <Name>EntityDesigner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignModel\EntityDesignModel.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignModel\EntityDesignModel.csproj">
       <Project>{b44e942f-0ad1-4fb4-9146-dd1f8e17d4d8}</Project>
       <Name>EntityDesignModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj">
       <Project>{c7198bdf-eb70-44d3-ba61-45cc552248e4}</Project>
       <Name>EntityDesignPackage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesign\EntityDesign.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesign\EntityDesign.csproj">
       <Project>{f904b4be-c7cf-4e4f-85b7-b006a2d1c561}</Project>
       <Name>EntityDesign</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\tools\VsIdeHostAdapter\Framework\VsIdeTestHostFramework.csproj">
+    <ProjectReference Include="$(RepositoryRoot)tools\VsIdeHostAdapter\Framework\VsIdeTestHostFramework.csproj">
       <Project>{614ac98e-a68e-4eb4-af27-1cedba7ca3b4}</Project>
       <Name>VsIdeTestHostFramework</Name>
     </ProjectReference>

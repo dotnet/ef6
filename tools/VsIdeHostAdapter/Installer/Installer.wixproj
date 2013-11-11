@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\EFTools.version.settings"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets"/>
     
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <ProjectGuid>{0119e679-20f1-4e3f-b77e-14408c535555}</ProjectGuid>
     <OutputName>VsIdeTestHost</OutputName>
     <OutputType>Package</OutputType>
-    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <DefineConstants>FullProductVersion=$(FullProductVersion);BuildRevisionProductVersion=$(BuildRevisionProductVersion);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
+    <DefineConstants>AssemblyFileVersion=$(AssemblyFileVersion);BuildRevisionProductVersion=$(VersionBuild).$(VersionRevision);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

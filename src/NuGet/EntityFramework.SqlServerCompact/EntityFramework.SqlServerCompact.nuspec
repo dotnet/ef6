@@ -15,7 +15,7 @@
     <language>en-US</language>
     <dependencies>
       <dependency id="Microsoft.SqlServer.Compact" version="4.0" />
-      <dependency id="EntityFramework" version="$EFPackageVersion$" />
+      <dependency id="EntityFramework" version="$EF6NuGetPackageVersion$" />
     </dependencies>
   </metadata>
 </package>

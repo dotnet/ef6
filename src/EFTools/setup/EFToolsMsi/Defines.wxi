@@ -3,7 +3,7 @@
   <?define LCID = 1033?>
   <?define Lang = enu?>
 
-  <?if $(env.VisualStudioVersion) = 11.0?>
+  <?if $(var.VisualStudioVersion) = 11.0?>
     <?define UpgradeCode = {27790FD4-0395-45E1-9309-447B91604CCA}?>
     <?define FullProductName = !(loc.FullProductName_Dev11)?>
     <?define ProductDescription = !(loc.ProductDescription_Dev11)?>
@@ -12,6 +12,6 @@
     <?define UpgradeCode = {B9BF703A-2405-4A71-AFC5-38F59C11911D}?>
     <?define FullProductName = !(loc.FullProductName_Dev12)?>
     <?define ProductDescription = !(loc.ProductDescription_Dev12)?>
-    <?define ProductVersion = $(var.FullProductVersion)?>
+    <?define ProductVersion = $(var.AssemblyFileVersion)?>
   <?endif?>
 </Include>

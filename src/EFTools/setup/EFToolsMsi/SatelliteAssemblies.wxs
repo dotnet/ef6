@@ -14,57 +14,57 @@
         <Directory Id="ide_$(var.IdSafeCulture)" Name="$(var.SatelliteAssemblyCulture)">
           <Component Id="ide_$(var.IdSafeCulture)_BootstrapPackageComponent">
             <File Id="ide_$(var.IdSafeCulture)_BootstrapPackage"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.BootstrapPackage.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.BootstrapPackage.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_DatabaseGenerationComponent">
             <File Id="ide_$(var.IdSafeCulture)_DatabaseGeneration"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DatabaseGeneration.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DatabaseGeneration.resources.dll" />
           </Component>
-          <?if $(env.VisualStudioVersion) = 11.0?>
+          <?if $(var.VisualStudioVersion) = 11.0?>
             <Component Id="ide_$(var.IdSafeCulture)_DataSourceWizardExtensionComponent">
               <File Id="ide_$(var.IdSafeCulture)_DataSourceWizardExtension"
-                    Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DataSourceWizardExtension.resources.dll" />
+                    Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.DataSourceWizardExtension.resources.dll" />
             </Component>
           <?endif?>
           <Component Id="ide_$(var.IdSafeCulture)_EntityDesignerComponent">
             <File Id="ide_$(var.IdSafeCulture)_EntityDesigner"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.EntityDesigner.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.EntityDesigner.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_ExtensibilityComponent">
             <File Id="ide_$(var.IdSafeCulture)_Extensibility"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Extensibility.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Extensibility.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_ModelComponent">
             <File Id="ide_$(var.IdSafeCulture)_Model"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Model.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Model.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_PackageComponent">
             <File Id="ide_$(var.IdSafeCulture)_Package"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Package.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.Package.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_EntityDesign">
             <File Id="ide_$(var.IdSafeCulture)_EntityDesign"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_EntityFramework">
             <File Id="ide_$(var.IdSafeCulture)_EntityFramework"
-                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6PackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.resources.dll" />
+                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_SqlServer">
             <File Id="ide_$(var.IdSafeCulture)_SqlServer"
-                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6PackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.SqlServer.resources.dll" />
+                  Source="$(var.PackagesDir)\EntityFramework.$(var.SatelliteAssemblyCulture).$(var.EF6NuGetPackageVersion)\lib\net45\$(var.SatelliteAssemblyCulture)\EntityFramework.SqlServer.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_VersioningFacade">
             <File Id="ide_$(var.IdSafeCulture)_VersioningFacade"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.VersioningFacade.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Entity.Design.VersioningFacade.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_XmlCore">
             <File Id="ide_$(var.IdSafeCulture)_XmlCore"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Tools.Design.XmlCore.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.Data.Tools.Design.XmlCore.resources.dll" />
           </Component>
           <Component Id="ide_$(var.IdSafeCulture)_ToolsXmlCore">
             <File Id="ide_$(var.IdSafeCulture)_ToolsXmlCore"
-                  Source="$(var.TargetDir)\Localized\$(var.SatelliteAssemblyCulture)\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.resources.dll" />
+                  Source="$(var.SatelliteAssemblyPath)\$(var.SatelliteAssemblyCulture)\Microsoft.VisualStudio.Data.Tools.Design.XmlCore.resources.dll" />
           </Component>
         </Directory>
         <?undef IdSafeCulture?>
@@ -82,7 +82,7 @@
       
         <ComponentRef Id="ide_$(var.IdSafeCulture)_BootstrapPackageComponent" />
         <ComponentRef Id="ide_$(var.IdSafeCulture)_DatabaseGenerationComponent" />
-        <?if $(env.VisualStudioVersion) = 11.0?>
+        <?if $(var.VisualStudioVersion) = 11.0?>
           <ComponentRef Id="ide_$(var.IdSafeCulture)_DataSourceWizardExtensionComponent" />
         <?endif?>
         <ComponentRef Id="ide_$(var.IdSafeCulture)_EntityDesignerComponent" />

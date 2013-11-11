@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), BuildEFTools.cmd))\tools\EntityFramework.settings.targets" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,7 +38,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\..\tools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(RepositoryRoot)src\EFTools\EFToolsPublicKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>true</DelaySign>
@@ -73,10 +74,10 @@
     </Reference>
     <Reference Include="VsWebSite.Interop" />
     <Reference Include="xunit">
-      <HintPath>..\..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+      <HintPath>$(RepositoryRoot)packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
-      <HintPath>..\..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+      <HintPath>$(RepositoryRoot)packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -184,7 +185,7 @@
     <Compile Include="XmlCore\Model\XmlModelProviderTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkConfig_6_0_0.xsd">
+    <None Include="$(RepositoryRoot)src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkConfig_6_0_0.xsd">
       <Link>EntityFrameworkConfig_6_0_0.xsd</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -192,58 +193,58 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
       <Project>{1ef9c524-7122-4677-b111-dd14bb2a9ea2}</Project>
       <Name>EntityFramework.SqlServerCompact</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
       <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>
       <Name>EntityFramework.SqlServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EntityFramework\EntityFramework.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EntityFramework\EntityFramework.csproj">
       <Project>{e06d1c12-efe8-4413-a15c-ae01fc158f2f}</Project>
       <Name>EntityFramework</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\DesignXmlCore\DesignXmlCore.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\DesignXmlCore\DesignXmlCore.csproj">
       <Project>{6c80dbca-16c8-48c9-9019-ab6fded788de}</Project>
       <Name>DesignXmlCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignDatabaseGeneration\EntityDesignDatabaseGeneration.csproj">
       <Project>{15000b5c-c005-473a-ba65-eaf37e660b2c}</Project>
       <Name>EntityDesignDatabaseGeneration</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignEntityDesigner\EntityDesigner.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignEntityDesigner\EntityDesigner.csproj">
       <Project>{488b84c2-9358-4b90-bc2d-ed688939e6bb}</Project>
       <Name>EntityDesigner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj">
       <Project>{0518e682-510d-48f8-bb14-7151c50a1850}</Project>
       <Name>EntityDesignerVersioningFacade</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignExtensibility\EntityDesignExtensibility.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignExtensibility\EntityDesignExtensibility.csproj">
       <Project>{092010ff-c0c3-4564-b8f0-7758e630de00}</Project>
       <Name>EntityDesignExtensibility</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignModel\EntityDesignModel.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignModel\EntityDesignModel.csproj">
       <Project>{b44e942f-0ad1-4fb4-9146-dd1f8e17d4d8}</Project>
       <Name>EntityDesignModel</Name>
       <Aliases>global,EntityDesignModel</Aliases>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj">
       <Project>{c7198bdf-eb70-44d3-ba61-45cc552248e4}</Project>
       <Name>EntityDesignPackage</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\EntityDesign\EntityDesign.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\EntityDesign\EntityDesign.csproj">
       <Project>{f904b4be-c7cf-4e4f-85b7-b006a2d1c561}</Project>
       <Name>EntityDesign</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\EFTools\XmlCore\XmlCore.csproj">
+    <ProjectReference Include="$(RepositoryRoot)src\EFTools\XmlCore\XmlCore.csproj">
       <Project>{79b40a85-cdcc-4ac3-a583-77ca43cb5136}</Project>
       <Name>XmlCore</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkCatalog.xml">
+    <Content Include="$(RepositoryRoot)src\EFTools\setup\EFToolsMsi\XmlSchemas\EntityFrameworkCatalog.xml">
       <Link>EntityFrameworkCatalog.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -255,7 +256,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\..\tools\EFTools.common.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

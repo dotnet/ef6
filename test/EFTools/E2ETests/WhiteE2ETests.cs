@@ -183,6 +183,15 @@ namespace EFDesigner.E2ETests
             Exception exceptionCaught = null;
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
 
+            // On the main thread create a project
+            var project = Dte.CreateProject(
+                TestContext.TestRunDirectory,
+                "ExistingDBTest",
+                DteExtensions.ProjectKind.Executable,
+                DteExtensions.ProjectLanguage.CSharp);
+
+            Assert.IsNotNull(project, "Could not create project");
+
             // We need to create this thread to keep polling for wizard to show up and
             // walk thru the wizard. DTE call just launches the wizard and stays there
             // taking up the main thread
@@ -192,6 +201,17 @@ namespace EFDesigner.E2ETests
                     try
                     {
                         Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+
+                        _visualStudio = Application.Attach(Process.GetCurrentProcess().Id);
+                        _visualStudioMainWindow = _visualStudio.GetWindow(
+                            SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                            InitializeOption.NoCache);
+
+                        var newItemWindow = _visualStudioMainWindow.Popup;
+                        var extensions = newItemWindow.Get<ListView>(SearchCriteria.ByText("Extensions"));
+                        extensions.Select("ADO.NET Entity Data Model");
+                        var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
+                        addButton.Click();
 
                         // This method polls for the the wizard to show up
                         _wizard = GetWizard();
@@ -205,17 +225,7 @@ namespace EFDesigner.E2ETests
                     }
                 }, "UIExecutor");
 
-            // On the main thread create a project
-            var project = Dte.CreateProject(
-                TestContext.TestRunDirectory,
-                "ExistingDBTest",
-                DteExtensions.ProjectKind.Executable,
-                DteExtensions.ProjectLanguage.CSharp);
-
-            Assert.IsNotNull(project, "Could not create project");
-
-            // Create model from a small size database
-            DteExtensions.AddNewItem(Dte, @"Data\ADO.NET Entity Data Model", "Model1.edmx", project);
+            Dte.ExecuteCommand("Project.AddNewItem");
 
             wizardDiscoveryThread.Join();
 
@@ -283,6 +293,14 @@ namespace EFDesigner.E2ETests
             Exception exceptionCaught = null;
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
 
+            var project = Dte.CreateProject(
+                TestContext.TestRunDirectory,
+                "ExistingDBTestChangeDefaults",
+                DteExtensions.ProjectKind.Executable,
+                DteExtensions.ProjectLanguage.CSharp);
+
+            Assert.IsNotNull(project, "Could not create project");
+
             // We need to create this thread to keep polling for wizard to show up and
             // walk thru the wizard. DTE call just launches the wizard and stays there
             // taking up the main thread
@@ -292,6 +310,17 @@ namespace EFDesigner.E2ETests
                     try
                     {
                         Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+
+                        _visualStudio = Application.Attach(Process.GetCurrentProcess().Id);
+                        _visualStudioMainWindow = _visualStudio.GetWindow(
+                            SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
+                            InitializeOption.NoCache);
+
+                        var newItemWindow = _visualStudioMainWindow.Popup;
+                        var extensions = newItemWindow.Get<ListView>(SearchCriteria.ByText("Extensions"));
+                        extensions.Select("ADO.NET Entity Data Model");
+                        var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
+                        addButton.Click();
 
                         // This method polls for the the wizard to show up
                         _wizard = GetWizard();
@@ -305,23 +334,7 @@ namespace EFDesigner.E2ETests
                     }
                 }, "UIExecutor");
 
-            // *****
-            // On the main thread create a project
-            // *****
-
-            var project = Dte.CreateProject(
-                TestContext.TestRunDirectory,
-                "ExistingDBTestChangeDefaults",
-                DteExtensions.ProjectKind.Executable,
-                DteExtensions.ProjectLanguage.CSharp);
-
-            Assert.IsNotNull(project, "Could not create project");
-
-            // *****
-            // Create model from a small size database
-            // *****
-
-            DteExtensions.AddNewItem(Dte, @"Data\ADO.NET Entity Data Model", "School.edmx", project);
+            Dte.ExecuteCommand("Project.AddNewItem");
 
             wizardDiscoveryThread.Join();
 
