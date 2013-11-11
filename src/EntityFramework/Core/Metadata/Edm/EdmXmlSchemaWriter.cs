@@ -4,6 +4,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -15,7 +17,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     internal class EdmXmlSchemaWriter : XmlSchemaWriter
     {
         private readonly bool _serializeDefaultNullability;
+        private readonly IDbDependencyResolver _resolver;
+
         private const string AnnotationNamespacePrefix = "annotation";
+        private const string CustomAnnotationNamespacePrefix = "customannotation";
         private const string StoreSchemaGenNamespacePrefix = "store";
         private const string DataServicesPrefix = "m";
         private const string DataServicesNamespace = "http://schemas.microsoft.com/ado/2007/08/dataservices/metadata";
@@ -191,13 +196,14 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         public EdmXmlSchemaWriter()
         {
-            // testing
+            _resolver = DbConfiguration.DependencyResolver;
         }
 
-        internal EdmXmlSchemaWriter(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability)
+        internal EdmXmlSchemaWriter(XmlWriter xmlWriter, double edmVersion, bool serializeDefaultNullability, IDbDependencyResolver resolver = null)
         {
             DebugCheck.NotNull(xmlWriter);
 
+            _resolver = resolver ?? DbConfiguration.DependencyResolver;
             _serializeDefaultNullability = serializeDefaultNullability;
             _xmlWriter = xmlWriter;
             _version = edmVersion;
@@ -224,6 +230,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
 
             _xmlWriter.WriteAttributeString("xmlns", AnnotationNamespacePrefix, null, XmlConstants.AnnotationNamespace);
+            _xmlWriter.WriteAttributeString("xmlns", CustomAnnotationNamespacePrefix, null, XmlConstants.CustomAnnotationNamespace);
         }
 
         // virtual for testing
@@ -244,6 +251,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             {
                 _xmlWriter.WriteAttributeString("xmlns", StoreSchemaGenNamespacePrefix, null, XmlConstants.EntityStoreSchemaGeneratorNamespace);
             }
+
+            _xmlWriter.WriteAttributeString("xmlns", CustomAnnotationNamespacePrefix, null, XmlConstants.CustomAnnotationNamespace);
         }
 
         private void WritePolymorphicTypeAttributes(EdmType edmType)
@@ -344,6 +353,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteStartElement(XmlConstants.EntityType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, entityType.Name);
 
+            WriteExtendedProperties(entityType);
+
             if (entityType.Annotations.GetClrAttributes() != null)
             {
                 foreach (var a in entityType.Annotations.GetClrAttributes())
@@ -396,6 +407,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
             _xmlWriter.WriteAttributeString(
                 XmlConstants.IsFlags, GetLowerCaseStringFromBoolValue(enumType.IsFlags));
 
+            WriteExtendedProperties(enumType);
+
             if (enumType.UnderlyingType != null)
             {
                 _xmlWriter.WriteAttributeString(
@@ -442,6 +455,9 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             _xmlWriter.WriteStartElement(XmlConstants.ComplexType);
             _xmlWriter.WriteAttributeString(XmlConstants.Name, complexType.Name);
+
+            WriteExtendedProperties(complexType);
+
             WritePolymorphicTypeAttributes(complexType);
         }
 
@@ -830,7 +846,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             return new EdmXmlSchemaWriter(xmlWriter, _version, _serializeDefaultNullability);
         }
 
-        private void WriteExtendedProperties(MetadataItem item)
+        internal void WriteExtendedProperties(MetadataItem item)
         {
             DebugCheck.NotNull(item);
 
@@ -841,7 +857,13 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 {
                     DebugCheck.NotNull(extendedProperty.Value);
 
-                    _xmlWriter.WriteAttributeString(attributeName, xmlNamespaceUri, extendedProperty.Value.ToString());
+                    var serializer = _resolver.GetService<IMetadataAnnotationSerializer>(extendedProperty.Name);
+
+                    var value = serializer == null 
+                        ? extendedProperty.Value.ToString() 
+                        : serializer.SerializeValue(extendedProperty.Name, extendedProperty.Value);
+
+                    _xmlWriter.WriteAttributeString(attributeName, xmlNamespaceUri, value);
                 }
             }
         }

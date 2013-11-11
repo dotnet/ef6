@@ -981,5 +981,16 @@ namespace System.Data.Entity.ModelConfiguration
                 Strings.ModelBuilder_PropertyFilterTypeMustBePrimitive(typeof(object)),
                 ex.Message);
         }
+
+        [Fact]
+        public void Build_adds_the_UseClrTypes_annotation_to_the_container()
+        {
+            var databaseMapping = new DbModelBuilder().Build(ProviderRegistry.Sql2008_ProviderInfo).DatabaseMapping;
+
+            Assert.Equal(
+                1,
+                databaseMapping.Model.Container.Annotations.Count(
+                    a => a.Name == XmlConstants.UseClrTypesAnnotation && a.Value.Equals("true")));
+        }
     }
 }

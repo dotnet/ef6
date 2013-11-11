@@ -842,6 +842,52 @@ namespace System.Data.Entity
             }
         }
 
+        public class SetMetadataAnnotationSerializer
+        {
+            [Fact]
+            public void SetMetadataAnnotationSerializer_throws_if_given_a_null_serializer_or_bad_name()
+            {
+                Assert.Equal(
+                    "serializer",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetMetadataAnnotationSerializer("Karl", null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("annotationName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer(null, new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("annotationName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer("", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+                Assert.Equal(
+                    Strings.ArgumentIsNullOrWhitespace("annotationName"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetMetadataAnnotationSerializer(" ", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+            }
+
+            [Fact]
+            public void SetMetadataAnnotationSerializer_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                var serializer = new Mock<IMetadataAnnotationSerializer>().Object;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetMetadataAnnotationSerializer("Foo", serializer);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(serializer, "Foo"));
+            }
+
+            [Fact]
+            public void SetMetadataAnnotationSerializer_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetMetadataAnnotationSerializer"),
+                    Assert.Throws<InvalidOperationException>(
+                        () => configuration.SetMetadataAnnotationSerializer("Karl", new Mock<IMetadataAnnotationSerializer>().Object)).Message);
+            }
+        }
+
         private static DbConfiguration CreatedLockedConfiguration()
         {
             var configuration = new DbConfiguration();

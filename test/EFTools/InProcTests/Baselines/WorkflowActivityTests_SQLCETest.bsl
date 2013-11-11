@@ -127,6 +127,7 @@ ADD CONSTRAINT [FK_CompSciStudentBook_Book]
     REFERENCES [BookSet]
         ([ISBN])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_CompSciStudentBook_Book'
 CREATE INDEX [IX_FK_CompSciStudentBook_Book]

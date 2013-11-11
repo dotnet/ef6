@@ -5,6 +5,7 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Data.Entity.Core.Mapping.ViewGeneration;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
@@ -60,6 +61,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 #else
             _resolvers.Add(new SingletonDependencyResolver<IDbProviderFactoryResolver>(new DefaultDbProviderFactoryResolver()));
 #endif
+            _resolvers.Add(new SingletonDependencyResolver<IMetadataAnnotationSerializer>(
+                new ClrTypeAnnotationSerializer(), XmlConstants.ClrTypeAnnotation));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

@@ -23,3 +23,4 @@ EntityFramework.SqlServerCompact.xml
 *.csproj.DotSettings
 /coverage
 /OpenCoverResults.xml
+/src/EFTools/EntityDesign/VisualStudio/ItemTemplate/VersionedTemplates/

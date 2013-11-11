@@ -52,7 +52,7 @@ namespace System.Data.Entity.Internal
             return mockModel;
         }
 
-        [Fact]
+        //[Fact] Disabled -- see CodePlex 1803
         public void ModelHashCalculator_creates_expected_model_hash_for_empty_builder()
         {
             // If this hash changes then it may mean that people upgrading from a previous version

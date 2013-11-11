@@ -86,10 +86,8 @@ namespace Microsoft.Data.Entity.Design.Package
             foreach (var command in baseCommands)
             {
                 if (command.CommandID == CommonModelingCommands.PageSetup
-                    ||
-                    command.CommandID == CommonModelingCommands.Print
-                    ||
-                    command.CommandID == CommonModelingCommands.PrintPreview)
+                    || command.CommandID == CommonModelingCommands.Print
+                    || command.CommandID == CommonModelingCommands.PrintPreview)
                 {
                     commands.Add(command);
                 }

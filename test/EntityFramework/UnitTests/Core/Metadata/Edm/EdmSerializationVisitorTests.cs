@@ -249,7 +249,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Visit_writes_Empty_model_namespace_for_empty_model_if_custom_namespace_not_provided()
         {
-            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false, null);
 
             new EdmSerializationVisitor(schemaWriterMock.Object)
                 .Visit(new EdmModel(DataSpace.CSpace), null);
@@ -260,7 +260,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Visit_writes_custom_model_namespace_if_provided()
         {
-            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false, null);
 
             new EdmSerializationVisitor(schemaWriterMock.Object)
                 .Visit(new EdmModel(DataSpace.CSpace), "NS");
@@ -274,7 +274,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
             var model = new EdmModel(DataSpace.CSpace);
             model.AddItem(new ComplexType("foo", "namespace", DataSpace.CSpace));
 
-            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false);
+            var schemaWriterMock = new Mock<EdmXmlSchemaWriter>(new Mock<XmlWriter>().Object, 3.0, false, null);
 
             new EdmSerializationVisitor(schemaWriterMock.Object)
                 .Visit(new EdmModel(DataSpace.CSpace), "NS");

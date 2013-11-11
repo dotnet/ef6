@@ -148,6 +148,41 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Null(property.MaxLength);
         }
 
+        [Fact]
+        public void Rename_invalidates_identity_cache_in_declaring_function()
+        {
+            var typeUsage
+                = TypeUsage.Create(
+                    PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32), new Facet[0]);
+
+            const int parameterCount = 26; // UseSortedListCrossover + 1 (see MetadataCollection<T>)
+            var parameters = new FunctionParameter[parameterCount];
+            var returnParameters = new FunctionParameter[parameterCount];
+            var entitySets = new EntitySet[parameterCount];
+
+            for (var i = 0; i < parameterCount; i++)
+            {
+                parameters[i] = new FunctionParameter("P" + i, typeUsage, ParameterMode.In);
+                returnParameters[i] = new FunctionParameter("R" + i, typeUsage, ParameterMode.ReturnValue);
+                entitySets[i] = new EntitySet();
+            }
+
+            var function = new EdmFunction(
+                "F", "N", DataSpace.CSpace,
+                new EdmFunctionPayload
+                {
+                    Parameters = parameters,
+                    ReturnParameters = returnParameters,
+                    EntitySets = entitySets
+                });
+
+            parameters[3].Name = "P5NewName";
+            returnParameters[7].Name = "R5NewName";
+
+            Assert.True(function.Parameters.Contains(parameters[3].Name));
+            Assert.True(function.ReturnParameters.Contains(returnParameters[7].Name));
+        }
+
         private static Facet CreateConstFacet(string facetName, PrimitiveTypeKind facetTypeKind, object value)
         {
             return

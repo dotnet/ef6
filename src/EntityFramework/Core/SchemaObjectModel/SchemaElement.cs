@@ -5,6 +5,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
     using System.Collections.Generic;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Metadata.Edm.Provider;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -32,6 +34,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         private string _name;
 
         private List<MetadataProperty> _otherContent;
+
+        private readonly IDbDependencyResolver _resolver;
 
         #endregion
 
@@ -258,8 +262,10 @@ namespace System.Data.Entity.Core.SchemaObjectModel
 
         #region Protected Methods
 
-        internal SchemaElement(SchemaElement parentElement)
+        internal SchemaElement(SchemaElement parentElement, IDbDependencyResolver resolver = null)
         {
+            _resolver = resolver ?? DbConfiguration.DependencyResolver;
+
             if (parentElement != null)
             {
                 ParentElement = parentElement;
@@ -280,8 +286,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             }
         }
 
-        internal SchemaElement(SchemaElement parentElement, string name)
-            : this(parentElement)
+        internal SchemaElement(SchemaElement parentElement, string name, IDbDependencyResolver resolver = null)
+            : this(parentElement, resolver)
         {
             _name = name;
         }
@@ -577,7 +583,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                         var element = XElement.Load(stringReader);
 
                         property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
-                            element.Name.NamespaceName, element.Name.LocalName, element);
+                            element.Name.NamespaceName, element.Name.LocalName, (string)element);
                     }
                 }
             }
@@ -606,15 +612,14 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        internal static MetadataProperty CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
-            string xmlNamespaceUri, string artifactName, object value)
+        internal MetadataProperty CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
+            string xmlNamespaceUri, string artifactName, string value)
         {
-            MetadataProperty property;
-            property = new MetadataProperty(
-                xmlNamespaceUri + ":" + artifactName,
-                TypeUsage.Create(EdmProviderManifest.Instance.GetPrimitiveType(PrimitiveTypeKind.String)),
-                value);
-            return property;
+            var name = xmlNamespaceUri + ":" + artifactName;
+            var serializer = _resolver.GetService<IMetadataAnnotationSerializer>(name);
+            var parsedValue = serializer == null ? value : serializer.DeserializeValue(name, value);
+
+            return MetadataProperty.CreateAnnotation(name, parsedValue);
         }
 
         // <summary>

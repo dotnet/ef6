@@ -202,7 +202,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 return _provider ?? (_provider = new DbQueryProvider(
                                                      GetInternalQueryWithCheck("IQueryable.Provider").InternalContext,
-                                                     GetInternalQueryWithCheck("IQueryable.Provider").ObjectQueryProvider));
+                                                     GetInternalQueryWithCheck("IQueryable.Provider")));
             }
         }
 

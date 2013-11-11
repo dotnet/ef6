@@ -40,7 +40,7 @@
         <MSBuild Targets="Clean"
                  Projects="@(Projects)" />
         <MSBuild Targets="Clean"
-                 Projects="$(SolutionDir)\setup\dirs.proj" />
+                 Projects="$(SolutionDir)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj" />
     </Target>
 
     <Target Name="Scorch">
@@ -108,7 +108,7 @@
     <Target Name="Build" DependsOnTargets="CreateDirectories;CheckSkipStrongNames;RestorePackages;BuildDesigner;BuildInstaller" />
 
     <Target Name="Rebuild">
-        <MSBuild Projects="$(MSBuildProjectFile)" Properties="BuildTargets=Rebuild;Configuration=$(Configuration)" Targets="Build" />
+        <MSBuild Projects="$(MSBuildProjectFile)" Properties="BuildTargets=Rebuild;Configuration=$(Configuration)" Targets="Clean;Build" />
     </Target>
 
     <Target Name="InstallTestHost" DependsOnTargets="CreateDirectories">
@@ -120,7 +120,7 @@
         </PropertyGroup>
         <MSBuild Condition="'$(TestHostInstalled)'!='True'"
                  Targets="Clean;Build"
-                 Projects="$(SolutionDir)\tools\VsIdeHostAdapter\dirs.proj"
+                 Projects="$(SolutionDir)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj"
                  Properties="Configuration=$(Configuration)" />
         <Exec Condition="'$(TestHostInstalled)'!='True'"
               Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log'
@@ -144,7 +144,7 @@
 
     <Target Name="ReRunTests">
         <MSBuild Targets="$(BuildTargets)"
-                 Projects="$(MSBuildThisFileDirectory)test\EFTools\dirs.proj"
+                 Projects="$(MSBuildThisFileDirectory)\src\EFTools\Setup\EFToolsMsi\EFToolsMsi.wixproj"
                  Properties="Configuration=$(Configuration);BuildPackages=false" />
         <MSBuild Projects="$(SolutionDir)tools\EFTools.xunit.targets"
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />

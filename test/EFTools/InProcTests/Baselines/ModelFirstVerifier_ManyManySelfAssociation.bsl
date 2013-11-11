@@ -145,6 +145,7 @@ ADD CONSTRAINT [FK_EmployeeManagers_Manager]
     REFERENCES [dbo].[EmployeeSet]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_EmployeeManagers_Manager'
 CREATE INDEX [IX_FK_EmployeeManagers_Manager]

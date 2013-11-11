@@ -5,6 +5,7 @@ namespace System.Data.Entity
     using System.ComponentModel;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
@@ -378,6 +379,29 @@ namespace System.Data.Entity
 
             _internalConfiguration.CheckNotLocked("SetManifestTokenResolver");
             _internalConfiguration.RegisterSingleton(resolver);
+        }
+
+        /// <summary>
+        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        /// an implementation of <see cref="IMetadataAnnotationSerializer" /> which allows custom annotations
+        /// represented by <see cref="MetadataProperty"/> instances to be serialized to and from the EDMX XML.
+        /// </summary>
+        /// <remarks>
+        /// Note that an <see cref="IMetadataAnnotationSerializer" /> is not needed if the annotation uses a simple string value.
+        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        /// <see cref="IMetadataAnnotationSerializer" />. This means that, if desired, the same functionality can be achieved using
+        /// a custom resolver or a resolver backed by an Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="annotationName"> The name of custom annotation that will be handled by this serializer. </param>
+        /// <param name="serializer"> The serializer. </param>
+        protected internal void SetMetadataAnnotationSerializer(string annotationName, IMetadataAnnotationSerializer serializer)
+        {
+            Check.NotEmpty(annotationName, "annotationName");
+            Check.NotNull(serializer, "serializer");
+
+            _internalConfiguration.CheckNotLocked("SetMetadataAnnotationSerializer");
+            _internalConfiguration.RegisterSingleton(serializer, annotationName);
         }
 
         /// <summary>

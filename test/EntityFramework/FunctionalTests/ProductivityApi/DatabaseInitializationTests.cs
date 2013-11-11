@@ -1948,7 +1948,6 @@ namespace ProductivityApiTests
             }
         }
 
-
         public class ExistingDatabaseContext : BaseModelContext
         {
         }
@@ -1963,6 +1962,34 @@ namespace ProductivityApiTests
 
         public class DropCreateContext : BaseModelContext
         {
+        }
+
+        [Fact] // CodePlex 1769
+        public void Initializer_that_performs_queries_should_not_corrupt_context_state()
+        {
+            Database.SetInitializer(new QueryInitializerForSimpleModel());
+            using (var context = new SimpleModelWithQueryInitializer())
+            {
+                var set = context.Products;
+
+                context.Database.Initialize(force: false);
+
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+
+                Assert.Equal(0, context.Products.Count());
+            }
+        }
+
+        public class SimpleModelWithQueryInitializer : SimpleModelContext
+        {
+        }
+
+        public class QueryInitializerForSimpleModel : DropCreateDatabaseAlways<SimpleModelWithQueryInitializer>
+        {
+            protected override void Seed(SimpleModelWithQueryInitializer context)
+            {
+                Assert.Equal(0, context.Products.Count());
+            }
         }
     }
 }

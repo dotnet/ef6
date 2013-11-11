@@ -198,6 +198,7 @@ ADD CONSTRAINT [FK_DiscontinuedCategoryDiscontinuedProduct]
     REFERENCES [dbo].[DiscontinuedCategorySet]
         ([Id], [Name])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DiscontinuedCategoryDiscontinuedProduct'
 CREATE INDEX [IX_FK_DiscontinuedCategoryDiscontinuedProduct]

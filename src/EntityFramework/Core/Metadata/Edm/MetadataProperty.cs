@@ -176,7 +176,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <returns>
         /// The value of this <see cref="T:System.Data.Entity.Core.Metadata.Edm.PropertyKind" />.
         /// </returns>
-        public PropertyKind PropertyKind
+        public virtual PropertyKind PropertyKind
         {
             get { return _propertyKind; }
         }

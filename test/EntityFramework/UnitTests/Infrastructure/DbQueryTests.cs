@@ -103,7 +103,7 @@ namespace System.Data.Entity.Infrastructure
                 m => m.Expression);
             VerifyGetter(
                 q => ((IQueryable)q).Provider,
-                m => m.ObjectQueryProvider);
+                m => m.InternalContext);
         }
 
         [Fact]
@@ -124,9 +124,9 @@ namespace System.Data.Entity.Infrastructure
             nonGenericInternalQueryMock.Verify(m => m.GetEnumerator(), Times.Once());
         }
 
-        private void VerifyGetter<TProperty>(
+        private void VerifyGetter<TProperty, TInternalProperty>(
             Func<DbQuery<string>, TProperty> getterFunc,
-            Expression<Func<IInternalQuery<string>, TProperty>> mockGetterFunc)
+            Expression<Func<IInternalQuery<string>, TInternalProperty>> mockGetterFunc)
         {
             Assert.NotNull(getterFunc);
             Assert.NotNull(mockGetterFunc);

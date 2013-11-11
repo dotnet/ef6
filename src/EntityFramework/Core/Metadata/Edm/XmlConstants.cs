@@ -9,6 +9,10 @@ namespace System.Data.Entity.Core.Metadata.Edm
     // </summary>
     internal static class XmlConstants
     {
+        internal const string CustomAnnotationNamespace = "http://schemas.microsoft.com/ado/2013/11/edm/customannotation";
+        internal const string ClrTypeAnnotation = CustomAnnotationNamespace + ":ClrType";
+        internal const string UseClrTypesAnnotation = CustomAnnotationNamespace + ":UseClrTypes";
+
         // v3.5 of .net framework
         internal const string ModelNamespace_1 = "http://schemas.microsoft.com/ado/2006/04/edm";
         internal const string ModelNamespace_1_1 = "http://schemas.microsoft.com/ado/2007/05/edm";

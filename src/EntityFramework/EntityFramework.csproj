@@ -241,6 +241,7 @@
     <Compile Include="Infrastructure\CommitFailedException.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolver.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\ClrTypeAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CompositeResolver`.cs" />
     <Compile Include="Infrastructure\DependencyResolution\DatabaseInitializerResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\DbConfigurationLoadedEventArgs.cs" />
@@ -262,6 +263,7 @@
     <Compile Include="Infrastructure\DependencyResolution\RootDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\SingletonDependencyResolver.cs" />
     <Compile Include="Infrastructure\DependencyResolution\WrappingDependencyResolver`.cs" />
+    <Compile Include="Infrastructure\IMetadataAnnotationSerializer.cs" />
     <Compile Include="Infrastructure\Interception\CancelableDbCommandDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\DbCommandDispatcher.cs" />
     <Compile Include="Infrastructure\Interception\DbCommandInterceptionContext.cs" />

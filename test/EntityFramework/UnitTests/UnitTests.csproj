@@ -278,6 +278,7 @@
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderFactoryTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataRecordTests.cs" />
     <Compile Include="Core\Query\ResultAssembly\BridgeDataReaderTests.cs" />
+    <Compile Include="Core\SchemaObjectModel\SchemaElementTests.cs" />
     <Compile Include="DataAnnotations\Schema\ColumnAttributeTests.cs" />
     <Compile Include="DataAnnotations\MaxLengthAttributeTests.cs" />
     <Compile Include="DataAnnotations\MinLengthAttributeTests.cs" />
@@ -311,6 +312,7 @@
     <Compile Include="Infrastructure\DefaultManifestTokenResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\AppConfigDependencyResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CachingDependencyResolverTests.cs" />
+    <Compile Include="Infrastructure\DependencyResolution\ClrTypeAnnotationSerializerTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\CompositeResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\DatabaseInitializerResolverTests.cs" />
     <Compile Include="Infrastructure\DependencyResolution\DbConfigurationEventArgsTests.cs" />

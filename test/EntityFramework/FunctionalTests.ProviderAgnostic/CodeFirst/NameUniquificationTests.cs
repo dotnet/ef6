@@ -87,13 +87,13 @@ namespace System.Data.Entity.CodeFirst
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
-                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>().Replace("+Order2+", "+Order1+"));
             }
 
             [Fact]
             public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
             {
-                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>().Replace("+Order2+", "+Order1+"));
             }
         }
 
@@ -175,13 +175,13 @@ namespace System.Data.Entity.CodeFirst
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
-                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>().Replace("+Order2+", "+Order1+"));
             }
 
             [Fact]
             public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
             {
-                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>().Replace("+Order2+", "+Order1+"));
             }
         }
 
@@ -247,13 +247,13 @@ namespace System.Data.Entity.CodeFirst
             [Fact]
             public void Column_name_uniquification_is_deterministic()
             {
-                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>());
+                Assert.Equal(WriteEdmx<Order1.Context>(), WriteEdmx<Order2.Context>().Replace("+Order2+", "+Order1+"));
             }
 
             [Fact]
             public void Column_name_uniquification_is_not_deterministic_for_model_builder_version_lower_than_V6()
             {
-                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>());
+                Assert.NotEqual(WriteEdmx<Order1.ContextV5>(), WriteEdmx<Order2.ContextV5>().Replace("+Order2+", "+Order1+"));
             }
         }
 

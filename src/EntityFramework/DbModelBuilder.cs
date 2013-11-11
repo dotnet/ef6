@@ -387,6 +387,8 @@ namespace System.Data.Entity
                 modelBuilderClone);
             var modelAdapter = (IEdmModelAdapter)model;
 
+            modelAdapter.ConceptualModel.Container.AddAnnotation(XmlConstants.UseClrTypesAnnotation, "true");
+
             _conventionsConfiguration.ApplyModelConfiguration(_modelConfiguration);
 
             _modelConfiguration.NormalizeConfigurations();

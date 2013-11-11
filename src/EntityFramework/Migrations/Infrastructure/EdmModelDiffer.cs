@@ -159,17 +159,25 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var renamedModificationFunctions = FindRenamedModificationFunctions().ToList();
             var movedModificationFunctions = FindMovedModificationFunctions().ToList();
 
+            RemoveSymmetricTableOperations(addedTables, removedTables);
+            
             return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
                 .Concat(removedForeignKeys)
-                .Concat(removedForeignKeys.Select(fko => fko.CreateDropIndexOperation()))
+                .Concat(
+                    removedForeignKeys
+                        .Select(fko => fko.CreateDropIndexOperation())
+                        .Distinct(new DynamicEqualityComparer<DropIndexOperation>((i1, i2) => i1.Name.EqualsIgnoreCase(i2.Name))))
                 .Concat(orphanedColumns)
                 .Concat(HandleTransitiveRenameDependencies(renamedColumns))
                 .Concat(addedTables)
                 .Concat(addedColumns)
                 .Concat(alteredColumns)
                 .Concat(changedPrimaryKeys)
-                .Concat(addedForeignKeys.Select(fko => fko.CreateCreateIndexOperation()))
+                .Concat(
+                    addedForeignKeys
+                        .Select(fko => fko.CreateCreateIndexOperation())
+                        .Distinct(new DynamicEqualityComparer<CreateIndexOperation>((i1, i2) => i1.Name.EqualsIgnoreCase(i2.Name))))
                 .Concat(addedForeignKeys)
                 .Concat(removedColumns)
                 .Concat(removedTables)
@@ -179,6 +187,36 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Concat(changedModificationFunctions)
                 .Concat(removedModificationFunctions)
                 .ToList();
+        }
+
+        private static void RemoveSymmetricTableOperations(List<CreateTableOperation> addedTables, List<DropTableOperation> removedTables)
+        {
+            DebugCheck.NotNull(addedTables);
+            DebugCheck.NotNull(removedTables);
+
+            if (!addedTables.Any()
+                || !removedTables.Any())
+            {
+                return;
+            }
+
+            for (var i = addedTables.Count - 1; i >= 0; i--)
+            {
+                var createTableOperation = addedTables[i];
+
+                for (var j = removedTables.Count - 1; j >= 0; j--)
+                {
+                    var removeTableOperation = removedTables[j];
+
+                    if (createTableOperation.Name.EqualsIgnoreCase(removeTableOperation.Name))
+                    {
+                        addedTables.RemoveAt(i);
+                        removedTables.RemoveAt(j);
+
+                        break;
+                    }
+                }
+            }
         }
 
         private static IEnumerable<RenameTableOperation> HandleTransitiveRenameDependencies(
@@ -1354,21 +1392,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                  && rc.NewName.EqualsIgnoreCase(p2.NameAttribute()))
                    where (rc != null
                           || p1.NameAttribute().EqualsIgnoreCase(p2.NameAttribute()))
-                         && !DiffColumns(p1, p2, rc)
+                         && !DiffColumns(p1, p2)
                    select BuildAlterColumnOperation(t, p2, t2.NameAttribute(), _target, p1, t1.NameAttribute(), _source);
         }
 
-        private bool DiffColumns(XElement column1, XElement column2, RenameColumnOperation renameColumnOperation)
+        private bool DiffColumns(XElement column1, XElement column2)
         {
             DebugCheck.NotNull(column1);
             DebugCheck.NotNull(column2);
 
-            if (renameColumnOperation != null)
-            {
-                // normalize if column is being renamed
-                column1 = new XElement(column1);
-                column1.SetAttributeValue("Name", renameColumnOperation.NewName);
-            }
+            // normalize column names in case being renamed or different case
+            column1 = new XElement(column1);
+            column1.SetAttributeValue("Name", column2.NameAttribute());
 
             if (_consistentProviders)
             {
