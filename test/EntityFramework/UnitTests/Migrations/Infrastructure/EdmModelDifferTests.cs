@@ -25,6 +25,84 @@ namespace System.Data.Entity.Migrations.Infrastructure
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
     public class EdmModelDifferTests : DbTestCase
     {
+        public class RenameColumnEntity
+        {
+            public int Id { get; set; }
+            public string Title { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_column_name_case_change_as_alter_column()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<RenameColumnEntity>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder
+                .Entity<RenameColumnEntity>()
+                .Property(e => e.Title)
+                .HasColumnName("tITLE");
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel())
+                    .ToList();
+
+            Assert.Equal(0, operations.Count());
+        }
+
+        public class SwagBag
+        {
+            public int Id { get; set; }
+            public virtual Hat Hat { get; set; }
+            public virtual Bracelet Bracelet { get; set; }
+        }
+
+        public class Bracelet
+        {
+            public int Id { get; set; }
+            public virtual SwagBag SwagBag { get; set; }
+        }
+
+        public class Hat
+        {
+            public int Id { get; set; }
+            public virtual SwagBag SwagBag { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_product_duplicate_indexes_when_multiple_fks()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<SwagBag>()
+                .HasRequired(c => c.Hat)
+                .WithOptional(p => p.SwagBag);
+
+            modelBuilder.Entity<SwagBag>()
+                .HasRequired(c => c.Bracelet)
+                .WithOptional(l => l.SwagBag);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer()
+                    .Diff(model1.GetModel(), model2.GetModel())
+                    .ToList();
+
+            Assert.Equal(6, operations.Count());
+        }
+
         public class Fish
         {
             public int Id { get; set; }
