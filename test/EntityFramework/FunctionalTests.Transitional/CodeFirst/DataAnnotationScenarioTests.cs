@@ -13,7 +13,6 @@ namespace FunctionalTests
     using System.Linq;
     using System.Linq.Expressions;
     using FunctionalTests.Model;
-    using ProductivityApiTests;
     using SimpleModel;
     using Xunit;
     using Product = FunctionalTests.Model.Product;
@@ -1203,6 +1202,44 @@ namespace FunctionalTests
             public string Name { get; set; }
             public string Email { get; set; }
             public virtual Login User { get; set; }
+        }
+
+        [Fact]
+        public void InversePropertyAttribute_on_inhereted_property_from_unmapped_class_does_not_throw()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<ConcreteRecord>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            var association = databaseMapping.Model.AssociationTypes.Single();
+            Assert.Equal("ConcreteRecord", association.SourceEnd.GetEntityType().Name);
+            Assert.Equal(RelationshipMultiplicity.One, association.SourceEnd.RelationshipMultiplicity);
+            Assert.Equal("ConcreteRecord", association.TargetEnd.GetEntityType().Name);
+            Assert.Equal(RelationshipMultiplicity.Many, association.TargetEnd.RelationshipMultiplicity);
+            Assert.Equal("ConcreteRecord", association.Constraint.ToRole.GetEntityType().Name);
+            Assert.Equal("ConcreteRecord", association.Constraint.FromRole.GetEntityType().Name);
+        }
+
+        public abstract class AbstractRecord
+        {
+            [Key]
+            public long Id { get; set; }
+
+            public long MasterId { get; set; }
+
+            [ForeignKey("MasterId")]
+            public virtual ConcreteRecord Master { get; set; }
+
+            [InverseProperty("Master")]
+            public virtual ICollection<ConcreteRecord> Suggestions { get; set; }
+        }
+
+        public class ConcreteRecord : AbstractRecord
+        {
+            public string Foo { get; set; }
         }
 
         [Fact]

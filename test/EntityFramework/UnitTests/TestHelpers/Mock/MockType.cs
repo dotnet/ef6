@@ -32,6 +32,7 @@ namespace System.Data.Entity
             Setup(t => t.Equals(It.IsAny<object>())).Returns<Type>(t => ReferenceEquals(Object, t));
             Setup(t => t.ToString()).Returns(typeName);
             Setup(t => t.Namespace).Returns(@namespace);
+            Setup(t => t.IsAssignableFrom(this)).Returns(true);
 
             this.Protected()
                 .Setup<PropertyInfo>(
