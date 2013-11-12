@@ -147,6 +147,7 @@ namespace System.Data.Entity.TestDoubles
             mockSqlQuery.Verify(m => m.AsNoTracking(), Times.Once());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Moq_DbSet_can_be_used_for_SqlQuery_with_AsStreaming()
         {
@@ -164,6 +165,7 @@ namespace System.Data.Entity.TestDoubles
             mockSet.Verify(m => m.SqlQuery(query, parameters), Times.Once());
             mockSqlQuery.Verify(m => m.AsStreaming(), Times.Once());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void Moq_DbSet_can_be_used_for_Create()
@@ -335,6 +337,7 @@ namespace System.Data.Entity.TestDoubles
             mockSet.Verify(m => m.AsNoTracking(), Times.Once());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Moq_DbSet_can_be_used_for_query_with_AsStreaming_extension_method()
         {
@@ -364,6 +367,7 @@ namespace System.Data.Entity.TestDoubles
             Assert.Equal(new[] { 1, 2 }, results.Select(p => p.Id));
             mockSet.Verify(m => m.AsStreaming(), Times.Once());
         }
+#pragma warning restore 612, 618
 
 #if !NET40
         [Fact]

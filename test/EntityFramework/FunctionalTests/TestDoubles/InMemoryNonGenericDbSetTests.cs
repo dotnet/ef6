@@ -87,6 +87,7 @@ namespace System.Data.Entity.TestDoubles
                 CreateSetWithRawData().SqlQuery("not a real query", 4, 5).AsNoTracking().ToList<Product>().Select(p => p.Name).OrderBy(n => n));
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void In_memory_DbSet_can_be_used_for_SqlQuery_with_AsStreaming()
         {
@@ -94,6 +95,7 @@ namespace System.Data.Entity.TestDoubles
                 new[] { "Cheese", "Gromit", "Wallace" },
                 CreateSetWithRawData().SqlQuery("not a real query", 4, 5).AsStreaming().ToList<Product>().Select(p => p.Name).OrderBy(n => n));
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void In_memory_DbSet_can_be_used_for_Create()
@@ -227,6 +229,7 @@ namespace System.Data.Entity.TestDoubles
             Assert.Equal(new[] { "Cheese", "Wallace" }, results.Select(p => p.Name));
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void In_memory_DbSet_can_be_used_for_query_with_AsStreaming_extension_method()
         {
@@ -239,7 +242,9 @@ namespace System.Data.Entity.TestDoubles
 
             Assert.Equal(new[] { "Cheese", "Wallace" }, results.Select(p => p.Name));
         }
+#pragma warning restore 612, 618
 
+#pragma warning disable 612, 618
         [Fact]
         public void In_memory_DbSet_can_be_used_for_query_with_base_AsStreaming_method()
         {
@@ -251,6 +256,7 @@ namespace System.Data.Entity.TestDoubles
 
             Assert.Equal(new[] { "Cheese", "Wallace" }, results.Select(p => p.Name));
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void In_memory_DbSet_can_be_converted_to_generic_in_memory_DbDet()
@@ -367,6 +373,7 @@ namespace System.Data.Entity.TestDoubles
             Assert.Equal(new[] { "Cheese", "Wallace" }, results.Select(p => p.Name));
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void In_memory_DbSet_can_be_used_for_async_query_with_AsStreaming_extension_method()
         {
@@ -389,6 +396,7 @@ namespace System.Data.Entity.TestDoubles
 
             Assert.Equal(new[] { "Cheese", "Wallace" }, results.Select(p => p.Name));
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void In_memory_DbSet_can_be_used_for_async_SqlQuery()
@@ -417,6 +425,7 @@ namespace System.Data.Entity.TestDoubles
                     .OrderBy(n => n));
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void In_memory_DbSet_can_be_used_for_async_SqlQuery_with_AsStreaming()
         {
@@ -430,6 +439,7 @@ namespace System.Data.Entity.TestDoubles
                     .Select(p => p.Name)
                     .OrderBy(n => n));
         }
+#pragma warning restore 612, 618
 #endif
 
         private static InMemoryNonGenericDbSet<Product> CreateSetWithRawData()
