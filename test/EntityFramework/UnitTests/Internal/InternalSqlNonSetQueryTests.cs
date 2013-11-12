@@ -43,12 +43,12 @@ namespace System.Data.Entity.Internal
 
 #if !NET40
             VerifyMethod<string>(
-                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", streaming, parameters),
+                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync(typeof(string), "foo", streaming ? true : (bool?)null, parameters),
                 "foo", streaming, parameters);
 #endif
 
             VerifyMethod<string>(
-                e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", streaming, parameters),
+                e => e.GetEnumerator(), m => m.ExecuteSqlQuery(typeof(string), "foo", streaming ? true : (bool?)null, parameters),
                 "foo", streaming, parameters);
         }
 
@@ -61,7 +61,11 @@ namespace System.Data.Entity.Internal
             Assert.NotNull(mockMethodInvoke);
 
             var internalContextMock = new Mock<InternalContextForMock>();
-            var sqlSetQuery = new InternalSqlNonSetQuery(internalContextMock.Object, typeof(T), sql, streaming, parameters);
+            var sqlSetQuery = new InternalSqlNonSetQuery(internalContextMock.Object, typeof(T), sql, parameters);
+            if (streaming)
+            {
+                sqlSetQuery = (InternalSqlNonSetQuery)sqlSetQuery.AsStreaming();
+            }
 
             try
             {

@@ -368,7 +368,7 @@ namespace System.Data.Entity
             return new DbSqlQuery(
                 InternalSet == null
                     ? null
-                    : new InternalSqlSetQuery(InternalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters));
+                    : new InternalSqlSetQuery(InternalSet, sql, /*isNoTracking:*/ false, parameters));
         }
 
         #endregion

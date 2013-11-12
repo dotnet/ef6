@@ -23,9 +23,10 @@ namespace System.Data.Entity.Internal
         /// <param name="internalContext"> The internal context. </param>
         /// <param name="elementType"> Type of the element. </param>
         /// <param name="sql"> The SQL. </param>
-        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
-        internal InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, bool streaming, object[] parameters)
+        internal InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, object[] parameters) : this(internalContext, elementType, sql, /*streaming:*/ null, parameters) {}
+
+        private InternalSqlNonSetQuery(InternalContext internalContext, Type elementType, string sql, bool? streaming, object[] parameters)
             : base(sql, streaming, parameters)
         {
             DebugCheck.NotNull(internalContext);
@@ -55,7 +56,7 @@ namespace System.Data.Entity.Internal
         /// <inheritdoc />
         public override InternalSqlQuery AsStreaming()
         {
-            return Streaming
+            return Streaming.HasValue && Streaming.Value
                        ? this
                        : new InternalSqlNonSetQuery(_internalContext, _elementType, Sql, /*streaming:*/ true, Parameters);
         }

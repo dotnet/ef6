@@ -4,12 +4,15 @@ namespace ProductivityApiTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
     using System.Data.SqlClient;
     using System.Linq;
     using AdvancedPatternsModel;
+    using Moq;
     using SimpleModel;
     using Xunit;
     using Xunit.Extensions;
@@ -433,6 +436,50 @@ namespace ProductivityApiTests
             Assert.Equal("Cars", cadillac.CategoryId);
         }
 
+        [Fact]
+        public void SQL_query_for_entity_is_streaming_by_default()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Products.SqlQuery("select * from Products");
+                using (var enumerator = products.GetEnumerator())
+                {
+                    enumerator.MoveNext();
+
+                    Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+                }
+            }
+        }
+
+        [Fact]
+        public void SQL_query_for_entity_is_buffered_if_execution_strategy_is_used()
+        {
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<Product>>>()))
+                 .Returns<Func<ObjectResult<Product>>>(f => f());
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(f => f());
+
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+            try
+            {
+                using (var context = new SimpleModelContext())
+                {
+                    var products = context.Products.SqlQuery("select * from Products");
+                    using (var enumerator = products.GetEnumerator())
+                    {
+                        enumerator.MoveNext();
+
+                        Assert.Equal(ConnectionState.Closed, context.Database.Connection.State);
+                    }
+                }
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
         #endregion
 
         #region SQL queries for non-entities
@@ -779,6 +826,90 @@ namespace ProductivityApiTests
         }
 
 #endif
+
+        [Fact]
+        public void SQL_query_is_streaming_by_default()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Database.SqlQuery<int>("select Id from Products");
+                using (var enumerator = products.GetEnumerator())
+                {
+                    enumerator.MoveNext();
+
+                    Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+                }
+            }
+        }
+
+        [Fact]
+        public void SQL_query_is_buffered_if_execution_strategy_is_used()
+        {
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<int>>>()))
+                 .Returns<Func<ObjectResult<int>>>(f => f());
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(f => f());
+
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+            try
+            {
+                using (var context = new SimpleModelContext())
+                {
+                    var products = context.Database.SqlQuery<int>("select Id from Products");
+                    using (var enumerator = products.GetEnumerator())
+                    {
+                        enumerator.MoveNext();
+
+                        Assert.Equal(ConnectionState.Closed, context.Database.Connection.State);
+                    }
+                }
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [Fact]
+        public void Nongeneric_SQL_query_is_streaming_by_default()
+        {
+            using (var context = new SimpleModelContext())
+            {
+                var products = context.Database.SqlQuery(typeof(int), "select Id from Products");
+                var enumerator = products.GetEnumerator();
+                enumerator.MoveNext();
+
+                Assert.Equal(ConnectionState.Open, context.Database.Connection.State);
+            }
+        }
+
+        [Fact]
+        public void Nongeneric_SQL_query_is_buffered_if_execution_strategy_is_used()
+        {
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<int>>>()))
+                 .Returns<Func<ObjectResult<int>>>(f => f());
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Action>())).Callback<Action>(f => f());
+
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+            try
+            {
+                using (var context = new SimpleModelContext())
+                {
+                    var products = context.Database.SqlQuery(typeof(int), "select Id from Products");
+                    var enumerator = products.GetEnumerator();
+                    enumerator.MoveNext();
+
+                    Assert.Equal(ConnectionState.Closed, context.Database.Connection.State);
+                }
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
 
         #endregion
 

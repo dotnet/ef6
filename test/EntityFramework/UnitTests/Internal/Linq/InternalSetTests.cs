@@ -192,7 +192,7 @@ namespace System.Data.Entity.Internal.Linq
             var objectContextMock = Mock.Get(MockHelper.CreateMockObjectContext<string>());
             var internalSet = CreateInternalSet(objectContextMock, "foo");
 
-            Assert.False(internalSet.ObjectQuery.Streaming);
+            Assert.True(internalSet.ObjectQuery.Streaming);
             var streamingQuery = internalSet.AsStreaming();
             Assert.True(streamingQuery.ObjectQuery.Streaming);
         }

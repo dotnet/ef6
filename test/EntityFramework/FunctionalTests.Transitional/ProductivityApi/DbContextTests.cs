@@ -3419,13 +3419,14 @@ namespace ProductivityApiTests
                 var query = from p in context.Products
                             select p.Name;
 
-                query = query.AsStreaming();
-
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 IEnumerator<string> enumerator = query.GetEnumerator();
                 enumerator.MoveNext();
+
+                Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // close the underlying store connection without explicitly closing entityConnection
                 // (but entityConnection state is updated automatically)
@@ -3471,14 +3472,15 @@ namespace ProductivityApiTests
 
                 var query = from p in context.Products
                             select p.Name;
-
-                query = query.AsStreaming();
-
+                
                 Assert.Equal(ConnectionState.Closed, entityConnection.State); // entityConnection state
                 Assert.Equal(ConnectionState.Closed, entityConnection.StoreConnection.State); // underlying storeConnection state
 
                 IEnumerator<string> enumerator = query.GetEnumerator();
                 enumerator.MoveNext();
+
+                Assert.Equal(ConnectionState.Open, entityConnection.State);
+                Assert.Equal(ConnectionState.Open, entityConnection.StoreConnection.State);
 
                 // close the entity connection explicitly (i.e. not through context) in middle of query
                 entityConnection.Close();

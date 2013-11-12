@@ -7,6 +7,15 @@ namespace System.Data.Entity.Core.Objects
     public class ExecutionOptionsTests
     {
         [Fact]
+        public void Streaming_is_null_by_default()
+        {
+            var executionOptions = new ExecutionOptions(MergeOption.OverwriteChanges);
+
+            Assert.Equal(MergeOption.OverwriteChanges, executionOptions.MergeOption);
+            Assert.Null(executionOptions.UserSpecifiedStreaming);
+        }
+
+        [Fact]
         public void Equals_returns_correct_results()
         {
             TestEquals(

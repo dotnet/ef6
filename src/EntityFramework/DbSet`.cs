@@ -313,7 +313,7 @@ namespace System.Data.Entity
 
             return new DbSqlQuery<TEntity>(
                 _internalSet != null
-                    ? new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, /*streaming:*/ false, parameters)
+                    ? new InternalSqlSetQuery(_internalSet, sql, /*isNoTracking:*/ false, parameters)
                     : null);
         }
 

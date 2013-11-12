@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Objects.Internal
 {
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
@@ -105,10 +106,19 @@ namespace System.Data.Entity.Core.Objects.Internal
 
         internal bool EffectiveStreamingBehaviour
         {
-            get { return UserSpecifiedStreamingBehaviour ?? false; }
+            get { return UserSpecifiedStreamingBehaviour ?? DefaultStreamingBehaviour; }
         }
 
         internal bool? UserSpecifiedStreamingBehaviour { get; set; }
+
+        internal bool DefaultStreamingBehaviour
+        {
+            get
+            {
+                var executionStrategy = DbProviderServices.GetExecutionStrategy(ObjectContext.Connection, ObjectContext.MetadataWorkspace);
+                return !executionStrategy.RetriesOnFailure;
+            }
+        }
 
         /// <summary>
         /// Gets the element type - the type of each result item - for this query as a CLR type instance.

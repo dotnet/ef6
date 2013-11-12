@@ -7,7 +7,17 @@ namespace System.Data.Entity.Core.Objects
     /// </summary>
     public class ExecutionOptions
     {
-        internal static readonly ExecutionOptions Default = new ExecutionOptions(MergeOption.AppendOnly, false);
+        internal static readonly ExecutionOptions Default = new ExecutionOptions(MergeOption.AppendOnly);
+
+        /// <summary>
+        /// Creates a new instance of <see cref="ExecutionOptions" />.
+        /// </summary>
+        /// <param name="mergeOption"> Merge option to use for entity results. </param>
+        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
+        public ExecutionOptions(MergeOption mergeOption)
+        {
+            MergeOption = mergeOption;
+        }
 
         /// <summary>
         /// Creates a new instance of <see cref="ExecutionOptions" />.
@@ -17,7 +27,13 @@ namespace System.Data.Entity.Core.Objects
         public ExecutionOptions(MergeOption mergeOption, bool streaming)
         {
             MergeOption = mergeOption;
-            Streaming = streaming;
+            UserSpecifiedStreaming = streaming;
+        }
+
+        internal ExecutionOptions(MergeOption mergeOption, bool? streaming)
+        {
+            MergeOption = mergeOption;
+            UserSpecifiedStreaming = streaming;
         }
 
         /// <summary>
@@ -28,7 +44,9 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Whether the query is streaming or buffering.
         /// </summary>
-        public bool Streaming { get; private set; }
+        public bool Streaming { get { return UserSpecifiedStreaming ?? true; } }
+
+        internal bool? UserSpecifiedStreaming { get; private set; }
 
         /// <summary>Determines whether the specified objects are equal.</summary>
         /// <returns>true if the two objects are equal; otherwise, false.</returns>
@@ -70,13 +88,13 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return MergeOption == otherOptions.MergeOption &&
-                   Streaming == otherOptions.Streaming;
+                   UserSpecifiedStreaming == otherOptions.UserSpecifiedStreaming;
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return MergeOption.GetHashCode() ^ Streaming.GetHashCode();
+            return MergeOption.GetHashCode() ^ UserSpecifiedStreaming.GetHashCode();
         }
     }
 }

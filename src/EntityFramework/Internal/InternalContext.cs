@@ -67,15 +67,15 @@ namespace System.Data.Entity.Internal
                 "ExecuteSqlQueryAsIDbAsyncEnumerator", BindingFlags.Instance | BindingFlags.NonPublic);
 #endif
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IEnumerator>>
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool?, object[], IEnumerator>>
             _queryExecutors =
-                new ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IEnumerator>>();
+                new ConcurrentDictionary<Type, Func<InternalContext, string, bool?, object[], IEnumerator>>();
 
 #if !NET40
 
-        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IDbAsyncEnumerator>>
+        private static readonly ConcurrentDictionary<Type, Func<InternalContext, string, bool?, object[], IDbAsyncEnumerator>>
             _asyncQueryExecutors =
-                new ConcurrentDictionary<Type, Func<InternalContext, string, bool, object[], IDbAsyncEnumerator>>();
+                new ConcurrentDictionary<Type, Func<InternalContext, string, bool?, object[], IDbAsyncEnumerator>>();
 
 #endif
 
@@ -819,7 +819,7 @@ namespace System.Data.Entity.Internal
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
-        public virtual IEnumerator<TElement> ExecuteSqlQuery<TElement>(string sql, bool streaming, object[] parameters)
+        public virtual IEnumerator<TElement> ExecuteSqlQuery<TElement>(string sql, bool? streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -860,7 +860,7 @@ namespace System.Data.Entity.Internal
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> Task containing the query results. </returns>
-        public virtual IDbAsyncEnumerator<TElement> ExecuteSqlQueryAsync<TElement>(string sql, bool streaming, object[] parameters)
+        public virtual IDbAsyncEnumerator<TElement> ExecuteSqlQueryAsync<TElement>(string sql, bool? streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -904,19 +904,19 @@ namespace System.Data.Entity.Internal
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
-        public virtual IEnumerator ExecuteSqlQuery(Type elementType, string sql, bool streaming, object[] parameters)
+        public virtual IEnumerator ExecuteSqlQuery(Type elementType, string sql, bool? streaming, object[] parameters)
         {
             // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
             // forced to use MakeGenericMethod.  We compile this into a delegate so that we
             // only take the hit once.
-            Func<InternalContext, string, bool, object[], IEnumerator> executor;
+            Func<InternalContext, string, bool?, object[], IEnumerator> executor;
             if (!_queryExecutors.TryGetValue(elementType, out executor))
             {
                 var genericExecuteMethod = _executeSqlQueryAsIEnumeratorMethod.MakeGenericMethod(elementType);
                 executor =
-                    (Func<InternalContext, string, bool, object[], IEnumerator>)
+                    (Func<InternalContext, string, bool?, object[], IEnumerator>)
                     Delegate.CreateDelegate(
-                        typeof(Func<InternalContext, string, bool, object[], IEnumerator>), genericExecuteMethod);
+                        typeof(Func<InternalContext, string, bool?, object[], IEnumerator>), genericExecuteMethod);
                 _queryExecutors.TryAdd(elementType, executor);
             }
             return executor(this, sql, streaming, parameters);
@@ -926,7 +926,7 @@ namespace System.Data.Entity.Internal
         /// Calls the generic ExecuteSqlQuery but with a non-generic return type so that it
         /// has the correct signature to be used with CreateDelegate above.
         /// </summary>
-        private IEnumerator ExecuteSqlQueryAsIEnumerator<TElement>(string sql, bool streaming, object[] parameters)
+        private IEnumerator ExecuteSqlQueryAsIEnumerator<TElement>(string sql, bool? streaming, object[] parameters)
         {
             return ExecuteSqlQuery<TElement>(sql, streaming, parameters);
         }
@@ -942,19 +942,19 @@ namespace System.Data.Entity.Internal
         /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         /// <param name="parameters"> The parameters. </param>
         /// <returns> The query results. </returns>
-        public virtual IDbAsyncEnumerator ExecuteSqlQueryAsync(Type elementType, string sql, bool streaming, object[] parameters)
+        public virtual IDbAsyncEnumerator ExecuteSqlQueryAsync(Type elementType, string sql, bool? streaming, object[] parameters)
         {
             // There is no non-generic ExecuteStoreQuery method on ObjectContext so we are
             // forced to use MakeGenericMethod.  We compile this into a delegate so that we
             // only take the hit once.
-            Func<InternalContext, string, bool, object[], IDbAsyncEnumerator> executor;
+            Func<InternalContext, string, bool?, object[], IDbAsyncEnumerator> executor;
             if (!_asyncQueryExecutors.TryGetValue(elementType, out executor))
             {
                 var genericExecuteMethod = _executeSqlQueryAsIDbAsyncEnumeratorMethod.MakeGenericMethod(elementType);
                 executor =
-                    (Func<InternalContext, string, bool, object[], IDbAsyncEnumerator>)
+                    (Func<InternalContext, string, bool?, object[], IDbAsyncEnumerator>)
                     Delegate.CreateDelegate(
-                        typeof(Func<InternalContext, string, bool, object[], IDbAsyncEnumerator>), genericExecuteMethod);
+                        typeof(Func<InternalContext, string, bool?, object[], IDbAsyncEnumerator>), genericExecuteMethod);
                 _asyncQueryExecutors.TryAdd(elementType, executor);
             }
             return executor(this, sql, streaming, parameters);
@@ -964,7 +964,7 @@ namespace System.Data.Entity.Internal
         /// Calls the generic ExecuteSqlQueryAsync but with an object return type so that it
         /// has the correct signature to be used with CreateDelegate above.
         /// </summary>
-        private IDbAsyncEnumerator ExecuteSqlQueryAsIDbAsyncEnumerator<TElement>(string sql, bool streaming, object[] parameters)
+        private IDbAsyncEnumerator ExecuteSqlQueryAsIDbAsyncEnumerator<TElement>(string sql, bool? streaming, object[] parameters)
         {
             return ExecuteSqlQueryAsync<TElement>(sql, streaming, parameters);
         }

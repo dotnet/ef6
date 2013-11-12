@@ -285,7 +285,7 @@ namespace System.Data.Entity
                 var newQuery = query.AsStreaming();
 
                 Assert.NotSame(query, newQuery);
-                Assert.False(query.Streaming);
+                Assert.True(query.Streaming);
                 Assert.True(((ObjectQuery<object>)newQuery).Streaming);
             }
 
@@ -393,7 +393,7 @@ namespace System.Data.Entity
                 var newQuery = query.AsStreaming();
 
                 Assert.NotSame(query, newQuery);
-                Assert.False(query.Streaming);
+                Assert.True(query.Streaming);
                 Assert.True(((ObjectQuery)newQuery).Streaming);
             }
 

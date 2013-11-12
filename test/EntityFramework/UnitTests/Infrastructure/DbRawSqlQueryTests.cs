@@ -52,7 +52,7 @@ namespace System.Data.Entity.Infrastructure
                 var query =
                     new DbRawSqlQuery(
                         MockHelper.CreateInternalSqlSetQuery(
-                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
+                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, 4, "Beverages"));
 
                 Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
             }
@@ -71,7 +71,7 @@ namespace System.Data.Entity.Infrastructure
                 var query =
                     new DbRawSqlQuery<FakeEntity>(
                         MockHelper.CreateInternalSqlSetQuery(
-                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, false, 4, "Beverages"));
+                            "select * from Products where Id < {0} and CategoryId = '{1}'", false, 4, "Beverages"));
 
                 Assert.Equal("select * from Products where Id < {0} and CategoryId = '{1}'", query.ToString());
             }
@@ -82,27 +82,27 @@ namespace System.Data.Entity.Infrastructure
             [Fact]
             public void Generic_DbSqlQuery_AsStreaming_returns_new_object_with_streamin_flag_set()
             {
-                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
+                var query = new DbRawSqlQuery<FakeEntity>(MockHelper.CreateInternalSqlSetQuery("query", false, 1, 2));
                 DynamicAsStreamingTest(query);
             }
 
             [Fact]
             public void Non_generic_DbSqlQuery_AsStreaming_returns_new_object_with_streamin_flag_set()
             {
-                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, false, 1, 2));
+                var query = new DbRawSqlQuery(MockHelper.CreateInternalSqlSetQuery("query", false, 1, 2));
                 DynamicAsStreamingTest(query);
             }
 
             private void DynamicAsStreamingTest(dynamic query)
             {
-                Assert.False(((InternalSqlSetQuery)query.InternalQuery).Streaming);
+                Assert.Null(((InternalSqlSetQuery)query.InternalQuery).Streaming);
 
                 var streamingQuery = query.AsStreaming();
 
                 Assert.NotSame(query, streamingQuery);
 
                 var internalQuery = (InternalSqlSetQuery)streamingQuery.InternalQuery;
-                Assert.True(internalQuery.Streaming);
+                Assert.True(internalQuery.Streaming.Value);
 
                 Assert.Equal("query", internalQuery.Sql);
                 Assert.Equal(2, internalQuery.Parameters.Length);

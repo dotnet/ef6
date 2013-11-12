@@ -28,7 +28,7 @@ namespace ProductivityApiTests
                 foreach (var winner in winners)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -55,7 +55,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers)
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(42, count);
@@ -82,7 +82,7 @@ namespace ProductivityApiTests
                 foreach (var winner in winners)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -110,7 +110,7 @@ namespace ProductivityApiTests
                 foreach (var winner in query)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -137,7 +137,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers)
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(42, count);
@@ -165,7 +165,7 @@ namespace ProductivityApiTests
                 foreach (var winner in query)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -192,7 +192,7 @@ namespace ProductivityApiTests
                 foreach (var winner in winners)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -219,7 +219,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers)
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(42, count);
@@ -246,7 +246,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers.Where(d => d.Wins > 20))
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -277,7 +277,7 @@ namespace ProductivityApiTests
                 foreach (var winner in winners)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -304,7 +304,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers)
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(42, count);
@@ -331,7 +331,7 @@ namespace ProductivityApiTests
                 foreach (var winner in winners)
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);
@@ -358,7 +358,7 @@ namespace ProductivityApiTests
                 foreach (var driver in drivers)
                 {
                     Assert.NotNull(driver);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(42, count);
@@ -385,7 +385,7 @@ namespace ProductivityApiTests
                 foreach (var winner in drivers.Where(d => d.Wins > 20))
                 {
                     Assert.NotNull(winner);
-                    Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                    Assert.True(context.Database.Connection.State == ConnectionState.Open);
                     count++;
                 }
                 Assert.Equal(2, count);

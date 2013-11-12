@@ -315,7 +315,7 @@ namespace System.Data.Entity
                 var query = database.SqlQuery<Random>("query");
 
                 Assert.NotNull(query);
-                Assert.False(query.InternalQuery.Streaming);
+                Assert.Null(query.InternalQuery.Streaming);
             }
         }
 
@@ -379,7 +379,7 @@ namespace System.Data.Entity
                 var query = database.SqlQuery(typeof(Random), "query");
 
                 Assert.NotNull(query);
-                Assert.False(query.InternalQuery.Streaming);
+                Assert.Null(query.InternalQuery.Streaming);
             }
         }
 
