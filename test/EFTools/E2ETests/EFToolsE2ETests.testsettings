@@ -2,7 +2,6 @@
 <TestSettings name="EFToolsE2ETestsTestsettings" id="5af8bf31-f38c-4416-92ce-7a5cc3931478" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="test\EFTools\InProcTests\TestData\" outputDirectory="TestData\" />
   </Deployment>
   <Execution>
     <!-- VsIdeHostRunConfigData causes warnings and is not used, retaining in case it becomes needed again -->

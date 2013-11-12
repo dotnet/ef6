@@ -27,6 +27,7 @@
         <Projects Include="$(SolutionDir)src\EFTools\EntityDesignPackage\EntityDesignPackage.csproj" />
         <Projects Include="$(SolutionDir)src\EFTools\EntityDesignerVersioningFacade\EntityDesignerVersioningFacade.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\InProcTests\InProcTests.csproj" />
+        <Projects Include="$(SolutionDir)test\EFTools\E2ETests\E2ETests.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\FunctionalTests\FunctionalTests.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\TestInfrastructure\TestInfrastructure.csproj" />
         <Projects Include="$(SolutionDir)test\EFTools\UnitTests\UnitTests.csproj" />
@@ -150,9 +151,9 @@
                  Properties="Configuration=$(Configuration);$(BuildProperties)" />
         <Exec Command='"$(VSTest)" EFDesigner.InProcTests.dll /Settings:..\..\EFDesignerInProcTests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\InProcTests\bin\$(Configuration)\"/>
-        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
+        <Exec Condition="'$(TestCaseFilter)'!=''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx /TestCaseFilter:$(TestCaseFilter)'
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
-	<Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFDesignerE2ETests.testsettings /InIsolation /logger:trx'
+	<Exec Condition="'$(TestCaseFilter)'==''" Command='"$(VSTest)" EFDesigner.E2ETests.dll /Settings:..\..\EFToolsE2ETests.testsettings /InIsolation /logger:trx'
               WorkingDirectory="$(SolutionDir)test\EFTools\E2ETests\bin\$(Configuration)\"/>
     </Target>
 </Project>
