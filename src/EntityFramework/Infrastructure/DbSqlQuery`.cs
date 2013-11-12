@@ -58,6 +58,7 @@ namespace System.Data.Entity.Infrastructure
         /// Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
+        [Obsolete("The queries are now streaming by default")]
         public new virtual DbSqlQuery<TEntity> AsStreaming()
         {
             return InternalQuery == null ? this : new DbSqlQuery<TEntity>(InternalQuery.AsStreaming());

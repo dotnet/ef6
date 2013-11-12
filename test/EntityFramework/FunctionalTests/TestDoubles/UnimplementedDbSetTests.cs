@@ -80,6 +80,7 @@ namespace System.Data.Entity.TestDoubles
                 .ValidateMessage("TestDoubleNotImplemented", "GetEnumerator", typeof(DbSqlQuery<Product>).Name, typeof(DbSqlQuery<>).Name);
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Getting_results_from_SqlQuery_with_AsStreaming_throws_for_unimplemented_DbSet()
         {
@@ -87,6 +88,7 @@ namespace System.Data.Entity.TestDoubles
                 () => new UnimplementedDbSet<Product>().SqlQuery("not a real query").AsStreaming().ToList())
                 .ValidateMessage("TestDoubleNotImplemented", "GetEnumerator", typeof(DbSqlQuery<Product>).Name, typeof(DbSqlQuery<>).Name);
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void Getting_results_from_SqlQuery_with_NoTracking_throws_for_unimplemented_DbSet()
@@ -171,6 +173,7 @@ namespace System.Data.Entity.TestDoubles
             Assert.Same(set, set.AsNoTracking());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Actual_AsStreaming_method_is_noop_for_unimplemented_DbSet()
         {
@@ -191,6 +194,7 @@ namespace System.Data.Entity.TestDoubles
             var query = new UnimplementedDbSet<Product>().SqlQuery("not a real query");
             Assert.Same(query, query.AsStreaming());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void AsNoTracking_is_noop_for_unimplemented_DbSqlQuery()

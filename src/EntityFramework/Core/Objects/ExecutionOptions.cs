@@ -44,6 +44,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Whether the query is streaming or buffering.
         /// </summary>
+        [Obsolete("The queries are now streaming by default")]
         public bool Streaming { get { return UserSpecifiedStreaming ?? true; } }
 
         internal bool? UserSpecifiedStreaming { get; private set; }

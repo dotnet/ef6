@@ -268,6 +268,7 @@ namespace System.Data.Entity
             }
         }
 
+#pragma warning disable 612, 618
         public class AsStreaming_Generic
         {
             [Fact]
@@ -484,6 +485,7 @@ namespace System.Data.Entity
                 Assert.Same(source, afterAsStreaming);
             }
         }
+#pragma warning restore 612, 618
 
         public class Include_Generic
         {

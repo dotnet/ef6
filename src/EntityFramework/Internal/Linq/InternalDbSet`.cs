@@ -86,6 +86,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <inheritdoc />
+        [Obsolete("The queries are now streaming by default")]
         public override DbQuery AsStreaming()
         {
             return new InternalDbQuery<TEntity>(_internalSet.AsStreaming());

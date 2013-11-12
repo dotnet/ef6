@@ -198,12 +198,14 @@ namespace ProductivityApiTests
                 (c, s) => c.Products.SqlQuery(s).AsNoTracking().ToList());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Products.SqlQuery(s).AsStreaming().AsNoTracking().ToList());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
@@ -212,12 +214,14 @@ namespace ProductivityApiTests
                 (c, s) => c.Database.SqlQuery<Product>(s).ToList());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Database.SqlQuery<Product>(s).AsStreaming().ToList());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking()
@@ -226,12 +230,14 @@ namespace ProductivityApiTests
                 (c, s) => c.Set(typeof(Product)).SqlQuery(s).AsNoTracking().ToList<Product>());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Non_generic_SQL_query_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Set(typeof(Product)).SqlQuery(s).AsStreaming().AsNoTracking().ToList<Product>());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void
@@ -241,6 +247,7 @@ namespace ProductivityApiTests
                 (c, s) => c.Database.SqlQuery(typeof(Product), s).ToList<Product>());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void
             Non_generic_SQL_query_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
@@ -248,6 +255,7 @@ namespace ProductivityApiTests
             SQL_query_can_be_used_to_materialize_entities_without_tracking(
                 (c, s) => c.Database.SqlQuery(typeof(Product), s).AsStreaming().ToList<Product>());
         }
+#pragma warning restore 612, 618
 
         private void SQL_query_can_be_used_to_materialize_entities_without_tracking(
             Func<SimpleModelContext, string, List<Product>> query)
@@ -271,12 +279,14 @@ namespace ProductivityApiTests
                 (c, s, p) => c.Products.SqlQuery(s, p).AsNoTracking().ToList());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Products.SqlQuery(s, p).AsStreaming().AsNoTracking().ToList());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void
@@ -286,6 +296,7 @@ namespace ProductivityApiTests
                 (c, s, p) => c.Database.SqlQuery<Product>(s, p).ToList());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
@@ -293,6 +304,7 @@ namespace ProductivityApiTests
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Database.SqlQuery<Product>(s, p).AsStreaming().ToList());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking()
@@ -301,12 +313,14 @@ namespace ProductivityApiTests
                 (c, s, p) => c.Set(typeof(Product)).SqlQuery(s, p).AsNoTracking().ToList<Product>());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_with_AsNoTracking_and_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Set(typeof(Product)).SqlQuery(s, p).AsStreaming().AsNoTracking().ToList<Product>());
         }
+#pragma warning restore 612, 618
 
         [Fact]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery()
@@ -315,12 +329,14 @@ namespace ProductivityApiTests
                 (c, s, p) => c.Database.SqlQuery(typeof(Product), s, p).ToList<Product>());
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void Non_generic_SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking_by_using_Database_SqlQuery_with_AsStreaming()
         {
             SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
                 (c, s, p) => c.Database.SqlQuery(typeof(Product), s, p).AsStreaming().ToList<Product>());
         }
+#pragma warning restore 612, 618
 
         private void SQL_query_with_parameters_can_be_used_to_materialize_entities_without_tracking(
             Func<SimpleModelContext, string, object[], List<Product>> query)
@@ -598,6 +614,7 @@ namespace ProductivityApiTests
             }
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming()
         {
@@ -610,6 +627,7 @@ namespace ProductivityApiTests
                     "System.Int32");
             }
         }
+#pragma warning restore 612, 618
 
 #if !NET40
 
@@ -629,6 +647,7 @@ namespace ProductivityApiTests
             }
         }
 
+#pragma warning disable 612, 618
         [Fact]
         public void SQL_query_for_non_entity_where_columns_dont_map_throws_when_streaming_async()
         {
@@ -644,6 +663,7 @@ namespace ProductivityApiTests
                             "System.Int32");
             }
         }
+#pragma warning restore 612, 618
 
 #endif
 

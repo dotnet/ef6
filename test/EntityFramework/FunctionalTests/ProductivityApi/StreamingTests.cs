@@ -10,6 +10,7 @@ namespace ProductivityApiTests
     using ConcurrencyModel;
     using Xunit;
 
+#pragma warning disable 612, 618
     /// <summary>
     /// Tests for the AsStreaming extension methods on IQueryable.
     /// </summary>
@@ -408,4 +409,5 @@ namespace ProductivityApiTests
 
         #endregion
     }
+#pragma warning restore 612, 618
 }
