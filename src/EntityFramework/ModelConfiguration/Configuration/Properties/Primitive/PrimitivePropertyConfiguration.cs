@@ -22,6 +22,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     // </summary>
     internal class PrimitivePropertyConfiguration : PropertyConfiguration
     {
+        private readonly IDictionary<string, object> _annotations = new Dictionary<string, object>();
+
         // <summary>
         // Initializes a new instance of the PrimitivePropertyConfiguration class.
         // </summary>
@@ -49,6 +51,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             ParameterName = source.ParameterName;
             ColumnOrder = source.ColumnOrder;
             OverridableConfigurationParts = source.OverridableConfigurationParts;
+
+            foreach (var annotation in source._annotations)
+            {
+                _annotations.Add(annotation);
+            }
         }
 
         internal virtual PrimitivePropertyConfiguration Clone()
@@ -81,6 +88,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         // Gets or sets the name of the database column used to store the property.
         // </summary>
         public string ColumnName { get; set; }
+
+        public IDictionary<string, object> Annotations
+        {
+            get { return _annotations; }
+        }
+
+        public virtual void SetAnnotation(string name, object value)
+        {
+            // Technically we could accept some names that are invalid in EDM, but this is not too restrictive
+            // and is an easy way of ensuring that name is valid all places we want to use it--i.e. in the XML
+            // and in the MetadataWorkspace.
+            if (!name.IsValidUndottedName())
+            {
+                throw new ArgumentException(Strings.BadAnnotationName(name));
+            }
+
+            _annotations[name] = value;
+        }
 
         // <summary>Gets or sets the name of the parameter used in stored procedures for this property.</summary>
         // <returns>The name of the parameter used in stored procedures for this property.</returns>
@@ -267,6 +292,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
             ConfigureColumnName(column, table);
 
+            ConfigureAnnotations(column);
+
             if (!string.IsNullOrWhiteSpace(ColumnType))
             {
                 column.PrimitiveType = providerManifest.GetStoreTypeFromName(ColumnType);
@@ -325,6 +352,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                     });
         }
 
+        private void ConfigureAnnotations(EdmProperty column)
+        {
+            foreach (var annotation in _annotations)
+            {
+                column.AddAnnotation(XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key, annotation.Value);
+            }
+        }
+
         internal virtual void Configure(EdmProperty column, FacetDescription facetDescription)
         {
             DebugCheck.NotNull(column);
@@ -333,6 +368,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
         internal virtual void CopyFrom(PrimitivePropertyConfiguration other)
         {
+            if (ReferenceEquals(this, other))
+            {
+                return;
+            }
+
             ColumnName = other.ColumnName;
             ParameterName = other.ParameterName;
             ColumnOrder = other.ColumnOrder;
@@ -341,38 +381,62 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             DatabaseGeneratedOption = other.DatabaseGeneratedOption;
             IsNullable = other.IsNullable;
             OverridableConfigurationParts = other.OverridableConfigurationParts;
+
+            foreach (var annotation in other._annotations)
+            {
+                _annotations[annotation.Key] = annotation.Value;
+            }
         }
 
         internal virtual void FillFrom(PrimitivePropertyConfiguration other, bool inCSpace)
         {
-            if (ColumnName == null
-                && !inCSpace)
+
+            if (ReferenceEquals(this, other))
             {
-                ColumnName = other.ColumnName;
+                return;
             }
-            if (ParameterName == null
-                && !inCSpace)
+
+            if (!inCSpace)
             {
-                ParameterName = other.ParameterName;
+                if (ColumnName == null)
+                {
+                    ColumnName = other.ColumnName;
+                }
+
+                if (ParameterName == null)
+                {
+                    ParameterName = other.ParameterName;
+                }
+
+                if (ColumnOrder == null)
+                {
+                    ColumnOrder = other.ColumnOrder;
+                }
+
+                if (ColumnType == null)
+                {
+                    ColumnType = other.ColumnType;
+                }
+
+                foreach (var annotation in other._annotations)
+                {
+                    if (!_annotations.ContainsKey(annotation.Key))
+                    {
+                        _annotations[annotation.Key] = annotation.Value;
+                    }
+                }
             }
-            if (ColumnOrder == null
-                && !inCSpace)
-            {
-                ColumnOrder = other.ColumnOrder;
-            }
-            if (ColumnType == null
-                && !inCSpace)
-            {
-                ColumnType = other.ColumnType;
-            }
+            
             if (ConcurrencyMode == null)
             {
                 ConcurrencyMode = other.ConcurrencyMode;
             }
+            
             if (DatabaseGeneratedOption == null)
             {
                 DatabaseGeneratedOption = other.DatabaseGeneratedOption;
             }
+            
             if (IsNullable == null && inCSpace)
             {
                 IsNullable = other.IsNullable;
@@ -385,6 +449,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
         {
             DebugCheck.NotNull(other);
 
+            if (ReferenceEquals(this, other))
+            {
+                return;
+            }
+
             if (other.ColumnName != null) ColumnName = null;
             if (other.ParameterName != null) ParameterName = null;
             if (other.ColumnOrder != null) ColumnOrder = null;
@@ -392,27 +461,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             if (other.ConcurrencyMode != null) ConcurrencyMode = null;
             if (other.DatabaseGeneratedOption != null) DatabaseGeneratedOption = null;
             if (other.IsNullable != null) IsNullable = null;
+
+            foreach (var annotationName in other._annotations.Keys)
+            {
+                if (_annotations.ContainsKey(annotationName))
+                {
+                    _annotations.Remove(annotationName);
+                }
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", MessageId = "2#")]
         internal virtual bool IsCompatible(PrimitivePropertyConfiguration other, bool inCSpace, out string errorMessage)
         {
             errorMessage = string.Empty;
-            if (other == null)
+            if (other == null || ReferenceEquals(this, other))
             {
                 return true;
             }
 
             var isNullableIsCompatible = !inCSpace || IsCompatible(c => c.IsNullable, other, ref errorMessage);
             var concurrencyModeIsCompatible = !inCSpace || IsCompatible(c => c.ConcurrencyMode, other, ref errorMessage);
-            var databaseGeneratedOptionIsCompatible = !inCSpace
-                                                      ||
-                                                      IsCompatible(
-                                                          c => c.DatabaseGeneratedOption, other, ref errorMessage);
+            var databaseGeneratedOptionIsCompatible = !inCSpace || IsCompatible(c => c.DatabaseGeneratedOption, other, ref errorMessage);
             var columnNameIsCompatible = inCSpace || IsCompatible(c => c.ColumnName, other, ref errorMessage);
             var parameterNameIsCompatible = inCSpace || IsCompatible(c => c.ParameterName, other, ref errorMessage);
             var columnOrderIsCompatible = inCSpace || IsCompatible(c => c.ColumnOrder, other, ref errorMessage);
             var columnTypeIsCompatible = inCSpace || IsCompatible(c => c.ColumnType, other, ref errorMessage);
+            var annotationsAreCompatible = inCSpace || AnnotationsAreCompatible(other, ref errorMessage);
 
             return isNullableIsCompatible &&
                    concurrencyModeIsCompatible &&
@@ -420,7 +495,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                    columnNameIsCompatible &&
                    parameterNameIsCompatible &&
                    columnOrderIsCompatible &&
-                   columnTypeIsCompatible;
+                   columnTypeIsCompatible &&
+                   annotationsAreCompatible;
+        }
+
+        private bool AnnotationsAreCompatible(PrimitivePropertyConfiguration other, ref string errorMessage)
+        {
+            var annotationsAreCompatible = true;
+
+            foreach (var annotation in Annotations)
+            {
+                if (other.Annotations.ContainsKey(annotation.Key))
+                {
+                    var otherValue = other.Annotations[annotation.Key];
+                    if (!Equals(annotation.Value, otherValue))
+                    {
+                        annotationsAreCompatible = false;
+
+                        errorMessage += Environment.NewLine + "\t" +
+                                        Strings.ConflictingAnnotationValue(
+                                            annotation.Key, annotation.Value.ToString(), otherValue.ToString());
+                    }
+                }
+            }
+            return annotationsAreCompatible;
         }
 
         // <summary>Gets a value that indicates whether the provided model is compatible with the current model provider.</summary>

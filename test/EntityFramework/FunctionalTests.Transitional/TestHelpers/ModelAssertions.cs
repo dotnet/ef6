@@ -257,6 +257,25 @@ namespace System.Data.Entity
 
                 return this;
             }
+
+            public ColumnAssertions HasAnnotation(string name, object value)
+            {
+                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+
+                Xunit.Assert.Equal(1, _column.Annotations.Count(a => a.Name == qualifiedName));
+                Xunit.Assert.Equal(value, _column.Annotations.Single(a => a.Name == qualifiedName).Value);
+
+                return this;
+            }
+
+            public ColumnAssertions HasNoAnnotation(string name)
+            {
+                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+
+                Xunit.Assert.Equal(0, _column.Annotations.Count(a => a.Name == qualifiedName));
+
+                return this;
+            }
         }
 
         internal class PropertyAssertions

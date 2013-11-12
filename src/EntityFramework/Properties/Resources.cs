@@ -415,6 +415,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Custom annotation '{0}' = '{1}' conflicts with custom annotation '{0}' = '{2}'"
+        // </summary>
+        internal static string ConflictingAnnotationValue(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingAnnotationValue, p0, p1, p2);
+        }
+
+        // <summary>
         // A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject."
         // </summary>
         internal static string CodeFirstInvalidComplexType(object p0)
@@ -732,6 +740,22 @@ namespace System.Data.Entity.Resources
         internal static string IncorrectColumnCount(object p0)
         {
             return EntityRes.GetString(EntityRes.IncorrectColumnCount, p0);
+        }
+
+        // <summary>
+        // A string like "The foreign key column name '{0}' specified for the '{1}' annotation is not valid. The column name to annotate must match a column name set using the MapKey method."
+        // </summary>
+        internal static string BadKeyNameForAnnotation(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.BadKeyNameForAnnotation, p0, p1);
+        }
+
+        // <summary>
+        // A string like "The annotation name '{0}' is not valid. Annotation names have the same restrictions as C# and EDM identifiers."
+        // </summary>
+        internal static string BadAnnotationName(object p0)
+        {
+            return EntityRes.GetString(EntityRes.BadAnnotationName, p0);
         }
 
         // <summary>
@@ -15424,6 +15448,7 @@ namespace System.Data.Entity.Resources
         internal const string ConflictingPropertyConfiguration = "ConflictingPropertyConfiguration";
         internal const string ConflictingColumnConfiguration = "ConflictingColumnConfiguration";
         internal const string ConflictingConfigurationValue = "ConflictingConfigurationValue";
+        internal const string ConflictingAnnotationValue = "ConflictingAnnotationValue";
         internal const string CodeFirstInvalidComplexType = "CodeFirstInvalidComplexType";
         internal const string InvalidEntityType = "InvalidEntityType";
         internal const string SimpleNameCollision = "SimpleNameCollision";
@@ -15464,6 +15489,8 @@ namespace System.Data.Entity.Resources
         internal const string ModelBuilder_KeyPropertiesMustBePrimitive = "ModelBuilder_KeyPropertiesMustBePrimitive";
         internal const string TableNotFound = "TableNotFound";
         internal const string IncorrectColumnCount = "IncorrectColumnCount";
+        internal const string BadKeyNameForAnnotation = "BadKeyNameForAnnotation";
+        internal const string BadAnnotationName = "BadAnnotationName";
         internal const string CircularComplexTypeHierarchy = "CircularComplexTypeHierarchy";
         internal const string UnableToDeterminePrincipal = "UnableToDeterminePrincipal";
         internal const string UnmappedAbstractType = "UnmappedAbstractType";

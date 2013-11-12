@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -20,6 +21,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     public sealed class ForeignKeyAssociationMappingConfiguration : AssociationMappingConfiguration
     {
         private readonly List<string> _keyColumnNames = new List<string>();
+        private readonly IDictionary<Tuple<string, string>, object> _annotations = new Dictionary<Tuple<string, string>, object>();
 
         private DatabaseName _tableName;
 
@@ -33,6 +35,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             _keyColumnNames.AddRange(source._keyColumnNames);
             _tableName = source._tableName;
+
+            foreach (var annotation in source._annotations)
+            {
+                _annotations.Add(annotation);
+            }
         }
 
         internal override AssociationMappingConfiguration Clone()
@@ -51,6 +58,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             _keyColumnNames.Clear();
             _keyColumnNames.AddRange(keyColumnNames);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an annotation in the model for a database column that has been configured with <see cref="MapKey"/>.
+        /// The annotation value can later be used when processing the column such as when creating migrations.
+        /// </summary>
+        /// <remarks>
+        /// It will likely be necessary to register a <see cref="IMetadataAnnotationSerializer"/> if the type of
+        /// the annotation value is anything other than a string. Passing a null value clears any annotation with
+        /// the given name on the column that had been previously set.
+        /// </remarks>
+        /// <param name="keyColumnName">The name of the column that was configured with the HasKey method.</param>
+        /// <param name="annotationName">The annotation name, which must be a valid C#/EDM identifier.</param>
+        /// <param name="value">The annotation value, which may be a string or some other type that
+        /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
+        /// <returns>The same ForeignKeyAssociationMappingConfiguration instance so that multiple calls can be chained.</returns>
+        public ForeignKeyAssociationMappingConfiguration HasKeyAnnotation(string keyColumnName, string annotationName, object value)
+        {
+            Check.NotEmpty(keyColumnName, "keyColumnName");
+            Check.NotEmpty(annotationName, "annotationName");
+
+            _annotations[Tuple.Create(keyColumnName, annotationName)] = value;
 
             return this;
         }
@@ -92,6 +123,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             return this;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         internal override void Configure(
             AssociationSetMapping associationSetMapping, EdmModel database, PropertyInfo navigationProperty)
@@ -157,6 +189,20 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             }
 
             _keyColumnNames.Each((n, i) => propertyMappings[i].Column.Name = n);
+
+            foreach (var annotation in _annotations)
+            {
+                var index = _keyColumnNames.IndexOf(annotation.Key.Item1);
+
+                if (index == -1)
+                {
+                    throw new InvalidOperationException(Strings.BadKeyNameForAnnotation(annotation.Key.Item1, annotation.Key.Item2));
+                }
+
+                propertyMappings[index].Column.AddAnnotation(
+                    XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key.Item2,
+                    annotation.Value);
+            }
         }
 
         /// <inheritdoc />
@@ -180,12 +226,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return true;
             }
 
-            if (!Equals(other._tableName, _tableName))
-            {
-                return false;
-            }
-
-            return other._keyColumnNames.SequenceEqual(_keyColumnNames);
+            return Equals(other._tableName, _tableName)
+                   && other._keyColumnNames.SequenceEqual(_keyColumnNames)
+                   && other._annotations.SequenceEqual(_annotations);
         }
 
         /// <inheritdoc />
@@ -202,8 +245,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 return true;
             }
 
-            if (obj.GetType()
-                != typeof(ForeignKeyAssociationMappingConfiguration))
+            if (obj.GetType() != typeof(ForeignKeyAssociationMappingConfiguration))
             {
                 return false;
             }
@@ -217,8 +259,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         {
             unchecked
             {
-                return ((_tableName != null ? _tableName.GetHashCode() : 0) * 397)
-                       ^ _keyColumnNames.Aggregate(0, (t, n) => t + n.GetHashCode());
+                var hashCode = (_tableName != null ? _tableName.GetHashCode() : 0) * 397;
+                hashCode = _keyColumnNames.Aggregate(hashCode, (h, v) => (h * 397) ^ v.GetHashCode());
+                return _annotations.Aggregate(hashCode, (h, v) => (h * 397) ^ v.GetHashCode());
             }
         }
 

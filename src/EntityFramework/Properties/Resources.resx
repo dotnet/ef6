@@ -298,6 +298,9 @@
   <data name="ConflictingConfigurationValue" xml:space="preserve">
     <value>{0} = {1} conflicts with {2} = {3}</value>
   </data>
+  <data name="ConflictingAnnotationValue" xml:space="preserve">
+    <value>Custom annotation '{0}' = '{1}' conflicts with custom annotation '{0}' = '{2}'</value>
+  </data>
   <data name="CodeFirstInvalidComplexType" xml:space="preserve">
     <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
@@ -452,6 +455,12 @@
   <data name="IncorrectColumnCount" xml:space="preserve">
     <value>The specified association foreign key columns '{0}' are invalid. The number of columns specified must match the number of primary key columns.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
+  </data>
+  <data name="BadKeyNameForAnnotation" xml:space="preserve">
+    <value>The foreign key column name '{0}' specified for the '{1}' annotation is not valid. The column name to annotate must match a column name set using the MapKey method.</value>
+  </data>
+  <data name="BadAnnotationName" xml:space="preserve">
+    <value>The annotation name '{0}' is not valid. Annotation names have the same restrictions as C# and EDM identifiers.</value>
   </data>
   <data name="CircularComplexTypeHierarchy" xml:space="preserve">
     <value>A circular ComplexType hierarchy was detected. Self-referencing ComplexTypes are not supported.</value>

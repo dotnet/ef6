@@ -3338,7 +3338,11 @@ namespace FunctionalTests
         {
             var modelBuilder = new AdventureWorksModelBuilder();
 
-            modelBuilder.Entity<Repro144459_Product>().Property(e => e.Name).HasColumnName("NameOfProduct");
+            modelBuilder.Entity<Repro144459_Product>()
+                .Property(e => e.Name)
+                .HasColumnName("NameOfProduct")
+                .HasAnnotation("Fish", "Blub");
+
             modelBuilder.Entity<Repro144459_Product>().ToTable("Products");
             modelBuilder.Entity<Repro144459_ClearanceProduct>().Map(mapping => { mapping.MapInheritedProperties(); }).
                 ToTable("ClearanceProduct");
@@ -3353,6 +3357,18 @@ namespace FunctionalTests
                 .DbEqual(true, t => t.Properties.Any(c => c.Name == "NameOfProduct"));
             databaseMapping.Assert<Repro144459_ClearanceProduct>("ClearanceProduct")
                 .DbEqual(true, t => t.Properties.Any(c => c.Name == "NameOfProduct"));
+
+            databaseMapping.Assert<Repro144459_Product>("Products")
+                .Column("NameOfProduct")
+                .HasAnnotation("Fish", "Blub");
+
+            databaseMapping.Assert<Repro144459_ClearanceProduct>("ClearanceProduct")
+                .Column("NameOfProduct")
+                .HasAnnotation("Fish", "Blub");
+
+            databaseMapping.Assert<Repro144459_DiscontinuedProduct>("DiscontinuedProduct")
+                .Column("NameOfProduct")
+                .HasAnnotation("Fish", "Blub");
         }
 
         public class Repro144459_Product
@@ -6418,13 +6434,21 @@ namespace FunctionalTests
 
                     Map<FirstEntity>(m =>
                     {
-                        m.Property(t => t.Value).HasColumnName("Int1");
+                        m.Property(t => t.Value)
+                            .HasColumnName("Int1")
+                            .HasAnnotation("Elephant", "Toot")
+                            .HasAnnotation("Fish", "Blub");
+                        
                         m.Requires("TypeID").HasValue(1);
                     });
 
                     Map<SecondEntity>(m =>
                     {
-                        m.Property(t => t.Height).HasColumnName("Int1");
+                        m.Property(t => t.Height)
+                            .HasColumnName("Int1")
+                            .HasAnnotation("Seal", "Ow ow ow")
+                            .HasAnnotation("Fox", "No one knows...");
+                        
                         m.Requires("TypeID").HasValue(2);
                     });
                 }
@@ -6443,8 +6467,23 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<FirstEntity>("Entities")
                     .HasColumns("ID", "ShortName", "Int1", "TypeID");
+                
                 databaseMapping.Assert<SecondEntity>("Entities")
                     .HasColumns("ID", "ShortName", "Int1", "TypeID");
+
+                databaseMapping.Assert<FirstEntity>("Entities")
+                    .Column("Int1")
+                    .HasAnnotation("Elephant", "Toot")
+                    .HasAnnotation("Fish", "Blub")
+                    .HasAnnotation("Seal", "Ow ow ow")
+                    .HasAnnotation("Fox", "No one knows...");
+
+                databaseMapping.Assert<SecondEntity>("Entities")
+                    .Column("Int1")
+                    .HasAnnotation("Elephant", "Toot")
+                    .HasAnnotation("Fish", "Blub")
+                    .HasAnnotation("Seal", "Ow ow ow")
+                    .HasAnnotation("Fox", "No one knows...");
             }
 
             [Fact]
@@ -6460,8 +6499,23 @@ namespace FunctionalTests
 
                 databaseMapping.Assert<FirstEntity>("MyEntity")
                     .HasColumns("ID", "ShortName", "Int1", "TypeID");
+
                 databaseMapping.Assert<SecondEntity>("MyEntity")
                     .HasColumns("ID", "ShortName", "Int1", "TypeID");
+
+                databaseMapping.Assert<FirstEntity>("MyEntity")
+                    .Column("Int1")
+                    .HasAnnotation("Elephant", "Toot")
+                    .HasAnnotation("Fish", "Blub")
+                    .HasAnnotation("Seal", "Ow ow ow")
+                    .HasAnnotation("Fox", "No one knows...");
+
+                databaseMapping.Assert<SecondEntity>("MyEntity")
+                    .Column("Int1")
+                    .HasAnnotation("Elephant", "Toot")
+                    .HasAnnotation("Fish", "Blub")
+                    .HasAnnotation("Seal", "Ow ow ow")
+                    .HasAnnotation("Fox", "No one knows...");
             }
         }
     }

@@ -529,7 +529,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void PrimitivePropertyConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<PrimitivePropertyConfiguration>(9);
+            VerifyFieldCount<PrimitivePropertyConfiguration>(10);
         }
 
         [Fact]
@@ -639,6 +639,11 @@ namespace System.Data.Entity.ModelConfiguration
             configuration.ColumnName = "ColumnName";
             configuration.ColumnOrder = 1;
             configuration.OverridableConfigurationParts = OverridableConfigurationParts.OverridableInCSpace;
+            configuration.SetAnnotation("A1", "V1");
+            configuration.SetAnnotation("A2", "V2");
+            configuration.SetAnnotation("A3", "V3");
+            configuration.SetAnnotation("A1", "V4");
+            configuration.SetAnnotation("A2", null);
 
             var clone = configuration.Clone();
 
@@ -649,6 +654,9 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.Equal("ColumnName", clone.ColumnName);
             Assert.Equal(1, clone.ColumnOrder);
             Assert.Equal(OverridableConfigurationParts.OverridableInCSpace, clone.OverridableConfigurationParts);
+            Assert.Equal("V4", clone.Annotations["A1"]);
+            Assert.Null(clone.Annotations["A2"]);
+            Assert.Equal("V3", clone.Annotations["A3"]);
 
             return clone;
         }
@@ -797,9 +805,26 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         [Fact]
+        public void Cloning_an_foreign_key_mapping_configuration_clones_its_annotation_information()
+        {
+            var configuration = new ForeignKeyAssociationMappingConfiguration();
+            configuration.MapKey("C1", "C2");
+            configuration.HasKeyAnnotation("C1", "A1", "V1");
+            configuration.HasKeyAnnotation("C2", "A2", "V2");
+
+            var clone = (ForeignKeyAssociationMappingConfiguration)configuration.Clone();
+
+            Assert.Equal(configuration, clone);
+
+            configuration.HasKeyAnnotation("C2", "A2", "V3");
+
+            Assert.NotEqual(configuration, clone);
+        }
+
+        [Fact]
         public void ForeignKeyAssociationMappingConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ForeignKeyAssociationMappingConfiguration>(2);
+            VerifyFieldCount<ForeignKeyAssociationMappingConfiguration>(3);
         }
 
         [Fact]

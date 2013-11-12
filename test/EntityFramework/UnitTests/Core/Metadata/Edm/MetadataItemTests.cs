@@ -9,6 +9,24 @@ namespace System.Data.Entity.Core.Metadata.Edm
     public class MetadataItemTests
     {
         [Fact]
+        public void AddAnnotation_checks_arguments()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => entityType.AddAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => entityType.AddAnnotation("", null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => entityType.AddAnnotation(" ", null)).Message);
+        }
+
+        [Fact]
         public void Can_add_and_get_annotation()
         {
             var entityType = new EntityType("E", "N", DataSpace.CSpace);
@@ -38,6 +56,31 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.NotEmpty(entityType.Annotations);
 
             Assert.True(entityType.RemoveAnnotation("name"));
+
+            Assert.Empty(entityType.Annotations);
+        }
+
+        [Fact]
+        public void Can_remove_annotation_by_setting_null()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+            var value = new object();
+
+            entityType.AddAnnotation("name", value);
+
+            Assert.NotEmpty(entityType.Annotations);
+
+            entityType.AddAnnotation("name", null);
+
+            Assert.Empty(entityType.Annotations);
+        }
+
+        [Fact]
+        public void Passing_a_null_value_causes_annotation_to_not_be_set()
+        {
+            var entityType = new EntityType("E", "N", DataSpace.CSpace);
+
+            entityType.AddAnnotation("name", null);
 
             Assert.Empty(entityType.Annotations);
         }

@@ -33,13 +33,18 @@ namespace FunctionalTests
             modelBuilder.Entity<DerivedEntity>()
                 .Property(e => e.DateTimeProperty)
                 .HasColumnType("datetime2")
-                .HasPrecision(4);
+                .HasPrecision(4)
+                .HasAnnotation("Dog", "Woof");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
 
             databaseMapping.Assert<Entity>(p => p.DateTimeProperty).DbEqual((byte)4, f => f.Precision);
+
+            databaseMapping.Assert<DerivedEntity>()
+                .Column("DateTimeProperty")
+                .HasAnnotation("Dog", "Woof");
         }
 
         [Fact]
@@ -534,6 +539,99 @@ namespace FunctionalTests
                 "WorkAddress_Line2", "Discriminator");
 
             databaseMapping.Assert<Building>("Buildings").HasColumns("Id", "FirstLine", "Address_Line2");
+        }
+
+        [Fact]
+        public void Annotations_can_be_added_to_store_columns_using_fluent_API()
+        {
+            var modelBuilder = new AdventureWorksModelBuilder();
+
+            var someObject = new Random();
+
+            modelBuilder.Entity<UnitMeasure>().HasKey(u => u.UnitMeasureCode);
+            modelBuilder.Entity<UnitMeasure>()
+                .Property(u => u.UnitMeasureCode)
+                .HasAnnotation("Dog", "Woof")
+                .HasAnnotation("Cat", "Meow")
+                .HasAnnotation("Fox", "Its fur is red...")
+                .HasAnnotation("Fox", "...so beautiful")
+                .HasAnnotation("Elephant", "Toot")
+                .HasAnnotation("Elephant", null)
+                .HasAnnotation("Seal", someObject);
+
+            var databaseMapping = BuildMapping(modelBuilder);
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<UnitMeasure>("UnitMeasures")
+                .Column("UnitMeasureCode")
+                .HasAnnotation("Dog", "Woof")
+                .HasAnnotation("Cat", "Meow")
+                .HasAnnotation("Fox", "...so beautiful") // Last set wins
+                .HasAnnotation("Seal", someObject)
+                .HasNoAnnotation("Elephant"); // Null removes
+        }
+
+        [Fact]
+        public void Annotations_can_be_added_to_store_columns_of_complex_child_properties_using_fluent_API()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<CTEmployee>()
+                .Property(a => a.HomeAddress.Line1)
+                .HasAnnotation("Dog", "Woof");
+
+            modelBuilder.Entity<Building>()
+                .Property(b => b.Address.Line1)
+                .HasAnnotation("Cat", "Meow");
+
+            modelBuilder.ComplexType<Address>()
+                .Property(a => a.Line1)
+                .HasAnnotation("Fox", "No one knows...");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<CTEmployee>("CTEmployees")
+                .Column("HomeAddress_Line1")
+                .HasAnnotation("Dog", "Woof")
+                .HasNoAnnotation("Cat")
+                .HasAnnotation("Fox", "No one knows...");
+
+            databaseMapping.Assert<Building>("Buildings")
+                .Column("Address_Line1")
+                .HasAnnotation("Cat", "Meow")
+                .HasNoAnnotation("Dog")
+                .HasAnnotation("Fox", "No one knows...");
+        }
+
+        [Fact]
+        public void Annotations_can_be_overridden_on_store_columns_of_complex_child_properties_when_already_configured()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.ComplexType<Address>()
+                .Property(a => a.Line1)
+                .HasAnnotation("Fox", "No one knows...");
+
+            modelBuilder.Entity<Building>()
+                .Property(b => b.Address.Line1);
+
+            modelBuilder.Entity<CTEmployee>()
+                .Property(a => a.HomeAddress.Line1)
+                .HasAnnotation("Fox", "Hatee Hatee Hatee Ho!");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<CTEmployee>("CTEmployees")
+                .Column("HomeAddress_Line1")
+                .HasAnnotation("Fox", "Hatee Hatee Hatee Ho!");
+
+            databaseMapping.Assert<Building>("Buildings")
+                .Column("Address_Line1")
+                .HasAnnotation("Fox", "No one knows...");
         }
 
         [Fact]

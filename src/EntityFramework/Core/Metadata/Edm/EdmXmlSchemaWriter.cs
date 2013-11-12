@@ -541,6 +541,8 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 _xmlWriter.WriteAttributeString(EdmProviderManifest.ConcurrencyModeFacetName, XmlConstants.Fixed);
             }
 
+            WriteExtendedProperties(property);
+
             if (property.Annotations.GetClrAttributes() != null)
             {
                 var epmCount = 0;
@@ -852,8 +854,12 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
             foreach (var extendedProperty in item.MetadataProperties.Where(p => p.PropertyKind == PropertyKind.Extended))
             {
+                // We have to special case StoreGeneratedPattern because even though it is an "extended" property we have
+                // special handling for it elsewhere, which means if we try to serialize it like a normal extended property
+                // we might end up with duplicate attributes in the XML.
                 string xmlNamespaceUri, attributeName;
-                if (TrySplitExtendedMetadataPropertyName(extendedProperty.Name, out xmlNamespaceUri, out attributeName))
+                if (TrySplitExtendedMetadataPropertyName(extendedProperty.Name, out xmlNamespaceUri, out attributeName)
+                    && extendedProperty.Name != XmlConstants.StoreGeneratedPatternAnnotation)
                 {
                     DebugCheck.NotNull(extendedProperty.Value);
 

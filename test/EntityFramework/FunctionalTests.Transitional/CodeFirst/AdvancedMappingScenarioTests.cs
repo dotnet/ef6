@@ -292,14 +292,26 @@ namespace FunctionalTests
             var modelBuilder = new DbModelBuilder();
 
             modelBuilder.Entity<SplitProduct>().ToTable("Product");
-            modelBuilder.Entity<SplitProductDetail>().ToTable("Product");
-            modelBuilder.Entity<SplitProductDetail>().Property(s => s.Name).HasColumnName("Unique");
+
+            modelBuilder.Entity<SplitProductDetail>()
+                .ToTable("Product")
+                .Property(s => s.Name)
+                .HasColumnName("Unique")
+                .HasAnnotation("Fish", "Blub");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<SplitProduct>(s => s.Name).DbEqual("Name", c => c.Name);
             databaseMapping.Assert<SplitProductDetail>(s => s.Name).DbEqual("Unique", c => c.Name);
+
+            databaseMapping.Assert<SplitProduct>("Product")
+                .Column("Name")
+                .HasNoAnnotation("Fish");
+
+            databaseMapping.Assert<SplitProductDetail>("Product")
+                .Column("Unique")
+                .HasAnnotation("Fish", "Blub");
         }
 
         public class SplitProduct

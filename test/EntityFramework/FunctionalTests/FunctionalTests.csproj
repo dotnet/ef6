@@ -204,7 +204,6 @@
     <Compile Include="CodeFirst\SpecialCharacterTests.cs" />
     <Compile Include="Interception\BlogContextNoInit.cs" />
     <Compile Include="Interception\DatabaseLogFormatterTests.cs" />
-    <Compile Include="Metadata\MetadataAnnotationsTests.cs" />
     <Compile Include="Metadata\MetadataAnnotationTests.cs" />
     <Compile Include="Metadata\MetadataCachingTests.cs" />
     <Compile Include="Metadata\MetadataCollectionTests.cs" />

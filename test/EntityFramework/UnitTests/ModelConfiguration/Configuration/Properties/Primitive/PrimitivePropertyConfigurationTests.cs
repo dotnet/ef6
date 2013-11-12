@@ -9,6 +9,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
+    using System.Linq;
+    using Moq;
     using Xunit;
 
     public abstract class PrimitivePropertyConfigurationTests : TestBase
@@ -288,6 +290,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void Configure_should_update_column_annotations()
+        {
+            var configuration = CreateConfiguration();
+            configuration.SetAnnotation("A1", "V1");
+            configuration.SetAnnotation("A2", "V2");
+            configuration.SetAnnotation("A3", "V3");
+            configuration.SetAnnotation("A1", "V4");
+            configuration.SetAnnotation("A3", null);
+
+            var edmPropertyMapping = new ColumnMappingBuilder(new EdmProperty("C"), new List<EdmProperty>());
+
+            configuration.Configure(
+                new[] { Tuple.Create(edmPropertyMapping, new EntityType("T", XmlConstants.TargetNamespace_3, DataSpace.SSpace)) },
+                ProviderRegistry.Sql2008_ProviderManifest);
+
+            Assert.Equal(
+                "V4",
+                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A1").Value);
+
+            Assert.Equal(
+                "V2",
+                edmPropertyMapping.ColumnProperty.Annotations.Single(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A2").Value);
+
+            Assert.False(edmPropertyMapping.ColumnProperty.Annotations.Any(a => a.Name == XmlConstants.CustomAnnotationNamespace + ":A3"));
+        }
+
+        [Fact]
         public void Configure_should_update_mapped_column_order()
         {
             var configuration = CreateConfiguration();
@@ -515,6 +544,23 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Assert.Equal(
                 OverridableConfigurationParts.OverridableInCSpace | OverridableConfigurationParts.OverridableInSSpace,
                 configurationA.OverridableConfigurationParts);
+        }
+
+        [Fact]
+        public void CopyFrom_overwrites_existing_attributes()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V3");
+
+            configurationA.CopyFrom(configurationB);
+
+            Assert.Equal(2, configurationA.Annotations.Count);
+            Assert.Equal("V3", configurationA.Annotations["A1"]);
+            Assert.Equal("V2", configurationA.Annotations["A2"]);
         }
 
         [Fact]
@@ -859,6 +905,60 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             configurationA.FillFrom(configurationB, inCSpace: true);
 
             Assert.Equal(OverridableConfigurationParts.None, configurationA.OverridableConfigurationParts);
+        }
+
+        [Fact]
+        public void FillFrom_does_not_add_annotations_in_CSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V3");
+            configurationB.SetAnnotation("A3", "V4");
+
+            configurationA.FillFrom(configurationB, inCSpace: true);
+
+            Assert.Equal(2, configurationA.Annotations.Count);
+            Assert.Equal("V1", configurationA.Annotations["A1"]);
+            Assert.Equal("V2", configurationA.Annotations["A2"]);
+        }
+
+        [Fact]
+        public void FillFrom_adds_missing_annotations_only()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V3");
+            configurationB.SetAnnotation("A3", "V4");
+
+            configurationA.FillFrom(configurationB, inCSpace: false);
+
+            Assert.Equal(3, configurationA.Annotations.Count);
+            Assert.Equal("V1", configurationA.Annotations["A1"]);
+            Assert.Equal("V2", configurationA.Annotations["A2"]);
+            Assert.Equal("V4", configurationA.Annotations["A3"]);
+        }
+
+        [Fact]
+        public void OverrideFrom_removes_annotations_set_in_other()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V3");
+            configurationB.SetAnnotation("A3", "V4");
+
+            configurationA.OverrideFrom(configurationB);
+
+            Assert.Equal(1, configurationA.Annotations.Count);
+            Assert.Equal("V2", configurationA.Annotations["A2"]);
         }
 
         [Fact]
@@ -1209,6 +1309,75 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.True(configurationB.IsCompatible(configurationA, false, out errorMessage));
             Assert.True(string.IsNullOrEmpty(errorMessage));
+        }
+
+        [Fact]
+        public void IsCompatible_returns_true_when_no_annotations_have_different_values_on_either_type()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V1");
+            configurationB.SetAnnotation("A3", "V3");
+            
+            string errorMessage;
+            Assert.True(configurationA.IsCompatible(configurationB, true, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+
+            Assert.True(configurationB.IsCompatible(configurationA, false, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+        }
+
+        [Fact]
+        public void IsCompatible_returns_false_for_conflicting_annotation_values_in_SSpace()
+        {
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", "V1");
+            configurationA.SetAnnotation("A2", "V2");
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", "V1");
+            configurationB.SetAnnotation("A2", "V3");
+
+            string errorMessage;
+            Assert.True(configurationA.IsCompatible(configurationB, true, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+
+            var expectedMessage = Environment.NewLine + "\t" + Strings.ConflictingAnnotationValue("A2", "V2", "V3");
+            Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
+            Assert.Equal(expectedMessage, errorMessage);
+        }
+
+        [Fact]
+        public void HasAnnotation_throws_for_invalid_annotation_names()
+        {
+            var configuration = new PrimitivePropertyConfiguration(CreateConfiguration());
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+
+            Assert.Equal(
+                Strings.BadAnnotationName("Cheese:Pickle"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
+        }
+
+        [Fact]
+        public void HasAnnotation_sets_annotation_on_underlying_configuration()
+        {
+            var mockConfig = new Mock<Properties.Primitive.PrimitivePropertyConfiguration>();
+
+            var configuration = new PrimitivePropertyConfiguration(mockConfig.Object);
+
+            configuration.HasAnnotation("A", "V");
+
+            mockConfig.Verify(m => m.SetAnnotation("A", "V"));
         }
 
         internal Properties.Primitive.PrimitivePropertyConfiguration CreateConfiguration()

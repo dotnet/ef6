@@ -292,13 +292,34 @@ namespace FunctionalTests
             modelBuilder.Entity<BaseEntityDuplicateProps>().ToTable("BaseEntities");
             modelBuilder.Entity<Entity1DuplicateProps>().ToTable("Entity1s");
             modelBuilder.Entity<Entity2DuplicateProps>().ToTable("Entity2s");
-            modelBuilder.Entity<Entity1DuplicateProps>().Property(e => e.SomeProperty).HasColumnName("Foo");
-            modelBuilder.Entity<Entity2DuplicateProps>().Property(e => e.SomeProperty).HasColumnName("Foo");
+            
+            modelBuilder.Entity<Entity1DuplicateProps>()
+                .Property(e => e.SomeProperty)
+                .HasColumnName("Foo")
+                .HasAnnotation("Annotation1", "Entity1")
+                .HasAnnotation("Annotation2", "Common");
+            
+            modelBuilder.Entity<Entity2DuplicateProps>()
+                .Property(e => e.SomeProperty)
+                .HasColumnName("Foo")
+                .HasAnnotation("Annotation1", "Entity2")
+                .HasAnnotation("Annotation2", "Common");
+            
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
             databaseMapping.Assert<Entity1DuplicateProps>(e => e.SomeProperty).DbEqual("Foo", c => c.Name);
             databaseMapping.Assert<Entity2DuplicateProps>(e => e.SomeProperty).DbEqual("Foo", c => c.Name);
+
+            databaseMapping.Assert<Entity1DuplicateProps>("Entity1s")
+                .Column("Foo")
+                .HasAnnotation("Annotation1", "Entity1")
+                .HasAnnotation("Annotation2", "Common");
+
+            databaseMapping.Assert<Entity2DuplicateProps>("Entity2s")
+                .Column("Foo")
+                .HasAnnotation("Annotation1", "Entity2")
+                .HasAnnotation("Annotation2", "Common");
         }
 
         public class BaseEntityDuplicateProps
@@ -990,9 +1011,22 @@ namespace FunctionalTests
         public void TPT_model_using_Table_attributes_can_map_PK_property_to_different_columns_in_different_tables()
         {
             var modelBuilder = new DbModelBuilder();
-            modelBuilder.Entity<TPTHorse>().Property(e => e.Id).HasColumnName("horse_id");
-            modelBuilder.Entity<TPTUnicorn>().Property(e => e.Id).HasColumnName("unicorn_id");
-            modelBuilder.Entity<TPTHornedPegasus>().Property(e => e.Id).HasColumnName("pegasus_id");
+            modelBuilder.Entity<TPTHorse>()
+                .Property(e => e.Id)
+                .HasAnnotation("WhatDoesItSay", "Mor...or...or...or...orse")
+                .HasAnnotation("Common", "Just a pony.")
+                .HasColumnName("horse_id");
+            
+            modelBuilder.Entity<TPTUnicorn>()
+                .Property(e => e.Id)
+                .HasColumnName("unicorn_id")
+                .HasAnnotation("WhatDoesItSay", "Hor...or...or...or...orn")
+                .HasAnnotation("Common", "Just a pony.");
+            
+            modelBuilder.Entity<TPTHornedPegasus>()
+                .Property(e => e.Id)
+                .HasColumnName("pegasus_id")
+                .HasAnnotation("WhatDoesItSay", "Prin...in...in...in...cess");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1002,6 +1036,21 @@ namespace FunctionalTests
             databaseMapping.Assert<TPTHorse>(p => p.Id).DbEqual("horse_id", c => c.Name);
             databaseMapping.Assert<TPTUnicorn>(p => p.Id).DbEqual("unicorn_id", c => c.Name);
             databaseMapping.Assert<TPTHornedPegasus>(p => p.Id).DbEqual("pegasus_id", c => c.Name);
+
+            databaseMapping.Assert<TPTHorse>("Horses")
+                .Column("horse_id")
+                .HasAnnotation("WhatDoesItSay", "Mor...or...or...or...orse")
+                .HasAnnotation("Common", "Just a pony.");
+
+            databaseMapping.Assert<TPTUnicorn>("Unicorns")
+                .Column("unicorn_id")
+                .HasAnnotation("WhatDoesItSay", "Hor...or...or...or...orn")
+                .HasAnnotation("Common", "Just a pony.");
+
+            databaseMapping.Assert<TPTHornedPegasus>("HornedPegasuses")
+                .Column("pegasus_id")
+                .HasAnnotation("WhatDoesItSay", "Prin...in...in...in...cess")
+                .HasAnnotation("Common", "Just a pony.");
         }
 
         [Fact] // CodePlex 583
@@ -1066,6 +1115,35 @@ namespace FunctionalTests
         }
 
         [Fact] // CodePlex 583
+        public void Subclasses_that_map_properties_to_same_column_with_different_annotations_using_TPH_will_throw()
+        {
+            var modelBuilder = new DbModelBuilder();
+            
+            modelBuilder.Entity<Person>();
+            
+            modelBuilder.Entity<Student>()
+                .Property(p => p.Career)
+                .HasColumnName("ColumnName")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
+
+            modelBuilder.Entity<Officer>()
+                .Property(p => p.Department)
+                .HasColumnName("ColumnName")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Different Value");
+
+            var details = Environment.NewLine + "\t" +
+                          string.Format(
+                              LookupString(
+                                  EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "ConflictingAnnotationValue"),
+                              "Annotation2", "Different Value", "Value2");
+
+            Assert.Throws<MappingException>(() => BuildMapping(modelBuilder))
+                  .ValidateMessage("BadTphMappingToSharedColumn", "Department", "Officer", "Career", "Student", "ColumnName", "Person", details);
+        }
+
+        [Fact] // CodePlex 583
         public void Column_configuration_can_be_applied_to_only_one_property_when_properties_share_TPH_column()
         {
             var modelBuilder = new DbModelBuilder();
@@ -1073,10 +1151,12 @@ namespace FunctionalTests
             modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data");
 
             modelBuilder.Entity<Officer>()
-                        .Property(p => p.Department)
-                        .HasColumnName("Data")
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar");
+                .Property(p => p.Department)
+                .HasColumnName("Data")
+                .HasMaxLength(256)
+                .HasColumnType("varchar")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
 
             modelBuilder.Entity<Teacher>().Property(p => p.Department).HasColumnName("Data");
             modelBuilder.Entity<Lawyer>().Property(p => p.Specialty).HasColumnName("Data");
@@ -1084,30 +1164,56 @@ namespace FunctionalTests
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.Assert<Student>(t => t.Career)
-                           .DbEqual(256, f => f.MaxLength)
-                           .DbEqual("varchar", f => f.TypeName);
+                .DbEqual(256, f => f.MaxLength)
+                .DbEqual("varchar", f => f.TypeName);
             databaseMapping.Assert<Officer>(t => t.Department)
-                           .DbEqual(256, f => f.MaxLength)
-                           .DbEqual("varchar", f => f.TypeName);
+                .DbEqual(256, f => f.MaxLength)
+                .DbEqual("varchar", f => f.TypeName);
             databaseMapping.Assert<Teacher>(t => t.Department)
-                           .DbEqual(256, f => f.MaxLength)
-                           .DbEqual("varchar", f => f.TypeName);
+                .DbEqual(256, f => f.MaxLength)
+                .DbEqual("varchar", f => f.TypeName);
             databaseMapping.Assert<Lawyer>(t => t.Specialty)
-                           .DbEqual(256, f => f.MaxLength)
-                           .DbEqual("varchar", f => f.TypeName);
+                .DbEqual(256, f => f.MaxLength)
+                .DbEqual("varchar", f => f.TypeName);
 
             databaseMapping.AssertValid();
+
+            databaseMapping.Assert("People")
+                .Column("Data")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
         }
 
         [Fact] // CodePlex 583
         public void Non_conflicting_column_configuration_can_be_spread_across_properties_that_share_TPH_column()
         {
             var modelBuilder = new DbModelBuilder();
+            
             modelBuilder.Entity<Person>();
-            modelBuilder.Entity<Student>().Property(p => p.Career).HasColumnName("Data").HasMaxLength(256);
-            modelBuilder.Entity<Officer>().Property(p => p.Department).HasColumnName("Data").HasColumnType("varchar");
-            modelBuilder.Entity<Teacher>().Property(p => p.Department).HasColumnName("Data").HasColumnType("varchar");
-            modelBuilder.Entity<Lawyer>().Property(p => p.Specialty).HasColumnName("Data").HasMaxLength(256);
+            
+            modelBuilder.Entity<Student>()
+                .Property(p => p.Career)
+                .HasColumnName("Data")
+                .HasMaxLength(256)
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
+            
+            modelBuilder.Entity<Officer>()
+                .Property(p => p.Department)
+                .HasColumnName("Data")
+                .HasColumnType("varchar");
+            
+            modelBuilder.Entity<Teacher>()
+                .Property(p => p.Department)
+                .HasColumnName("Data")
+                .HasColumnType("varchar")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
+            
+            modelBuilder.Entity<Lawyer>()
+                .Property(p => p.Specialty)
+                .HasColumnName("Data")
+                .HasMaxLength(256);
 
             var databaseMapping = BuildMapping(modelBuilder);
 
@@ -1125,6 +1231,11 @@ namespace FunctionalTests
                            .DbEqual("varchar", f => f.TypeName);
 
             databaseMapping.AssertValid();
+
+            databaseMapping.Assert("People")
+                .Column("Data")
+                .HasAnnotation("Annotation1", "Value1")
+                .HasAnnotation("Annotation2", "Value2");
         }
 
         public class TphPersonContext : DbContext

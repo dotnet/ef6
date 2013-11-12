@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Infrastructure;
 
     /// <summary>
     /// Used to configure a <see cref="T:System.string" /> property of an entity type or complex type.
@@ -133,6 +134,26 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         public new StringPropertyConfiguration HasColumnName(string columnName)
         {
             base.HasColumnName(columnName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an annotation in the model for the database column used to store the property. The annotation
+        /// value can later be used when processing the column such as when creating migrations.
+        /// </summary>
+        /// <remarks>
+        /// It will likely be necessary to register a <see cref="IMetadataAnnotationSerializer"/> if the type of
+        /// the annotation value is anything other than a string. Passing a null value clears any annotation with
+        /// the given name on the column that had been previously set.
+        /// </remarks>
+        /// <param name="name">The annotation name, which must be a valid C#/EDM identifier.</param>
+        /// <param name="value">The annotation value, which may be a string or some other type that
+        /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
+        /// <returns>The same StringPropertyConfiguration instance so that multiple calls can be chained.</returns>
+        public new StringPropertyConfiguration HasAnnotation(string name, object value)
+        {
+            base.HasAnnotation(name, value);
 
             return this;
         }

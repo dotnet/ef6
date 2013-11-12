@@ -459,6 +459,38 @@ namespace System.Data.Entity.Core.Metadata.Edm
             Assert.Equal(@"<EntityType", fixture.ToString());
         }
 
+        [Fact]
+        public void WriteExtendedProperties_writes_annotations_on_properties()
+        {
+            var annotation = MetadataProperty.CreateAnnotation(XmlConstants.CustomAnnotationNamespace + ":Foo", "Goo");
+
+            var mockProperty = new Mock<MetadataProperty>();
+            mockProperty.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { annotation }));
+
+            var fixture = new Fixture(2.0);
+            fixture.UnderlyingWriter.WriteStartElement(XmlConstants.Property);
+            fixture.Writer.WriteExtendedProperties(mockProperty.Object);
+
+            Assert.Equal(@"<Property p1:Foo=""Goo""", fixture.ToString());
+        }
+
+        [Fact]
+        public void WriteExtendedProperties_does_not_write_store_generated_annotations()
+        {
+            var annotation = MetadataProperty.CreateAnnotation(XmlConstants.StoreGeneratedPatternAnnotation, "Identity");
+
+            var mockProperty = new Mock<MetadataProperty>();
+            mockProperty.Setup(m => m.MetadataProperties).Returns(
+                new ReadOnlyMetadataCollection<MetadataProperty>(new List<MetadataProperty>() { annotation }));
+
+            var fixture = new Fixture(2.0);
+            fixture.UnderlyingWriter.WriteStartElement(XmlConstants.Property);
+            fixture.Writer.WriteExtendedProperties(mockProperty.Object);
+
+            Assert.Equal(@"<Property", fixture.ToString());
+        }
+
         private class Fixture
         {
             public readonly EdmXmlSchemaWriter Writer;

@@ -101,15 +101,36 @@ namespace System.Data.Entity.Core.Metadata.Edm
         }
 
         /// <summary>
-        /// Adds an annotation with the specified name and value.
+        /// Adds or updates an annotation with the specified name and value.
         /// </summary>
+        /// <remarks>
+        /// If an annotation with the given name already exists then the value of that annotation
+        /// is updated to the given value. If the given value is null then the annotation will be
+        /// removed.
+        /// </remarks>
         /// <param name="name">The name of the annotation property.</param>
         /// <param name="value">The value of the annotation property.</param>
         public void AddAnnotation(string name, object value)
         {
             Check.NotEmpty(name, "name");
 
-            GetMetadataProperties().Add(MetadataProperty.CreateAnnotation(name, value));
+            var existingAnnotation = Annotations.FirstOrDefault(a => a.Name == name);
+
+            if (existingAnnotation != null)
+            {
+                if (value == null)
+                {
+                    RemoveAnnotation(name);
+                }
+                else
+                {
+                    existingAnnotation.Value = value;
+                }
+            }
+            else if (value != null)
+            {
+                GetMetadataProperties().Add(MetadataProperty.CreateAnnotation(name, value));
+            } 
         }
 
         /// <summary>
