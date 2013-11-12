@@ -615,7 +615,7 @@ namespace System.Data.Entity
                 var query = set.SqlQuery("query");
 
                 Assert.NotNull(query);
-                Assert.False(query.InternalQuery.Streaming);
+                Assert.Null(query.InternalQuery.Streaming);
             }
         }
 
@@ -659,8 +659,9 @@ namespace System.Data.Entity
                 var set = new InternalDbSet<FakeEntity>(new Mock<InternalSetForMock<FakeEntity>>().Object);
 
                 var query = set.SqlQuery("query");
+
                 Assert.NotNull(query);
-                Assert.False(query.InternalQuery.Streaming);
+                Assert.Null(query.InternalQuery.Streaming);
             }
         }
 

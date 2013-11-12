@@ -14,6 +14,33 @@ namespace System.Data.Entity.Core.Objects
     public class ObjectQueryTests : TestBase
     {
         [Fact]
+        public void Is_streaming_by_default()
+        {
+            var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
+            Assert.True(objectQuery.Streaming);
+        }
+
+        [Fact]
+        public void Is_buffered_if_execution_strategy_is_used()
+        {
+            var executionStrategyMock = new Mock<IDbExecutionStrategy>();
+            executionStrategyMock.Setup(m => m.RetriesOnFailure).Returns(true);
+            executionStrategyMock.Setup(m => m.Execute(It.IsAny<Func<ObjectResult<object>>>()))
+                 .Returns<Func<ObjectResult<object>>>(f => f());
+
+            MutableResolver.AddResolver<Func<IDbExecutionStrategy>>(key => (Func<IDbExecutionStrategy>)(() => executionStrategyMock.Object));
+            try
+            {
+                var objectQuery = MockHelper.CreateMockObjectQuery((object)null).Object;
+                Assert.False(objectQuery.Streaming);
+            }
+            finally
+            {
+                MutableResolver.ClearResolvers();
+            }
+        }
+
+        [Fact]
         public void MethodInfo_fields_are_initialized()
         {
             Assert.NotNull(ObjectQuery<int>.IncludeSpanMethod);

@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal.Linq
 {
@@ -620,7 +620,7 @@ namespace System.Data.Entity.Internal.Linq
                 DbHelpers.QuoteIdentifier(_entitySet.EntityContainer.Name),
                 DbHelpers.QuoteIdentifier(_entitySet.Name));
 
-            InitializeQuery(CreateObjectQuery(asNoTracking: false, streaming: false));
+            InitializeQuery(CreateObjectQuery(asNoTracking: false));
         }
 
         // <summary>
@@ -630,7 +630,7 @@ namespace System.Data.Entity.Internal.Linq
         // if set to <c>true</c> then the query is set to be no-tracking.
         // </param>
         // <returns> The query. </returns>
-        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking, bool streaming)
+        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking, bool? streaming = null)
         {
             var objectQuery = InternalContext.ObjectContext.CreateQuery<TEntity>(_quotedEntitySetName);
             if (_baseType != typeof(TEntity))
@@ -643,7 +643,7 @@ namespace System.Data.Entity.Internal.Linq
                 objectQuery.MergeOption = MergeOption.NoTracking;
             }
 
-            objectQuery.Streaming = streaming;
+            if (streaming.HasValue) { objectQuery.Streaming = streaming.Value; }
 
             return objectQuery;
         }
@@ -712,7 +712,7 @@ namespace System.Data.Entity.Internal.Linq
             // AsNoTracking called directly on the DbSet (as opposed to a DbQuery) is special-cased so that
             // it doesn't result in a LINQ query being created where one is not needed. This adds a perf boost
             // for simple no-tracking queries such as context.Products.AsNoTracking().
-            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: true, streaming: false));
+            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: true));
         }
 
         #endregion
@@ -748,7 +748,7 @@ namespace System.Data.Entity.Internal.Linq
         // <param name="streaming"> Whether the query is streaming or buffering. </param>
         // <param name="parameters"> The parameters. </param>
         // <returns> The query results. </returns>
-        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, bool streaming, object[] parameters)
+        public IEnumerator ExecuteSqlQuery(string sql, bool asNoTracking, bool? streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -792,7 +792,7 @@ namespace System.Data.Entity.Internal.Linq
         // <param name="streaming"> Whether the query is streaming or buffering. </param>
         // <param name="parameters"> The parameters. </param>
         // <returns> The query results. </returns>
-        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, bool streaming, object[] parameters)
+        public IDbAsyncEnumerator ExecuteSqlQueryAsync(string sql, bool asNoTracking, bool? streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);

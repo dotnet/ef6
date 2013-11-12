@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -21,7 +21,7 @@ namespace System.Data.Entity.Internal
 
         private readonly string _sql;
         private readonly object[] _parameters;
-        private readonly bool _streaming;
+        private readonly bool? _streaming;
 
         // <summary>
         // Initializes a new instance of the <see cref="InternalSqlQuery" /> class.
@@ -29,7 +29,7 @@ namespace System.Data.Entity.Internal
         // <param name="sql"> The SQL. </param>
         // <param name="streaming"> Whether the query is streaming or buffering. </param>
         // <param name="parameters"> The parameters. </param>
-        internal InternalSqlQuery(string sql, bool streaming, object[] parameters)
+        internal InternalSqlQuery(string sql, bool? streaming, object[] parameters)
         {
             DebugCheck.NotNull(sql);
             DebugCheck.NotNull(parameters);
@@ -59,7 +59,7 @@ namespace System.Data.Entity.Internal
         // <c>true</c> if the query is streaming;
         // <c>false</c> if the query is buffering
         // </value>
-        internal bool Streaming
+        internal bool? Streaming
         {
             get { return _streaming; }
         }

@@ -3445,7 +3445,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotNull(parameters, "parameters");
             Check.NotEmpty(functionName, "functionName");
-            return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption, streaming: false), parameters);
+            return ExecuteFunction<TElement>(functionName, new ExecutionOptions(mergeOption), parameters);
         }
 
         /// <summary>
@@ -3487,16 +3487,21 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
-                && executionOptions.Streaming)
+                && executionOptions.UserSpecifiedStreaming.HasValue && executionOptions.UserSpecifiedStreaming.Value)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
+            }
+
+            if (!executionOptions.UserSpecifiedStreaming.HasValue)
+            {
+                executionOptions = new ExecutionOptions(executionOptions.MergeOption, !executionStrategy.RetriesOnFailure);
             }
 
             return executionStrategy.Execute(
                 () => ExecuteInTransaction(
                     () => CreateFunctionObjectResult<TElement>(entityCommand, functionImport.EntitySets, expectedEdmTypes, executionOptions),
-                    executionStrategy, startLocalTransaction: true,
-                    releaseConnectionOnSuccess: !executionOptions.Streaming));
+                    executionStrategy, startLocalTransaction: !executionOptions.UserSpecifiedStreaming.Value,
+                    releaseConnectionOnSuccess: !executionOptions.UserSpecifiedStreaming.Value));
         }
 
         /// <summary>Executes a stored procedure or function that is defined in the data source and expressed in the conceptual model; discards any results returned from the function; and returns the number of rows affected by the execution.</summary>
@@ -3599,7 +3604,7 @@ namespace System.Data.Entity.Core.Objects
             try
             {
                 storeReader = commandDefinition.ExecuteStoreCommands(
-                    entityCommand, executionOptions.Streaming
+                    entityCommand, executionOptions.UserSpecifiedStreaming.Value
                         ? CommandBehavior.Default
                         : CommandBehavior.SequentialAccess);
             }
@@ -3614,7 +3619,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             ShaperFactory<TElement> shaperFactory = null;
-            if (!executionOptions.Streaming)
+            if (!executionOptions.UserSpecifiedStreaming.Value)
             {
                 BufferedDataReader bufferedReader = null;
                 try
@@ -3643,7 +3648,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return MaterializedDataRecord<TElement>(
-                entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.Streaming);
+                entityCommand, storeReader, 0, entitySets, edmTypes, shaperFactory, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value);
         }
 
         // <summary>
@@ -4194,7 +4199,7 @@ namespace System.Data.Entity.Core.Objects
         {
             Check.NotEmpty(entitySetName, "entitySetName");
             return ExecuteStoreQueryReliably<TElement>(
-                commandText, entitySetName, new ExecutionOptions(mergeOption, streaming: false), parameters);
+                commandText, entitySetName, new ExecutionOptions(mergeOption), parameters);
         }
 
         /// <summary>
@@ -4242,9 +4247,14 @@ namespace System.Data.Entity.Core.Objects
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
 
             if (executionStrategy.RetriesOnFailure
-                && executionOptions.Streaming)
+                && executionOptions.UserSpecifiedStreaming.HasValue && executionOptions.UserSpecifiedStreaming.Value)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
+            }
+
+            if (!executionOptions.UserSpecifiedStreaming.HasValue)
+            {
+                executionOptions = new ExecutionOptions(executionOptions.MergeOption, !executionStrategy.RetriesOnFailure);
             }
 
             return executionStrategy.Execute(
@@ -4252,7 +4262,7 @@ namespace System.Data.Entity.Core.Objects
                     () => ExecuteStoreQueryInternal<TElement>(
                         commandText, entitySetName, executionOptions, parameters),
                     executionStrategy, startLocalTransaction: false,
-                    releaseConnectionOnSuccess: !executionOptions.Streaming));
+                    releaseConnectionOnSuccess: !executionOptions.UserSpecifiedStreaming.Value));
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Disposed by ObjectResult")]
@@ -4268,13 +4278,13 @@ namespace System.Data.Entity.Core.Objects
                 using (var command = CreateStoreCommand(commandText, parameters))
                 {
                     reader = command.ExecuteReader(
-                        executionOptions.Streaming
+                        executionOptions.UserSpecifiedStreaming.Value
                             ? CommandBehavior.Default
                             : CommandBehavior.SequentialAccess);
                 }
 
                 shaperFactory = InternalTranslate<TElement>(
-                    reader, entitySetName, executionOptions.MergeOption, executionOptions.Streaming, out entitySet, out edmType);
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet, out edmType);
             }
             catch
             {
@@ -4288,7 +4298,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            if (!executionOptions.Streaming)
+            if (!executionOptions.UserSpecifiedStreaming.Value)
             {
                 BufferedDataReader bufferedReader = null;
                 try
@@ -4311,7 +4321,7 @@ namespace System.Data.Entity.Core.Objects
                 }
             }
 
-            return ShapeResult(reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.Streaming, shaperFactory, entitySet, edmType);
+            return ShapeResult(reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.UserSpecifiedStreaming.Value, shaperFactory, entitySet, edmType);
         }
 
 #if !NET40
@@ -4374,10 +4384,6 @@ namespace System.Data.Entity.Core.Objects
             AsyncMonitor.EnsureNotEntered();
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
-            if (executionStrategy.RetriesOnFailure)
-            {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
-            }
 
             return ExecuteStoreQueryReliablyAsync<TElement>(
                 commandText, /*entitySetName:*/null, ExecutionOptions.Default, cancellationToken, executionStrategy, parameters);
@@ -4409,17 +4415,8 @@ namespace System.Data.Entity.Core.Objects
         public virtual Task<ObjectResult<TElement>> ExecuteStoreQueryAsync<TElement>(
             string commandText, ExecutionOptions executionOptions, params object[] parameters)
         {
-            AsyncMonitor.EnsureNotEntered();
-
-            var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
-            if (executionStrategy.RetriesOnFailure
-                && executionOptions.Streaming)
-            {
-                throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
-            }
-
-            return ExecuteStoreQueryReliablyAsync<TElement>(
-                commandText, /*entitySetName:*/null, executionOptions, CancellationToken.None, executionStrategy, parameters);
+            return ExecuteStoreQueryAsync<TElement>(
+                commandText, executionOptions, CancellationToken.None, parameters);
         }
 
         /// <summary>
@@ -4455,7 +4452,7 @@ namespace System.Data.Entity.Core.Objects
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
-                && executionOptions.Streaming)
+                && executionOptions.UserSpecifiedStreaming.HasValue && executionOptions.UserSpecifiedStreaming.Value)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
@@ -4530,7 +4527,7 @@ namespace System.Data.Entity.Core.Objects
 
             var executionStrategy = DbProviderServices.GetExecutionStrategy(Connection, MetadataWorkspace);
             if (executionStrategy.RetriesOnFailure
-                && executionOptions.Streaming)
+                && executionOptions.UserSpecifiedStreaming.HasValue && executionOptions.UserSpecifiedStreaming.Value)
             {
                 throw new InvalidOperationException(Strings.ExecutionStrategy_StreamingNotSupported(executionStrategy.GetType().Name));
             }
@@ -4559,13 +4556,17 @@ namespace System.Data.Entity.Core.Objects
                 // user must manually call LoadFromAssembly. *GetCallingAssembly returns
                 // the assembly of the method that invoked the currently executing method.
                 MetadataWorkspace.ImplicitLoadAssemblyForType(typeof(TElement), Assembly.GetCallingAssembly());
+                if (!executionOptions.UserSpecifiedStreaming.HasValue)
+                {
+                    executionOptions = new ExecutionOptions(executionOptions.MergeOption, !executionStrategy.RetriesOnFailure);
+                }
 
                 return await executionStrategy.ExecuteAsync(
                     () => ExecuteInTransactionAsync(
                         () => ExecuteStoreQueryInternalAsync<TElement>(
                             commandText, entitySetName, executionOptions, cancellationToken, parameters),
                         executionStrategy,
-                        /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.Streaming,
+                        /*startLocalTransaction:*/ false, /*releaseConnectionOnSuccess:*/ !executionOptions.UserSpecifiedStreaming.Value,
                         cancellationToken),
                     cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             }
@@ -4591,14 +4592,14 @@ namespace System.Data.Entity.Core.Objects
                 using (var command = CreateStoreCommand(commandText, parameters))
                 {
                     reader = await command.ExecuteReaderAsync(
-                        executionOptions.Streaming
+                        executionOptions.UserSpecifiedStreaming.Value
                             ? CommandBehavior.Default
                             : CommandBehavior.SequentialAccess,
                         cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
 
                 shaperFactory = InternalTranslate<TElement>(
-                    reader, entitySetName, executionOptions.MergeOption, executionOptions.Streaming, out entitySet, out edmType);
+                    reader, entitySetName, executionOptions.MergeOption, executionOptions.UserSpecifiedStreaming.Value, out entitySet, out edmType);
             }
             catch
             {
@@ -4612,7 +4613,7 @@ namespace System.Data.Entity.Core.Objects
                 throw;
             }
 
-            if (!executionOptions.Streaming)
+            if (!executionOptions.UserSpecifiedStreaming.Value)
             {
                 BufferedDataReader bufferedReader = null;
                 try
@@ -4637,7 +4638,7 @@ namespace System.Data.Entity.Core.Objects
             }
 
             return ShapeResult(
-                reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.Streaming, shaperFactory, entitySet, edmType);
+                reader, executionOptions.MergeOption, /*readerOwned:*/ true, executionOptions.UserSpecifiedStreaming.Value, shaperFactory, entitySet, edmType);
         }
 
 #endif

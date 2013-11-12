@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 namespace System.Data.Entity.Internal
 {
@@ -26,9 +26,10 @@ namespace System.Data.Entity.Internal
         // <param name="isNoTracking">
         // If set to <c>true</c> then the entities will not be tracked.
         // </param>
-        // <param name="streaming"> Whether the query is streaming or buffering. </param>
         // <param name="parameters"> The parameters. </param>
-        internal InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, bool streaming, object[] parameters)
+        internal InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, object[] parameters) : this(set, sql, isNoTracking, /*streaming:*/ null, parameters) {}
+
+        private InternalSqlSetQuery(IInternalSet set, string sql, bool isNoTracking, bool? streaming, object[] parameters)
             : base(sql, streaming, parameters)
         {
             DebugCheck.NotNull(set);
@@ -69,7 +70,7 @@ namespace System.Data.Entity.Internal
         // <inheritdoc />
         public override InternalSqlQuery AsStreaming()
         {
-            return Streaming
+            return Streaming.HasValue && Streaming.Value
                        ? this
                        : new InternalSqlSetQuery(_set, Sql, isNoTracking: _isNoTracking, streaming: true, parameters: Parameters);
         }

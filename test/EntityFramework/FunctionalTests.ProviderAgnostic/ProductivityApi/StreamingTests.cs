@@ -2,13 +2,11 @@
 
 namespace ProductivityApiTests
 {
-    using ConcurrencyModel;
     using System.Data;
     using System.Data.Entity;
     using System.Data.Entity.Configuration;
     using System.Data.Entity.Core.Objects;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.TestHelpers;
     using System.Data.Entity.TestModels.ProviderAgnosticModel;
     using System.Linq;
     using Xunit;
@@ -33,7 +31,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in nonPrivates)
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -70,7 +68,7 @@ namespace ProductivityApiTests
                     foreach (var gear in gears)
                     {
                         Assert.NotNull(gear);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -107,7 +105,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in nonPrivates)
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -145,7 +143,7 @@ namespace ProductivityApiTests
                     foreach (var result in query)
                     {
                         Assert.NotNull(result);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -182,7 +180,7 @@ namespace ProductivityApiTests
                     foreach (var gear in gears)
                     {
                         Assert.NotNull(gear);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -219,7 +217,7 @@ namespace ProductivityApiTests
                     foreach (var result in query)
                     {
                         Assert.NotNull(result);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -255,7 +253,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in nonPrivates)
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -292,7 +290,7 @@ namespace ProductivityApiTests
                     foreach (var gear in gears)
                     {
                         Assert.NotNull(gear);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -329,7 +327,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in gears.Where(g => g.Rank > MilitaryRank.Private))
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -370,7 +368,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in nonPrivates)
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -407,7 +405,7 @@ namespace ProductivityApiTests
                     foreach (var gear in gears)
                     {
                         Assert.NotNull(gear);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -444,7 +442,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in nonPrivates)
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
                     Assert.Equal(3, count);
@@ -479,7 +477,7 @@ namespace ProductivityApiTests
                     foreach (var gear in gears)
                     {
                         Assert.NotNull(gear);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 
@@ -516,7 +514,7 @@ namespace ProductivityApiTests
                     foreach (var nonPrivate in gears.Where(g => g.Rank > MilitaryRank.Private))
                     {
                         Assert.NotNull(nonPrivate);
-                        Assert.True(context.Database.Connection.State == ConnectionState.Closed);
+                        Assert.True(context.Database.Connection.State == ConnectionState.Open);
                         count++;
                     }
 

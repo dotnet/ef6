@@ -27,12 +27,12 @@ namespace System.Data.Entity.Internal
 
 #if !NET40
             VerifyMethod<string>(
-                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync("foo", isNoTracking, streaming, parameters),
+                e => e.GetAsyncEnumerator(), m => m.ExecuteSqlQueryAsync("foo", isNoTracking, streaming ? true: (bool?)null, parameters),
                 "foo", isNoTracking, streaming, parameters);
 #endif
 
             VerifyMethod<string>(
-                e => e.GetEnumerator(), m => m.ExecuteSqlQuery("foo", isNoTracking, streaming, parameters),
+                e => e.GetEnumerator(), m => m.ExecuteSqlQuery("foo", isNoTracking, streaming ? true : (bool?)null, parameters),
                 "foo", isNoTracking, streaming, parameters);
         }
 
@@ -45,7 +45,11 @@ namespace System.Data.Entity.Internal
             Assert.NotNull(mockMethodInvoke);
 
             var internalSetMock = new Mock<IInternalSet<T>>();
-            var sqlSetQuery = new InternalSqlSetQuery(internalSetMock.Object, sql, isNoTracking, streaming, parameters);
+            var sqlSetQuery = new InternalSqlSetQuery(internalSetMock.Object, sql, isNoTracking, parameters);
+            if (streaming)
+            {
+                sqlSetQuery = (InternalSqlSetQuery)sqlSetQuery.AsStreaming();
+            }
 
             try
             {
