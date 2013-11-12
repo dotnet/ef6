@@ -24,5 +24,6 @@
   <assembly name="EFDesigner.UnitTests" />
   <assembly name="EFDesigner.InProcTests" />
   <assembly name="EFDesigner.FunctionalTests" />
+  <assembly name="EFDesigner.E2ETests" />
 
 </assemblies>

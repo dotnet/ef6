@@ -101,6 +101,7 @@ namespace EFDesigner.E2ETests
         /// </summary>
         [TestMethod]
         [HostType("VS IDE")]
+        [TestCategory("DoNotRunOnCI")]
         public void AddAnEmptyModel()
         {
             Exception exceptionCaught = null;
@@ -124,7 +125,7 @@ namespace EFDesigner.E2ETests
                             SearchCriteria.ByAutomationId("VisualStudioMainWindow"),
                             InitializeOption.NoCache);
 
-                        var newItemWindow = _visualStudioMainWindow.Popup; //.Get<Window>(SearchCriteria.ByAutomationId("NewItemDialog"));
+                        var newItemWindow = _visualStudioMainWindow.Popup;
                         var extensions = newItemWindow.Get<ListView>(SearchCriteria.ByText("Extensions"));
                         extensions.Select("ADO.NET Entity Data Model");
                         var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
@@ -176,6 +177,7 @@ namespace EFDesigner.E2ETests
         [TestMethod]
         [HostType("VS IDE")]
         [Timeout(4 * 60 * 1000)]
+        [TestCategory("DoNotRunOnCI")]
         public void AddModelFromExistingDB()
         {
             Exception exceptionCaught = null;
