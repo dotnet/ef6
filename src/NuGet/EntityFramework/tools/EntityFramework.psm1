@@ -269,17 +269,19 @@ function Initialize-EFConfiguration
     than once for a given project.
 	
 .EXAMPLE 
-	# Scaffold a migrations configuration in a project with only one context
 	Enable-Migrations
+	# Scaffold a migrations configuration in a project with only one context
 	
 .EXAMPLE 
+	Enable-Migrations -Auto
 	# Scaffold a migrations configuration with automatic migrations enabled for a project
 	# with only one context
-	Enable-Migrations -EnableAutomaticMigrations
 	
 .EXAMPLE 
-	# Scaffold a migrations configuration for a project with multiple contexts in a new directory
 	Enable-Migrations -ContextTypeName MyContext -MigrationsDirectory DirectoryName
+	# Scaffold a migrations configuration for a project with multiple contexts
+	# This scaffolds a migrations configuration for MyContext and will put the configuration
+	# and subsequent configurations in a new directory called "DirectoryName"
 
 #>
 function Enable-Migrations
@@ -379,15 +381,15 @@ function Enable-Migrations
     current model.
 	
 .EXAMPLE
-	# Scaffold a new migration named "first"
-	Add-Migration first
+	Add-Migration First
+	# Scaffold a new migration named "First"
 	
 .EXAMPLE
+	Add-Migration First -IgnoreChanges
 	# Scaffold an empty migration ignoring any pending changes detected in the current model.
 	# This can be used to create an initial, empty migration to enable Migrations for an existing
 	# database. N.B. Doing this assumes that the target database schema is compatible with the
 	# current model.
-	Add-Migration first -IgnoreChanges
 
 #>
 function Add-Migration
@@ -488,29 +490,34 @@ function Add-Migration
     Specifies the provider invariant name of the connection string.
 	
 .EXAMPLE
-	# Update the database to the latest migration
 	Update-Database
+	# Update the database to the latest migration
 	
 .EXAMPLE
-	# Update database to a migration named "second"
-	Update-Database -TargetMigration second
+	Update-Database -TargetMigration Second
+	# Update database to a migration named "Second"
+	# This will apply migrations if the target hasn't been applied or roll back migrations
+	# if it has
 	
 .EXAMPLE
+	Update-Database -Script
 	# Generate a script to update the database from it's current state  to the latest migration
-	Update-Databse -Script
 	
 .EXAMPLE
+	Update-Database -Script -SourceMigration Second -TargetMigration First
 	# Generate a script to migrate the database from a specified start migration
-	# named "second" to a specified target migration named "first"
-	Update-Database -Script -SourceMigration second -TargetMigration first
+	# named "Second" to a specified target migration named "First"	
 	
 .EXAMPLE
-	# Generate a state agnostic database migration script
 	Update-Database -Script -SourceMigration $InitialDatabase
+	# Generate a script that can upgrade a database currently at any version to the latest version. 
+	# The generated script includes logic to check the __MigrationsHistory table and only apply changes 
+	# that haven't been previously applied.	
 	
 .EXAMPLE 
-	# Reset database to initial state
 	Update-Database -TargetMigration $InitialDatabase
+	# Runs the Down method to roll-back any migrations that have been applied to the database
+	
 	
 #>
 function Update-Database
