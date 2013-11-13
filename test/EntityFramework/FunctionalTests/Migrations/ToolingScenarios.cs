@@ -177,6 +177,44 @@ namespace System.Data.Entity.Migrations
             }
         }
 
+        [MigrationsTheory]
+        public void Can_still_scaffold_generic_context_by_specifying_name_directly()
+        {
+            ResetDatabase();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ContextLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _contextDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var result = facade.GetContextType("GenericContext`1");
+                Assert.Equal("ContextLibrary1.GenericContext`1", result);
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_still_scaffold_abstract_context_by_specifying_name_directly()
+        {
+            ResetDatabase();
+
+            using (var facade = new ToolingFacade(
+                "ClassLibrary1",
+                "ContextLibrary1",
+                configurationTypeName: null,
+                workingDirectory: _contextDir,
+                configurationFilePath: null,
+                dataDirectory: null,
+                connectionStringInfo: null))
+            {
+                var result = facade.GetContextType("AbstractContext");
+                Assert.Equal("ContextLibrary1.AbstractContext", result);
+            }
+        }
+
         [MigrationsTheory(SlowGroup = TestGroup.MigrationsTests)]
         public void Can_scaffold_initial_create()
         {
@@ -353,6 +391,26 @@ namespace System.Data.Entity.Migrations
 
         public DbSet<Entity> Entities { get; set; }
     }
+
+    public class GenericContext<TEntity> : DbContext where TEntity : class
+    {
+        public GenericContext()
+            : base(""Name=ClassLibrary1"")
+        {
+        }
+
+        public DbSet<TEntity> Entities { get; set; }
+    }
+
+    public abstract class AbstractContext : DbContext
+    {
+        public AbstractContext()
+            : base(""Name=ClassLibrary1"")
+        {
+        }
+
+        public DbSet<Entity> Entities { get; set; }
+    } 
 
     public class Entity
     {
