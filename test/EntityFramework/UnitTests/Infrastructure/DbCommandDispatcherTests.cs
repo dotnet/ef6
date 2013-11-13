@@ -591,7 +591,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Protected()
-                           .Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                           .Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                            .Returns(new Mock<DbDataReader>().Object);
 
                 var dispatcher = new DbCommandDispatcher();
@@ -599,7 +599,7 @@ namespace System.Data.Entity.Infrastructure
 
                 Assert.NotNull(dispatcher.Reader(mockCommand.Object, interceptionContext));
 
-                mockCommand.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                mockCommand.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
 
                 Assert.Null(interceptionContext.Result);
                 Assert.Equal("Bang!", interceptionContext.Exception.Message);
@@ -1505,7 +1505,7 @@ namespace System.Data.Entity.Infrastructure
 
                 var mockCommand = new Mock<DbCommand>();
                 mockCommand.Protected()
-                           .Setup<Task<DbDataReader>>("ExecuteDbDataReaderAsync", CommandBehavior.SequentialAccess, It.IsAny<CancellationToken>())
+                           .Setup<Task<DbDataReader>>("ExecuteDbDataReaderAsync", CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>())
                            .Returns(result);
 
                 var mockInterceptor = new Mock<IDbCommandInterceptor>();
@@ -1530,7 +1530,7 @@ namespace System.Data.Entity.Infrastructure
                 Assert.NotSame(result, interceptResult);
 
                 mockCommand.Protected()
-                           .Verify("ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.SequentialAccess, It.IsAny<CancellationToken>());
+                           .Verify("ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>());
 
                 mockInterceptor.Verify(
                     m => m.ReaderExecuting(
@@ -1642,7 +1642,7 @@ namespace System.Data.Entity.Infrastructure
 
                 mockCommand.Protected()
                            .Verify(
-                               "ExecuteDbDataReaderAsync", Times.Once(), ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>());
+                               "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.Default, ItExpr.IsAny<CancellationToken>());
             }
 
             [Fact]
@@ -1682,7 +1682,7 @@ namespace System.Data.Entity.Infrastructure
                 var interceptResult = dispatcher.ReaderAsync(mockCommand.Object, interceptionContext, new CancellationToken());
 
                 mockCommand.Protected().Verify(
-                    "ExecuteDbDataReaderAsync", Times.Once(), ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>());
+                    "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.Default, ItExpr.IsAny<CancellationToken>());
 
                 result.Start();
                 interceptResult.Wait();

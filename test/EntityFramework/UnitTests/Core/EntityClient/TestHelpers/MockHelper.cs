@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.EntityClient
                 Returns((EntityCommand ec, CommandBehavior cb, CancellationToken ct) => Task.FromResult(dataReader));
 #endif
             var entityCommandMock = new Mock<EntityCommand>();
-            entityCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(dataReader);
+            entityCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(dataReader);
             entityCommandDefinitionMock.Setup(m => m.CreateCommand()).Returns(entityCommandMock.Object);
 
             return entityCommandDefinitionMock.Object;
