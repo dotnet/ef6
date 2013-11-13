@@ -15,7 +15,7 @@
     <CheckSkipStrongNamesStatus AssembliesFile="$(SkipStrongNamesXml)">
       <Output TaskParameter="Status" PropertyName="Status" />
     </CheckSkipStrongNamesStatus>
-    <Error Text="SkipStrongNames must be enabled. Current status: $(Status). Run 'EFToolsBuild /t:EnableSkipStrongNames' to fix this problem." Condition="'$(Status)' != 'Enabled'" />
+    <Error Text="SkipStrongNames must be enabled. Current status: $(Status). Run 'BuildEFTools /t:EnableSkipStrongNames' to fix this problem." Condition="'$(Status)' != 'Enabled'" />
   </Target>
 
   <Target Name="EnableSkipStrongNames">

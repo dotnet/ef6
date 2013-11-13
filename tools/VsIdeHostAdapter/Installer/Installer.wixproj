@@ -31,6 +31,11 @@
     <Error Text="Wix Toolset not installed" />
   </Target>  
   
+  <Target Name="Clean">
+    <!-- Clean target from WiX would have overwritten this target if wix had been installed -->
+    <Error Text="Wix Toolset not installed" />
+  </Target>  
+  
   <Import 
     Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets" 
     Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
