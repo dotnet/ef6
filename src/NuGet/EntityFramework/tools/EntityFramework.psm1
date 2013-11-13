@@ -267,6 +267,20 @@ function Initialize-EFConfiguration
 .PARAMETER Force
     Specifies that the migrations configuration be overwritten when running more
     than once for a given project.
+	
+.EXAMPLE 
+	# Scaffold a migrations configuration in a project with only one context
+	Enable-Migrations
+	
+.EXAMPLE 
+	# Scaffold a migrations configuration with automatic migrations enabled for a project
+	# with only one context
+	Enable-Migrations -EnableAutomaticMigrations
+	
+.EXAMPLE 
+	# Scaffold a migrations configuration for a project with multiple contexts in a new directory
+	Enable-Migrations -ContextTypeName MyContext -MigrationsDirectory DirectoryName
+
 #>
 function Enable-Migrations
 {
@@ -363,6 +377,17 @@ function Enable-Migrations
     This can be used to create an initial, empty migration to enable Migrations for an existing
     database. N.B. Doing this assumes that the target database schema is compatible with the
     current model.
+	
+.EXAMPLE
+	# Scaffold a new migration named "first"
+	Add-Migration first
+	
+.EXAMPLE
+	# Scaffold an empty migration ignoring any pending changes detected in the current model.
+	# This can be used to create an initial, empty migration to enable Migrations for an existing
+	# database. N.B. Doing this assumes that the target database schema is compatible with the
+	# current model.
+	Add-Migration first -IgnoreChanges
 
 #>
 function Add-Migration
@@ -461,6 +486,32 @@ function Add-Migration
 
 .PARAMETER ConnectionProviderName
     Specifies the provider invariant name of the connection string.
+	
+.EXAMPLE
+	# Update the database to the latest migration
+	Update-Database
+	
+.EXAMPLE
+	# Update database to a migration named "second"
+	Update-Database -TargetMigration second
+	
+.EXAMPLE
+	# Generate a script to update the database from it's current state  to the latest migration
+	Update-Databse -Script
+	
+.EXAMPLE
+	# Generate a script to migrate the database from a specified start migration
+	# named "second" to a specified target migration named "first"
+	Update-Database -Script -SourceMigration second -TargetMigration first
+	
+.EXAMPLE
+	# Generate a state agnostic database migration script
+	Update-Database -Script -SourceMigration $InitialDatabase
+	
+.EXAMPLE 
+	# Reset database to initial state
+	Update-Database -TargetMigration $InitialDatabase
+	
 #>
 function Update-Database
 {
