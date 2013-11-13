@@ -11,14 +11,13 @@ namespace System.Data.Entity.Core.Objects.Internal
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;
     using System.Reflection;
+#if !NET40
     using System.Threading;
     using System.Threading.Tasks;
+#endif
     using Moq;
     using Moq.Protected;
     using Xunit;
-#if !NET40
-
-#endif
 
     public class BufferedDataReaderTests : TestBase
     {
@@ -492,6 +491,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         [Fact]
         public void Data_methods_throw_exception_if_no_data_present()
         {
+#if DEBUG
             Verify_method_throws_when_no_data(r => r.GetBoolean(0), new[] { new object[] { true } });
             Verify_method_throws_when_no_data(r => r.GetByte(0), new[] { new object[] { (byte)1 } });
             Verify_method_throws_when_no_data(r => r.GetInt16(0), new[] { new object[] { (short)1 } });
@@ -516,6 +516,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 #if !NET40
             Verify_method_throws_when_no_data(r => r.IsDBNullAsync(0).Result, new[] { new object[] { DBNull.Value } });
             Verify_method_throws_when_no_data(r => r.IsDBNullAsync(0).Result, new[] { new[] { new object() } });
+#endif
 #endif
         }
 

@@ -111,7 +111,7 @@ namespace System.Data.Entity.SqlServer
                 mockReader.Setup(m => m.GetInt32(0)).Returns(engineEdition);
 
                 var mockCommand = new Mock<DbCommand>();
-                mockCommand.Protected().Setup<DbDataReader>("ExecuteDbDataReader", CommandBehavior.Default).Returns(mockReader.Object);
+                mockCommand.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(mockReader.Object);
 
                 var mockConnection = new Mock<DbConnection>();
                 mockConnection.Setup(m => m.State).Returns(ConnectionState.Open);

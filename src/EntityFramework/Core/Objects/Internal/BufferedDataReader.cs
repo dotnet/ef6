@@ -111,6 +111,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         }
 
         [SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
+        [Conditional("DEBUG")]
         private void AssertFieldIsReady(int ordinal)
         {
             Debug.Assert(_underlyingReader == null, "The reader wasn't initialized");

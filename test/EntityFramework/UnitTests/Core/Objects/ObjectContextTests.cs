@@ -776,7 +776,7 @@ namespace System.Data.Entity.Core.Objects
                     .Setup(m => m.GetEnumerator())
                     .Returns(new List<DbParameter>().GetEnumerator());
 
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(
                     Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } }));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
@@ -788,7 +788,7 @@ namespace System.Data.Entity.Core.Objects
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
-                dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
                 Assert.True(correctParameters);
 
                 result.Dispose();
@@ -822,7 +822,7 @@ namespace System.Data.Entity.Core.Objects
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } });
                 // This reader will throw if buffering is on
                 Mock.Get(dataReader).Setup(m => m.Read()).Throws(new NotImplementedException());
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(dataReader);
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(dataReader);
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
 
@@ -833,7 +833,7 @@ namespace System.Data.Entity.Core.Objects
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Never());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
-                dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                dbCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 Assert.True(correctParameters);
 
                 result.Dispose();
@@ -847,7 +847,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
 
                 var storeDataReaderMock = new Mock<DbDataReader>();
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>()).Returns(
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(
                     storeDataReaderMock.Object);
 
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -895,7 +895,7 @@ namespace System.Data.Entity.Core.Objects
             {
                 var dbCommandMock = new Mock<DbCommand>();
 
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                              .Throws(new InvalidOperationException("Foo"));
 
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -922,7 +922,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
-                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                dbCommandMock.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                              .Returns(dataReader);
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
                 parameterCollectionMock
@@ -952,7 +952,7 @@ namespace System.Data.Entity.Core.Objects
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
                 dbCommandMock.Protected().Setup<DbDataReader>(
-                    "ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                    "ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                              .Returns(dataReader);
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
@@ -967,10 +967,10 @@ namespace System.Data.Entity.Core.Objects
                                      (f, t, s, r) =>
                                          {
                                              dbCommandMock.Protected().Verify<DbDataReader>(
-                                                 "ExecuteDbDataReader", Times.Never(), It.IsAny<CommandBehavior>());
+                                                 "ExecuteDbDataReader", Times.Never(), CommandBehavior.SequentialAccess);
                                              var result = f();
                                              dbCommandMock.Protected().Verify<DbDataReader>(
-                                                 "ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                                                 "ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
                                              return result;
                                          });
 
@@ -1351,7 +1351,7 @@ namespace System.Data.Entity.Core.Objects
 
                     objectContext.ExecuteFunction<object>("Foo", new ExecutionOptions(MergeOption.AppendOnly, streaming: true));
 
-                    entityCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                    entityCommandMock.Protected().Verify("ExecuteDbDataReader", Times.Once(), CommandBehavior.Default);
                 }
                 finally
                 {
@@ -1396,7 +1396,7 @@ namespace System.Data.Entity.Core.Objects
 
                 var entityCommandMock = Mock.Get((EntityCommand)entityCommandDefinition.CreateCommand());
                 entityCommandMock.Protected().Setup<DbDataReader>(
-                    "ExecuteDbDataReader", It.IsAny<CommandBehavior>())
+                    "ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>())
                                  .Returns(dataReaderMock.Object);
 
                 var objectContextMock = Mock.Get(CreateObjectContext(entityCommandMock.Object));
@@ -1415,10 +1415,10 @@ namespace System.Data.Entity.Core.Objects
                                      (f, t, s, r) =>
                                          {
                                              entityCommandMock.Protected().Verify<DbDataReader>(
-                                                 "ExecuteDbDataReader", Times.Never(), It.IsAny<CommandBehavior>());
+                                                 "ExecuteDbDataReader", Times.Never(), CommandBehavior.SequentialAccess);
                                              var result = f();
                                              entityCommandMock.Protected().Verify<DbDataReader>(
-                                                 "ExecuteDbDataReader", Times.Once(), It.IsAny<CommandBehavior>());
+                                                 "ExecuteDbDataReader", Times.Once(), CommandBehavior.SequentialAccess);
                                              return result;
                                          });
 
@@ -2414,7 +2414,7 @@ namespace System.Data.Entity.Core.Objects
                    .Setup(m => m.GetEnumerator())
                    .Returns(new List<DbParameter>().GetEnumerator());
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
-                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Returns(
                                  Task.FromResult(
                                      Common.Internal.Materialization.MockHelper.CreateDbDataReader(new[] { new[] { new object() } })));
@@ -2423,13 +2423,13 @@ namespace System.Data.Entity.Core.Objects
 
                 var objectContext = CreateObjectContext(dbCommandMock.Object);
 
-                var result =objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Result;
+                var result = objectContext.ExecuteStoreQueryAsync<object>("{0} Foo", parameterMock.Object).Result;
 
                 Mock.Get(objectContext).Verify(m => m.ReleaseConnection(), Times.Once());
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify(
-                    "ExecuteDbDataReaderAsync", Times.Once(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
+                    "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>());
                 Assert.True(correctParameters);
 
                 result.Dispose();
@@ -2463,7 +2463,7 @@ namespace System.Data.Entity.Core.Objects
                 // This reader will throw if buffering is on
                 Mock.Get(dataReader).Setup(m => m.ReadAsync(It.IsAny<CancellationToken>())).Throws(new NotImplementedException());
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
-                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(dataReader));
                 dbCommandMock.Protected().SetupGet<DbParameterCollection>("DbParameterCollection").Returns(
                     () => parameterCollectionMock.Object);
@@ -2478,7 +2478,7 @@ namespace System.Data.Entity.Core.Objects
 
                 dbCommandMock.VerifySet(m => m.CommandText = "{0} Foo", Times.Once());
                 dbCommandMock.Protected().Verify(
-                    "ExecuteDbDataReaderAsync", Times.Once(), It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
+                    "ExecuteDbDataReaderAsync", Times.Once(), CommandBehavior.Default, It.IsAny<CancellationToken>());
                 Assert.True(correctParameters);
 
                 result.Dispose();
@@ -2494,7 +2494,7 @@ namespace System.Data.Entity.Core.Objects
                 var storeDataReaderMock = new Mock<DbDataReader>();
                 dbCommandMock.Protected()
                              .Setup<Task<DbDataReader>>(
-                                 "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                                 "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(storeDataReaderMock.Object));
 
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -2544,7 +2544,7 @@ namespace System.Data.Entity.Core.Objects
                 var dbCommandMock = new Mock<DbCommand>();
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
-                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Throws(new InvalidOperationException("Foo"));
 
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -2573,7 +2573,7 @@ namespace System.Data.Entity.Core.Objects
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
-                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(dataReader));
 
                 var parameterCollectionMock = new Mock<DbParameterCollection>();
@@ -2606,7 +2606,7 @@ namespace System.Data.Entity.Core.Objects
                 var dataReader = Common.Internal.Materialization.MockHelper.CreateDbDataReader();
 
                 dbCommandMock.Protected().Setup<Task<DbDataReader>>(
-                    "ExecuteDbDataReaderAsync", It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>())
+                    "ExecuteDbDataReaderAsync", ItExpr.IsAny<CommandBehavior>(), ItExpr.IsAny<CancellationToken>())
                              .Returns(Task.FromResult(dataReader));
 
                 var objectContextMock = Mock.Get(CreateObjectContext(dbCommandMock.Object));
@@ -2623,11 +2623,11 @@ namespace System.Data.Entity.Core.Objects
                                          {
                                              dbCommandMock.Protected().Verify<Task<DbDataReader>>(
                                                  "ExecuteDbDataReaderAsync", Times.Never(),
-                                                 It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
+                                                 CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>());
                                              var result = f();
                                              dbCommandMock.Protected().Verify<Task<DbDataReader>>(
                                                  "ExecuteDbDataReaderAsync", Times.Once(),
-                                                 It.IsAny<CommandBehavior>(), It.IsAny<CancellationToken>());
+                                                 CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>());
                                              return result;
                                          });
 

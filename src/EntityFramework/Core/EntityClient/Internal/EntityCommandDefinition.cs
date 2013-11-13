@@ -14,7 +14,6 @@ namespace System.Data.Entity.Core.EntityClient.Internal
     using System.Data.Entity.Core.Query.InternalTrees;
     using System.Data.Entity.Core.Query.PlanCompiler;
     using System.Data.Entity.Core.Query.ResultAssembly;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Internal;
@@ -429,7 +428,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
                 throw new InvalidOperationException(Strings.ADP_MustUseSequentialAccess);
             }
 
-            var storeDataReader = ExecuteStoreCommands(entityCommand, behavior);
+            var storeDataReader = ExecuteStoreCommands(entityCommand, behavior & ~CommandBehavior.SequentialAccess);
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
@@ -484,7 +483,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             }
 
             var storeDataReader =
-                await ExecuteStoreCommandsAsync(entityCommand, behavior, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                await ExecuteStoreCommandsAsync(entityCommand, behavior & ~CommandBehavior.SequentialAccess, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
             DbDataReader result = null;
 
             // If we actually executed something, then go ahead and construct a bridge
@@ -542,7 +541,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             DbDataReader reader = null;
             try
             {
-                reader = storeProviderCommand.ExecuteReader(behavior & ~CommandBehavior.SequentialAccess);
+                reader = storeProviderCommand.ExecuteReader(behavior);
             }
             catch (Exception e)
             {
@@ -575,7 +574,7 @@ namespace System.Data.Entity.Core.EntityClient.Internal
             try
             {
                 reader = await
-                         storeProviderCommand.ExecuteReaderAsync(behavior & ~CommandBehavior.SequentialAccess, cancellationToken)
+                         storeProviderCommand.ExecuteReaderAsync(behavior, cancellationToken)
                                              .ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (Exception e)

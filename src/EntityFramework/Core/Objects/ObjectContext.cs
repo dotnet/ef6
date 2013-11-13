@@ -3598,7 +3598,10 @@ namespace System.Data.Entity.Core.Objects
             DbDataReader storeReader = null;
             try
             {
-                storeReader = commandDefinition.ExecuteStoreCommands(entityCommand, CommandBehavior.Default);
+                storeReader = commandDefinition.ExecuteStoreCommands(
+                    entityCommand, executionOptions.Streaming
+                        ? CommandBehavior.Default
+                        : CommandBehavior.SequentialAccess);
             }
             catch (Exception e)
             {
@@ -4264,7 +4267,10 @@ namespace System.Data.Entity.Core.Objects
             {
                 using (var command = CreateStoreCommand(commandText, parameters))
                 {
-                    reader = command.ExecuteReader();
+                    reader = command.ExecuteReader(
+                        executionOptions.Streaming
+                            ? CommandBehavior.Default
+                            : CommandBehavior.SequentialAccess);
                 }
 
                 shaperFactory = InternalTranslate<TElement>(
@@ -4584,7 +4590,11 @@ namespace System.Data.Entity.Core.Objects
             {
                 using (var command = CreateStoreCommand(commandText, parameters))
                 {
-                    reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+                    reader = await command.ExecuteReaderAsync(
+                        executionOptions.Streaming
+                            ? CommandBehavior.Default
+                            : CommandBehavior.SequentialAccess,
+                        cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
                 }
 
                 shaperFactory = InternalTranslate<TElement>(

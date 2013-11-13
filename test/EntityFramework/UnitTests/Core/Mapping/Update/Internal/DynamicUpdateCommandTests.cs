@@ -7,7 +7,6 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
     using System.Data.Entity.Core.Common.CommandTrees;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.Internal;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -228,7 +227,7 @@ namespace System.Data.Entity.Core.Mapping.Update.Internal
                 mockDbDataReader.Setup(m => m.NextResultAsync(It.IsAny<CancellationToken>())).Returns(Task.FromResult(false));
 
                 mockDbCommand.Protected()
-                    .Setup<Task<DbDataReader>>("ExecuteDbDataReaderAsync", CommandBehavior.SequentialAccess, It.IsAny<CancellationToken>())
+                    .Setup<Task<DbDataReader>>("ExecuteDbDataReaderAsync", CommandBehavior.SequentialAccess, ItExpr.IsAny<CancellationToken>())
                     .Returns(Task.FromResult(mockDbDataReader.Object));
 
                 var identifierValues = new Dictionary<int, object>();

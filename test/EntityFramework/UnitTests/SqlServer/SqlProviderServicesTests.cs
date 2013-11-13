@@ -159,7 +159,7 @@ namespace System.Data.Entity.SqlServer
             mockReader.Setup(m => m.GetInt32(0)).Returns(azure ? 5 : 2);
 
             var mockCommand = new Mock<DbCommand>();
-            mockCommand.Protected().Setup<DbDataReader>("ExecuteDbDataReader", CommandBehavior.Default).Returns(mockReader.Object);
+            mockCommand.Protected().Setup<DbDataReader>("ExecuteDbDataReader", ItExpr.IsAny<CommandBehavior>()).Returns(mockReader.Object);
 
             var mockFactory = new Mock<DbProviderFactory>();
 
