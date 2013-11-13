@@ -123,6 +123,11 @@ namespace System.Data.Entity.Core.Metadata.Edm
             }
         }
 
+        internal AssociationEndMember PrincipalEnd
+        {
+            get { return (AssociationEndMember)FromRole; }
+        }
+
         internal AssociationEndMember DependentEnd
         {
             get { return (AssociationEndMember)ToRole; }

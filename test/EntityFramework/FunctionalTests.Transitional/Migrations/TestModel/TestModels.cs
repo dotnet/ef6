@@ -424,4 +424,162 @@ namespace System.Data.Entity.Migrations
 
         public virtual ICollection<ProcessedTransaction> ChildTransactions { get; set; }
     }
+
+    namespace OSpaceRenames_v1
+    {
+        public class TableRename1
+        {
+            public int Id { get; set; }
+        }
+
+        public class TableRenameDerived1 : TableRename1
+        {
+            public string Member { get; set; }
+        }
+
+        public class TableRenameManyManyLeft1
+        {
+            public int Id { get; set; }
+            public ICollection<TableRenameManyManyRight> Rights { get; set; }
+        }
+
+        public class TableRenameManyManyRight
+        {
+            public int Id { get; set; }
+            public ICollection<TableRenameManyManyLeft1> Lefts { get; set; }
+        }
+
+        public class TableRenameEntitySplit1
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+        }
+
+        public class TableRenameTableSplit1
+        {
+            public int Id { get; set; }
+            public TableRenameTableSplitPayload1 Payload { get; set; }
+        }
+
+        public class TableRenameTableSplitPayload1
+        {
+            public int Id { get; set; }
+        }
+
+        [Table("ColumnRename")]
+        public class ColumnRename1
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+            public ComplexType ComplexMember { get; set; }
+            public IaParent Parent { get; set; }
+        }
+
+        public class ColumnRenameDerived : ColumnRename1
+        {
+            public string DerivedMember { get; set; }
+        }
+
+        public class ComplexType
+        {
+            public string Member { get; set; }
+        }
+
+        public class IaParent
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+        }
+
+        public class OrphanedColumn1
+        {
+            public int Id { get; set; }
+            public string OrphanedColumnParentId { get; set; }
+            public OrphanedColumnParent OrphanedColumnParent { get; set; }
+        }
+
+        public class OrphanedColumnParent
+        {
+            public string Id { get; set; }
+        }
+    }
+
+    namespace OSpaceRenames_v2
+    {
+        public class TableRename2
+        {
+            public int Id { get; set; }
+        }
+
+        public class TableRenameDerived2 : TableRename2
+        {
+            public string Member { get; set; }
+        }
+
+        public class TableRenameManyManyLeft2
+        {
+            public int Id { get; set; }
+            public ICollection<TableRenameManyManyRight> Rights { get; set; }
+        }
+
+        public class TableRenameManyManyRight
+        {
+            public int Id { get; set; }
+            public ICollection<TableRenameManyManyLeft2> Lefts { get; set; }
+        }
+        
+        public class TableRenameEntitySplit2
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+        }
+
+        public class TableRenameTableSplit2
+        {
+            public int Id { get; set; }
+            public TableRenameTableSplitPayload2 Payload { get; set; }
+        }
+
+        public class TableRenameTableSplitPayload2
+        {
+            public int Id { get; set; }
+        }
+
+        [Table("ColumnRename")]
+        public class ColumnRename2
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+            public ComplexType ComplexMember { get; set; }
+            public IaParent Parent { get; set; }
+        }
+
+        public class ColumnRenameDerived : ColumnRename2
+        {
+            public string DerivedMember { get; set; }
+        }
+
+        public class ComplexType
+        {
+            public string Member { get; set; }
+        }
+
+        public class IaParent
+        {
+            public int Id { get; set; }
+            public string Member { get; set; }
+        }
+
+        public class OrphanedColumn2
+        {
+            public int Id { get; set; }
+            public string OrphanedColumnParentId { get; set; }
+            public OrphanedColumnParent OrphanedColumnParent { get; set; }
+        }
+
+        public class OrphanedColumnParent
+        {
+            public string Id { get; set; }
+        }
+    }
 }

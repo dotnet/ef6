@@ -334,4 +334,17 @@ namespace System.Data.Entity.Migrations.Infrastructure.FunctionsModel
                 );
         }
     }
+
+    internal class TestContext_v2c : TestContext
+    {
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder
+                .Entity<Customer>()
+                .Property(o => o.Name)
+                .HasMaxLength(42);
+        }
+    }
 }

@@ -70,6 +70,8 @@ namespace System.Data.Entity.Core.Mapping
         // Types for which the mapping holds true for not only the type specified but the sub-types of that type as well.
         // </summary>
         private readonly Dictionary<string, EntityType> m_isOfEntityTypes = new Dictionary<string, EntityType>(StringComparer.Ordinal);
+        
+        private EntityType _entityType;
 
         /// <summary>
         /// Gets the EntitySetMapping that contains this EntityTypeMapping.
@@ -89,7 +91,7 @@ namespace System.Data.Entity.Core.Mapping
         /// </summary>
         public EntityType EntityType
         {
-            get { return m_entityTypes.Values.SingleOrDefault(); }
+            get { return _entityType ?? (_entityType = m_entityTypes.Values.SingleOrDefault()); }
         }
 
         /// <summary>
