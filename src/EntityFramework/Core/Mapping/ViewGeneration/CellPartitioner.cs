@@ -60,24 +60,9 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration
                 var associationSetExtent = cell.CQuery.Extent as AssociationSet;
                 if (associationSetExtent != null)
                 {
-                    if (associationSetExtent.ElementType.IsManyToMany())
+                    foreach (var end in associationSetExtent.AssociationSetEnds)
                     {
-                        foreach (var end in associationSetExtent.AssociationSetEnds)
-                        {
-                            extentGraph.AddEdge(end.EntitySet, associationSetExtent);
-                        }
-                    }
-                    else
-                    {
-                        EntitySetBase prev = null;
-                        foreach (var end in associationSetExtent.AssociationSetEnds)
-                        {
-                            if (prev != null)
-                            {
-                                extentGraph.AddEdge(prev, end.EntitySet);
-                            }
-                            prev = end.EntitySet;
-                        }
+                        extentGraph.AddEdge(end.EntitySet, associationSetExtent);
                     }
                 }
             }
