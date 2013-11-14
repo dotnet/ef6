@@ -1277,7 +1277,7 @@ namespace System.Data.Entity.Core.Objects.ELinq
         {
             // check if either side is an initializer type
             var leftType = left.ResultType.EdmType as RowType;
-            var rightType = left.ResultType.EdmType as RowType;
+            var rightType = right.ResultType.EdmType as RowType;
 
             if (null != leftType
                 || null != rightType)
