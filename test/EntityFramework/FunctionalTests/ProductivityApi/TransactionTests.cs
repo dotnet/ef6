@@ -183,26 +183,34 @@ namespace ProductivityApiTests
                 connection.Open();
                 using (var txn = connection.BeginTransaction())
                 {
+                    var stateChangeEventHandlerField = typeof(DbConnection).GetFields(
+                        BindingFlags.NonPublic | BindingFlags.Instance).SingleOrDefault(fi => fi.Name == "_stateChangeEventHandler");
+
                     using (var ctx2 = new Issue1805Context(connection, false))
                     {
                         ctx2.Database.UseTransaction(txn);
                         ctx2.Database.Initialize(force: false);
+
+                        // Now look up by reflection the event handler on the initial connection.
+                        // That event handler's invocation list should contain a delegate to EntityConnection's
+                        // StoreConnectionStateChangeHandler method because it subscribed to that
+                        // event when it was created.
+                        var stateChangeEventHandler = (StateChangeEventHandler)stateChangeEventHandlerField.GetValue(connection);
+                        Assert.NotEmpty(stateChangeEventHandler.GetInvocationList().Where(
+                                    del => del.Target != null
+                                           && del.Target.ToString() == "System.Data.Entity.Core.EntityClient.EntityConnection"
+                                           && del.Method != null
+                                           && del.Method.ToString().StartsWith("Void StoreConnectionStateChangeHandler")));
                     }
 
                     Assert.Equal(ConnectionState.Open, connection.State);
 
-                    // Now look up by reflection the delegates of the event handler on the initial connection.
-                    // If any of those delegates still point to the EntityConnection's StoreConnectionStateChangeHandler
-                    // method, then that would keep the EntityConnection alive which in turn would prevent the
-                    // SimpleModelContextForConnectionEvent from being garbage-collected.
-                    var stateChangeEventHandlerField = typeof(DbConnection).GetFields(
-                        BindingFlags.NonPublic | BindingFlags.Instance).SingleOrDefault(fi => fi.Name == "_stateChangeEventHandler");
-
-                    var stateChangeEventHandler = (StateChangeEventHandler)stateChangeEventHandlerField.GetValue(connection);
-
-                    Assert.Empty(stateChangeEventHandler.GetInvocationList().Where(
-                                del => del.Target.ToString() == "System.Data.Entity.Core.EntityClient.EntityConnection"
-                                        && del.Method.ToString().StartsWith("Void StoreConnectionStateChangeHandler")));
+                    // Now look up the event handler on the initial connection again.
+                    // That event handler should be null as the subscription to EntityConnection's
+                    // StoreConnectionStateChangeHandler method (which would keep the EntityConnection
+                    // alive which in turn would prevent the Issue1805Context from being garbage-collected)
+                    // should have been unsubscribed during Dispose() on the EntityConnection.
+                    Assert.Null(stateChangeEventHandlerField.GetValue(connection));
                 }
             }
         }
