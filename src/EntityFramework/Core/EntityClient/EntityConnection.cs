@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         private DbProviderFactory _providerFactory;
         private DbConnection _storeConnection;
-        private readonly bool _entityConnectionShouldCloseAndDisposeStoreConnection = true;
+        private readonly bool _entityConnectionOwnsStoreConnection = true;
         private MetadataWorkspace _metadataWorkspace;
         // DbTransaction started using BeginDbTransaction() method
         private EntityTransaction _currentTransaction;
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.EntityClient
 
             _metadataWorkspace = workspace;
             _storeConnection = connection;
-            _entityConnectionShouldCloseAndDisposeStoreConnection = entityConnectionOwnsStoreConnection;
+            _entityConnectionOwnsStoreConnection = entityConnectionOwnsStoreConnection;
             _dispatcher = dispatcher ?? DbInterception.Dispatch.EntityConnection;
 
             if (_storeConnection != null)
@@ -1000,21 +1000,19 @@ namespace System.Data.Entity.Core.EntityClient
 
                 if (_storeConnection != null)
                 {
-                    if (_entityConnectionShouldCloseAndDisposeStoreConnection)
+                    if (_entityConnectionOwnsStoreConnection)
                     {
                         StoreCloseHelper(); // closes store connection
                     }
 
                     UnsubscribeFromStoreConnectionStateChangeEvents();
                     
-                    if (_storeConnection != null)
+                    if (_entityConnectionOwnsStoreConnection)
                     {
-                        if (_entityConnectionShouldCloseAndDisposeStoreConnection)
-                        {
-                            _storeConnection.Dispose();
-                        }
-                        _storeConnection = null;
+                        _storeConnection.Dispose();
                     }
+
+                    _storeConnection = null;
                 }
 
                 // ensure our own state is closed even if _storeConnection was null
