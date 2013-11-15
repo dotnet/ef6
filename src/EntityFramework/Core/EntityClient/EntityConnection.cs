@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.EntityClient
 
         private DbProviderFactory _providerFactory;
         private DbConnection _storeConnection;
-        private readonly bool _entityConnectionShouldDisposeStoreConnection = true;
+        private readonly bool _entityConnectionShouldCloseAndDisposeStoreConnection = true;
         private MetadataWorkspace _metadataWorkspace;
         // DbTransaction started using BeginDbTransaction() method
         private EntityTransaction _currentTransaction;
@@ -171,7 +171,7 @@ namespace System.Data.Entity.Core.EntityClient
 
             _metadataWorkspace = workspace;
             _storeConnection = connection;
-            _entityConnectionShouldDisposeStoreConnection = entityConnectionOwnsStoreConnection;
+            _entityConnectionShouldCloseAndDisposeStoreConnection = entityConnectionOwnsStoreConnection;
             _dispatcher = dispatcher ?? DbInterception.Dispatch.EntityConnection;
 
             if (_storeConnection != null)
@@ -1000,11 +1000,16 @@ namespace System.Data.Entity.Core.EntityClient
 
                 if (_storeConnection != null)
                 {
-                    StoreCloseHelper(); // closes store connection
+                    if (_entityConnectionShouldCloseAndDisposeStoreConnection)
+                    {
+                        StoreCloseHelper(); // closes store connection
+                    }
+
+                    UnsubscribeFromStoreConnectionStateChangeEvents();
+                    
                     if (_storeConnection != null)
                     {
-                        UnsubscribeFromStoreConnectionStateChangeEvents();
-                        if (_entityConnectionShouldDisposeStoreConnection) // only dispose it if we are responsible for disposing...
+                        if (_entityConnectionShouldCloseAndDisposeStoreConnection)
                         {
                             _storeConnection.Dispose();
                         }

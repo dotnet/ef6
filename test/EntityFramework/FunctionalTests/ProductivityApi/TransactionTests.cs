@@ -8,6 +8,10 @@ namespace ProductivityApiTests
     using SimpleModel;
     using Xunit;
 
+    using System.Data;
+    using System.Data.Common;
+    using System.Reflection;
+    
     /// <summary>
     /// Tests for simple uses of transactions with DbContext.
     /// </summary>
@@ -159,6 +163,48 @@ namespace ProductivityApiTests
             using (var context = new SimpleModelContextForCommit2())
             {
                 Assert.True(context.Products.Where(p => p.Name == "Fanta").Any());
+            }
+        }
+
+        public class Issue1805Context : SimpleModelContext
+        {
+            public Issue1805Context(DbConnection connection, bool contextOwnsConnection)
+                : base(connection, contextOwnsConnection)
+            { }
+        }
+
+        [Fact]
+        public void Issue1805_EntityConnection_is_not_subscribed_to_its_underlying_store_connection_event_after_it_has_been_disposed()
+        {
+            using (var ctx1 = new SimpleModelContext())
+            {
+                var connection = ctx1.Database.Connection;
+
+                connection.Open();
+                using (var txn = connection.BeginTransaction())
+                {
+                    using (var ctx2 = new Issue1805Context(connection, false))
+                    {
+                        ctx2.Database.UseTransaction(txn);
+                        ctx2.Database.Initialize(force: false);
+                    }
+
+                    // Now look up by reflection the delegates of the event handler on the initial connection.
+                    // If any of those delegates still point to the EntityConnection's StoreConnectionStateChangeHandler
+                    // method, then that would keep the EntityConnection alive which in turn will prevent the
+                    // SimpleModelContextForConnectionEvent from being garbage-collected.
+                    var stateChangeEventHandlerField = typeof(DbConnection).GetFields(
+                        BindingFlags.NonPublic | BindingFlags.Instance).SingleOrDefault(fi => fi.Name == "_stateChangeEventHandler");
+
+                    var stateChangeEventHandler = (StateChangeEventHandler)stateChangeEventHandlerField.GetValue(connection);
+
+                    if (stateChangeEventHandler != null)
+                    {
+                        Assert.Empty(stateChangeEventHandler.GetInvocationList().Where(
+                                    del => del.Target.ToString() == "System.Data.Entity.Core.EntityClient.EntityConnection"
+                                           && del.Method.ToString().StartsWith("Void StoreConnectionStateChangeHandler")));
+                    }
+                }
             }
         }
 
