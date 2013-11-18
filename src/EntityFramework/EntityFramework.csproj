@@ -299,7 +299,6 @@
     <Compile Include="Internal\ConfigFile\ConfigLoadedCollection.cs" />
     <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElement.cs" />
     <Compile Include="Internal\DatabaseExistenceState.cs" />
-    <Compile Include="Internal\MigrationsChecker.cs" />
     <Compile Include="Migrations\Builders\ParameterBuilder.cs" />
     <Compile Include="Migrations\Model\AlterProcedureOperation.cs" />
     <Compile Include="Migrations\Model\UpdateDatabaseOperation.cs" />

@@ -120,7 +120,7 @@ namespace System.Data.Entity.Internal
 
         private DatabaseLogFormatter _logFormatter;
 
-        private DbMigrationsConfiguration _migrationsConfiguration;
+        private Func<DbMigrationsConfiguration> _migrationsConfiguration;
         private bool? _migrationsConfigurationDiscovered;
 
         private DbContextInfo _contextInfo;
@@ -316,10 +316,12 @@ namespace System.Data.Entity.Internal
 
         private HistoryRepository CreateHistoryRepository(DatabaseExistenceState existenceState = DatabaseExistenceState.Unknown)
         {
+            DiscoverMigrationsConfiguration();
+
             return new HistoryRepository(
                 OriginalConnectionString,
                 ProviderFactory,
-                ContextKey,
+                _migrationsConfiguration().ContextKey,
                 CommandTimeout,
                 HistoryContextFactory,
                 schemas: DefaultSchema != null ? new[] { DefaultSchema } : Enumerable.Empty<string>(),
@@ -1462,15 +1464,12 @@ namespace System.Data.Entity.Internal
             }
         }
 
-        // <summary>
-        // This is either the <see cref="DefaultContextKey"/> or if a Migrations configuration is
-        // discovered then it is the context key from the discovered configuration.
-        // </summary>
-        public string ContextKey
+        public DbMigrationsConfiguration MigrationsConfiguration
         {
             get
             {
-                return MigrationsConfigurationDiscovered ? _migrationsConfiguration.ContextKey : DefaultContextKey;
+                DiscoverMigrationsConfiguration();
+                return _migrationsConfiguration();
             }
         }
 
@@ -1478,35 +1477,49 @@ namespace System.Data.Entity.Internal
         {
             get
             {
-                return (MigrationsConfigurationDiscovered
-                            ? _migrationsConfiguration
-                            : new DbMigrationsConfiguration()).GetHistoryContextFactory(ProviderName);
+                DiscoverMigrationsConfiguration();
+                return _migrationsConfiguration().GetHistoryContextFactory(ProviderName);
             }
         }
 
-        public bool MigrationsConfigurationDiscovered
+        public virtual bool MigrationsConfigurationDiscovered
         {
             get
             {
-                if (!_migrationsConfigurationDiscovered.HasValue)
-                {
-                    var contextType = Owner.GetType();
-                    var discoveredConfig
-                        = new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly()))
-                            .FindMigrationsConfiguration(contextType, null);
-
-                    if (discoveredConfig != null)
-                    {
-                        _migrationsConfiguration = discoveredConfig;
-                        _migrationsConfigurationDiscovered = true;
-                    }
-                    else
-                    {
-                        _migrationsConfigurationDiscovered = false;
-                    }
-                }
-
+                DiscoverMigrationsConfiguration();
                 return _migrationsConfigurationDiscovered.Value;
+            }
+        }
+
+        private void DiscoverMigrationsConfiguration()
+        {
+            if (!_migrationsConfigurationDiscovered.HasValue)
+            {
+                var contextType = Owner.GetType();
+                var discoveredConfig
+                    = new MigrationsConfigurationFinder(new TypeFinder(contextType.Assembly))
+                        .FindMigrationsConfiguration(contextType, null);
+
+                if (discoveredConfig != null)
+                {
+                    _migrationsConfiguration = () => discoveredConfig;
+                    _migrationsConfigurationDiscovered = true;
+                }
+                else
+                {
+                    _migrationsConfiguration = () => new Lazy<DbMigrationsConfiguration>(
+                        () => new DbMigrationsConfiguration
+                        {
+                            ContextType = contextType,
+                            AutomaticMigrationsEnabled = true,
+                            MigrationsAssembly = contextType.Assembly,
+                            MigrationsNamespace = contextType.Namespace,
+                            ContextKey = DefaultContextKey,
+                            TargetDatabase = new DbConnectionInfo(OriginalConnectionString, ProviderName),
+                            CommandTimeout = CommandTimeout
+                        }).Value;
+                    _migrationsConfigurationDiscovered = false;
+                }
             }
         }
 

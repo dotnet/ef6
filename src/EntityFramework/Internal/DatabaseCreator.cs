@@ -3,7 +3,6 @@
 namespace System.Data.Entity.Internal
 {
     using System.Data.Entity.Core.Objects;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Migrations.Infrastructure;
@@ -16,19 +15,17 @@ namespace System.Data.Entity.Internal
     internal class DatabaseCreator
     {
         private readonly IDbDependencyResolver _resolver;
-        private readonly MigrationsChecker _migrationsChecker;
 
         public DatabaseCreator()
             : this(DbConfiguration.DependencyResolver)
         {
         }
 
-        public DatabaseCreator(IDbDependencyResolver resolver, MigrationsChecker migrationsChecker = null)
+        public DatabaseCreator(IDbDependencyResolver resolver)
         {
             DebugCheck.NotNull(resolver);
 
             _resolver = resolver;
-            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
         }
 
         // <summary>
@@ -48,14 +45,9 @@ namespace System.Data.Entity.Internal
             if (internalContext.CodeFirstModel != null
                 && _resolver.GetService<Func<MigrationSqlGenerator>>(internalContext.ProviderName) != null)
             {
-                if (!_migrationsChecker.IsMigrationsConfigured(internalContext, () => false))
-                {
-                    var migrator = createMigrator(
-                        GetMigrationsConfiguration(internalContext),
-                        internalContext.Owner);
-
-                    migrator.Update();
-                }
+                createMigrator(
+                    internalContext.MigrationsConfiguration,
+                    internalContext.Owner).Update();
             }
             else
             {
@@ -66,24 +58,6 @@ namespace System.Data.Entity.Internal
             // If the database is created explicitly, then this is treated as overriding the
             // database initialization strategy, so make it as already run.
             internalContext.MarkDatabaseInitialized();
-        }
-
-        public static DbMigrationsConfiguration GetMigrationsConfiguration(InternalContext internalContext)
-        {
-            DebugCheck.NotNull(internalContext);
-
-            var contextType = internalContext.Owner.GetType();
-
-            return new DbMigrationsConfiguration
-                {
-                    ContextType = contextType,
-                    AutomaticMigrationsEnabled = true,
-                    MigrationsAssembly = contextType.Assembly(),
-                    MigrationsNamespace = contextType.Namespace,
-                    ContextKey = internalContext.ContextKey,
-                    TargetDatabase = new DbConnectionInfo(internalContext.OriginalConnectionString, internalContext.ProviderName),
-                    CommandTimeout = internalContext.CommandTimeout
-                };
         }
     }
 }

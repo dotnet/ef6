@@ -16,7 +16,6 @@ namespace System.Data.Entity.Internal
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using DaFunc;
     using Moq;
     using Xunit;
 
@@ -54,16 +53,6 @@ namespace System.Data.Entity.Internal
         public class MigrationsConfiguration : TestBase
         {
             [Fact]
-            public void ContextKey_returns_to_string_of_context_type()
-            {
-                var genericFuncy = new GT<NT, NT>.GenericFuncy<GT<GT<NT, NT>, NT>, NT>();
-
-                var internalContext = new EagerInternalContext(genericFuncy);
-
-                Assert.Equal(genericFuncy.GetType().ToString(), internalContext.ContextKey);
-            }
-
-            [Fact]
             public void MigrationsConfigurationDiscovered_returns_true_if_configuration_discovered()
             {
                 Assert.True(new ContextWithMigrations().InternalContext.MigrationsConfigurationDiscovered);
@@ -78,7 +67,7 @@ namespace System.Data.Entity.Internal
             [Fact]
             public void ContextKey_returns_key_from_Migrations_configuration_if_discovered()
             {
-                Assert.Equal("My Key", new ContextWithMigrations().InternalContext.ContextKey);
+                Assert.Equal("My Key", new ContextWithMigrations().InternalContext.MigrationsConfiguration.ContextKey);
             }
 
             [Fact]
@@ -102,6 +91,11 @@ namespace System.Data.Entity.Internal
 
             public class ContextWithMigrations : DbContext
             {
+                public ContextWithMigrations()
+                {
+                    Database.Initialize(force: false);
+                }
+
                 static ContextWithMigrations()
                 {
                     Database.SetInitializer<ContextWithMigrations>(null);
@@ -110,6 +104,11 @@ namespace System.Data.Entity.Internal
 
             public class ContextWithoutMigrations : DbContext
             {
+                public ContextWithoutMigrations()
+                {
+                    Database.Initialize(force: false);
+                }
+
                 static ContextWithoutMigrations()
                 {
                     Database.SetInitializer<ContextWithoutMigrations>(null);

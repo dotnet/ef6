@@ -110,30 +110,26 @@ namespace System.Data.Entity
             Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
-        [Fact] // CodePlex 1192
-        public void DropCreateDatabaseAlways_throws_if_Migrations_is_configured_and_database_exists()
+        [Fact]
+        public void DropCreateDatabaseAlways_initializes_if_Migrations_is_configured_and_database_exists()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: true, migrationsConfigured: true);
 
-            Assert.Equal(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop("FakeNoRegContextProxy"),
-                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            tracker.ExecuteStrategy();
 
-            Assert.Equal("", tracker.Result);
+            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
-        [Fact] // CodePlex 1192
-        public void DropCreateDatabaseAlways_throws_if_Migrations_is_configured_and_database_does_not_exist()
+        [Fact]
+        public void DropCreateDatabaseAlways_initializes_if_Migrations_is_configured_and_database_does_not_exist()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseAlways<FakeNoRegContext>>(
-                databaseExists: false, checker: new MigrationsChecker(c => true));
+                databaseExists: false, migrationsConfigured: true);
 
-            Assert.Equal(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop("FakeNoRegContextProxy"),
-                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            tracker.ExecuteStrategy();
 
-            Assert.Equal("", tracker.Result);
+            Assert.Equal("DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
         #endregion
@@ -184,24 +180,22 @@ namespace System.Data.Entity
             Assert.Equal("Exists", tracker.Result);
         }
 
-        [Fact] // CodePlex 1192
-        public void CreateDatabaseIfNotExists_throws_if_database_does_not_exist_and_Migrations_is_enabled()
+        [Fact]
+        public void CreateDatabaseIfNotExists_initializes_if_database_does_not_exist_and_Migrations_is_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: false, checker: new MigrationsChecker(c => true));
+                databaseExists: false, migrationsConfigured: true);
 
-            Assert.Equal(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
-                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
         public void CreateDatabaseIfNotExists_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: false, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: false, migrationsConfigured: true);
 
             Assert.Equal(
                 Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
@@ -214,7 +208,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_and_model_matches_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: true, migrationsConfigured: true);
 
             tracker.ExecuteStrategy();
 
@@ -225,7 +219,7 @@ namespace System.Data.Entity
         public void CreateDatabaseIfNotExists_does_nothing_if_database_exists_but_has_no_metadata_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, CreateDatabaseIfNotExists<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, hasMetadata: false, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: true, hasMetadata: false, migrationsConfigured: true);
 
             tracker.ExecuteStrategy();
 
@@ -281,41 +275,37 @@ namespace System.Data.Entity
             Assert.Equal(Strings.Database_NoDatabaseMetadata, Assert.Throws<NotSupportedException>(() => tracker.ExecuteStrategy()).Message);
         }
 
-        [Fact] // CodePlex 1192
-        public void DropCreateDatabaseIfModelChanges_throws_if_database_does_not_exist_and_Migrations_is_enabled()
+        [Fact]
+        public void DropCreateDatabaseIfModelChanges_initializes_if_database_does_not_exist_and_Migrations_is_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: false, checker: new MigrationsChecker(c => true));
+                databaseExists: false, migrationsConfigured: true);
 
-            Assert.Equal(
-                Strings.DatabaseInitializationStrategy_MigrationsEnabled("FakeNoRegContextProxy"),
-                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists", tracker.Result);
+            Assert.Equal("Exists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
         public void DropCreateDatabaseIfModelChanges_does_nothing_if_database_exists_and_model_is_up_to_date_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: true, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: true, migrationsConfigured: true);
 
             tracker.ExecuteStrategy();
 
             Assert.Equal("Exists", tracker.Result);
         }
 
-        [Fact] // CodePlex 1192
-        public void DropCreateDatabaseIfModelChanges_throws_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
+        [Fact]
+        public void DropCreateDatabaseIfModelChanges_initializes_if_database_exists_and_model_does_not_match_with_Migrations_enabled()
         {
             var tracker = new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                databaseExists: true, modelCompatible: false, checker: new MigrationsChecker(c => true));
+                databaseExists: true, modelCompatible: false, migrationsConfigured: true);
 
-            Assert.Equal(
-                Strings.DatabaseInitializationStrategy_ModelMismatch(tracker.Context.GetType().Name),
-                Assert.Throws<InvalidOperationException>(() => tracker.ExecuteStrategy()).Message);
+            tracker.ExecuteStrategy();
 
-            Assert.Equal("Exists", tracker.Result);
+            Assert.Equal("Exists DeleteIfExists CreateDatabase Seed", tracker.Result);
         }
 
         [Fact] // CodePlex 1192
@@ -323,7 +313,7 @@ namespace System.Data.Entity
         {
             var tracker =
                 new DatabaseInitializerTracker<FakeNoRegContext, DropCreateDatabaseIfModelChanges<FakeNoRegContext>>(
-                    databaseExists: true, modelCompatible: true, hasMetadata: false, checker: new MigrationsChecker(c => true));
+                    databaseExists: true, modelCompatible: true, hasMetadata: false, migrationsConfigured: true);
 
             Assert.Equal(
                 Strings.Database_NoDatabaseMetadata, 

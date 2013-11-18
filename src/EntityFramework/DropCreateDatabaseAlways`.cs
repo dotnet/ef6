@@ -4,7 +4,6 @@ namespace System.Data.Entity
 {
     using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
-    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
 
     /// <summary>
@@ -16,17 +15,9 @@ namespace System.Data.Entity
     public class DropCreateDatabaseAlways<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
-        private readonly MigrationsChecker _migrationsChecker;
-
         /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.DropCreateDatabaseAlways`1" /> class.</summary>
         public DropCreateDatabaseAlways()
-            : this(null)
         {
-        }
-
-        internal DropCreateDatabaseAlways(MigrationsChecker migrationsChecker)
-        {
-            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
         }
 
         #region Strategy implementation
@@ -49,12 +40,6 @@ namespace System.Data.Entity
         public void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
-
-            if (_migrationsChecker.IsMigrationsConfigured(context.InternalContext, () => true))
-            {
-                throw new InvalidOperationException(
-                    Strings.DatabaseInitializationStrategy_MigrationsEnabledNoDrop(context.GetType().Name));
-            }
 
             context.Database.Delete();
             context.Database.Create(DatabaseExistenceState.DoesNotExist);

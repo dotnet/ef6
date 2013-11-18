@@ -31,7 +31,7 @@ namespace System.Data.Entity
             bool databaseExists, 
             bool modelCompatible = true, 
             bool hasMetadata = true,
-            MigrationsChecker checker = null)
+            bool migrationsConfigured = false)
         {
             _databaseExists = databaseExists;
             _mockInternalContext = new Mock<InternalContextForMock<TContext>>
@@ -77,8 +77,9 @@ namespace System.Data.Entity
 
             _mockInternalContext.Setup(c => c.CreateObjectContextForDdlOps()).Returns(new Mock<ClonedObjectContext>().Object);
             _mockInternalContext.SetupGet(c => c.ProviderName).Returns("Dummy.Data.Provider");
+            _mockInternalContext.Setup(c => c.MigrationsConfigurationDiscovered).Returns(migrationsConfigured);
 
-            _mockStrategy = new Mock<TInitializer>(checker)
+            _mockStrategy = new Mock<TInitializer>()
                                 {
                                     CallBase = true
                                 };

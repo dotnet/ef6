@@ -10,239 +10,187 @@ namespace System.Data.Entity.Migrations
 
     public class InitializerScenarios : FunctionalTestBase
     {
-        [Fact] // CodePlex 1720
-        public void Dropping_database_using_DropCreateDatabaseAlways_throws_if_Migrations_configuration_is_available()
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseAlways_with_no_database_uses_Migrations_configuration_if_available()
         {
-            // Make sure initializer throws when database does not exist
-            using (var context = new AlwaysDropContext())
+            EnsureDeleted<AlwaysDropContext1>();
+
+            VerifyInitialized<AlwaysDropContext1, AlwaysDropMigrationsConfig1>();
+        }
+
+        public class AlwaysDropContext1 : UpDownUpContext
+        {
+            static AlwaysDropContext1()
             {
-                context.Database.Delete();
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabledNoDrop", "AlwaysDropContext");
-
-                Assert.False(context.Database.Exists());
-            }
-
-            // Use Migrations to create database and run first Migration
-            new DbMigrator(new AlwaysDropMigrationsConfig()).Update("201303090309299_Test");
-
-            // Make sure initializer throws when database does exist but is not up-to-date
-            using (var context = new AlwaysDropContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabledNoDrop", "AlwaysDropContext");
-
-                Assert.True(context.Database.Exists());
-            }
-
-            // Now Migrate to a fully up-to-date database
-            new DbMigrator(new AlwaysDropMigrationsConfig()).Update();
-
-            // Make sure initializer throws when database exists and is up-to-date
-            using (var context = new AlwaysDropContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabledNoDrop", "AlwaysDropContext");
-
-                Assert.True(context.Database.Exists());
-            }
-
-            // Verify that the database is indeed up-to-date
-            using (var context = new AlwaysDropContext())
-            {
-                Database.SetInitializer<AlwaysDropContext>(null);
-
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
-
-                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
-
-                Assert.Equal(2, migrations.Count);
-                Assert.True(migrations.All(m => m.ContextKey == typeof(AlwaysDropMigrationsConfig).ToString()));
-                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
-                Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
+                Database.SetInitializer<AlwaysDropContext1>(new AlwaysDropInitializer());
             }
         }
 
-        public class AlwaysDropContext : UpDownUpContext
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseAlways_with_out_of_date_database_uses_Migrations_configuration_if_available()
         {
-            static AlwaysDropContext()
+            EnsureDeleted<AlwaysDropContext2>();
+
+            new DbMigrator(new AlwaysDropMigrationsConfig2()).Update("201303090309299_Test");
+
+            VerifyInitialized<AlwaysDropContext2, AlwaysDropMigrationsConfig2>();
+        }
+
+        public class AlwaysDropContext2 : UpDownUpContext
+        {
+            static AlwaysDropContext2()
             {
-                Database.SetInitializer(new DropCreateDatabaseAlways<AlwaysDropContext>());
+                Database.SetInitializer<AlwaysDropContext2>(new AlwaysDropInitializer());
             }
         }
 
-        [Fact] // CodePlex 1720
-        public void Dropping_database_using_DropCreateDatabaseIfModelChanges_throws_if_Migrations_configuration_is_available()
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseAlways_with_up_to_date_database_uses_Migrations_configuration_if_available()
         {
-            // Make sure initializer throws when database does not exist
-            using (var context = new ModelChangesContext())
-            {
-                context.Database.Delete();
+            EnsureDeleted<AlwaysDropContext3>();
 
+            new DbMigrator(new AlwaysDropMigrationsConfig3()).Update();
+
+            VerifyInitialized<AlwaysDropContext3, AlwaysDropMigrationsConfig3>();
+        }
+
+        public class AlwaysDropContext3 : UpDownUpContext
+        {
+            static AlwaysDropContext3()
+            {
+                Database.SetInitializer<AlwaysDropContext3>(new AlwaysDropInitializer());
+            }
+        }
+
+        public class AlwaysDropInitializer : DropCreateDatabaseAlways<UpDownUpContext>
+        {
+            protected override void Seed(UpDownUpContext context)
+            {
+                Seeder.InitializerSeed(context);
+            }
+        }
+
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseIfModelChanges_with_no_database_uses_Migrations_configuration_if_available()
+        {
+            EnsureDeleted<ModelChangesContext1>();
+
+            VerifyInitialized<ModelChangesContext1, ModelChangesMigrationsConfig1>();
+        }
+
+        public class ModelChangesContext1 : UpDownUpContext
+        {
+            static ModelChangesContext1()
+            {
+                Database.SetInitializer<ModelChangesContext1>(new ModelChangesInitializer());
+            }
+        }
+
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseIfModelChanges_with_out_of_date_database_uses_Migrations_configuration_if_available()
+        {
+            EnsureDeleted<ModelChangesContext2>();
+
+            new DbMigrator(new ModelChangesMigrationsConfig2()).Update("201303090309299_Test");
+
+            VerifyInitialized<ModelChangesContext2, ModelChangesMigrationsConfig2>();
+        }
+
+        public class ModelChangesContext2 : UpDownUpContext
+        {
+            static ModelChangesContext2()
+            {
+                Database.SetInitializer<ModelChangesContext2>(new ModelChangesInitializer());
+            }
+        }
+
+        [Fact] // CodePlex 1709
+        public void DropCreateDatabaseIfModelChanges_with_up_to_date_database_uses_Migrations_configuration_if_available()
+        {
+            EnsureDeleted<ModelChangesContext3>();
+
+            new DbMigrator(new ModelChangesMigrationsConfig3()).Update();
+
+            VerifyMigrated<ModelChangesContext3, ModelChangesMigrationsConfig3>();
+        }
+
+        public class ModelChangesContext3 : UpDownUpContext
+        {
+            static ModelChangesContext3()
+            {
+                Database.SetInitializer<ModelChangesContext3>(new ModelChangesInitializer());
+            }
+        }
+
+        public class ModelChangesInitializer : DropCreateDatabaseIfModelChanges<UpDownUpContext>
+        {
+            protected override void Seed(UpDownUpContext context)
+            {
+                Seeder.InitializerSeed(context);
+            }
+        }
+
+        [Fact] // CodePlex 1709
+        public void CreateDatabaseIfNotExists_with_no_database_uses_Migrations_configuration_if_available()
+        {
+            EnsureDeleted<CreateFirstContext1>();
+
+            VerifyInitialized<CreateFirstContext1, CreateFirstMigrationsConfig1>();
+        }
+
+        public class CreateFirstContext1 : UpDownUpContext
+        {
+            static CreateFirstContext1()
+            {
+                Database.SetInitializer<CreateFirstContext1>(new CreateFirstInitializer());
+            }
+        }
+
+        [Fact] // CodePlex 1709
+        public void CreateDatabaseIfNotExists_with_out_of_date_database_uses_Migrations_configuration_if_available()
+        {
+            EnsureDeleted<CreateFirstContext2>();
+
+            new DbMigrator(new CreateFirstMigrationsConfig2()).Update("201303090309299_Test");
+
+            using (var context = new CreateFirstContext2())
+            {
                 Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "ModelChangesContext");
-
-                Assert.False(context.Database.Exists());
-            }
-
-            // Use Migrations to create database and run first Migration
-            new DbMigrator(new ModelChangesMigrationsConfig()).Update("201303090309299_Test");
-
-            // Make sure initializer throws when database does exist but is not up-to-date
-            using (var context = new ModelChangesContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_ModelMismatch", "ModelChangesContext");
-
-                Assert.True(context.Database.Exists());
-            }
-
-            // Now Migrate to a fully up-to-date database
-            new DbMigrator(new ModelChangesMigrationsConfig()).Update();
-
-            using (var context = new ModelChangesContext())
-            {
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
-
-                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
-
-                Assert.Equal(2, migrations.Count);
-                Assert.True(migrations.All(m => m.ContextKey == typeof(ModelChangesMigrationsConfig).ToString()));
-                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
-                Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
-            }
-
-            // Make sure initializer does nothing when database does exist and is up-to-date
-            using (var context = new ModelChangesContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                context.Database.Initialize(force: false);
-
-                Assert.True(context.Database.Exists());
-
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
+                    .ValidateMessage("DatabaseInitializationStrategy_ModelMismatch", "CreateFirstContext2");
             }
         }
 
-        public class ModelChangesContext : UpDownUpContext
+        public class CreateFirstContext2 : UpDownUpContext
         {
-            static ModelChangesContext()
+            static CreateFirstContext2()
             {
-                Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ModelChangesContext>());
+                Database.SetInitializer<CreateFirstContext2>(new CreateFirstInitializer());
             }
         }
 
-        [Fact] // CodePlex 1720
-        public void Dropping_database_using_CreateDatabaseIfNotExists_throws_if_Migrations_configuration_is_available()
+        [Fact] // CodePlex 1709
+        public void CreateDatabaseIfNotExists_with_up_to_date_database_uses_Migrations_configuration_if_available()
         {
-            // Make sure initializer throws when database does not exist
-            using (var context = new CreateFirstContext())
+            EnsureDeleted<CreateFirstContext3>();
+
+            new DbMigrator(new CreateFirstMigrationsConfig3()).Update();
+
+            VerifyMigrated<CreateFirstContext3, CreateFirstMigrationsConfig3>();
+        }
+
+        public class CreateFirstContext3 : UpDownUpContext
+        {
+            static CreateFirstContext3()
             {
-                context.Database.Delete();
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "CreateFirstContext");
-
-                Assert.False(context.Database.Exists());
-            }
-
-            // Use Migrations to create database and run first Migration
-            new DbMigrator(new CreateFirstMigrationsConfig()).Update("201303090309299_Test");
-
-            // Make sure initializer throws when database does exist but is not up-to-date
-            using (var context = new CreateFirstContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: false))
-                    .ValidateMessage("DatabaseInitializationStrategy_ModelMismatch", "CreateFirstContext");
-
-                Assert.True(context.Database.Exists());
-            }
-
-            // Now Migrate to a fully up-to-date database
-            new DbMigrator(new CreateFirstMigrationsConfig()).Update();
-
-            using (var context = new CreateFirstContext())
-            {
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
-
-                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
-
-                Assert.Equal(2, migrations.Count);
-                Assert.True(migrations.All(m => m.ContextKey == typeof(CreateFirstMigrationsConfig).ToString()));
-                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
-                Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
-            }
-
-            // Make sure initializer does nothing when database does exist and is up-to-date
-            using (var context = new CreateFirstContext())
-            {
-                Assert.True(context.Database.Exists());
-
-                context.Database.Initialize(force: false);
-
-                Assert.True(context.Database.Exists());
-
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
+                Database.SetInitializer<CreateFirstContext3>(new CreateFirstInitializer());
             }
         }
 
-        public class CreateFirstContext : UpDownUpContext
+        public class CreateFirstInitializer : CreateDatabaseIfNotExists<UpDownUpContext>
         {
-            static CreateFirstContext()
+            protected override void Seed(UpDownUpContext context)
             {
-                Database.SetInitializer(new CreateDatabaseIfNotExists<CreateFirstContext>());
-            }
-        }
-
-        [Fact] // CodePlex 529
-        public void Creating_database_using_default_initializer_throws_if_Migrations_configuration_is_available()
-        {
-            // Make sure initializer does nothing...
-            using (var context = new UpDownUpContext())
-            {
-                context.Database.Delete();
-
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "UpDownUpContext");
-
-                Assert.False(context.Database.Exists());
-            }
-
-            // ...but Migrations works fine
-            new DbMigrator(new UpDownUpMigrationsConfig()).Update();
-
-            using (var context = new UpDownUpContext())
-            {
-                var upDownUpEntity = context.Entities.Single();
-                Assert.Equal("Cab", upDownUpEntity.Name);
-                Assert.Equal("For Cutie", upDownUpEntity.Extra);
-
-                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
-
-                Assert.Equal(2, migrations.Count);
-                Assert.True(migrations.All(m => m.ContextKey == typeof(UpDownUpMigrationsConfig).ToString()));
-                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
-                Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
+                Seeder.InitializerSeed(context);
             }
         }
 
@@ -264,15 +212,15 @@ namespace System.Data.Entity.Migrations
             public string Extra { get; set; }
         }
 
-        [Fact] // CodePlex 529, 1192
-        public void Creating_database_using_throws_if_Migrations_configuration_is_found_but_not_ready_to_update()
+        [Fact] // CodePlex 529, 1709
+        public void Creating_database_throws_if_Migrations_configuration_is_found_but_not_ready_to_update()
         {
             using (var context = new NotReadyContext())
             {
                 context.Database.Delete();
 
-                Assert.Throws<InvalidOperationException>(() => context.Database.Initialize(force: true))
-                    .ValidateMessage("DatabaseInitializationStrategy_MigrationsEnabled", "NotReadyContext");
+                Assert.Throws<AutomaticMigrationsDisabledException>(() => context.Database.Initialize(force: true))
+                    .ValidateMessage("AutomaticDisabledException");
 
                 Assert.False(context.Database.Exists());
             }
@@ -286,6 +234,49 @@ namespace System.Data.Entity.Migrations
         public class NotReadyContext : DbContext
         {
             public DbSet<UpDownUpEntity> Entities { get; set; }
+        }
+
+        private static void EnsureDeleted<TContext>()
+        where TContext : UpDownUpContext, new()
+        {
+            using (var context = new TContext())
+            {
+                context.Database.Delete();
+            }
+        }
+
+        private static void VerifyInitialized<TContext, TMigrationsConfig>()
+            where TContext : UpDownUpContext, new()
+        {
+            VerifyInitializedOrMigrated<TContext, TMigrationsConfig>("Initializer");
+        }
+
+        private static void VerifyMigrated<TContext, TMigrationsConfig>()
+            where TContext : UpDownUpContext, new()
+        {
+            VerifyInitializedOrMigrated<TContext, TMigrationsConfig>("Migrations");
+        }
+
+        private static void VerifyInitializedOrMigrated<TContext, TMigrationsConfig>(string expectedSeed)
+            where TContext : UpDownUpContext, new()
+        {
+            using (var context = new TContext())
+            {
+                context.Database.Initialize(force: false);
+
+                Assert.True(context.Database.Exists());
+
+                var upDownUpEntity = context.Entities.Single();
+                Assert.Equal("Seeded", upDownUpEntity.Name);
+                Assert.Equal(expectedSeed, upDownUpEntity.Extra);
+
+                var migrations = context.Database.SqlQuery<MigrationRow>("select * from __MigrationHistory").ToList();
+
+                Assert.Equal(2, migrations.Count);
+                Assert.True(migrations.All(m => m.ContextKey == typeof(TMigrationsConfig).ToString()));
+                Assert.Equal("201303090309299_Test", migrations[0].MigrationId);
+                Assert.Equal("201303101635379_Second", migrations[1].MigrationId);
+            }
         }
     }
 }
@@ -303,25 +294,73 @@ namespace System.Data.Entity.Migrations.UpDownUp
         }
     }
 
-    public class AlwaysDropMigrationsConfig : DbMigrationsConfiguration<InitializerScenarios.AlwaysDropContext>
+    public class AlwaysDropMigrationsConfig1 : DbMigrationsConfiguration<InitializerScenarios.AlwaysDropContext1>
     {
-        protected override void Seed(InitializerScenarios.AlwaysDropContext context)
+        protected override void Seed(InitializerScenarios.AlwaysDropContext1 context)
         {
             Seeder.Seed(context);
         }
     }
 
-    public class ModelChangesMigrationsConfig : DbMigrationsConfiguration<InitializerScenarios.ModelChangesContext>
+    public class AlwaysDropMigrationsConfig2 : DbMigrationsConfiguration<InitializerScenarios.AlwaysDropContext2>
     {
-        protected override void Seed(InitializerScenarios.ModelChangesContext context)
+        protected override void Seed(InitializerScenarios.AlwaysDropContext2 context)
         {
             Seeder.Seed(context);
         }
     }
 
-    public class CreateFirstMigrationsConfig : DbMigrationsConfiguration<InitializerScenarios.CreateFirstContext>
+    public class AlwaysDropMigrationsConfig3 : DbMigrationsConfiguration<InitializerScenarios.AlwaysDropContext3>
     {
-        protected override void Seed(InitializerScenarios.CreateFirstContext context)
+        protected override void Seed(InitializerScenarios.AlwaysDropContext3 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class ModelChangesMigrationsConfig1 : DbMigrationsConfiguration<InitializerScenarios.ModelChangesContext1>
+    {
+        protected override void Seed(InitializerScenarios.ModelChangesContext1 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class ModelChangesMigrationsConfig2 : DbMigrationsConfiguration<InitializerScenarios.ModelChangesContext2>
+    {
+        protected override void Seed(InitializerScenarios.ModelChangesContext2 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class ModelChangesMigrationsConfig3 : DbMigrationsConfiguration<InitializerScenarios.ModelChangesContext3>
+    {
+        protected override void Seed(InitializerScenarios.ModelChangesContext3 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class CreateFirstMigrationsConfig1 : DbMigrationsConfiguration<InitializerScenarios.CreateFirstContext1>
+    {
+        protected override void Seed(InitializerScenarios.CreateFirstContext1 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class CreateFirstMigrationsConfig2 : DbMigrationsConfiguration<InitializerScenarios.CreateFirstContext2>
+    {
+        protected override void Seed(InitializerScenarios.CreateFirstContext2 context)
+        {
+            Seeder.Seed(context);
+        }
+    }
+
+    public class CreateFirstMigrationsConfig3 : DbMigrationsConfiguration<InitializerScenarios.CreateFirstContext3>
+    {
+        protected override void Seed(InitializerScenarios.CreateFirstContext3 context)
         {
             Seeder.Seed(context);
         }
@@ -335,10 +374,15 @@ namespace System.Data.Entity.Migrations.UpDownUp
                 e => e.Name,
                 new InitializerScenarios.UpDownUpEntity
                 {
-                    Name = "Cab",
-                    Extra = "For Cutie"
+                    Name = "Seeded",
+                    Extra = "Migrations"
                 });
             context.SaveChanges();
+        }
+
+        public static void InitializerSeed(InitializerScenarios.UpDownUpContext context)
+        {
+            context.Entities.Add(new InitializerScenarios.UpDownUpEntity { Name = "Seeded", Extra = "Initializer" });
         }
     }
 

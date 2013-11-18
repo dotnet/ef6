@@ -16,17 +16,9 @@ namespace System.Data.Entity
     public class CreateDatabaseIfNotExists<TContext> : IDatabaseInitializer<TContext>
         where TContext : DbContext
     {
-        private readonly MigrationsChecker _migrationsChecker;
-
         /// <summary>Initializes a new instance of the <see cref="T:System.Data.Entity.CreateDatabaseIfNotExists`1" /> class.</summary>
         public CreateDatabaseIfNotExists()
-            : this(null)
         {
-        }
-
-        internal CreateDatabaseIfNotExists(MigrationsChecker migrationsChecker)
-        {
-            _migrationsChecker = migrationsChecker ?? new MigrationsChecker();
         }
 
         #region Strategy implementation
@@ -45,21 +37,6 @@ namespace System.Data.Entity
             Check.NotNull(context, "context");
 
             var existence = new DatabaseTableChecker().AnyModelTableExists(context.InternalContext);
-
-            if (_migrationsChecker.IsMigrationsConfigured(
-                context.InternalContext,
-                () =>
-                {
-                    if (existence == DatabaseExistenceState.Exists && !context.Database.CompatibleWithModel(throwIfNoMetadata: false))
-                    {
-                        throw Error.DatabaseInitializationStrategy_ModelMismatch(context.GetType().Name);
-                    }
-
-                    return existence == DatabaseExistenceState.Exists;
-                }))
-            {
-                return;
-            }
 
             if (existence == DatabaseExistenceState.Exists)
             {
