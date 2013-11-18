@@ -13,7 +13,6 @@ namespace System.Data.Entity.Core.Objects
         /// Creates a new instance of <see cref="ExecutionOptions" />.
         /// </summary>
         /// <param name="mergeOption"> Merge option to use for entity results. </param>
-        /// <param name="streaming"> Whether the query is streaming or buffering. </param>
         public ExecutionOptions(MergeOption mergeOption)
         {
             MergeOption = mergeOption;
