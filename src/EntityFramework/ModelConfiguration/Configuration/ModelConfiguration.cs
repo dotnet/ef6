@@ -722,7 +722,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 = (from t in databaseMapping.Database.EntityTypes
                    where databaseMapping.GetEntitySetMappings()
                                         .SelectMany(esm => esm.EntityTypeMappings)
-                                        .SelectMany(etm => etm.MappingFragments).All(etmf => etmf.Table != t)
+                                        .SelectMany(etm => etm.MappingFragments)
+                                        .All(etmf => etmf.Table != t)
                          && databaseMapping.GetAssociationSetMappings().All(asm => asm.Table != t)
                    select t).ToList();
 
@@ -737,6 +738,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     }
 
                     databaseMapping.Database.RemoveEntityType(t);
+
+                    // Remove any FKs on the removed table
+                    var associationTypes
+                        = databaseMapping.Database.AssociationTypes
+                            .Where(at => at.SourceEnd.GetEntityType() == t
+                                        || at.TargetEnd.GetEntityType() == t)
+                            .ToList();
+
+                    associationTypes.Each(at => databaseMapping.Database.RemoveAssociationType(at));
                 });
         }
 
