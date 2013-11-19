@@ -70,7 +70,7 @@ namespace System.Data.Entity.Core.Objects
         private readonly MetadataWorkspace _workspace;
         private ObjectStateManager _objectStateManager;
         private ClrPerspective _perspective;
-        private readonly bool _createdConnection;
+        private bool _contextOwnsConnection;
         private bool _openedConnection; // whether or not the context opened the connection to do an operation
         private int _connectionRequestCount; // the number of active requests for an open connection
         private int? _queryTimeout;
@@ -121,7 +121,7 @@ namespace System.Data.Entity.Core.Objects
         public ObjectContext(EntityConnection connection)
             : this(connection, true, null)
         {
-            _createdConnection = false;
+            _contextOwnsConnection = false;
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace System.Data.Entity.Core.Objects
         public ObjectContext(EntityConnection connection, bool contextOwnsConnection)
             : this(connection, true, null)
         {
-            _createdConnection = contextOwnsConnection;
+            _contextOwnsConnection = contextOwnsConnection;
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace System.Data.Entity.Core.Objects
         public ObjectContext(string connectionString)
             : this(CreateEntityConnection(connectionString), false, null)
         {
-            _createdConnection = true;
+            _contextOwnsConnection = true;
         }
 
         /// <summary>
@@ -347,6 +347,18 @@ namespace System.Data.Entity.Core.Objects
                 }
 
                 return _objectStateManager;
+            }
+        }
+
+        // <summary>
+        // ContextOwnsConnection sets whether this context should dispose
+        // its underlying EntityConnection.
+        // </summary>
+        internal bool ContextOwnsConnection
+        {
+            set
+            {
+                _contextOwnsConnection = value;
             }
         }
 
@@ -2062,7 +2074,7 @@ namespace System.Data.Entity.Core.Objects
                         _connection.StateChange -= ConnectionStateChange;
 
                         // Dispose the connection the ObjectContext created
-                        if (_createdConnection)
+                        if (_contextOwnsConnection)
                         {
                             _connection.Dispose();
                         }

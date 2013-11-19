@@ -92,9 +92,7 @@ namespace System.Data.Entity
         }
 
         [Fact]
-        public void DbCompiledModel_GetConstructorDelegate_for_non_derived_ObjectContext_can_be_accessed_from_multiple_threads_concurrently(
-            
-            )
+        public void DbCompiledModel_GetConstructorDelegate_for_non_derived_ObjectContext_can_be_accessed_from_multiple_threads_concurrently()
         {
             DbCompiledModel_GetConstructorDelegate_can_be_accessed_from_multiple_threads_concurrently_implementation<ObjectContext>();
         }

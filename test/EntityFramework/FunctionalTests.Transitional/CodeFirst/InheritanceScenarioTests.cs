@@ -24,6 +24,44 @@ namespace FunctionalTests
 
     public class InheritanceScenarioTests : TestBase
     {
+        public class ApplicationUser
+        {
+            public virtual string Id { get; set; }
+        }
+
+        public abstract class Ad
+        {
+            public int AdID { get; set; }
+
+            public string UserId { get; set; }
+            public virtual ApplicationUser User { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        public class Boat : Ad
+        {
+        }
+
+        [Fact]
+        public void Tpc_with_association_from_abstract_base_should_not_fail_validation()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<ApplicationUser>().ToTable("AspNetUsers");
+            modelBuilder.Entity<Boat>().Map(
+                m =>
+                {
+                    m.MapInheritedProperties();
+                    m.ToTable("Boats");
+                });
+            modelBuilder.Entity<Ad>();
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+        }
+
         public abstract class MessageBase
         {
             public int Id { get; set; }

@@ -105,6 +105,7 @@ namespace System.Data.Entity.Infrastructure
             var metadataWorkspace = _workspace.GetMetadataWorkspace(existingConnection);
             var entityConnection = new EntityConnection(metadataWorkspace, existingConnection);
             var context = (TContext)GetConstructorDelegate<TContext>()(entityConnection);
+            context.ContextOwnsConnection = true;
 
             // Set the DefaultContainerName if it is empty
             if (String.IsNullOrEmpty(context.DefaultContainerName))

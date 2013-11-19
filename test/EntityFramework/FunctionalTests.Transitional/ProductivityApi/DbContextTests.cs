@@ -8,7 +8,7 @@ namespace ProductivityApiTests
     using Xunit;
 
     /// <summary>
-    /// Tests for the primary methods on DbContext.
+    ///     Tests for the primary methods on DbContext.
     /// </summary>
     public class DbContextReplaceConnectionTests : FunctionalTestBase
     {
@@ -20,7 +20,7 @@ namespace ProductivityApiTests
         }
 
         #endregion
-        
+
         #region Replace connection tests
 
         [Fact]
@@ -64,9 +64,9 @@ namespace ProductivityApiTests
 
             context.Entities.Add(
                 new PersistEntity
-                    {
-                        Name = "Testing"
-                    });
+                {
+                    Name = "Testing"
+                });
             context.SaveChanges();
 
             Assert.Same(newConnection.Connection, context.Database.Connection);
