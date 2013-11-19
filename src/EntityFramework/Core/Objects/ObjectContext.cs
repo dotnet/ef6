@@ -4975,7 +4975,7 @@ namespace System.Data.Entity.Core.Objects
                 if (attributeCount == 1)
                 {
                     itemCollection.MappingViewCacheFactory
-                        = new DefaultDbMappingViewCacheFactory(attributes.First());
+                        = new DefaultDbMappingViewCacheFactory(attributes.First().CacheType);
                 }
 
                 return true;

@@ -8,10 +8,9 @@ namespace System.Data.Entity.Infrastructure.MappingViews
     public class DefaultDbMappingViewCacheFactoryTests
     {
         [Fact]
-        public void Create_returns_instance_of_type_specified_by_attribute()
+        public void Create_returns_instance_of_type_specified_in_constructor()
         {
-            var attribute = new DbMappingViewCacheTypeAttribute(typeof(SampleContext), typeof(SampleMappingViewCache));
-            var factory = new DefaultDbMappingViewCacheFactory(attribute);
+            var factory = new DefaultDbMappingViewCacheFactory(typeof(SampleMappingViewCache));
 
             var cache = factory.Create("C", "S");
 
@@ -20,19 +19,14 @@ namespace System.Data.Entity.Infrastructure.MappingViews
         }
 
         [Fact]
-        public void Different_instances_with_same_attribute_are_equal()
+        public void Different_instances_containing_the_same_mapping_view_cache_type_are_equal()
         {
-            var attribute = new DbMappingViewCacheTypeAttribute(typeof(SampleContext), typeof(SampleMappingViewCache));
-            var factory1 = new DefaultDbMappingViewCacheFactory(attribute);
-            var factory2 = new DefaultDbMappingViewCacheFactory(attribute);
+            var factory1 = new DefaultDbMappingViewCacheFactory(typeof(SampleMappingViewCache));
+            var factory2 = new DefaultDbMappingViewCacheFactory(typeof(SampleMappingViewCache));
 
             Assert.True(factory1.Equals(factory2));
             Assert.True(factory2.Equals(factory1));
             Assert.True(factory1.GetHashCode() == factory2.GetHashCode());
-        }
-
-        private class SampleContext : DbContext
-        {
         }
 
         private class SampleMappingViewCache : DbMappingViewCache
