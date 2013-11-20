@@ -582,8 +582,8 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                     {
                         var element = XElement.Load(stringReader);
 
-                        property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
-                            element.Name.NamespaceName, element.Name.LocalName, (string)element);
+                        property = CreateMetadataPropertyFromXmlElement(
+                            element.Name.NamespaceName, element.Name.LocalName, element);
                     }
                 }
             }
@@ -596,7 +596,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                 }
 
                 Debug.Assert(reader.NodeType == XmlNodeType.Attribute, "called an attribute function when not on an attribute");
-                property = CreateMetadataPropertyFromOtherNamespaceXmlArtifact(reader.NamespaceURI, reader.LocalName, reader.Value);
+                property = CreateMetadataPropertyFromXmlAttribute(reader.NamespaceURI, reader.LocalName, reader.Value);
             }
 
             if (!OtherContent.Exists(mp => mp.Identity == property.Identity))
@@ -612,7 +612,13 @@ namespace System.Data.Entity.Core.SchemaObjectModel
             return false;
         }
 
-        internal MetadataProperty CreateMetadataPropertyFromOtherNamespaceXmlArtifact(
+        internal static MetadataProperty CreateMetadataPropertyFromXmlElement(
+            string xmlNamespaceUri, string artifactName, XElement value)
+        {
+            return MetadataProperty.CreateAnnotation(xmlNamespaceUri + ":" + artifactName, value);
+        }
+
+        internal MetadataProperty CreateMetadataPropertyFromXmlAttribute(
             string xmlNamespaceUri, string artifactName, string value)
         {
             var name = xmlNamespaceUri + ":" + artifactName;
