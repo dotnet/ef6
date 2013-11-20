@@ -1894,7 +1894,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio
                 return references;
             }
 
-            Debug.Fail("Project type is not recognized.");
+            Debug.Assert(IsMiscellaneousProject(project), "Project type is not recognized.");
 
             return Enumerable.Empty<KeyValuePair<string, Version>>();
         }

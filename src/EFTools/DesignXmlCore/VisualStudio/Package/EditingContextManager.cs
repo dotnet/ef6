@@ -18,7 +18,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     ///     of frames that are loaded with artifacts file documents,
     ///     and the association of frames to a particular artifact
     /// </summary>
-    internal class EditingContextManager : IDisposable
+    internal class EditingContextManager
     {
         // we need this hash table; we could do reverse-lookups on the EFArtifact for the EditingContext that holds it, but we don't want to have
         // any references to the designer inside the artifact. 
@@ -31,24 +31,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             _package = package;
         }
 
-        public void Dispose()
-        {
-            lock (this)
-            {
-                if (_mapArtifactToEditingContext != null)
-                {
-                    _mapArtifactToEditingContext.Clear();
-                    _mapArtifactToEditingContext = null;
-                }
-
-                if (_mapFrameToUri != null)
-                {
-                    _mapFrameToUri.Clear();
-                    _mapFrameToUri = null;
-                }
-            }
-        }
-
+        
         internal static EFArtifact GetArtifact(EditingContext context)
         {
             if (context != null)
@@ -73,9 +56,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         }
 
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        protected virtual EFArtifact GetNewOrExistingArtifact(Uri itemUri)
+        {
+            return _package.ModelManager.GetNewOrExistingArtifact(itemUri, new VSXmlModelProvider(_package, _package));
+        }
+
         internal bool DoesContextExist(Uri itemUri)
         {
-            var artifact = _package.ModelManager.GetNewOrExistingArtifact(itemUri, new VSXmlModelProvider(_package, _package));
+            var artifact = GetNewOrExistingArtifact(itemUri);
             if (artifact != null)
             {
                 return _mapArtifactToEditingContext.ContainsKey(artifact);
@@ -99,7 +87,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             // there isn't one, so call the path that will create it
             if (itemContext == null)
             {
-                item = _package.ModelManager.GetNewOrExistingArtifact(itemUri, new VSXmlModelProvider(_package, _package));
+                item = GetNewOrExistingArtifact(itemUri);
                 if (itemUri != null
                     && item != null
                     && !_mapArtifactToEditingContext.TryGetValue(item, out itemContext))
@@ -147,40 +135,17 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        internal void CloseArtifact(Uri artifactUri)
+        internal void CloseArtifact(Uri uri)
         {
-            if (artifactUri != null)
+            Debug.Assert(uri != null, "uri != null");
+
+            EditingContext editingContext = null;
+            var artifact = _package.ModelManager.GetArtifact(uri);
+            if (artifact != null
+                && _mapArtifactToEditingContext.TryGetValue(artifact, out editingContext))
             {
-                CloseArtifacts(new[] { artifactUri });
-            }
-        }
-
-        internal void CloseArtifacts(IEnumerable<Uri> artifactsToClose)
-        {
-            var artifactsToDispose = new List<EFArtifact>();
-            var editingContextsToDispose = new List<EditingContext>();
-
-            foreach (var artifactUri in artifactsToClose)
-            {
-                EditingContext artifactContext = null;
-                var artifact = _package.ModelManager.GetArtifact(artifactUri);
-                if (artifact != null
-                    && _mapArtifactToEditingContext.TryGetValue(artifact, out artifactContext))
-                {
-                    artifactsToDispose.Add(artifact);
-
-                    _mapArtifactToEditingContext.Remove(artifact);
-                    editingContextsToDispose.Add(artifactContext);
-                }
-            }
-
-            foreach (var artifact in artifactsToDispose)
-            {
+                _mapArtifactToEditingContext.Remove(artifact);
                 _package.ModelManager.ClearArtifact(artifact.Uri);
-            }
-
-            foreach (var editingContext in editingContextsToDispose)
-            {
                 editingContext.Dispose();
             }
         }

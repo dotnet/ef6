@@ -24,12 +24,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         private IVsMonitorSelection _sel;
         private uint _selEventsCookie;
         private readonly IXmlDesignerPackage _package;
-        private EditingContextManager _editingContextMgr;
+        private readonly EditingContextManager _editingContextMgr;
         private bool _doNotChangeArtifactInBrowserForNextOpeningDoc;
         private bool _disposed;
         private bool _handlingOnElementValueChanged;
 
-        internal EFArtifact CurrentArtifact
+        internal virtual EFArtifact CurrentArtifact
         {
             get
             {
@@ -67,35 +67,12 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
             }
         }
 
-        ~DocumentFrameMgr()
-        {
-            Dispose(false);
-        }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsMonitorSelection.UnadviseSelectionEvents(System.UInt32)")]
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", MessageId = "Microsoft.VisualStudio.Shell.Interop.IVsRunningDocumentTable.UnadviseRunningDocTableEvents(System.UInt32)")]
-        protected void Dispose(bool disposing)
+        public void Dispose()
         {
             if (!_disposed)
             {
-                if (disposing)
-                {
-                    // dispose-only, i.e. non-finalizable logic
-                    if (_editingContextMgr != null)
-                    {
-                        _editingContextMgr.Dispose();
-                        _editingContextMgr = null;
-                    }
-                }
-
                 // shared cleanup logic
                 if (_rdt != null)
                 {
@@ -116,8 +93,6 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
                 _disposed = true;
             }
         }
-
-        #endregion
 
         internal EditingContextManager EditingContextManager
         {

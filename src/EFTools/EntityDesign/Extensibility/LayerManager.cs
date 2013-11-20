@@ -243,7 +243,7 @@ namespace Microsoft.Data.Entity.Design.Extensibility
             }
         }
 
-        internal void Unload()
+        internal virtual void Unload()
         {
             StopListeningToSelections();
             UnloadAllLayers();

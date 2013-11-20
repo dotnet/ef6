@@ -38,7 +38,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Model
             get { return PackageManager.Package.DocumentFrameMgr.EditingContextManager.GetNewOrExistingContext(Uri); }
         }
 
-        internal LayerManager LayerManager
+        internal virtual LayerManager LayerManager
         {
             get { return _layerManager; }
         }

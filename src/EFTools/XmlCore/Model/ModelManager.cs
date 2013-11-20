@@ -156,8 +156,8 @@ namespace Microsoft.Data.Entity.Design.Model
         /// </summary>
         /// <param name="uri"></param>
         /// <param name="provider">This should alway be NULL except for our unit tests</param>
-        /// <returns></returns>
-        internal EFArtifact GetNewOrExistingArtifact(Uri uri, XmlModelProvider xmlModelProvider)
+        /// <remarks>virtual for testing</remarks>
+        internal virtual EFArtifact GetNewOrExistingArtifact(Uri uri, XmlModelProvider xmlModelProvider)
         {
             lock (this)
             {
@@ -232,8 +232,9 @@ namespace Microsoft.Data.Entity.Design.Model
 
         /// <summary>
         ///     Remove the Artifact associated with the Uri from the cache.
+        ///     Virtual for testing.
         /// </summary>
-        internal void ClearArtifact(Uri uri)
+        internal virtual void ClearArtifact(Uri uri)
         {
             lock (this)
             {

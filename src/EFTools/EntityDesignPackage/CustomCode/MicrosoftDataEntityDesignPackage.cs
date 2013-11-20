@@ -96,7 +96,7 @@ namespace Microsoft.Data.Entity.Design.Package
                     NativeMethods.ThrowOnFailure(vsShell.LoadPackage(ref editorPackageGuid, out editorPackage));
                 }
 
-                _documentFrameMgr = new EntityDesignDocumentFrameMgr();
+                _documentFrameMgr = new EntityDesignDocumentFrameMgr(PackageManager.Package);
                 _modelChangeEventListener = new ModelChangeEventListener();
                 _guidsCache = new AggregateProjectTypeGuidCache();
                 _modelGenErrorCache = new ModelGenErrorCache();

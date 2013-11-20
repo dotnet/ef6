@@ -52,7 +52,6 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
 
     partial class EntityDesignerDiagram : IViewDiagram
     {
-        private static EntityDesignerDiagramSelectionRules _selectionRules;
         private const int undefinedZoomLevel = -1;
         internal const int IMPLICIT_AUTO_LAYOUT_CEILING = 1000;
 
@@ -1497,11 +1496,7 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
         {
             get
             {
-                if (_selectionRules == null)
-                {
-                    _selectionRules = new EntityDesignerDiagramSelectionRules(this);
-                }
-                return _selectionRules;
+                return new EntityDesignerDiagramSelectionRules(this);
             }
         }
 
@@ -1539,7 +1534,8 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.View
                 var originalProposedItemsToAdd = new DiagramItem[proposedItemsToAdd.Count];
                 proposedItemsToAdd.CopyTo(originalProposedItemsToAdd, 0);
 
-                // we only perform this with selection rectangles, in which case the focused item will be the diagram
+                // we only perform this with selection rectangles, in which case the focused item will be the diagram 
+                // and the user clicks on the "Properties" or "Navigation Properties" compartment on an entity
                 if (currentSelection.FocusedItem != null
                     && currentSelection.FocusedItem.Shape == _diagram)
                 {

@@ -12,11 +12,10 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.CustomSerializer
     /// <summary>
     ///     This class contains XRef between DSL Model and Escher Model.
     /// </summary>
-    internal class ModelToDesignerModelXRefItem : IDisposable
+    internal class ModelToDesignerModelXRefItem
     {
-        private Dictionary<EFObject, ModelElement> _modelToViewModel;
-        private Dictionary<ModelElement, EFObject> _viewModelToModel;
-        private bool _isDisposed;
+        private readonly Dictionary<EFObject, ModelElement> _modelToViewModel;
+        private readonly Dictionary<ModelElement, EFObject> _viewModelToModel;
 
         internal ModelToDesignerModelXRefItem()
         {
@@ -86,14 +85,8 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.CustomSerializer
 
         internal void Clear()
         {
-            if (_modelToViewModel != null)
-            {
-                _modelToViewModel.Clear();
-            }
-            if (_viewModelToModel != null)
-            {
-                _viewModelToModel.Clear();
-            }
+            _modelToViewModel.Clear();
+            _viewModelToModel.Clear();
         }
 
         internal ICollection<ModelElement> ReferencedViewElements
@@ -109,31 +102,5 @@ namespace Microsoft.Data.Entity.Design.EntityDesigner.CustomSerializer
                 return objects.AsReadOnly();
             }
         }
-
-        #region IDisposable
-
-        ~ModelToDesignerModelXRefItem()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing && !_isDisposed)
-            {
-                Clear();
-                _modelToViewModel = null;
-                _viewModelToModel = null;
-                _isDisposed = true;
-            }
-        }
-
-        #endregion
     }
 }

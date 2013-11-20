@@ -8,6 +8,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     using System.IO;
     using Microsoft.Data.Entity.Design.Base.Context;
     using Microsoft.Data.Entity.Design.VisualStudio.Model;
+    using Microsoft.Data.Tools.VSXmlDesignerBase.Model.VisualStudio;
     using Microsoft.VisualStudio;
     using Microsoft.VisualStudio.Shell.Interop;
 
@@ -19,8 +20,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
     {
         private readonly HashSet<Uri> _dirtyArtifactsOnClose = null;
 
-        internal EntityDesignDocumentFrameMgr()
-            : base(PackageManager.Package)
+        internal EntityDesignDocumentFrameMgr(IXmlDesignerPackage package)
+            : base(package)
         {
         }
 
@@ -134,7 +135,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         protected override void OnBeforeLastDesignerDocumentUnlock(Uri docUri)
         {
             var vsArtifact = CurrentArtifact as VSArtifact;
-            if (vsArtifact != null
+            if (vsArtifact != null && vsArtifact.Uri == docUri
                 && vsArtifact.LayerManager != null)
             {
                 vsArtifact.LayerManager.Unload();
