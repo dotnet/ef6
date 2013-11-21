@@ -163,6 +163,8 @@
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Engine\UpdateModelFromDatabaseModelBuilderEngineTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\ViewModels\RuntimeConfigViewModelTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\ViewModels\EntityFrameworkVersionOptionTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageBaseTests.cs" />
+    <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageDbConfigTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\ModelWizard\Gui\WizardPageStartTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Model\StandaloneXmlModelProviderTests.cs" />
     <Compile Include="EntityDesign\VisualStudio\Package\ConnectionManagerTests.cs" />

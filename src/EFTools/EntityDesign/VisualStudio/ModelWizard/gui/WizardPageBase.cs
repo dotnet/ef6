@@ -57,9 +57,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             get { return _wizard.ServiceProvider; }
         }
 
+        internal virtual bool MovingNext 
+        {
+            get { return Wizard.MovingNext; }
+        }
+
         public override bool OnDeactivate()
         {
-            if (Wizard.MovingNext
+            if (MovingNext
                 && !Wizard.MovingPrevious
                 && !Wizard.WizardFinishing)
             {

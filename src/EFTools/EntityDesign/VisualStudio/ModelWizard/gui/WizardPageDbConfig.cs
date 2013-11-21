@@ -204,6 +204,14 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             }
         }
 
+        public override bool OnActivate()
+        {
+            // don't allow activating this page if the name provided by the user
+            // conflicts with an existing file because the initialization steps
+            // we perform on activation will fail due to model name not being set
+            return base.OnActivate() && !Wizard.FileAlreadyExistsError;
+        }
+
         public override void OnActivated()
         {
             base.OnActivated();

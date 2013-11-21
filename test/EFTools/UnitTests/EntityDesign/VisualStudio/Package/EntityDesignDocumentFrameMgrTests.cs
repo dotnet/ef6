@@ -34,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.Package
         }
 
         [Fact]
-        public void OnBeforeLastDesignerDocumentUnlock_unloads_artifact_it_not_owns()
+        public void OnBeforeLastDesignerDocumentUnlock_unloads_artifact_it_owns()
         {
             var artifactUri = new Uri("c:\\artifact.edmx");
 

@@ -2,6 +2,7 @@
 
 namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
 {
+    using System.Xml.Linq;
     using Microsoft.Data.Entity.Design.VersioningFacade;
     using Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine;
     using Moq;
@@ -33,7 +34,7 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
         [Fact]
         public void OnDeactivate_creates_and_verifies_model_path()
         {
-            var modelBuilderSettings = new ModelBuilderSettings()
+            var modelBuilderSettings = new ModelBuilderSettings
             {
                 NewItemFolder = @"C:\temp",
                 ModelName = "myModel"
@@ -145,6 +146,19 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             mockWizardPageStart
                 .Protected()
                 .Verify("GetEdmxTemplateContent", Times.Once(), "fake.vstemplate");   
+        }
+
+        [Fact]
+        public void OnActivate_result_depends_on_FileAlreadyExistsError()
+        {
+            var wizard = new ModelBuilderWizardForm(new ModelBuilderSettings(), ModelBuilderWizardForm.WizardMode.PerformAllFunctionality);
+            var wizardPageStart = new WizardPageStart(wizard, new Mock<IServiceProvider>().Object);
+
+            wizard.FileAlreadyExistsError = true;
+            Assert.False(wizardPageStart.OnActivate());
+
+            wizard.FileAlreadyExistsError = false;
+            Assert.True(wizardPageStart.OnActivate());
         }
     }
 }

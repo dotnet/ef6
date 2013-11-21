@@ -92,6 +92,16 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             get { return listViewModelContents.SelectedIndices.Count == 1; }
         }
 
+        public override bool OnActivate()
+        {
+            // Prevents flickering if the user provides a name of the model that
+            // conflicts with an existing file. If this happens we block activation
+            // of the next page so the wizard will want to re-activate this page. 
+            // Beacuse we close the wizard form anyways we can block activating 
+            // this page which will prevent flickering.
+            return base.OnActivate() && !Wizard.FileAlreadyExistsError;
+        }
+
         /// <summary>
         ///     Invoked by the VS Wizard framework when this page is entered.
         ///     Updates GUI from ModelBuilderSettings
@@ -126,15 +136,15 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Gui
             if (!Wizard.FileAlreadyExistsError)
             {
                 UpdateSettingsFromGui(GetSelectedOptionIndex(), modelPath);
+
+                return base.OnDeactivate();
             }
             else
             {
-                // prevents flickering
-                RemoveAllExceptFirstPage();
+                var deactivateResult = base.OnDeactivate();
                 Wizard.Close();
+                return deactivateResult;
             }
-
-            return base.OnDeactivate();
         }
 
         /// <summary>
