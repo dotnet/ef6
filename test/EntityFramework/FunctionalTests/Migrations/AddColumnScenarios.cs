@@ -272,5 +272,232 @@ namespace System.Data.Entity.Migrations
 
             migrator.Update();
         }
+
+        private class AddStringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String());
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AddStringColumnMigration());
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            WhenSqlCe(
+                () =>
+                {
+                    Assert.Equal("ntext", column.Type);
+                    Assert.Equal(SqlCeTestDatabase.NtextLength, column.MaxLength);
+                });
+            WhenNotSqlCe(
+                () =>
+                {
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                });
+        }
+
+        private class AddNvarcharMaxStringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "nvarchar(max)"));
+            }
+        }
+        private class AddNvarcharMaxStringColumnCEMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "ntext"));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_nvarchar_max_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+            
+            WhenSqlCe(
+                () =>
+                {
+                    migrator = CreateMigrator<ShopContext_v1>(new AddNvarcharMaxStringColumnCEMigration());
+                });
+
+            WhenNotSqlCe(
+                () =>
+                {
+                    migrator = CreateMigrator<ShopContext_v1>(new AddNvarcharMaxStringColumnMigration());
+                });
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            WhenSqlCe(
+                () =>
+                {
+                    Assert.Equal("ntext", column.Type);
+                    Assert.Equal(SqlCeTestDatabase.NtextLength, column.MaxLength);
+                });
+            WhenNotSqlCe(
+                () =>
+                {
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                });
+        }
+        
+        private class AddNvarcharMax64StringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "nvarchar(max)", maxLength: 64));
+            }
+        }
+
+        private class AddNvarcharMax64StringColumnCEMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "ntext", maxLength: 64));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_nvarchar_max_64_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            WhenSqlCe(
+                () =>
+                {
+                    migrator = CreateMigrator<ShopContext_v1>(new AddNvarcharMax64StringColumnCEMigration());
+                });
+
+            WhenNotSqlCe(
+                () =>
+                {
+                    migrator = CreateMigrator<ShopContext_v1>(new AddNvarcharMax64StringColumnMigration());
+                });
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            WhenSqlCe(
+                () =>
+                {
+                    Assert.Equal("ntext", column.Type);
+                    Assert.Equal(SqlCeTestDatabase.NtextLength, column.MaxLength);
+                });
+            WhenNotSqlCe(
+                () =>
+                {
+                    Assert.Equal("nvarchar", column.Type);
+                    Assert.Equal(-1, column.MaxLength);
+                });
+        }
+
+        private class Add64LengthStringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(maxLength: 64));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_64_length_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new Add64LengthStringColumnMigration());
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            Assert.Equal("nvarchar", column.Type);
+            Assert.Equal(64, column.MaxLength);
+        }
+
+        private class AddNvarcharStringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "nvarchar"));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_nvarchar_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AddNvarcharStringColumnMigration());
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            Assert.Equal("nvarchar", column.Type);
+            Assert.Equal(4000, column.MaxLength);
+        }
+
+        private class AddNvarchar64StringColumnMigration : DbMigration
+        {
+            public override void Up()
+            {
+                AddColumn("MigrationsCustomers", "new_col", c => c.String(storeType: "nvarchar", maxLength: 64));
+            }
+        }
+
+        [MigrationsTheory]
+        public void Can_add_nvarchar_64_string_column_when_no_data_present()
+        {
+            ResetDatabase();
+
+            var migrator = CreateMigrator<ShopContext_v1>();
+
+            migrator.Update();
+
+            migrator = CreateMigrator<ShopContext_v1>(new AddNvarchar64StringColumnMigration());
+
+            migrator.Update();
+
+            var column = Info.Columns.SingleOrDefault(c => c.TableName == "MigrationsCustomers" && c.Name == "new_col");
+
+            Assert.Equal("nvarchar", column.Type);
+            Assert.Equal(64, column.MaxLength);
+        }
     }
 }

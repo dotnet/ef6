@@ -257,5 +257,42 @@ namespace System.Data.Entity.Migrations.Model
                 booleanColumnModel.IsNarrowerThan(new ColumnModel(typeKind), _providerManifest);
             }
         }
+
+        [Fact]
+        public void ToFacetValues_returns_empty_by_default()
+        {
+            var columnModel = new ColumnModel(PrimitiveTypeKind.Boolean);
+            Assert.True(FacetValuesHelpers.Equal<int>(new FacetValues(), columnModel.ToFacetValues()));
+        }
+
+        [Fact]
+        public void ToFacetValues_returns_specified_facet_values()
+        {
+            var columnModel = new ColumnModel(PrimitiveTypeKind.Boolean)
+            {
+                DefaultValue = 0.1,
+                IsFixedLength = true,
+                IsIdentity = true,
+                IsNullable = true,
+                IsUnicode = true,
+                MaxLength = 64,
+                Precision = 5,
+                Scale = 3
+            };
+
+            var expectedFacetValues = new FacetValues()
+            {
+                DefaultValue = 0.1,
+                FixedLength = true,
+                StoreGeneratedPattern = StoreGeneratedPattern.Identity,
+                Nullable = true,
+                Unicode = true,
+                MaxLength = (int?)64,
+                Precision = (byte?)5,
+                Scale = (byte?)3
+            };
+
+            Assert.True(FacetValuesHelpers.Equal<double>(expectedFacetValues, columnModel.ToFacetValues()));
+        }
     }
 }

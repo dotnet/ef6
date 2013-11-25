@@ -3,8 +3,11 @@
 namespace System.Data.Entity.Migrations.Sql
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Common.CommandTrees;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Migrations.Model;
+    using System.Linq;
 
     /// <summary>
     /// Common base class for providers that convert provider agnostic migration
@@ -12,6 +15,14 @@ namespace System.Data.Entity.Migrations.Sql
     /// </summary>
     public abstract class MigrationSqlGenerator
     {
+        /// <summary>
+        /// Gets or sets the provider manifest.
+        /// </summary>
+        /// <value>
+        /// The provider manifest.
+        /// </value>
+        protected DbProviderManifest ProviderManifest { get; set; }
+
         /// <summary>
         /// Converts a set of migration operations into database provider specific SQL.
         /// </summary>
@@ -35,6 +46,22 @@ namespace System.Data.Entity.Migrations.Sql
             string providerManifestToken)
         {
             return null;
+        }
+
+        /// <summary>
+        /// Builds the store type usage for the specified <paramref name="storeTypeName"/> using the facets from the specified <paramref name="property"/>.
+        /// </summary>
+        /// <param name="storeTypeName">Name of the store type.</param>
+        /// <param name="property">The target property.</param>
+        /// <returns>A store-specific TypeUsage</returns>
+        protected virtual TypeUsage BuildStoreTypeUsage(string storeTypeName, PropertyModel property)
+        {
+            var storeType = ProviderManifest.GetStoreTypes()
+                                   .SingleOrDefault(p => string.Equals(p.Name, storeTypeName, StringComparison.OrdinalIgnoreCase));
+            
+            return storeType == null
+                ? null
+                : TypeUsage.Create(storeType, property.ToFacetValues());
         }
     }
 }

@@ -36,7 +36,6 @@ namespace System.Data.Entity.SqlServer
         internal const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffK";
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
-        private DbProviderManifest _providerManifest;
         private SqlGenerator _sqlGenerator;
         private List<MigrationStatement> _statements;
         private HashSet<string> _generatedSchemas;
@@ -105,7 +104,7 @@ namespace System.Data.Entity.SqlServer
 
             using (var connection = CreateConnection())
             {
-                _providerManifest
+                ProviderManifest
                     = DbProviderServices
                         .GetProviderServices(connection)
                         .GetProviderManifest(providerManifestToken);
@@ -1258,11 +1257,17 @@ namespace System.Data.Entity.SqlServer
             DebugCheck.NotNull(propertyModel);
 
             var originalStoreTypeName = propertyModel.StoreType;
-            var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage);
+            var typeUsage = ProviderManifest.GetStoreType(propertyModel.TypeUsage);
 
             if (string.IsNullOrWhiteSpace(originalStoreTypeName))
             {
                 originalStoreTypeName = typeUsage.EdmType.Name;
+            }
+            else
+            {
+                var storeTypeUsage = BuildStoreTypeUsage(originalStoreTypeName, propertyModel);
+
+                typeUsage = storeTypeUsage ?? typeUsage;
             }
 
             var storeTypeName = originalStoreTypeName;

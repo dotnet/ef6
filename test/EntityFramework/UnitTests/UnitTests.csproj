@@ -215,6 +215,8 @@
     <Compile Include="Core\Metadata\Edm\RowTypeTests.cs" />
     <Compile Include="Core\Metadata\Edm\SsdlSerializerTests.cs" />
     <Compile Include="Core\Metadata\Edm\StoreItemCollectionTests.cs" />
+    <Compile Include="Core\Metadata\Edm\TestHelpers\FacetDescriptionHelpers.cs" />
+    <Compile Include="Core\Metadata\Edm\TestHelpers\FacetValuesHelpers.cs" />
     <Compile Include="Core\Objects\DataClasses\RelationshipManagerTests.cs" />
     <Compile Include="Core\Objects\DataClasses\EdmFunctionAttributeTests.cs" />
     <Compile Include="Core\Objects\DelegateFactoryTests.cs" />
