@@ -8,6 +8,7 @@ namespace System.Data.Entity.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Data.Entity.Migrations.Model;
     using System.Data.Entity.ModelConfiguration.Conventions;
+    using System.Data.SqlServerCe;
     using System.Linq;
     using Xunit;
 
@@ -665,6 +666,7 @@ namespace System.Data.Entity.Migrations
             Assert.Null(addColumnOperation.Column.IsFixedLength);
             Assert.Null(addColumnOperation.Column.IsNullable);
             Assert.Null(addColumnOperation.Column.MaxLength);
+            Assert.Null(addColumnOperation.Column.StoreType);
             Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
         }
 
@@ -679,6 +681,308 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class AutoAndGenerateScenarios_AddColumnNvarcharMax :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMax.V1, AutoAndGenerateScenarios_AddColumnNvarcharMax.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnNvarcharMax()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Ignore(s => s.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                if (Database.Connection is SqlCeConnection)
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("ntext");
+                }
+                else
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("nvarchar(max)");
+                }
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var addColumnOperation =
+                migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(addColumnOperation);
+
+            Assert.Null(addColumnOperation.Column.IsFixedLength);
+            Assert.Null(addColumnOperation.Column.IsNullable);
+            Assert.Null(addColumnOperation.Column.MaxLength);
+            Assert.Null(addColumnOperation.Column.StoreType);
+            Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropColumnOperation =
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+            Assert.NotNull(dropColumnOperation);
+        }
+    }
+    
+    public class AutoAndGenerateScenarios_AddColumnNvarcharMax64 :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMax64.V1, AutoAndGenerateScenarios_AddColumnNvarcharMax64.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnNvarcharMax64()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Ignore(s => s.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                if (Database.Connection is SqlCeConnection)
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("ntext")
+                        .HasMaxLength(64);
+                }
+                else
+                {
+                    modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(64);
+                }
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var addColumnOperation =
+                migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(addColumnOperation);
+
+            Assert.Null(addColumnOperation.Column.IsFixedLength);
+            Assert.Null(addColumnOperation.Column.IsNullable);
+            Assert.Null(addColumnOperation.Column.MaxLength);
+            Assert.Null(addColumnOperation.Column.StoreType);
+            Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropColumnOperation =
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+            Assert.NotNull(dropColumnOperation);
+        }
+    }
+    
+    public class AutoAndGenerateScenarios_AddColumnNvarchar :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarchar.V1, AutoAndGenerateScenarios_AddColumnNvarchar.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnNvarchar()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Ignore(s => s.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("nvarchar");
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var addColumnOperation =
+                migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(addColumnOperation);
+
+            Assert.Null(addColumnOperation.Column.IsFixedLength);
+            Assert.Null(addColumnOperation.Column.IsNullable);
+            Assert.Equal(4000, addColumnOperation.Column.MaxLength.Value);
+            Assert.Null(addColumnOperation.Column.StoreType);
+            Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropColumnOperation =
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+            Assert.NotNull(dropColumnOperation);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AddColumnNvarcharMaxLength :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarcharMaxLength.V1, AutoAndGenerateScenarios_AddColumnNvarcharMaxLength.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnNvarcharMaxLength()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Ignore(s => s.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                        .HasColumnType("nvarchar")
+                        .IsMaxLength();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var addColumnOperation =
+                migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(addColumnOperation);
+
+            Assert.Null(addColumnOperation.Column.IsFixedLength);
+            Assert.Null(addColumnOperation.Column.IsNullable);
+            //Assert.Null(addColumnOperation.Column.MaxLength);
+            Assert.Equal(4000, addColumnOperation.Column.MaxLength);
+            //Assert.Equal("nvarchar", addColumnOperation.Column.StoreType);
+            Assert.Null(addColumnOperation.Column.StoreType);
+            Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropColumnOperation =
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+            Assert.NotNull(dropColumnOperation);
+        }
+    }
+
+    public class AutoAndGenerateScenarios_AddColumnNvarchar64 :
+        AutoAndGenerateTestCase<AutoAndGenerateScenarios_AddColumnNvarchar64.V1, AutoAndGenerateScenarios_AddColumnNvarchar64.V2>
+    {
+        public AutoAndGenerateScenarios_AddColumnNvarchar64()
+        {
+            IsDownDataLoss = true;
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Ignore(s => s.Name);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                    .HasColumnType("nvarchar")
+                    .HasMaxLength(64);
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var addColumnOperation =
+                migrationOperations.OfType<AddColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(addColumnOperation);
+
+            Assert.Null(addColumnOperation.Column.IsFixedLength);
+            Assert.Null(addColumnOperation.Column.IsNullable);
+            Assert.Equal(64, addColumnOperation.Column.MaxLength.Value);
+            Assert.Null(addColumnOperation.Column.StoreType);
+            Assert.Equal(PrimitiveTypeKind.String, addColumnOperation.Column.Type);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var dropColumnOperation =
+                migrationOperations.OfType<DropColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Name == "Name");
+            Assert.NotNull(dropColumnOperation);
+        }
+    }
+    
     public class AutoAndGenerateScenarios_RemoveColumn :
         AutoAndGenerateTestCase<AutoAndGenerateScenarios_RemoveColumn.V1, AutoAndGenerateScenarios_RemoveColumn.V2>
     {
@@ -1392,12 +1696,12 @@ namespace System.Data.Entity.Migrations
         }
     }
 
-    public class AutoAndGenerateScenarios_AlterColumnMaxLength_Max
+    public class AutoAndGenerateScenarios_AlterColumn256_Max
         :
             AutoAndGenerateScenarios_AlterColumnMaxLength
-                <AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V1, AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V2>
+                <AutoAndGenerateScenarios_AlterColumn256_Max.V1, AutoAndGenerateScenarios_AlterColumn256_Max.V2>
     {
-        public AutoAndGenerateScenarios_AlterColumnMaxLength_Max()
+        public AutoAndGenerateScenarios_AlterColumn256_Max()
             : base(null)
         {
         }
@@ -1429,6 +1733,70 @@ namespace System.Data.Entity.Migrations
         }
     }
 
+    public class AutoAndGenerateScenarios_AlterColumnMaxLength_Max
+        :
+            AutoAndGenerateScenarios_AlterColumnMaxLength
+                <AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V1, AutoAndGenerateScenarios_AlterColumnMaxLength_Max.V2>
+    {
+        public AutoAndGenerateScenarios_AlterColumnMaxLength_Max()
+            : base(null)
+        {
+        }
+
+        public class V1 : AutoAndGenerateContext_v1
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name)
+                    .HasColumnType("nvarchar").IsMaxLength();
+
+                // Prevent convention override
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        public class V2 : AutoAndGenerateContext_v2
+        {
+            protected override void OnModelCreating(DbModelBuilder modelBuilder)
+            {
+                modelBuilder.Entity<MigrationsStore>().Property(s => s.Name);
+
+                // Prevent convention override
+                modelBuilder.Conventions.Remove<SqlCePropertyMaxLengthConvention>();
+
+                this.IgnoreSpatialTypesOnSqlCe(modelBuilder);
+            }
+        }
+
+        protected override void VerifyUpOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Null(alterColumnOperation.Column.MaxLength);
+            Assert.Null(alterColumnOperation.Column.StoreType);
+        }
+
+        protected override void VerifyDownOperations(IEnumerable<MigrationOperation> migrationOperations)
+        {
+            Assert.Equal(1, migrationOperations.Count());
+
+            var alterColumnOperation =
+                migrationOperations.OfType<AlterColumnOperation>().SingleOrDefault(
+                    o => o.Table == "dbo.MigrationsStores" && o.Column.Name == "Name");
+            Assert.NotNull(alterColumnOperation);
+
+            Assert.Equal(4000, alterColumnOperation.Column.MaxLength);
+            Assert.Null(alterColumnOperation.Column.StoreType);
+        }
+    }
+    
     public class AutoAndGenerateScenarios_AlterColumnMaxLength_512
         :
             AutoAndGenerateScenarios_AlterColumnMaxLength

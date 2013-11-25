@@ -1697,6 +1697,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             return createTableOperation;
         }
 
+        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
         private static ColumnModel BuildColumnModel(
             XElement property, string entitySetName, ModelMetadata modelMetadata)
         {
@@ -1710,7 +1711,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var precisionAttribute = property.PrecisionAttribute();
             var scaleAttribute = property.ScaleAttribute();
             var storeGeneratedPatternAttribute = property.StoreGeneratedPatternAttribute();
-            var storeType = property.TypeAttribute();
+            var storeTypeName = property.TypeAttribute();
 
             var entityType
                 = modelMetadata.StoreItemCollection
@@ -1720,9 +1721,23 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var edmProperty
                 = entityType.Properties[nameAttribute];
 
+            var storeType = edmProperty.TypeUsage.EdmType;
             var typeUsage = modelMetadata.ProviderManifest.GetEdmType(edmProperty.TypeUsage);
 
             var defaultStoreTypeName = modelMetadata.ProviderManifest.GetStoreType(typeUsage).EdmType.Name;
+
+            if (storeTypeName.EqualsIgnoreCase(defaultStoreTypeName))
+            {
+                storeTypeName = null;
+            }
+            else
+            {
+                storeType = modelMetadata.ProviderManifest.GetStoreTypes()
+                        .SingleOrDefault(p => string.Equals(p.Name, storeTypeName, StringComparison.OrdinalIgnoreCase)) ?? storeType;
+            }
+
+            var maxLengthFacetDescription = storeType.GetAssociatedFacetDescriptions()
+                    .SingleOrDefault(d => d.FacetName.EqualsIgnoreCase(DbProviderManifest.MaxLengthFacetName));
 
             var column
                 = new ColumnModel(((PrimitiveType)edmProperty.TypeUsage.EdmType).PrimitiveTypeKind, typeUsage)
@@ -1737,7 +1752,10 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             // Setting "Max" is equivalent to not setting anything
                             = !string.IsNullOrWhiteSpace(maxLengthAttribute) && !maxLengthAttribute.EqualsIgnoreCase(XmlConstants.Max)
                                   ? Convert.ToInt32(maxLengthAttribute, CultureInfo.InvariantCulture)
-                                  : (int?)null,
+                                  : maxLengthFacetDescription != null
+                                      && !maxLengthFacetDescription.IsConstant
+                                      ? maxLengthFacetDescription.DefaultValue as int?
+                                      : (int?)null,
                         Precision
                             = !string.IsNullOrWhiteSpace(precisionAttribute)
                                   ? Convert.ToByte(precisionAttribute, CultureInfo.InvariantCulture)
@@ -1747,9 +1765,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                                   ? Convert.ToByte(scaleAttribute, CultureInfo.InvariantCulture)
                                   : (byte?)null,
                         StoreType
-                            = !storeType.EqualsIgnoreCase(defaultStoreTypeName)
-                                  ? storeType
-                                  : null
+                            = storeTypeName
                     };
 
             column.IsIdentity

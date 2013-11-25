@@ -207,5 +207,22 @@ namespace System.Data.Entity.Migrations.Model
 
             return false;
         }
+
+        internal override FacetValues ToFacetValues()
+        {
+            var facets = base.ToFacetValues();
+
+            if (IsNullable != null)
+            {
+                facets.Nullable = IsNullable.Value;
+            }
+
+            if (IsIdentity)
+            {
+                facets.StoreGeneratedPattern = StoreGeneratedPattern.Identity;
+            }
+
+            return facets;
+        }
     }
 }

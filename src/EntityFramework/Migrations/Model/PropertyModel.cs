@@ -180,5 +180,42 @@ namespace System.Data.Entity.Migrations.Model
                        ? TypeUsage.CreateTimeTypeUsage(primitiveType, Precision)
                        : TypeUsage.CreateDefaultTypeUsage(primitiveType);
         }
+
+        internal virtual FacetValues ToFacetValues()
+        {
+            var facets = new FacetValues();
+
+            if (DefaultValue != null)
+            {
+                facets.DefaultValue = DefaultValue;
+            }
+
+            if (IsFixedLength != null)
+            {
+                facets.FixedLength = IsFixedLength.Value;
+            }
+
+            if (IsUnicode != null)
+            {
+                facets.Unicode = IsUnicode.Value;
+            }
+
+            if (MaxLength != null)
+            {
+                facets.MaxLength = MaxLength.Value;
+            }
+
+            if (Precision != null)
+            {
+                facets.Precision = Precision.Value;
+            }
+
+            if (Scale != null)
+            {
+                facets.Scale = Scale.Value;
+            }
+
+            return facets;
+        }
     }
 }

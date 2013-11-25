@@ -24,7 +24,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Create_copies_unbounded_value_from_MaxLengthFacet()
         {
-            Test_create_copies_value(GetFacetDescription<int>(DbProviderManifest.MaxLengthFacetName),
+            Test_create_copies_value(FacetDescriptionHelpers.GetFacetDescription<int>(DbProviderManifest.MaxLengthFacetName),
                 value: EdmConstants.UnboundedValue);
         }
 
@@ -49,7 +49,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Create_copies_unbounded_value_from_PrecisionFacet()
         {
-            Test_create_copies_value(GetFacetDescription<byte>(DbProviderManifest.PrecisionFacetName),
+            Test_create_copies_value(FacetDescriptionHelpers.GetFacetDescription<byte>(DbProviderManifest.PrecisionFacetName),
                 value: EdmConstants.UnboundedValue);
         }
 
@@ -61,7 +61,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
         [Fact]
         public void Create_copies_unbounded_value_from_ScaleFacet()
         {
-            Test_create_copies_value(GetFacetDescription<byte>(DbProviderManifest.ScaleFacetName),
+            Test_create_copies_value(FacetDescriptionHelpers.GetFacetDescription<byte>(DbProviderManifest.ScaleFacetName),
                 value: EdmConstants.UnboundedValue);
         }
 
@@ -109,7 +109,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static void Test_create_copies_value<T>(string facetName, T value)
         {
-            var description = GetFacetDescription<T>(facetName);
+            var description = FacetDescriptionHelpers.GetFacetDescription<T>(facetName);
             var facet = Facet.Create(description, value: value);
 
             var values = FacetValues.Create(new List<Facet> { facet });
@@ -210,7 +210,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
 
         private static void Test_NullFacetValues_has_value_set_to_null<T>(string facetName, bool shouldBePresent = true)
         {
-            var description = GetFacetDescription<T>(facetName);
+            var description = FacetDescriptionHelpers.GetFacetDescription<T>(facetName);
 
             var values = FacetValues.NullFacetValues;
 
@@ -225,23 +225,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
                 Assert.False(values.TryGetFacet(description, out returnedFacet));
                 Assert.Null(returnedFacet);
             }
-        }
-
-        private static FacetDescription GetFacetDescription<T>(string facetName)
-        {
-            var type = typeof(T);
-            EdmType edmType;
-            PrimitiveTypeKind primitiveTypeKind;
-            if (ClrProviderManifest.TryGetPrimitiveTypeKind(type, out primitiveTypeKind))
-            {
-                edmType = new PrimitiveType { PrimitiveTypeKind = primitiveTypeKind };
-            }
-            else
-            {
-                edmType = new EnumType(type);
-            }
-
-            return new FacetDescription(facetName, edmType, null, null, null);
         }
     }
 }
