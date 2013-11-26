@@ -17,7 +17,6 @@ namespace System.Data.Entity.Migrations.Infrastructure
     using System.Linq;
     using System.Xml.Linq;
     using Xunit;
-    using Console = System.Console;
 
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.CSharp)]
     [Variant(DatabaseProvider.SqlServerCe, ProgrammingLanguage.CSharp)]
@@ -2176,6 +2175,40 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.True(addForeignKeyOperation.CascadeDelete);
         }
 
+        [Table("Contract")]
+        public class Contract
+        {
+            public long Id { get; set; }
+            public DateTime X { get; set; }
+        }
+
+        [Table("InitialContract")]
+        public class ContractRevision : Contract
+        {
+        }
+
+        [Table("InitialContract")]
+        public class InitialContract : Contract
+        {
+        }
+
+        [MigrationsTheory]
+        public void Should_not_detect_duplicate_added_foreign_keys()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<Contract>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(1, operations.OfType<AddForeignKeyOperation>().Count());
+        }
+
         #endregion
 
         #region Removed FKs
@@ -2225,6 +2258,23 @@ namespace System.Data.Entity.Migrations.Infrastructure
             Assert.Equal("OrderId", inverse.PrincipalColumns.Single());
             Assert.Equal("dbo.OrderLines", inverse.DependentTable);
             Assert.Equal("OrderId", inverse.DependentColumns.Single());
+        }
+        
+        [MigrationsTheory]
+        public void Should_not_detect_duplicate_dropped_foreign_keys()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<Contract>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model2.GetModel(), model1.GetModel());
+
+            Assert.Equal(1, operations.OfType<DropForeignKeyOperation>().Count());
         }
 
         #endregion
@@ -2376,8 +2426,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel());
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(1, operations.Count());
             Assert.True(operations.Single() is RenameColumnOperation);
@@ -2404,8 +2454,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel());
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
 
@@ -2443,8 +2493,8 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             var model2 = modelBuilder.Build(ProviderInfo);
 
-            var operations = new EdmModelDiffer().Diff(
-                model1.GetModel(), model2.GetModel());
+            var operations 
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
 
             Assert.Equal(4, operations.Count());
 
@@ -2458,6 +2508,54 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             Assert.Equal("dbo.OrderLines", dropPrimaryKeyOperation.Table);
             Assert.Equal("Id", dropPrimaryKeyOperation.Columns.Single());
+        }
+
+        public class PkEntity1
+        {
+            public string Id { get; set; }
+            public ICollection<PkEntity2> PkEntity2s { get; set; }
+        }
+
+        public class PkEntity2
+        {
+            public string Id { get; set; }
+            public string PkEntity1Id { get; set; }
+        }
+
+
+        [MigrationsTheory]
+        public void Can_detect_changed_primary_key_when_pk_column_facets_changed()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<PkEntity1>();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<PkEntity1>().Property(e => e.Id).HasMaxLength(42);
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(8, operations.Count());
+
+            Assert.Equal(
+                new[]
+                {
+                    typeof(DropForeignKeyOperation),
+                    typeof(DropIndexOperation),
+                    typeof(DropPrimaryKeyOperation),
+                    typeof(AlterColumnOperation),
+                    typeof(AlterColumnOperation),
+                    typeof(AddPrimaryKeyOperation),
+                    typeof(CreateIndexOperation),
+                    typeof(AddForeignKeyOperation)
+                },
+                operations.Select(o => o.GetType()));
         }
 
         #endregion

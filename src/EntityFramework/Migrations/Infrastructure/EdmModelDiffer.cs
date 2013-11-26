@@ -43,6 +43,14 @@ namespace System.Data.Entity.Migrations.Infrastructure
             public DbProviderInfo ProviderInfo { get; set; }
         }
 
+        private static readonly DynamicEqualityComparer<ForeignKeyOperation> _foreignKeyEqualityComparer
+            = new DynamicEqualityComparer<ForeignKeyOperation>((fk1, fk2) => fk1.Name.EqualsOrdinal(fk2.Name));
+
+        private static readonly DynamicEqualityComparer<IndexOperation> _indexEqualityComparer
+            = new DynamicEqualityComparer<IndexOperation>(
+                (i1, i2) => i1.Name.EqualsOrdinal(i2.Name)
+                            && i1.Table.EqualsOrdinal(i2.Table));
+
         private ModelMetadata _source;
         private ModelMetadata _target;
 
@@ -131,10 +139,20 @@ namespace System.Data.Entity.Migrations.Infrastructure
             var addedTables = FindAddedTables(tablePairs).ToList();
             var droppedTables = FindDroppedTables(tablePairs).ToList();
 
-            var addedForeignKeys = FindAddedForeignKeys(associationTypePairs, renamedColumns).ToList();
-            var droppedForeignKeys = FindDroppedForeignKeys(associationTypePairs, renamedColumns).ToList();
-            var alteredPrimaryKeys = FindAlteredPrimaryKeys(tablePairs, renamedColumns).ToList();
+            var alteredPrimaryKeys
+                = FindAlteredPrimaryKeys(tablePairs, renamedColumns, alteredColumns)
+                    .ToList();
 
+            var addedForeignKeys
+                = FindAddedForeignKeys(associationTypePairs, renamedColumns)
+                    .Concat(alteredPrimaryKeys.OfType<AddForeignKeyOperation>())
+                    .ToList();
+            
+            var droppedForeignKeys
+                = FindDroppedForeignKeys(associationTypePairs, renamedColumns)
+                    .Concat(alteredPrimaryKeys.OfType<DropForeignKeyOperation>())
+                    .ToList();
+            
             var addedModificationFunctions
                 = FindAddedModificationFunctions(modificationCommandTreeGenerator, migrationSqlGenerator)
                     .ToList();
@@ -149,28 +167,23 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
             return HandleTransitiveRenameDependencies(renamedTables)
                 .Concat<MigrationOperation>(movedTables)
-                .Concat(droppedForeignKeys)
+                .Concat(droppedForeignKeys.Distinct(_foreignKeyEqualityComparer))
                 .Concat(
                     droppedForeignKeys
                         .Select(fko => fko.CreateDropIndexOperation())
-                        .Distinct(
-                            new DynamicEqualityComparer<DropIndexOperation>(
-                                (i1, i2) => i1.Name.EqualsOrdinal(i2.Name)
-                                            && i1.Table.EqualsOrdinal(i2.Table))))
+                        .Distinct(_indexEqualityComparer))
                 .Concat(orphanedColumns)
                 .Concat(HandleTransitiveRenameDependencies(renamedColumns))
+                .Concat(alteredPrimaryKeys.OfType<DropPrimaryKeyOperation>())
                 .Concat(addedTables)
                 .Concat(addedColumns)
                 .Concat(alteredColumns)
-                .Concat(alteredPrimaryKeys)
+                .Concat(alteredPrimaryKeys.OfType<AddPrimaryKeyOperation>())
                 .Concat(
                     addedForeignKeys
                         .Select(fko => fko.CreateCreateIndexOperation())
-                        .Distinct(
-                            new DynamicEqualityComparer<CreateIndexOperation>(
-                                (i1, i2) => i1.Name.EqualsOrdinal(i2.Name)
-                                            && i1.Table.EqualsOrdinal(i2.Table))))
-                .Concat(addedForeignKeys)
+                        .Distinct(_indexEqualityComparer))
+                .Concat(addedForeignKeys.Distinct(_foreignKeyEqualityComparer))
                 .Concat(droppedColumns)
                 .Concat(droppedTables)
                 .Concat(addedModificationFunctions)
@@ -1341,29 +1354,48 @@ namespace System.Data.Entity.Migrations.Infrastructure
                             BuildCreateTableOperation(es, _source))));
         }
 
-        private static IEnumerable<PrimaryKeyOperation> FindAlteredPrimaryKeys(
+        private IEnumerable<MigrationOperation> FindAlteredPrimaryKeys(
             ICollection<Tuple<EntitySet, EntitySet>> tablePairs,
-            ICollection<RenameColumnOperation> renamedColumns)
+            ICollection<RenameColumnOperation> renamedColumns, 
+            ICollection<AlterColumnOperation> alteredColumns)
         {
             DebugCheck.NotNull(tablePairs);
             DebugCheck.NotNull(renamedColumns);
+            DebugCheck.NotNull(alteredColumns);
 
             return
                 from ts in tablePairs
+                let t2 = GetSchemaQualifiedName(ts.Item2)
                 where !ts.Item1.ElementType.KeyProperties.SequenceEqual(
                     ts.Item2.ElementType.KeyProperties,
                     (p1, p2) => p1.Name.EqualsIgnoreCase(p2.Name)
                                 || renamedColumns.Any(
-                                    rc => rc.Table.EqualsIgnoreCase(GetSchemaQualifiedName(ts.Item2))
+                                    rc => rc.Table.EqualsIgnoreCase(t2)
                                           && rc.Name.EqualsIgnoreCase(p1.Name)
                                           && rc.NewName.EqualsIgnoreCase(p2.Name)))
+                      || ts.Item2.ElementType.KeyProperties
+                          .Any(
+                              p => alteredColumns.Any(
+                                  ac => ac.Table.EqualsIgnoreCase(t2)
+                                        && ac.Column.Name.EqualsIgnoreCase(p.Name)))
                 from o in BuildChangePrimaryKeyOperations(ts)
                 select o;
         }
 
-        private static IEnumerable<PrimaryKeyOperation> BuildChangePrimaryKeyOperations(Tuple<EntitySet, EntitySet> tablePair)
+        private IEnumerable<MigrationOperation> BuildChangePrimaryKeyOperations(Tuple<EntitySet, EntitySet> tablePair)
         {
             DebugCheck.NotNull(tablePair);
+
+            var referencedForeignKeys
+                = _target.StoreItemCollection.GetItems<AssociationType>()
+                    .Select(at => at.Constraint)
+                    .Where(c => c.FromProperties.SequenceEqual(tablePair.Item2.ElementType.KeyProperties))
+                    .ToList();
+
+            foreach (var constraint in referencedForeignKeys)
+            {
+                yield return BuildDropForeignKeyOperation(constraint, _target);
+            }
 
             var dropPrimaryKeyOperation
                 = new DropPrimaryKeyOperation
@@ -1386,6 +1418,11 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 .Each(pr => addPrimaryKeyOperation.Columns.Add(pr.Name));
 
             yield return addPrimaryKeyOperation;
+
+            foreach (var constraint in referencedForeignKeys)
+            {
+                yield return BuildAddForeignKeyOperation(constraint, _target);
+            }
         }
 
         private IEnumerable<AddForeignKeyOperation> FindAddedForeignKeys(
