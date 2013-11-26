@@ -657,7 +657,7 @@ namespace System.Data.Entity
         /// An <see cref="IQueryable{T}" /> to apply AsStreaming to.
         /// </param>
         /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
-        [Obsolete("The queries are now streaming by default")]
+        [Obsolete("LINQ queries are now streaming by default unless a retrying ExecutionStrategy is used. Calling this method will have no effect.")]
         public static IQueryable<T> AsStreaming<T>(this IQueryable<T> source)
         {
             Check.NotNull(source, "source");
@@ -675,7 +675,7 @@ namespace System.Data.Entity
         /// An <see cref="IQueryable" /> to apply AsStreaming to.
         /// </param>
         /// <returns> A new query with AsStreaming applied, or the source query if AsStreaming is not supported. </returns>
-        [Obsolete("The queries are now streaming by default")]
+        [Obsolete("LINQ queries are now streaming by default unless a retrying ExecutionStrategy is used. Calling this method will have no effect.")]
         public static IQueryable AsStreaming(this IQueryable source)
         {
             Check.NotNull(source, "source");

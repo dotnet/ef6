@@ -61,7 +61,7 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         /// <inheritdoc />
-        [Obsolete("The queries are now streaming by default")]
+        [Obsolete("Queries are now streaming by default unless a retrying ExecutionStrategy is used. Calling this method will have no effect.")]
         public override DbQuery AsStreaming()
         {
             return new InternalDbQuery<TElement>(_internalQuery.AsStreaming());
