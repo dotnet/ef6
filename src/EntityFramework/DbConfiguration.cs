@@ -640,6 +640,59 @@ namespace System.Data.Entity
             _internalConfiguration.RegisterSingleton(interceptor);
         }
 
+        /// <summary>
+        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        /// a factory to allow <see cref="DbContextInfo"/> to create instances of a context that does not have a public,
+        /// parameterless constructor.
+        /// </summary>
+        /// <remarks>
+        /// This is typically needed to allow design-time tools like Migrations or scaffolding code to use contexts that
+        /// do not have public, parameterless constructors.
+        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        /// <see cref="Func{DbContext}" /> with the context <see cref="Type"/> as the key. This means that, if desired,
+        /// the same functionality can be achieved using a custom resolver or a resolver backed by an
+        /// Inversion-of-Control container.
+        /// </remarks>
+        /// <param name="contextType">The context type for which the factory should be used.</param>
+        /// <param name="factory">The delegate to use to create context instances.</param>
+        protected internal void SetContextFactory(Type contextType, Func<DbContext> factory)
+        {
+            Check.NotNull(contextType, "contextType");
+            Check.NotNull(factory, "factory");
+
+            if (!typeof(DbContext).IsAssignableFrom(contextType))
+            {
+                throw new ArgumentException(Strings.ContextFactoryContextType(contextType.FullName));
+            }
+
+            _internalConfiguration.CheckNotLocked("SetContextFactory");
+            _internalConfiguration.RegisterSingleton(factory, contextType);
+        }
+
+        /// <summary>
+        /// Call this method from the constructor of a class derived from <see cref="DbConfiguration" /> to set
+        /// a factory to allow <see cref="DbContextInfo"/> to create instances of a context that does not have a public,
+        /// parameterless constructor.
+        /// </summary>
+        /// <remarks>
+        /// This is typically needed to allow design-time tools like Migrations or scaffolding code to use contexts that
+        /// do not have public, parameterless constructors.
+        /// This method is provided as a convenient and discoverable way to add configuration to the Entity Framework.
+        /// Internally it works in the same way as using AddDependencyResolver to add an appropriate resolver for
+        /// <see cref="Func{DbContext}" /> with the context <see cref="Type"/> as the key. This means that, if desired,
+        /// the same functionality can be achieved using a custom resolver or a resolver backed by an
+        /// Inversion-of-Control container.
+        /// </remarks>
+        /// <typeparam name="TContext">The context type for which the factory should be used.</typeparam>
+        /// <param name="factory">The delegate to use to create context instances.</param>
+        protected internal void SetContextFactory<TContext>(Func<TContext> factory) where TContext : DbContext
+        {
+            Check.NotNull(factory, "factory");
+
+            SetContextFactory(typeof(TContext), factory);
+        }
+
         internal virtual InternalConfiguration InternalConfiguration
         {
             get { return _internalConfiguration; }

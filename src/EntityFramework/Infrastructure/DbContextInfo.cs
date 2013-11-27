@@ -35,6 +35,7 @@ namespace System.Data.Entity.Infrastructure
         private readonly bool _isConstructible;
         private readonly DbConnectionStringOrigin _connectionStringOrigin;
         private readonly string _connectionStringName;
+        private readonly Func<IDbDependencyResolver> _resolver = () => DbConfiguration.DependencyResolver;
 
         private Action<DbModelBuilder> _onModelCreating;
 
@@ -45,7 +46,12 @@ namespace System.Data.Entity.Infrastructure
         /// The type deriving from <see cref="DbContext" />.
         /// </param>
         public DbContextInfo(Type contextType)
-            : this(Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, null)
+            : this(contextType, (Func<IDbDependencyResolver>)null)
+        {
+        }
+
+        internal DbContextInfo(Type contextType, Func<IDbDependencyResolver> resolver)
+            : this(Check.NotNull(contextType, "contextType"), null, AppConfig.DefaultInstance, null, resolver)
         {
         }
 
@@ -161,9 +167,11 @@ namespace System.Data.Entity.Infrastructure
         // Called internally when a context info is needed for an existing context, which may not be constructable.
         // </summary>
         // <param name="context"> The context instance to get info from. </param>
-        internal DbContextInfo(DbContext context)
+        internal DbContextInfo(DbContext context, Func<IDbDependencyResolver> resolver = null)
         {
             Check.NotNull(context, "context");
+
+            _resolver = resolver ?? (() => DbConfiguration.DependencyResolver);
 
             _contextType = context.GetType();
             _appConfig = AppConfig.DefaultInstance;
@@ -183,12 +191,15 @@ namespace System.Data.Entity.Infrastructure
             Type contextType,
             DbProviderInfo modelProviderInfo,
             AppConfig config,
-            DbConnectionInfo connectionInfo)
+            DbConnectionInfo connectionInfo,
+            Func<IDbDependencyResolver> resolver = null)
         {
             if (!typeof(DbContext).IsAssignableFrom(contextType))
             {
                 throw new ArgumentOutOfRangeException("contextType");
             }
+
+            _resolver = resolver ?? (() => DbConfiguration.DependencyResolver);
 
             _contextType = contextType;
             _modelProviderInfo = modelProviderInfo;
@@ -362,7 +373,7 @@ namespace System.Data.Entity.Infrastructure
             {
                 context.InternalContext.OverrideConnection(
                     new EagerInternalConnection(
-                        DbConfiguration.DependencyResolver.GetService<DbProviderFactory>(
+                        _resolver().GetService<DbProviderFactory>(
                             _modelProviderInfo.ProviderInvariantName).CreateConnection(), connectionOwned: true));
             }
 
@@ -381,6 +392,13 @@ namespace System.Data.Entity.Infrastructure
                 return () => (DbContext)Activator.CreateInstance(_contextType);
             }
 
+            var resolvedFactory = _resolver().GetService<Func<DbContext>>(_contextType);
+
+            if (resolvedFactory != null)
+            {
+                return resolvedFactory;
+            }
+
             var factoryType
                 = (from t in _contextType.Assembly().GetAccessibleTypes()
                    where t.IsClass() && typeof(IDbContextFactory<>).MakeGenericType(_contextType).IsAssignableFrom(t)
@@ -396,9 +414,7 @@ namespace System.Data.Entity.Infrastructure
                 throw Error.DbContextServices_MissingDefaultCtor(factoryType);
             }
 
-            var factory = (IDbContextFactory<DbContext>)Activator.CreateInstance(factoryType);
-
-            return factory.Create;
+            return ((IDbContextFactory<DbContext>)Activator.CreateInstance(factoryType)).Create;
         }
 
         internal static void MapContextToInfo(Type contextType, DbContextInfo info)

@@ -786,7 +786,7 @@
     <value>Code generated using the T4 templates for Database First and Model First development may not work correctly if used in Code First mode. To continue using Database First or Model First ensure that the Entity Framework connection string is specified in the config file of executing application. To use these classes, that were generated from Database First or Model First, with Code First add any additional configuration using attributes or the DbModelBuilder API and then remove the code that throws this exception.</value>
   </data>
   <data name="DbContextServices_MissingDefaultCtor" xml:space="preserve">
-    <value>The context factory type '{0}' must have a public default constructor.</value>
+    <value>The context factory type '{0}' does not have a public parameterless constructor. Either add a public parameterless constructor, create an IDbContextFactory implementation in the context assembly, or register a context factory using DbConfiguration.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="CannotCallGenericSetWithProxyType" xml:space="preserve">
@@ -5258,6 +5258,9 @@
   </data>
   <data name="DbMigrationsConfiguration_ContextType" xml:space="preserve">
     <value>The type '{0}' does not inherit from DbContext. The DbMigrationsConfiguration.ContextType property must be set to a type that inherits from DbContext.</value>
+  </data>
+  <data name="ContextFactoryContextType" xml:space="preserve">
+    <value>The type '{0}' does not inherit from DbContext.  Context factories can only be registered for context types that inherit from DbContext.</value>
   </data>
   <data name="DbMigrationsConfiguration_RootedPath" xml:space="preserve">
     <value>The 'MigrationsDirectory' property of 'DbMigrationsConfiguration' was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root.</value>

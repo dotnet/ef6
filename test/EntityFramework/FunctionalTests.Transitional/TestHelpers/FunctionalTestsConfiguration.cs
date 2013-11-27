@@ -72,6 +72,9 @@ namespace System.Data.Entity.TestHelpers
                 "System.Data.SqlClient", () => DatabaseTestHelpers.IsSqlAzure(ModelHelpers.BaseConnectionString)
                     ? new TestSqlAzureExecutionStrategy()
                     : (IDbExecutionStrategy)new DefaultExecutionStrategy());
+
+            SetContextFactory(() => new CodeFirstScaffoldingContext("Foo"));
+            SetContextFactory(() => new CodeFirstScaffoldingContextWithConnection("Bar"));
         }
 
         public static bool SuspendExecutionStrategy { get; set; }

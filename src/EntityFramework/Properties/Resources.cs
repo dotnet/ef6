@@ -1439,7 +1439,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The context factory type '{0}' must have a public default constructor."
+        // A string like "The context factory type '{0}' does not have a public parameterless constructor. Either add a public parameterless constructor, create an IDbContextFactory implementation in the context assembly, or register a context factory using DbConfiguration."
         // </summary>
         internal static string DbContextServices_MissingDefaultCtor(object p0)
         {
@@ -13223,6 +13223,14 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "The type '{0}' does not inherit from DbContext.  Context factories can only be registered for context types that inherit from DbContext."
+        // </summary>
+        internal static string ContextFactoryContextType(object p0)
+        {
+            return EntityRes.GetString(EntityRes.ContextFactoryContextType, p0);
+        }
+
+        // <summary>
         // A string like "The 'MigrationsDirectory' property of 'DbMigrationsConfiguration' was set to the absolute path '{0}'. The migrations directory must be set to a relative path for a sub-directory under the Visual Studio project root."
         // </summary>
         internal static string DbMigrationsConfiguration_RootedPath(object p0)
@@ -14830,7 +14838,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // InvalidOperationException with message like "The context factory type '{0}' must have a public default constructor."
+        // InvalidOperationException with message like "The context factory type '{0}' does not have a public parameterless constructor. Either add a public parameterless constructor, create an IDbContextFactory implementation in the context assembly, or register a context factory using DbConfiguration."
         // </summary>
         internal static Exception DbContextServices_MissingDefaultCtor(object p0)
         {
@@ -17049,6 +17057,7 @@ namespace System.Data.Entity.Resources
         internal const string CreateConfigurationType_NoParameterlessConstructor = "CreateConfigurationType_NoParameterlessConstructor";
         internal const string CollectionEmpty = "CollectionEmpty";
         internal const string DbMigrationsConfiguration_ContextType = "DbMigrationsConfiguration_ContextType";
+        internal const string ContextFactoryContextType = "ContextFactoryContextType";
         internal const string DbMigrationsConfiguration_RootedPath = "DbMigrationsConfiguration_RootedPath";
         internal const string ModelBuilder_PropertyFilterTypeMustBePrimitive = "ModelBuilder_PropertyFilterTypeMustBePrimitive";
         internal const string LightweightEntityConfiguration_NonScalarProperty = "LightweightEntityConfiguration_NonScalarProperty";

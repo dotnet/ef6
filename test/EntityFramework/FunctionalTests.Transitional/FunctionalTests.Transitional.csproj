@@ -151,6 +151,8 @@
     <Compile Include="Migrations\TestModel\TestModels.cs" />
     <Compile Include="Properties\InternalsVisibleTo.cs" />
     <Compile Include="TestHelpers\AnyValueParameter.cs" />
+    <Compile Include="TestHelpers\CodeFirstScaffoldingContext.cs" />
+    <Compile Include="TestHelpers\CodeFirstScaffoldingContextWithConnection.cs" />
     <Compile Include="TestHelpers\DatabaseTestHelpers.cs" />
     <Compile Include="TestHelpers\CsdlToClrAssemblyConverter.cs" />
     <Compile Include="TestHelpers\DefaultFunctionalTestsConnectionFactory.cs" />

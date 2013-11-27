@@ -5,8 +5,8 @@ namespace ProductivityApiTests
     using System.Configuration;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using FunctionalTests.ProductivityApi.TemplateModels.CsAdvancedPatterns;
-    using SimpleModel;
     using Xunit;
 
     public class ScaffoldingScenarioTests : FunctionalTestBase
@@ -51,49 +51,36 @@ namespace ProductivityApiTests
             }
         }
 
-        public class CodeFirstContext : DbContext
-        {
-            public DbSet<Product> Products { get; set; }
-        }
-
         [Fact]
         public void DbContextInfo_can_provide_a_code_first_model_without_hitting_the_database()
         {
-            Database.SetInitializer<CodeFirstContext>(null);
+            Database.SetInitializer<CodeFirstScaffoldingContext>(null);
 
             using (var context = new DbContextInfo(
-                typeof(CodeFirstContext),
+                typeof(CodeFirstScaffoldingContext),
                 new DbProviderInfo("System.Data.SqlClient", "2008")).CreateInstance())
             {
                 var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-                Assert.Equal("CodeFirstContext", objectContext.DefaultContainerName);
+                Assert.Equal("CodeFirstScaffoldingContext", objectContext.DefaultContainerName);
+                Assert.Equal("Foo", ((CodeFirstScaffoldingContext)context).ExtraInfo);
             }
-        }
-
-        public class CodeFirstContextWithConnection : DbContext
-        {
-            public CodeFirstContextWithConnection()
-                : base("name=CodeFirstConnectionString")
-            {
-            }
-
-            public DbSet<Product> Products { get; set; }
         }
 
         [Fact]
         public void DbContextInfo_can_provide_a_code_first_model_without_hitting_the_database_when_also_give_config()
         {
-            Database.SetInitializer<CodeFirstContextWithConnection>(null);
+            Database.SetInitializer<CodeFirstScaffoldingContextWithConnection>(null);
 
             using (var context = new DbContextInfo(
-                typeof(CodeFirstContextWithConnection),
+                typeof(CodeFirstScaffoldingContextWithConnection),
                 AddConnectionStrings(CreateEmptyConfig()),
                 new DbProviderInfo("System.Data.SqlClient", "2008")).CreateInstance())
             {
                 // Will throw if CodeFirstConnectionString is not found and will throw if it is used to
                 // make a connection since it points to a server that does not exist.
                 var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-                Assert.Equal("CodeFirstContextWithConnection", objectContext.DefaultContainerName);
+                Assert.Equal("CodeFirstScaffoldingContextWithConnection", objectContext.DefaultContainerName);
+                Assert.Equal("Bar", ((CodeFirstScaffoldingContextWithConnection)context).ExtraInfo);
             }
         }
 

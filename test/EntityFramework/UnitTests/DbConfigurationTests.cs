@@ -888,6 +888,80 @@ namespace System.Data.Entity
             }
         }
 
+        public class SetContextFactory
+        {
+            public class SomeContext : DbContext
+            {
+            }
+
+            [Fact]
+            public void Generic_SetContextFactory_checks_arguments()
+            {
+                Assert.Equal(
+                    "factory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetContextFactory<SomeContext>(null)).ParamName);
+            }
+
+            [Fact]
+            public void Non_generic_SetContextFactory_checks_arguments()
+            {
+                Assert.Equal(
+                    "contextType",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetContextFactory(null, () => null)).ParamName);
+
+                Assert.Equal(
+                    "factory",
+                    Assert.Throws<ArgumentNullException>(() => new DbConfiguration().SetContextFactory(typeof(SomeContext), null)).ParamName);
+
+                Assert.Equal(
+                    Strings.ContextFactoryContextType("System.Random"),
+                    Assert.Throws<ArgumentException>(
+                        () => new DbConfiguration().SetContextFactory(typeof(Random), () => null)).Message);
+            }
+
+            [Fact]
+            public void Generic_SetContextFactory_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<SomeContext> factory = () => null;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetContextFactory(factory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton<Func<DbContext>>(factory, typeof(SomeContext)));
+            }
+
+            [Fact]
+            public void Non_generic_SetContextFactory_delegates_to_internal_configuration()
+            {
+                var mockInternalConfiguration = new Mock<InternalConfiguration>(null, null, null, null, null);
+                Func<DbContext> factory = () => null;
+
+                new DbConfiguration(mockInternalConfiguration.Object).SetContextFactory(typeof(SomeContext), factory);
+
+                mockInternalConfiguration.Verify(m => m.RegisterSingleton(factory, typeof(SomeContext)));
+            }
+
+            [Fact]
+            public void Generic_SetContextFactory_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetContextFactory"),
+                    Assert.Throws<InvalidOperationException>(() => configuration.SetContextFactory<SomeContext>(() => null)).Message);
+            }
+
+            [Fact]
+            public void Non_generic_SetContextFactory_throws_if_the_configuation_is_locked()
+            {
+                var configuration = CreatedLockedConfiguration();
+
+                Assert.Equal(
+                    Strings.ConfigurationLocked("SetContextFactory"),
+                    Assert.Throws<InvalidOperationException>(() => configuration.SetContextFactory(typeof(SomeContext), () => null)).Message);
+            }
+        }
+
         private static DbConfiguration CreatedLockedConfiguration()
         {
             var configuration = new DbConfiguration();

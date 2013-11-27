@@ -8,6 +8,7 @@ namespace System.Data.Entity.Infrastructure
     using System.Data.Entity;
     using System.Data.Entity.Core.EntityClient;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure.DependencyResolution;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
@@ -219,9 +220,12 @@ namespace System.Data.Entity.Infrastructure
         [DbConfigurationType(typeof(FunctionalTestsConfiguration))]
         public class ContextWithoutDefaultCtor : DbContext
         {
-            private ContextWithoutDefaultCtor(string nameOrConnectionString)
+            public string NameOrConnectionString { get; private set; }
+
+            internal ContextWithoutDefaultCtor(string nameOrConnectionString)
                 : base(nameOrConnectionString)
             {
+                NameOrConnectionString = nameOrConnectionString;
             }
 
             public class ContextFactory : IDbContextFactory<ContextWithoutDefaultCtor>
@@ -259,7 +263,48 @@ namespace System.Data.Entity.Infrastructure
             Assert.True(contextInfo.IsConstructible);
             using (var context = contextInfo.CreateInstance())
             {
-                Assert.Same(typeof(ContextWithoutDefaultCtor), context.GetType());
+                Assert.IsType<ContextWithoutDefaultCtor>(context);
+                Assert.Equal("foo", ((ContextWithoutDefaultCtor)context).NameOrConnectionString);
+            }
+        }
+
+        [Fact]
+        public void CreateInstance_should_use_resolver_when_both_context_factory_resolver_and_factory_class_exist()
+        {
+            var resolver = new SingletonDependencyResolver<Func<DbContext>>(
+                () => new ContextWithoutDefaultCtor("bar"), typeof(ContextWithoutDefaultCtor));
+
+            var contextInfo = new DbContextInfo(typeof(ContextWithoutDefaultCtor), () => resolver);
+
+            Assert.True(contextInfo.IsConstructible);
+            using (var context = contextInfo.CreateInstance())
+            {
+                Assert.IsType<ContextWithoutDefaultCtor>(context);
+                Assert.Equal("bar", ((ContextWithoutDefaultCtor)context).NameOrConnectionString);
+            }
+        }
+
+        [Fact]
+        public void CreateInstance_should_use_resolver_when_no_factory_class_exists()
+        {
+            var resolver = new SingletonDependencyResolver<Func<DbContext>>(
+                () => new ContextForResolverTest("bar"), typeof(ContextForResolverTest));
+
+            var contextInfo = new DbContextInfo(typeof(ContextForResolverTest), () => resolver);
+
+            Assert.True(contextInfo.IsConstructible);
+            using (var context = contextInfo.CreateInstance())
+            {
+                Assert.IsType<ContextForResolverTest>(context);
+            }
+        }
+
+        [DbConfigurationType(typeof(FunctionalTestsConfiguration))]
+        public class ContextForResolverTest : DbContext
+        {
+            internal ContextForResolverTest(string nameOrConnectionString)
+                : base(nameOrConnectionString)
+            {
             }
         }
 
