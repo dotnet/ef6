@@ -1066,6 +1066,7 @@ namespace System.Data.Entity.Migrations
         {
             var databaseCreated = false;
             var databaseCreator = new DatabaseCreator(_configuration.CommandTimeout);
+
             using (var connection = CreateConnection())
             {
                 if (_existenceState == DatabaseExistenceState.DoesNotExist
@@ -1086,7 +1087,8 @@ namespace System.Data.Entity.Migrations
             }
             catch
             {
-                if (databaseCreated)
+                if (databaseCreated
+                    && !_historyRepository.HasMigrations())
                 {
                     try
                     {

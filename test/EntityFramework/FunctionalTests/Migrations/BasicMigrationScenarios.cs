@@ -4,7 +4,6 @@ namespace System.Data.Entity.Migrations
 {
     using System.Data.Entity.Migrations.Design;
     using System.Data.Entity.Migrations.Infrastructure;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -15,6 +14,41 @@ namespace System.Data.Entity.Migrations
     [Variant(DatabaseProvider.SqlClient, ProgrammingLanguage.VB)]
     public class BasicMigrationScenarios : DbTestCase
     {
+        private class ErrorContext : DbContext
+        {
+            public DbSet<ErrorEntity> Entities { get; set; }
+        }
+
+        private class ErrorEntity
+        {
+            public int Id { get; set; }
+        }
+
+        private class ErrorMigration : DbMigration
+        {
+            public override void Up()
+            {
+                Sql("Bluth's Frozen Bananas");
+            }
+        }
+
+        [MigrationsTheory]
+        public void Database_not_deleted_when_at_least_one_good_migration()
+        {
+            DropDatabase();
+
+            var migrator = CreateMigrator<ErrorContext>(new ErrorMigration());
+
+            try
+            {
+                migrator.Update();
+            }
+            catch
+            {
+                Assert.True(DatabaseExists());
+            }
+        }
+
         [MigrationsTheory]
         public void GetHistory_should_return_migrations_list()
         {
