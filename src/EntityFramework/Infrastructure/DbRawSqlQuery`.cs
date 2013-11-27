@@ -49,7 +49,7 @@ namespace System.Data.Entity.Infrastructure
         /// Returns a new query that will stream the results instead of buffering.
         /// </summary>
         /// <returns> A new query with AsStreaming applied. </returns>
-        [Obsolete("The queries are now streaming by default")]
+        [Obsolete("Queries are now streaming by default unless a retrying ExecutionStrategy is used. Calling this method will have no effect.")]
         public virtual DbRawSqlQuery<TElement> AsStreaming()
         {
             return _internalQuery == null ? this : new DbRawSqlQuery<TElement>(_internalQuery.AsStreaming());

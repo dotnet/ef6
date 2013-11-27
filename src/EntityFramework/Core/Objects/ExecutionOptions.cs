@@ -43,7 +43,7 @@ namespace System.Data.Entity.Core.Objects
         /// <summary>
         /// Whether the query is streaming or buffering.
         /// </summary>
-        [Obsolete("The queries are now streaming by default")]
+        [Obsolete("Queries are now streaming by default unless a retrying ExecutionStrategy is used. This property no longer returns an accurate value.")]
         public bool Streaming { get { return UserSpecifiedStreaming ?? true; } }
 
         internal bool? UserSpecifiedStreaming { get; private set; }
