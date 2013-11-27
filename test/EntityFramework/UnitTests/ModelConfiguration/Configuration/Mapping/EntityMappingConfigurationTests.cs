@@ -2,10 +2,11 @@
 
 namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 {
+    using System.Collections.Generic;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
-    using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
-    using System.Data.Entity.ModelConfiguration.Edm;    
+    using System.Data.Entity.ModelConfiguration.Edm;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.Utilities;    
     using System.Linq;
@@ -47,7 +48,9 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             entityTypeMapping.AddFragment(new MappingFragment(entitySet, entityTypeMapping, false));
             
             entityMappingConfiguration.Configure(
-                databaseMapping, ProviderRegistry.Sql2008_ProviderManifest, entityTypeMapping.EntityType, ref entityTypeMapping, false, 0, 1);
+                databaseMapping, ProviderRegistry.Sql2008_ProviderManifest, entityTypeMapping.EntityType, 
+                ref entityTypeMapping, false, 0, 1, 
+                new Dictionary<string, object>());
 
             Assert.Equal("Foo", table.GetTableName().Name);
         }
@@ -222,6 +225,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 primitivePropertyConfigurations[expression14.GetComplexPropertyAccess()]);
 
             Assert.Equal(14, primitivePropertyConfigurations.Count);
+        }
+
+        [Fact]
+        public void HasAnnotation_checks_arguments()
+        {
+            var configuration = new EntityMappingConfiguration<object>();
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+
+            Assert.Equal(
+                Strings.BadAnnotationName("Cheese:Pickle"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
         }
     }
 }

@@ -71,13 +71,12 @@ namespace System.Data.Entity.Metadata
         }
 
         [Fact]
-        public void Column_annotations_are_serialized_to_and_from_XML()
+        public void Column_and_table_annotations_are_serialized_to_and_from_XML()
         {
             var edmxBuilder = new StringBuilder();
 
             using (var context = new GearsOfWarContext())
             {
-                //EdmxWriter.WriteEdmx(context, XmlWriter.Create(@"C:\Stuff\SSDLTest.xml"));
                 EdmxWriter.WriteEdmx(context, XmlWriter.Create(edmxBuilder));
             }
 
@@ -118,6 +117,46 @@ namespace System.Data.Entity.Metadata
                 entityTypes.Single(e => e.Name == "Weapon")
                     .Properties.Single(p => p.Name == "Specs_AmmoPerClip")
                     .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_AmmoPerClip")
+                    .Value);
+
+            Assert.Equal(
+                "Step to West 17",
+                entityTypes.Single(e => e.Name == "Gear")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_Gear")
+                    .Value);
+
+            Assert.Equal(
+                "The Long Earth",
+                entityTypes.Single(e => e.Name == "City")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_City1")
+                    .Value);
+
+            Assert.Equal(
+                "Natural Stepper",
+                entityTypes.Single(e => e.Name == "City")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_City3")
+                    .Value);
+
+            Assert.False(
+                entityTypes.Single(e => e.Name == "City")
+                    .MetadataProperties.Any(p => p.Name == CustomAnnotationNamespace + ":Annotation_City2"));
+
+            Assert.Equal(
+                "Happy Place",
+                entityTypes.Single(e => e.Name == "Squad")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_Squad1")
+                    .Value);
+
+            Assert.Equal(
+                "Happy Planet",
+                entityTypes.Single(e => e.Name == "Squad")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_Squad2")
+                    .Value);
+
+            Assert.Equal(
+                "It's an elf!",
+                entityTypes.Single(e => e.Name == "CogTag")
+                    .MetadataProperties.Single(p => p.Name == CustomAnnotationNamespace + ":Annotation_CogTag")
                     .Value);
         }
 

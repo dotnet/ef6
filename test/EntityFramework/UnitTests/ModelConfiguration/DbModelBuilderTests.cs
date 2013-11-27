@@ -295,7 +295,7 @@ namespace System.Data.Entity.ModelConfiguration
         [Fact]
         public void EntityTypeConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityTypeConfiguration>(11);
+            VerifyFieldCount<EntityTypeConfiguration>(12);
         }
 
         [Fact]
@@ -421,13 +421,19 @@ namespace System.Data.Entity.ModelConfiguration
             var configuration = new EntityTypeConfiguration(typeof(object));
 
             configuration.ToTable("Table");
+            configuration.SetAnnotation("A1", "V1");
 
             var clone = configuration.Clone();
             Assert.Equal("Table", clone.GetTableName().Name);
+            Assert.Equal("A1", clone.Annotations.Single().Key);
+            Assert.Equal("V1", clone.Annotations.Single().Value);
 
             configuration.ToTable("AnotherTable");
+            configuration.SetAnnotation("A2", "V2");
 
             Assert.Equal("Table", clone.GetTableName().Name);
+            Assert.Equal("A1", clone.Annotations.Single().Key);
+            Assert.Equal("V1", clone.Annotations.Single().Value);
         }
 
         [Fact]
@@ -828,26 +834,37 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         [Fact]
-        public void Cloning_a_many_to_many_foreign_key_mapping_configuration_clones_its_table_and_column_information()
+        public void Cloning_a_many_to_many_foreign_key_mapping_configuration_clones_its_table_column_and_annotation_information()
         {
             var configuration = new ManyToManyAssociationMappingConfiguration();
             configuration.MapLeftKey("C1");
             configuration.MapRightKey("C2");
             configuration.ToTable("T", "S");
+            configuration.HasAnnotation("A1", "V1");
 
             var clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
-
             Assert.Equal(configuration, clone);
 
-            configuration.MapLeftKey("C3");
+            clone.MapLeftKey("C3");
+            Assert.NotEqual(configuration, clone);
 
+            clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
+            clone.MapRightKey("C3");
+            Assert.NotEqual(configuration, clone);
+
+            clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
+            clone.ToTable("T", "S2");
+            Assert.NotEqual(configuration, clone);
+
+            clone = (ManyToManyAssociationMappingConfiguration)configuration.Clone();
+            clone.HasAnnotation("A1", "V2");
             Assert.NotEqual(configuration, clone);
         }
 
         [Fact]
         public void ManyToManyAssociationMappingConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<ManyToManyAssociationMappingConfiguration>(3);
+            VerifyFieldCount<ManyToManyAssociationMappingConfiguration>(4);
         }
 
         [Fact]
@@ -857,7 +874,7 @@ namespace System.Data.Entity.ModelConfiguration
         }
 
         [Fact]
-        public void Cloning_an_entity_mapping_configuration_clones_its_table_property_and_condition_information()
+        public void Cloning_an_entity_mapping_configuration_clones_its_table_property_condition_and_annotation_information()
         {
             var configuration = new EntityMappingConfiguration();
 
@@ -874,6 +891,8 @@ namespace System.Data.Entity.ModelConfiguration
 
             configuration.MapInheritedProperties = true;
 
+            configuration.SetAnnotation("A1", "V1");
+
             var clone = configuration.Clone();
 
             Assert.True(clone.Properties.Any(p => p[0].Name == "P1"));
@@ -884,22 +903,29 @@ namespace System.Data.Entity.ModelConfiguration
             Assert.True(clone.ValueConditions.Any(c => c.Discriminator == "D"));
             Assert.True(clone.NullabilityConditions.Any(c => c.PropertyPath[0].Name == "P1"));
 
+            Assert.Equal("A1", clone.Annotations.Single().Key);
+            Assert.Equal("V1", clone.Annotations.Single().Value);
+
             configuration.AddValueCondition(new ValueConditionConfiguration(configuration, "D2"));
             configuration.AddNullabilityCondition(
                 new NotNullConditionConfiguration(
                     configuration,
                     new PropertyPath(new MockPropertyInfo(typeof(int), "P2"))));
+            configuration.SetAnnotation("A2", "V2");
 
             Assert.False(clone.ValueConditions.Any(c => c.Discriminator == "D2"));
             Assert.False(clone.NullabilityConditions.Any(c => c.PropertyPath[0].Name == "P2"));
 
             Assert.True(clone.MapInheritedProperties);
+
+            Assert.Equal("A1", clone.Annotations.Single().Key);
+            Assert.Equal("V1", clone.Annotations.Single().Value);
         }
 
         [Fact]
         public void EntityMappingConfiguration_has_expected_number_of_fields()
         {
-            VerifyFieldCount<EntityMappingConfiguration>(6);
+            VerifyFieldCount<EntityMappingConfiguration>(7);
         }
 
         [Fact]

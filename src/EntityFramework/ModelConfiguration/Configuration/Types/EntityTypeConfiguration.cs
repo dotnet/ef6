@@ -39,6 +39,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
 
         private readonly List<EntityMappingConfiguration> _nonCloneableMappings = new List<EntityMappingConfiguration>();
 
+        private readonly IDictionary<string, object> _annotations = new Dictionary<string, object>();
+
         private bool _isKeyConfigured;
         private string _entitySetName;
 
@@ -75,6 +77,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             IsReplaceable = source.IsReplaceable;
             IsTableNameConfigured = source.IsTableNameConfigured;
             IsExplicitEntity = source.IsExplicitEntity;
+
+            foreach (var annotation in source._annotations)
+            {
+                _annotations.Add(annotation);
+            }
         }
 
         internal virtual EntityTypeConfiguration Clone()
@@ -318,6 +325,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
             UpdateTableNameForSubTypes();
         }
 
+        public IDictionary<string, object> Annotations
+        {
+            get { return _annotations; }
+        }
+
+        public virtual void SetAnnotation(string name, object value)
+        {
+            // Technically we could accept some names that are invalid in EDM, but this is not too restrictive
+            // and is an easy way of ensuring that name is valid all places we want to use it--i.e. in the XML
+            // and in the MetadataWorkspace.
+            if (!name.IsValidUndottedName())
+            {
+                throw new ArgumentException(Strings.BadAnnotationName(name));
+            }
+
+            _annotations[name] = value;
+        }
+
         private void UpdateTableNameForSubTypes()
         {
             _entitySubTypesMappingConfigurations
@@ -536,12 +561,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
                             ref entityTypeMapping,
                             IsMappingAnyInheritedProperty(entityType),
                             i,
-                            _entityMappingConfigurations.Count);
+                            _entityMappingConfigurations.Count,
+                            _annotations);
                 }
             }
             else
             {
-                ConfigureUnconfiguredType(databaseMapping, providerManifest, entityType);
+                ConfigureUnconfiguredType(databaseMapping, providerManifest, entityType, _annotations);
             }
         }
 
@@ -556,12 +582,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Types
         }
 
         internal static void ConfigureUnconfiguredType(
-            DbDatabaseMapping databaseMapping, DbProviderManifest providerManifest, EntityType entityType)
+            DbDatabaseMapping databaseMapping, 
+            DbProviderManifest providerManifest, 
+            EntityType entityType, 
+            IDictionary<string, object> commonAnnotations)
         {
             var c = new EntityMappingConfiguration();
             var entityTypeMapping
                 = databaseMapping.GetEntityTypeMapping(entityType.GetClrType());
-            c.Configure(databaseMapping, providerManifest, entityType, ref entityTypeMapping, false, 0, 1);
+            c.Configure(databaseMapping, providerManifest, entityType, ref entityTypeMapping, false, 0, 1, commonAnnotations);
         }
 
         internal void Configure(

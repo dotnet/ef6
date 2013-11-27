@@ -552,7 +552,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                     && sortedEntityConfigurations.All(etc => etc.ClrType != currentType.GetClrType()))
                 {
                     // run through mapping configuration to make sure property mappings point to where the base type is now mapping them
-                    EntityTypeConfiguration.ConfigureUnconfiguredType(databaseMapping, providerManifest, currentType);
+                    EntityTypeConfiguration.ConfigureUnconfiguredType(databaseMapping, providerManifest, currentType, new Dictionary<string, object>());
                     derivedTypes.AddRange(databaseMapping.Model.GetDerivedTypes(currentType));
                 }
             }

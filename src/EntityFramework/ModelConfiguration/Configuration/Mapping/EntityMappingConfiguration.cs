@@ -32,6 +32,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         private readonly Dictionary<PropertyPath, PrimitivePropertyConfiguration> _primitivePropertyConfigurations
             = new Dictionary<PropertyPath, PrimitivePropertyConfiguration>();
 
+        private readonly IDictionary<string, object> _annotations = new Dictionary<string, object>();
+
         internal EntityMappingConfiguration()
         {
         }
@@ -54,6 +56,11 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
             source._primitivePropertyConfigurations.Each(
                 c => _primitivePropertyConfigurations.Add(c.Key, c.Value.Clone()));
+
+            foreach (var annotation in source._annotations)
+            {
+                _annotations.Add(annotation);
+            }
         }
 
         internal virtual EntityMappingConfiguration Clone()
@@ -76,6 +83,24 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                 _tableName = value;
             }
+        }
+
+        public IDictionary<string, object> Annotations
+        {
+            get { return _annotations; }
+        }
+
+        public virtual void SetAnnotation(string name, object value)
+        {
+            // Technically we could accept some names that are invalid in EDM, but this is not too restrictive
+            // and is an easy way of ensuring that name is valid all places we want to use it--i.e. in the XML
+            // and in the MetadataWorkspace.
+            if (!name.IsValidUndottedName())
+            {
+                throw new ArgumentException(Strings.BadAnnotationName(name));
+            }
+
+            _annotations[name] = value;
         }
 
         internal List<PropertyPath> Properties
@@ -204,7 +229,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             ref EntityTypeMapping entityTypeMapping,
             bool isMappingAnyInheritedProperty,
             int configurationIndex,
-            int configurationCount)
+            int configurationCount,
+            IDictionary<string, object> commonAnnotations)
         {
             DebugCheck.NotNull(entityType);
             DebugCheck.NotNull(databaseMapping);
@@ -231,8 +257,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             foreach (var propertyPath in mappingsToContain)
             {
                 var propertyMapping = fragment.ColumnMappings.SingleOrDefault(
-                    pm =>
-                    pm.PropertyPath.SequenceEqual(propertyPath));
+                    pm => pm.PropertyPath.SequenceEqual(propertyPath));
 
                 if (propertyMapping == null)
                 {
@@ -359,7 +384,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             CleanupUnmappedArtifacts(databaseMapping, fromTable);
             CleanupUnmappedArtifacts(databaseMapping, toTable);
 
+            ConfigureAnnotations(toTable, commonAnnotations);
+            ConfigureAnnotations(toTable, _annotations);
+
             toTable.SetConfiguration(this);
+        }
+
+        private static void ConfigureAnnotations(EdmType toTable, IDictionary<string, object> annotations)
+        {
+            foreach (var annotation in annotations)
+            {
+                var name = XmlConstants.CustomAnnotationNamespace + ":" + annotation.Key;
+                var existingAnnotation = toTable.Annotations.FirstOrDefault(
+                    a => a.Name == name && !Equals(a.Value, annotation.Value));
+                if (existingAnnotation != null)
+                {
+                    throw new InvalidOperationException(
+                        Strings.ConflictingTypeAnnotation(annotation.Key, annotation.Value, existingAnnotation.Value, toTable.Name));
+                }
+
+                toTable.AddAnnotation(name, annotation.Value);
+            }
         }
 
         internal void ConfigurePropertyMappings(

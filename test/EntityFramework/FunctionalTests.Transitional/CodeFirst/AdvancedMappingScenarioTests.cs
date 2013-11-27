@@ -278,12 +278,48 @@ namespace FunctionalTests
         {
             var modelBuilder = new DbModelBuilder();
 
-            modelBuilder.Entity<SplitProduct>().ToTable("Product");
-            modelBuilder.Entity<SplitProductDetail>().ToTable("Product");
+            modelBuilder.Entity<SplitProduct>()
+                .ToTable("Product")
+                .HasAnnotation("A1", "V1")
+                .HasAnnotation("A2", "V2")
+                .HasAnnotation("A1", "V1B");
+
+            modelBuilder.Entity<SplitProductDetail>()
+                .HasAnnotation("A1", "V1B")
+                .HasAnnotation("A3", "V3")
+                .HasAnnotation("A4", "V4")
+                .HasAnnotation("A3", null)
+                .ToTable("Product");
 
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
+
+            databaseMapping.Assert("Product")
+                .HasAnnotation("A1", "V1B")
+                .HasAnnotation("A2", "V2")
+                .HasAnnotation("A4", "V4")
+                .HasNoAnnotation("A3");
+        }
+
+        [Fact]
+        public void Table_splitting_with_conflicting_annotations_to_same_table_throws()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<SplitProduct>()
+                .ToTable("Product")
+                .HasAnnotation("A1", "V1")
+                .HasAnnotation("A2", "V2");
+
+            modelBuilder.Entity<SplitProductDetail>()
+                .HasAnnotation("A1", "V3")
+                .HasAnnotation("A3", "V4")
+                .ToTable("Product");
+
+            Assert.Throws<InvalidOperationException>(
+                () => BuildMapping(modelBuilder))
+                .ValidateMessage("ConflictingTypeAnnotation", "A1", "V3", "V1", "SplitProduct");
         }
 
         [Fact]

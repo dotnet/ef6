@@ -128,5 +128,23 @@ namespace System.Data.Entity.ModelConfiguration
         private class C : A
         {
         }
+
+        [Fact]
+        public void HasAnnotation_checks_arguments()
+        {
+            var configuration = new EntityTypeConfiguration<object>();
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation(" ", null)).Message);
+
+            Assert.Equal(
+                Strings.BadAnnotationName("Cheese:Pickle"),
+                Assert.Throws<ArgumentException>(() => configuration.HasAnnotation("Cheese:Pickle", null)).Message);
+        }
     }
 }

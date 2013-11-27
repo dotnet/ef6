@@ -228,7 +228,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             return Equals(other._tableName, _tableName)
                    && other._keyColumnNames.SequenceEqual(_keyColumnNames)
-                   && other._annotations.SequenceEqual(_annotations);
+                   && other._annotations.OrderBy(a => a.Key).SequenceEqual(_annotations.OrderBy(a => a.Key));
         }
 
         /// <inheritdoc />
@@ -261,7 +261,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             {
                 var hashCode = (_tableName != null ? _tableName.GetHashCode() : 0) * 397;
                 hashCode = _keyColumnNames.Aggregate(hashCode, (h, v) => (h * 397) ^ v.GetHashCode());
-                return _annotations.Aggregate(hashCode, (h, v) => (h * 397) ^ v.GetHashCode());
+                return _annotations.OrderBy(a => a.Key).Aggregate(hashCode, (h, v) => (h * 397) ^ v.GetHashCode());
             }
         }
 

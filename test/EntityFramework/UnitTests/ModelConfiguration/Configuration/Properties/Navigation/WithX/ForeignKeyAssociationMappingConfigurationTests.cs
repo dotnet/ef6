@@ -145,8 +145,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigat
             independentAssociationMappingConfiguration1
                 .ToTable("Foo", "Bar")
                 .MapKey("Baz", "Biz")
-                .HasKeyAnnotation("Baz", "Boz", "Bees")
-                .HasKeyAnnotation("Biz", "Buz", "Knees");
+                .HasKeyAnnotation("Biz", "Buz", "Knees")
+                .HasKeyAnnotation("Baz", "Boz", "Bees");
 
             var independentAssociationMappingConfiguration2 = new ForeignKeyAssociationMappingConfiguration();
             independentAssociationMappingConfiguration2

@@ -1882,19 +1882,27 @@ namespace FunctionalTests
 
             modelBuilder.Entity<Tag>();
             modelBuilder.Entity<ProductA>()
-                        .HasMany(p => p.Tags)
-                        .WithMany(t => t.Products)
-                        .Map(
-                            mc =>
-                                {
-                                    mc.MapLeftKey("ProductId");
-                                    mc.MapRightKey("TagId");
-                                });
+                .HasAnnotation("A0", "V0")
+                .HasMany(p => p.Tags)
+                .WithMany(t => t.Products)
+                .Map(
+                    mc => mc.MapLeftKey("ProductId")
+                        .MapRightKey("TagId")
+                        .HasAnnotation("A1", "V1")
+                        .HasAnnotation("A2", "V2")
+                        .HasAnnotation("A3", "V3")
+                        .HasAnnotation("A1", "V1B")
+                        .HasAnnotation("A2", null));
 
             var databaseMapping = BuildMapping(modelBuilder);
 
             databaseMapping.AssertValid();
-            databaseMapping.Assert("ProductATags").HasColumns("ProductId", "TagId");
+            databaseMapping.Assert("ProductATags")
+                .HasNoAnnotation("A0")
+                .HasAnnotation("A1", "V1B")
+                .HasNoAnnotation("A2")
+                .HasAnnotation("A3", "V3")
+                .HasColumns("ProductId", "TagId");
         }
 
         [Fact]

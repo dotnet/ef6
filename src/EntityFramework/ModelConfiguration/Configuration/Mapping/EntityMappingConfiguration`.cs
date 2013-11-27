@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Mapping;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.Spatial;
@@ -266,22 +267,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// be included in the table rather than just the non-inherited properties. This is known as
         /// Table per Concrete Type (TPC) mapping.
         /// </summary>
-        public void MapInheritedProperties()
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        public EntityMappingConfiguration<TEntityType> MapInheritedProperties()
         {
             _entityMappingConfiguration.MapInheritedProperties = true;
+
+            return this;
         }
 
         /// <summary>
         /// Configures the table name to be mapped to.
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
-        public void ToTable(string tableName)
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        public EntityMappingConfiguration<TEntityType> ToTable(string tableName)
         {
             Check.NotEmpty(tableName, "tableName");
 
             var databaseName = DatabaseName.Parse(tableName);
 
             ToTable(databaseName.Name, databaseName.Schema);
+
+            return this;
         }
 
         /// <summary>
@@ -289,11 +296,36 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         /// </summary>
         /// <param name="tableName"> Name of the table. </param>
         /// <param name="schemaName"> Schema of the table. </param>
-        public void ToTable(string tableName, string schemaName)
+        /// <returns> The same configuration instance so that multiple calls can be chained. </returns>
+        public EntityMappingConfiguration<TEntityType> ToTable(string tableName, string schemaName)
         {
             Check.NotEmpty(tableName, "tableName");
 
             _entityMappingConfiguration.TableName = new DatabaseName(tableName, schemaName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an annotation in the model for the table to which this entity is mapped. The annotation
+        /// value can later be used when processing the table such as when creating migrations.
+        /// </summary>
+        /// <remarks>
+        /// It will likely be necessary to register a <see cref="IMetadataAnnotationSerializer"/> if the type of
+        /// the annotation value is anything other than a string. Passing a null value clears any annotation with
+        /// the given name on the column that had been previously set.
+        /// </remarks>
+        /// <param name="name">The annotation name, which must be a valid C#/EDM identifier.</param>
+        /// <param name="value">The annotation value, which may be a string or some other type that
+        /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
+        /// <returns>The same configuration instance so that multiple calls can be chained.</returns>
+        public EntityMappingConfiguration<TEntityType> HasAnnotation(string name, object value)
+        {
+            Check.NotEmpty(name, "name");
+
+            _entityMappingConfiguration.SetAnnotation(name, value);
+
+            return this;
         }
 
         /// <summary>

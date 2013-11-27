@@ -32,20 +32,29 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.Entity<Gear>().HasMany(g => g.Weapons).WithMany();
             modelBuilder.Entity<Gear>().HasOptional(g => g.CityOfBirth).WithMany();
             modelBuilder.Entity<Gear>().HasRequired(g => g.Squad).WithMany(g => g.Members);
+            modelBuilder.Entity<Gear>().HasAnnotation("Annotation_Gear", "Step to West 17");
             
             modelBuilder.Entity<Gear>()
                 .Property(g => g.Rank)
                 .HasAnnotation("Annotation_Rank", "Love not war!")
                 .IsConcurrencyToken();
 
-            modelBuilder.Entity<City>().HasKey(c => c.Name);
+            modelBuilder.Entity<City>()
+                .HasAnnotation("Annotation_City1", "The Short Earth")
+                .HasAnnotation("Annotation_City2", "It's a Joker!")
+                .HasAnnotation("Annotation_City1", "The Long Earth")
+                .HasAnnotation("Annotation_City3", "Natural Stepper")
+                .HasAnnotation("Annotation_City2", null)
+                .HasKey(c => c.Name);
 
             modelBuilder.Entity<Squad>()
+                .HasAnnotation("Annotation_Squad1", "Happy Place")
                 .Property(s => s.Id)
                 .HasAnnotation("Annotation_Id", "All you need is love...")
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             modelBuilder.Entity<Squad>()
+                .HasAnnotation("Annotation_Squad2", "Happy Planet")
                 .Property(s => s.InternalNumber)
                 .HasAnnotation("Annotation_InternalNumber", "She loves me, yeah, yeah, yeah.")
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
@@ -53,6 +62,7 @@ namespace System.Data.Entity.TestModels.GearsOfWarModel
             modelBuilder.Entity<Weapon>().HasOptional(w => w.SynergyWith).WithOptionalPrincipal();
 
             modelBuilder.Entity<CogTag>()
+                .HasAnnotation("Annotation_CogTag", "It's an elf!")
                 .Property(t => t.Note)
                 .HasAnnotation("Annotation_Note", "...living life in peace.")
                 .HasMaxLength(40);

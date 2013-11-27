@@ -477,6 +477,25 @@ namespace System.Data.Entity
                     new ColumnAssertions(
                         _table.ForeignKeyBuilders.SelectMany(f => f.DependentColumns).Single(c => c.Name == column));
             }
+
+            public TypeAssertions HasAnnotation(string name, object value)
+            {
+                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+
+                Xunit.Assert.Equal(1, _table.Annotations.Count(a => a.Name == qualifiedName));
+                Xunit.Assert.Equal(value, _table.Annotations.Single(a => a.Name == qualifiedName).Value);
+
+                return this;
+            }
+
+            public TypeAssertions HasNoAnnotation(string name)
+            {
+                var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
+
+                Xunit.Assert.Equal(0, _table.Annotations.Count(a => a.Name == qualifiedName));
+
+                return this;
+            }
         }
 
         internal class MappingFragmentAssertions
