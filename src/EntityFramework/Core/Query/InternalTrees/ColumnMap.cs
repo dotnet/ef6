@@ -54,7 +54,7 @@ namespace System.Data.Entity.Core.Query.InternalTrees
     // </remarks>
     internal abstract class ColumnMap
     {
-        private readonly TypeUsage _type; // column datatype
+        private TypeUsage _type; // column datatype
         private string _name; // name of the column
 
         // <summary>
@@ -82,6 +82,11 @@ namespace System.Data.Entity.Core.Query.InternalTrees
         internal TypeUsage Type
         {
             get { return _type; }
+            set
+            {
+                DebugCheck.NotNull(value);
+                _type = value;
+            }
         }
 
         // <summary>

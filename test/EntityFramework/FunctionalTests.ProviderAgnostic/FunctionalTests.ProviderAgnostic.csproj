@@ -146,7 +146,9 @@
     <Compile Include="TestModels\ProviderAgnosticModel\StandardWeapon.cs" />
     <Compile Include="TestModels\ProviderAgnosticModel\Weapon.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
       <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>

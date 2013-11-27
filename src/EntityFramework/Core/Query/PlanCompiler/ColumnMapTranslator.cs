@@ -3,7 +3,9 @@
 namespace System.Data.Entity.Core.Query.PlanCompiler
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Core.Query.InternalTrees;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
 
     // <summary>
@@ -96,6 +98,16 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
                                 && varRefColumnMap.IsNamed)
                             {
                                 columnMap.Name = varRefColumnMap.Name;
+                            }
+
+                            // The type of the original column map may be enum and we need to preserve it type when replacing
+                            // the column map. For more details see https://entityframework.codeplex.com/workitem/1686
+                            if (Helper.IsEnumType(varRefColumnMap.Type.EdmType) && varRefColumnMap.Type.EdmType != columnMap.Type.EdmType)
+                            {
+                                Debug.Assert(
+                                    Helper.GetUnderlyingEdmTypeForEnumType(varRefColumnMap.Type.EdmType) == columnMap.Type.EdmType);
+
+                                columnMap.Type = varRefColumnMap.Type;
                             }
                         }
                         else
