@@ -6,6 +6,7 @@ namespace EFDesigner.E2ETests
 {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Linq;
@@ -43,7 +44,7 @@ namespace EFDesigner.E2ETests
 
         // Define model db attributes
         private const string ModelName = "SchoolModel";
-        private readonly string ProjectPrefix = "ExistingDBTest";
+        private const string ProjectPrefix = "ExistingDBTest";
         private static int _projIndex;
 
         private static readonly List<string> _entityNames = new List<string>
@@ -86,7 +87,7 @@ namespace EFDesigner.E2ETests
         }
 
         [ClassInitialize]
-        public static void ClasInitialize(TestContext testContext)
+        public static void ClassInitialize(TestContext testContext)
         {
             // Create a simple DB for tests to use
             CreateDatabase();
@@ -133,10 +134,10 @@ namespace EFDesigner.E2ETests
                         var addButton = newItemWindow.Get<Button>(SearchCriteria.ByAutomationId("btn_OK"));
                         addButton.Click();
 
-                        _wizard = GetWizard();
+                        _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Empty model selection
-                        CreateEmptyModel(_wizard);
+                        CreateEmptyModel();
                     }
                     catch (Exception ex)
                     {
@@ -216,15 +217,15 @@ namespace EFDesigner.E2ETests
                         addButton.Click();
 
                         // This method polls for the the wizard to show up
-                        _wizard = GetWizard();
+                        _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
-                        CreateModelFromDB(_wizard, "School");
+                        CreateModelFromDB("School", false);
                     }
                     catch (Exception ex)
                     {
                         exceptionCaught = ex;
-                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Wizard Discovery thread exception:" + ex.ToString());
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Wizard Discovery thread exception:" + ex);
                     }
                 }, "UIExecutor");
 
@@ -259,12 +260,13 @@ namespace EFDesigner.E2ETests
 
                 var currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
 
-                if (!string.IsNullOrEmpty(currentNode)
-                    && !currentNode.Contains("Migration"))
+                if (string.IsNullOrEmpty(currentNode)
+                    || currentNode.Contains("Migration"))
                 {
-                    CheckProperties(ModelName + "." + currentNode + ":EntityType");
-                    Assert.AreEqual("EntityTypeShape " + currentNode, childNode.Text);
+                    continue;
                 }
+                CheckProperties(ModelName + "." + currentNode + ":EntityType");
+                Assert.AreEqual("EntityTypeShape " + currentNode, childNode.Text);
             }
 
             // See if entities exist in model and have expected properties
@@ -294,7 +296,7 @@ namespace EFDesigner.E2ETests
         [HostType("VS IDE")]
         [Timeout(4 * 60 * 1000)]
         [TestCategory("DoNotRunOnCI")]
-        public void AddModelFromExistingDB_ChangeDefaults()
+        public void AddModelFromExistingDBChangeDefaults()
         {
             Exception exceptionCaught = null;
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
@@ -329,10 +331,10 @@ namespace EFDesigner.E2ETests
                         addButton.Click();
 
                         // This method polls for the the wizard to show up
-                        _wizard = GetWizard();
+                        _wizard = GetWizard("WizardFormDialog_Title");
 
                         // Walk thru the Wizard with existing DB option
-                        CreateModelFromDBNonDefaults(_wizard, "School");
+                        CreateModelFromDBNonDefaults("School");
                     }
                     catch (Exception ex)
                     {
@@ -354,9 +356,193 @@ namespace EFDesigner.E2ETests
             Assert.IsTrue(errors == null || errors.Count == 0);
         }
 
-        private string GetRandomProjectName()
+        [TestMethod]
+        [HostType("VS IDE")]
+        [TestCategory("DoNotRunOnCI")]
+        public void AddModelFromDBUpdateModel()
         {
-            return ProjectPrefix + _projIndex++;
+            Exception exceptionCaught = null;
+            Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
+
+            // We need to create this thread to keep polling for wizard to show up and
+            // walk thru the wizard. DTE call just launches the wizard and stays there
+            // taking up the main thread
+            var wizardDiscoveryThread = ExecuteThreadedAction(
+                () =>
+                {
+                    try
+                    {
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+
+                        // This method polls for the the wizard to show up
+                        _wizard = GetWizard("WizardFormDialog_Title");
+
+                        // Walk thru the Wizard with existing DB option
+                        CreateModelFromDB("School", false);
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptionCaught = ex;
+                    }
+                }, "UIExecutor");
+
+            // On the main thread create a project
+            var project = Dte.CreateProject(
+                TestContext.TestRunDirectory,
+                "UpdateFromDBTest",
+                DteExtensions.ProjectKind.Executable,
+                DteExtensions.ProjectLanguage.CSharp);
+
+            Assert.IsNotNull(project, "Could not create project");
+
+            // Create model from a small size database
+            DteExtensions.AddNewItem(Dte, @"Data\ADO.NET Entity Data Model", "Model1", project);
+
+            wizardDiscoveryThread.Join();
+            if (exceptionCaught != null)
+            {
+                throw exceptionCaught;
+            }
+
+            // Update the sample db
+            const string createTable = "CREATE TABLE Books (BookID INTEGER PRIMARY KEY IDENTITY, " +
+                                       "Title CHAR(50) NOT NULL, Author CHAR(50), " +
+                                       "PageCount INTEGER, Topic CHAR(30), Code CHAR(15))";
+
+            const string connectionString = @"Data Source=(localdb)\v11.0;initial catalog=School;integrated security=True;Pooling=false";
+            ExecuteSqlCommand(connectionString, createTable);
+
+            // Update model from db
+            var wizardDiscoveryThread2 = ExecuteThreadedAction(
+                () =>
+                {
+                    try
+                    {
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+
+                        // This method polls for the the wizard to show up
+                        _wizard = GetWizard("UpdateFromDatabaseWizard_Title");
+
+                        // Walk thru the Wizard with existing DB option
+                        UpdateModelFromDBWizard();
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptionCaught = ex;
+                    }
+                }, "UIExecutor");
+
+            var designerSurface = _visualStudioMainWindow.Get<Panel>(SearchCriteria.ByText("Modeling Design Surface"));
+            designerSurface.RightClickAt(designerSurface.Location);
+            var popUpMenu = _visualStudioMainWindow.Popup;
+            var menuItem = popUpMenu.Item("Update Model from Database...");
+            menuItem.Click();
+
+            wizardDiscoveryThread2.Join();
+            if (exceptionCaught != null)
+            {
+                throw exceptionCaught;
+            }
+
+            // Make sure all expected files are generated.
+            // Make sure EDMX is what you expected.
+            CheckFilesExistingModel(project);
+
+            // Build the project
+            var errors = Build();
+            Assert.IsTrue(errors == null || errors.Count == 0);
+
+            // Check Model browser, mapping window, properties window to spot check them
+            Dte.ExecuteCommand("View.EntityDataModelBrowser");
+            var modelBrowserTree = _visualStudioMainWindow.Get<Tree>(SearchCriteria.ByAutomationId("ExplorerTreeView"));
+
+            // See if entities exist in diagram
+            var diagramNode = modelBrowserTree.Node("Model1.edmx", "Diagrams Diagrams", "Diagram Diagram1");
+            ((ExpandCollapsePattern)diagramNode.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
+
+            var updatedEntityNames = _entityNames;
+            updatedEntityNames.Add("Books");
+            foreach (var childNode in diagramNode.Nodes)
+            {
+                Dte.ExecuteCommand("View.EntityDataModelBrowser");
+                ((SelectionItemPattern)childNode.AutomationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
+
+                var currentNode = updatedEntityNames.Find(el => el.Equals(childNode.Text));
+
+                if (string.IsNullOrEmpty(currentNode)
+                    || currentNode.Contains("Migration"))
+                {
+                    continue;
+                }
+                CheckProperties(ModelName + "." + currentNode + ":EntityType");
+                Assert.AreEqual("EntityTypeShape " + currentNode, childNode.Text);
+            }
+
+            // See if entities exist in model and have expected properties
+            Dte.ExecuteCommand("View.EntityDataModelBrowser");
+            var modelNode = modelBrowserTree.Node(
+                "Model1.edmx", "ConceptualEntityModel " + ModelName,
+                "Entity Types");
+            CheckEntityProperties(modelNode, "ConceptualEntityType {0}", "ConceptualProperty ", "{0}.{1}.{2}:Property");
+
+            // See if entities exist in store and have expected properties
+            Dte.ExecuteCommand("View.EntityDataModelBrowser");
+            var storeNode = modelBrowserTree.Node(
+                "Model1.edmx", "StorageEntityModel " + ModelName + ".Store",
+                "Tables / Views");
+            CheckEntityProperties(storeNode, "StorageEntityType {0}s", "StorageProperty ", "{0}.Store.{1}s.{2}:Property");
+        }
+
+        [TestMethod]
+        [HostType("VS IDE")]
+        [TestCategory("DoNotRunOnCI")]
+        public void CodeFirstAddModelFromDB()
+        {
+            Exception exceptionCaught = null;
+            Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Starting the test");
+
+            // We need to create this thread to keep polling for wizard to show up and
+            // walk thru the wizard. DTE call just launches the wizard and stays there
+            // taking up the main thread
+            var wizardDiscoveryThread = ExecuteThreadedAction(
+                () =>
+                {
+                    try
+                    {
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In thread wizardDiscoveryThread");
+
+                        // This method polls for the the wizard to show up
+                        _wizard = GetWizard("WizardFormDialog_Title");
+
+                        // Walk thru the Wizard with existing DB option, code first
+                        CreateModelFromDB("School", true);
+                    }
+                    catch (Exception ex)
+                    {
+                        exceptionCaught = ex;
+                    }
+                }, "UIExecutor");
+
+            // On the main thread create a project
+            var project = Dte.CreateProject(
+                TestContext.TestRunDirectory,
+                "CodeFirstAddModelFromDBTest",
+                DteExtensions.ProjectKind.Executable,
+                DteExtensions.ProjectLanguage.CSharp);
+
+            Assert.IsNotNull(project, "Could not create project");
+
+            // Create model from a small size database
+            DteExtensions.AddNewItem(Dte, @"Data\ADO.NET Entity Data Model", "Model1", project);
+
+            wizardDiscoveryThread.Join();
+            if (exceptionCaught != null)
+            {
+                throw exceptionCaught;
+            }
+
+            // Make sure all expected files are generated.
+            CheckFilesCodeFirst(project);
         }
 
         private void CheckProperties(string property)
@@ -364,6 +550,102 @@ namespace EFDesigner.E2ETests
             Dte.ExecuteCommand("View.PropertiesWindow", string.Empty);
             var componentsBox = _visualStudioMainWindow.Get<ComboBox>(SearchCriteria.ByText("Components"));
             Assert.AreEqual(property, componentsBox.Item(0).Text);
+        }
+
+        private void CheckEntityProperties(TreeNode node, string entityType, string entityProperty, string propertyValue)
+        {
+            Dte.ExecuteCommand("View.EntityDataModelBrowser");
+            ((ExpandCollapsePattern)node.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
+            foreach (var childNode in node.Nodes)
+            {
+                var currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
+                if (string.IsNullOrEmpty(currentNode))
+                {
+                    continue;
+                }
+                Assert.AreEqual(string.Format(entityType, currentNode), childNode.Text);
+                Dte.ExecuteCommand("View.EntityDataModelBrowser");
+                ((ExpandCollapsePattern)childNode.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
+                foreach (var propertyNode in childNode.Nodes)
+                {
+                    Dte.ExecuteCommand("View.EntityDataModelBrowser");
+                    ((SelectionItemPattern)propertyNode.AutomationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
+                    var cleanProperty = propertyNode.Text.Replace(entityProperty, "");
+
+                    CheckProperties(string.Format(propertyValue, ModelName, currentNode, cleanProperty));
+                    Assert.IsTrue(_entityAttributes.Contains(cleanProperty));
+                }
+            }
+        }
+
+        private static void CheckAppConfig(Project project)
+        {
+            var appConfigFile = project.GetProjectItemByName("app.config");
+            var appConfigPath = appConfigFile.Properties.Item("FullPath").Value.ToString();
+
+            var xmlEntries = XDocument.Load(appConfigPath);
+
+            var element = xmlEntries.Elements("configuration")
+                .Elements("connectionStrings")
+                .Elements("add").First();
+            Assert.AreEqual((string)element.Attribute("name"), "SchoolEntities");
+        }
+
+        private static void CheckFilesEmptyModel(Project project)
+        {
+            var edmxFile = project.GetProjectItemByName("Model1.edmx");
+            Assert.IsNotNull(edmxFile, "edmxfile is null");
+
+            var edmxPath = edmxFile.Properties.Item("FullPath").Value.ToString();
+            var xmlEntries = XDocument.Load(edmxPath);
+            var edmx = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edmx");
+            var edm = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm");
+
+            var conceptualElement = xmlEntries.Elements(edmx + "Edmx")
+                .Elements(edmx + "Runtime")
+                .Elements(edmx + "ConceptualModels")
+                .Elements(edm + "Schema").First();
+            Assert.AreEqual((string)conceptualElement.Attribute("Namespace"), "Model1");
+
+            var entity1Element = (from el in conceptualElement.Descendants(edm + "EntityType")
+                where (string)el.Attribute("Name") == "Entity_1"
+                select el).First();
+            Assert.IsNotNull(entity1Element);
+
+            var entity2Element = (from el in conceptualElement.Descendants(edm + "EntityType")
+                where (string)el.Attribute("Name") == "Entity_2"
+                select el).First();
+            Assert.IsNotNull(entity2Element);
+
+            var entity3Element = (from el in conceptualElement.Descendants(edm + "EntityType")
+                where (string)el.Attribute("Name") == "Entity_3"
+                select el).First();
+            Assert.IsNotNull(entity3Element);
+
+            var entity4Element = (from el in conceptualElement.Descendants(edm + "EntityType")
+                where (string)el.Attribute("Name") == "Entity_4"
+                select el).First();
+            Assert.IsNotNull(entity4Element);
+
+            var association1Element = (from el in conceptualElement.Descendants(edm + "Association")
+                where (string)el.Attribute("Name") == "Entity_1Entity_2"
+                select el).First();
+            Assert.IsNotNull(association1Element);
+
+            var association2Element = (from el in conceptualElement.Descendants(edm + "Association")
+                where (string)el.Attribute("Name") == "Entity_3Entity_4"
+                select el).First();
+            Assert.IsNotNull(association2Element);
+
+            var association3Element = (from el in conceptualElement.Descendants(edm + "Association")
+                where (string)el.Attribute("Name") == "Entity_1Entity_3"
+                select el).First();
+            Assert.IsNotNull(association3Element);
+
+            var enumElement = (from el in conceptualElement.Descendants(edm + "EnumType")
+                where (string)el.Attribute("Name") == "EnumType5"
+                select el).First();
+            Assert.IsNotNull(enumElement);
         }
 
         private static void CheckFilesExistingModel(Project project)
@@ -399,15 +681,11 @@ namespace EFDesigner.E2ETests
             Assert.AreEqual((string)element.Attribute("Namespace"), "SchoolModel.Store");
             Assert.AreEqual((string)element.Attribute("Provider"), "System.Data.SqlClient");
 
-            var entityTypes = from el in element.Elements(ssdl + "EntityType")
-                select el.Attribute("Name").Value;
+            var entityTypes = (from el in element.Elements(ssdl + "EntityType") select el.Attribute("Name").Value).ToList();
 
-            foreach (var entityName in _entityNames)
+            foreach (var entityName in _entityNames.Where(entityName => !entityName.Contains("Migration")))
             {
-                if (!entityName.Contains("Migration"))
-                {
-                    Assert.IsTrue(entityTypes.Any(el => el.Equals(entityName)), string.Format("Looking for Entity name:" + entityName));
-                }
+                Assert.IsTrue(entityTypes.Any(el => el.Equals(entityName)), string.Format("Looking for Entity name:" + entityName));
             }
 
             element =
@@ -431,49 +709,56 @@ namespace EFDesigner.E2ETests
             Assert.AreEqual((string)element.Attribute("CdmEntityContainer"), "SchoolEntities");
         }
 
-        private void CheckEntityProperties(TreeNode node, string entityType, string entityProperty, string propertyValue)
+        private static void CheckFilesCodeFirst(Project project)
         {
-            Dte.ExecuteCommand("View.EntityDataModelBrowser");
-            ((ExpandCollapsePattern)node.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
-            foreach (var childNode in node.Nodes)
-            {
-                var currentNode = _entityNames.Find(el => el.Equals(childNode.Text));
-                if (!string.IsNullOrEmpty(currentNode))
-                {
-                    Assert.AreEqual(string.Format(entityType, currentNode), childNode.Text);
-                    Dte.ExecuteCommand("View.EntityDataModelBrowser");
-                    ((ExpandCollapsePattern)childNode.AutomationElement.GetCurrentPattern(ExpandCollapsePattern.Pattern)).Expand();
-                    foreach (var propertyNode in childNode.Nodes)
-                    {
-                        Dte.ExecuteCommand("View.EntityDataModelBrowser");
-                        ((SelectionItemPattern)propertyNode.AutomationElement.GetCurrentPattern(SelectionItemPattern.Pattern)).Select();
-                        var cleanProperty = propertyNode.Text.Replace(entityProperty, "");
+            var modelfile = project.GetProjectItemByName("Model1.cs");
+            Assert.IsNotNull(modelfile, "modelfile is null");
 
-                        CheckProperties(string.Format(propertyValue, ModelName, currentNode, cleanProperty));
-                        Assert.IsTrue(_entityAttributes.Contains(cleanProperty));
-                    }
+            var coursfile = project.GetProjectItemByName("Cours.cs");
+            Assert.IsNotNull(coursfile, "coursfile is null");
+
+            var departmentfile = project.GetProjectItemByName("Department.cs");
+            Assert.IsNotNull(departmentfile, "departmentfile is null");
+
+            var officeassignmentfile = project.GetProjectItemByName("OfficeAssignment.cs");
+            Assert.IsNotNull(officeassignmentfile, "officeassignmentfile is null");
+
+            var personfile = project.GetProjectItemByName("Person.cs");
+            Assert.IsNotNull(personfile, "personfile is null");
+
+            var studentgradefile = project.GetProjectItemByName("StudentGrade.cs");
+            Assert.IsNotNull(studentgradefile, "studentgradefile is null");
+        }
+
+        private static void ExecuteSqlCommand(string connectionString, string commandString)
+        {
+            using (var mycon = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    var mycomm = new SqlCommand { CommandType = CommandType.Text, CommandText = commandString, Connection = mycon };
+
+                    mycon.Open();
+                    SqlConnection.ClearAllPools();
+                    mycomm.ExecuteNonQuery();
+                }
+                finally
+                {
+                    mycon.Close();
                 }
             }
         }
 
-        private static void CheckAppConfig(Project project)
+        private static string GetRandomProjectName()
         {
-            var appConfigFile = project.GetProjectItemByName("app.config");
-            var appConfigPath = appConfigFile.Properties.Item("FullPath").Value.ToString();
-
-            var xmlEntries = XDocument.Load(appConfigPath);
-
-            var element = xmlEntries.Elements("configuration")
-                .Elements("connectionStrings")
-                .Elements("add").First();
-            Assert.AreEqual((string)element.Attribute("name"), "SchoolEntities");
+            return ProjectPrefix + _projIndex++;
         }
 
         /// <summary>
         ///     Tries to find the wizard after it is launched.
         /// </summary>
         /// <returns>the wizard element</returns>
-        private Window GetWizard()
+        private Window GetWizard(string wizardName)
         {
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":In GetWizard");
 
@@ -483,133 +768,195 @@ namespace EFDesigner.E2ETests
                 InitializeOption.NoCache);
 
             var wizard = _visualStudio.Find(
-                x => x.Equals(_resourceHelper.GetEntityDesignResourceString("WizardFormDialog_Title")),
+                x => x.Equals(_resourceHelper.GetEntityDesignResourceString(wizardName)),
                 InitializeOption.NoCache);
+            Trace.WriteLine(wizard.AutomationElement);
             return wizard;
         }
 
         /// <summary>
         ///     Chooses 'Create Empty Model' option for the wizard and clicks finish button
         /// </summary>
-        private void CreateEmptyModel(UIItemContainer wizard)
+        private void CreateEmptyModel()
         {
             // Select the empty model option
-            SelectModelOption(
-                wizard,
-                _resourceHelper.GetEntityDesignResourceString("EmptyModelOption"));
+            SelectModelOption(_resourceHelper.GetEntityDesignResourceString("EmptyModelOption"));
 
-            var finish = wizard.Get<Button>(SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText")));
+            var finish = _wizard.Get<Button>(SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText")));
             finish.Click();
         }
 
         /// <summary>
         ///     Chooses the 'Generate from database' option for the wizard and walks thru the wizard
         /// </summary>
-        private void CreateModelFromDB(Window wizard, string dbName)
+        private void CreateModelFromDB(String dbName, Boolean codeFirst)
         {
-            // Select the 'Generate from Database' option
             SelectModelOption(
-                wizard,
-                _resourceHelper.GetEntityDesignResourceString("GenerateFromDatabaseOption"));
+                codeFirst
+                    ? _resourceHelper.GetEntityDesignResourceString("CodeFirstFromDatabaseOption")
+                    : _resourceHelper.GetEntityDesignResourceString("GenerateFromDatabaseOption"));
 
-            ClickNextButton(wizard);
+            ClickNextButton();
 
             var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
-            if (appconfig.Text != "SchoolEntities")
+            if (appconfig.Text != (codeFirst ? "Model1" : "SchoolEntities"))
             {
                 var newConnectionButton =
-                    wizard.Get<Button>(
+                    _wizard.Get<Button>(
                         SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("NewDatabaseConnectionBtn")));
 
                 newConnectionButton.Click();
-                HandleConnectionDialog(wizard, dbName);
-                wizard.WaitTill(WaitTillNewDBSettingsLoaded);
+                HandleConnectionDialog(dbName);
+                _wizard.WaitTill(WaitTillNewDBSettingsLoaded);
             }
 
-            ClickNextButton(wizard);
+            ClickNextButton();
 
-            var versionsPanel = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("versionsPanel"));
-            var selectionButton =
-                versionsPanel.Get<RadioButton>(
-                    SearchCriteria.ByText(String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
-            Assert.IsTrue(selectionButton.IsSelected);
-            ClickNextButton(wizard);
+            if (!codeFirst)
+            {
+                var versionsPanel = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("versionsPanel"));
+                var selectionButton =
+                    versionsPanel.Get<RadioButton>(
+                        SearchCriteria.ByText(
+                            String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
+                Assert.IsTrue(selectionButton.IsSelected);
+                ClickNextButton();
+            }
 
-            wizard.WaitTill(WaitTillDBTablesLoaded, new TimeSpan(0, 1, 0));
-            CheckAllCheckBoxes(wizard);
+            var pane = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("treeView"));
+            _wizard.WaitTill(WaitTillDBTablesLoaded, new TimeSpan(0, 1, 0));
+            CheckAllCheckBoxes(pane);
 
-            var finishButton = wizard.Get<Button>(
+            var finishButton = _wizard.Get<Button>(
                 SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText")));
+            finishButton.Click();
+        }
+
+        /// <summary>
+        ///     Walks through the 'Update from database' wizard
+        /// </summary>
+        private void UpdateModelFromDBWizard()
+        {
+            _wizard.WaitTill(WaitTillDBChecksLoaded, new TimeSpan(0, 1, 0));
+
+            var pane = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("AddTreeView"));
+            CheckAllCheckBoxes(pane);
+
+            var finishButton = _wizard.Get<Button>(
+                SearchCriteria.ByAutomationId("_btnFinish"));
             finishButton.Click();
         }
 
         /// <summary>
         ///     Chooses the 'Generate from database' option for the wizard and walks thru the wizard
         /// </summary>
-        private void CreateModelFromDBNonDefaults(Window wizard, string dbName)
+        private void CreateModelFromDBNonDefaults(string dbName)
         {
             // Select the 'Generate from Database' option
-            SelectModelOption(
-                wizard,
-                _resourceHelper.GetEntityDesignResourceString("GenerateFromDatabaseOption"));
+            SelectModelOption(_resourceHelper.GetEntityDesignResourceString("GenerateFromDatabaseOption"));
 
-            ClickNextButton(wizard);
+            ClickNextButton();
 
             var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
             if (appconfig.Text != "SchoolEntities")
             {
                 var newConnectionButton =
-                    wizard.Get<Button>(
+                    _wizard.Get<Button>(
                         SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("NewDatabaseConnectionBtn")));
 
                 newConnectionButton.Click();
-                HandleConnectionDialog(wizard, dbName);
-                wizard.WaitTill(WaitTillNewDBSettingsLoaded, new TimeSpan(0, 1, 0));
+                HandleConnectionDialog(dbName);
+                _wizard.WaitTill(WaitTillNewDBSettingsLoaded, new TimeSpan(0, 1, 0));
             }
 
-            ClickNextButton(wizard);
+            ClickNextButton();
             var versionsPanel = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("versionsPanel"));
             var selectionButton =
                 versionsPanel.Get<RadioButton>(
                     SearchCriteria.ByText(String.Format(_resourceHelper.GetEntityDesignResourceString("EntityFrameworkVersionName"), "6.0")));
             Assert.IsTrue(selectionButton.IsSelected);
-            ClickNextButton(wizard);
+            ClickNextButton();
 
-            wizard.WaitTill(WaitTillDBTablesLoaded, new TimeSpan(0, 1, 0));
-            CheckAllCheckBoxes(wizard);
-            ChangeDefaultValues(wizard);
+            _wizard.WaitTill(WaitTillDBTablesLoaded, new TimeSpan(0, 1, 0));
+            var pane = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("treeView"));
+            CheckAllCheckBoxes(pane);
+            ChangeDefaultValues();
 
-            var finishButton = wizard.Get<Button>(
+            var finishButton = _wizard.Get<Button>(
                 SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonFinishText")));
             finishButton.Click();
         }
 
-        private void ChangeDefaultValues(Window wizard)
+        private void ChangeDefaultValues()
         {
-            wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkPluralize")).Toggle();
-            wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkIncludeForeignKeys")).Toggle();
-            var functionImports = wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkCreateFunctionImports"));
+            _wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkPluralize")).Toggle();
+            _wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkIncludeForeignKeys")).Toggle();
+            var functionImports = _wizard.Get<CheckBox>(SearchCriteria.ByAutomationId("chkCreateFunctionImports"));
 
             if (functionImports.Enabled)
             {
                 functionImports.Toggle();
             }
 
-            var modelNameSpace = wizard.Get<TextBox>(SearchCriteria.ByAutomationId("modelNamespaceTextBox"));
+            var modelNameSpace = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("modelNamespaceTextBox"));
             modelNameSpace.Enter("SchoolContext");
         }
 
-        private void SelectModelOption(UIItemContainer wizard, string modelOption)
+        private void SelectModelOption(string modelOption)
         {
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":SelectModelOption");
             Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":trying to find option list");
 
             var options =
-                wizard.Get<ListBox>(SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("StartPage_PromptLabelText")));
+                _wizard.Get<ListBox>(SearchCriteria.ByText(_resourceHelper.GetEntityDesignResourceString("StartPage_PromptLabelText")));
             var item = options.Item(modelOption);
             item.Select();
         }
 
+        // Handles the new connection dialog
+        private void HandleConnectionDialog(string dbName)
+        {
+            var serverNameText = _wizard.Get<TextBox>(
+                SearchCriteria.ByText(
+                    _resourceHelper.GetConnectionUIDialogResourceString("serverLabel.Text")));
+            serverNameText.Enter(@"(localdb)\v11.0");
+
+            var refreshButton = _wizard.Get<Button>(
+                SearchCriteria.ByText(
+                    _resourceHelper.GetConnectionUIDialogResourceString("refreshButton.Text")));
+            refreshButton.Focus();
+
+            var dbNameText = _wizard.Get<TextBox>(
+                SearchCriteria.ByText(
+                    _resourceHelper.GetConnectionUIDialogResourceString("selectDatabaseRadioButton.Text")));
+            dbNameText.Enter(dbName);
+
+            var okButton = _wizard.Get<Button>(
+                SearchCriteria.ByText(
+                    _resourceHelper.GetConnectionUIDialogResourceString("acceptButton.Text")));
+            okButton.Click();
+        }
+
+        // checks all the checkboxes on the "which database objects to select" dialog
+        private static void CheckAllCheckBoxes(UIItemContainer pane)
+        {
+            var tree = pane.Get<Tree>(SearchCriteria.ByControlType(ControlType.Tree));
+            foreach (var checkbox in tree.Nodes)
+            {
+                checkbox.Click();
+                Keyboard.Instance.Enter(" ");
+            }
+        }
+
+        // Invokes click on next button
+        private void ClickNextButton()
+        {
+            var finish = _wizard.Get<Button>(
+                SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonNextText")));
+            finish.Click();
+        }
+
+        // Ensures the wizard is in the appropriate state before continuing
         private bool WaitTillNewDBSettingsLoaded()
         {
             var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
@@ -618,54 +965,15 @@ namespace EFDesigner.E2ETests
 
         private bool WaitTillDBTablesLoaded()
         {
-            var modelNamespaceTextBox = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("modelNamespaceTextBox"));
-            return modelNamespaceTextBox.Enabled;
-        }
-
-        // checks all the checkboxes on the "which database objects to select" dialog
-        private static void CheckAllCheckBoxes(UIItemContainer wizard)
-        {
-            var pane = wizard.Get<Panel>(SearchCriteria.ByAutomationId("treeView"));
+            var pane = _wizard.Get<Panel>(SearchCriteria.ByAutomationId("treeView"));
             var tree = pane.Get<Tree>(SearchCriteria.ByControlType(ControlType.Tree));
-
-            Assert.IsTrue(tree.Nodes.Count != 0);
-            foreach (var checkbox in tree.Nodes)
-            {
-                checkbox.Click();
-                Keyboard.Instance.Enter(" ");
-            }
+            return (tree.Nodes.Count != 0);
         }
 
-        // Handles the new connection dialog
-        private void HandleConnectionDialog(UIItemContainer wizard, string dbName)
+        private bool WaitTillDBChecksLoaded()
         {
-            var serverNameText = wizard.Get<TextBox>(
-                SearchCriteria.ByText(
-                    _resourceHelper.GetConnectionUIDialogResourceString("serverLabel.Text")));
-            serverNameText.Enter(@"(localdb)\v11.0");
-
-            var refreshButton = wizard.Get<Button>(
-                SearchCriteria.ByText(
-                    _resourceHelper.GetConnectionUIDialogResourceString("refreshButton.Text")));
-            refreshButton.Focus();
-
-            var dbNameText = wizard.Get<TextBox>(
-                SearchCriteria.ByText(
-                    _resourceHelper.GetConnectionUIDialogResourceString("selectDatabaseRadioButton.Text")));
-            dbNameText.Enter(dbName);
-
-            var okButton = wizard.Get<Button>(
-                SearchCriteria.ByText(
-                    _resourceHelper.GetConnectionUIDialogResourceString("acceptButton.Text")));
-            okButton.Click();
-        }
-
-        // Invokes click on next button
-        private void ClickNextButton(UIItemContainer wizard)
-        {
-            var finish = wizard.Get<Button>(
-                SearchCriteria.ByText(_resourceHelper.GetWizardFrameworkResourceString("ButtonNextText")));
-            finish.Click();
+            var modelNamespaceTextBox = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("DescriptionTextBox"));
+            return modelNamespaceTextBox.Visible;
         }
 
         public List<string> AddEntities()
@@ -826,68 +1134,10 @@ namespace EFDesigner.E2ETests
             btnOk.Click();
         }
 
-        private static void CheckFilesEmptyModel(Project project)
-        {
-            var edmxFile = project.GetProjectItemByName("Model1.edmx");
-            Assert.IsNotNull(edmxFile, "edmxfile is null");
-
-            var edmxPath = edmxFile.Properties.Item("FullPath").Value.ToString();
-            var xmlEntries = XDocument.Load(edmxPath);
-            var edmx = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edmx");
-            var edm = XNamespace.Get("http://schemas.microsoft.com/ado/2009/11/edm");
-
-            var conceptualElement = xmlEntries.Elements(edmx + "Edmx")
-                .Elements(edmx + "Runtime")
-                .Elements(edmx + "ConceptualModels")
-                .Elements(edm + "Schema").First();
-            Assert.AreEqual((string)conceptualElement.Attribute("Namespace"), "Model1");
-
-            var entity1Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                where (string)el.Attribute("Name") == "Entity_1"
-                select el).First();
-            Assert.IsNotNull(entity1Element);
-
-            var entity2Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                where (string)el.Attribute("Name") == "Entity_2"
-                select el).First();
-            Assert.IsNotNull(entity2Element);
-
-            var entity3Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                where (string)el.Attribute("Name") == "Entity_3"
-                select el).First();
-            Assert.IsNotNull(entity3Element);
-
-            var entity4Element = (from el in conceptualElement.Descendants(edm + "EntityType")
-                where (string)el.Attribute("Name") == "Entity_4"
-                select el).First();
-            Assert.IsNotNull(entity4Element);
-
-            var association1Element = (from el in conceptualElement.Descendants(edm + "Association")
-                where (string)el.Attribute("Name") == "Entity_1Entity_2"
-                select el).First();
-            Assert.IsNotNull(association1Element);
-
-            var association2Element = (from el in conceptualElement.Descendants(edm + "Association")
-                where (string)el.Attribute("Name") == "Entity_3Entity_4"
-                select el).First();
-            Assert.IsNotNull(association2Element);
-
-            var association3Element = (from el in conceptualElement.Descendants(edm + "Association")
-                where (string)el.Attribute("Name") == "Entity_1Entity_3"
-                select el).First();
-            Assert.IsNotNull(association3Element);
-
-            var enumElement = (from el in conceptualElement.Descendants(edm + "EnumType")
-                where (string)el.Attribute("Name") == "EnumType5"
-                select el).First();
-            Assert.IsNotNull(enumElement);
-        }
-
         // Creates a new thread for action and starts it
         private static SystemThread ExecuteThreadedAction(Action action, string threadName = "Worker")
         {
-            var thread = new SystemThread(
-                new ThreadStart(action)) { Name = threadName };
+            var thread = new SystemThread(new ThreadStart(action)) { Name = threadName };
             thread.Start();
             return thread;
         }
@@ -939,17 +1189,18 @@ namespace EFDesigner.E2ETests
             var dte2 = (DTE2)Dte;
             Dte.ExecuteCommand("View.ErrorList", string.Empty);
             var errorItems = dte2.ToolWindows.ErrorList.ErrorItems;
-            if (errorItems != null
-                || errorItems.Count != 0)
+            if (errorItems == null
+                || errorItems.Count == 0)
             {
-                Trace.WriteLine(string.Format("THere are {0} Build Errors", errorItems.Count));
-                for (var i = 1; i <= errorItems.Count; i++)
-                {
-                    Trace.WriteLine(
-                        string.Format(
-                            "File: {0}\tDescription:{1}\tLine:{2}", errorItems.Item(i).FileName, errorItems.Item(i).Description,
-                            errorItems.Item(i).Line));
-                }
+                return errorItems;
+            }
+            Trace.WriteLine(string.Format("THere are {0} Build Errors", errorItems.Count));
+            for (var i = 1; i <= errorItems.Count; i++)
+            {
+                Trace.WriteLine(
+                    string.Format(
+                        "File: {0}\tDescription:{1}\tLine:{2}", errorItems.Item(i).FileName, errorItems.Item(i).Description,
+                        errorItems.Item(i).Line));
             }
 
             return errorItems;
