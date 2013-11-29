@@ -193,7 +193,6 @@ namespace System.Data.Entity
         /// </remarks>
         /// <param name="providerInvariantName"> The ADO.NET provider invariant name indicating the type of ADO.NET connection for which this provider will be used. </param>
         /// <param name="provider"> The provider instance. </param>
-        [CLSCompliant(false)]
         protected internal void SetProviderServices(string providerInvariantName, DbProviderServices provider)
         {
             Check.NotEmpty(providerInvariantName, "providerInvariantName");

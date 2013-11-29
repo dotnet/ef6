@@ -18,8 +18,24 @@ namespace System.Data.Entity.Core.Objects.DataClasses
         // Properties
         // ----------
 
-        /// <summary>Gets a value that indicates whether all related objects have been loaded.</summary>
-        /// <returns>true if the related end contains all the related entities from the database; otherwise, false.</returns>
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity (for an <see cref="EntityReference"/> or all entities 
+        /// in the collection (for an <see cref="EntityCollection{TEntity}"/> have been loaded from the database.
+        /// </summary>
+        /// <remarks>
+        /// Loading the related entities from the database either using lazy-loading, as part of a query, or explicitly
+        /// with one of the Load methods will set the IsLoaded flag to true.
+        /// IsLoaded can be explicitly set to true to prevent the related entities from being lazy-loaded.
+        /// This can be useful if the application has caused a subset of related entities to be loaded
+        /// and wants to prevent any other entities from being loaded automatically.
+        /// Note that explicit loading using <see cref="Load()"/> will load all related entities from the database
+        /// regardless of whether or not IsLoaded is true.
+        /// When any related entity is detached the IsLoaded flag is reset to false indicating that not all related entities
+        /// are now loaded.
+        /// </remarks>
+        /// <value>
+        /// True if all the related entities are loaded or the IsLoaded has been explicitly set to true; otherwise false.
+        /// </value>
         bool IsLoaded { get; set; }
 
         /// <summary>Gets the name of the relationship in which this related end participates.</summary>

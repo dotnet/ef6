@@ -32,7 +32,7 @@ namespace System.Data.Entity
         /// Executes the strategy to initialize the database for the given context.
         /// </summary>
         /// <param name="context"> The context. </param>
-        public void InitializeDatabase(TContext context)
+        public virtual void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
 

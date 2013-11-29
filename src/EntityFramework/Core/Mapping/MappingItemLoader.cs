@@ -2105,13 +2105,13 @@ namespace System.Data.Entity.Core.Mapping
                 }
             }
 
-            var currentTypesInHierachy = isOfTypeEntityTypes.Concat(entityTypes).Distinct().OfType<StructuralType>();
+            var currentTypesInHierarchy = isOfTypeEntityTypes.Concat(entityTypes).Distinct().OfType<StructuralType>();
             var columnRenameMappings = new Collection<FunctionImportReturnTypePropertyMapping>();
 
             // Process all conditions and column renames.
             var conditions = new List<FunctionImportEntityTypeMappingCondition>();
 
-            if (!LoadFunctionImportStructuralType(nav.Clone(), currentTypesInHierachy, columnRenameMappings, conditions))
+            if (!LoadFunctionImportStructuralType(nav.Clone(), currentTypesInHierarchy, columnRenameMappings, conditions))
             {
                 return false;
             }

@@ -370,9 +370,7 @@ namespace System.Data.Entity.Migrations
 
             var migrator = CreateMigrator<EmptyModel>();
 
-            Assert.Equal(
-                new AutomaticDataLossException("Automatic migration was not applied because it would result in data loss.").Message,
-                Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).Message);
+            Assert.Throws<AutomaticDataLossException>(() => migrator.Update()).ValidateMessage("AutomaticDataLoss");
         }
 
         [MigrationsTheory]

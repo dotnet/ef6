@@ -348,7 +348,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
         }
 
         [Fact]
-        public void MapEntityType_should_correctly_map_properties_in_class_hierachy()
+        public void MapEntityType_should_correctly_map_properties_in_class_hierarchy()
         {
             var model = new EdmModel(DataSpace.CSpace);
             var typeMapper = new TypeMapper(new MappingContext(new ModelConfiguration(), new ConventionsConfiguration(), model));

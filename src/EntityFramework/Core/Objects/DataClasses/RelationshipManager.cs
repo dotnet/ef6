@@ -1531,10 +1531,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 // _relationships collection.
                 foreach (var relatedEnd in _relationships)
                 {
-                    if (!relatedEnd.CheckReferentialConstraintProperties(ownerEntry))
-                    {
-                        throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
-                    }
+                    relatedEnd.CheckReferentialConstraintProperties(ownerEntry);
                 }
             }
         }

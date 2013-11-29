@@ -49,7 +49,7 @@ namespace System.Data.Entity
         }
 
         /// <inheritdoc />
-        public void InitializeDatabase(TContext context)
+        public virtual void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
 

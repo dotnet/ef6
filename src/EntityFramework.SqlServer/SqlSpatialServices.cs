@@ -3,7 +3,6 @@
 namespace System.Data.Entity.SqlServer
 {
     using System.Collections.Generic;
-    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Spatial;
     using System.Data.Entity.SqlServer.Resources;
     using System.Data.Entity.SqlServer.Utilities;
@@ -11,8 +10,12 @@ namespace System.Data.Entity.SqlServer
     using System.Diagnostics.CodeAnalysis;
     using System.Reflection;
 
+    /// <summary>
+    /// An implementation of <see cref="DbSpatialServices"/> to provide support for geospatial types when using
+    /// Entity Framework with Microsoft SQL Server.
+    /// </summary>
     [Serializable]
-    internal class SqlSpatialServices : DbSpatialServices
+    public class SqlSpatialServices : DbSpatialServices
     {
         internal static readonly SqlSpatialServices Instance = new SqlSpatialServices();
 
@@ -21,16 +24,16 @@ namespace System.Data.Entity.SqlServer
         [NonSerialized]
         private readonly SqlTypesAssemblyLoader _loader;
 
-        public SqlSpatialServices()
+        internal SqlSpatialServices()
         {
         }
 
-        public SqlSpatialServices(SqlTypesAssemblyLoader loader)
+        internal SqlSpatialServices(SqlTypesAssemblyLoader loader)
         {
             _loader = loader;
         }
 
-        // <inheritdoc />
+        /// <inheritdoc />
         public override bool NativeTypesAvailable
         {
             get { return (_loader ?? SqlTypesAssemblyLoader.DefaultInstance).TryGetSqlTypesAssembly() != null; }
@@ -72,11 +75,12 @@ namespace System.Data.Entity.SqlServer
             return services != null;
         }
 
-        public SqlTypesAssembly SqlTypes
+        internal SqlTypesAssembly SqlTypes
         {
             get { return (_loader ?? SqlTypesAssemblyLoader.DefaultInstance).GetSqlTypesAssembly(); }
         }
 
+        /// <inheritdoc />
         public override object CreateProviderValue(DbGeographyWellKnownValue wellKnownValue)
         {
             Check.NotNull(wellKnownValue, "wellKnownValue");
@@ -98,6 +102,7 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
+        /// <inheritdoc />
         public override DbGeography GeographyFromProviderValue(object providerValue)
         {
             Check.NotNull(providerValue, "providerValue");
@@ -146,6 +151,7 @@ namespace System.Data.Entity.SqlServer
             return providerValue;
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeographyWellKnownValue CreateWellKnownValue(DbGeography geographyValue)
         {
@@ -160,9 +166,9 @@ namespace System.Data.Entity.SqlServer
                 () =>
                 (Exception)
                 new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeographyValueNoWkbOrWkt, "geographyValue"),
-                (srid, wkb, wkt) => new DbGeographyWellKnownValue
+                (coordinateSystemId, wkb, wkt) => new DbGeographyWellKnownValue
                                         {
-                                            CoordinateSystemId = srid,
+                                            CoordinateSystemId = coordinateSystemId,
                                             WellKnownBinary = wkb,
                                             WellKnownText = wkt
                                         });
@@ -170,6 +176,7 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
+        /// <inheritdoc />
         public override object CreateProviderValue(DbGeometryWellKnownValue wellKnownValue)
         {
             Check.NotNull(wellKnownValue, "wellKnownValue");
@@ -191,6 +198,7 @@ namespace System.Data.Entity.SqlServer
             return result;
         }
 
+        /// <inheritdoc />
         public override DbGeometry GeometryFromProviderValue(object providerValue)
         {
             Check.NotNull(providerValue, "providerValue");
@@ -199,6 +207,7 @@ namespace System.Data.Entity.SqlServer
             return SqlTypes.IsSqlGeometryNull(normalizedProviderValue) ? null : CreateGeometry(this, normalizedProviderValue);
         }
 
+        /// <inheritdoc />
         [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly")]
         public override DbGeometryWellKnownValue CreateWellKnownValue(DbGeometry geometryValue)
         {
@@ -212,9 +221,9 @@ namespace System.Data.Entity.SqlServer
                 (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoSrid, "geometryValue"),
                 () =>
                 (Exception)new ArgumentException(Strings.SqlSpatialservices_CouldNotCreateWellKnownGeometryValueNoWkbOrWkt, "geometryValue"),
-                (srid, wkb, wkt) => new DbGeometryWellKnownValue
+                (coordinateSystemId, wkb, wkt) => new DbGeometryWellKnownValue
                                         {
-                                            CoordinateSystemId = srid,
+                                            CoordinateSystemId = coordinateSystemId,
                                             WellKnownBinary = wkb,
                                             WellKnownText = wkt
                                         });
@@ -223,33 +232,34 @@ namespace System.Data.Entity.SqlServer
         }
 
         private static TValue CreateWellKnownValue<TValue>(
-            IDbSpatialValue spatialValue, Func<Exception> onMissingSrid, Func<Exception> onMissingWkbAndWkt,
+            IDbSpatialValue spatialValue, Func<Exception> onMissingcoordinateSystemId, Func<Exception> onMissingWkbAndWkt,
             Func<int, byte[], string, TValue> onValidValue)
         {
-            var srid = spatialValue.CoordinateSystemId;
+            var coordinateSystemId = spatialValue.CoordinateSystemId;
 
-            if (!srid.HasValue)
+            if (!coordinateSystemId.HasValue)
             {
-                throw onMissingSrid();
+                throw onMissingcoordinateSystemId();
             }
 
             var wkt = spatialValue.WellKnownText;
             if (wkt != null)
             {
-                return onValidValue(srid.Value, null, wkt);
+                return onValidValue(coordinateSystemId.Value, null, wkt);
             }
             else
             {
                 var wkb = spatialValue.WellKnownBinary;
                 if (wkb != null)
                 {
-                    return onValidValue(srid.Value, wkb, null);
+                    return onValidValue(coordinateSystemId.Value, wkb, null);
                 }
             }
 
             throw onMissingWkbAndWkt();
         }
 
+        /// <inheritdoc />
         public override string AsTextIncludingElevationAndMeasure(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -257,6 +267,7 @@ namespace System.Data.Entity.SqlServer
             return SqlTypes.GeographyAsTextZM(geographyValue);
         }
 
+        /// <inheritdoc />
         public override string AsTextIncludingElevationAndMeasure(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -380,146 +391,167 @@ namespace System.Data.Entity.SqlServer
             return SqlTypes.SqlXmlToString(sqlXmlValue);
         }
 
-        public override DbGeography GeographyFromText(string geographyText)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromText(string wellKnownText)
         {
-            var sqlGeographyText = ConvertToSqlString(geographyText, "geographyText");
-            var result = SqlTypes.SmiSqlGeographyParse.Value.Invoke(null, new[] { sqlGeographyText });
+            var sqlwellKnownText = ConvertToSqlString(wellKnownText, "wellKnownText");
+            var result = SqlTypes.SmiSqlGeographyParse.Value.Invoke(null, new[] { sqlwellKnownText });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyFromText(string geographyText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromText(string wellKnownText, int coordinateSystemId)
         {
-            var sqlGeographyText = ConvertToSqlChars(geographyText, "geographyText");
-            var result = SqlTypes.SmiSqlGeographyStGeomFromText.Value.Invoke(null, new[] { sqlGeographyText, srid });
+            var sqlwellKnownText = ConvertToSqlChars(wellKnownText, "wellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStGeomFromText.Value.Invoke(null, new[] { sqlwellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyPointFromText(string pointText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyPointFromText(string pointWellKnownText, int coordinateSystemId)
         {
-            var sqlPointText = ConvertToSqlChars(pointText, "pointText");
-            var result = SqlTypes.SmiSqlGeographyStPointFromText.Value.Invoke(null, new[] { sqlPointText, srid });
+            var sqlpointWellKnownText = ConvertToSqlChars(pointWellKnownText, "pointWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStPointFromText.Value.Invoke(null, new[] { sqlpointWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyLineFromText(string lineText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyLineFromText(string lineWellKnownText, int coordinateSystemId)
         {
-            var sqlLineText = ConvertToSqlChars(lineText, "lineText");
-            var result = SqlTypes.SmiSqlGeographyStLineFromText.Value.Invoke(null, new[] { sqlLineText, srid });
+            var sqllineWellKnownText = ConvertToSqlChars(lineWellKnownText, "lineWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStLineFromText.Value.Invoke(null, new[] { sqllineWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyPolygonFromText(string polygonText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyPolygonFromText(string polygonWellKnownText, int coordinateSystemId)
         {
-            var sqlPolygonText = ConvertToSqlChars(polygonText, "polygonText");
-            var result = SqlTypes.SmiSqlGeographyStPolyFromText.Value.Invoke(null, new[] { sqlPolygonText, srid });
+            var sqlpolygonWellKnownText = ConvertToSqlChars(polygonWellKnownText, "polygonWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStPolyFromText.Value.Invoke(null, new[] { sqlpolygonWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiPointFromText(string multiPointText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiPointFromText(string multiPointWellKnownText, int coordinateSystemId)
         {
-            var sqlMultiPointText = ConvertToSqlChars(multiPointText, "multiPointText");
-            var result = SqlTypes.SmiSqlGeographyStmPointFromText.Value.Invoke(null, new[] { sqlMultiPointText, srid });
+            var sqlmultiPointWellKnownText = ConvertToSqlChars(multiPointWellKnownText, "multiPointWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStmPointFromText.Value.Invoke(null, new[] { sqlmultiPointWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiLineFromText(string multiLineText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiLineFromText(string multiLineWellKnownText, int coordinateSystemId)
         {
-            var sqlMultiLineText = ConvertToSqlChars(multiLineText, "multiLineText");
-            var result = SqlTypes.SmiSqlGeographyStmLineFromText.Value.Invoke(null, new[] { sqlMultiLineText, srid });
+            var sqlmultiLineWellKnownText = ConvertToSqlChars(multiLineWellKnownText, "multiLineWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStmLineFromText.Value.Invoke(null, new[] { sqlmultiLineWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiPolygonFromText(string multiPolygonText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiPolygonFromText(string multiPolygonKnownText, int coordinateSystemId)
         {
-            var sqlMultiPolygonText = ConvertToSqlChars(multiPolygonText, "multiPolygonText");
-            var result = SqlTypes.SmiSqlGeographyStmPolyFromText.Value.Invoke(null, new[] { sqlMultiPolygonText, srid });
+            var sqlmultiPolygonKnownText = ConvertToSqlChars(multiPolygonKnownText, "multiPolygonWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStmPolyFromText.Value.Invoke(null, new[] { sqlmultiPolygonKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyCollectionFromText(string geographyCollectionText, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyCollectionFromText(string geographyCollectionWellKnownText, int coordinateSystemId)
         {
-            var sqlGeographyCollectionText = ConvertToSqlChars(geographyCollectionText, "geographyCollectionText");
-            var result = SqlTypes.SmiSqlGeographyStGeomCollFromText.Value.Invoke(null, new[] { sqlGeographyCollectionText, srid });
+            var sqlgeographyCollectionWellKnownText = ConvertToSqlChars(geographyCollectionWellKnownText, "geographyCollectionWellKnownText");
+            var result = SqlTypes.SmiSqlGeographyStGeomCollFromText.Value.Invoke(null, new[] { sqlgeographyCollectionWellKnownText, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyFromBinary(byte[] geographyBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromBinary(byte[] wellKnownBinary, int coordinateSystemId)
         {
-            var sqlGeographyBytes = ConvertToSqlBytes(geographyBytes, "geographyBytes");
-            var result = SqlTypes.SmiSqlGeographyStGeomFromWkb.Value.Invoke(null, new[] { sqlGeographyBytes, srid });
+            var sqlwellKnownBinary = ConvertToSqlBytes(wellKnownBinary, "wellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStGeomFromWkb.Value.Invoke(null, new[] { sqlwellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyFromBinary(byte[] geographyBytes)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromBinary(byte[] wellKnownBinary)
         {
-            var sqlGeographyBytes = ConvertToSqlBytes(geographyBytes, "geographyBytes");
-            var result = SqlTypes.SmiSqlGeographyStGeomFromWkb.Value.Invoke(null, new[] { sqlGeographyBytes, 4326 });
+            var sqlwellKnownBinary = ConvertToSqlBytes(wellKnownBinary, "wellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStGeomFromWkb.Value.Invoke(null, new[] { sqlwellKnownBinary, 4326 });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyPointFromBinary(byte[] pointBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyPointFromBinary(byte[] pointWellKnownBinary, int coordinateSystemId)
         {
-            var sqlPointBytes = ConvertToSqlBytes(pointBytes, "pointBytes");
-            var result = SqlTypes.SmiSqlGeographyStPointFromWkb.Value.Invoke(null, new[] { sqlPointBytes, srid });
+            var sqlpointWellKnownBinary = ConvertToSqlBytes(pointWellKnownBinary, "pointWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStPointFromWkb.Value.Invoke(null, new[] { sqlpointWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyLineFromBinary(byte[] lineBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyLineFromBinary(byte[] lineWellKnownBinary, int coordinateSystemId)
         {
-            var sqlLineBytes = ConvertToSqlBytes(lineBytes, "lineBytes");
-            var result = SqlTypes.SmiSqlGeographyStLineFromWkb.Value.Invoke(null, new[] { sqlLineBytes, srid });
+            var sqllineWellKnownBinary = ConvertToSqlBytes(lineWellKnownBinary, "lineWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStLineFromWkb.Value.Invoke(null, new[] { sqllineWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyPolygonFromBinary(byte[] polygonBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyPolygonFromBinary(byte[] polygonWellKnownBinary, int coordinateSystemId)
         {
-            var sqlPolygonBytes = ConvertToSqlBytes(polygonBytes, "polygonBytes");
-            var result = SqlTypes.SmiSqlGeographyStPolyFromWkb.Value.Invoke(null, new[] { sqlPolygonBytes, srid });
+            var sqlpolygonWellKnownBinary = ConvertToSqlBytes(polygonWellKnownBinary, "polygonWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStPolyFromWkb.Value.Invoke(null, new[] { sqlpolygonWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiPointFromBinary(byte[] multiPointBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiPointBytes = ConvertToSqlBytes(multiPointBytes, "multiPointBytes");
-            var result = SqlTypes.SmiSqlGeographyStmPointFromWkb.Value.Invoke(null, new[] { sqlMultiPointBytes, srid });
+            var sqlmultiPointWellKnownBinary = ConvertToSqlBytes(multiPointWellKnownBinary, "multiPointWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStmPointFromWkb.Value.Invoke(null, new[] { sqlmultiPointWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiLineFromBinary(byte[] multiLineBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiLineBytes = ConvertToSqlBytes(multiLineBytes, "multiLineBytes");
-            var result = SqlTypes.SmiSqlGeographyStmLineFromWkb.Value.Invoke(null, new[] { sqlMultiLineBytes, srid });
+            var sqlmultiLineWellKnownBinary = ConvertToSqlBytes(multiLineWellKnownBinary, "multiLineWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStmLineFromWkb.Value.Invoke(null, new[] { sqlmultiLineWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyMultiPolygonFromBinary(byte[] multiPolygonBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyMultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiPolygonBytes = ConvertToSqlBytes(multiPolygonBytes, "multiPolygonBytes");
-            var result = SqlTypes.SmiSqlGeographyStmPolyFromWkb.Value.Invoke(null, new[] { sqlMultiPolygonBytes, srid });
+            var sqlmultiPolygonWellKnownBinary = ConvertToSqlBytes(multiPolygonWellKnownBinary, "multiPolygonWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStmPolyFromWkb.Value.Invoke(null, new[] { sqlmultiPolygonWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyCollectionFromBinary(byte[] geographyCollectionBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyCollectionFromBinary(byte[] geographyCollectionWellKnownBinary, int coordinateSystemId)
         {
-            var sqlGeographyCollectionBytes = ConvertToSqlBytes(geographyCollectionBytes, "geographyCollectionBytes");
-            var result = SqlTypes.SmiSqlGeographyStGeomCollFromWkb.Value.Invoke(null, new[] { sqlGeographyCollectionBytes, srid });
+            var sqlgeographyCollectionWellKnownBinary = ConvertToSqlBytes(geographyCollectionWellKnownBinary, "geographyCollectionWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeographyStGeomCollFromWkb.Value.Invoke(null, new[] { sqlgeographyCollectionWellKnownBinary, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyFromGml(string geographyGml)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromGml(string geographyMarkup)
         {
-            var sqlGeographyGml = ConvertToSqlXml(geographyGml, "geographyGml");
-            var result = SqlTypes.SmiSqlGeographyGeomFromGml.Value.Invoke(null, new[] { sqlGeographyGml, 4326 });
+            var sqlgeographyMarkup = ConvertToSqlXml(geographyMarkup, "geographyMarkup");
+            var result = SqlTypes.SmiSqlGeographyGeomFromGml.Value.Invoke(null, new[] { sqlgeographyMarkup, 4326 });
             return GeographyFromProviderValue(result);
         }
 
-        public override DbGeography GeographyFromGml(string geographyGml, int srid)
+        /// <inheritdoc />
+        public override DbGeography GeographyFromGml(string geographyMarkup, int coordinateSystemId)
         {
-            var sqlGeographyGml = ConvertToSqlXml(geographyGml, "geographyGml");
-            var result = SqlTypes.SmiSqlGeographyGeomFromGml.Value.Invoke(null, new[] { sqlGeographyGml, srid });
+            var sqlgeographyMarkup = ConvertToSqlXml(geographyMarkup, "geographyMarkup");
+            var result = SqlTypes.SmiSqlGeographyGeomFromGml.Value.Invoke(null, new[] { sqlgeographyMarkup, coordinateSystemId });
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override int GetCoordinateSystemId(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -529,6 +561,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToInt(result);
         }
 
+        /// <inheritdoc />
         public override string GetSpatialTypeName(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -538,6 +571,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlStringToString(result);
         }
 
+        /// <inheritdoc />
         public override int GetDimension(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -547,6 +581,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToInt(result);
         }
 
+        /// <inheritdoc />
         public override byte[] AsBinary(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -556,6 +591,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBytesToBinary(result);
         }
 
+        /// <inheritdoc />
         public override string AsGml(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -565,6 +601,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlXmlToString(result);
         }
 
+        /// <inheritdoc />
         public override string AsText(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -574,6 +611,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlCharsToString(result);
         }
 
+        /// <inheritdoc />
         public override bool GetIsEmpty(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -583,6 +621,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool SpatialEquals(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -593,6 +632,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Disjoint(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -603,6 +643,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Intersects(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -613,6 +654,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography Buffer(DbGeography geographyValue, double distance)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -622,6 +664,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double Distance(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -632,6 +675,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToDouble(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography Intersection(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -642,6 +686,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography Union(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -652,6 +697,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography Difference(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -662,6 +708,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography SymmetricDifference(DbGeography geographyValue, DbGeography otherGeography)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -672,6 +719,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override int? GetElementCount(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -681,15 +729,17 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToNullableInt(result);
         }
 
-        public override DbGeography ElementAt(DbGeography geographyValue, int nValue)
+        /// <inheritdoc />
+        public override DbGeography ElementAt(DbGeography geographyValue, int index)
         {
             Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            var result = SqlTypes.ImiSqlGeographyStGeometryN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
+            var result = SqlTypes.ImiSqlGeographyStGeometryN.Value.Invoke(sqlGeographyValue, new object[] { index });
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double? GetLatitude(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -699,6 +749,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetLongitude(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -708,6 +759,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetElevation(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -717,6 +769,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetMeasure(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -726,6 +779,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetLength(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -735,6 +789,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography GetStartPoint(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -744,6 +799,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeography GetEndPoint(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -753,6 +809,7 @@ namespace System.Data.Entity.SqlServer
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override bool? GetIsClosed(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -762,6 +819,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
+        /// <inheritdoc />
         public override int? GetPointCount(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -771,15 +829,17 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToNullableInt(result);
         }
 
-        public override DbGeography PointAt(DbGeography geographyValue, int nValue)
+        /// <inheritdoc />
+        public override DbGeography PointAt(DbGeography geographyValue, int index)
         {
             Check.NotNull(geographyValue, "geographyValue");
 
             var sqlGeographyValue = ConvertToSqlValue(geographyValue, "geographyValue");
-            var result = SqlTypes.ImiSqlGeographyStPointN.Value.Invoke(sqlGeographyValue, new object[] { nValue });
+            var result = SqlTypes.ImiSqlGeographyStPointN.Value.Invoke(sqlGeographyValue, new object[] { index });
             return GeographyFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double? GetArea(DbGeography geographyValue)
         {
             Check.NotNull(geographyValue, "geographyValue");
@@ -789,146 +849,167 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
-        public override DbGeometry GeometryFromText(string geometryText)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromText(string wellKnownText)
         {
-            var sqlGeometryText = ConvertToSqlString(geometryText, "geometryText");
-            var result = SqlTypes.SmiSqlGeometryParse.Value.Invoke(null, new[] { sqlGeometryText });
+            var sqlwellKnownText = ConvertToSqlString(wellKnownText, "wellKnownText");
+            var result = SqlTypes.SmiSqlGeometryParse.Value.Invoke(null, new[] { sqlwellKnownText });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryFromText(string geometryText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromText(string wellKnownText, int coordinateSystemId)
         {
-            var sqlGeometryText = ConvertToSqlChars(geometryText, "geometryText");
-            var result = SqlTypes.SmiSqlGeometryStGeomFromText.Value.Invoke(null, new[] { sqlGeometryText, srid });
+            var sqlwellKnownText = ConvertToSqlChars(wellKnownText, "wellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStGeomFromText.Value.Invoke(null, new[] { sqlwellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryPointFromText(string pointText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryPointFromText(string pointWellKnownText, int coordinateSystemId)
         {
-            var sqlPointText = ConvertToSqlChars(pointText, "pointText");
-            var result = SqlTypes.SmiSqlGeometryStPointFromText.Value.Invoke(null, new[] { sqlPointText, srid });
+            var sqlpointWellKnownText = ConvertToSqlChars(pointWellKnownText, "pointWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStPointFromText.Value.Invoke(null, new[] { sqlpointWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryLineFromText(string lineText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryLineFromText(string lineWellKnownText, int coordinateSystemId)
         {
-            var sqlLineText = ConvertToSqlChars(lineText, "lineText");
-            var result = SqlTypes.SmiSqlGeometryStLineFromText.Value.Invoke(null, new[] { sqlLineText, srid });
+            var sqllineWellKnownText = ConvertToSqlChars(lineWellKnownText, "lineWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStLineFromText.Value.Invoke(null, new[] { sqllineWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryPolygonFromText(string polygonText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryPolygonFromText(string polygonWellKnownText, int coordinateSystemId)
         {
-            var sqlPolygonText = ConvertToSqlChars(polygonText, "polygonText");
-            var result = SqlTypes.SmiSqlGeometryStPolyFromText.Value.Invoke(null, new[] { sqlPolygonText, srid });
+            var sqlpolygonWellKnownText = ConvertToSqlChars(polygonWellKnownText, "polygonWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStPolyFromText.Value.Invoke(null, new[] { sqlpolygonWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiPointFromText(string multiPointText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiPointFromText(string multiPointWellKnownText, int coordinateSystemId)
         {
-            var sqlMultiPointText = ConvertToSqlChars(multiPointText, "multiPointText");
-            var result = SqlTypes.SmiSqlGeometryStmPointFromText.Value.Invoke(null, new[] { sqlMultiPointText, srid });
+            var sqlmultiPointWellKnownText = ConvertToSqlChars(multiPointWellKnownText, "multiPointWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStmPointFromText.Value.Invoke(null, new[] { sqlmultiPointWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiLineFromText(string multiLineText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiLineFromText(string multiLineWellKnownText, int coordinateSystemId)
         {
-            var sqlMultiLineText = ConvertToSqlChars(multiLineText, "multiLineText");
-            var result = SqlTypes.SmiSqlGeometryStmLineFromText.Value.Invoke(null, new[] { sqlMultiLineText, srid });
+            var sqlmultiLineWellKnownText = ConvertToSqlChars(multiLineWellKnownText, "multiLineWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStmLineFromText.Value.Invoke(null, new[] { sqlmultiLineWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiPolygonFromText(string multiPolygonText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiPolygonFromText(string multiPolygonKnownText, int coordinateSystemId)
         {
-            var sqlMultiPolygonText = ConvertToSqlChars(multiPolygonText, "multiPolygonText");
-            var result = SqlTypes.SmiSqlGeometryStmPolyFromText.Value.Invoke(null, new[] { sqlMultiPolygonText, srid });
+            var sqlmultiPolygonKnownText = ConvertToSqlChars(multiPolygonKnownText, "multiPolygonKnownText");
+            var result = SqlTypes.SmiSqlGeometryStmPolyFromText.Value.Invoke(null, new[] { sqlmultiPolygonKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryCollectionFromText(string geometryCollectionText, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryCollectionFromText(string geometryCollectionWellKnownText, int coordinateSystemId)
         {
-            var sqlGeometryCollectionText = ConvertToSqlChars(geometryCollectionText, "geometryCollectionText");
-            var result = SqlTypes.SmiSqlGeometryStGeomCollFromText.Value.Invoke(null, new[] { sqlGeometryCollectionText, srid });
+            var sqlgeometryCollectionWellKnownText = ConvertToSqlChars(geometryCollectionWellKnownText, "geometryCollectionWellKnownText");
+            var result = SqlTypes.SmiSqlGeometryStGeomCollFromText.Value.Invoke(null, new[] { sqlgeometryCollectionWellKnownText, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryFromBinary(byte[] geometryBytes)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromBinary(byte[] wellKnownBinary)
         {
-            var sqlGeometryBytes = ConvertToSqlBytes(geometryBytes, "geometryBytes");
-            var result = SqlTypes.SmiSqlGeometryStGeomFromWkb.Value.Invoke(null, new[] { sqlGeometryBytes, 0 });
+            var sqlwellKnownBinary = ConvertToSqlBytes(wellKnownBinary, "wellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStGeomFromWkb.Value.Invoke(null, new[] { sqlwellKnownBinary, 0 });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryFromBinary(byte[] geometryBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromBinary(byte[] wellKnownBinary, int coordinateSystemId)
         {
-            var sqlGeometryBytes = ConvertToSqlBytes(geometryBytes, "geometryBytes");
-            var result = SqlTypes.SmiSqlGeometryStGeomFromWkb.Value.Invoke(null, new[] { sqlGeometryBytes, srid });
+            var sqlwellKnownBinary = ConvertToSqlBytes(wellKnownBinary, "wellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStGeomFromWkb.Value.Invoke(null, new[] { sqlwellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryPointFromBinary(byte[] pointBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryPointFromBinary(byte[] pointWellKnownBinary, int coordinateSystemId)
         {
-            var sqlPointBytes = ConvertToSqlBytes(pointBytes, "pointBytes");
-            var result = SqlTypes.SmiSqlGeometryStPointFromWkb.Value.Invoke(null, new[] { sqlPointBytes, srid });
+            var sqlpointWellKnownBinary = ConvertToSqlBytes(pointWellKnownBinary, "pointWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStPointFromWkb.Value.Invoke(null, new[] { sqlpointWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryLineFromBinary(byte[] lineBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryLineFromBinary(byte[] lineWellKnownBinary, int coordinateSystemId)
         {
-            var sqlLineBytes = ConvertToSqlBytes(lineBytes, "lineBytes");
-            var result = SqlTypes.SmiSqlGeometryStLineFromWkb.Value.Invoke(null, new[] { sqlLineBytes, srid });
+            var sqllineWellKnownBinary = ConvertToSqlBytes(lineWellKnownBinary, "lineWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStLineFromWkb.Value.Invoke(null, new[] { sqllineWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryPolygonFromBinary(byte[] polygonBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryPolygonFromBinary(byte[] polygonWellKnownBinary, int coordinateSystemId)
         {
-            var sqlPolygonBytes = ConvertToSqlBytes(polygonBytes, "polygonBytes");
-            var result = SqlTypes.SmiSqlGeometryStPolyFromWkb.Value.Invoke(null, new[] { sqlPolygonBytes, srid });
+            var sqlpolygonWellKnownBinary = ConvertToSqlBytes(polygonWellKnownBinary, "polygonWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStPolyFromWkb.Value.Invoke(null, new[] { sqlpolygonWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiPointFromBinary(byte[] multiPointBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiPointFromBinary(byte[] multiPointWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiPointBytes = ConvertToSqlBytes(multiPointBytes, "multiPointBytes");
-            var result = SqlTypes.SmiSqlGeometryStmPointFromWkb.Value.Invoke(null, new[] { sqlMultiPointBytes, srid });
+            var sqlmultiPointWellKnownBinary = ConvertToSqlBytes(multiPointWellKnownBinary, "multiPointWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStmPointFromWkb.Value.Invoke(null, new[] { sqlmultiPointWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiLineFromBinary(byte[] multiLineBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiLineFromBinary(byte[] multiLineWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiLineBytes = ConvertToSqlBytes(multiLineBytes, "multiLineBytes");
-            var result = SqlTypes.SmiSqlGeometryStmLineFromWkb.Value.Invoke(null, new[] { sqlMultiLineBytes, srid });
+            var sqlmultiLineWellKnownBinary = ConvertToSqlBytes(multiLineWellKnownBinary, "multiLineWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStmLineFromWkb.Value.Invoke(null, new[] { sqlmultiLineWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryMultiPolygonFromBinary(byte[] multiPolygonBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryMultiPolygonFromBinary(byte[] multiPolygonWellKnownBinary, int coordinateSystemId)
         {
-            var sqlMultiPolygonBytes = ConvertToSqlBytes(multiPolygonBytes, "multiPolygonBytes");
-            var result = SqlTypes.SmiSqlGeometryStmPolyFromWkb.Value.Invoke(null, new[] { sqlMultiPolygonBytes, srid });
+            var sqlmultiPolygonWellKnownBinary = ConvertToSqlBytes(multiPolygonWellKnownBinary, "multiPolygonWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStmPolyFromWkb.Value.Invoke(null, new[] { sqlmultiPolygonWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryCollectionFromBinary(byte[] geometryCollectionBytes, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryCollectionFromBinary(byte[] geometryCollectionWellKnownBinary, int coordinateSystemId)
         {
-            var sqlGeometryCollectionBytes = ConvertToSqlBytes(geometryCollectionBytes, "geometryCollectionBytes");
-            var result = SqlTypes.SmiSqlGeometryStGeomCollFromWkb.Value.Invoke(null, new[] { sqlGeometryCollectionBytes, srid });
+            var sqlgeometryCollectionWellKnownBinary = ConvertToSqlBytes(geometryCollectionWellKnownBinary, "geometryCollectionWellKnownBinary");
+            var result = SqlTypes.SmiSqlGeometryStGeomCollFromWkb.Value.Invoke(null, new[] { sqlgeometryCollectionWellKnownBinary, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryFromGml(string geometryGml)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromGml(string geometryMarkup)
         {
-            var sqlGeometryGml = ConvertToSqlXml(geometryGml, "geometryGml");
-            var result = SqlTypes.SmiSqlGeometryGeomFromGml.Value.Invoke(null, new[] { sqlGeometryGml, 0 });
+            var sqlgeometryMarkup = ConvertToSqlXml(geometryMarkup, "geometryMarkup");
+            var result = SqlTypes.SmiSqlGeometryGeomFromGml.Value.Invoke(null, new[] { sqlgeometryMarkup, 0 });
             return GeometryFromProviderValue(result);
         }
 
-        public override DbGeometry GeometryFromGml(string geometryGml, int srid)
+        /// <inheritdoc />
+        public override DbGeometry GeometryFromGml(string geometryMarkup, int coordinateSystemId)
         {
-            var sqlGeometryGml = ConvertToSqlXml(geometryGml, "geometryGml");
-            var result = SqlTypes.SmiSqlGeometryGeomFromGml.Value.Invoke(null, new[] { sqlGeometryGml, srid });
+            var sqlgeometryMarkup = ConvertToSqlXml(geometryMarkup, "geometryMarkup");
+            var result = SqlTypes.SmiSqlGeometryGeomFromGml.Value.Invoke(null, new[] { sqlgeometryMarkup, coordinateSystemId });
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override int GetCoordinateSystemId(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -938,6 +1019,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToInt(result);
         }
 
+        /// <inheritdoc />
         public override string GetSpatialTypeName(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -947,6 +1029,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlStringToString(result);
         }
 
+        /// <inheritdoc />
         public override int GetDimension(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -956,6 +1039,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToInt(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetEnvelope(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -965,6 +1049,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override byte[] AsBinary(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -974,6 +1059,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBytesToBinary(result);
         }
 
+        /// <inheritdoc />
         public override string AsGml(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -983,6 +1069,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlXmlToString(result);
         }
 
+        /// <inheritdoc />
         public override string AsText(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -991,6 +1078,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlCharsToString(result);
         }
 
+        /// <inheritdoc />
         public override bool GetIsEmpty(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1000,6 +1088,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool GetIsSimple(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1009,6 +1098,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetBoundary(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1017,6 +1107,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override bool GetIsValid(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1026,6 +1117,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool SpatialEquals(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1036,6 +1128,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Disjoint(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1046,6 +1139,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Intersects(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1056,6 +1150,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Touches(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1066,6 +1161,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Crosses(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1076,6 +1172,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Within(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1086,6 +1183,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Contains(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1096,6 +1194,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Overlaps(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1105,6 +1204,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool Relate(DbGeometry geometryValue, DbGeometry otherGeometry, string matrix)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1115,6 +1215,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToBoolean(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry Buffer(DbGeometry geometryValue, double distance)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1124,6 +1225,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double Distance(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1134,6 +1236,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToDouble(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetConvexHull(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1143,6 +1246,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry Intersection(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1153,6 +1257,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry Union(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1163,6 +1268,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry Difference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1173,6 +1279,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry SymmetricDifference(DbGeometry geometryValue, DbGeometry otherGeometry)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1183,6 +1290,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override int? GetElementCount(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1192,15 +1300,17 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToNullableInt(result);
         }
 
-        public override DbGeometry ElementAt(DbGeometry geometryValue, int nValue)
+        /// <inheritdoc />
+        public override DbGeometry ElementAt(DbGeometry geometryValue, int index)
         {
             Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            var result = SqlTypes.ImiSqlGeometryStGeometryN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
+            var result = SqlTypes.ImiSqlGeometryStGeometryN.Value.Invoke(sqlGeometryValue, new object[] { index });
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double? GetXCoordinate(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1210,6 +1320,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetYCoordinate(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1219,6 +1330,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetElevation(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1228,6 +1340,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetMeasure(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1237,6 +1350,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override double? GetLength(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1246,6 +1360,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetStartPoint(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1255,6 +1370,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetEndPoint(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1264,6 +1380,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override bool? GetIsClosed(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1273,6 +1390,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
+        /// <inheritdoc />
         public override bool? GetIsRing(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1282,6 +1400,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlBooleanToNullableBoolean(result);
         }
 
+        /// <inheritdoc />
         public override int? GetPointCount(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1291,15 +1410,17 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToNullableInt(result);
         }
 
-        public override DbGeometry PointAt(DbGeometry geometryValue, int nValue)
+        /// <inheritdoc />
+        public override DbGeometry PointAt(DbGeometry geometryValue, int index)
         {
             Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            var result = SqlTypes.ImiSqlGeometryStPointN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
+            var result = SqlTypes.ImiSqlGeometryStPointN.Value.Invoke(sqlGeometryValue, new object[] { index });
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override double? GetArea(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1309,6 +1430,7 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlDoubleToNullableDouble(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetCentroid(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1318,6 +1440,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetPointOnSurface(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1327,6 +1450,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override DbGeometry GetExteriorRing(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1336,6 +1460,7 @@ namespace System.Data.Entity.SqlServer
             return GeometryFromProviderValue(result);
         }
 
+        /// <inheritdoc />
         public override int? GetInteriorRingCount(DbGeometry geometryValue)
         {
             Check.NotNull(geometryValue, "geometryValue");
@@ -1345,12 +1470,13 @@ namespace System.Data.Entity.SqlServer
             return ConvertSqlInt32ToNullableInt(result);
         }
 
-        public override DbGeometry InteriorRingAt(DbGeometry geometryValue, int nValue)
+        /// <inheritdoc />
+        public override DbGeometry InteriorRingAt(DbGeometry geometryValue, int index)
         {
             Check.NotNull(geometryValue, "geometryValue");
 
             var sqlGeometryValue = ConvertToSqlValue(geometryValue, "geometryValue");
-            var result = SqlTypes.ImiSqlGeometryStInteriorRingN.Value.Invoke(sqlGeometryValue, new object[] { nValue });
+            var result = SqlTypes.ImiSqlGeometryStInteriorRingN.Value.Invoke(sqlGeometryValue, new object[] { index });
             return GeometryFromProviderValue(result);
         }
     }

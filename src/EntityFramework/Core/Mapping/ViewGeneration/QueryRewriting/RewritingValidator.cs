@@ -296,7 +296,7 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.Validation
             // We want the possible values for joinSlot.MemberPath which is a
             // C-side element -- so we use the queryDomainMap
             var possibleValues = memberMaps.QueryDomainMap.GetDomain(joinSlot.MemberPath);
-            // Note: the values in constaints can be null or not null as
+            // Note: the values in constraints can be null or not null as
             // well (i.e., just not scalarConstants)
             var allowedValues = new Set<Constant>(Constant.EqualityComparer);
             if (negatedConstant != null)

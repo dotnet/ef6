@@ -547,11 +547,6 @@ namespace System.Data.Entity.Core.Mapping
 
         public int GetHashCode(InputForComputingCellGroups value)
         {
-            if (value == null)
-            {
-                return 0;
-            }
-
             return value.GetHashCode();
         }
 

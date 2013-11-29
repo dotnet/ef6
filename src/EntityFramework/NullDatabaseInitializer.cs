@@ -17,7 +17,7 @@ namespace System.Data.Entity
         where TContext : DbContext
     {
         /// <inheritdoc />
-        public void InitializeDatabase(TContext context)
+        public virtual void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
         }

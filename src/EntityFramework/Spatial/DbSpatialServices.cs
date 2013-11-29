@@ -372,13 +372,13 @@ namespace System.Data.Entity.Spatial
         /// <returns>
         /// A new <see cref="T:System.Data.Entity.Spatial.DbGeography" /> multi polygon value.
         /// </returns>
-        /// <param name="multiPolygonWellKnownText">The well-known text value.</param>
+        /// <param name="multiPolygonKnownText">The well-known text value.</param>
         /// <param name="coordinateSystemId">The coordinate system identifier.</param>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi",
             Justification = "Match OGC, EDM")]
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "multi",
             Justification = "Match OGC, EDM")]
-        public abstract DbGeography GeographyMultiPolygonFromText(string multiPolygonWellKnownText, int coordinateSystemId);
+        public abstract DbGeography GeographyMultiPolygonFromText(string multiPolygonKnownText, int coordinateSystemId);
 
         /// <summary>
         /// Creates a new <see cref="T:System.Data.Entity.Spatial.DbGeography" /> collection value based on the specified well-known text value and coordinate system identifier (SRID).

@@ -738,6 +738,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                         for (var i = 0; i < constraint.FromProperties.Count; ++i)
                         {
                             EntityEntry.AddOrIncreaseCounter(
+                                constraint,
                                 properties,
                                 constraint.ToProperties[i].Name,
                                 retrievedProperties[constraint.FromProperties[i].Name].Key);

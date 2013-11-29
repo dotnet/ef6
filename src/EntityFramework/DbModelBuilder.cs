@@ -251,7 +251,7 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Begins configuration of a lightweight convention that applies to all entities in
+        /// Begins configuration of a lightweight convention that applies to all entities and complex types in
         /// the model.
         /// </summary>
         /// <returns> A configuration object for the convention. </returns>
@@ -261,11 +261,11 @@ namespace System.Data.Entity
         }
 
         /// <summary>
-        /// Begins configuration of a lightweight convention that applies to all entities of
-        /// the specified type in the model. This method does not register entity types as
-        /// part of the model.
+        /// Begins configuration of a lightweight convention that applies to all entities and complex types
+        /// in the model that inherit from or implement the type specified by the generic argument.
+        /// This method does not register types as part of the model.
         /// </summary>
-        /// <typeparam name="T"> The type of the entities that this convention will apply to. </typeparam>
+        /// <typeparam name="T"> The type of the entities or complex types that this convention will apply to. </typeparam>
         /// <returns> A configuration object for the convention. </returns>
         public TypeConventionConfiguration<T> Types<T>()
             where T : class

@@ -277,7 +277,22 @@ namespace System.Data.Entity
         /// Saves all changes made in this context to the underlying database.
         /// </summary>
         /// <returns> The number of objects written to the underlying database. </returns>
-        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <exception cref="DbUpdateException">An error occurred sending updates to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">
+        /// A database command did not affect the expected number of rows. This usually indicates an optimistic 
+        /// concurrency violation; that is, a row has been changed in the database since it was queried.
+        /// </exception>
+        /// <exception cref="DbEntityValidationException">
+        /// The save was aborted because validation of entity property values failed.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// An attempt was made to use unsupported behavior such as executing multiple asynchronous commands concurrently
+        /// on the same context instance.</exception>
+        /// <exception cref="ObjectDisposedException">The context or connection have been disposed.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Some error occurred attempting to process entities in the context either before or after sending commands
+        /// to the database.
+        /// </exception>
         public virtual int SaveChanges()
         {
             return InternalContext.SaveChanges();
@@ -296,7 +311,22 @@ namespace System.Data.Entity
         /// A task that represents the asynchronous save operation.
         /// The task result contains the number of objects written to the underlying database.
         /// </returns>
-        /// <exception cref="InvalidOperationException">Thrown if the context has been disposed.</exception>
+        /// <exception cref="DbUpdateException">An error occurred sending updates to the database.</exception>
+        /// <exception cref="DbUpdateConcurrencyException">
+        /// A database command did not affect the expected number of rows. This usually indicates an optimistic 
+        /// concurrency violation; that is, a row has been changed in the database since it was queried.
+        /// </exception>
+        /// <exception cref="DbEntityValidationException">
+        /// The save was aborted because validation of entity property values failed.
+        /// </exception>
+        /// <exception cref="NotSupportedException">
+        /// An attempt was made to use unsupported behavior such as executing multiple asynchronous commands concurrently
+        /// on the same context instance.</exception>
+        /// <exception cref="ObjectDisposedException">The context or connection have been disposed.</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Some error occurred attempting to process entities in the context either before or after sending commands
+        /// to the database.
+        /// </exception>
         public virtual Task<int> SaveChangesAsync()
         {
             return SaveChangesAsync(CancellationToken.None);

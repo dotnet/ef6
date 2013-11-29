@@ -11,7 +11,6 @@ namespace System.Data.Entity.Migrations.Utilities
     /// Provides a way of dispatching specific calls form the PowerShell commands'
     /// AppDomain to the Visual Studio's main AppDomain.
     /// </summary>
-    [CLSCompliant(false)]
     public class DomainDispatcher : MarshalByRefObject
     {
         private readonly PSCmdlet _cmdlet;
@@ -33,6 +32,7 @@ namespace System.Data.Entity.Migrations.Utilities
         /// Initializes a new instance of the <see cref="DomainDispatcher"/> class.
         /// </summary>
         /// <param name="cmdlet">The PowerShell command that is being executed.</param>
+        [CLSCompliant(false)]
         public DomainDispatcher(PSCmdlet cmdlet)
         {
             // Not using Check here because this assembly is very small and without resources

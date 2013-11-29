@@ -39,7 +39,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Automatic migration was not applied because it would result in data loss."
+        // A string like "Automatic migration was not applied because it would result in data loss. Set AutomaticMigrationDataLossAllowed to 'true' on your DbMigrationsConfiguration to allow application of automatic migrations even if they might cause data loss. Alternately, use Update-Database with the '-Force' option, or scaffold an explicit migration."
         // </summary>
         internal static string AutomaticDataLoss
         {
@@ -511,7 +511,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute or the HasKey method to specify an order for composite primary keys."
+        // A string like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys."
         // </summary>
         internal static string ModelGeneration_UnableToDetermineKeyOrder(object p0)
         {
@@ -839,7 +839,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "An error occurred while getting provider information from the database. This can be caused by Entity Framework using an incorrect connection string. Check the inner exceptions for details and ensure that the connection string is correct."
+        // A string like "An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See [fwlink] for information on DbContext and connections. See the inner exception for details of the failure."
         // </summary>
         internal static string FailedToGetProviderInformation
         {
@@ -6351,11 +6351,11 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "An object with the same key already exists in the ObjectStateManager. The ObjectStateManager cannot track multiple objects with the same key."
+        // A string like "Attaching an entity of type '{0}' failed because another entity of the same type already has the same primary key value. This can happen when using the 'Attach' method or setting the state of an entity to 'Unchanged' or 'Modified' if any entities in the graph have conflicting key values. This may be because some entities are new and have not yet received database-generated key values. In this case use the 'Add' method or the 'Added' entity state to track the graph and then set the state of non-new entities to 'Unchanged' or 'Modified' as appropriate."
         // </summary>
-        internal static string ObjectStateManager_ObjectStateManagerContainsThisEntityKey
+        internal static string ObjectStateManager_ObjectStateManagerContainsThisEntityKey(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ObjectStateManager_ObjectStateManagerContainsThisEntityKey); }
+            return EntityRes.GetString(EntityRes.ObjectStateManager_ObjectStateManagerContainsThisEntityKey, p0);
         }
 
         // <summary>
@@ -6367,11 +6367,11 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "AcceptChanges cannot continue because the object's key values conflict with another object in the ObjectStateManager. Make sure that the key values are unique before calling AcceptChanges."
+        // A string like "Saving or accepting changes failed because more than one entity of type '{0}' have the same primary key value. Ensure that explicitly set primary key values are unique. Ensure that database-generated primary keys are configured correctly in the database and in the Entity Framework model. Use the Entity Designer for Database First/Model First configuration. Use the 'HasDatabaseGeneratedOption" fluent API or 'DatabaseGeneratedAttribute' for Code First configuration."
         // </summary>
-        internal static string ObjectStateManager_CannotFixUpKeyToExistingValues
+        internal static string ObjectStateManager_CannotFixUpKeyToExistingValues(object p0)
         {
-            get { return EntityRes.GetString(EntityRes.ObjectStateManager_CannotFixUpKeyToExistingValues); }
+            return EntityRes.GetString(EntityRes.ObjectStateManager_CannotFixUpKeyToExistingValues, p0);
         }
 
         // <summary>
@@ -7271,11 +7271,11 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "A referential integrity constraint violation occurred: The property values that define the referential constraints are not consistent between principal and dependent objects in the relationship."
+        // A string like "A referential integrity constraint violation occurred: The property value(s) of '{0}' on one end of a relationship do not match the property value(s) of '{1}' on the other end."
         // </summary>
-        internal static string RelationshipManager_InconsistentReferentialConstraintProperties
+        internal static string RelationshipManager_InconsistentReferentialConstraintProperties(object p0, object p1)
         {
-            get { return EntityRes.GetString(EntityRes.RelationshipManager_InconsistentReferentialConstraintProperties); }
+            return EntityRes.GetString(EntityRes.RelationshipManager_InconsistentReferentialConstraintProperties, p0, p1);
         }
 
         // <summary>
@@ -12161,9 +12161,9 @@ namespace System.Data.Entity.Resources
         // <summary>
         // A string like "The types of all properties in the Dependent Role of a referential constraint must be the same as the corresponding property types in the Principal Role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint '{4}'."
         // </summary>
-        internal static string TypeMismatchRelationshipConstaint(object p0, object p1, object p2, object p3, object p4)
+        internal static string TypeMismatchRelationshipConstraint(object p0, object p1, object p2, object p3, object p4)
         {
-            return EntityRes.GetString(EntityRes.TypeMismatchRelationshipConstaint, p0, p1, p2, p3, p4);
+            return EntityRes.GetString(EntityRes.TypeMismatchRelationshipConstraint, p0, p1, p2, p3, p4);
         }
 
         // <summary>
@@ -13757,6 +13757,46 @@ namespace System.Data.Entity.Resources
         {
             return EntityRes.GetString(EntityRes.ConfigEventCannotBind, p0, p1);
         }
+
+        // <summary>
+        // A string like "Unable to generate views because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model."
+        // </summary>
+        internal static string ViewGenContainersNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ViewGenContainersNotFound, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Unable to calculate model hash because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model."
+        // </summary>
+        internal static string HashCalcContainersNotFound(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.HashCalcContainersNotFound, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Unable to generate views because the model contained more than one container. Choose the conceptual and store model containers to use by passing their names to the appropriate overload of the GenerateViews method."
+        // </summary>
+        internal static string ViewGenMultipleContainers
+        {
+            get { return EntityRes.GetString(EntityRes.ViewGenMultipleContainers); }
+        }
+
+        // <summary>
+        // A string like "Unable to calculate model hash because the model contained more than one container. Choose the conceptual and store model containers to use by passing their names to the appropriate overload of the ComputeMappingHashValue method."
+        // </summary>
+        internal static string HashCalcMultipleContainers
+        {
+            get { return EntityRes.GetString(EntityRes.HashCalcMultipleContainers); }
+        }
+
+        // <summary>
+        // A string like "Unexpected connection state. When using a wrapping provider ensure that the StateChange event is implemented on the wrapped DbConnection."
+        // </summary>
+        internal static string BadConnectionWrapping
+        {
+            get { return EntityRes.GetString(EntityRes.BadConnectionWrapping); }
+        }
     }
 
     // <summary>
@@ -13766,7 +13806,7 @@ namespace System.Data.Entity.Resources
     internal static class Error
     {
         // <summary>
-        // Migrations.Infrastructure.AutomaticDataLossException with message like "Automatic migration was not applied because it would result in data loss."
+        // Migrations.Infrastructure.AutomaticDataLossException with message like "Automatic migration was not applied because it would result in data loss. Set AutomaticMigrationDataLossAllowed to 'true' on your DbMigrationsConfiguration to allow application of automatic migrations even if they might cause data loss. Alternately, use Update-Database with the '-Force' option, or scaffold an explicit migration."
         // </summary>
         internal static Exception AutomaticDataLoss()
         {
@@ -14094,7 +14134,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // InvalidOperationException with message like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute or the HasKey method to specify an order for composite primary keys."
+        // InvalidOperationException with message like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys."
         // </summary>
         internal static Exception ModelGeneration_UnableToDetermineKeyOrder(object p0)
         {
@@ -15139,14 +15179,6 @@ namespace System.Data.Entity.Resources
         internal static Exception RelatedEnd_OwnerIsNull()
         {
             return new InvalidOperationException(Strings.RelatedEnd_OwnerIsNull);
-        }
-
-        // <summary>
-        // InvalidOperationException with message like "A referential integrity constraint violation occurred: The property values that define the referential constraints are not consistent between principal and dependent objects in the relationship."
-        // </summary>
-        internal static Exception RelationshipManager_InconsistentReferentialConstraintProperties()
-        {
-            return new InvalidOperationException(Strings.RelationshipManager_InconsistentReferentialConstraintProperties);
         }
 
         // <summary>
@@ -16924,7 +16956,7 @@ namespace System.Data.Entity.Resources
         internal const string InvalidFromPropertyInRelationshipConstraint = "InvalidFromPropertyInRelationshipConstraint";
         internal const string InvalidToPropertyInRelationshipConstraint = "InvalidToPropertyInRelationshipConstraint";
         internal const string InvalidPropertyInRelationshipConstraint = "InvalidPropertyInRelationshipConstraint";
-        internal const string TypeMismatchRelationshipConstaint = "TypeMismatchRelationshipConstaint";
+        internal const string TypeMismatchRelationshipConstraint = "TypeMismatchRelationshipConstraint";
         internal const string InvalidMultiplicityFromRoleUpperBoundMustBeOne = "InvalidMultiplicityFromRoleUpperBoundMustBeOne";
         internal const string InvalidMultiplicityFromRoleToPropertyNonNullableV1 = "InvalidMultiplicityFromRoleToPropertyNonNullableV1";
         internal const string InvalidMultiplicityFromRoleToPropertyNonNullableV2 = "InvalidMultiplicityFromRoleToPropertyNonNullableV2";
@@ -17124,6 +17156,11 @@ namespace System.Data.Entity.Resources
         internal const string ConfigEventTypeNotFound = "ConfigEventTypeNotFound";
         internal const string ConfigEventBadMethod = "ConfigEventBadMethod";
         internal const string ConfigEventCannotBind = "ConfigEventCannotBind";
+        internal const string ViewGenContainersNotFound = "ViewGenContainersNotFound";
+        internal const string HashCalcContainersNotFound = "HashCalcContainersNotFound";
+        internal const string ViewGenMultipleContainers = "ViewGenMultipleContainers";
+        internal const string HashCalcMultipleContainers = "HashCalcMultipleContainers";
+        internal const string BadConnectionWrapping = "BadConnectionWrapping";
 
         private static EntityRes loader;
         private readonly ResourceManager resources;

@@ -2293,11 +2293,10 @@ namespace System.Data.Entity.Core.Objects
                         if (principalEntry != null)
                         {
                             var constraint = ((AssociationType)relatedEnd.RelationMetadata).ReferentialConstraints[0];
-                            if (
-                                !RelatedEnd.VerifyRIConstraintsWithRelatedEntry(
+                            if (!RelatedEnd.VerifyRIConstraintsWithRelatedEntry(
                                     constraint, dependentEntry.GetCurrentEntityValue, principalEntry.EntityKey))
                             {
-                                throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
+                                throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                             }
                         }
                     }
@@ -2842,10 +2841,9 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 for (var i = 0; i < constraint.FromProperties.Count; ++i)
                                 {
-                                    if (constraint.FromProperties[i].Name
-                                        == pair.Key)
+                                    if (constraint.FromProperties[i].Name == pair.Key)
                                     {
-                                        AddOrIncreaseCounter(properties, constraint.ToProperties[i].Name, pair.Value);
+                                        AddOrIncreaseCounter(constraint, properties, constraint.ToProperties[i].Name, pair.Value);
                                     }
                                 }
                             }
@@ -2856,8 +2854,12 @@ namespace System.Data.Entity.Core.Objects
         }
 
         internal static void AddOrIncreaseCounter(
-            Dictionary<string, KeyValuePair<object, IntBox>> properties, string propertyName, object propertyValue)
+            ReferentialConstraint constraint,
+            Dictionary<string, KeyValuePair<object, IntBox>> properties,
+            string propertyName, 
+            object propertyValue)
         {
+            DebugCheck.NotNull(constraint);
             DebugCheck.NotNull(properties);
             DebugCheck.NotNull(propertyName);
             DebugCheck.NotNull(propertyValue);
@@ -2865,17 +2867,14 @@ namespace System.Data.Entity.Core.Objects
             if (properties.ContainsKey(propertyName))
             {
                 // If this property already exists in the dictionary, check if value is the same then increase the counter
-
                 var valueCounterPair = properties[propertyName];
 
                 if (!ByValueEqualityComparer.Default.Equals(valueCounterPair.Key, propertyValue))
                 {
-                    throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
+                    throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                 }
-                else
-                {
-                    valueCounterPair.Value.Value = valueCounterPair.Value.Value + 1;
-                }
+
+                valueCounterPair.Value.Value = valueCounterPair.Value.Value + 1;
             }
             else
             {
@@ -2920,14 +2919,12 @@ namespace System.Data.Entity.Core.Objects
                             {
                                 for (var i = 0; i < constraint.FromProperties.Count; ++i)
                                 {
-                                    if (constraint.ToProperties[i].Name
-                                        == pair.Key)
+                                    if (constraint.ToProperties[i].Name == pair.Key)
                                     {
-                                        if (
-                                            !ByValueEqualityComparer.Default.Equals(
-                                                GetCurrentEntityValue(constraint.FromProperties[i].Name), pair.Value))
+                                        if (!ByValueEqualityComparer.Default.Equals(
+                                            GetCurrentEntityValue(constraint.FromProperties[i].Name), pair.Value))
                                         {
-                                            throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
+                                            throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                                         }
                                     }
                                 }

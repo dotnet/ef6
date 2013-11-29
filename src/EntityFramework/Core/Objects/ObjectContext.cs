@@ -618,7 +618,8 @@ namespace System.Data.Entity.Core.Objects
             {
                 if (!ReferenceEquals(existingEntry.Entity, wrappedEntity.Entity))
                 {
-                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey(wrappedEntity.IdentityType.FullName));
                 }
                 else
                 {
@@ -1343,7 +1344,8 @@ namespace System.Data.Entity.Core.Objects
                 else
                 {
                     Debug.Assert(!ReferenceEquals(entry.Entity, wrappedEntity.Entity));
-                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey(wrappedEntity.IdentityType.FullName));
                 }
             }
             else
@@ -1726,8 +1728,10 @@ namespace System.Data.Entity.Core.Objects
 
         private T EnsureContextIsEnlistedInCurrentTransaction<T>(Transaction currentTransaction, Func<T> openConnection, T defaultValue)
         {
-            // The following conditions are no longer valid since Metadata Independence.
-            Debug.Assert(ConnectionState.Open == Connection.State, "Connection must be open.");
+            if (Connection.State != ConnectionState.Open)
+            {
+                throw new InvalidOperationException(Strings.BadConnectionWrapping);
+            }
 
             // IF YOU MODIFIED THIS TABLE YOU MUST UPDATE TESTS IN SaveChangesTransactionTests SUITE ACCORDINGLY AS SOME CASES REFER TO NUMBERS IN THIS TABLE
             //
@@ -3081,7 +3085,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // If AcceptAllChanges throws - let's inform user that changes in database were committed 
                     // and that Context and Database can be in inconsistent state.
-                    throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
+                    throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message), e);
                 }
             }
 
@@ -3113,7 +3117,7 @@ namespace System.Data.Entity.Core.Objects
                 {
                     // If AcceptAllChanges throws - let's inform user that changes in database were committed 
                     // and that Context and Database can be in inconsistent state.
-                    throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message));
+                    throw new InvalidOperationException(Strings.ObjectContext_AcceptAllChangesFailure(e.Message), e);
                 }
             }
 

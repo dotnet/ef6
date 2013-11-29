@@ -287,8 +287,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
             get { return _fromEndMember; }
         }
 
-        /// <summary>Gets a value that indicates whether all related objects have been loaded.</summary>
-        /// <returns>true if the related end contains all the related objects from the database; otherwise, false.</returns>
+        /// <inheritdoc />
         [SoapIgnore]
         [XmlIgnore]
         public bool IsLoaded
@@ -1006,11 +1005,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                     if (IsDependentEndOfReferentialConstraint(checkIdentifying: false))
                     {
                         Debug.Assert(collection.Count == 1, "Dependant should attach to single principal");
-                        if (
-                            !VerifyRIConstraintsWithRelatedEntry(
-                                constraint, ownerEntry.GetCurrentEntityValue, collection[0].ObjectStateEntry.EntityKey))
+                        if (!VerifyRIConstraintsWithRelatedEntry(
+                            constraint, ownerEntry.GetCurrentEntityValue, collection[0].ObjectStateEntry.EntityKey))
                         {
-                            throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
+                            throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                         }
                     }
                     else
@@ -1022,11 +1020,10 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                             {
                                 var targetEntry = stateManager.FindEntityEntry((targetRelatedEnd).WrappedOwner.Entity);
                                 Debug.Assert(targetEntry != null, "Both entities should be attached.");
-                                if (
-                                    !VerifyRIConstraintsWithRelatedEntry(
-                                        constraint, targetEntry.GetCurrentEntityValue, ownerEntry.EntityKey))
+                                if (!VerifyRIConstraintsWithRelatedEntry(
+                                    constraint, targetEntry.GetCurrentEntityValue, ownerEntry.EntityKey))
                                 {
-                                    throw Error.RelationshipManager_InconsistentReferentialConstraintProperties();
+                                    throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                                 }
                             }
                         }
@@ -1989,7 +1986,7 @@ namespace System.Data.Entity.Core.Objects.DataClasses
 
         // Check if related entities contain proper property values 
         // (entities with temporary keys are skipped)
-        internal bool CheckReferentialConstraintProperties(EntityEntry ownerEntry)
+        internal void CheckReferentialConstraintProperties(EntityEntry ownerEntry)
         {
             foreach (var constraint in ((AssociationType)RelationMetadata).ReferentialConstraints)
             {
@@ -1997,18 +1994,17 @@ namespace System.Data.Entity.Core.Objects.DataClasses
                 {
                     if (!CheckReferentialConstraintPrincipalProperty(ownerEntry, constraint))
                     {
-                        return false;
+                        throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                     }
                 }
                 else if (constraint.FromRole == FromEndMember)
                 {
                     if (!CheckReferentialConstraintDependentProperty(ownerEntry, constraint))
                     {
-                        return false;
+                        throw new InvalidOperationException(constraint.BuildConstraintExceptionMessage());
                     }
                 }
             }
-            return true;
         }
 
         internal virtual bool CheckReferentialConstraintPrincipalProperty(EntityEntry ownerEntry, ReferentialConstraint constraint)

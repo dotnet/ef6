@@ -26,7 +26,6 @@ namespace System.Data.Entity.Core.Common
     /// as the argument to the IServiceProvider.GetService method on the provider
     /// factory;
     /// </summary>
-    [CLSCompliant(false)]
     public abstract class DbProviderServices : IDbDependencyResolver
     {
         private readonly Lazy<IDbDependencyResolver> _resolver;

@@ -87,7 +87,6 @@ namespace System.Data.Entity.Core.Objects
         /// <param name="metadataWorkspace">
         /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace" />, which supplies mapping and metadata information.
         /// </param>
-        [CLSCompliant(false)]
         public ObjectStateManager(MetadataWorkspace metadataWorkspace)
         {
             Check.NotNull(metadataWorkspace, "metadataWorkspace");
@@ -151,7 +150,6 @@ namespace System.Data.Entity.Core.Objects
         ///     cref="T:System.Data.Entity.Core.Objects.ObjectStateManager" />
         /// .
         /// </returns>
-        [CLSCompliant(false)]
         public virtual MetadataWorkspace MetadataWorkspace
         {
             get { return _metadataWorkspace; }
@@ -207,7 +205,8 @@ namespace System.Data.Entity.Core.Objects
             var entry = FindEntityEntry(entityKey);
             if (entry != null)
             {
-                throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
+                throw new InvalidOperationException(
+                    Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey(entitySet.ElementType.Name));
             }
 
             // Get a StateManagerTypeMetadata for the entity type.
@@ -331,7 +330,8 @@ namespace System.Data.Entity.Core.Objects
                 if (existingEntry.Entity
                     != wrappedObject.Entity)
                 {
-                    throw new InvalidOperationException(Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey);
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateManager_ObjectStateManagerContainsThisEntityKey(wrappedObject.IdentityType.FullName));
                 }
                 // key does exist but entity is the same, it is being re-added ;
                 // no-op when Add(entity)
@@ -456,7 +456,10 @@ namespace System.Data.Entity.Core.Objects
             Justification = "This method is compiled only when the compilation symbol DEBUG is defined")]
         internal virtual void AssertAllForeignKeyIndexEntriesAreValid()
         {
-            if (_danglingForeignKeys.Count == 0)
+            // These checks are most useful when running the test suite where the number of entities is generally very
+            // small. However, when running a debug build with many entities this code can cause significant perf issues,
+            // so we disable it to avoid the perf issues. See CodePlex 1724.
+            if (GetMaxEntityEntriesForDetectChanges() > 100)
             {
                 return;
             }
@@ -1691,6 +1694,23 @@ namespace System.Data.Entity.Core.Objects
         [Conditional("DEBUG")]
         private void ValidateKeylessEntityStore()
         {
+            // The normal case these days is for all entities to be in the keyless store,
+            // so we do a quick check whether the count of the keyless store is the same as the
+            // count of the other stores and if so we abort the other checks so that running
+            // the debug build is not slowed down too much--see CodePlex 1724
+
+            Dictionary<EntityKey, EntityEntry>[] stores =
+                {
+                    _unchangedEntityStore, _modifiedEntityStore, _addedEntityStore,
+                    _deletedEntityStore
+                };
+
+            if (_keylessEntityStore != null
+                && _keylessEntityStore.Count == stores.Sum(s => s == null ? 0 : s.Count))
+            {
+                return;
+            }
+
             // Future Enhancement : Check each entry in _keylessEntityStore to make sure it has a corresponding entry in one of the other stores.
             if (null != _keylessEntityStore)
             {
@@ -1720,11 +1740,6 @@ namespace System.Data.Entity.Core.Objects
             }
 
             //Check each entry in the other stores to make sure that each non-IEntityWithKey entry is also in _keylessEntityStore
-            Dictionary<EntityKey, EntityEntry>[] stores =
-                {
-                    _unchangedEntityStore, _modifiedEntityStore, _addedEntityStore,
-                    _deletedEntityStore
-                };
             foreach (var store in stores)
             {
                 if (null != store)
@@ -2042,7 +2057,8 @@ namespace System.Data.Entity.Core.Objects
                 if (!existingEntry.IsKeyEntry)
                 {
                     // If the fixed-up key conflicts with an existing entry, we throw.
-                    throw new InvalidOperationException(Strings.ObjectStateManager_CannotFixUpKeyToExistingValues);
+                    throw new InvalidOperationException(
+                        Strings.ObjectStateManager_CannotFixUpKeyToExistingValues(entry.WrappedEntity.IdentityType.FullName));
                 }
                 newKey = existingEntry.EntityKey; // reuse existing reference
             }
@@ -3464,22 +3480,21 @@ namespace System.Data.Entity.Core.Objects
                                 // The related entity is detached or added, these are valid cases 
                                 //   so do not consider their changes in conflict
                                 var relatedEntry = FindEntityEntry(addedEntity.Entity);
-                                if (relatedEntry != null
-                                    &&
-                                    (relatedEntry.State == EntityState.Unchanged ||
-                                     relatedEntry.State == EntityState.Modified))
+                                if (relatedEntry != null 
+                                    && (relatedEntry.State == EntityState.Unchanged
+                                    || relatedEntry.State == EntityState.Modified))
                                 {
                                     var retrievedProperties = new Dictionary<string, KeyValuePair<object, IntBox>>();
                                     relatedEntry.GetOtherKeyProperties(retrievedProperties);
                                     // Merge retrievedProperties into the main list of properties
                                     foreach (var constraint in ((AssociationType)reference.RelationMetadata).ReferentialConstraints)
                                     {
-                                        if (constraint.ToRole
-                                            == reference.FromEndMember)
+                                        if (constraint.ToRole == reference.FromEndMember)
                                         {
                                             for (var i = 0; i < constraint.FromProperties.Count; ++i)
                                             {
                                                 EntityEntry.AddOrIncreaseCounter(
+                                                    constraint,
                                                     properties,
                                                     constraint.ToProperties[i].Name,
                                                     retrievedProperties[constraint.FromProperties[i].Name].Key);

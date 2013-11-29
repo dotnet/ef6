@@ -446,7 +446,7 @@ namespace System.Data.Entity
         /// <returns>
         /// A new <see cref="IQueryable{T}" /> with the defined query path.
         /// </returns>
-        public static IQueryable<T> Include<T>(this IQueryable<T> source, string path) where T : class
+        public static IQueryable<T> Include<T>(this IQueryable<T> source, string path)
         {
             Check.NotNull(source, "source");
             Check.NotEmpty(path, "path");
@@ -576,7 +576,7 @@ namespace System.Data.Entity
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
         public static IQueryable<T> Include<T, TProperty>(
-            this IQueryable<T> source, Expression<Func<T, TProperty>> path) where T : class
+            this IQueryable<T> source, Expression<Func<T, TProperty>> path)
         {
             Check.NotNull(source, "source");
             Check.NotNull(path, "path");

@@ -384,35 +384,9 @@ namespace System.Data.Entity.Core.EntityClient
         }
 
         /// <summary>
-        /// Gets the <see cref="T:System.Data.ConnectionState" /> property of the underlying provider if the
-        /// <see
-        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
-        /// is open. Otherwise, returns
-        /// <see
-        ///     cref="F:System.Data.ConnectionState.Closed" />
-        /// .
+        /// Gets the state of the EntityConnection, which is set up to track the state of the underlying
+        /// database connection that is wrapped by this EntityConnection.
         /// </summary>
-        /// <returns>
-        /// <see cref="F:System.Data.ConnectionState.Open" />, if and only if both the
-        /// <see
-        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
-        /// ’s internal state and the underlying provider's
-        /// <see
-        ///     cref="T:System.Data.ConnectionState" />
-        /// are open. If the
-        /// <see
-        ///     cref="T:System.Data.Entity.Core.EntityClient.EntityConnection" />
-        /// ’s state is open but the provider's
-        /// <see
-        ///     cref="T:System.Data.ConnectionState" />
-        /// is closed, this property returns
-        /// <see
-        ///     cref="F:System.Data.ConnectionState.Broken" />
-        /// . Otherwise, it returns
-        /// <see
-        ///     cref="F:System.Data.ConnectionState.Closed" />
-        /// .
-        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
         public override ConnectionState State
         {
@@ -526,7 +500,6 @@ namespace System.Data.Entity.Core.EntityClient
         /// </returns>
         /// <exception cref="T:System.Data.Entity.Core.MetadataException">The inline connection string contains an invalid Metadata keyword value.</exception>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-        [CLSCompliant(false)]
         public virtual MetadataWorkspace GetMetadataWorkspace()
         {
             if (_metadataWorkspace != null)

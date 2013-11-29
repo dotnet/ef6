@@ -214,9 +214,9 @@ namespace System.Data.Entity.Core.SchemaObjectModel
                                 != _principalRole.RoleProperties[i].Property.Type)
                             {
                                 AddError(
-                                    ErrorCode.TypeMismatchRelationshipConstaint,
+                                    ErrorCode.TypeMismatchRelationshipConstraint,
                                     EdmSchemaErrorSeverity.Error,
-                                    Strings.TypeMismatchRelationshipConstaint(
+                                    Strings.TypeMismatchRelationshipConstraint(
                                         _dependentRole.RoleProperties[i].Name,
                                         _dependentRole.End.Type.Identity,
                                         _principalRole.RoleProperties[i].Name,

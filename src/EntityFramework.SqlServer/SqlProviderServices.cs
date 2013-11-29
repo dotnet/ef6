@@ -44,7 +44,6 @@ namespace System.Data.Entity.SqlServer
     /// services for SQL Server.
     /// </remarks>
     [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
-    [CLSCompliant(false)]
     public sealed class SqlProviderServices : DbProviderServices
     {
         /// <summary>

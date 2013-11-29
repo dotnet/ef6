@@ -13,7 +13,7 @@ namespace System.Data.Entity.Core.Query.PlanCompiler
     internal delegate ColumnMap ColumnMapTranslatorTranslationDelegate(ColumnMap columnMap);
 
     // <summary>
-    // ColumnMapTranslator visits the ColumnMap hiearchy and runs the translation delegate
+    // ColumnMapTranslator visits the ColumnMap hierarchy and runs the translation delegate
     // you specify;  There are some static methods to perform common translations, but you
     // can bring your own translation if you desire.
     // This visitor only creates new ColumnMap objects when necessary; it attempts to

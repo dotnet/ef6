@@ -127,7 +127,7 @@
     <value>InitialCreate</value>
   </data>
   <data name="AutomaticDataLoss" xml:space="preserve">
-    <value>Automatic migration was not applied because it would result in data loss.</value>
+    <value>Automatic migration was not applied because it would result in data loss. Set AutomaticMigrationDataLossAllowed to 'true' on your DbMigrationsConfiguration to allow application of automatic migrations even if they might cause data loss. Alternately, use Update-Database with the '-Force' option, or scaffold an explicit migration.</value>
     <comment>## ExceptionType=Migrations.Infrastructure.AutomaticDataLossException</comment>
   </data>
   <data name="LoggingAutoMigrate" xml:space="preserve">
@@ -345,7 +345,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ModelGeneration_UnableToDetermineKeyOrder" xml:space="preserve">
-    <value>Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute or the HasKey method to specify an order for composite primary keys.</value>
+    <value>Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ForeignKeyAttributeConvention_EmptyKey" xml:space="preserve">
@@ -501,7 +501,7 @@
     <value>Connection to the database failed. The connection string is configured with an invalid LocalDB server name. This may have been set in 'global.asax' by a pre-release version of MVC4. The default connection factory is now set in web.config so the line in 'global.asax' starting with 'Database.DefaultConnectionFactory = ' should be removed. See http://go.microsoft.com/fwlink/?LinkId=243166 for details.</value>
   </data>
   <data name="FailedToGetProviderInformation" xml:space="preserve">
-    <value>An error occurred while getting provider information from the database. This can be caused by Entity Framework using an incorrect connection string. Check the inner exceptions for details and ensure that the connection string is correct.</value>
+    <value>An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See [fwlink] for information on DbContext and connections. See the inner exception for details of the failure.</value>
   </data>
   <data name="DbPropertyEntry_CannotGetCurrentValue" xml:space="preserve">
     <value>Cannot get value for property '{0}' from entity of type '{1}' because the property has no get accessor.</value>
@@ -2643,13 +2643,13 @@
     <value>Objects in a detached state do not exist in the ObjectStateManager.</value>
   </data>
   <data name="ObjectStateManager_ObjectStateManagerContainsThisEntityKey" xml:space="preserve">
-    <value>An object with the same key already exists in the ObjectStateManager. The ObjectStateManager cannot track multiple objects with the same key.</value>
+    <value>Attaching an entity of type '{0}' failed because another entity of the same type already has the same primary key value. This can happen when using the 'Attach' method or setting the state of an entity to 'Unchanged' or 'Modified' if any entities in the graph have conflicting key values. This may be because some entities are new and have not yet received database-generated key values. In this case use the 'Add' method or the 'Added' entity state to track the graph and then set the state of non-new entities to 'Unchanged' or 'Modified' as appropriate.</value>
   </data>
   <data name="ObjectStateManager_DoesnotAllowToReAddUnchangedOrModifiedOrDeletedEntity" xml:space="preserve">
     <value>An object with the same key already exists in the ObjectStateManager. The existing object is in the {0} state. An object can only be added to the ObjectStateManager again if it is in the added state.</value>
   </data>
   <data name="ObjectStateManager_CannotFixUpKeyToExistingValues" xml:space="preserve">
-    <value>AcceptChanges cannot continue because the object's key values conflict with another object in the ObjectStateManager. Make sure that the key values are unique before calling AcceptChanges.</value>
+    <value>Saving or accepting changes failed because more than one entity of type '{0}' have the same primary key value. Ensure that explicitly set primary key values are unique. Ensure that database-generated primary keys are configured correctly in the database and in the Entity Framework model. Use the Entity Designer for Database First/Model First configuration. Use the 'HasDatabaseGeneratedOption" fluent API or 'DatabaseGeneratedAttribute' for Code First configuration.</value>
   </data>
   <data name="ObjectStateManager_KeyPropertyDoesntMatchValueInKey" xml:space="preserve">
     <value>The value of a property that is part of an object's key does not match the corresponding property value stored in the ObjectContext.  This can occur if properties that are part of the key return inconsistent or incorrect values or if DetectChanges is not called after changes are made to a property that is part of the key.</value>
@@ -3008,11 +3008,10 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="RelationshipManager_UnableToRetrieveReferentialConstraintProperties" xml:space="preserve">
-    <value>A referential integrity constraints violation occurred: Not all of the property values that define referential integrity constraints could be retrieved from related entities.</value>
+   <value>A referential integrity constraints violation occurred: Not all of the property values that define referential integrity constraints could be retrieved from related entities.</value>
   </data>
   <data name="RelationshipManager_InconsistentReferentialConstraintProperties" xml:space="preserve">
-    <value>A referential integrity constraint violation occurred: The property values that define the referential constraints are not consistent between principal and dependent objects in the relationship.</value>
-    <comment>## ExceptionType=InvalidOperationException</comment>
+    <value>A referential integrity constraint violation occurred: The property value(s) of '{0}' on one end of a relationship do not match the property value(s) of '{1}' on the other end.</value>
   </data>
   <data name="RelationshipManager_CircularRelationshipsWithReferentialConstraints" xml:space="preserve">
     <value>A circular relationship path has been detected while enforcing a referential integrity constraints. Referential integrity cannot be enforced on circular relationships.</value>
@@ -4849,7 +4848,7 @@
   <data name="InvalidPropertyInRelationshipConstraint" xml:space="preserve">
     <value>There is no property with name '{0}' defined in type referred by Role '{1}'.</value>
   </data>
-  <data name="TypeMismatchRelationshipConstaint" xml:space="preserve">
+  <data name="TypeMismatchRelationshipConstraint" xml:space="preserve">
     <value>The types of all properties in the Dependent Role of a referential constraint must be the same as the corresponding property types in the Principal Role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint '{4}'.</value>
   </data>
   <data name="InvalidMultiplicityFromRoleUpperBoundMustBeOne" xml:space="preserve">
@@ -5471,5 +5470,20 @@
   </data>
   <data name="ConfigEventCannotBind" xml:space="preserve">
     <value>The method '{0}' of type '{1}' registered in the application config file could not be used as a DbConfiguration.Loaded event handler. Make sure that the method matches the EventHandler&lt;DbConfigurationLoadedEventArgs&gt; signature. See inner exception for details.</value>
+  </data>
+  <data name="ViewGenContainersNotFound" xml:space="preserve">
+    <value>Unable to generate views because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model.</value>
+  </data>
+  <data name="HashCalcContainersNotFound" xml:space="preserve">
+    <value>Unable to calculate model hash because no mapping was found between conceptual model container '{0}' and store model container '{1}'. Ensure that the names match those defined in the EDMX or Code First model.</value>
+  </data>
+  <data name="ViewGenMultipleContainers" xml:space="preserve">
+    <value>Unable to generate views because the model contained more than one container. Choose the conceptual and store model containers to use by passing their names to the appropriate overload of the GenerateViews method.</value>
+  </data>
+  <data name="HashCalcMultipleContainers" xml:space="preserve">
+    <value>Unable to calculate model hash because the model contained more than one container. Choose the conceptual and store model containers to use by passing their names to the appropriate overload of the ComputeMappingHashValue method.</value>
+  </data>
+  <data name="BadConnectionWrapping" xml:space="preserve">
+    <value>Unexpected connection state. When using a wrapping provider ensure that the StateChange event is implemented on the wrapped DbConnection.</value>
   </data>
 </root>

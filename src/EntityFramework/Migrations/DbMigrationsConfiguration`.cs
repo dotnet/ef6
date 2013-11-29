@@ -32,6 +32,19 @@ namespace System.Data.Entity.Migrations
         /// <summary>
         /// Runs after upgrading to the latest migration to allow seed data to be updated.
         /// </summary>
+        /// <remarks>
+        /// Note that the database may already contain seed data when this method runs. This means that
+        /// implementations of this method must check whether or not seed data is present and/or up-to-date
+        /// and then only make changes if necessary and in a non-destructive way. The 
+        /// <see cref="DbSetMigrationsExtensions.AddOrUpdate{TEntity}(System.Data.Entity.IDbSet{TEntity},TEntity[])"/>
+        /// can be used to help with this, but for seeding large amounts of data it may be necessary to do less
+        /// granular checks if performance is an issue.
+        /// If the <see cref="MigrateDatabaseToLatestVersion{TContext,TMigrationsConfiguration}"/> database 
+        /// initializer is being used, then this method will be called each time that the initializer runs.
+        /// If one of the <see cref="DropCreateDatabaseAlways{TContext}"/>, <see cref="DropCreateDatabaseIfModelChanges{TContext}"/>,
+        /// or <see cref="CreateDatabaseIfNotExists{TContext}"/> initializers is being used, then this method will not be
+        /// called and the Seed method defined in the initializer should be used instead.
+        /// </remarks>
         /// <param name="context"> Context to be used for updating seed data. </param>
         protected virtual void Seed(TContext context)
         {

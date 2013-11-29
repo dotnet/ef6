@@ -275,7 +275,9 @@ using System.Data.Entity.Infrastructure;
             var mappingCollection =
                 CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
 
-            Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue());
+            Assert.Equal(
+                Strings.HashCalcMultipleContainers,
+                Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue()).Message);
         }
 
         [Fact]
@@ -284,7 +286,9 @@ using System.Data.Entity.Infrastructure;
             var mappingCollection =
                 CreateStorageMappingItemCollection(new[] { Ssdl, SchoolSsdl }, new[] { Csdl, SchoolCsdl }, new[] { Msl, SchoolMsl });
 
-            Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue("C", "S"));
+            Assert.Equal(
+                Strings.HashCalcContainersNotFound("C", "S"),
+                Assert.Throws<InvalidOperationException>(() => mappingCollection.ComputeMappingHashValue("C", "S")).Message);
         }
 
         [Fact]
@@ -327,7 +331,9 @@ using System.Data.Entity.Infrastructure;
 
             var errors = new List<EdmSchemaError>();
 
-            Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews(errors));
+            Assert.Equal(
+                Strings.ViewGenMultipleContainers,
+                Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews(errors)).Message);
         }
 
         [Fact]
@@ -338,7 +344,9 @@ using System.Data.Entity.Infrastructure;
 
             var errors = new List<EdmSchemaError>();
 
-            Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews("C", "S", errors));
+            Assert.Equal(
+                Strings.ViewGenContainersNotFound("C", "S"),
+                Assert.Throws<InvalidOperationException>(() => mappingCollection.GenerateViews("C", "S", errors)).Message);
         }
 
         [Fact]

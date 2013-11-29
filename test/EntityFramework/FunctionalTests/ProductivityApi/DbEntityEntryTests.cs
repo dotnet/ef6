@@ -582,7 +582,7 @@ namespace ProductivityApiTests
                 var entry = context.Entry(newCategory);
 
                 Assert.Throws<InvalidOperationException>(() => entry.State = state).ValidateMessage(
-                    "ObjectStateManager_ObjectStateManagerContainsThisEntityKey");
+                    "ObjectStateManager_ObjectStateManagerContainsThisEntityKey", typeof(Category).FullName);
             }
         }
 

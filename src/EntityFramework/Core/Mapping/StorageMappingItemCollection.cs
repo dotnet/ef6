@@ -1316,12 +1316,17 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotEmpty(conceptualModelContainerName, "conceptualModelContainerName");
             Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
 
-            return MetadataMappingHasherVisitor.GetMappingClosureHash(
-                MappingVersion,
-                GetItems<EntityContainerMapping>()
-                    .Single(
-                        m => m.EdmEntityContainer.Name == conceptualModelContainerName
-                             && m.StorageEntityContainer.Name == storeModelContainerName));
+            var mapping = GetItems<EntityContainerMapping>().SingleOrDefault(
+                    m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                         && m.StorageEntityContainer.Name == storeModelContainerName);
+
+            if (mapping == null)
+            {
+                throw new InvalidOperationException(Strings.HashCalcContainersNotFound(
+                    conceptualModelContainerName, storeModelContainerName));
+            }
+
+            return MetadataMappingHasherVisitor.GetMappingClosureHash(MappingVersion, mapping);
         }
 
         /// <summary>
@@ -1330,10 +1335,14 @@ namespace System.Data.Entity.Core.Mapping
         /// <returns>A string that specifies the computed hash value.</returns>
         public string ComputeMappingHashValue()
         {
-            return 
-                MetadataMappingHasherVisitor.GetMappingClosureHash(
-                    MappingVersion,
-                    GetItems<EntityContainerMapping>().Single());
+            if (GetItems<EntityContainerMapping>().Count != 1)
+            {
+                throw new InvalidOperationException(Strings.HashCalcMultipleContainers);
+            }
+
+            return MetadataMappingHasherVisitor.GetMappingClosureHash(
+                MappingVersion,
+                GetItems<EntityContainerMapping>().Single());
         }
 
         /// <summary>
@@ -1355,12 +1364,17 @@ namespace System.Data.Entity.Core.Mapping
             Check.NotEmpty(storeModelContainerName, "storeModelContainerName");
             Check.NotNull(errors, "errors");
 
-            return GenerateViews(
-                GetItems<EntityContainerMapping>()
-                    .Single(
-                        m => m.EdmEntityContainer.Name == conceptualModelContainerName
-                             && m.StorageEntityContainer.Name == storeModelContainerName),
-                errors);
+            var mapping = GetItems<EntityContainerMapping>().SingleOrDefault(
+                m => m.EdmEntityContainer.Name == conceptualModelContainerName
+                     && m.StorageEntityContainer.Name == storeModelContainerName);
+
+            if (mapping == null)
+            {
+                throw new InvalidOperationException(Strings.ViewGenContainersNotFound(
+                    conceptualModelContainerName, storeModelContainerName));
+            }
+
+            return GenerateViews(mapping, errors);
         }
 
         /// <summary>
@@ -1376,9 +1390,12 @@ namespace System.Data.Entity.Core.Mapping
         {
             Check.NotNull(errors, "errors");
 
-            return GenerateViews(
-                GetItems<EntityContainerMapping>().Single(),
-                errors);
+            if (GetItems<EntityContainerMapping>().Count != 1)
+            {
+                throw new InvalidOperationException(Strings.ViewGenMultipleContainers);
+            }
+
+            return GenerateViews(GetItems<EntityContainerMapping>().Single(), errors);
         }
 
         internal static Dictionary<EntitySetBase, DbMappingView> GenerateViews(

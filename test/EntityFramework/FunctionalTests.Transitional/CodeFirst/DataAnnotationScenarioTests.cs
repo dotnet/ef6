@@ -158,7 +158,7 @@ namespace FunctionalTests
         }
 
         [Fact]
-        public void NotMapped_should_propagate_down_inheritance_hierachy()
+        public void NotMapped_should_propagate_down_inheritance_hierarchy()
         {
             var modelBuilder = new DbModelBuilder();
 

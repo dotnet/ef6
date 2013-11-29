@@ -953,8 +953,9 @@ namespace ProductivityApiTests
 
                 // Accept will fail because of PK violation
                 // (cat1 doesn't actually exist in the store so update pipeline will succeed)
-                Assert.Throws<InvalidOperationException>(() => saveChanges(context)).ValidateMessage(
-                    "ObjectContext_AcceptAllChangesFailure");
+                var exception = Assert.Throws<InvalidOperationException>(() => saveChanges(context));
+                exception.ValidateMessage("ObjectContext_AcceptAllChangesFailure");
+                exception.InnerException.ValidateMessage("ObjectStateManager_CannotFixUpKeyToExistingValues", typeof(Category).FullName);
             }
         }
 

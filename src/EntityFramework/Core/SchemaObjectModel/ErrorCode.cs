@@ -217,7 +217,7 @@ namespace System.Data.Entity.Core.SchemaObjectModel
         // <summary>
         // Type mismatch between ToProperty and FromProperty in the relationship constraint
         // </summary>
-        TypeMismatchRelationshipConstaint = 112,
+        TypeMismatchRelationshipConstraint = 112,
 
         // <summary>
         // Invalid multiplicty in FromRole in the relationship constraint

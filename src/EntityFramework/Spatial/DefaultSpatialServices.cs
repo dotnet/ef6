@@ -241,7 +241,7 @@ namespace System.Data.Entity.Spatial
 
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "MultiPolygon",
             Justification = "Match MultiPoint, MultiLine")]
-        public override DbGeography GeographyMultiPolygonFromText(string geographyText, int spatialReferenceSystemId)
+        public override DbGeography GeographyMultiPolygonFromText(string multiPolygonKnownText, int spatialReferenceSystemId)
         {
             // Without a backing implementation, this method cannot enforce the requirement that the result be of the specified geometry type
             throw SpatialServicesUnavailable();

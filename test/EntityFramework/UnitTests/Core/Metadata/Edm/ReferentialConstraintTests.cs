@@ -2,6 +2,7 @@
 
 namespace System.Data.Entity.Core.Metadata.Edm
 {
+    using System.Data.Entity.Resources;
     using System.Linq;
     using Xunit;
 
@@ -63,6 +64,62 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     Enumerable.Empty<EdmProperty>());
 
             Assert.NotEmpty(referentialConstraint.FromProperties);
+        }
+
+        [Fact]
+        public void BuildConstraintExceptionMessage_returns_message_for_single_property_constraint()
+        {
+            var principalType = new EntityType("Principal", "N", DataSpace.CSpace);
+            var principalProperty = EdmProperty.CreatePrimitive("P1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            principalType.AddMember(principalProperty);
+
+            var dependentType = new EntityType("Dependent", "N", DataSpace.CSpace);
+            var dependentProperty = EdmProperty.CreatePrimitive("D1", PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32));
+            dependentType.AddMember(dependentProperty);
+
+            var referentialConstraint
+                = new ReferentialConstraint(
+                    new AssociationEndMember("P", principalType),
+                    new AssociationEndMember("D", dependentType),
+                    new[] { principalProperty },
+                    new[] { dependentProperty });
+
+            Assert.Equal(
+                Strings.RelationshipManager_InconsistentReferentialConstraintProperties("Principal.P1", "Dependent.D1"),
+                referentialConstraint.BuildConstraintExceptionMessage());
+        }
+
+        [Fact]
+        public void BuildConstraintExceptionMessage_returns_message_for_composite_constraint()
+        {
+            var primitiveType = PrimitiveType.GetEdmPrimitiveType(PrimitiveTypeKind.Int32);
+
+            var principalType = new EntityType("Principal", "N", DataSpace.CSpace);
+            var principalProperties = new EdmProperty[3];
+
+            var dependentType = new EntityType("Dependent", "N", DataSpace.CSpace);
+            var dependentProperties = new EdmProperty[principalProperties.Length];
+
+            for (var i = 0; i < principalProperties.Length; i++)
+            {
+                principalProperties[i] = EdmProperty.CreatePrimitive("P" + i, primitiveType);
+                principalType.AddMember(principalProperties[i]);
+
+                dependentProperties[i] = EdmProperty.CreatePrimitive("D" + i, primitiveType);
+                dependentType.AddMember(dependentProperties[i]);
+            }
+
+            var referentialConstraint
+                = new ReferentialConstraint(
+                    new AssociationEndMember("P", principalType),
+                    new AssociationEndMember("D", dependentType),
+                    principalProperties,
+                    dependentProperties);
+
+            Assert.Equal(
+                Strings.RelationshipManager_InconsistentReferentialConstraintProperties(
+                    "Principal.P0, Principal.P1, Principal.P2", "Dependent.D0, Dependent.D1, Dependent.D2"),
+                referentialConstraint.BuildConstraintExceptionMessage());
         }
     }
 }

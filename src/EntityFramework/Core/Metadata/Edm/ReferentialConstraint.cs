@@ -3,7 +3,10 @@
 namespace System.Data.Entity.Core.Metadata.Edm
 {
     using System.Collections.Generic;
+    using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// This class represents a referential constraint between two entities specifying the "to" and "from" ends of the relationship.
@@ -218,6 +221,29 @@ namespace System.Data.Entity.Core.Metadata.Edm
                     toRole.SetReadOnly();
                 }
             }
+        }
+
+        internal string BuildConstraintExceptionMessage()
+        {
+            var fromType = FromProperties.First().DeclaringType.Name;
+            var toType = ToProperties.First().DeclaringType.Name;
+
+            var fromProps = new StringBuilder();
+            var toProps = new StringBuilder();
+            for (var i = 0; i < FromProperties.Count; ++i)
+            {
+                if (i > 0)
+                {
+                    fromProps.Append(", ");
+                    toProps.Append(", ");
+                }
+
+                fromProps.Append(fromType).Append('.').Append(FromProperties[i]);
+                toProps.Append(toType).Append('.').Append(ToProperties[i]);
+            }
+
+            return Strings.RelationshipManager_InconsistentReferentialConstraintProperties(
+                fromProps.ToString(), toProps.ToString());
         }
     }
 }

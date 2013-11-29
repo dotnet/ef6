@@ -2061,7 +2061,7 @@ namespace ProductivityApiTests
                 category.Products.Add(product);
 
                 Assert.Throws<InvalidOperationException>(() => context.Categories.Attach(category)).ValidateMessage(
-                    "RelationshipManager_InconsistentReferentialConstraintProperties");
+                    "RelationshipManager_InconsistentReferentialConstraintProperties", "Category.Id", "Product.CategoryId");
 
                 Assert.Null(context.Categories.Find("Spreads"));
                 Assert.Null(context.Products.Find(0));

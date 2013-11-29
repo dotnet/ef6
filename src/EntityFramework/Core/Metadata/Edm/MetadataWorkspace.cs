@@ -276,7 +276,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <param name="dataSpace">
         /// The <see cref="T:System.Data.Entity.Core.Metadata.Edm.DataSpace" /> from which to retrieve items.
         /// </param>
-        [CLSCompliant(false)]
         public virtual ItemCollection GetItemCollection(DataSpace dataSpace)
         {
             var collection = GetItemCollection(dataSpace, required: true);
@@ -286,7 +285,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// <summary>Registers the item collection with each associated data model.</summary>
         /// <param name="collection">The output parameter collection that needs to be filled up.</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
-        [CLSCompliant(false)]
         [Obsolete("Construct MetadataWorkspace using constructor that accepts metadata loading delegates.")]
         public virtual void RegisterItemCollection(ItemCollection collection)
         {
@@ -887,7 +885,6 @@ namespace System.Data.Entity.Core.Metadata.Edm
         /// .
         /// </param>
         /// <param name="collection">When this method returns, contains the item collection. This parameter is passed uninitialized.</param>
-        [CLSCompliant(false)]
         public virtual bool TryGetItemCollection(DataSpace dataSpace, out ItemCollection collection)
         {
             collection = GetItemCollection(dataSpace, required: false);

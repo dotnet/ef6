@@ -37,7 +37,7 @@ namespace System.Data.Entity
         /// <c>null</c>
         /// .
         /// </exception>
-        public void InitializeDatabase(TContext context)
+        public virtual void InitializeDatabase(TContext context)
         {
             Check.NotNull(context, "context");
 

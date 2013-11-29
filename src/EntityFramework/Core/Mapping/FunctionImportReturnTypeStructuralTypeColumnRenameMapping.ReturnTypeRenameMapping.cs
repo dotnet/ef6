@@ -79,10 +79,10 @@ namespace System.Data.Entity.Core.Mapping
             else
             {
                 // find out all the tyes that is isparent type of this lookup type
-                var nodesInBaseHierachy =
+                var nodesInBaseHierarchy =
                     _columnListForIsTypeOfType.Where(t => t.Type.IsAssignableFrom(typeForRename));
 
-                if (nodesInBaseHierachy.Count() == 0)
+                if (nodesInBaseHierarchy.Count() == 0)
                 {
                     // non of its parent is renamed, so it will take the default one
                     return new FunctionImportReturnTypeStructuralTypeColumn(_defaultMemberName, typeForRename, false, null);
@@ -91,16 +91,16 @@ namespace System.Data.Entity.Core.Mapping
                 {
                     // we will guarantee that there will be some mapping for us on this column
                     // find out which one is lowest on the link
-                    return GetLowestParentInHierachy(nodesInBaseHierachy);
+                    return GetLowestParentInHierarchy(nodesInBaseHierarchy);
                 }
             }
         }
 
-        private static FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierachy(
-            IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierachy)
+        private static FunctionImportReturnTypeStructuralTypeColumn GetLowestParentInHierarchy(
+            IEnumerable<FunctionImportReturnTypeStructuralTypeColumn> nodesInHierarchy)
         {
             FunctionImportReturnTypeStructuralTypeColumn lowestParent = null;
-            foreach (var node in nodesInHierachy)
+            foreach (var node in nodesInHierarchy)
             {
                 if (lowestParent == null)
                 {

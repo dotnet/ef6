@@ -34,7 +34,6 @@ namespace System.Data.Entity.SqlServerCompact
     /// resolved to <see cref="SqlCeMigrationSqlGenerator" /> instances to provide default Migrations SQL
     /// generation for SQL Compact.
     /// </remarks>
-    [CLSCompliant(false)]
     public sealed class SqlCeProviderServices : DbProviderServices
     {
         /// <summary>
