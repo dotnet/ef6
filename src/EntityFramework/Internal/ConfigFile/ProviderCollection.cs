@@ -32,24 +32,31 @@ namespace System.Data.Entity.Internal.ConfigFile
 
         protected override void BaseAdd(ConfigurationElement element)
         {
-            var key = GetElementKey(element);
-            if (BaseGet(key) != null)
+            if (!ValidateProviderElement(element))
             {
-                throw new InvalidOperationException(Strings.ProviderInvariantRepeatedInConfig(key));
+                base.BaseAdd(element);
             }
-
-            base.BaseAdd(element);
         }
 
         protected override void BaseAdd(int index, ConfigurationElement element)
         {
+            if (!ValidateProviderElement(element))
+            {
+                base.BaseAdd(index, element);
+            }
+        }
+
+        private bool ValidateProviderElement(ConfigurationElement element)
+        {
             var key = GetElementKey(element);
-            if (BaseGet(key) != null)
+            var existingProvider = (ProviderElement)BaseGet(key);
+            if (existingProvider != null
+                && existingProvider.ProviderTypeName != ((ProviderElement)element).ProviderTypeName)
             {
                 throw new InvalidOperationException(Strings.ProviderInvariantRepeatedInConfig(key));
             }
 
-            base.BaseAdd(index, element);
+            return existingProvider != null;
         }
 
         public ProviderElement AddProvider(string invariantName, string providerTypeName)

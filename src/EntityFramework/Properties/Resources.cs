@@ -12959,7 +12959,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider."
+        // A string like "The provider for invariant name '{0}' is specified in the application configuration multiple times with different provider type names. The provider type names have to be unique for each configured provider."
         // </summary>
         internal static string ProviderInvariantRepeatedInConfig(object p0)
         {

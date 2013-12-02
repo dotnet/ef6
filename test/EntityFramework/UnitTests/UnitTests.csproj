@@ -356,6 +356,7 @@
     <Compile Include="Internal\CommandTracerTests.cs" />
     <Compile Include="Internal\ConfigFile\ConfigLoadedCollectionTests.cs" />
     <Compile Include="Internal\ConfigFile\ConfigLoadedHandlerElementTests.cs" />
+    <Compile Include="Internal\ConfigFile\ProviderCollectionTests.cs" />
     <Compile Include="Internal\DatabaseTableCheckerTests.cs" />
     <Compile Include="Internal\DbHelpersTests.cs" />
     <Compile Include="Internal\EagerInternalContextTests.cs" />

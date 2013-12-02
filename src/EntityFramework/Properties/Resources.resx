@@ -5150,7 +5150,7 @@
     <value>The 'Instance' member of the Entity Framework provider type '{0}' did not return an object that inherits from 'System.Data.Entity.Core.Common.DbProviderServices'. Entity Framework providers must inherit from this class and the 'Instance' member must return the singleton instance of the provider. This may be because the provider does not support Entity Framework 6 or later; see http://go.microsoft.com/fwlink/?LinkId=260882 for more information.</value>
   </data>
   <data name="ProviderInvariantRepeatedInConfig" xml:space="preserve">
-    <value>The provider for invariant name '{0}' is specified multiple times in the application configuration. The invariant name must be unique for each configured provider.</value>
+    <value>The provider for invariant name '{0}' is specified in the application configuration multiple times with different provider type names. The provider type names have to be unique for each configured provider.</value>
   </data>
   <data name="DbDependencyResolver_NoProviderInvariantName" xml:space="preserve">
     <value>No name was passed to the IDbDependencyResolver.GetService method. The provider invariant name must be supplied when attempting to resolve a '{0}' dependency.</value>
