@@ -550,6 +550,22 @@ CREATE TABLE [foo].[Customers] (
         }
 
         [Fact]
+        public void Generate_can_output_rename_table_statements()
+        {
+            var renameTableOperation = new RenameTableOperation("dbo.Foo", "Bar");
+
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { renameTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"EXECUTE sp_rename @objname = N'dbo.Foo', @newname = N'Bar', @objtype = N'OBJECT'
+IF object_id('[PK_dbo.Foo]') IS NOT NULL BEGIN
+    EXECUTE sp_rename @objname = N'[PK_dbo.Foo]', @newname = N'PK_dbo.Bar', @objtype = N'OBJECT'
+END", sql);
+        }
+
+        [Fact]
         public void Generate_can_output_move_procedure_statement()
         {
             var moveProcedureOperation

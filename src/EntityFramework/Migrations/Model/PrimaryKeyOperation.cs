@@ -16,6 +16,18 @@ namespace System.Data.Entity.Migrations.Model
     /// </summary>
     public abstract class PrimaryKeyOperation : MigrationOperation
     {
+        /// <summary>
+        /// Returns the default name for the primary key.
+        /// </summary>
+        /// <param name="table">The target table name.</param>
+        /// <returns>The default primary key name.</returns>
+        public static string BuildDefaultName(string table)
+        {
+            Check.NotEmpty(table, "table");
+
+            return string.Format(CultureInfo.InvariantCulture, "PK_{0}", table).RestrictTo(128);
+        }
+
         private readonly List<string> _columns = new List<string>();
 
         private string _table;
@@ -95,7 +107,7 @@ namespace System.Data.Entity.Migrations.Model
 
         internal string DefaultName
         {
-            get { return string.Format(CultureInfo.InvariantCulture, "PK_{0}", Table).RestrictTo(128); }
+            get { return BuildDefaultName(Table); }
         }
     }
 }

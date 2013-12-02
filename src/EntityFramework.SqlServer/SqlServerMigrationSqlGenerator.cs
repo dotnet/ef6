@@ -879,6 +879,23 @@ namespace System.Data.Entity.SqlServer
             {
                 WriteRenameTable(renameTableOperation, writer);
 
+                // rename the PK constraint
+                var oldPkName = PrimaryKeyOperation.BuildDefaultName(renameTableOperation.Name);
+                var newPkName = PrimaryKeyOperation.BuildDefaultName(((RenameTableOperation)renameTableOperation.Inverse).Name);
+
+                writer.WriteLine();
+                writer.Write("IF object_id('");
+                writer.Write(Escape(Quote(oldPkName)));
+                writer.WriteLine("') IS NOT NULL BEGIN");
+                writer.Indent++;
+                writer.Write("EXECUTE sp_rename @objname = N'");
+                writer.Write(Escape(Quote(oldPkName)));
+                writer.Write("', @newname = N'");
+                writer.Write(Escape(newPkName));
+                writer.WriteLine("', @objtype = N'OBJECT'"); 
+                writer.Indent--;
+                writer.Write("END");
+
                 Statement(writer);
             }
         }

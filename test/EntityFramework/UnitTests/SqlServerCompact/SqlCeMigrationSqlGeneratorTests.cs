@@ -374,6 +374,19 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
         }
 
         [Fact]
+        public void Generate_can_output_rename_table_statements()
+        {
+            var renameTableOperation = new RenameTableOperation("dbo.Foo", "Bar");
+
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var sql = migrationSqlGenerator.Generate(new[] { renameTableOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains(
+                @"EXECUTE sp_rename @objname = N'Foo', @newname = N'Bar', @objtype = N'OBJECT'", sql);
+        }
+
+        [Fact]
         public void Generate_can_output_create_index_statement()
         {
             var createTableOperation = new CreateTableOperation("Customers");
