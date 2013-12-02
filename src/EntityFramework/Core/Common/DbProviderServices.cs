@@ -452,10 +452,16 @@ namespace System.Data.Entity.Core.Common
             return null;
         }
 
-        internal void SetParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
+        /// <summary>
+        /// Sets the parameter value and appropriate facets for the given <see cref="TypeUsage"/>.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="parameterType">The type of the parameter.</param>
+        /// <param name="value">The value of the parameter.</param>
+        public void SetParameterValue(DbParameter parameter, TypeUsage parameterType, object value)
         {
-            DebugCheck.NotNull(parameter);
-            DebugCheck.NotNull(parameterType);
+            Check.NotNull(parameter, "parameter");
+            Check.NotNull(parameterType, "parameterType");
 
             SetDbParameterValue(parameter, parameterType, value);
         }
