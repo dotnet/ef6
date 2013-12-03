@@ -157,13 +157,17 @@ namespace System.Data.Entity.Core.Mapping.ViewGeneration.QueryRewriting
 
             var chaseExpr = _chase.Chase(Normalizer.ToNnfAndSplitRange(optimalSplitForm));
 
-            var fullExpression = chaseExpr.CountTerms() + ResidueSize > noChaseSize
-                                     ? new AndExpr<DomainConstraint>(KbExpression, expression)
-                                     : new AndExpr<DomainConstraint>(
-                                           new List<DomainBoolExpr>(ResidueInternal)
-                                               {
-                                                   chaseExpr
-                                               });
+            BoolExpr<DomainConstraint> fullExpression;
+            if (chaseExpr.CountTerms() + ResidueSize > noChaseSize)
+            {
+                fullExpression = new AndExpr<DomainConstraint>(KbExpression, expression);
+            }
+            else
+            {
+                fullExpression = new AndExpr<DomainConstraint>(
+                    new List<DomainBoolExpr>(ResidueInternal) { chaseExpr });
+                context = IdentifierService<DomainConstraint>.Instance.CreateConversionContext();
+            }
 
             return !new Converter<DomainConstraint>(fullExpression, context).Vertex.IsZero();
         }
