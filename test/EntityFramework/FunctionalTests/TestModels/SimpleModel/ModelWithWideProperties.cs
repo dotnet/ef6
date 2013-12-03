@@ -20,7 +20,7 @@ namespace ProductivityApiTests
     {
         public ModelWithWidePropertiesForSqlCe()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ModelWithWidePropertiesForSqlCe>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<ModelWithWidePropertiesForSqlCe>());
         }
 
         public DbSet<EntityWithExplicitWideProperties> ExplicitlyWide { get; set; }

@@ -168,6 +168,10 @@
       <Project>{1ef9c524-7122-4677-b111-dd14bb2a9ea2}</Project>
       <Name>EntityFramework.SqlServerCompact</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj">
+      <Project>{54bfa36b-8105-468e-aa22-f2e1d3b28b54}</Project>
+      <Name>EntityFramework.SqlServerCompact.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\src\EntityFramework.SqlServer\EntityFramework.SqlServer.csproj">
       <Project>{6f4bb80b-5f74-44d3-a77f-0025dfa48c1a}</Project>
       <Name>EntityFramework.SqlServer</Name>
@@ -237,6 +241,7 @@
     <Compile Include="ProductivityApi\DbContextTests.cs" />
     <Compile Include="ProductivityApi\DbFunctionScenarios.cs" />
     <Compile Include="ProductivityApi\DeadlockTests.cs" />
+    <Compile Include="ProductivityApi\SimpleScenariosForSqlCe35.cs" />
     <Compile Include="ProductivityApi\TemplateTests.cs" />
     <Compile Include="Query\LinqToEntities\ProjectionTests.cs" />
     <Compile Include="Query\QueryTestHelpers.cs" />

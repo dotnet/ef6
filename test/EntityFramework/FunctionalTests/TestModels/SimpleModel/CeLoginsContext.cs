@@ -8,7 +8,7 @@ namespace SimpleModel
     {
         public CeLoginsContext()
         {
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CeLoginsContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<CeLoginsContext>());
         }
     }
 }

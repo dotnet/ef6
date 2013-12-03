@@ -26,7 +26,11 @@ namespace System.Data.Entity.SqlServerCompact
         // </summary>
         internal static readonly SqlCeProviderManifest Instance = new SqlCeProviderManifest(true);
 
+#if SQLSERVERCOMPACT35
+        internal const string ProviderInvariantName = "System.Data.SqlServerCe.3.5";
+#else
         internal const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
+#endif
 
         internal const string Token40 = "4.0";
 

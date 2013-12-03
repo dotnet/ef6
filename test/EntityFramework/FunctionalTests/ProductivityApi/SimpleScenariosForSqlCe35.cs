@@ -7,24 +7,25 @@ namespace ProductivityApiTests
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Transactions;
-    using SimpleModel;
     using Xunit;
+    using SimpleModel;
+    using System.Data.Entity.Core;
 
     /// <summary>
     /// These are not really tests, but rather simple scenarios with minimal final state validation.
     /// They are here as a good starting point for understanding the functionality and to give some level
     /// of confidence that the simple scenarios keep on working as the code evolves.
     /// </summary>
-    public class SimpleScenariosForSqlCe : FunctionalTestBase, IDisposable
+    public class SimpleScenariosForSqlCe35 : FunctionalTestBase, IDisposable
     {
         #region Infrastructure/setup
 
         private readonly IDbConnectionFactory _previousConnectionFactory;
 
-        public SimpleScenariosForSqlCe()
+        public SimpleScenariosForSqlCe35()
         {
             MutableResolver.AddResolver<IDbConnectionFactory>(k => new SqlCeConnectionFactory(
-                "System.Data.SqlServerCe.4.0",
+                "System.Data.SqlServerCe.3.5",
                 AppDomain.CurrentDomain.BaseDirectory, ""));
         }
 
@@ -104,7 +105,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Find_OnSqlCe()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new SimpleModelContextLegacy())
             {
                 var product = context.Products.Find(1);
                 var category = context.Categories.Find("Foods");
@@ -125,7 +126,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Insert_OnSqlCe()
         {
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                     {
                         var product = new Product
@@ -146,7 +147,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Update_OnSqlCe()
         {
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                     {
                         var product = context.Products.Find(1);
@@ -164,7 +165,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Query_OnSqlCe()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new SimpleModelContextLegacy())
             {
                 var products = context.Products.ToList();
 
@@ -177,7 +178,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Relate_using_query_OnSqlCe()
         {
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                     {
                         var category = context.Categories.Find("Foods");
@@ -209,7 +210,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Relate_using_FK_OnSqlCe()
         {
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                     {
                         var product = new Product
@@ -239,7 +240,7 @@ namespace ProductivityApiTests
             builder.Entity<Product>();
             builder.Entity<Category>();
 
-            var model = builder.Build(ProviderRegistry.SqlCe4_ProviderInfo).Compile();
+            var model = builder.Build(ProviderRegistry.SqlCe35_ProviderInfo).Compile();
 
             using (var context = new SimpleModelContextWithNoData("Scenario_CodeFirstWithModelBuilder", model))
             {
@@ -278,7 +279,7 @@ namespace ProductivityApiTests
                             GetStateEntry(context, login).State);
                     });
 
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                     {
                         var category = new Category
@@ -309,15 +310,16 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Use_AppConfig_connection_string_OnSqlCe()
         {
-            Database.Delete("Scenario_Use_SqlCe_AppConfig_connection_string");
+	        const string connectionStringKey = "Scenario_Use_SqlCeLegacy_AppConfig_connection_string";
+            Database.Delete(connectionStringKey);
 
-            using (var context = new SimpleModelContextWithNoData("Scenario_Use_SqlCe_AppConfig_connection_string"))
+            using (var context = new SimpleModelContextWithNoData(connectionStringKey))
             {
-                Assert.Equal("Scenario_Use_AppConfig.sdf", context.Database.Connection.Database);
+                Assert.Equal("Scenario_Use_AppConfig_Legacy.sdf", context.Database.Connection.Database);
                 InsertIntoCleanContext(context);
             }
 
-            using (var context = new SimpleModelContextWithNoData("Scenario_Use_SqlCe_AppConfig_connection_string"))
+            using (var context = new SimpleModelContextWithNoData(connectionStringKey))
             {
                 ValidateFromCleanContext(context);
             }
@@ -359,7 +361,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_Include_OnSqlCe()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new SimpleModelContextLegacy())
             {
                 context.Configuration.LazyLoadingEnabled = false;
 
@@ -374,7 +376,7 @@ namespace ProductivityApiTests
         [Fact]
         public void Scenario_IncludeWithLambda_OnSqlCe()
         {
-            using (var context = new SimpleModelContext())
+            using (var context = new SimpleModelContextLegacy())
             {
                 context.Configuration.LazyLoadingEnabled = false;
 
@@ -392,7 +394,7 @@ namespace ProductivityApiTests
             var categoryId = Guid.NewGuid().ToString();
             string productName = null;
 
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                 {
                     ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = true;
@@ -418,7 +420,7 @@ namespace ProductivityApiTests
             var categoryId = Guid.NewGuid().ToString();
             string productName = null;
 
-            RunInSqlCeTransaction<SimpleModelContext>(
+            RunInSqlCeTransaction<SimpleModelContextLegacy>(
                 context =>
                 {
                     ((IObjectContextAdapter)context).ObjectContext.ContextOptions.UseCSharpNullComparisonBehavior = false;
@@ -435,14 +437,12 @@ namespace ProductivityApiTests
         }
 
         [Fact]
-		public void Scenario_Query_With_Skip_And_Take_On_SqlCe40()
+		public void Scenario_Query_With_Skip_And_Take_On_SqlCe35()
 		{
-			using (var context = new SimpleModelContext())
+			using (var context = new SimpleModelContextLegacy())
 			{
-				var products = context.Products.OrderBy(p => p.Name).Skip(3).Take(2).ToList();
-
-				Assert.Equal(2, products.Count);
-				Assert.True(products.TrueForAll(p => GetStateEntry(context, p).State == EntityState.Unchanged));
+                Assert.Throws<EntityCommandCompilationException>(
+                    () => context.Products.OrderBy(p => p.Name).Skip(3).Take(2).ToList());
 			}
 		}
 

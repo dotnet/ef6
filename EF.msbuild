@@ -18,6 +18,7 @@
     <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.csproj">
       <RestorePackages>true</RestorePackages>
     </ProjectToBuild>
+    <ProjectToBuild Include="src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj" />
     <ProjectToBuild Include="src\Migrate\Migrate.csproj" />
   </ItemGroup>
   

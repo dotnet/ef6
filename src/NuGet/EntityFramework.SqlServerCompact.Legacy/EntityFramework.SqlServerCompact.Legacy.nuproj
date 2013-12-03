@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), build.cmd))\tools\EntityFramework.settings.targets"/>
+  <PropertyGroup>
+    <NuSpecFile>EntityFramework.SqlServerCompact.Legacy.nuspec</NuSpecFile>
+  </PropertyGroup>  
+  <ItemGroup>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.Legacy.dll;EntityFramework.SqlServerCompact.Legacy.xml">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.Legacy.dll;EntityFramework.SqlServerCompact.Legacy.xml">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.Legacy.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath40)</Source>
+      <Destination>lib\net40</Destination>
+    </NuGetContent>
+    <NuGetContent Include="EntityFramework.SqlServerCompact.Legacy.pdb" Condition="'$(NuGetPackSymbols)' == 'true'">
+      <Source>$(OutputPath45)</Source>
+      <Destination>lib\net45</Destination>
+    </NuGetContent>
+    <NuGetContentProject Include="$(RepositoryRoot)\src\EntityFramework.SqlServerCompact\EntityFramework.SqlServerCompact.Legacy.csproj" Condition="'$(NuGetPackSymbols)' == 'true'" />
+    <NuGetContent Include="tools\*">
+      <Destination>tools</Destination>
+    </NuGetContent>
+    <NuGetContent Include="Content\*">
+      <Destination>content</Destination>
+    </NuGetContent>
+  </ItemGroup>
+  <Import Project="$(RepositoryRoot)Tools\NuGetProj.targets"/>
+</Project>

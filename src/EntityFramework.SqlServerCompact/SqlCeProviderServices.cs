@@ -1,6 +1,9 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
-
+#if SQLSERVERCOMPACT35
+namespace System.Data.Entity.SqlServerCompact.Legacy
+#else
 namespace System.Data.Entity.SqlServerCompact
+#endif
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -41,7 +44,7 @@ namespace System.Data.Entity.SqlServerCompact
         /// the "provider invariant name" used to specify Microsoft SQL Server Compact Edition 4.0 for
         /// ADO.NET and Entity Framework provider services.
         /// </summary>
-        public const string ProviderInvariantName = "System.Data.SqlServerCe.4.0";
+        public const string ProviderInvariantName = SqlCeProviderManifest.ProviderInvariantName;
 
         /// <summary>
         /// Singleton object;

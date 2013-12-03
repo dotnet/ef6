@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata schemaVersion="2">
+    <id>EntityFramework.SqlServerCompact.Legacy</id>
+    <version>$NuGetPackageVersion$</version>
+    <title>EntityFramework.SqlServerCompact.Legacy</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <tags>Microsoft EF SQL Compact CE 3.5 Legacy</tags>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=263480</projectUrl>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=262998</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Allows SQL Server Compact 3.5 to be used with Entity Framework. Requires the SQL Server Compact 3.5 SP2 runtime to be installed.</description>
+    <summary>Allows SQL Server Compact 3.5 to be used with Entity Framework.</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="EntityFramework" version="$EFPackageVersion$" />
+    </dependencies>
+  </metadata>
+</package>

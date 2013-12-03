@@ -1901,6 +1901,9 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
         public override ISqlFragment Visit(DbSkipExpression e)
         {
             Check.NotNull(e, "e");
+#if SQLSERVERCOMPACT35
+            throw ADP1.SkipNotSupportedException();
+#else
 
             Symbol fromSymbol;
             var result = VisitInputExpression(e.Input.Expression, e.Input.VariableName, e.Input.VariableType, out fromSymbol);
@@ -1927,6 +1930,7 @@ namespace System.Data.Entity.SqlServerCompact.SqlGen
             selectStatementStack.Pop();
 
             return result;
+#endif
         }
 
         // <summary>
