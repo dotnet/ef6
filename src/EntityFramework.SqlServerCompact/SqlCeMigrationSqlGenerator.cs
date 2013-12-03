@@ -37,7 +37,6 @@ namespace System.Data.Entity.SqlServerCompact
 
         internal const string DateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
-        private DbProviderManifest _providerManifest;
         private List<MigrationStatement> _statements;
 
         /// <summary>
@@ -73,7 +72,7 @@ namespace System.Data.Entity.SqlServerCompact
 
             using (var connection = CreateConnection())
             {
-                _providerManifest
+                ProviderManifest
                     = DbProviderServices
                         .GetProviderServices(connection)
                         .GetProviderManifest(providerManifestToken);
@@ -818,11 +817,17 @@ namespace System.Data.Entity.SqlServerCompact
             DebugCheck.NotNull(propertyModel);
 
             var originalStoreTypeName = propertyModel.StoreType;
-            var typeUsage = _providerManifest.GetStoreType(propertyModel.TypeUsage);
+            var typeUsage = ProviderManifest.GetStoreType(propertyModel.TypeUsage);
 
             if (string.IsNullOrWhiteSpace(originalStoreTypeName))
             {
                 originalStoreTypeName = typeUsage.EdmType.Name;
+            }
+            else
+            {
+                var storeTypeUsage = BuildStoreTypeUsage(originalStoreTypeName, propertyModel);
+
+                typeUsage = storeTypeUsage ?? typeUsage;
             }
 
             var storeTypeName = originalStoreTypeName;

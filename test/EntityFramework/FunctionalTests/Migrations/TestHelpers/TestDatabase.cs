@@ -79,7 +79,7 @@ namespace System.Data.Entity.Migrations
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleConnectionString(name);
-            ProviderName = "System.Data.SqlClient";
+            ProviderName = SqlProviderServices.ProviderInvariantName;
             ProviderManifestToken = "2008";
             SqlGenerator = new SqlServerMigrationSqlGenerator();
             Info = CreateInfoContext(new SqlConnection(ConnectionString));
@@ -188,6 +188,7 @@ namespace System.Data.Entity.Migrations
     public class SqlCeTestDatabase : TestDatabase
     {
         private readonly string _name;
+        public const int NtextLength = (1 << 29) - 1;
 
         public SqlCeTestDatabase(string name)
         {
@@ -199,7 +200,7 @@ namespace System.Data.Entity.Migrations
             _name = name;
 
             ConnectionString = ModelHelpers.SimpleCeConnectionString(name);
-            ProviderName = "System.Data.SqlServerCe.4.0";
+            ProviderName = SqlCeProviderServices.ProviderInvariantName;
             ProviderManifestToken = "4.0";
             SqlGenerator = new SqlCeMigrationSqlGenerator();
             Info = CreateInfoContext(new SqlCeConnection(ConnectionString), false);
