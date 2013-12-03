@@ -598,14 +598,31 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
             var column = new ColumnModel(PrimitiveTypeKind.String)
                              {
                                  Name = "Bar",
-                                 StoreType = "varchar",
-                                 MaxLength = 15
+                                 StoreType = "nvarchar"
                              };
             var addColumnOperation = new AddColumnOperation("Foo", column);
 
             var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [varchar](15)", sql);
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [nvarchar](4000)", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_with_custom_store_type_and_maxLength()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var column = new ColumnModel(PrimitiveTypeKind.String)
+            {
+                Name = "Bar",
+                StoreType = "nvarchar",
+                MaxLength = 15
+            };
+            var addColumnOperation = new AddColumnOperation("Foo", column);
+
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [nvarchar](15)", sql);
         }
 
         [Fact]

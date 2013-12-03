@@ -864,6 +864,23 @@ WHERE (([MigrationId] = N'House Lannister') AND ([ContextKey] = N'The pointy end
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
 
             var column = new ColumnModel(PrimitiveTypeKind.String)
+            {
+                Name = "Bar",
+                StoreType = "varchar"
+            };
+            var addColumnOperation = new AddColumnOperation("Foo", column);
+
+            var sql = migrationSqlGenerator.Generate(new[] { addColumnOperation }, "2008").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Foo] ADD [Bar] [varchar](8000)", sql);
+        }
+
+        [Fact]
+        public void Generate_can_output_add_column_statement_with_custom_store_type_and_maxLength()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var column = new ColumnModel(PrimitiveTypeKind.String)
                              {
                                  Name = "Bar",
                                  StoreType = "varchar",
