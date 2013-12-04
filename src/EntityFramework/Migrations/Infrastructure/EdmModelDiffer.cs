@@ -1847,11 +1847,7 @@ namespace System.Data.Entity.Migrations.Infrastructure
                     IsUnicode
                         = property.IsUnicode == false ? false : (bool?)null,
                     IsFixedLength
-                        = property.IsFixedLength == true ? true : (bool?)null,
-                    Precision
-                        = property.Precision,
-                    Scale
-                        = property.Scale
+                        = property.IsFixedLength == true ? true : (bool?)null
                 };
 
             Facet facet;
@@ -1860,6 +1856,18 @@ namespace System.Data.Entity.Migrations.Infrastructure
                 && !facet.Description.IsConstant)
             {
                 column.MaxLength = (int?)facet.Value;
+            }
+
+            if (property.TypeUsage.Facets.TryGetValue(DbProviderManifest.PrecisionFacetName, true, out facet)
+                && !facet.Description.IsConstant)
+            {
+                column.Precision = (byte?)facet.Value;
+            }
+
+            if (property.TypeUsage.Facets.TryGetValue(DbProviderManifest.ScaleFacetName, true, out facet)
+                && !facet.Description.IsConstant)
+            {
+                column.Scale = (byte?)facet.Value;
             }
 
             return column;

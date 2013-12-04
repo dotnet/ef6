@@ -815,6 +815,37 @@ namespace System.Data.Entity.Migrations.Infrastructure
 
         #region Added Tables
 
+        public class PrecisionScaleEntity
+        {
+            public string Id { get; set; }
+
+            [Column(TypeName = "datetime")]
+            public DateTime DatetimeColumn { get; set; }
+        }
+
+        [MigrationsTheory]
+        public void Should_not_set_precision_scale_when_default_for_type()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            var model1 = modelBuilder.Build(ProviderInfo);
+
+            modelBuilder.Entity<PrecisionScaleEntity>();
+
+            var model2 = modelBuilder.Build(ProviderInfo);
+
+            var operations
+                = new EdmModelDiffer().Diff(model1.GetModel(), model2.GetModel());
+
+            Assert.Equal(1, operations.Count());
+
+            var createTableOperation
+                = operations.OfType<CreateTableOperation>().Single();
+
+            Assert.True(createTableOperation.Columns.All(c => c.Precision == null));
+            Assert.True(createTableOperation.Columns.All(c => c.Scale == null));
+        }
+
         [MigrationsTheory]
         public void Can_detect_added_tables()
         {
