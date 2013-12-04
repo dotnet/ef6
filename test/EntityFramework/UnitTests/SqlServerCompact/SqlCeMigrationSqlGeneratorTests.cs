@@ -112,7 +112,7 @@ namespace System.Data.Entity.SqlServerCompact
             var sql = migrationSqlGenerator
                 .Generate(new[] { alterColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
 
-            Assert.Equal(@"ALTER TABLE [Foo] ALTER COLUMN [Bar] [int]
+            Assert.Equal(@"ALTER TABLE [Foo] ALTER COLUMN [Bar] [int] NULL
 ALTER TABLE [Foo] ALTER COLUMN [Bar] DROP DEFAULT
 ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
         }
@@ -258,6 +258,32 @@ ALTER TABLE [Foo] ALTER COLUMN [Bar] SET DEFAULT 42", sql);
             var sql = migrationSqlGenerator.Generate(new[] { addPrimaryKeyOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
 
             Assert.Contains("ALTER TABLE [T] ADD CONSTRAINT [PK_T] PRIMARY KEY NONCLUSTERED ([c1], [c2])", sql);
+        }
+
+        [Fact]
+        public void Generate_should_output_column_nullability_for_altered_nullable_columns()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var alterColumnOperation = 
+                new AlterColumnOperation("Customers", new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Baz", IsNullable = true }, false);
+
+            var sql = migrationSqlGenerator.Generate(new[] { alterColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Customers] ALTER COLUMN [Baz] [int] NULL", sql);
+        }
+
+        [Fact]
+        public void Generate_should_output_column_nullability_for_altered_non_nullable_columns()
+        {
+            var migrationSqlGenerator = new SqlCeMigrationSqlGenerator();
+
+            var alterColumnOperation =
+                new AlterColumnOperation("Customers", new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Baz", IsNullable = false }, false);
+
+            var sql = migrationSqlGenerator.Generate(new[] { alterColumnOperation }, "4.0").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Customers] ALTER COLUMN [Baz] [int] NOT NULL", sql);
         }
 
         [Fact]

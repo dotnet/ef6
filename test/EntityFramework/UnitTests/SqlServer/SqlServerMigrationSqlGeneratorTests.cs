@@ -272,6 +272,32 @@ END
         }
 
         [Fact]
+        public void Generate_should_output_column_nullability_for_altered_nullable_columns()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var alterColumnOperation =
+                new AlterColumnOperation("Customers", new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Baz", IsNullable = true }, false);
+
+            var sql = migrationSqlGenerator.Generate(new[] { alterColumnOperation }, "2012").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Customers] ALTER COLUMN [Baz] [int] NULL", sql);
+        }
+
+        [Fact]
+        public void Generate_should_output_column_nullability_for_altered_non_nullable_columns()
+        {
+            var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();
+
+            var alterColumnOperation =
+                new AlterColumnOperation("Customers", new ColumnModel(PrimitiveTypeKind.Int32) { Name = "Baz", IsNullable = false }, false);
+
+            var sql = migrationSqlGenerator.Generate(new[] { alterColumnOperation }, "2012").Join(s => s.Sql, Environment.NewLine);
+
+            Assert.Contains("ALTER TABLE [Customers] ALTER COLUMN [Baz] [int] NOT NULL", sql);
+        }
+
+        [Fact]
         public void Generate_can_output_drop_column()
         {
             var migrationSqlGenerator = new SqlServerMigrationSqlGenerator();

@@ -772,8 +772,10 @@ namespace System.Data.Entity.SqlServer
                 if ((column.IsNullable != null)
                     && !column.IsNullable.Value)
                 {
-                    writer.Write(" NOT NULL");
+                    writer.Write(" NOT");
                 }
+
+                writer.Write(" NULL");
 
                 Statement(writer);
             }
