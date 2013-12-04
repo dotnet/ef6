@@ -49,7 +49,7 @@
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <Import Project="$(RepositoryRoot)EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)tools\EFToolsDev12References.settings.targets" Condition="$(VisualStudioVersion)=='12.0'" />
   <ItemGroup>
     <Reference Include="Castle.Core">
       <HintPath>$(RepositoryRoot)packages\Castle.Core.3.2.1\lib\net45\Castle.Core.dll</HintPath>

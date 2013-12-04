@@ -44,7 +44,7 @@
   <PropertyGroup>
     <DelaySign>true</DelaySign>
   </PropertyGroup>
-  <Import Project="$(RepositoryRoot)EFToolsDev12References.settings" Condition="$(VisualStudioVersion)=='12.0'" />
+  <Import Project="$(RepositoryRoot)tools\EFToolsDev12References.settings.targets" Condition="$(VisualStudioVersion)=='12.0'" />
   <ItemGroup>
     <Reference Include="Moq">
       <HintPath>$(RepositoryRoot)packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>

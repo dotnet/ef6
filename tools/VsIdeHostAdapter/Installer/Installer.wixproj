@@ -8,7 +8,8 @@
     <OutputName>VsIdeTestHost</OutputName>
     <OutputType>Package</OutputType>
     <DefineSolutionProperties>false</DefineSolutionProperties>
-    <DefineConstants>AssemblyFileVersion=$(AssemblyFileVersion);BuildRevisionProductVersion=$(VersionBuild).$(VersionRevision);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
+    <DefineConstants>WixVsIDETestHostAdapterProductVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</DefineConstants>
+    <DefineConstants>$(DefineConstants);BuildRevisionProductVersion=$(VersionBuild).$(VersionRevision);VisualStudioVersion=$(VisualStudioVersion)</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
