@@ -72,6 +72,11 @@ Project global pre-settings.
   </PropertyGroup>
   
   <PropertyGroup>
+    <!-- If UseRuntimeAssemblyVersionFormat is true then CI build will use a different AssemblyVersion for the Nightly Build -->
+    <UseRuntimeAssemblyVersionFormat>true</UseRuntimeAssemblyVersionFormat>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <!-- Use CustomAfterMicrosoftCommonTargets property (Microsoft.Common.targets) to inject project post-targets  -->
     <!-- Note: this is how common properties are defined that must be set _after_ the properties in the .csproj files e.g. VS11 -->
     <CustomAfterMicrosoftCommonTargets>$(MSBuildThisFileDirectory)EntityFramework.targets</CustomAfterMicrosoftCommonTargets>
