@@ -24,6 +24,68 @@ namespace FunctionalTests
 
     public class InheritanceScenarioTests : TestBase
     {
+        public class Contract
+        {
+            public long Id { get; set; }
+            public DateTime X { get; set; }
+        }
+
+        public class ContractRevision : Contract
+        {
+        }
+
+        public class InitialContract : Contract
+        {
+        }
+
+        [Fact]
+        public void Hybrid_tpt_tph_should_introduce_discriminator_for_tph()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Contract>();
+            modelBuilder.Entity<ContractRevision>().ToTable("TPH");
+            modelBuilder.Entity<InitialContract>().ToTable("TPH");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<ContractRevision>().HasColumn("Discriminator");
+            databaseMapping.Assert<InitialContract>().HasColumn("Discriminator");
+        }
+
+        [Fact]
+        public void Hybrid_tpt_tph_should_introduce_discriminator_for_tph_no_base_properties()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Contract>().Ignore(c => c.X);
+            modelBuilder.Entity<ContractRevision>().ToTable("TPH");
+            modelBuilder.Entity<InitialContract>().ToTable("TPH");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<ContractRevision>().HasColumn("Discriminator");
+            databaseMapping.Assert<InitialContract>().HasColumn("Discriminator");
+        }
+
+        [Fact]
+        public void Hybrid_tpt_tph_should_introduce_discriminator_for_tph_leaf_tpt()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<Contract>();
+            modelBuilder.Entity<ContractRevision>();
+            modelBuilder.Entity<InitialContract>().ToTable("TPT");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+            databaseMapping.Assert<ContractRevision>().HasColumn("Discriminator");
+            databaseMapping.Assert<Contract>().HasColumn("Discriminator");
+        }
+
         public class ApplicationUser
         {
             public virtual string Id { get; set; }

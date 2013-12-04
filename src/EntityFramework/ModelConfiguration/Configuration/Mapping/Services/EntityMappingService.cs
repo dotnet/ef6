@@ -168,7 +168,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                                 pm => entityType.GetKeyProperties().Contains(pm.PropertyPath.First())))
                         {
                             RemoveFragment(entitySet, propertiesTypeMapping, propertiesTypeMappingFragment);
-
+                            
                             if (requiresSplit
                                 &&
                                 conditionTypeMappingFragment.ColumnMappings.All(
@@ -453,6 +453,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
         {
             // Make the default discriminator nullable if this type isn't using it but there is a base type
             var defaultDiscriminator = fragment.GetDefaultDiscriminator();
+
             if (defaultDiscriminator != null
                 && entityTypeMapping.EntityType.BaseType != null
                 && !entityTypeMapping.EntityType.Abstract)
@@ -460,6 +461,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                 var columnMapping =
                     _tableMappings[fragment.Table].ColumnMappings.SingleOrDefault(
                         cm => cm.Column == defaultDiscriminator);
+
                 if (columnMapping != null)
                 {
                     var propertyMapping = columnMapping.PropertyMappings.SingleOrDefault(
@@ -469,6 +471,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
                         columnMapping.PropertyMappings.Remove(propertyMapping);
                     }
                 }
+
                 defaultDiscriminator.Nullable = true;
             }
 
@@ -485,7 +488,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
 
             entityTypeMapping.RemoveFragment(fragment);
-
+            
             if (!entityTypeMapping.MappingFragments.Any())
             {
                 _databaseMapping.GetEntitySetMapping(entitySet).RemoveTypeMapping(entityTypeMapping);

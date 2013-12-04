@@ -353,8 +353,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
 
                         if (extraTable == fromTable)
                         {
-                            // move the default discriminator along with the properties
-                            MoveDefaultDiscriminator(fragment, extraFragment);
+                            // copy the default discriminator along with the properties
+                            CopyDefaultDiscriminator(fragment, extraFragment);
                         }
 
                         var requiresUpdate = extraTable != fromTable;
@@ -455,18 +455,19 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Mapping
             }
         }
 
-        private static void MoveDefaultDiscriminator(
+        private static void CopyDefaultDiscriminator(
             MappingFragment fromFragment, MappingFragment toFragment)
         {
             var discriminatorColumn = fromFragment.GetDefaultDiscriminator();
+
             if (discriminatorColumn != null)
             {
-                var discriminator = fromFragment.ColumnConditions.SingleOrDefault(
-                    cc => cc.Column == discriminatorColumn);
+                var discriminator 
+                    = fromFragment.ColumnConditions
+                        .SingleOrDefault(cc => cc.Column == discriminatorColumn);
+                
                 if (discriminator != null)
                 {
-                    fromFragment.RemoveDefaultDiscriminatorAnnotation();
-                    fromFragment.RemoveConditionProperty(discriminator);
                     toFragment.AddDiscriminatorCondition(discriminator.Column, discriminator.Value);
                     toFragment.SetDefaultDiscriminator(discriminator.Column);
                 }

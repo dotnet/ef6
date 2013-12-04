@@ -293,7 +293,7 @@ namespace System.Data.Entity.ModelConfiguration.Edm
             return set.All(
                 et => et == entityType // same type
                       || entityType.IsAncestorOf(et) // entityType is parent of et
-                      || !et.IsAncestorOf(entityType)); // et is not a parent of entityType (i.e. they can be unrelated)
+                      || et.GetRootType() != entityType.GetRootType()); // unrelated
         }
     }
 }
