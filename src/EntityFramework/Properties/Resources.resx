@@ -349,7 +349,7 @@
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ModelGeneration_UnableToDetermineKeyOrder" xml:space="preserve">
-    <value>Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys.</value>
+    <value>Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see http://go.microsoft.com/fwlink/?LinkId=386388) or the HasKey method (see http://go.microsoft.com/fwlink/?LinkId=386387) to specify an order for composite primary keys.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
   </data>
   <data name="ForeignKeyAttributeConvention_EmptyKey" xml:space="preserve">
@@ -505,7 +505,7 @@
     <value>Connection to the database failed. The connection string is configured with an invalid LocalDB server name. This may have been set in 'global.asax' by a pre-release version of MVC4. The default connection factory is now set in web.config so the line in 'global.asax' starting with 'Database.DefaultConnectionFactory = ' should be removed. See http://go.microsoft.com/fwlink/?LinkId=243166 for details.</value>
   </data>
   <data name="FailedToGetProviderInformation" xml:space="preserve">
-    <value>An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See [fwlink] for information on DbContext and connections. See the inner exception for details of the failure.</value>
+    <value>An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=386386 for information on DbContext and connections. See the inner exception for details of the failure.</value>
   </data>
   <data name="DbPropertyEntry_CannotGetCurrentValue" xml:space="preserve">
     <value>Cannot get value for property '{0}' from entity of type '{1}' because the property has no get accessor.</value>

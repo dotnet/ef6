@@ -519,7 +519,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys."
+        // A string like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see http://go.microsoft.com/fwlink/?LinkId=386388) or the HasKey method (see http://go.microsoft.com/fwlink/?LinkId=386387) to specify an order for composite primary keys."
         // </summary>
         internal static string ModelGeneration_UnableToDetermineKeyOrder(object p0)
         {
@@ -847,7 +847,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // A string like "An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See [fwlink] for information on DbContext and connections. See the inner exception for details of the failure."
+        // A string like "An error occurred accessing the database. This usually means that the connection to the database failed. Check that the connection string is correct and that the appropriate DbContext constructor is being used to specify it or find it in the application's config file. See http://go.microsoft.com/fwlink/?LinkId=386386 for information on DbContext and connections. See the inner exception for details of the failure."
         // </summary>
         internal static string FailedToGetProviderInformation
         {
@@ -14150,7 +14150,7 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
-        // InvalidOperationException with message like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see [fwlink]) or the HasKey method (see [fwlink]) to specify an order for composite primary keys."
+        // InvalidOperationException with message like "Unable to determine composite primary key ordering for type '{0}'. Use the ColumnAttribute (see http://go.microsoft.com/fwlink/?LinkId=386388) or the HasKey method (see http://go.microsoft.com/fwlink/?LinkId=386387) to specify an order for composite primary keys."
         // </summary>
         internal static Exception ModelGeneration_UnableToDetermineKeyOrder(object p0)
         {
