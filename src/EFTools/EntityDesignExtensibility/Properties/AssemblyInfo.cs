@@ -18,6 +18,6 @@ using System.Reflection;
 [assembly: System.Resources.NeutralResourcesLanguage("en-US")]
 #if !BUILD_GENERATED_VERSION
 [assembly: AssemblyVersion("11.1.0.0")]
-[assembly: AssemblyFileVersion("11.1.0.0")]
+[assembly: AssemblyFileVersion("11.2.0.0")]
 #endif
 #endif

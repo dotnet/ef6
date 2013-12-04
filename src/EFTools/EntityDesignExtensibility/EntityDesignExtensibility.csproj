@@ -14,7 +14,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <FileAlignment>512</FileAlignment>
-    <VersionMinor Condition="'$(VisualStudioVersion)' == '11.0'">1</VersionMinor>
+    <!-- Note: AssemblyVersion must remain fixed for VS11 - see note in AssemblyInfo.cs -->
+    <AssemblyVersion Condition="'$(VisualStudioVersion)' == '11.0'">11.1.0.0</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
