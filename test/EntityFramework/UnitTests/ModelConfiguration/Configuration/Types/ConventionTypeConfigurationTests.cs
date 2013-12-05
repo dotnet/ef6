@@ -71,6 +71,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             config().ToTable("Table1", "Schema1");
             config().MapToStoredProcedures();
             config().MapToStoredProcedures(c => { });
+            config().HasAnnotation("A", "V");
         }
 
         [Fact]
@@ -232,6 +233,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 config => config.MapToStoredProcedures(), "MapToStoredProcedures");
             Ignore_type_throws_with_any_other_configuration_implementation(
                 config => config.MapToStoredProcedures(c => { }), "MapToStoredProcedures");
+            Ignore_type_throws_with_any_other_configuration_implementation(
+                config => config.HasAnnotation("A1", "V1"), "HasAnnotation");
         }
 
         private void Ignore_type_throws_with_any_other_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
@@ -305,6 +308,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 config => config.NavigationProperty("Property1"), "NavigationProperty");
             IsComplexType_throws_with_conflicting_configuration_implementation(
                 config => config.NavigationProperty(config.ClrType.GetRuntimeProperties().First(p => p.IsPublic())), "NavigationProperty");
+            IsComplexType_throws_with_conflicting_configuration_implementation(
+                config => config.HasAnnotation("A1", "V1"), "HasAnnotation");
         }
 
         private void IsComplexType_throws_with_conflicting_configuration_implementation(Action<ConventionTypeConfiguration> configAction,
@@ -626,6 +631,41 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
 
             Assert.Equal("Table1", innerConfig.TableName);
             Assert.Equal("Schema1", innerConfig.SchemaName);
+        }
+
+        [Fact]
+        public void HasAnnotation_evaluates_preconditions()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation(" ", null)).Message);
+
+            Assert.Equal(
+                Strings.BadAnnotationName("Cheese:Pickle"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation("Cheese:Pickle", null)).Message);
+        }
+
+        [Fact]
+        public void HasAnnotation_configures_only_annotations_that_have_not_already_been_set()
+        {
+            var type = new MockType();
+            var innerConfig = new EntityTypeConfiguration(type);
+            innerConfig.SetAnnotation("A1", "V1");
+            var config = new ConventionTypeConfiguration(type, () => innerConfig, new ModelConfiguration());
+
+            var result = config.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2");
+
+            Assert.Equal("V1", innerConfig.Annotations["A1"]);
+            Assert.Equal("V2", innerConfig.Annotations["A2"]);
+            Assert.Same(config, result);
         }
 
         [Fact]

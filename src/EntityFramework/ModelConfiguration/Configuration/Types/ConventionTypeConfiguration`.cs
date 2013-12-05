@@ -3,6 +3,7 @@
 namespace System.Data.Entity.ModelConfiguration.Configuration
 {
     using System.ComponentModel;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.Utilities;
@@ -213,6 +214,28 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             Check.NotEmpty(tableName, "tableName");
 
             _configuration.ToTable(tableName, schemaName);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Sets an annotation in the model for the table to which this entity is mapped. The annotation
+        /// value can later be used when processing the table such as when creating migrations.
+        /// </summary>
+        /// <remarks>
+        /// It will likely be necessary to register a <see cref="IMetadataAnnotationSerializer"/> if the type of
+        /// the annotation value is anything other than a string. Calling this method will have no effect if the 
+        /// annotation with the given name has already been configured.
+        /// </remarks>
+        /// <param name="name">The annotation name, which must be a valid C#/EDM identifier.</param>
+        /// <param name="value">The annotation value, which may be a string or some other type that
+        /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
+        /// <returns>The same configuration instance so that multiple calls can be chained.</returns>
+        public ConventionTypeConfiguration<T> HasAnnotation(string name, object value)
+        {
+            Check.NotEmpty(name, "name");
+
+            _configuration.HasAnnotation(name, value);
 
             return this;
         }

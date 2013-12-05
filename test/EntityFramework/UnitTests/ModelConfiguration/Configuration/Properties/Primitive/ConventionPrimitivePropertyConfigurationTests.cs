@@ -52,6 +52,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             config.IsMaxLength();
             config.IsRowVersion();
             config.IsKey();
+            config.HasAnnotation("Fox", "Like an angel in disguise");
         }
 
         [Fact]
@@ -91,6 +92,39 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 () => config.HasColumnName(""));
 
             Assert.Equal(Strings.ArgumentIsNullOrWhitespace("columnName"), ex.Message);
+        }
+
+        [Fact]
+        public void HasAnnotation_configures_only_annotations_that_have_not_already_been_set()
+        {
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
+            innerConfig.SetAnnotation("A1", "V1");
+            var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            var result = config.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2");
+
+            Assert.Equal("V1", innerConfig.Annotations["A1"]);
+            Assert.Equal("V2", innerConfig.Annotations["A2"]);
+            Assert.Same(config, result);
+        }
+
+        [Fact]
+        public void HasAnnotation_evaluates_preconditions()
+        {
+            var innerConfig = new Properties.Primitive.PrimitivePropertyConfiguration();
+            var config = new ConventionPrimitivePropertyConfiguration(new MockPropertyInfo(), () => innerConfig);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation(null, null)).Message);
+
+            Assert.Equal(
+                Strings.ArgumentIsNullOrWhitespace("name"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation(" ", null)).Message);
+
+            Assert.Equal(
+                Strings.BadAnnotationName("Cheese:Pickle"),
+                Assert.Throws<ArgumentException>(() => config.HasAnnotation("Cheese:Pickle", null)).Message);
         }
 
         [Fact]

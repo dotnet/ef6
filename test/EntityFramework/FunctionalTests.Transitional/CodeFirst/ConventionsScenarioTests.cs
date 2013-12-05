@@ -7,6 +7,7 @@ namespace FunctionalTests
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity;
+    using System.Data.Entity.Core;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.ModelConfiguration;
     using System.Data.Entity.ModelConfiguration.Conventions;
@@ -761,6 +762,190 @@ namespace FunctionalTests
                     storeModel.EntityTypes.Single(e => e.Name == "LightweightEntity").Properties
                     .Any(p => p.Name == "bar"));
             }
+
+            [Fact]
+            public void Can_configure_annotations_on_entity_types()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightEntity))
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightEntityWithAnnotations))
+                    .Configure(e => e.HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>("LightweightEntities")
+                    .HasAnnotation("A1", "V1")
+                    .HasNoAnnotation("A2");
+
+                databaseMapping.Assert<LightweightEntityWithAnnotations>("LightweightEntityWithAnnotations")
+                    .HasAnnotation("A2", "V2")
+                    .HasNoAnnotation("A1");
+            }
+
+            [Fact]
+            public void Can_configure_annotations_on_entity_types_using_generic_API()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Types<LightweightEntity>()
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Types<LightweightEntityWithAnnotations>()
+                    .Configure(e => e.HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>("LightweightEntities")
+                    .HasAnnotation("A1", "V1")
+                    .HasNoAnnotation("A2");
+
+                databaseMapping.Assert<LightweightEntityWithAnnotations>("LightweightEntityWithAnnotations")
+                    .HasAnnotation("A2", "V2")
+                    .HasNoAnnotation("A1");
+            }
+
+            [Fact]
+            public void Annotation_on_entity_types_does_not_get_set_if_annotation_already_set()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>().HasAnnotation("A1", "V1A");
+                modelBuilder.Entity<LightweightDerivedEntity>().HasAnnotation("A1", "V1A");
+                modelBuilder.Entity<LightweightEntityWithAnnotations>();
+
+                modelBuilder.Types<LightweightEntity>()
+                    .Configure(e => e.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2"));
+
+                modelBuilder.Types<LightweightEntityWithAnnotations>()
+                    .Configure(e => e.HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>("LightweightEntities")
+                    .HasAnnotation("A1", "V1A")
+                    .HasAnnotation("A2", "V2");
+
+                databaseMapping.Assert<LightweightEntityWithAnnotations>("LightweightEntityWithAnnotations")
+                    .HasAnnotation("A2", "V2")
+                    .HasNoAnnotation("A1");
+            }
+
+            [Fact]
+            public void Configure_annotations_on_complex_types_when_complex_type_is_not_configured_is_no_op()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<RelatedLightweightEntity>();
+                modelBuilder.ComplexType<LightweightComplexTypeWithId>();
+
+                modelBuilder.Types<LightweightComplexTypeWithId>()
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<RelatedLightweightEntity>("RelatedLightweightEntities")
+                    .HasNoAnnotation("A1");
+            }
+
+            [Fact]
+            public void Configure_annotations_on_configured_complex_types_throws()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<RelatedLightweightEntity>();
+                modelBuilder.ComplexType<LightweightComplexTypeWithId>();
+
+                modelBuilder.Types<LightweightComplexTypeWithId>()
+                    .Configure(e => e.HasAnnotation("A1", "V1").IsComplexType());
+
+                Assert.Equal(
+                    Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder))
+                        .Message, Strings.LightweightEntityConfiguration_ConfigurationConflict_ComplexType(
+                            "HasAnnotation", typeof(LightweightComplexTypeWithId).Name));
+            }
+
+            [Fact]
+            public void Ignore_throws_if_annotations_also_configured()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<RelatedLightweightEntity>();
+                modelBuilder.Types<LightweightComplexTypeWithId>().Configure(c => c.Ignore().HasAnnotation("A1", "V1"));
+
+                Assert.Equal(
+                    Assert.Throws<InvalidOperationException>(() => BuildMapping(modelBuilder)).Message,
+                    Strings.LightweightEntityConfiguration_ConfigurationConflict_IgnoreType(
+                        "HasAnnotation", typeof(LightweightComplexTypeWithId).Name));
+            }
+
+            [Fact]
+            public void Annotations_configured_on_multiple_types_are_unified()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightDerivedEntity>();
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightEntity))
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightDerivedEntity))
+                    .Configure(e => e.HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>("LightweightEntities")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2");
+            }
+
+            [Fact]
+            public void Conflicting_annotations_configured_on_multiple_types_throws()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Entity<LightweightDerivedEntity>();
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightEntity))
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(LightweightDerivedEntity))
+                    .Configure(e => e.HasAnnotation("A1", "V2"));
+
+                Assert.Throws<InvalidOperationException>(
+                     () => BuildMapping(modelBuilder))
+                     .ValidateMessage("ConflictingTypeAnnotation", "A1", "V2", "V1", "LightweightEntity");
+            }
+
+            [Fact]
+            public void Annotations_can_fan_out_to_multiple_tables()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<SplitMeGood>()
+                    .Map(m => m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 }))
+                    .Map(m => m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 }));
+
+                modelBuilder.Types()
+                    .Where(t => t == typeof(SplitMeGood))
+                    .Configure(e => e.HasAnnotation("A1", "V1"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<SplitMeGood>("Left")
+                    .HasAnnotation("A1", "V1");
+
+                databaseMapping.Assert<SplitMeGood>("Right")
+                    .HasAnnotation("A1", "V1");
+            }
         }
 
         public class LightweightPropertyConventions : TestBase
@@ -1032,6 +1217,181 @@ namespace FunctionalTests
                 Assert.Equal(2, keys.Count());
                 Assert.Equal("IntProperty", keys.ElementAt(0).Name);
             }
+
+            [Fact]
+            public void HasAnnotation_adds_column_annotations()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>();
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "StringProperty")
+                    .Configure(p => p.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name.StartsWith("IntProperty"))
+                    .Configure(p => p.HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("StringProperty")
+                    .HasAnnotation("A1", "V1")
+                    .HasNoAnnotation("A2");
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("IntProperty")
+                    .HasNoAnnotation("A1")
+                    .HasAnnotation("A2", "V2");
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("IntProperty1")
+                    .HasNoAnnotation("A1")
+                    .HasAnnotation("A2", "V2");
+            }
+
+            [Fact]
+            public void HasAnnotation_does_not_override_custom_model_annotations_set_outside_of_convention()
+            {
+                var modelBuilder = new DbModelBuilder();
+
+                modelBuilder.Entity<LightweightEntity>()
+                    .Property(e => e.IntProperty)
+                    .HasAnnotation("A1", "V1");
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name.StartsWith("IntProperty"))
+                    .Configure(p => p.HasAnnotation("A1", "V1B").HasAnnotation("A2", "V2"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("IntProperty")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2");
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("IntProperty1")
+                    .HasAnnotation("A1", "V1B")
+                    .HasAnnotation("A2", "V2");
+            }
+
+            [Fact]
+            public void Can_configure_annotations_on_complex_type_properties()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<LightweightEntity>();
+                modelBuilder.Properties<string>()
+                    .Configure(p => p.HasAnnotation("A1", "V1"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("StringProperty")
+                    .HasAnnotation("A1", "V1");
+
+                databaseMapping.Assert<LightweightEntity>()
+                    .Column("ComplexProperty_StringProperty")
+                    .HasAnnotation("A1", "V1");
+            }
+
+            [Fact]
+            public void Annotations_configured_on_multiple_properties_are_unified_to_same_column()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<JoinMeGood>();
+                modelBuilder.Entity<JoinMeMore>();
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop1")
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1").HasAnnotation("A2", "V2"));
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop2")
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1").HasAnnotation("A3", "V3"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<JoinMeGood>("JoinMeGoods")
+                    .Column("MyCatHasPaws")
+                    .HasAnnotation("A1", "V1")
+                    .HasAnnotation("A2", "V2")
+                    .HasAnnotation("A3", "V3");
+            }
+
+            [Fact]
+            public void Conflicting_annotations_configured_on_multiple_properties_throws()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<JoinMeGood>();
+                modelBuilder.Entity<JoinMeMore>();
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop1")
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1A"));
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop2")
+                    .Configure(p => p.HasColumnName("MyCatHasPaws").HasAnnotation("A1", "V1B"));
+
+                var details = Environment.NewLine + "\t" +
+                              string.Format(
+                                  LookupString(
+                                      EntityFrameworkAssembly, "System.Data.Entity.Properties.Resources", "ConflictingAnnotationValue"),
+                                  "A1", "V1A", "V1B");
+
+                Assert.Throws<MappingException>(() => BuildMapping(modelBuilder))
+                    .ValidateMessage(
+                        "BadTphMappingToSharedColumn", "Prop1", "JoinMeGood", "Prop2", "JoinMeMore", "MyCatHasPaws", "JoinMeGood", details);
+            }
+
+            [Fact]
+            public void Annotations_can_fan_out_to_multiple_columns()
+            {
+                var modelBuilder = new DbModelBuilder();
+                modelBuilder.Entity<SplitMeGood>()
+                    .Map(m => m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 }))
+                    .Map(m => m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 }));
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Id")
+                    .Configure(p => p.HasAnnotation("A1", "V1"));
+
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop1")
+                    .Configure(p => p.HasAnnotation("A2", "V2"));
+                
+                modelBuilder.Properties()
+                    .Where(p => p.Name == "Prop2")
+                    .Configure(p => p.HasAnnotation("A3", "V3"));
+
+                var databaseMapping = BuildMapping(modelBuilder);
+
+                databaseMapping.Assert<SplitMeGood>("Left")
+                    .Column("Id")
+                    .HasAnnotation("A1", "V1")
+                    .HasNoAnnotation("A2")
+                    .HasNoAnnotation("A3");
+
+                databaseMapping.Assert<SplitMeGood>("Left")
+                    .Column("Prop1")
+                    .HasAnnotation("A2", "V2")
+                    .HasNoAnnotation("A1")
+                    .HasNoAnnotation("A3");
+
+                databaseMapping.Assert<SplitMeGood>("Right")
+                    .Column("Id")
+                    .HasAnnotation("A1", "V1")
+                    .HasNoAnnotation("A2")
+                    .HasNoAnnotation("A3");
+
+                databaseMapping.Assert<SplitMeGood>("Right")
+                    .Column("Prop2")
+                    .HasAnnotation("A3", "V3")
+                    .HasNoAnnotation("A1")
+                    .HasNoAnnotation("A2");
+            }
         }
     }
 
@@ -1111,6 +1471,24 @@ namespace FunctionalTests
         [Required]
         [StringLength(15)]
         public string StringProperty { get; set; }
+    }
+
+    public class SplitMeGood
+    {
+        public int Id { get; set; }
+        public int Prop1 { get; set; }
+        public int Prop2 { get; set; }
+    }
+
+    public class JoinMeGood
+    {
+        public int Id { get; set; }
+        public int Prop1 { get; set; }
+    }
+
+    public class JoinMeMore : JoinMeGood
+    {
+        public int Prop2 { get; set; }
     }
 
     public class LightweightDerivedEntity : LightweightEntity

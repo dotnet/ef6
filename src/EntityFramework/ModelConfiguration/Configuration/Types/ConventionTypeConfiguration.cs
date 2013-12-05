@@ -5,6 +5,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Data.Entity.Core;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Navigation;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Utilities;
@@ -446,6 +447,33 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         /// <summary>
+        /// Sets an annotation in the model for the table to which this entity is mapped. The annotation
+        /// value can later be used when processing the table such as when creating migrations.
+        /// </summary>
+        /// <remarks>
+        /// It will likely be necessary to register a <see cref="IMetadataAnnotationSerializer"/> if the type of
+        /// the annotation value is anything other than a string. Calling this method will have no effect if the 
+        /// annotation with the given name has already been configured.
+        /// </remarks>
+        /// <param name="name">The annotation name, which must be a valid C#/EDM identifier.</param>
+        /// <param name="value">The annotation value, which may be a string or some other type that
+        /// can be serialized with an <see cref="IMetadataAnnotationSerializer"/></param>.
+        /// <returns>The same configuration instance so that multiple calls can be chained.</returns>
+        public ConventionTypeConfiguration HasAnnotation(string name, object value)
+        {
+            Check.NotEmpty(name, "name");
+            ValidateConfiguration(ConfigurationAspect.HasAnnotation);
+
+            if (_entityTypeConfiguration != null
+                && !_entityTypeConfiguration().Annotations.ContainsKey(name))
+            {
+                _entityTypeConfiguration().SetAnnotation(name, value);
+            }
+
+            return this;
+        }
+
+        /// <summary>
         /// Configures this type to use stored procedures for insert, update and delete.
         /// The default conventions for procedure and parameter names will be used.
         /// </summary>
@@ -503,7 +531,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ConfigurationAspect.MapToStoredProcedures,
                 ConfigurationAspect.NavigationProperty,
                 ConfigurationAspect.Property,
-                ConfigurationAspect.ToTable
+                ConfigurationAspect.ToTable,
+                ConfigurationAspect.HasAnnotation
             };
 
         private static readonly List<ConfigurationAspect> ConfigurationAspectsConflictingWithComplexType = new List<ConfigurationAspect>
@@ -512,7 +541,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
                 ConfigurationAspect.HasKey,
                 ConfigurationAspect.MapToStoredProcedures,
                 ConfigurationAspect.NavigationProperty,
-                ConfigurationAspect.ToTable
+                ConfigurationAspect.ToTable,
+                ConfigurationAspect.HasAnnotation
             };
 
         private void ValidateConfiguration(ConfigurationAspect aspect)
@@ -583,7 +613,8 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             MapToStoredProcedures = 1 << 5,
             Property = 1 << 6,
             NavigationProperty = 1 << 7,
-            ToTable = 1 << 8
+            ToTable = 1 << 8,
+            HasAnnotation = 1 << 9
         }
     }
 }
