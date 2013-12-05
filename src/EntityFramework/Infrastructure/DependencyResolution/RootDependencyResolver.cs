@@ -63,6 +63,8 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
 #endif
             _resolvers.Add(new SingletonDependencyResolver<IMetadataAnnotationSerializer>(
                 new ClrTypeAnnotationSerializer(), XmlConstants.ClrTypeAnnotation));
+            _resolvers.Add(new SingletonDependencyResolver<IMetadataAnnotationSerializer>(
+                new IndexAnnotationSerializer(), XmlConstants.IndexAnnotation));
         }
 
         public DatabaseInitializerResolver DatabaseInitializerResolver

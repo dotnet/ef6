@@ -264,3 +264,6 @@ using System.Diagnostics.CodeAnalysis;
         MessageId = "System.Data.Entity.Core.SchemaObjectModel.ScalarType.ConvertToByteArray(System.String)", 
         Scope = "member", 
         Target = "System.Data.Entity.Core.Metadata.Edm.AspProxy.#.cctor()")]
+[assembly: 
+    SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", 
+        Target = "System.ComponentModel.DataAnnotations.Schema")]

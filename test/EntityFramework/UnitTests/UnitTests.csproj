@@ -287,8 +287,10 @@
     <Compile Include="DataAnnotations\Schema\ColumnAttributeTests.cs" />
     <Compile Include="DataAnnotations\MaxLengthAttributeTests.cs" />
     <Compile Include="DataAnnotations\MinLengthAttributeTests.cs" />
+    <Compile Include="DataAnnotations\Schema\CompatibilityResultTests.cs" />
     <Compile Include="DataAnnotations\Schema\DatabaseGeneratedAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\ForeignKeyAttributeTests.cs" />
+    <Compile Include="DataAnnotations\Schema\IndexAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\InversePropertyAttributeTests.cs" />
     <Compile Include="DataAnnotations\Schema\TableAttributeTests.cs" />
     <Compile Include="DbConfigurationTests.cs" />
@@ -351,6 +353,8 @@
     <Compile Include="Infrastructure\Interception\InterceptionContextMutableDataTests.cs" />
     <Compile Include="Infrastructure\Interception\InterceptionTests.cs" />
     <Compile Include="Infrastructure\Interception\InternalDispatcherTests.cs" />
+    <Compile Include="Infrastructure\IndexAnnotationSerializerTests.cs" />
+    <Compile Include="Infrastructure\IndexAnnotationTests.cs" />
     <Compile Include="Infrastructure\MappingViews\DbMappingViewCacheTypeAttributeTests.cs" />
     <Compile Include="Infrastructure\MappingViews\DbMappingViewTests.cs" />
     <Compile Include="Infrastructure\MappingViews\DefaultDbMappingViewCacheFactoryTests.cs" />

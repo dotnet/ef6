@@ -431,6 +431,62 @@ namespace System.Data.Entity.Resources
         }
 
         // <summary>
+        // A string like "Index attribute property '{0}' = '{1}' conflicts with index attribute property '{0}' = '{2}'"
+        // </summary>
+        internal static string ConflictingIndexAttributeProperty(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingIndexAttributeProperty, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "IndexAttributes with name '{0}' cannot be merged because they contain conflicting configuration: {1}"
+        // </summary>
+        internal static string ConflictingIndexAttribute(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingIndexAttribute, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Property '{0}' on type '{1}' is attributed with two IndexAttributes with name '{2}' that contain conflicting configuration: {3}"
+        // </summary>
+        internal static string ConflictingIndexAttributesOnProperty(object p0, object p1, object p2, object p3)
+        {
+            return EntityRes.GetString(EntityRes.ConflictingIndexAttributesOnProperty, p0, p1, p2, p3);
+        }
+
+        // <summary>
+        // A string like "Objects of type '{0}' are not compatible with objects of type '{1}' and cannot be merged."
+        // </summary>
+        internal static string IncompatibleTypes(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.IncompatibleTypes, p0, p1);
+        }
+
+        // <summary>
+        // A string like "Getting the value of '{0}' is not supported because C# syntax for attributes does not support nullable types and the value of '{0}' is null if it has not been explicitly set. Use the '{1}' property instead."
+        // </summary>
+        internal static string IndexAttributeNonNullableProperty(object p0, object p1)
+        {
+            return EntityRes.GetString(EntityRes.IndexAttributeNonNullableProperty, p0, p1);
+        }
+
+        // <summary>
+        // A string like "An object of type '{0}' cannot be serialized by the {1}. Only '{2}' objects can be serialized."
+        // </summary>
+        internal static string AnnotationSerializeWrongType(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.AnnotationSerializeWrongType, p0, p1, p2);
+        }
+
+        // <summary>
+        // A string like "The string '{0}' was not in the expected format to be deserialized by the {1}. Serialized values are expected to have the format '{2}'."
+        // </summary>
+        internal static string AnnotationSerializeBadFormat(object p0, object p1, object p2)
+        {
+            return EntityRes.GetString(EntityRes.AnnotationSerializeBadFormat, p0, p1, p2);
+        }
+
+        // <summary>
         // A string like "The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject."
         // </summary>
         internal static string CodeFirstInvalidComplexType(object p0)
@@ -764,6 +820,14 @@ namespace System.Data.Entity.Resources
         internal static string BadAnnotationName(object p0)
         {
             return EntityRes.GetString(EntityRes.BadAnnotationName, p0);
+        }
+
+        // <summary>
+        // A string like "The index name '{0}' is not valid. Index names used in the Entity Framework model have the same restrictions as C# identifiers."
+        // </summary>
+        internal static string BadIndexName(object p0)
+        {
+            return EntityRes.GetString(EntityRes.BadIndexName, p0);
         }
 
         // <summary>
@@ -15610,6 +15674,13 @@ namespace System.Data.Entity.Resources
         internal const string ConflictingColumnConfiguration = "ConflictingColumnConfiguration";
         internal const string ConflictingConfigurationValue = "ConflictingConfigurationValue";
         internal const string ConflictingAnnotationValue = "ConflictingAnnotationValue";
+        internal const string ConflictingIndexAttributeProperty = "ConflictingIndexAttributeProperty";
+        internal const string ConflictingIndexAttribute = "ConflictingIndexAttribute";
+        internal const string ConflictingIndexAttributesOnProperty = "ConflictingIndexAttributesOnProperty";
+        internal const string IncompatibleTypes = "IncompatibleTypes";
+        internal const string IndexAttributeNonNullableProperty = "IndexAttributeNonNullableProperty";
+        internal const string AnnotationSerializeWrongType = "AnnotationSerializeWrongType";
+        internal const string AnnotationSerializeBadFormat = "AnnotationSerializeBadFormat";
         internal const string CodeFirstInvalidComplexType = "CodeFirstInvalidComplexType";
         internal const string InvalidEntityType = "InvalidEntityType";
         internal const string SimpleNameCollision = "SimpleNameCollision";
@@ -15652,6 +15723,7 @@ namespace System.Data.Entity.Resources
         internal const string IncorrectColumnCount = "IncorrectColumnCount";
         internal const string BadKeyNameForAnnotation = "BadKeyNameForAnnotation";
         internal const string BadAnnotationName = "BadAnnotationName";
+        internal const string BadIndexName = "BadIndexName";
         internal const string CircularComplexTypeHierarchy = "CircularComplexTypeHierarchy";
         internal const string UnableToDeterminePrincipal = "UnableToDeterminePrincipal";
         internal const string UnmappedAbstractType = "UnmappedAbstractType";

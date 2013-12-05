@@ -29,14 +29,14 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Conventions
             var conventions = new ConventionsConfiguration();
             var entities = new TypeConventionConfiguration<object>(conventions);
 
-            Assert.Equal(15, conventions.ConfigurationConventions.Count());
+            Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
             entities
                 .Where(predicate)
                 .Having(capturingPredicate)
                 .Configure(configurationAction);
 
-            Assert.Equal(16, conventions.ConfigurationConventions.Count());
+            Assert.Equal(17, conventions.ConfigurationConventions.Count());
 
             var convention = (TypeConventionWithHaving<object, object>)conventions.ConfigurationConventions.First();
             Assert.Equal(2, convention.Predicates.Count());

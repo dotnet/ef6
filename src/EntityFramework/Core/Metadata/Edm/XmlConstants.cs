@@ -11,6 +11,7 @@ namespace System.Data.Entity.Core.Metadata.Edm
     {
         internal const string CustomAnnotationNamespace = "http://schemas.microsoft.com/ado/2013/11/edm/customannotation";
         internal const string ClrTypeAnnotation = CustomAnnotationNamespace + ":ClrType";
+        internal const string IndexAnnotation = CustomAnnotationNamespace + ":" + Infrastructure.IndexAnnotation.AnnotationName;
         internal const string UseClrTypesAnnotation = CustomAnnotationNamespace + ":UseClrTypes";
 
         // v3.5 of .net framework

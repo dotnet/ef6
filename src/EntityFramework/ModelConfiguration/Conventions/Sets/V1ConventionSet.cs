@@ -28,6 +28,7 @@ namespace System.Data.Entity.ModelConfiguration.Conventions.Sets
                             new MaxLengthAttributeConvention(),
                             new StringLengthAttributeConvention(),
                             new ColumnAttributeConvention(),
+                            new IndexAttributeConvention(),
                             new InversePropertyAttributeConvention(),
                             new ForeignKeyPrimitivePropertyAttributeConvention(),
                         }.Reverse(),

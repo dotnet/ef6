@@ -403,6 +403,88 @@ namespace FunctionalTests
         }
 
         [Fact]
+        public void Column_should_get_only_annotations_configured_for_that_column_when_property_maps_to_multiple_columns()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<SplitTeaSoup>()
+                .Map(
+                    m =>
+                    {
+                        m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 });
+                        m.Property(p => p.Id).HasAnnotation("A0", "V01").HasAnnotation("A1", "V1");
+                    })
+                .Map(
+                    m =>
+                    {
+                        m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 });
+                        m.Property(p => p.Id).HasAnnotation("A0", "V02").HasAnnotation("A2", "V2");
+                    });
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<SplitTeaSoup>("Left")
+                .Column("Id")
+                .HasAnnotation("A0", "V01")
+                .HasAnnotation("A1", "V1")
+                .HasNoAnnotation("A2");
+
+            databaseMapping.Assert<SplitTeaSoup>("Right")
+                .Column("Id")
+                .HasAnnotation("A0", "V02")
+                .HasAnnotation("A2", "V2")
+                .HasNoAnnotation("A1");
+        }
+
+        [Fact]
+        public void Column_should_get_only_annotations_configured_for_that_column_and_all_columns()
+        {
+            var modelBuilder = new DbModelBuilder();
+
+            modelBuilder.Entity<SplitTeaSoup>()
+                .Map(
+                    m =>
+                    {
+                        m.ToTable("Left").Properties(p => new { p.Id, p.Prop1 });
+                        m.Property(p => p.Id).HasAnnotation("A0", "V01").HasAnnotation("A1", "V1");
+                    })
+                .Map(
+                    m =>
+                    {
+                        m.ToTable("Right").Properties(p => new { p.Id, p.Prop2 });
+                        m.Property(p => p.Id).HasAnnotation("A0", "V02").HasAnnotation("A2", "V2");
+                    });
+            modelBuilder.Entity<SplitTeaSoup>().Property(e => e.Id).HasAnnotation("A3", "V3");
+
+            var databaseMapping = BuildMapping(modelBuilder);
+
+            databaseMapping.AssertValid();
+
+            databaseMapping.Assert<SplitTeaSoup>("Left")
+                .Column("Id")
+                .HasAnnotation("A0", "V01")
+                .HasAnnotation("A1", "V1")
+                .HasAnnotation("A3", "V3")
+                .HasNoAnnotation("A2");
+
+            databaseMapping.Assert<SplitTeaSoup>("Right")
+                .Column("Id")
+                .HasAnnotation("A0", "V02")
+                .HasAnnotation("A2", "V2")
+                .HasAnnotation("A3", "V3")
+                .HasNoAnnotation("A1");
+        }
+
+        public class SplitTeaSoup
+        {
+            public int Id { get; set; }
+            public string Prop1 { get; set; }
+            public string Prop2 { get; set; }
+        }
+
+        [Fact]
         public void Build_model_for_simple_tpt()
         {
             var modelBuilder = new AdventureWorksModelBuilder();

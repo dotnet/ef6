@@ -6,6 +6,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Configuration.Properties.Primitive;
     using System.Data.Entity.ModelConfiguration.Edm;
     using System.Data.Entity.Resources;
@@ -945,6 +946,37 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void FillFrom_merges_annotations_that_implement_IMergeableAnnotation()
+        {
+            var mockMergable1M = new Mock<IMergeableAnnotation>();
+            var mockMergable1A = new Mock<IMergeableAnnotation>();
+            var mockMergable1B = new Mock<IMergeableAnnotation>();
+            mockMergable1A.Setup(m => m.MergeWith(It.IsAny<object>())).Returns(mockMergable1M.Object);
+
+            var mockMergable2M = new Mock<IMergeableAnnotation>();
+            var mockMergable2A = new Mock<IMergeableAnnotation>();
+            var mockMergable2B = new Mock<IMergeableAnnotation>();
+            mockMergable2A.Setup(m => m.MergeWith(It.IsAny<object>())).Returns(mockMergable2M.Object);
+
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", mockMergable1A.Object);
+            configurationA.SetAnnotation("A2", mockMergable2A.Object);
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", mockMergable1B.Object);
+            configurationB.SetAnnotation("A2", mockMergable2B.Object);
+
+            configurationA.FillFrom(configurationB, inCSpace: false);
+
+            Assert.Equal(2, configurationA.Annotations.Count);
+            Assert.Same(mockMergable1M.Object, configurationA.Annotations["A1"]);
+            Assert.Same(mockMergable2M.Object, configurationA.Annotations["A2"]);
+
+            mockMergable1A.Verify(m => m.MergeWith(mockMergable1B.Object));
+            mockMergable2A.Verify(m => m.MergeWith(mockMergable2B.Object));
+        }
+
+        [Fact]
         public void OverrideFrom_removes_annotations_set_in_other()
         {
             var configurationA = CreateConfiguration();
@@ -1331,6 +1363,38 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
         }
 
         [Fact]
+        public void IsCompatible_returns_true_when_annotations_can_be_merged()
+        {
+            var mockMergable1A = new Mock<IMergeableAnnotation>();
+            mockMergable1A.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(true, null));
+            var mockMergable1B = new Mock<IMergeableAnnotation>();
+            mockMergable1B.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(true, null));
+
+            var mockMergable2A = new Mock<IMergeableAnnotation>();
+            mockMergable2A.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(true, null));
+            var mockMergable2B = new Mock<IMergeableAnnotation>();
+            mockMergable2B.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(true, null));
+
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", mockMergable1A.Object);
+            configurationA.SetAnnotation("A2", mockMergable2A.Object);
+
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", mockMergable1B.Object);
+            configurationB.SetAnnotation("A2", mockMergable2B.Object);
+
+            string errorMessage;
+            Assert.True(configurationA.IsCompatible(configurationB, false, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+
+            Assert.True(configurationB.IsCompatible(configurationA, false, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+
+            Assert.True(configurationB.IsCompatible(configurationA, true, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
+        }
+
+        [Fact]
         public void IsCompatible_returns_false_for_conflicting_annotation_values_in_SSpace()
         {
             var configurationA = CreateConfiguration();
@@ -1348,6 +1412,30 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var expectedMessage = Environment.NewLine + "\t" + Strings.ConflictingAnnotationValue("A2", "V2", "V3");
             Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
             Assert.Equal(expectedMessage, errorMessage);
+        }
+
+        [Fact]
+        public void IsCompatible_returns_false_for_conflicting_mergeable_annotation_values_in_SSpace()
+        {
+            var mockMergable1A = new Mock<IMergeableAnnotation>();
+            mockMergable1A.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(false, "Cheese"));
+            var mockMergable1B = new Mock<IMergeableAnnotation>();
+            mockMergable1B.Setup(m => m.IsCompatibleWith(It.IsAny<object>())).Returns(new CompatibilityResult(false, "Pickle"));
+
+            var configurationA = CreateConfiguration();
+            configurationA.SetAnnotation("A1", mockMergable1A.Object);
+            var configurationB = CreateConfiguration();
+            configurationB.SetAnnotation("A1", mockMergable1B.Object);
+
+            string errorMessage;
+            Assert.False(configurationA.IsCompatible(configurationB, false, out errorMessage));
+            Assert.Equal(Environment.NewLine + "\t" + "Cheese", errorMessage);
+
+            Assert.False(configurationB.IsCompatible(configurationA, false, out errorMessage));
+            Assert.Equal(Environment.NewLine + "\t" + "Pickle", errorMessage);
+
+            Assert.True(configurationA.IsCompatible(configurationB, true, out errorMessage));
+            Assert.True(string.IsNullOrEmpty(errorMessage));
         }
 
         [Fact]

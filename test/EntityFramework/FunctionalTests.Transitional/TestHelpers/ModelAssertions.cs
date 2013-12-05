@@ -258,12 +258,21 @@ namespace System.Data.Entity
                 return this;
             }
 
-            public ColumnAssertions HasAnnotation(string name, object value)
+            public ColumnAssertions HasAnnotation(string name, object value, IEqualityComparer<object> comparer = null)
             {
                 var qualifiedName = XmlConstants.CustomAnnotationNamespace + ":" + name;
 
                 Xunit.Assert.Equal(1, _column.Annotations.Count(a => a.Name == qualifiedName));
-                Xunit.Assert.Equal(value, _column.Annotations.Single(a => a.Name == qualifiedName).Value);
+                
+                var actual = _column.Annotations.Single(a => a.Name == qualifiedName).Value;
+                if (comparer == null)
+                {
+                    Xunit.Assert.Equal(value, actual);
+                }
+                else
+                {
+                    Xunit.Assert.Equal(value, actual, comparer);
+                }
 
                 return this;
             }

@@ -139,6 +139,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
     <Compile Include="CodeFirst\AdvancedMappingScenarioTests.cs" />
     <Compile Include="CodeFirst\AssociationScenarioTests.cs" />
+    <Compile Include="CodeFirst\AttributeToAnnotationScenarios.cs" />
     <Compile Include="CodeFirst\BasicMappingScenarioTests.cs" />
     <Compile Include="CodeFirst\ComplexTypeScenarioTests.cs" />
     <Compile Include="CodeFirst\ConfigurationScenarioTests.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="CodeFirst\DataAnnotationScenarioTests.cs" />
     <Compile Include="CodeFirst\DataServicesTests.cs" />
     <Compile Include="CodeFirst\FunctionsScenarioTests.cs" />
+    <Compile Include="CodeFirst\IndexScenarios.cs" />
     <Compile Include="CodeFirst\TableSplittingTests.cs" />
     <Compile Include="CodeFirst\TestHelpers\EndToEndFunctionsTest.cs" />
     <Compile Include="CodeFirst\TptMappingTests.cs" />
@@ -175,6 +177,8 @@
     </Compile>
     <Compile Include="TestHelpers\GenericProviderFactory`.cs" />
     <Compile Include="TestHelpers\GenericProviderServices.cs" />
+    <Compile Include="TestHelpers\IndexAnnotationEqualityComparer.cs" />
+    <Compile Include="TestHelpers\IndexAttributeEqualityComparer.cs" />
     <Compile Include="TestHelpers\LocalizationTestHelpers.cs" />
     <Compile Include="TestHelpers\MutableResolver.cs" />
     <Compile Include="TestHelpers\ExtendedFactAttribute.cs" />

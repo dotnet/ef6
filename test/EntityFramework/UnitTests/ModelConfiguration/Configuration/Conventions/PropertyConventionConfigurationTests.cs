@@ -58,13 +58,13 @@ namespace System.Data.Entity.ModelConfiguration.Configuration
             var conventions = new ConventionsConfiguration();
             var properties = new PropertyConventionConfiguration(conventions);
 
-            Assert.Equal(15, conventions.ConfigurationConventions.Count());
+            Assert.Equal(16, conventions.ConfigurationConventions.Count());
 
             properties
                 .Where(predicate)
                 .Configure(configurationAction);
 
-            Assert.Equal(16, conventions.ConfigurationConventions.Count());
+            Assert.Equal(17, conventions.ConfigurationConventions.Count());
 
             var convention = (PropertyConvention)conventions.ConfigurationConventions.First();
             Assert.Equal(1, convention.Predicates.Count());

@@ -7,6 +7,7 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Internal;
     using System.Data.Entity.ModelConfiguration.Configuration.Types;
     using System.Data.Entity.ModelConfiguration.Edm;
@@ -152,15 +153,16 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
                 PrimitivePropertyConfiguration mergedConfiguration;
                 if (existingConfiguration.GetType().IsAssignableFrom(GetType()))
                 {
-                    mergedConfiguration = (PrimitivePropertyConfiguration)MemberwiseClone();
+                    mergedConfiguration = Clone();
                 }
                 else
                 {
-                    mergedConfiguration = (PrimitivePropertyConfiguration)existingConfiguration.MemberwiseClone();
+                    mergedConfiguration = existingConfiguration.Clone();
                     mergedConfiguration.CopyFrom(this);
                 }
                 mergedConfiguration.FillFrom(existingConfiguration, inCSpace: true);
                 property.SetConfiguration(mergedConfiguration);
+                ConfigureAnnotations(property);
             }
             else
             {
@@ -420,7 +422,15 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
 
                 foreach (var annotation in other._annotations)
                 {
-                    if (!_annotations.ContainsKey(annotation.Key))
+                    if (_annotations.ContainsKey(annotation.Key))
+                    {
+                        var mergeableAnnotation = _annotations[annotation.Key] as IMergeableAnnotation;
+                        if (mergeableAnnotation != null)
+                        {
+                            _annotations[annotation.Key] = mergeableAnnotation.MergeWith(annotation.Value);
+                        }
+                    }
+                    else
                     {
                         _annotations[annotation.Key] = annotation.Value;
                     }
@@ -507,14 +517,27 @@ namespace System.Data.Entity.ModelConfiguration.Configuration.Properties.Primiti
             {
                 if (other.Annotations.ContainsKey(annotation.Key))
                 {
+                    var value = annotation.Value;
                     var otherValue = other.Annotations[annotation.Key];
-                    if (!Equals(annotation.Value, otherValue))
+
+                    var mergeableAnnotation = value as IMergeableAnnotation;
+                    if (mergeableAnnotation != null)
+                    {
+                        var isCompatible = mergeableAnnotation.IsCompatibleWith(otherValue);
+                        if (!isCompatible)
+                        {
+                            annotationsAreCompatible = false;
+
+                            errorMessage += Environment.NewLine + "\t" + isCompatible.ErrorMessage;
+                        }
+                    }
+                    else if (!Equals(value, otherValue))
                     {
                         annotationsAreCompatible = false;
 
                         errorMessage += Environment.NewLine + "\t" +
                                         Strings.ConflictingAnnotationValue(
-                                            annotation.Key, annotation.Value.ToString(), otherValue.ToString());
+                                            annotation.Key, value.ToString(), otherValue.ToString());
                     }
                 }
             }

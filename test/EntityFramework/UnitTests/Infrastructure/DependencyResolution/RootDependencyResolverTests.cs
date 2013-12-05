@@ -5,12 +5,10 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
     using System.Collections.Concurrent;
     using System.Data.Common;
     using System.Data.Entity.Core.Common;
-    using System.Data.Entity.Core.Mapping.ViewGeneration;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Infrastructure.Interception;
     using System.Data.Entity.Infrastructure.Pluralization;
-    using System.Data.Entity.Internal;
     using System.Data.Entity.Migrations.History;
     using System.Data.Entity.ModelConfiguration.Utilities;
     using System.Data.Entity.Utilities;
@@ -218,6 +216,13 @@ namespace System.Data.Entity.Infrastructure.DependencyResolution
             {
                 Assert.IsType<ClrTypeAnnotationSerializer>(
                     new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>(XmlConstants.ClrTypeAnnotation));
+            }
+
+            [Fact]
+            public void The_root_resolver_returns_the_IndexAnnotationSerializer()
+            {
+                Assert.IsType<IndexAnnotationSerializer>(
+                    new RootDependencyResolver().GetService<IMetadataAnnotationSerializer>(XmlConstants.IndexAnnotation));
             }
 
             [Fact]

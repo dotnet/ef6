@@ -305,6 +305,27 @@
   <data name="ConflictingAnnotationValue" xml:space="preserve">
     <value>Custom annotation '{0}' = '{1}' conflicts with custom annotation '{0}' = '{2}'</value>
   </data>
+  <data name="ConflictingIndexAttributeProperty" xml:space="preserve">
+    <value>Index attribute property '{0}' = '{1}' conflicts with index attribute property '{0}' = '{2}'</value>
+  </data>
+  <data name="ConflictingIndexAttribute" xml:space="preserve">
+    <value>IndexAttributes with name '{0}' cannot be merged because they contain conflicting configuration: {1}</value>
+  </data>
+  <data name="ConflictingIndexAttributesOnProperty" xml:space="preserve">
+    <value>Property '{0}' on type '{1}' is attributed with two IndexAttributes with name '{2}' that contain conflicting configuration: {3}</value>
+  </data>
+  <data name="IncompatibleTypes" xml:space="preserve">
+    <value>Objects of type '{0}' are not compatible with objects of type '{1}' and cannot be merged.</value>
+  </data>
+  <data name="IndexAttributeNonNullableProperty" xml:space="preserve">
+    <value>Getting the value of '{0}' is not supported because C# syntax for attributes does not support nullable types and the value of '{0}' is null if it has not been explicitly set. Use the '{1}' property instead.</value>
+  </data>
+  <data name="AnnotationSerializeWrongType" xml:space="preserve">
+    <value>An object of type '{0}' cannot be serialized by the {1}. Only '{2}' objects can be serialized.</value>
+  </data>
+  <data name="AnnotationSerializeBadFormat" xml:space="preserve">
+    <value>The string '{0}' was not in the expected format to be deserialized by the {1}. Serialized values are expected to have the format '{2}'.</value>
+  </data>
   <data name="CodeFirstInvalidComplexType" xml:space="preserve">
     <value>The type '{0}' was not mapped. Check that the type has not been explicitly excluded by using the Ignore method or NotMappedAttribute data annotation. Verify that the type was defined as a class, is not primitive or generic, and does not inherit from ComplexObject.</value>
     <comment>## ExceptionType=InvalidOperationException</comment>
@@ -465,6 +486,9 @@
   </data>
   <data name="BadAnnotationName" xml:space="preserve">
     <value>The annotation name '{0}' is not valid. Annotation names have the same restrictions as C# and EDM identifiers.</value>
+  </data>
+  <data name="BadIndexName" xml:space="preserve">
+    <value>The index name '{0}' is not valid. Index names used in the Entity Framework model have the same restrictions as C# identifiers.</value>
   </data>
   <data name="CircularComplexTypeHierarchy" xml:space="preserve">
     <value>A circular ComplexType hierarchy was detected. Self-referencing ComplexTypes are not supported.</value>
