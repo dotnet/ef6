@@ -112,13 +112,5 @@
       <Name>EntityDesign</Name>
     </ProjectReference>
   </ItemGroup>
-  <Target Name="Build">
-    <!-- Build target from Microsoft.CSharp.targets will overwrite this if VisualStudioVersion == 11.0 -->
-    <Error Text="EntityDesignDataSourceWizardExtension Build only supported for VS11" />
-  </Target>
-    <Target Name="Clean">
-    <!-- Build target from Microsoft.CSharp.targets will overwrite this if VisualStudioVersion == 11.0 -->
-    <Error Text="EntityDesignDataSourceWizardExtension Clean only supported for VS11" />
-  </Target>
-  <Import Condition="$(VisualStudioVersion)=='11.0'" Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
