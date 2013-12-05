@@ -62,6 +62,35 @@ namespace System.Data.Entity.Internal
             Assert.True(initialized);
             Assert.Equal(1, enumerator.Current);
         }
+
+        [Fact]
+        public void MoveNextAsync_passes_users_cancellationToken()
+        {
+            var cancellationToken = new CancellationTokenSource().Token;
+
+            var mockAsyncEnumerator = new Mock<IDbAsyncEnumerator<int>>();
+            mockAsyncEnumerator
+                .Setup(e => e.MoveNextAsync(It.IsAny<CancellationToken>()))
+                .Returns(
+                    (CancellationToken token) =>
+                    {
+                        Assert.Equal(cancellationToken, token);
+                        return Task.FromResult(false);
+                    });
+
+            var lazyEnumerator = 
+                new LazyAsyncEnumerator<int>(
+                    token =>
+                    {
+                        Assert.Equal(cancellationToken, token);
+                        return Task.FromResult(mockAsyncEnumerator.Object);
+                    });
+
+            lazyEnumerator
+                .MoveNextAsync(cancellationToken)
+                .GetAwaiter()
+                .GetResult();
+        }
     }
 }
 

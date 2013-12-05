@@ -27,6 +27,8 @@ namespace System.Data.Entity.Infrastructure
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(action);
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             using (var enumerator = source.GetAsyncEnumerator())
             {
                 if (await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
@@ -34,6 +36,7 @@ namespace System.Data.Entity.Infrastructure
                     Task<bool> moveNextTask;
                     do
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         var current = enumerator.Current;
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);
@@ -54,7 +57,7 @@ namespace System.Data.Entity.Infrastructure
         {
             DebugCheck.NotNull(source);
             DebugCheck.NotNull(action);
-
+           
             return ForEachAsync(source.GetAsyncEnumerator(), action, cancellationToken);
         }
 
@@ -63,11 +66,14 @@ namespace System.Data.Entity.Infrastructure
         {
             using (enumerator)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 if (await enumerator.MoveNextAsync(cancellationToken).ConfigureAwait(continueOnCapturedContext: false))
                 {
                     Task<bool> moveNextTask;
                     do
                     {
+                        cancellationToken.ThrowIfCancellationRequested();
                         var current = enumerator.Current;
                         moveNextTask = enumerator.MoveNextAsync(cancellationToken);
                         action(current);

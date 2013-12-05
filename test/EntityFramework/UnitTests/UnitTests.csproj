@@ -295,6 +295,7 @@
     <Compile Include="DbFunctionAttributeTests.cs" />
     <Compile Include="DbFunctionsTests.cs" />
     <Compile Include="Edm\EdmModelVisitorTests.cs" />
+    <Compile Include="IDbAsyncEnumerableExtensionsTests.cs" />
     <Compile Include="Infrastructure\CancelableDbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbCommandDispatcherTests.cs" />
     <Compile Include="Infrastructure\DbCommandInterceptionContextTests.cs" />
