@@ -512,7 +512,7 @@ namespace EFDesigner.E2ETests
 
                 newConnectionButton.Click();
                 HandleConnectionDialog(wizard, dbName);
-                wizard.WaitTill(WaitTillNewDBSettingsLoaded, new TimeSpan(0, 1, 0));
+                wizard.WaitTill(WaitTillNewDBSettingsLoaded);
             }
 
             ClickNextButton(wizard);
@@ -601,7 +601,6 @@ namespace EFDesigner.E2ETests
 
         private bool WaitTillNewDBSettingsLoaded()
         {
-            Trace.WriteLine("Waiting for New DB Settings to be loaded");
             var appconfig = _wizard.Get<TextBox>(SearchCriteria.ByAutomationId("textBoxAppConfigConnectionName"));
             return appconfig.Text.Equals("SchoolEntities");
         }
