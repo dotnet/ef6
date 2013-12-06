@@ -42,6 +42,8 @@ Project global post-settings and targets.
   </PropertyGroup>
   <Target Name="SetComputedProperties">
     <PropertyGroup>
+      <!-- If building the runtime then override the default AssemblyVersion. This only affects nightly builds. -->
+      <AssemblyVersion Condition="'$(BuildingRuntimeProject)' == 'true'">$(VersionMajor).0.0.0</AssemblyVersion>
       <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
       <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>

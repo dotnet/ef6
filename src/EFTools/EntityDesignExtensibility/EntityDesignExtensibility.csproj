@@ -14,8 +14,6 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <FileAlignment>512</FileAlignment>
-    <!-- Note: AssemblyVersion must remain fixed for VS11 - see note in AssemblyInfo.cs -->
-    <AssemblyVersion Condition="'$(VisualStudioVersion)' == '11.0'">11.1.0.0</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -95,4 +93,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="BeforeBuild">
+    <PropertyGroup>
+      <!-- Note: AssemblyVersion must remain fixed for VS11 - see note in AssemblyInfo.cs -->
+      <AssemblyVersion Condition="'$(VisualStudioVersion)' == '11.0'">11.1.0.0</AssemblyVersion>
+    </PropertyGroup>
+  </Target>
 </Project>
