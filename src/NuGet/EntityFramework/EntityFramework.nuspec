@@ -4,6 +4,7 @@
     <id>EntityFramework</id>
     <version>$NuGetPackageVersion$</version>
     <title>EntityFramework</title>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF Database Data O/RM ADO.NET</tags>

@@ -4,6 +4,7 @@
     <id>EntityFramework.SqlServerCompact.Legacy</id>
     <version>$NuGetPackageVersion$</version>
     <title>EntityFramework.SqlServerCompact.Legacy</title>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkID=386613</iconUrl>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <tags>Microsoft EF SQL Compact CE 3.5 Legacy</tags>
