@@ -67,6 +67,11 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TElement>(_internalQuery.AsStreaming());
         }
 
+        internal override DbQuery WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            return new InternalDbQuery<TElement>(_internalQuery.WithExecutionStrategy(executionStrategy));
+        }
+
         internal override IInternalQuery GetInternalQueryWithCheck(string memberName)
         {
             return _internalQuery;

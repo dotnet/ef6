@@ -90,6 +90,11 @@ namespace System.Data.Entity.Internal.Linq
             return new InternalDbQuery<TEntity>(_internalSet.AsStreaming());
         }
 
+        internal override DbQuery WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            return new InternalDbQuery<TEntity>(_internalSet.WithExecutionStrategy(executionStrategy));
+        }
+
         // <inheritdoc />
         public override object Find(params object[] keyValues)
         {

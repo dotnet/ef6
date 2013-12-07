@@ -107,6 +107,12 @@ namespace System.Data.Entity.Core.Objects
             }
         }
 
+        internal IDbExecutionStrategy ExecutionStrategy
+        {
+            get { return QueryState.ExecutionStrategy; }
+            set { QueryState.ExecutionStrategy = value; }
+        }
+
         #endregion
 
         #region Public Properties

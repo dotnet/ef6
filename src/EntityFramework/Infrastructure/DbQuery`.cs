@@ -92,6 +92,11 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
+        internal virtual DbQuery<TResult> WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            return _internalQuery == null ? this : new DbQuery<TResult>(_internalQuery.WithExecutionStrategy(executionStrategy));
+        }
+
         #region Data binding
 
         /// <summary>

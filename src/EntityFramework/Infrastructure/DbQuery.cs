@@ -179,6 +179,11 @@ namespace System.Data.Entity.Infrastructure
 
         #endregion
 
+        internal virtual DbQuery WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            return this;
+        }
+
         #region Conversion to generic
 
         /// <summary>

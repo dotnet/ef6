@@ -183,6 +183,21 @@ namespace System.Data.Entity
             }
 
             [Fact]
+            public void On_ObjectQuery_returns_a_NoTracking_one_with_ExecutionStrategy()
+            {
+                var query = (ObjectQuery)MockHelper.CreateMockObjectQuery(new object()).Object;
+                var mockExecutionStrategy = new Mock<IDbExecutionStrategy>().Object;
+
+                var newQuery = (ObjectQuery)query.AsNoTracking().WithExecutionStrategy(mockExecutionStrategy);
+
+                Assert.NotSame(query, newQuery);
+                Assert.NotEqual(MergeOption.NoTracking, query.MergeOption);
+                Assert.Null(query.ExecutionStrategy);
+                Assert.Same(mockExecutionStrategy, newQuery.ExecutionStrategy);
+                Assert.Equal(MergeOption.NoTracking, newQuery.MergeOption);
+            }
+
+            [Fact]
             public void On_IEnumerable_does_nothing()
             {
                 var enumerable = (IQueryable)new List<FakeEntity>

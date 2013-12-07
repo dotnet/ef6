@@ -6,6 +6,7 @@ namespace System.Data.Entity.Internal
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity.Core.Objects;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.ModelConfiguration.Mappers;
     using System.Data.Entity.Resources;
     using System.Data.Entity.Utilities;
@@ -459,7 +460,9 @@ namespace System.Data.Entity.Internal
 
             var asIQueryable = (IQueryable)query;
             var newQuery = (ObjectQuery)asIQueryable.Provider.CreateQuery(asIQueryable.Expression);
+            newQuery.ExecutionStrategy = query.ExecutionStrategy;
             newQuery.MergeOption = MergeOption.NoTracking;
+            newQuery.Streaming = query.Streaming;
             return newQuery;
         }
 
@@ -475,7 +478,21 @@ namespace System.Data.Entity.Internal
 
             var asIQueryable = (IQueryable)query;
             var newQuery = (ObjectQuery)asIQueryable.Provider.CreateQuery(asIQueryable.Expression);
+            newQuery.ExecutionStrategy = query.ExecutionStrategy;
             newQuery.Streaming = true;
+            newQuery.MergeOption = query.MergeOption;
+            return newQuery;
+        }
+
+        public static IQueryable CreateQueryWithExecutionStrategy(ObjectQuery query, IDbExecutionStrategy executionStrategy)
+        {
+            DebugCheck.NotNull(query);
+
+            var asIQueryable = (IQueryable)query;
+            var newQuery = (ObjectQuery)asIQueryable.Provider.CreateQuery(asIQueryable.Expression);
+            newQuery.ExecutionStrategy = executionStrategy;
+            newQuery.MergeOption = query.MergeOption;
+            newQuery.Streaming = query.Streaming;
             return newQuery;
         }
 

@@ -116,6 +116,12 @@ namespace System.Data.Entity.Internal.Linq
 
         #endregion
 
+        public virtual IInternalQuery<TElement> WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            return new InternalQuery<TElement>(
+                _internalContext, (ObjectQuery)DbHelpers.CreateQueryWithExecutionStrategy(_objectQuery, executionStrategy));
+        }
+
         #region Query properties
 
         // <summary>

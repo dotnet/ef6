@@ -713,6 +713,52 @@ namespace System.Data.Entity
 
             return source;
         }
+        
+        #endregion
+
+        #region WithExecutionStrategy
+
+        // These methods allow an internal way to change the execution strategy for a particular query
+        // When making it public all other places where execution strategy is used need to be changed too
+        internal static IQueryable<T> WithExecutionStrategy<T>(this IQueryable<T> source, IDbExecutionStrategy executionStrategy)
+        {
+            Check.NotNull(source, "source");
+
+            var asDbQuery = source as DbQuery<T>;
+            return asDbQuery != null
+                ? asDbQuery.WithExecutionStrategy(executionStrategy)
+                : CommonWithExecutionStrategy(source, executionStrategy);
+        }
+
+        internal static IQueryable WithExecutionStrategy(this IQueryable source, IDbExecutionStrategy executionStrategy)
+        {
+            Check.NotNull(source, "source");
+
+            var asDbQuery = source as DbQuery;
+            return asDbQuery != null
+                ? asDbQuery.WithExecutionStrategy(executionStrategy)
+                : CommonWithExecutionStrategy(source, executionStrategy);
+        }
+
+        private static T CommonWithExecutionStrategy<T>(T source, IDbExecutionStrategy executionStrategy) where T : class
+        {
+            DebugCheck.NotNull(source);
+
+            var asObjectQuery = source as ObjectQuery;
+            if (asObjectQuery != null)
+            {
+                return (T)DbHelpers.CreateQueryWithExecutionStrategy(asObjectQuery, executionStrategy);
+            }
+
+            var asStreamingMethod = source.GetType().GetPublicInstanceMethod("WithExecutionStrategy");
+            if (asStreamingMethod != null
+                && typeof(T).IsAssignableFrom(asStreamingMethod.ReturnType))
+            {
+                return (T)asStreamingMethod.Invoke(source, new object[] { executionStrategy });
+            }
+
+            return source;
+        }
 
         #endregion
 

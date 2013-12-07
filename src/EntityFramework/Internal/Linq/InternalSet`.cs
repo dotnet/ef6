@@ -639,7 +639,7 @@ namespace System.Data.Entity.Internal.Linq
         // if set to <c>true</c> then the query is set to be no-tracking.
         // </param>
         // <returns> The query. </returns>
-        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking, bool? streaming = null)
+        private ObjectQuery<TEntity> CreateObjectQuery(bool asNoTracking, bool? streaming = null, IDbExecutionStrategy executionStrategy = null)
         {
             var objectQuery = InternalContext.ObjectContext.CreateQuery<TEntity>(_quotedEntitySetName);
             if (_baseType != typeof(TEntity))
@@ -653,6 +653,8 @@ namespace System.Data.Entity.Internal.Linq
             }
 
             if (streaming.HasValue) { objectQuery.Streaming = streaming.Value; }
+
+            objectQuery.ExecutionStrategy = executionStrategy;
 
             return objectQuery;
         }
@@ -743,6 +745,16 @@ namespace System.Data.Entity.Internal.Linq
         }
 
         #endregion
+
+        public override IInternalQuery<TEntity> WithExecutionStrategy(IDbExecutionStrategy executionStrategy)
+        {
+            Initialize();
+
+            // WithExecutionStrategy called directly on the DbSet (as opposed to a DbQuery) is special-cased so that
+            // it doesn't result in a LINQ query being created where one is not needed. This adds a perf boost
+            // for simple  queries such as context.Products.WithExecutionStrategy().
+            return new InternalQuery<TEntity>(InternalContext, CreateObjectQuery(asNoTracking: false, streaming: false, executionStrategy: executionStrategy));
+        }
 
         #region Raw SQL query
 

@@ -4,6 +4,7 @@ namespace System.Data.Entity.Core.Objects.Internal
 {
     using System.Data.Entity.Core.Common;
     using System.Data.Entity.Core.Metadata.Edm;
+    using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Utilities;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -97,6 +98,7 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             _cachingEnabled = query.EnablePlanCaching;
             UserSpecifiedStreamingBehaviour = query.QueryState.UserSpecifiedStreamingBehaviour;
+            ExecutionStrategy = query.QueryState.ExecutionStrategy;
         }
 
         internal bool EffectiveStreamingBehaviour
@@ -110,10 +112,14 @@ namespace System.Data.Entity.Core.Objects.Internal
         {
             get
             {
-                var executionStrategy = DbProviderServices.GetExecutionStrategy(ObjectContext.Connection, ObjectContext.MetadataWorkspace);
+                var executionStrategy = ExecutionStrategy
+                                        ?? DbProviderServices.GetExecutionStrategy(
+                                            ObjectContext.Connection, ObjectContext.MetadataWorkspace);
                 return !executionStrategy.RetriesOnFailure;
             }
         }
+
+        internal IDbExecutionStrategy ExecutionStrategy { get; set; }
 
         // <summary>
         // Gets the element type - the type of each result item - for this query as a CLR type instance.
