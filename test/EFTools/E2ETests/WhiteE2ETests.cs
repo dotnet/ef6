@@ -43,6 +43,8 @@ namespace EFDesigner.E2ETests
 
         // Define model db attributes
         private const string ModelName = "SchoolModel";
+        private readonly string ProjectPrefix = "ExistingDBTest";
+        private static int _projIndex;
 
         private static readonly List<string> _entityNames = new List<string>
         {
@@ -186,7 +188,7 @@ namespace EFDesigner.E2ETests
             // On the main thread create a project
             var project = Dte.CreateProject(
                 TestContext.TestRunDirectory,
-                "ExistingDBTest",
+                GetRandomProjectName(),
                 DteExtensions.ProjectKind.Executable,
                 DteExtensions.ProjectLanguage.CSharp);
 
@@ -222,6 +224,7 @@ namespace EFDesigner.E2ETests
                     catch (Exception ex)
                     {
                         exceptionCaught = ex;
+                        Trace.WriteLine(DateTime.Now.ToLongTimeString() + "Wizard Discovery thread exception:" + ex.ToString());
                     }
                 }, "UIExecutor");
 
@@ -282,6 +285,9 @@ namespace EFDesigner.E2ETests
 
             // Make sure app.config is updated correctly
             CheckAppConfig(project);
+
+            Trace.WriteLine(DateTime.Now.ToLongTimeString() + ":Close Solution");
+            Dte.CloseSolution(false);
         }
 
         [TestMethod]
@@ -346,6 +352,11 @@ namespace EFDesigner.E2ETests
             // Build the project
             var errors = Build();
             Assert.IsTrue(errors == null || errors.Count == 0);
+        }
+
+        private string GetRandomProjectName()
+        {
+            return ProjectPrefix + _projIndex++;
         }
 
         private void CheckProperties(string property)
@@ -911,6 +922,13 @@ namespace EFDesigner.E2ETests
         public static ErrorItems Build()
         {
             Dte.ExecuteCommand("Build.BuildSelection", String.Empty);
+
+            // Wait for the build to be completed
+            while (Dte.Solution.SolutionBuild.BuildState != vsBuildState.vsBuildStateDone)
+            {
+                SystemThread.Sleep(100);
+            }
+
             var errors = GetErrors();
 
             return errors;
