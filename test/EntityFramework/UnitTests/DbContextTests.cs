@@ -701,7 +701,7 @@ END";
         public void ProviderName_gets_name_from_internal_connection_ProviderName_when_lazy_context_is_used()
         {
             var mockConnection = new Mock<IInternalConnection>();
-            var mockContext = new Mock<LazyInternalContext>(new Mock<DbContext>().Object, mockConnection.Object, null, null, null, null)
+            var mockContext = new Mock<LazyInternalContext>(new Mock<DbContext>().Object, mockConnection.Object, null, null, null, null, null)
                                   {
                                       CallBase = true
                                   };

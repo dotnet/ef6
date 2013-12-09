@@ -68,6 +68,7 @@ namespace System.Data.Entity
         /// See the class remarks for how this is used to create a connection.
         /// </summary>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected DbContext()
         {
             InitializeLazyInternalContext(new LazyInternalConnection(GetType().DatabaseName()));
@@ -81,6 +82,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="model"> The model that will back this context. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         protected DbContext(DbCompiledModel model)
         {
             Check.NotNull(model, "model");
@@ -95,6 +97,7 @@ namespace System.Data.Entity
         /// </summary>
         /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DbContext(string nameOrConnectionString)
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
@@ -110,6 +113,7 @@ namespace System.Data.Entity
         /// <param name="nameOrConnectionString"> Either the database name or a connection string. </param>
         /// <param name="model"> The model that will back this context. </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DbContext(string nameOrConnectionString, DbCompiledModel model)
         {
             Check.NotEmpty(nameOrConnectionString, "nameOrConnectionString");
@@ -128,6 +132,7 @@ namespace System.Data.Entity
         /// If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
         /// </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DbContext(DbConnection existingConnection, bool contextOwnsConnection)
         {
             Check.NotNull(existingConnection, "existingConnection");
@@ -147,6 +152,7 @@ namespace System.Data.Entity
         ///     If set to <c>true</c> the connection is disposed when the context is disposed, otherwise the caller must dispose the connection.
         /// </param>
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
+        [SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public DbContext(DbConnection existingConnection, DbCompiledModel model, bool contextOwnsConnection)
         {
             Check.NotNull(existingConnection, "existingConnection");
@@ -175,7 +181,7 @@ namespace System.Data.Entity
         /// <summary>
         /// Initializes the internal context, discovers and initializes sets, and initializes from a model if one is provided.
         /// </summary>
-        private void InitializeLazyInternalContext(IInternalConnection internalConnection, DbCompiledModel model = null)
+        internal virtual void InitializeLazyInternalContext(IInternalConnection internalConnection, DbCompiledModel model = null)
         {
             DbConfigurationManager.Instance.EnsureLoadedForContext(GetType());
 
