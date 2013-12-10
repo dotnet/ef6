@@ -9,6 +9,7 @@ namespace ProductivityApiTests
     using System.Data.Entity;
     using System.Data.Entity.Functionals.Utilities;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.TestHelpers;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -16,6 +17,9 @@ namespace ProductivityApiTests
     using ConcurrencyModel;
     using SimpleModel;
     using Xunit;
+    using Xunit.Extensions;
+    using Building = AdvancedPatternsModel.Building;
+    using FantasyModel = System.Data.Entity.TestModels.FantasyModel;
 
     public class DbSetTests : FunctionalTestBase
     {
@@ -3583,5 +3587,58 @@ namespace ProductivityApiTests
         }
 
         #endregion
+
+        public class CodePlex1796 : FunctionalTestBase
+        {
+            static CodePlex1796()
+            {
+                // force database initialization, we don't want this to happen inside transaction
+                using (var context = new FantasyModel.FantasyContext())
+                {
+                    context.Provinces.Count();
+                }
+            }
+
+            [Fact]
+            [AutoRollback]
+            [UseDefaultExecutionStrategy]
+            public void RemoveRange_honours_cascade_delete()
+            {
+                using (var context = new FantasyModel.FantasyContext())
+                {
+                    var provinceCount = context.Provinces.Count();
+                    var cityCount = context.Cities.Count();
+
+                    for (var i = 0; i < 5; i++)
+                    {
+                        context.Provinces.Add(
+                            new FantasyModel.Province
+                            {
+                                Name = "CodePlex1796_" + i,
+                                Cities = new List<FantasyModel.City> { 
+                                    new FantasyModel.City(),
+                                    new FantasyModel.City()
+                                }
+                            });
+                    }
+
+                    context.SaveChanges();
+
+                    Assert.Equal(provinceCount + 5, context.Provinces.Count());
+                    Assert.Equal(cityCount + 10, context.Cities.Count());
+
+                    var provinces = context.Provinces
+                        .Where(c => c.Name.StartsWith("CodePlex1796_"))
+                        .Include(c => c.Cities);
+
+                    context.Provinces.RemoveRange(provinces);
+
+                    Assert.DoesNotThrow(() => context.SaveChanges());
+
+                    Assert.Equal(provinceCount, context.Provinces.Count());
+                    Assert.Equal(cityCount, context.Cities.Count());
+                }
+            }
+        }
     }
 }

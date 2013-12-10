@@ -403,8 +403,17 @@ namespace System.Data.Entity.Internal.Linq
 
             InternalContext.DetectChanges();
 
-            ActOnSet(
-                entity => InternalContext.ObjectContext.DeleteObject(entity), EntityState.Deleted, copyOfEntities, "RemoveRange");
+            foreach (var entity in copyOfEntities)
+            {
+                Check.NotNull(entity, "entity");
+
+                if (!(entity is TEntity))
+                {
+                    throw Error.DbSet_BadTypeForAddAttachRemove("RemoveRange", entity.GetType().Name, typeof(TEntity).Name);
+                }
+
+                InternalContext.ObjectContext.DeleteObject(entity);
+            }
         }
 
         // <summary>
