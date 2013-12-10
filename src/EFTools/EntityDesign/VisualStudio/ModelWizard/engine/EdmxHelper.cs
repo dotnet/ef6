@@ -34,8 +34,8 @@ namespace Microsoft.Data.Entity.Design.VisualStudio.ModelWizard.Engine
                 "storeModelNamespace must not be null or empty string");
 
             // update the EDMX - stop if any attempt to update fails   
-            if (UpdateStorageModels(model.GetStoreModel(), storeModelNamespace, model.ProviderInfo, errors)
-                && UpdateConceptualModels(model.GetConceptualModel(), entityModelNamespace))
+            if (UpdateStorageModels(model.StoreModel, storeModelNamespace, model.ProviderInfo, errors)
+                && UpdateConceptualModels(model.ConceptualModel, entityModelNamespace))
             {
                 UpdateMapping(model);
             }

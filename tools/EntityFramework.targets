@@ -47,8 +47,6 @@ Project global post-settings and targets.
       <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionMajor).$(VersionMinor).0.$(VersionRevision)</AssemblyVersion>
       <AssemblyFileVersion Condition="'$(AssemblyFileVersion)' == ''">$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)</AssemblyFileVersion>
       <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)</NuGetPackageVersion>
-      <!-- TODO: FIX SETUP TO PICK UP NUGET PACKAGES FROM BUILD and remove the following hardcoded definition -->
-      <!-- NuGetPackageVersion>$(RuntimeVersionMajor).$(RuntimeVersionMinor).$(VersionRelease)-21025</NuGetPackageVersion -->
       <EF6NuGetPackageVersion>$(NuGetPackageVersion)</EF6NuGetPackageVersion>
       <EFPackageVersion>$(EF6NuGetPackageVersion)</EFPackageVersion>
       <EF6NuGetPackageWixId>$(NuGetPackageVersion)</EF6NuGetPackageWixId>

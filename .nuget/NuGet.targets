@@ -46,14 +46,21 @@
 
         <PackageOutputDir Condition="$(PackageOutputDir) == ''">$(TargetDir.Trim('\\'))</PackageOutputDir>
         
+        <NoCacheSwitch Condition=" $(RequireNoCache) == 'true' ">-NoCache</NoCacheSwitch>
+        <PreReleaseSwitch Condition=" $(IncludePreRelease) == 'true' ">-PreRelease</PreReleaseSwitch>
         <RequireConsentSwitch Condition=" $(RequireRestoreConsent) == 'true' ">-RequireConsent</RequireConsentSwitch>
         <NonInteractiveSwitch Condition=" '$(VisualStudioVersion)' != '' AND '$(OS)' == 'Windows_NT' ">-NonInteractive</NonInteractiveSwitch>
         
-        <PaddedSolutionDir Condition=" '$(OS)' == 'Windows_NT'">"$(SolutionDir) "</PaddedSolutionDir>
-        <PaddedSolutionDir Condition=" '$(OS)' != 'Windows_NT' ">"$(SolutionDir)"</PaddedSolutionDir>
+        <PaddedSolutionDir Condition=" '$(OS)' == 'Windows_NT' AND '$(PackageRestoreOutputDir)' != ''">"$(PackageRestoreOutputDir) "</PaddedSolutionDir>
+        <PaddedSolutionDir Condition=" '$(OS)' != 'Windows_NT'  AND '$(PackageRestoreOutputDir)' != ''">"$(PackageRestoreOutputDir)"</PaddedSolutionDir>
+
+        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(OS)' == 'Windows_NT'">"$(SolutionDir) "</PaddedSolutionDir>
+        <PaddedSolutionDir Condition=" '$(PaddedSolutionDir)' == '' AND '$(OS)' != 'Windows_NT' ">"$(SolutionDir)"</PaddedSolutionDir>
 
         <!-- Commands -->
-        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)"  $(NonInteractiveSwitch) $(RequireConsentSwitch) -solutionDir $(PaddedSolutionDir)</RestoreCommand>
+        <InstallCommandOptions>$(NonInteractiveSwitch) $(RequireConsentSwitch) $(NoCacheSwitch) $(PreReleaseSwitch) -solutionDir $(PaddedSolutionDir)</InstallCommandOptions>
+        <LocalRestoreCommand>$(NuGetCommand) install $(LocalPackageId) -source "$(LocalPackageSource)" $(InstallCommandOptions)</LocalRestoreCommand>
+        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source "$(PackageSources)" $(InstallCommandOptions)</RestoreCommand>
         <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -Properties "Configuration=$(Configuration);Platform=$(Platform)" $(NonInteractiveSwitch) -OutputDirectory "$(PackageOutputDir)" -symbols</BuildCommand>
 
         <!-- We need to ensure packages are restored prior to assembly resolve -->
@@ -82,6 +89,13 @@
 
     <Target Name="_DownloadNuGet">
         <DownloadNuGet OutputFilename="$(NuGetExePath)" Condition=" '$(DownloadNuGetExe)' == 'true' AND !Exists('$(NuGetExePath)')" />
+    </Target>
+
+    <Target Name="RestoreLocalPackage" DependsOnTargets="CheckPrerequisites">
+        <Exec Command="$(LocalRestoreCommand)" Condition="'$(OS)' != 'Windows_NT'" />
+              
+        <Exec Command="$(LocalRestoreCommand)"
+              LogStandardErrorAsError="true" Condition="'$(OS)' == 'Windows_NT'" />
     </Target>
 
     <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">

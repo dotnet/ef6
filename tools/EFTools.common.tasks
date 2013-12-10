@@ -141,4 +141,56 @@
     </Task>
   </UsingTask>
 
+  <UsingTask TaskName="ExtractNuspecFromPackage" TaskFactory="CodeTaskFactory" AssemblyFile="$(CodeTaskFactoryAssemblyFile)">
+    <ParameterGroup>
+      <NuGetPackageFilePath ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="WindowsBase" />
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.IO.Packaging" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            var packageNameWithNoVersion = Path.GetFileNameWithoutExtension(NuGetPackageFilePath);
+            var firstIndexOfADigit = Int32.MaxValue;
+            for (var i = 0; i < 10; i++)
+            {
+                int index;
+                if ((index = packageNameWithNoVersion.IndexOf((char)('0' + i))) >= 0)
+                {
+                    if (firstIndexOfADigit > index)
+                    {
+                        firstIndexOfADigit = index;
+                    }
+                }
+            }
+
+            if (firstIndexOfADigit != Int32.MaxValue)
+            {
+                packageNameWithNoVersion = packageNameWithNoVersion.Substring(0, firstIndexOfADigit-1);
+            }
+
+            var nuspecOutputFilePath = Path.ChangeExtension(NuGetPackageFilePath, ".nuspec");
+            var nuspecPartPath = String.Concat("/", packageNameWithNoVersion, ".nuspec");
+            using (var package = ZipPackage.Open(NuGetPackageFilePath, FileMode.Open, FileAccess.Read))
+            {
+                string content;
+
+                var part = package.GetPart(new Uri(nuspecPartPath, UriKind.Relative));
+                using (var reader = new StreamReader(part.GetStream(FileMode.Open, FileAccess.Read)))
+                {
+                    content = reader.ReadToEnd();
+                }
+
+                using (var writer = new StreamWriter(nuspecOutputFilePath))
+                {
+                    writer.Write(content);
+                }
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
 </Project>

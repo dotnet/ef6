@@ -12,7 +12,6 @@
     <OutputType>Package</OutputType>
     <Name>EFToolsMsi</Name>
     <SolutionDir Condition="$(SolutionDir) == ''">..\..\..\..\</SolutionDir>
-    <PackagesDir Condition="$(PackagesDir) == ''">$(SolutionDir)packages</PackagesDir>
     <RestorePackages>true</RestorePackages>
     <EmbedCab Condition="$(EmbedCab) == ''">no</EmbedCab>
     <IncludeLocalizedArtifacts Condition="$(IncludeLocalizedArtifacts) == ''">false</IncludeLocalizedArtifacts>
@@ -88,13 +87,39 @@
   </Target>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets"
           Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x')" />
-  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+
   <PropertyGroup>
-    <BuildDependsOn>RestorePackages;ExtractNuspec;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
+    <!-- If NuGetOutputPath is set search for packages there, otherwise look in the default place they are output by the runtime build -->
+    <PackagesInputDir Condition=" '$(PackagesDir)' == '' AND '$(NuGetOutputPath)' != ''">$(NuGetOutputPath)</PackagesInputDir>
+    <PackagesInputDir Condition=" '$(PackagesDir)' == ''">$(RepositoryRoot)bin\Release\NuGet</PackagesInputDir>
+
+    <!-- override output dir for package restore (which will automatically append \packages to path) -->
+    <PackageRestoreOutputDir>$(PackagesInputDir)</PackageRestoreOutputDir>
+
+    <!-- Now align PackagesDir with PackageRestoreOutputDir so that the local framework and the EF5 framework end up in the same directory -->
+    <PackagesDir>$(PackagesInputDir)\packages</PackagesDir>
+    
+    <BuildDependsOn>RestorePackages;RestoreLocalPackages;ExtractNuspecs;ReplaceEFToolsStrings;$(BuildDependsOn)</BuildDependsOn>
   </PropertyGroup>
-  <Target Name="ExtractNuspec">
-    <ExtractNuspec PackagesConfigPath="$(PackagesConfig)" PackagesOutputPath="$(PackagesDir)" />
+
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+
+  <Target Name="ExtractNuspecs">
+    <ItemGroup>
+      <ExtractNuspecPackages Include="$(PackagesDir)\**\EntityFramework*.nupkg" />
+    </ItemGroup>
+    <ExtractNuspecFromPackage NuGetPackageFilePath="%(ExtractNuspecPackages.Identity)" />
   </Target>
+  
+  <Target Name="RestoreLocalPackages">
+    <ItemGroup>
+      <LocalPackageNames Include="EntityFramework" />
+      <LocalPackageNames Include="EntityFramework.SqlServerCompact" />
+    </ItemGroup>
+    <MSBuild Projects="$(RepositoryRoot).nuget\NuGet.targets" Targets="RestoreLocalPackage"
+             Properties="$(BuildProperties);PackageRestoreOutputDir=$(PackagesInputDir);LocalPackageId=%(LocalPackageNames.Identity);LocalPackageSource=$(PackagesInputDir);RequireNoCache=true;IncludePreRelease=true" />
+  </Target>
+
   <Target Name="ReplaceEFToolsStrings">
     <RegexReplaceInFile InputFileName="Resources\EFToolsStrings.wxl.tokenized"
                         OutputFileName="Resources\EFToolsStrings.wxl"
@@ -133,5 +158,10 @@
       <EFDesignerSymbolFiles Include="$(OutputPath)EntityFramework.pdb" />
     </ItemGroup>
     <Copy Condition="'$(Configuration)' == 'Debug'" SourceFiles="@(EFDesignerSymbolFiles)" DestinationFolder="$(OutputPath)\en\Symbols" />
+  </Target>
+
+  <Target Name="AfterClean">
+    <!-- Remove the extra packages (and their expansions) created by RestorePackages and RestoreLocalPackages above -->
+    <RemoveDir Directories="$(PackagesDir)" />
   </Target>
 </Project>

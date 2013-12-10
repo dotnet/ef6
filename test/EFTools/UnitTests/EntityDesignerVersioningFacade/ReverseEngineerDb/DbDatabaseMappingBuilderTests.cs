@@ -68,7 +68,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
 
             var model = DbDatabaseMappingBuilder.Build(mappingContext);
 
-            Assert.Same(conceptualAssociationType, model.GetConceptualModel().AssociationTypes.SingleOrDefault());
+            Assert.Same(conceptualAssociationType, model.ConceptualModel.AssociationTypes.SingleOrDefault());
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             mappingContext.AddMapping(storeFunction, functionImport);
             mappingContext.AddMapping(storeContainer, modelContainer);
 
-            var entityModel = DbDatabaseMappingBuilder.Build(mappingContext).GetConceptualModel();
+            var entityModel = DbDatabaseMappingBuilder.Build(mappingContext).ConceptualModel;
 
             Assert.NotNull(entityModel);
             Assert.Equal(new[] { "f_c" }, entityModel.Containers.Single().FunctionImports.Select(f => f.Name));
@@ -177,7 +177,7 @@ namespace Microsoft.Data.Entity.Design.VersioningFacade.ReverseEngineerDb
             var mappingContext = new SimpleMappingContext(storeModel, true);
             mappingContext.AddMapping(storeContainer, modelContainer);
 
-            var entityModel = DbDatabaseMappingBuilder.Build(mappingContext).GetConceptualModel();
+            var entityModel = DbDatabaseMappingBuilder.Build(mappingContext).ConceptualModel;
 
             Assert.NotNull(entityModel);
             Assert.Empty(entityModel.Containers.Single().FunctionImports);

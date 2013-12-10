@@ -98,6 +98,9 @@
                  Projects="$(SolutionDir)\tools\EFTools.skipstrongnames.targets" />
     </Target>
 
+    <Target Name="BuildFramework">
+      <MSBuild Projects="$(RepositoryRoot)EF.msbuild" Targets="Package" Properties="Configuration=Release" />
+    </Target>
 
     <Target Name="BuildDesigner">
         <MSBuild Targets="$(BuildTargets)"
@@ -118,7 +121,7 @@
              Properties="Configuration=$(Configuration);$(BuildProperties);BuildPackages=false" />
     </Target>
 
-    <Target Name="Build" DependsOnTargets="CreateDirectories;CheckSkipStrongNames;RestorePackages;BuildDesigner;BuildTestHost;BuildInstaller" />
+    <Target Name="Build" DependsOnTargets="CreateDirectories;CheckSkipStrongNames;BuildFramework;RestorePackages;BuildDesigner;BuildTestHost;BuildInstaller" />
 
     <Target Name="Rebuild">
         <MSBuild Projects="$(MSBuildProjectFile)" Properties="BuildTargets=Rebuild;Configuration=$(Configuration)" Targets="Clean;Build" />
@@ -133,6 +136,14 @@
         </PropertyGroup>
         <Exec Condition="'$(TestHostInstalled)'!='True'"
               Command='msiexec /qb /i $(SolutionDir)\bin\$(Configuration)\VsIdeTestHost.msi /L*v $(LogsDir)VsIdeTestHost.msi.log' />
+    </Target>
+
+    <Target Name="UninstallTestHost">
+        <PropertyGroup>
+            <TestHostUnistallGuid Condition=" '$(VisualStudioVersion)' == '11.0' ">{710EEA0D-C40D-4245-B3FA-C883AAD83A65}</TestHostUnistallGuid>
+            <TestHostUnistallGuid Condition=" '$(TestHostUnistallGuid)' == '' ">{D39AE4C3-21C4-40DE-9F35-53A83803F8DB}</TestHostUnistallGuid>
+        </PropertyGroup>
+        <Exec Command='msiexec /qb /x $(TestHostUnistallGuid) /L*v $(LogsDir)VsIdeTestHost.msi.uninstall.log' />
     </Target>
 
     <Target Name="Install" DependsOnTargets="Rebuild">
