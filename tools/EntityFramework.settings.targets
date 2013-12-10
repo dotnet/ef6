@@ -10,7 +10,7 @@ Project global pre-settings.
   <PropertyGroup>
     <VersionMajor>6</VersionMajor>
     <VersionMinor>0</VersionMinor>
-    <VersionRelease>2-beta1</VersionRelease>
+    <VersionRelease>2</VersionRelease>
   </PropertyGroup>
 
   <!-- Default properties -->
