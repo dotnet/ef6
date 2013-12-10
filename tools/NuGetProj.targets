@@ -80,7 +80,7 @@ Relevant parameters:
   </ItemDefinitionGroup>
     
   <ItemGroup>
-    <NuGetContent Include="$(NuSpecFile)" />
+    <NuGetContent Include="$(ProjectPath)" />
   </ItemGroup>
 
   <ItemGroup>
