@@ -101,7 +101,8 @@ namespace System.Data.Entity.Internal
             DbCompiledModel model,
             Func<DbContext, IDbModelCacheKey> cacheKeyFactory = null,
             AttributeProvider attributeProvider = null,
-            Lazy<DbDispatchers> dispatchers = null)
+            Lazy<DbDispatchers> dispatchers = null,
+            ObjectContext objectContext = null)
             : base(owner, dispatchers)
         {
             DebugCheck.NotNull(internalConnection);
@@ -110,6 +111,7 @@ namespace System.Data.Entity.Internal
             _model = model;
             _cacheKeyFactory = cacheKeyFactory ?? new DefaultModelCacheKeyFactory().Create;
             _attributeProvider = attributeProvider ?? new AttributeProvider();
+            _objectContext = objectContext;
 
             _createdWithExistingModel = model != null;
         }
@@ -214,11 +216,15 @@ namespace System.Data.Entity.Internal
 
             if (!IsDisposed)
             {
-                _internalConnection.Dispose();
+                // Note: issue 1805 - it is important that the ObjectContext be disposed before the InternalConnection.
+                // If the ObjectContext is responsible for calling Dispose() on the EntityConnection (which is
+                // the case for non-EF connection strings) then the EntityConnection needs the chance to unsubscribe
+                // itself from the underlying connection's StateChange event _before_ that underlying connection is disposed.
                 if (_objectContext != null)
                 {
                     _objectContext.Dispose();
                 }
+                _internalConnection.Dispose();
             }
         }
 
